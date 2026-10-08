@@ -1026,7 +1026,7 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
  * @param rootSchema - The root schema a reference names a definition of, when there is one to look it up in
  * @param formData - The form data the object holds, which its conditions and dependencies are evaluated against
  * @param followedRefs - The references already followed on this walk
- * @param leftToAnyOption - Whether a name only some of an option's own options render counts as one it renders
+ * @param matchedOptionOnly - Whether only the option its own data matches is read among an option's own options
  * @returns - The names the schema and the subschemas merged into it declare between them, or undefined when one of
  *          those subschemas takes every key the data holds
  */
@@ -1036,7 +1036,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   rootSchema: S | undefined,
   formData: GenericObjectType,
   followedRefs: Set<string>,
-  leftToAnyOption: boolean,
+  matchedOptionOnly: boolean,
 ): string[] | undefined {
   const merged: (S | boolean | undefined)[] = Array.isArray(schema[ALL_OF_KEY])
     ? [...(schema[ALL_OF_KEY] as (S | boolean)[])]
@@ -1060,7 +1060,14 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
     // Each merged subschema is read as `namesOptionRenders()` reads an option, so that one offering `anyOf`/`oneOf`
     // options of its own contributes the names every one of them renders: a `$ref` is how an option usually names the
     // choice it is, and a name behind that reference has the option's field as much as one declared inline does
-    const subNames = namesOptionRenders<S, F>(context, subSchema, rootSchema, formData, followedRefs, leftToAnyOption);
+    const subNames = namesOptionRenders<S, F>(
+      context,
+      subSchema,
+      rootSchema,
+      formData,
+      followedRefs,
+      matchedOptionOnly,
+    );
     if (subNames === undefined) {
       return undefined;
     }
@@ -1081,7 +1088,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
  * @param rootSchema - The root schema a reference names a definition of, when there is one to look it up in
  * @param formData - The form data the object holds, which the option's conditions are evaluated against
  * @param followedRefs - The references already followed on this walk
- * @param leftToAnyOption - Whether a name only some of the option's own options render counts as one it renders
+ * @param matchedOptionOnly - Whether only the option the data matches is read among the option's own options
  * @returns - The names the option renders, or undefined for an option that renders every key the data holds
  */
 function namesOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
@@ -1090,12 +1097,19 @@ function namesOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends F
   rootSchema: S | undefined,
   formData: GenericObjectType,
   followedRefs: Set<string>,
-  leftToAnyOption: boolean,
+  matchedOptionOnly: boolean,
 ): Set<string> | undefined {
   if (allowsAdditionalProperties<S>(option)) {
     return undefined;
   }
-  const nestedNames = namesTheOptionsRender<S, F>(context, option, rootSchema, formData, followedRefs, leftToAnyOption);
+  const nestedNames = namesTheOptionsRender<S, F>(
+    context,
+    option,
+    rootSchema,
+    formData,
+    followedRefs,
+    matchedOptionOnly,
+  );
   if (nestedNames === undefined) {
     return undefined;
   }
@@ -1105,32 +1119,36 @@ function namesOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends F
     rootSchema,
     formData,
     followedRefs,
-    leftToAnyOption,
+    matchedOptionOnly,
   );
   return declaredNames === undefined ? undefined : new Set([...declaredNames, ...nestedNames]);
 }
 
 /** Returns the names a `schema`'s `anyOf`/`oneOf` options render, which are either the names every one of them renders
- * or the names any one of them does, depending on what the keyword describing the object's extra keys would make of a
- * name the option on screen is the only one to render.
+ * or the names the one the data matches does, depending on what the keyword describing the object's extra keys makes of
+ * a name the option on screen is the only one to render.
  *
  * Under `additionalProperties`, or a matching pattern, that keyword describes the key whichever option is chosen, so
  * only a name every option renders is left to them: the option on screen is the user's to choose and
  * `retrieveSchema()` leaves the options for `MultiSchemaField` to choose between rather than merging the chosen one in,
  * so a name the other options don't render would have no field at all under them and the value it holds nothing to
- * edit or remove it with. Under `unevaluatedProperties` the keyword says nothing about a key the option that matched
- * evaluates, which is every key that option declares, so a stub for such a name is not a second field for the value
- * but the wrong schema over it, and a name any option renders is left to the options.
+ * edit or remove it with. Under `unevaluatedProperties` the keyword says nothing about a key the matching option
+ * evaluates, which is every key that option declares, so a stub for one of its names is not a second field for the
+ * value but the wrong schema over it; a name only another option declares is a key nothing evaluates, which is the
+ * keyword's to describe and the object's to stub, so only the matching option is read. That option is matched the way
+ * `MultiSchemaField` matches the one it renders, through `getFirstMatchingOption()` over the options with their
+ * references resolved, which is how `resolveAnyOrOneOfSchemas()` scores them.
  *
  * A schema offering no options renders no name this way, and one whose every option takes keys of its own renders every
  * key the data holds, which is `undefined` as it is for a single option.
  *
- * @param context - The `SchemaContext` whose `validator` settles a condition
+ * @param context - The `SchemaContext` whose `validator` settles a condition and matches an option
  * @param schema - The schema whose options are to be read
  * @param rootSchema - The root schema a reference names a definition of, when there is one to look it up in
- * @param formData - The form data the object holds, which an option's conditions are evaluated against
+ * @param formData - The form data the object holds, which an option's conditions are evaluated against and which the
+ *          matching option is matched on
  * @param followedRefs - The references already followed on this walk
- * @param leftToAnyOption - Whether a name only some of the options render counts as one they render
+ * @param matchedOptionOnly - Whether only the option the data matches is read, rather than every option
  * @returns - The names the options render between them, or undefined when every one of them renders every key the data
  *          holds
  */
@@ -1140,27 +1158,59 @@ function namesTheOptionsRender<S extends StrictRJSFSchema = RJSFSchema, F extend
   rootSchema: S | undefined,
   formData: GenericObjectType,
   followedRefs: Set<string>,
-  leftToAnyOption: boolean,
+  matchedOptionOnly: boolean,
 ): Set<string> | undefined {
   const options = getXxxOfOptions<S>(schema)?.options ?? [];
   if (options.length === 0) {
     return new Set<string>();
   }
+  const read =
+    matchedOptionOnly && rootSchema !== undefined
+      ? [matchingOption<S, F>(context, schema, options, rootSchema, formData)]
+      : options;
   // Each option follows the references this walk has followed without adding to the others' lists, so two options
   // naming the same definition both read it rather than the second one reading a reference already followed
-  const namesPerOption = options.map((option) =>
+  const namesPerOption = read.map((option) =>
     isObject(option)
-      ? namesOptionRenders<S, F>(context, option, rootSchema, formData, new Set(followedRefs), leftToAnyOption)
+      ? namesOptionRenders<S, F>(context, option, rootSchema, formData, new Set(followedRefs), matchedOptionOnly)
       : new Set<string>(),
   );
   const naming = namesPerOption.filter((names): names is Set<string> => names !== undefined);
   if (naming.length === 0) {
     return undefined;
   }
-  if (leftToAnyOption) {
-    return new Set(naming.flatMap((names) => [...names]));
-  }
   return naming.reduce((shared, names) => new Set([...shared].filter((name) => names.has(name))));
+}
+
+/** Returns the one of an object's `options` that the `formData` matches, which is the option `MultiSchemaField`
+ * renders for that data and so the only one evaluating anything the object holds.
+ *
+ * The references are resolved before the options are scored because that is the form `resolveAnyOrOneOfSchemas()`
+ * scores them in, and a precompiled validator has a function compiled for the forms that pass through there.
+ *
+ * @param context - The `SchemaContext` whose `validator` scores the options
+ * @param schema - The object schema offering the options, read for the discriminator it names
+ * @param options - The options to match the data against
+ * @param rootSchema - The root schema a reference among the options names a definition of
+ * @param formData - The form data the object holds
+ * @returns - The option the data matches
+ */
+function matchingOption<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  options: S[],
+  rootSchema: S,
+  formData: GenericObjectType,
+): S {
+  const resolved = options.map((option) => resolveAllReferences(option, rootSchema, []));
+  const matched = getFirstMatchingOption<GenericObjectType, S, F>(
+    context,
+    formData,
+    resolved,
+    rootSchema,
+    getDiscriminatorFieldFromSchema<S>(schema),
+  );
+  return options[matched];
 }
 
 /** Returns the names another schema renders as properties of its own for an object that `retrieveSchema()` is stubbing
@@ -1172,12 +1222,13 @@ function namesTheOptionsRender<S extends StrictRJSFSchema = RJSFSchema, F extend
  * object's own `properties` are missing the names of for opposite reasons: a merge may be left undone, where an option
  * is left to `MultiSchemaField` to choose between on purpose.
  *
- * How much of an option counts is settled once here, from the keyword the object describes its extra keys with:
- * `unevaluatedProperties` describes a key no subschema evaluates, which an option's own properties are not, where
- * `additionalProperties` and a pattern describe the key whatever an option makes of it. A key one of the object's
- * patterns also matches follows the object's answer rather than its own, the question being the object's to settle:
- * leaving the name to the option that evaluates it costs the value a field while another option is on screen, where
- * stubbing it writes a schema over a value the option describes.
+ * Which options count is settled once here, from the keyword the object describes its extra keys with:
+ * `unevaluatedProperties` describes a key no subschema evaluates, which the matching option's own properties are not
+ * and another option's are, where `additionalProperties` and a pattern describe the key whatever an option makes of
+ * it, so every option counts and only a name all of them render is left to them. A key one of the object's patterns
+ * also matches follows the object's answer rather than its own, the question being the object's to settle: leaving the
+ * name to the option that evaluates it costs the value a field while another option is on screen, where stubbing it
+ * writes a schema over a value the option describes.
  *
  * @param context - The `SchemaContext` whose `validator` settles a condition
  * @param schema - The object schema whose extra keys are being stubbed
@@ -1193,7 +1244,7 @@ function namesRenderedElsewhere<S extends StrictRJSFSchema = RJSFSchema, F exten
 ): Set<string> | undefined {
   // `unevaluatedProperties` is the keyword describing the extra keys only where there is no `additionalProperties` for
   // `additionalPropertiesKeyword()` to give precedence to, which is the one place that reads it
-  const leftToAnyOption =
+  const matchedOptionOnly =
     schema.additionalProperties === undefined && additionalPropertiesKeyword<S>(schema) !== undefined;
   const optionNames = namesTheOptionsRender<S, F>(
     context,
@@ -1201,7 +1252,7 @@ function namesRenderedElsewhere<S extends StrictRJSFSchema = RJSFSchema, F exten
     rootSchema,
     formData,
     new Set<string>(),
-    leftToAnyOption,
+    matchedOptionOnly,
   );
   if (optionNames === undefined) {
     return undefined;
@@ -1209,7 +1260,7 @@ function namesRenderedElsewhere<S extends StrictRJSFSchema = RJSFSchema, F exten
   // A subschema merged into this object that takes keys of its own is this object taking them, which is the case the
   // stub is for rather than one to leave to another schema, so the walk saying so names nothing rendered elsewhere
   const declaredNames =
-    declaredPropertyNames<S, F>(context, schema, rootSchema, formData, new Set<string>(), leftToAnyOption) ?? [];
+    declaredPropertyNames<S, F>(context, schema, rootSchema, formData, new Set<string>(), matchedOptionOnly) ?? [];
   return new Set([...declaredNames, ...optionNames]);
 }
 

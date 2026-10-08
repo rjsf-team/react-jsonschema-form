@@ -3285,12 +3285,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           unevaluatedProperties: { type: 'string' },
         };
         const formData = { kind: 'a', a: { x: 'hi' } };
-        // The keyword says nothing about a key the option that matched evaluates, so a name any option declares is
-        // left to the options: stubbing `a` here would put a text input over the object the first option describes,
-        // and writing to it would replace that object with a string
+        // The keyword says nothing about a key the matching option evaluates, so a name that option declares is left
+        // to it: stubbing `a` here would put a text input over the object the first option describes, and writing to
+        // it would replace that object with a string
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
           ...schema,
           properties: {},
+        });
+      });
+      it('describes its extra keys with unevaluatedProperties beside an option the data does not match', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          oneOf: [
+            { properties: { kind: { const: 'b' }, b: { type: 'number' } } },
+            { properties: { kind: { const: 'a' }, a: { type: 'object', properties: { x: { type: 'string' } } } } },
+          ],
+          unevaluatedProperties: { type: 'string' },
+        };
+        // The matching option leads the list, which is the option the stub validator answers with as well as the one
+        // the data validates against, so the walk reads the same option under either
+        const formData = { kind: 'b', a: 'left over' };
+        // Only the option the data matches evaluates anything, so `a` is a key nothing evaluates: the keyword
+        // describes it and the object stubs it, where leaving it to the option declaring it would cost the value the
+        // only field it has
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
+          ...schema,
+          properties: { a: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
         });
       });
       it('describes its extra keys with additionalProperties beside unevaluatedProperties', () => {

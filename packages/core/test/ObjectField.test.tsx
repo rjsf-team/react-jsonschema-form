@@ -1402,6 +1402,29 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { a: 'q', b: 2, newKey: 0 }, 'root');
     });
 
+    it('should render a key only an unselected oneOf option declares as one unevaluatedProperties describes', () => {
+      // Only the option on screen evaluates the keys it declares, so a key another option declares is one nothing
+      // evaluates and the keyword describes: without a stub the value would have no field showing it and no remove
+      // button to clear it with
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { kind: { type: 'string', enum: ['a', 'b'] } },
+          unevaluatedProperties: { type: 'string' },
+          oneOf: [
+            { properties: { kind: { const: 'a' }, onlyA: { type: 'string' } } },
+            { properties: { kind: { const: 'b' }, onlyB: { type: 'string' } } },
+          ],
+        },
+        initialFormData: { kind: 'b', onlyA: 'left over', onlyB: 'shown' },
+      });
+
+      expect(node.querySelector('#root_onlyA')).toHaveValue('left over');
+      expect(node.querySelector('#root_onlyA-key')).toBeInTheDocument();
+      expect(node.querySelectorAll('#root_onlyB')).toHaveLength(1);
+      expect(node.querySelector('#root_onlyB-key')).toBeNull();
+    });
+
     it('should render a key a oneOf option declares only where that option renders it', async () => {
       // The option selector chooses between the options rather than merging the chosen one into the object, so a key
       // an option declares is missing from the object's own properties and would otherwise take a field of its own
