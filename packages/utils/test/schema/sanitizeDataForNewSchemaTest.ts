@@ -858,6 +858,26 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['c', 'd'])).toEqual([]);
     });
+    it('keeps items when only a sibling schema changed and the items schema is unchanged (#5451)', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          sibling: { type: 'string', enum: ['x', 'y'] },
+          list: { type: 'array', items: { type: 'string', enum: ['a', 'b'] } },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          sibling: { type: 'string', enum: ['x'] },
+          list: { type: 'array', items: { type: 'string', enum: ['a', 'b'] } },
+        },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { sibling: 'y', list: ['a', 'legacy', null] }),
+        // The sibling's removed value falls back to the only allowed enum value; the untouched list is kept whole
+      ).toEqual({ sibling: 'x', list: ['a', 'legacy', null] });
+    });
     it('keeps items that remain valid in the new items enum', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',

@@ -103,7 +103,14 @@ export default function sanitizeDataForNewSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}): T {
+>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  newSchema?: S,
+  oldSchema?: S,
+  data: any = {},
+  isNewArrayProperty = false,
+): T {
   // By default, we will clear the form data
   let newFormData;
   const newProperties = newSchema?.[PROPERTIES_KEY];
@@ -162,6 +169,7 @@ export default function sanitizeDataForNewSchema<
             newKeyedSchema,
             isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
             formValue,
+            isNewProperty && newSchemaTypeForKey === 'array',
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -259,11 +267,19 @@ export default function sanitizeDataForNewSchema<
             return newValue;
           }, []);
         } else {
-          // Filter out items that are no longer valid in the new items schema (e.g., enum values that changed)
+          // Filter out items that are no longer valid in the new items schema (e.g., enum values that changed).
+          // The filter is skipped when the raw items schema did not change (e.g., only a sibling schema changed):
+          // values entered while the schema offered them are kept rather than silently dropped by an unrelated
+          // sanitize pass (#5451). Two cases still filter against an unchanged items schema: a select over
+          // object/array constants, which holds each item as a whole (see `isWholeValueSelect()`), and a property
+          // the new schema just introduced, whose old items schema is only a stand-in for a constraint that did
+          // not previously exist
           const newItemEnumValues = enumValuesForSchema(newSchemaItems as S);
-          const filteredData = newItemEnumValues
-            ? data.filter((item: any) => newItemEnumValues.some((v: any) => deepEquals(v, item)))
-            : data;
+          const filteredData =
+            newItemEnumValues &&
+            !(sameItemsSchema && !isWholeValueSelect<S>(newSchemaItems as S) && !isNewArrayProperty)
+              ? data.filter((item: any) => newItemEnumValues.some((v: any) => deepEquals(v, item)))
+              : data;
           // `maxItems` of 0 allows no item at all, which is how the per-element path above reads it too
           newFormData =
             maxItems >= 0 && filteredData.length > maxItems ? filteredData.slice(0, maxItems) : filteredData;
