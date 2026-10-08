@@ -138,18 +138,19 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
   if (typeof result[REF_KEY] === 'string') {
     result = { ...result, [REF_KEY]: resolveUri(currentURI, result[REF_KEY]) };
   }
-  // Look for references in nested subschemas
+  // Look for references in nested subschemas (data keywords like `const` or `default` hold values, not schemas)
   for (const [key, subSchema] of Object.entries(result)) {
-    if (DATA_KEYWORDS.has(key)) {
-      continue;
-    }
-    if (Array.isArray(subSchema)) {
-      result = {
-        ...result,
-        [key]: subSchema.map((item: unknown) => (isObject(item) ? makeAllReferencesAbsolute(item, currentURI) : item)),
-      };
-    } else if (isObject(subSchema)) {
-      result = { ...result, [key]: makeAllReferencesAbsolute(subSchema, currentURI) };
+    if (!DATA_KEYWORDS.has(key)) {
+      if (Array.isArray(subSchema)) {
+        result = {
+          ...result,
+          [key]: subSchema.map((item: unknown) =>
+            isObject(item) ? makeAllReferencesAbsolute(item, currentURI) : item,
+          ),
+        };
+      } else if (isObject(subSchema)) {
+        result = { ...result, [key]: makeAllReferencesAbsolute(subSchema, currentURI) };
+      }
     }
   }
   return result;
