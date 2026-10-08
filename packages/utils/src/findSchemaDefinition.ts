@@ -113,20 +113,36 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
   return undefined;
 }
 
+/** Keywords whose values are instance data, not schemas: a `$ref` or `$id` found inside one is data
+ * (`{ const: { $ref: '#/a' } }` matches an instance carrying that literal key), never a reference to
+ * resolve, so the walk leaves these subtrees untouched.
+ */
+const DATA_KEYWORDS = new Set(['const', 'default', 'enum', 'examples']);
+
 /** Parses a JSONSchema and makes all references absolute with respect to
  * the `baseURI` argument
+ *
+ * The walk is keyword-aware: only a string `$ref` is a reference to resolve, only a string `$id`
+ * re-bases the subtree, and data keywords (`const`, `default`, `enum`, `examples`) are not walked.
+ * A schema map or data value that merely has a property named `$ref` or `$id` therefore passes
+ * through unchanged instead of crashing the resolution or being silently rewritten (#5457).
+ *
  * @param schema - The schema to be processed
  * @param baseURI - The base URI to be used for resolving relative references
  */
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
-  const currentURI = schema[ID_KEY] ?? baseURI;
+  const schemaId = schema[ID_KEY];
+  const currentURI = typeof schemaId === 'string' ? schemaId : baseURI;
   let result = schema;
   // Make all other references absolute
-  if (REF_KEY in result) {
-    result = { ...result, [REF_KEY]: resolveUri(currentURI, result[REF_KEY]!) };
+  if (typeof result[REF_KEY] === 'string') {
+    result = { ...result, [REF_KEY]: resolveUri(currentURI, result[REF_KEY]) };
   }
   // Look for references in nested subschemas
   for (const [key, subSchema] of Object.entries(result)) {
+    if (DATA_KEYWORDS.has(key)) {
+      continue;
+    }
     if (Array.isArray(subSchema)) {
       result = {
         ...result,

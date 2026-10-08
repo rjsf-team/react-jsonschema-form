@@ -664,4 +664,49 @@ describe('makeAllReferencesAbsolute()', () => {
       },
     });
   });
+  it('leaves a property named $ref intact when the schema has no root $id', () => {
+    const schemaWithRefProperty = { properties: { $ref: { type: 'string' } } } as unknown as RJSFSchema;
+    expect(makeAllReferencesAbsolute(schemaWithRefProperty, '#').properties!.$ref).toStrictEqual({
+      type: 'string',
+    });
+  });
+  it('leaves a property named $ref intact when the root $id is absolute', () => {
+    const schemaWithRefProperty = {
+      $id: 'https://example.com/root.json',
+      properties: { $ref: { type: 'string' } },
+    } as unknown as RJSFSchema;
+    expect(
+      makeAllReferencesAbsolute(schemaWithRefProperty, schemaWithRefProperty[ID_KEY]!).properties!.$ref,
+    ).toStrictEqual({ type: 'string' });
+  });
+  it('does not re-base siblings on a property named $id', () => {
+    const schemaWithIdProperty = {
+      $id: 'https://example.com/root.json',
+      properties: { $id: { type: 'string' }, other: { $ref: '#/$defs/x' } },
+      $defs: { x: { type: 'string' } },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(schemaWithIdProperty, schemaWithIdProperty[ID_KEY]!);
+    expect(resolved.properties!.$id).toStrictEqual({ type: 'string' });
+    expect(resolved.properties!.other).toStrictEqual({ $ref: 'https://example.com/root.json#/$defs/x' });
+  });
+  it('does not rewrite $ref-looking strings inside const, default, enum or examples', () => {
+    const schemaWithDataKeywords = {
+      $id: 'https://example.com/root.json',
+      properties: {
+        link: {
+          const: { $ref: '#/a' },
+          default: { $ref: '#/a' },
+          enum: [{ $ref: '#/a' }],
+          examples: [{ $ref: '#/a' }],
+        },
+      },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(schemaWithDataKeywords, schemaWithDataKeywords[ID_KEY]!);
+    expect(resolved.properties!.link).toStrictEqual({
+      const: { $ref: '#/a' },
+      default: { $ref: '#/a' },
+      enum: [{ $ref: '#/a' }],
+      examples: [{ $ref: '#/a' }],
+    });
+  });
 });
