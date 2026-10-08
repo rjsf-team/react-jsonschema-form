@@ -12,13 +12,20 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
-import { act, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import MarkdownTemplate from '../src/markdown.tsx';
-import { createFormComponent, createFormRef, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  createParentLog,
+  expectToHaveBeenCalledWithFormData,
+  submitForm,
+  TransformingParent,
+} from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
 
 const user = userEvent.setup();
@@ -1146,6 +1153,107 @@ describe('ObjectField', () => {
       await user.tab();
 
       expectToHaveBeenCalledWithFormData(onChange, { abc: 'typed', newKey: undefined }, 'root');
+    });
+
+    it('should keep the value the form mounted with when a property is renamed onto a defaulted schema', async () => {
+      // The property was never added here, so there is no seed of the form's to replace: its `0` merely equals what
+      // the schema describing its old name would seed, as any `0`, `false`, `{}` or defaulted value does
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'number' },
+          patternProperties: { '^pct_': { type: 'number', default: 50 } },
+        },
+        formData: { score: 0 },
+      });
+
+      const keyInput = node.querySelector('#root_score-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'pct_score');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { pct_score: 0, score: undefined }, 'root');
+    });
+
+    it('should keep a value the user typed over the seed when the key is renamed', async () => {
+      // The value equals the seed again, having been typed back to it, but the property's history says it was changed
+      // after it was added, which is what leaves the value the user's rather than the form's
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'number' },
+          patternProperties: { '^s_': { type: 'string' } },
+        },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      const valueInput = node.querySelector('#root_newKey')!;
+      await user.clear(valueInput);
+      await user.type(valueInput, '7');
+      await user.clear(valueInput);
+      await user.type(valueInput, '0');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 's_x');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { s_x: 0, newKey: undefined }, 'root');
+    });
+
+    it('should keep a value a controlled parent wrote over the seed when the key is renamed', async () => {
+      // The add button's seed is a proposal, so the value the property holds is the parent's answer to it rather than
+      // the seed itself: a parent that rewrites or declines what the button proposed leaves a value of its own under
+      // that name, which is no more the form's to replace on a rename than one the user typed
+      const log = createParentLog<GenericObjectType>();
+      const { container } = render(
+        <TransformingParent<GenericObjectType>
+          schema={{
+            type: 'object',
+            additionalProperties: { type: 'string' },
+            patternProperties: { '^num': { type: 'number' } },
+          }}
+          initialValue={{}}
+          log={log}
+          transform={(proposal) =>
+            proposal && 'newKey' in proposal ? { ...proposal, newKey: 'the parent wrote this' } : proposal
+          }
+        />,
+      );
+
+      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
+      expect(log.value).toEqual({ newKey: 'the parent wrote this' });
+
+      const keyInput = container.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'num1');
+      await user.tab();
+
+      expect(log.value).toEqual({ num1: 'the parent wrote this' });
+    });
+
+    it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
+      // The field the declared name brings up reads `uiSchema.count`, so seeding through `uiSchema.additionalProperties`
+      // would hand that number field the `ui:initialValue` written for the string the other keys hold
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          additionalProperties: { type: 'string' },
+        },
+        uiSchema: { additionalProperties: { 'ui:initialValue': 'AP' } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'AP' }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'count');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { count: 0, newKey: undefined }, 'root');
+      expect(node.querySelector('#root_count')).toHaveValue('0');
     });
 
     it('should re-seed an untouched new property from the declared schema when it is renamed onto a declared name', async () => {

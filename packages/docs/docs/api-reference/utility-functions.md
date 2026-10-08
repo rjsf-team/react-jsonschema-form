@@ -1956,7 +1956,7 @@ it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, regist
 
 ### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or a `patternProperties` entry.
+Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or an `additionalProperties`, `unevaluatedProperties` or `patternProperties` entry.
 `retrieveSchema()` only resolves the `dependencies`/`if` declared directly on the schema it is given, so a root-level retrieved schema never reflects a conditional branch switch that happens deeper in the tree.
 `Form` uses this to detect when a comparison of root-level retrieved schemas can't be trusted to decide whether sanitization is needed.
 
@@ -2590,10 +2590,11 @@ The types come from [`getSchemaOwnTypes()`](#getschemaowntypes), so a schema tha
 The non-`null` type comes first, as it does for a nullable type: a value of it is one the field can show, where `null` leaves the user nothing to enter.
 
 An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen, each option read by this same function so that an option's own typeless `enum` speaks for it too.
-Options that disagree leave the type to the value, since choosing one is what settles it, and a type of its own would render a field for that type beside the options.
+Options that disagree, or that name no type between them, say nothing here: choosing one is what would settle it, and a type one of them names alone would render a field for that type beside the options.
 
 A schema that says nothing about the type itself is read through the subschemas merged into it — the `allOf` entries it is composed of and the `$ref` it is spelled as, given a `rootSchema` to look the definition up in — since composition is how a schema usually names the object or the enum it is.
-The first of them to name a type answers, the merge holding the value to every entry at once.
+The options are no exception: one of them naming a type is the option's answer, where a merged subschema's is the whole schema's, so a subschema whose options say nothing is still read through the `allOf` and the `$ref` beside them.
+The first of those to name a type answers, the merge holding the value to every entry at once.
 They are looked up rather than the schema resolved: the type is all that is wanted here, where resolving every option of every additional property would cost each render the merges `MultiSchemaField` already pays for the one option on screen.
 A reference followed once on a walk is not followed again, since a recursive option refers back to itself without end, and one naming no definition says nothing, as the option holding it does until it is resolved.
 
