@@ -1,5 +1,5 @@
 import mergeObjects from './mergeObjects.ts';
-import { toPath } from './pathUtils.ts';
+import { propertyToPath } from './pathUtils.ts';
 import toErrorList from './toErrorList.ts';
 import type { ErrorSchema, RJSFValidationError, ValidationData } from './types.ts';
 
@@ -12,7 +12,7 @@ import type { ErrorSchema, RJSFValidationError, ValidationData } from './types.t
  * @returns - The key made of the error's path and message
  */
 function errorKey({ property, message }: RJSFValidationError): string {
-  return JSON.stringify([property ? toPath(property) : [], message]);
+  return JSON.stringify([propertyToPath(property), message]);
 }
 
 /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the
@@ -35,16 +35,16 @@ export default function validationDataMerge<T = unknown>(
   if (!additionalErrorSchema) {
     return validationData;
   }
-  const { errors: oldErrors, errorSchema: oldErrorSchema } = validationData;
+  const { errors: oldErrors = [], errorSchema: oldErrorSchema = {} } = validationData as Partial<ValidationData<T>>;
   let errors = toErrorList(additionalErrorSchema);
   let errorSchema = additionalErrorSchema;
-  if ((oldErrorSchema && Object.keys(oldErrorSchema).length > 0) || oldErrors.length > 0) {
+  if (Object.keys(oldErrorSchema).length > 0 || oldErrors.length > 0) {
     errorSchema = mergeObjects(
       oldErrorSchema,
       additionalErrorSchema,
       preventDuplicates ? 'preventDuplicates' : true,
     ) as ErrorSchema<T>;
-    if (preventDuplicates) {
+    if (preventDuplicates && errors.length > 0) {
       const known = new Set(oldErrors.map(errorKey));
       errors = errors.filter((error) => !known.has(errorKey(error)));
     }

@@ -46,6 +46,31 @@ describe('validationDataMerge()', () => {
     expect(result.errorSchema).toEqual(errorSchema);
     expect(result.errors).toEqual([...oldErrors, { property: '.', message: 'custom error', stack: '. custom error' }]);
   });
+  describe('does not throw when the validationData lacks its errors or errorSchema', () => {
+    const additional: ErrorSchema<any> = { foo: { __errors: ['bar'] } };
+    const expected = { errorSchema: additional, errors: [{ property: '.foo', message: 'bar', stack: '.foo bar' }] };
+
+    it.each([true, false])('with no errors, preventDuplicates %s', (preventDuplicates) => {
+      const validationData = { errorSchema: {} } as ValidationData<any>;
+      expect(validationDataMerge(validationData, additional, preventDuplicates)).toEqual(expected);
+    });
+    it.each([true, false])('with no errorSchema, preventDuplicates %s', (preventDuplicates) => {
+      const validationData = { errors: [] } as unknown as ValidationData<any>;
+      expect(validationDataMerge(validationData, additional, preventDuplicates)).toEqual(expected);
+    });
+    it.each([true, false])('with neither, preventDuplicates %s', (preventDuplicates) => {
+      const validationData = {} as ValidationData<any>;
+      expect(validationDataMerge(validationData, additional, preventDuplicates)).toEqual(expected);
+    });
+    it('keeps the existing errors when only the errors are given', () => {
+      const old = { property: '.a', message: 'old', stack: '.a old' };
+      const validationData = { errors: [old] } as unknown as ValidationData<any>;
+      expect(validationDataMerge(validationData, additional, true)).toEqual({
+        errorSchema: additional,
+        errors: [old, ...expected.errors],
+      });
+    });
+  });
   it('Returns merged data when additionalErrorSchema is passed, prevent duplicates', () => {
     const oldError = 'ajv error';
     const validationData: ValidationData<any> = {

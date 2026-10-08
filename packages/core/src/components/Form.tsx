@@ -26,6 +26,7 @@ import type {
 } from '@rjsf/utils';
 import {
   getByPath,
+  propertyToPath,
   setByPath,
   toPath,
   unsetByPath,
@@ -636,11 +637,6 @@ function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
-/** The path an `RJSFValidationError` addresses, the same way `toErrorSchema()` splits it */
-function errorPath(error: RJSFValidationError): string[] {
-  return error.property ? toPath(error.property) : [];
-}
-
 /** Counts the messages of `errorSchema` into `counts`, keyed by the property each sits at, or by the message alone when
  * `pooled`: after an array-valued raise, such as an `ArrayField` reorder, remove or copy, an item's errors may sit at
  * an index other than the one they came from, so only the message still says which is which
@@ -694,7 +690,7 @@ function replaceErrorsAt<T>(errors: RJSFValidationError[], path: FieldPathList, 
   const kept: RJSFValidationError[] = [];
   let insertAt = -1;
   for (const error of errors) {
-    const pathOfError = errorPath(error);
+    const pathOfError = propertyToPath(error.property);
     if (!isPathPrefix(path, pathOfError)) {
       kept.push(error);
     } else {
@@ -702,7 +698,7 @@ function replaceErrorsAt<T>(errors: RJSFValidationError[], path: FieldPathList, 
         insertAt = kept.length;
       }
       const found = incoming.findIndex(
-        (entry) => entry.message === error.message && String(errorPath(entry)) === String(pathOfError),
+        (entry) => entry.message === error.message && String(propertyToPath(entry.property)) === String(pathOfError),
       );
       if (found !== -1) {
         incoming.splice(found, 1);
@@ -920,7 +916,7 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
     // The list is what the `ErrorList` and the `onChange` payload carry, so it drops the same errors: the changed
     // field's own and those below it, and the own errors of every container holding it
     schemaValidationErrors = validation.errors.filter((error) => {
-      const pathOfError = errorPath(error);
+      const pathOfError = propertyToPath(error.property);
       return (
         pathOfError.length === 0 ||
         !changedPaths.some(

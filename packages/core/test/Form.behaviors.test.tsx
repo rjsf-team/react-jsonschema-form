@@ -727,17 +727,26 @@ describe('Error state consistency when deriving from new props', () => {
       street: { type: 'string', minLength: 3 },
       server: 'server',
       expected: ['.addr.street must NOT have fewer than 3 characters'],
+      listed: ['.addr.street must NOT have fewer than 3 characters', '.addr.street server'],
     },
     {
       name: 'the message the validator reports',
       street: { type: 'string', minLength: 3 },
       server: 'must NOT have fewer than 3 characters',
       expected: ['.addr.street must NOT have fewer than 3 characters'],
+      // The same message at the same path is listed once, not twice
+      listed: ['.addr.street must NOT have fewer than 3 characters'],
     },
-    { name: 'the only error on the path', street: { type: 'string' }, server: 'server', expected: [] },
-  ] satisfies { name: string; street: RJSFSchema; server: string; expected: string[] }[])(
+    {
+      name: 'the only error on the path',
+      street: { type: 'string' },
+      server: 'server',
+      expected: [],
+      listed: ['.addr.street server'],
+    },
+  ] satisfies { name: string; street: RJSFSchema; server: string; expected: string[]; listed: string[] }[])(
     'lets the parent clear the extraErrors an optional object Remove sent back, with $name',
-    async ({ street, server, expected }) => {
+    async ({ street, server, expected, listed }) => {
       const addrSchema: RJSFSchema = {
         type: 'object',
         properties: { addr: { type: 'object', properties: { street } } },
@@ -760,9 +769,7 @@ describe('Error state consistency when deriving from new props', () => {
       const { container, rerender } = render(<Parent extraErrors={addrServerErrors} />);
 
       await submitForm(container.querySelector('form')!, user);
-      // A server message the validator reports at the same path is listed once, not twice
-      const serverListed = (expected as string[]).includes(`.addr.street ${server}`) ? [] : [`.addr.street ${server}`];
-      expect(errorListMessages(container)).toEqual([...expected, ...serverListed]);
+      expect(errorListMessages(container)).toEqual(listed);
 
       // Remove hands back the displayed `errorSchema`, `server` included, which must not outlive the prop supplying it
       await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
@@ -828,8 +835,8 @@ describe('Error state consistency when deriving from new props', () => {
     act(() => rootField().onChange('a', streetPath, street));
 
     expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
-    // Listed twice, the raise's copy and the validator's own: what the form does today, not a guarantee
-    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`, `.addr.street ${minLengthError}`]);
+    // The raise's copy and the validator's own are one error at one path, so it is listed once
+    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`]);
 
     // An empty raise at `street` must unset its node rather than leave `{ addr: { street: {} } }`, which the empty
     // raise at `addr` would read as the validator's error still being there

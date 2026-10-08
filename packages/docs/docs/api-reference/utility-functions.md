@@ -1835,6 +1835,27 @@ Parses the `dateString` into a `DateObject`, including the time information when
 
 - Error when the date cannot be parsed from the string
 
+### propertyToPath()
+
+Converts the `property` of a validation error into its list of path segments, the way `toErrorSchema()` keys the errors it builds.
+It is [toPath()](#topath) for a `property` that may be missing: a missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path.
+
+#### Parameters
+
+- [property]: string | undefined - The `property` of an `RJSFValidationError`, such as `'.level1.level2[2].level3'`
+
+#### Returns
+
+- string[]: The list of path segments, such as `['level1', 'level2', '2', 'level3']`
+
+#### Example
+
+```typescript
+propertyToPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
+propertyToPath(undefined); // []
+propertyToPath('.'); // []
+```
+
 ### rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.

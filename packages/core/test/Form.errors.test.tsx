@@ -12,7 +12,6 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import type Form from '../src/index.ts';
 import {
   AcceptingParent,
   describeRepeated,
@@ -1361,15 +1360,18 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       };
       const extraErrors: ErrorSchema = { addr: { street: { __errors: [message] } } };
 
-      it('lists the message once in the top ErrorList and on the field after submit', async () => {
-        const { node } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings: false });
+      it.each([undefined, true])(
+        'lists the message once in the top ErrorList and on the field after submit, with extraErrorsAreWarnings %s',
+        async (extraErrorsAreWarnings) => {
+          const { node } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings });
 
-        await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
-        await submitForm(node, user);
+          await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
+          await submitForm(node, user);
 
-        expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
-        expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
-      });
+          expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
+          expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+        },
+      );
     });
   });
 });
