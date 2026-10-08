@@ -28,7 +28,7 @@ interface FancyMultiSelectProps {
   onValueChange?: (value: number[]) => void;
   /** Whether the component should autofocus */
   autoFocus?: boolean;
-  /** Accessible name given to the search input, for a select that no label points at */
+  /** Accessible name given to the search input, as the `Command`'s label, for a select that no label points at */
   ariaLabel?: string;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
@@ -176,6 +176,8 @@ export function FancyMultiSelect({
 
   return (
     <Command
+      // cmdk names the search input by this label, through an `aria-labelledby` it sets over any passed to the input
+      label={ariaLabel}
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
       autoFocus={autoFocus}
@@ -224,9 +226,7 @@ export function FancyMultiSelect({
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
             disabled={disabled}
             aria-controls={`command-item-input-${id}`}
-            // A reference outranks an `aria-label`, so it is dropped when one is given
-            aria-labelledby={ariaLabel ? undefined : `command-item-input-${id}`}
-            aria-label={ariaLabel}
+            aria-labelledby={`command-item-input-${id}`}
             aria-describedby={ariaDescribedby}
             id={`command-item-input-${id}`}
           />

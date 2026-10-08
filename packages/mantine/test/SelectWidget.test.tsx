@@ -200,3 +200,36 @@ describe('mantine SelectWidget focus and blur', () => {
     },
   );
 });
+
+describe('mantine SelectWidget rendered by a caller that names and describes it', () => {
+  const enumOptions = [
+    { label: 'Foo', value: 'foo', schema: { const: 'foo', description: 'The first one' } },
+    { label: 'Bar', value: 'bar' },
+  ];
+
+  test('names its input by the aria-label it is passed', () => {
+    renderWidget({ options: { enumOptions }, label: '', 'aria-label': 'When, year' });
+
+    expect(screen.getByRole('combobox', { name: 'When, year' })).toBeInTheDocument();
+  });
+
+  test('describes its input by the ids it is passed, rather than by the ones built from its own id', () => {
+    renderWidget({ options: { enumOptions }, 'aria-describedby': 'root_when__error root_when__help' });
+
+    expect(screen.getByRole('combobox')).toHaveAttribute(
+      'aria-describedby',
+      'root_when__error root_when__help root__description',
+    );
+  });
+
+  test('still describes its input by the description of the option it has selected', () => {
+    render(
+      <MantineProvider>
+        <p id='field-help'>Pick one.</p>
+        <SelectWidget {...makeProps({ options: { enumOptions }, value: 'foo', 'aria-describedby': 'field-help' })} />
+      </MantineProvider>,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick one. The first one');
+  });
+});

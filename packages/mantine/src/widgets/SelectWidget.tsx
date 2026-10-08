@@ -87,9 +87,11 @@ export default function SelectWidget<
     );
   }, [enumDisabled, enumOptions, optgroups, domValues]);
 
-  const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options);
-  // Mantine describes the input through its `InputWrapper` context, so only what a caller passes overrides it
-  const { 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy } = widgetAriaProps(props, '');
+  // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop
+  const { 'aria-label': ariaLabel, 'aria-describedby': describedBy } = widgetAriaProps(props);
+  const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options, {
+    describedBy,
+  });
 
   const sharedProps = {
     id,
@@ -111,7 +113,6 @@ export default function SelectWidget<
     ...ariaDescribedByProps,
     ...getDescriptionProps(props),
     ...(ariaLabel && { 'aria-label': ariaLabel }),
-    ...(callerDescribedBy && { 'aria-describedby': callerDescribedBy }),
   };
 
   return (

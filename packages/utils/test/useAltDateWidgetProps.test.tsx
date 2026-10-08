@@ -463,6 +463,26 @@ describe('useAltDateWidgetProps()', () => {
       expect(select).toHaveAttribute('aria-describedby', ariaDescribedByIds(TIME_PROPS.id));
     });
 
+    test('names an element by the translated name its caller already has, without translating it again', () => {
+      const translateString = vi.fn(englishStringTranslator);
+      render(
+        <DateElement
+          rootId='root'
+          label='When'
+          elementLabel='Année'
+          type='year'
+          range={[2020, 2024]}
+          value={-1}
+          select={vi.fn()}
+          registry={{ ...REGISTRY, translateString }}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+        />,
+      );
+      expect(screen.getByRole('combobox', { name: 'When, Année' })).toHaveDisplayValue('Année');
+      expect(translateString).toHaveBeenCalledTimes(1);
+    });
+
     test('translates the name and the placeholder of each element', () => {
       const translateString = vi.fn((key: string, params?: string[]) =>
         params ? `${params[1]} / ${params[0]}` : `[${key}]`,

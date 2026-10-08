@@ -156,3 +156,53 @@ describe('SelectWidget focus and blur', () => {
     },
   );
 });
+
+describe('SelectWidget named and described by its caller', () => {
+  const schema: RJSFSchema = { type: 'string', title: 'When', format: 'date' };
+  const uiSchema: UiSchema = { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } };
+
+  it('names the combobox alone, leaving the aria-label off the field root around it', () => {
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(Array.from(container.querySelectorAll('[aria-label="When, year"]'))).toEqual([
+      screen.getByRole('combobox', { name: 'When, year' }),
+    ]);
+  });
+
+  it('describes the combobox alone, leaving the aria-describedby off the field root around it', () => {
+    const { container } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(container.querySelector('.MuiTextField-root[aria-describedby]')).not.toBeInTheDocument();
+  });
+});
+
+describe('SelectWidget with an htmlInput given through rjsfSlotProps', () => {
+  const schema: RJSFSchema = { type: 'string', enum: ['red', 'blue'] };
+
+  it('keeps the aria-label the form author gave the combobox', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': { mui: { rjsfSlotProps: { htmlInput: { 'aria-label': 'Pick a color' } } } },
+    };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('combobox', { name: 'Pick a color' })).toBeInTheDocument();
+  });
+
+  it('keeps the aria-describedby the form author gave the combobox', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': { mui: { rjsfSlotProps: { htmlInput: { 'aria-describedby': 'my-hint' } } } },
+    };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-describedby', 'my-hint');
+  });
+
+  it('keeps an aria-label returned by the callback form', () => {
+    const uiSchema: UiSchema = {
+      'ui:options': { mui: { rjsfSlotProps: { htmlInput: () => ({ 'aria-label': 'Pick a color' }) } } },
+    };
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole('combobox', { name: 'Pick a color' })).toBeInTheDocument();
+  });
+});

@@ -40,31 +40,35 @@ export default function AltDateWidget<
   return (
     <div className='space-y-3' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
       <div className='grid grid-cols-3 gap-2'>
-        {elements.map((elemProps, i) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <div key={i} className='form-control'>
-            {/* The part's name as the user sees it. The select's `aria-label`, which `DateElement` builds from the
+        {elements.map((elemProps, i) => {
+          const elementLabel = dateElementLabel(elemProps.type, translateString);
+          return (
+            // oxlint-disable-next-line react/no-array-index-key
+            <div key={i} className='form-control'>
+              {/* The part's name as the user sees it. The select's `aria-label`, which `DateElement` builds from the
                 field's label and this same translated name, outranks this association as its accessible name */}
-            <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
-              <span className='label-text capitalize'>{dateElementLabel(elemProps.type, translateString)}</span>
-            </label>
-            <DateElement
-              rootId={id}
-              label={label}
-              className='select select-bordered select-sm'
-              select={handleChange}
-              type={elemProps.type}
-              range={elemProps.range}
-              value={elemProps.value}
-              disabled={disabled}
-              readonly={readonly}
-              registry={registry}
-              onBlur={onBlur}
-              onFocus={onFocus}
-              autofocus={autofocus && i === 0}
-            />
-          </div>
-        ))}
+              <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
+                <span className='label-text capitalize'>{elementLabel}</span>
+              </label>
+              <DateElement
+                rootId={id}
+                label={label}
+                elementLabel={elementLabel}
+                className='select select-bordered select-sm'
+                select={handleChange}
+                type={elemProps.type}
+                range={elemProps.range}
+                value={elemProps.value}
+                disabled={disabled}
+                readonly={readonly}
+                registry={registry}
+                onBlur={onBlur}
+                onFocus={onFocus}
+                autofocus={autofocus && i === 0}
+              />
+            </div>
+          );
+        })}
       </div>
       <div className='flex justify-start space-x-2'>
         {(options.hideNowButton !== undefined ? !options.hideNowButton : true) && (

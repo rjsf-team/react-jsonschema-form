@@ -85,6 +85,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
 - [label]: string - Optional label of the field, which leads the element's accessible name, as built by [dateElementAriaLabel()](#dateelementarialabel)
+- [elementLabel]: string - Optional translated name of the element, for a caller that already translated it to display it; defaults to [dateElementLabel()](#dateelementlabel)
 
 ### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -2410,14 +2411,15 @@ If no `additionalErrorSchema` is passed, then `validationData` is returned.
 
 ### widgetAriaProps()
 
-Return the `aria-label` and `aria-describedby` a widget gives the element a screen reader focuses, preferring what its caller passed over the widget's own default.
-A widget rendered inside another one, such as each select of an `AltDateWidget`, has no label of its own and an id that no description, help or error element is rendered for, so only its caller can name it and link it to its field.
-Every theme's `SelectWidget` spreads the result on its control, and a replacement `SelectWidget` should do the same.
+Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses.
+A select rendered inside another widget, such as each select of an `AltDateWidget`, has no label of its own and an id that no help or error element is rendered for, so only its caller can name it and link it to its field.
+The ids the caller passed are followed by `descriptionId(props.id)`, the one element the select renders itself, for the description of the option it has selected, so that description is still announced.
+Without ids from the caller, the result is `ariaDescribedByIds(props.id)`.
+Every theme's `SelectWidget` gives the result to its control, and a replacement `SelectWidget` should do the same; no other widget is required to.
 
 #### Parameters
 
 - props: WidgetAriaPropsInput - The widget's props, of which only `id`, `aria-label` and `aria-describedby` are read
-- [describedBy=ariaDescribedByIds(props.id)]: string - The `aria-describedby` to use when the caller passed none, for a widget that builds its own
 
 #### Returns
 
@@ -2428,7 +2430,7 @@ Every theme's `SelectWidget` spreads the result on its control, and a replacemen
 ```typescript
 widgetAriaProps({ id: 'root' }); // { 'aria-label': undefined, 'aria-describedby': 'root__error root__description root__help' }
 widgetAriaProps({ id: 'root_when_year', 'aria-label': 'When, year', 'aria-describedby': 'root_when__error' });
-// { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error' }
+// { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error root_when_year__description' }
 ```
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
