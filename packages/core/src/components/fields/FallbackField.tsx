@@ -44,18 +44,26 @@ function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): J
 }
 
 /**
- * Get the type the selection starts on when the form data gives nothing to match: the type of the field its widget
- * renders, and otherwise the first type the schema lists that can hold a value. Starting on `null` would have
- * `NullField` write a `null` into the form data for a field the user has not touched. A schema that offers nothing but
- * `null` starts there all the same, since it is the only value that schema allows.
+ * Get the type the selection starts on when the form data gives nothing to match: for a schema listing its types, the
+ * type of the field its widget renders, and otherwise the first type the schema offers that can hold a value. Starting
+ * on `null` would have `NullField` write a `null` into the form data for a field the user has not touched. A schema
+ * that offers nothing but `null` starts there all the same, since it is the only value that schema allows.
+ * @param schema - The schema being rendered by the fallback UI.
  * @param types - The types the selection offers.
  * @param [widget] - The `ui:widget` for the field, if any
  */
-function getDefaultType(types: JSONSchema7TypeName[], widget?: unknown): JSONSchema7TypeName {
+function getDefaultType<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  types: JSONSchema7TypeName[],
+  widget?: unknown,
+): JSONSchema7TypeName {
   // The rule every other reader of a type list resolves it by, so the selection starts on the field `SchemaField`
   // renders, and on the type `getDefaultFormState()` fills the value in as: a `textarea` on a
-  // `['null', 'boolean', 'string']` starts on `string` rather than on a checkbox nothing seeded with `false`
-  const type = getFieldTypeForWidget({ type: types }, widget);
+  // `['null', 'boolean', 'string']` starts on `string` rather than on a checkbox nothing seeded with `false`. Only a
+  // schema that lists its types has its widget read, since `getDefaultFormState()` fills nothing in for the widget's
+  // type of one that names no type, which offers every type. The list itself is still resolved, so one whose types
+  // come from an `enum` of `[null, 'a']` starts on `string` rather than on `null`
+  const type = getFieldTypeForWidget({ type: types }, Array.isArray(schema.type) ? widget : undefined);
   return types.find((aType) => aType === type) ?? types[0];
 }
 
@@ -353,10 +361,14 @@ function FallbackUiField<
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
-  const defaultType = useMemo(() => getDefaultType(types, uiOptions.widget), [types, uiOptions.widget]);
+  const defaultType = useMemo(
+    () => getDefaultType<S>(schema, types, uiOptions.widget),
+    [schema, types, uiOptions.widget],
+  );
   // Whether the value field keeps its widget, the field's own or a `ui:globalOptions` one, on a given type. Checked
-  // against the schema with its type pinned, which is all of the value schema `getWidget()` reads
-  const { widget: valueWidget, label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  // against the schema with its type pinned, which is all of the value schema `getWidget()` reads. The spread is what
+  // `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema` a second time
+  const { widget: valueWidget, label }: UIOptionsType<T, S, F> = { ...globalUiOptions, ...uiOptions };
   const keepsWidget = useCallback(
     (aType: JSONSchema7TypeName) =>
       !valueWidget || hasWidget<T, S, F>({ ...schema, type: aType }, valueWidget, widgets),

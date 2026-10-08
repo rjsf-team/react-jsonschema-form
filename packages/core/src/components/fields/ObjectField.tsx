@@ -432,10 +432,11 @@ export default function ObjectField<
         type = getFieldTypeForWidget(apSchema, widget);
         // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
         // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled. The
-        // `ui:enumDisabled` values match strictly, as the widgets match them
+        // `ui:enumDisabled` values match strictly, and one that isn't a list disables nothing, as the widgets read it
         if (isConstantSelect<S>(apSchema)) {
           const enabledOptions = (optionsList<T, S, F>(apSchema, resolvedApUiSchema) ?? []).filter(
-            (option) => !enumDisabled?.some((disabledValue) => disabledValue === option.value),
+            (option) =>
+              !(Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)),
           );
           const zeroValue = getDefaultValue<T, S, F>(translateString, type);
           firstOption = enabledOptions.some((option) => deepEquals(option.value, zeroValue))

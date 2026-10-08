@@ -9,6 +9,7 @@ import type {
   GenericObjectType,
   FormValidation,
   ObjectFieldTemplateProps,
+  UiSchema,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
 import { act, screen } from '@testing-library/react';
@@ -1722,6 +1723,20 @@ describe('ObjectField', () => {
         expectToHaveBeenCalledWithFormData(onChange, { newKey: expected }, 'root');
       },
     );
+
+    // The select widgets read a `ui:enumDisabled` that isn't a list as disabling nothing, so the seed does too
+    it('should add the first option of a select whose ui:enumDisabled is not a list', async () => {
+      const uiSchema: UiSchema = JSON.parse('{ "additionalProperties": { "ui:enumDisabled": "a" } }');
+      const { onChange } = createFormComponent({
+        schema: { ...schema, additionalProperties: { type: 'string', enum: ['a', 'b'] } },
+        uiSchema,
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'a' }, 'root');
+    });
 
     it('should start a new object rather than spread a string held by a type list naming object', async () => {
       const { onChange } = createFormComponent({

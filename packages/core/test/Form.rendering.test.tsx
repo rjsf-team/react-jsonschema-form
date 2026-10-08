@@ -838,6 +838,36 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('#root_val')!.tagName).toBe('TEXTAREA');
     });
 
+    // The defaults resolve a widget only for a schema that lists its types, so one naming no type seeds nothing for the
+    // widget's type, and a `boolean` selection would show an unchecked box holding no value
+    it('starts a schema naming no type on its first type whatever its ui:widget', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', required: ['val'], properties: { val: { title: 'val' } } },
+        uiSchema: { val: { 'ui:widget': 'checkbox' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
+    });
+
+    // The types an `enum` names are offered in the order its values come in, so the first of them can be `null`, which
+    // `NullField` would write into the data of a field nobody has touched
+    it('starts a schema naming no type on the first type its enum offers that can hold a value', () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { enum: [null, 'a', 'b'] } } },
+        uiSchema: { val: { 'ui:field': 'FallbackField' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      for (const [{ formData }] of onChange.mock.calls) {
+        expect(formData).not.toHaveProperty('val');
+      }
+    });
+
     // Only a field's own `ui:widget` picks a type list's field, as the defaults never see `ui:globalOptions`, and the
     // global widget the selected type has none of is dropped from the value field rather than throwing `No widget`
     it('starts a union with no data on its first type whatever widget ui:globalOptions names', () => {
