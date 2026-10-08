@@ -87,7 +87,10 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *         then:
  *         - For each element in the `data` recursively sanitize the data, stopping at `maxItems` if specified
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
- *         any values after `maxItems` if it is set
+ *         any values after `maxItems` if it is set. The filter is skipped when the raw old and new `items` schemas are
+ *         equal and neither side was resolved against the current data into something else (no `if`/`then`,
+ *         `dependencies`, `$ref` or `allOf` rewrote it on the way in), unless the items are a select over object or
+ *         array constants
  *   - If the type of the old and new schema `items` are booleans of the same value, return `data` as is
  * - Otherwise return `undefined`
  *
@@ -103,13 +106,33 @@ export default function sanitizeDataForNewSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}): T {
+  return sanitizeDataForNewSchemaInternal<T, S, F>(context, rootSchema, newSchema, oldSchema, data, false);
+}
+
+/** Internal recursive implementation of `sanitizeDataForNewSchema()`, carrying whether a schema on the path down was
+ * resolved against the current data into a different shape (a nested `if`/`then`, `dependencies`, `$ref` or `allOf`),
+ * in which case an unchanged raw `items` schema does not prove the constraint that applies to the data is stable.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root JSON schema of the entire form
+ * @param [newSchema] - The new schema for which the data is being sanitized
+ * @param [oldSchema] - The old schema from which the data originated
+ * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+ * @param conditionalResolvedUpstream - True when an ancestor schema was resolved against the current data
+ * @returns - The sanitized form data
+ */
+function sanitizeDataForNewSchemaInternal<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
 >(
   context: SchemaContext<S, F>,
   rootSchema: S,
-  newSchema?: S,
-  oldSchema?: S,
-  data: any = {},
-  isNewArrayProperty = false,
+  newSchema: S | undefined,
+  oldSchema: S | undefined,
+  data: any,
+  conditionalResolvedUpstream: boolean,
 ): T {
   // By default, we will clear the form data
   let newFormData;
@@ -163,13 +186,18 @@ export default function sanitizeDataForNewSchema<
           !isWholeValueSelect<S>(newKeyedSchema);
         if (isContainer) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
-          const itemData = sanitizeDataForNewSchema<T, S, F>(
+          const itemData = sanitizeDataForNewSchemaInternal<T, S, F>(
             context,
             rootSchema,
             newKeyedSchema,
-            isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
+            // A property the new schema introduces has no old constraint; the neutral stand-in keeps its data
+            // filtered against the new schema (and its nested properties seen as new) instead of pretending the
+            // new schema was always there
+            isNewProperty && newSchemaTypeForKey === 'array' ? ({ type: 'array', items: {} } as S) : oldKeyedSchema,
             formValue,
-            isNewProperty && newSchemaTypeForKey === 'array',
+            conditionalResolvedUpstream ||
+              !deepEquals(oldKeyedSchema, oldRawKeyedSchema) ||
+              !deepEquals(newKeyedSchema, newRawKeyedSchema),
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -254,12 +282,15 @@ export default function sanitizeDataForNewSchema<
             const newItemSchema = sameItemsSchema
               ? oldItemSchema
               : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
-            const itemValue = sanitizeDataForNewSchema<T, S, F>(
+            const itemValue = sanitizeDataForNewSchemaInternal<T, S, F>(
               context,
               rootSchema,
               newItemSchema,
               oldItemSchema,
               aValue,
+              conditionalResolvedUpstream ||
+                !deepEquals(oldSchemaItems, oldSchemaItemsRaw) ||
+                !deepEquals(newSchemaItems, newSchemaItemsRaw),
             );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
@@ -270,14 +301,21 @@ export default function sanitizeDataForNewSchema<
           // Filter out items that are no longer valid in the new items schema (e.g., enum values that changed).
           // The filter is skipped when the raw items schema did not change (e.g., only a sibling schema changed):
           // values entered while the schema offered them are kept rather than silently dropped by an unrelated
-          // sanitize pass (#5451). Two cases still filter against an unchanged items schema: a select over
-          // object/array constants, which holds each item as a whole (see `isWholeValueSelect()`), and a property
-          // the new schema just introduced, whose old items schema is only a stand-in for a constraint that did
-          // not previously exist
+          // sanitize pass (#5451). That skip only holds when the unchanged raw schema is the whole story: if either
+          // side was resolved against the current data into a different shape (a nested `if`/`then`, `dependencies`,
+          // `$ref` or `allOf` on the way in), the constraint that applies can change with the data, so the filter
+          // still runs (#5250). A select over object/array constants also still filters an unchanged items schema,
+          // since it holds each item as a whole (see `isWholeValueSelect()`)
           const newItemEnumValues = enumValuesForSchema(newSchemaItems as S);
+          const itemsResolvedAsWritten =
+            deepEquals(oldSchemaItems, oldSchemaItemsRaw) && deepEquals(newSchemaItems, newSchemaItemsRaw);
+          const shouldFilter =
+            !sameItemsSchema ||
+            !itemsResolvedAsWritten ||
+            conditionalResolvedUpstream ||
+            isWholeValueSelect<S>(newSchemaItems as S);
           const filteredData =
-            newItemEnumValues &&
-            !(sameItemsSchema && !isWholeValueSelect<S>(newSchemaItems as S) && !isNewArrayProperty)
+            newItemEnumValues && shouldFilter
               ? data.filter((item: any) => newItemEnumValues.some((v: any) => deepEquals(v, item)))
               : data;
           // `maxItems` of 0 allows no item at all, which is how the per-element path above reads it too

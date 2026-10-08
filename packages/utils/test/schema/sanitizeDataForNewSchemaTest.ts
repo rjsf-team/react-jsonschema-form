@@ -878,6 +878,49 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         // The sibling's removed value falls back to the only allowed enum value; the untouched list is kept whole
       ).toEqual({ sibling: 'x', list: ['a', 'legacy', null] });
     });
+    it('still filters items when a nested if/then narrows the items enum for the current data (#5250)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          obj: {
+            type: 'object',
+            properties: {
+              sibling: { type: 'string', enum: ['x', 'y'] },
+              list: { type: 'array', items: { type: 'string', enum: ['a', 'b'] } },
+            },
+            if: { properties: { sibling: { const: 'x' } }, required: ['sibling'] },
+            then: { properties: { list: { items: { enum: ['a'] } } } },
+          },
+        },
+      };
+      testValidator.setReturnValues({ isValid: [true] });
+      // The user picks sibling 'x'; the same schema sanitizes against itself, but the `then` branch now applies
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(schema, schema, { obj: { sibling: 'x', list: ['a', 'b'] } }),
+      ).toEqual({ obj: { sibling: 'x', list: ['a'] } });
+    });
+    it('still filters a nested array inside an array-of-objects property the new schema introduces', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: { other: { type: 'string' } },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          other: { type: 'string' },
+          rows: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: { tags: { type: 'array', items: { type: 'string', enum: ['a', 'b'] } } },
+            },
+          },
+        },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { rows: [{ tags: ['a', 'x'] }] }),
+      ).toEqual({ rows: [{ tags: ['a'] }] });
+    });
     it('keeps items that remain valid in the new items enum', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',
