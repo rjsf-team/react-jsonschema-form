@@ -130,6 +130,19 @@ describe('getWidget()', () => {
     );
   });
 
+  // `SchemaField` renders a select over several types through `StringField`, so a `checkbox` would write a `false` no
+  // option holds, whatever the order the list names its types in
+  it.each<RJSFSchema>([
+    { type: ['string', 'boolean'], enum: ['a', true] },
+    { type: ['boolean', 'string'], enum: [true, 'a'] },
+    { type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] },
+  ])('should fail for a widget of one listed type on a select over several: %j', (union) => {
+    expect(() => getWidget(union, 'checkbox', { CheckboxWidget: TestWidget })).toThrow(
+      `No widget 'checkbox' for type 'string' in schema: ${JSON.stringify(union)}`,
+    );
+    expect(getWidget(union, 'radio', { RadioWidget: TestWidget })).toBe(TestWidget);
+  });
+
   it('should return an array widget for a type list that resolves to array', () => {
     const union: RJSFSchema = { type: ['null', 'array', 'string'], items: { type: 'string' } };
     expect(getWidget(union, 'checkboxes', { CheckboxesWidget: TestWidget })).toBe(TestWidget);
@@ -280,6 +293,34 @@ describe('getWidgetType()', () => {
     ['text', { type: 'foo' } as unknown as RJSFSchema],
     ['text', {}],
   ])('should return undefined when no type the schema allows has the widget %s: %j', (widget, schema) => {
+    expect(getWidgetType(schema, widget)).toBeUndefined();
+  });
+
+  it.each<[string, RJSFSchema, string]>([
+    ['radio', { type: ['string', 'boolean'], enum: ['a', true] }, 'string'],
+    ['SelectWidget', { type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] }, 'string'],
+    ['radio', { type: ['string', 'object'], enum: ['x', { a: 1 }] }, 'string'],
+    ['select', { type: ['null', 'array', 'string'], enum: [null, ['a'], 'x'] }, 'string'],
+    ['hidden', { type: ['null'], enum: [null] }, 'string'],
+    ['checkbox', { type: ['null', 'boolean'], enum: [null, true, false] }, 'boolean'],
+    ['textarea', { type: ['string', 'null'], enum: ['a', null] }, 'string'],
+    ['radio', { type: ['array', 'null'], enum: [[1], null] }, 'array'],
+    ['checkboxes', { type: ['array', 'null'], items: { type: 'string' }, enum: [] }, 'array'],
+    ['textarea', { type: ['string', 'integer'], enum: ['a', 'b'] }, 'string'],
+    ['TextareaWidget', { type: ['number', 'string'], enum: [1, 'a'] }, 'string'],
+  ])('should return the type of the field rendering the select with the widget %s: %j', (widget, schema, expected) => {
+    expect(getWidgetType(schema, widget)).toBe(expected);
+  });
+
+  it.each<[string, RJSFSchema]>([
+    ['checkbox', { type: ['string', 'boolean'], enum: ['a', true] }],
+    ['updown', { type: ['number', 'string'], enum: [1, 'a'] }],
+    ['range', { type: ['integer', 'number'], enum: [1, 2.5] }],
+    ['checkboxes', { type: ['array', 'null'], enum: [[1], null] }],
+    ['textarea', { type: ['object', 'string'], enum: [{ a: 1 }, 'x'] }],
+    ['textarea', { type: ['string', 'object'], enum: ['x', { a: 1 }] }],
+    ['file', { type: ['array', 'string'], enum: [['a'], 'x'] }],
+  ])('should return undefined for a widget the field rendering the select has none of %s: %j', (widget, schema) => {
     expect(getWidgetType(schema, widget)).toBeUndefined();
   });
 
