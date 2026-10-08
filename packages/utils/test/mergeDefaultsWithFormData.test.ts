@@ -169,6 +169,14 @@ describe('mergeDefaultsWithFormData()', () => {
     });
   });
 
+  it('should not merge a scalar default into object formData as index keys', () => {
+    expect(mergeDefaultsWithFormData<any>('x', { b: 2 })).toEqual({ b: 2 });
+  });
+
+  it('should not merge an array default into object formData as index keys', () => {
+    expect(mergeDefaultsWithFormData<any>([1, 2], { b: 2 })).toEqual({ b: 2 });
+  });
+
   describe('test with overrideFormDataWithDefaults set to true', () => {
     it('should return data in formData when no defaults', () => {
       expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, true)).toEqual([2]);
