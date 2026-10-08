@@ -39,11 +39,11 @@ This are the rules which are used when injecting the defaults:
 - When the value is an object in the form data, the defaults are deeply merged into the form data, using the rules defined here for the deep merge.
 - Then the value is an array in the form data, defaults are only injected in existing array items. No new array items will be created, even if the schema has minItems or additional items defined.
 
-A boolean property that is listed in its parent's `required` array and has no `default` of its own is populated with `false`. You can turn this off using the experimental [`requiredBooleanDefault`](../api-reference/form-props.md#requiredbooleandefault) flag, so that the property stays `undefined` until the user answers it.
+A boolean property that is listed in its parent's `required` array and has no `default` of its own is populated with `false`. You can turn this off using the [`requiredBooleanDefault`](../api-reference/form-props.md#requiredbooleandefault) flag, so that the property stays `undefined` until the user answers it.
 
 ### Merging of defaults within the schema
 
-In the schema itself, defaults of parent elements are propagated into children. So when you have a schema which defines a deeply nested object as default, these defaults will be applied to children of the current node. This also merges objects defined at different levels together, with the deeper (descendant) default taking precedence for any overlapping properties by default. You can change this behavior using the experimental [`nestedDefaultsPrecedence`](../api-reference/form-props.md#nesteddefaultsprecedence) flag. If the parent node defines properties which are not defined in the child, they will be merged so that the default for the child will be the merged defaults of parent and child.
+In the schema itself, defaults of parent elements are propagated into children. So when you have a schema which defines a deeply nested object as default, these defaults will be applied to children of the current node. This also merges objects defined at different levels together, with the deeper (descendant) default taking precedence for any overlapping properties by default. You can change this behavior using the [`nestedDefaultsPrecedence`](../api-reference/form-props.md#nesteddefaultsprecedence) flag. If the parent node defines properties which are not defined in the child, they will be merged so that the default for the child will be the merged defaults of parent and child.
 
 For arrays this is not the case. Defining an array, when a parent also defines an array, will be overwritten. This is only true when arrays are used in the same level, for objects within these arrays, they will be deeply merged again.
 
@@ -75,10 +75,39 @@ i.glyphicon {
 }
 ```
 
+## The imperative handle
+
+A `ref` on `Form` exposes its `FormHandle`: `getFormData()`, `submit()`, `reset()`, `setFieldValue()`, `validateForm()`, `validateFormWithFormData()`, `validate()` and `focusOnError()`. Nothing else on the instance is supported. Type the ref as `Form` (TSX types a class element's `ref` by its instance) and narrow to `FormHandle` where you use it.
+
+## Read form data programmatically
+
+`getFormData()` returns the data the form currently renders. Use it with `initialFormData`, where the form owns the data and there is otherwise no way to read it between `onChange` calls:
+
+```tsx
+import { createRef } from 'react';
+import type { FormHandle } from '@rjsf/core';
+import Form from '@rjsf/core';
+import type { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'object', properties: { title: { type: 'string' } } };
+const formRef = createRef<Form>();
+
+function saveDraft() {
+  const form: FormHandle | null = formRef.current;
+  localStorage.setItem('draft', JSON.stringify(form?.getFormData()));
+}
+
+<Form ref={formRef} schema={schema} validator={validator} initialFormData={{ title: 'Untitled' }} />;
+```
+
+It reads committed data, so an edit or `setFieldValue()` in the same tick is visible only after React commits. With a `formData` prop it returns that prop: the form renders nothing else, so a proposal your `onChange` handler declined is never returned.
+
 ## Submit form programmatically
 
 You can use the reference to get your `Form` component and call the `submit` method to submit the form programmatically without a submit button.
 This method will dispatch the `submit` event of the form, and the function, that is passed to `onSubmit` props, will be called.
+It is queued behind any change, `setFieldValue()` or reset still in flight, so `setFieldValue('title', 'Draft'); submit();` submits the new title. `validateForm()` returns its result immediately instead, so it validates the data React has already committed.
 
 ```tsx
 import { createRef } from 'react';
@@ -105,7 +134,7 @@ formRef.current.submit();
 
 ## Update field value in form programmatically
 
-You can use the reference to get your `Form` component and call the `setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void` method to change the value of a field.
+You can use the reference to get your `Form` component and call the `setFieldValue(fieldPath: string | FieldPathList, newValue?: unknown): void` method to change the value of a field.
 This method will dispatch the `onChange` event of the form.
 
 ```tsx

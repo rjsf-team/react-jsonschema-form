@@ -1,18 +1,16 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { buttonId, getTemplate, getUiOptions } from '@rjsf/utils';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import { buttonId, getTemplates, getUiOptions } from '@rjsf/utils';
+import { Col, Container, Row } from 'react-bootstrap';
 
 export default function ArrayFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     disabled,
-    fieldPathId,
+    id,
     uiSchema,
     items,
     optionalDataControl,
@@ -24,16 +22,7 @@ export default function ArrayFieldTemplate<
     title,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
@@ -44,7 +33,7 @@ export default function ArrayFieldTemplate<
       <Row className='p-0 m-0'>
         <Col className='p-0 m-0'>
           <ArrayFieldTitleTemplate
-            fieldPathId={fieldPathId}
+            id={id}
             title={uiOptions.title || title}
             schema={schema}
             uiSchema={uiSchema}
@@ -53,13 +42,13 @@ export default function ArrayFieldTemplate<
             optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
           />
           <ArrayFieldDescriptionTemplate
-            fieldPathId={fieldPathId}
+            id={id}
             description={uiOptions.description || schema.description}
             schema={schema}
             uiSchema={uiSchema}
             registry={registry}
           />
-          <Container fluid key={`array-item-list-${fieldPathId.$id}`} className='p-0 m-0'>
+          <Container fluid key={`array-item-list-${id}`} className='p-0 m-0'>
             {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
             {items}
             {canAdd && (
@@ -68,7 +57,7 @@ export default function ArrayFieldTemplate<
                   <Col xs={9} md={10} lg={11} />
                   <Col xs={3} md={2} lg={1} className='py-4'>
                     <AddButton
-                      id={buttonId(fieldPathId, 'add')}
+                      id={buttonId(id, 'add')}
                       className='rjsf-array-item-add'
                       onClick={onAddClick}
                       disabled={disabled || readonly}

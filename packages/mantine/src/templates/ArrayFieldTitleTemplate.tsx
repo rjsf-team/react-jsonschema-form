@@ -3,16 +3,16 @@ import type { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchem
 import { getUiOptions, titleId } from '@rjsf/utils';
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
- * the `fieldPathId`.
+ * the `id`.
  *
  * @param props - The `ArrayFieldTitleProps` for the component
  */
 export default function ArrayFieldTitleTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTitleProps<T, S, F>) {
-  const { fieldPathId, title, uiSchema, registry, optionalDataControl } = props;
+  const { id, title, uiSchema, registry, optionalDataControl } = props;
 
   const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { label: displayLabel = true } = options;
@@ -20,7 +20,7 @@ export default function ArrayFieldTitleTemplate<
     return null;
   }
   let heading = title ? (
-    <Title id={titleId(fieldPathId)} order={4} fw='normal'>
+    <Title id={titleId(id)} order={4} fw='normal'>
       {title}
     </Title>
   ) : null;

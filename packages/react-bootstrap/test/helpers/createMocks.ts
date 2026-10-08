@@ -1,4 +1,4 @@
-import { getTestRegistry } from '@rjsf/core';
+import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
 
 import BaseInputTemplate from '../../src/BaseInputTemplate/index.ts';
@@ -14,7 +14,7 @@ const mockSchema: RJSFSchema = {
 const mockEventHandlers = (): void => undefined;
 
 function mockRegistry() {
-  return getTestRegistry({ templates: Templates, rootSchema: mockSchema, widgets: { TextWidget: BaseInputTemplate } });
+  return getTestRegistry(mockSchema, undefined, Templates, { TextWidget: BaseInputTemplate });
 }
 
 export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetProps {

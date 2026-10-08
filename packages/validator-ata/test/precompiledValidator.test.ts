@@ -1,30 +1,32 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
-import { ErrorSchemaBuilder, JUNK_OPTION_ID, RJSF_REF_KEY, hashForSchema, noop, retrieveSchema } from '@rjsf/utils';
+import {
+  ErrorSchemaBuilder,
+  JUNK_OPTION_ID,
+  RJSF_REF_KEY,
+  hashForSchema,
+  mergeSchemas,
+  noop,
+  retrieveSchema,
+} from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import type { Localizer, ValidatorFunctions } from '../src/index.ts';
+import type { Localizer } from '../src/index.ts';
 import ATAPrecompiledValidator from '../src/precompiledValidator.ts';
-import superSchemaObj from './harness/superSchema.json';
+import loadModule from './harness/loadModule.ts';
+import superSchemaObj from './harness/superSchema.json' with { type: 'json' };
 
 const rootSchema = superSchemaObj as unknown as RJSFSchema;
 
-function loadModule(code: string) {
-  const module = { exports: {} as Record<string, any> };
-  // oxlint-disable-next-line no-new-func, no-implied-eval
-  new Function('module', 'exports', code)(module, module.exports);
-  return module.exports;
-}
-
 const PHONE_US = /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/;
 
-const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema)) as ValidatorFunctions;
+const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema));
 const validateOptionsFns = loadModule(
   compileSchemaValidatorsCode(rootSchema, {
     customFormats: { 'phone-us': PHONE_US },
     ataOptionsOverrides: { verbose: true },
   }),
-) as ValidatorFunctions;
+);
 
 describe('ATAPrecompiledValidator', () => {
   let builder: ErrorSchemaBuilder;
@@ -44,7 +46,7 @@ describe('ATAPrecompiledValidator', () => {
         expect(validator.ensureSameRootSchema(rootSchema)).toBe(true);
       });
       it('using resolved rootSchema returns true', () => {
-        const resolvedRootSchema = retrieveSchema(validator, rootSchema, rootSchema);
+        const resolvedRootSchema = retrieveSchema({ validator }, rootSchema, rootSchema);
         expect(validator.ensureSameRootSchema(resolvedRootSchema)).toBe(true);
       });
       it('using a different schema throws', () => {
@@ -74,7 +76,7 @@ describe('ATAPrecompiledValidator', () => {
             },
           ],
           [RJSF_REF_KEY]: '#/definitions/foo',
-        } as RJSFSchema;
+        };
 
         expect(validator.isValid(schema, { name: 'bar' }, rootSchema)).toBe(true);
       });
@@ -90,7 +92,7 @@ describe('ATAPrecompiledValidator', () => {
             },
           ],
           [RJSF_REF_KEY]: '#/definitions/foo',
-        } as RJSFSchema;
+        };
 
         expect(validator.isValid(schema, { name: 12345 }, rootSchema)).toBe(false);
       });
@@ -266,12 +268,17 @@ describe('ATAPrecompiledValidator', () => {
             name: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
-            if (formData.passwords.pass1 !== formData.passwords.pass2) {
-              errors.passwords!.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (
+              formData: { passwords: { pass1?: string; pass2?: string } },
+              errors: FormValidation<{ passwords?: { pass2?: string } }>,
+            ) => {
+              if (formData.passwords.pass1 !== formData.passwords.pass2) {
+                errors.passwords?.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided and passes custom validation', () => {
           beforeAll(() => {
@@ -357,7 +364,7 @@ describe('ATAPrecompiledValidator', () => {
     let localizer: Localizer;
     beforeAll(() => {
       localizer = vi.fn().mockImplementation(noop);
-      validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, localizer);
+      validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, { localizer });
     });
     describe('validating using single custom meta schema', () => {
       let errors: RJSFValidationError[];
@@ -410,8 +417,91 @@ describe('ATAPrecompiledValidator', () => {
   });
   describe('with suppressDuplicateFiltering option', () => {
     it('should store the suppressDuplicateFiltering value on the instance', () => {
-      const validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, undefined, 'all');
+      const validator = new ATAPrecompiledValidator(validateOptionsFns, rootSchema, {
+        suppressDuplicateFiltering: 'all',
+      });
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
+  });
+});
+
+describe('ATAPrecompiledValidator checking a rootSchema it is handed', () => {
+  // Resolving this root schema means evaluating its `if`, so which validator answers decides which branch it resolves to
+  const conditionalSchema: RJSFSchema = {
+    type: 'object',
+    properties: { a: { type: 'string' } },
+    if: { properties: { a: { const: 'yes' } }, required: ['a'] },
+    then: { properties: { b: { type: 'string' } } },
+    else: { properties: { c: { type: 'string' } } },
+  };
+
+  it('resolves it with itself rather than the validator the context names', () => {
+    const validator = new ATAPrecompiledValidator(
+      loadModule(compileSchemaValidatorsCode(conditionalSchema)),
+      conditionalSchema,
+    );
+    const formData = { a: 'yes' };
+    const resolvedRootSchema = retrieveSchema({ validator }, conditionalSchema, conditionalSchema, formData);
+    expect(resolvedRootSchema.properties).toHaveProperty('b');
+
+    // Answering every condition `false` takes the `else` branch instead, so the branch really does decide the result
+    const otherValidator = { isValid: vi.fn(() => false), validateFormData: vi.fn(), rawValidation: vi.fn() };
+    const otherResolved = retrieveSchema({ validator: otherValidator }, conditionalSchema, conditionalSchema, formData);
+    expect(otherResolved.properties).toHaveProperty('c');
+    expect(otherResolved).not.toEqual(resolvedRootSchema);
+    expect(otherValidator.isValid).toHaveBeenCalled();
+    otherValidator.isValid.mockClear();
+
+    // So had the check resolved with the context's validator, it would have rejected a root schema that does match
+    expect(() => validator.isValid(conditionalSchema, formData, resolvedRootSchema)).not.toThrow();
+    expect(otherValidator.isValid).not.toHaveBeenCalled();
+  });
+});
+
+describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
+  const allOfSchema: RJSFSchema = {
+    type: 'object',
+    allOf: [{ properties: { name: { type: 'string' } } }],
+  };
+  // Merges the `allOf` the way the default merge does, plus a title, so the resolved root schema differs from the
+  // default resolution of the same root schema
+  const customMergeAllOf = ({ allOf, ...rest }: RJSFSchema) =>
+    ({ ...(mergeSchemas(rest, allOf![0] as RJSFSchema) as RJSFSchema), title: 'Custom merge' }) as RJSFSchema;
+
+  it('accepts the root schema the form resolved with the customMergeAllOf it was constructed with', () => {
+    const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(allOfSchema)), allOfSchema, {
+      customMergeAllOf,
+    });
+    const formData = { name: 'x' };
+    const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
+    expect(resolvedRootSchema.title).toBe('Custom merge');
+    expect(validator.validateFormData(formData, resolvedRootSchema).errors).toEqual([]);
+  });
+
+  it('accepts that root schema through isValid(), which the schema functions reach while scoring options', () => {
+    const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(allOfSchema)), allOfSchema, {
+      customMergeAllOf,
+    });
+    const formData = { name: 'x' };
+    const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
+    expect(validator.isValid(allOfSchema, formData, resolvedRootSchema)).toBe(true);
+  });
+
+  it('accepts that root schema through rawValidation()', () => {
+    const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(allOfSchema)), allOfSchema, {
+      customMergeAllOf,
+    });
+    const formData = { name: 'x' };
+    const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
+    expect(validator.rawValidation(resolvedRootSchema, formData).errors).toBeUndefined();
+  });
+
+  it('rejects that root schema when constructed without the customMergeAllOf, which resolves it the default way', () => {
+    const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(allOfSchema)), allOfSchema);
+    const formData = { name: 'x' };
+    const resolvedRootSchema = retrieveSchema({ validator, customMergeAllOf }, allOfSchema, allOfSchema, formData);
+    expect(() => validator.rawValidation(resolvedRootSchema, formData)).toThrow(
+      'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+    );
   });
 });

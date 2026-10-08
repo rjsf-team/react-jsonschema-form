@@ -1,3 +1,4 @@
+import { ID_KEY } from './constants.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Hashes a string using the algorithm based on Java's hashing function.
@@ -58,12 +59,25 @@ export function hashObject(object: unknown): string {
 
 /** Stringifies the schema and returns the hash of the resulting string. Sorts schema fields
  * in consistent order before stringify to prevent different hash ids for the same schema.
- * Symbol-keyed properties (RJSF_REF_KEY, RJSF_REF_CYCLE_KEY, ADDITIONAL_PROPERTY_FLAG) are
- * automatically excluded by JSON.stringify, so no special filtering is needed.
+ * The symbol-keyed properties RJSF marks schemas with are automatically excluded by
+ * JSON.stringify, so no special filtering is needed.
  *
  * @param schema - The schema for which the hash is desired
  * @returns - The string obtained from the hash of the stringified schema
  */
 export default function hashForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S) {
   return hashString(sortedJSONStringify(schema));
+}
+
+/** Returns the key a validator caches a schema's compiled validation function under, and the key `schemaParser()` maps
+ * it into the compiled set under: its `$id` when it names something, and the hash of its content otherwise. An empty
+ * `$id` names nothing, so a schema carrying one is keyed by its hash rather than sharing the empty key with every
+ * other such schema. Two schemas sharing a key must validate the same way, so a schema derived from another in a way
+ * that changes its meaning drops or derives the `$id` -- see `withVariantId()`.
+ *
+ * @param schema - The schema for which the validator cache key is desired
+ * @returns - The `$id` of the schema if it has a non-empty one, otherwise the hash of the schema
+ */
+export function schemaKey<S extends StrictRJSFSchema = RJSFSchema>(schema: S): string {
+  return schema[ID_KEY] || hashForSchema<S>(schema);
 }

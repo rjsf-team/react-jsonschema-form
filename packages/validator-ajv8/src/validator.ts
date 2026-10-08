@@ -8,9 +8,8 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix, hashForSchema } from '@rjsf/utils';
-import type { ErrorObject, ValidateFunction } from 'ajv';
-import type Ajv from 'ajv';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import createAjvInstance from './createAjvInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -20,10 +19,9 @@ import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringT
 /** `ValidatorType` implementation that uses the AJV 8 validation mechanism.
  */
 export default class AJV8Validator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The AJV instance to use for all validations
    *
    * @private
@@ -92,19 +90,17 @@ export default class AJV8Validator<
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
-   * @param schema - The schema against which to validate the form data   * @param schema
-   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
     try {
       if (schema[ID_KEY]) {
         compiledValidator = this.ajv.getSchema(schema[ID_KEY]);
       }
-      if (compiledValidator === undefined) {
-        compiledValidator = this.ajv.compile(schema);
-      }
+      compiledValidator ??= this.ajv.compile(schema);
       compiledValidator(formData);
     } catch (err) {
       compilationError = err as Error;
@@ -116,8 +112,15 @@ export default class AJV8Validator<
       // for anonymous schemas AJV uses the object reference as the key.
       // Guard with compiledValidator === undefined so that a runtime error thrown
       // by compiledValidator(formData) does not evict a correctly-compiled schema.
+      // A truthy non-string $id makes AJV throw before it caches anything, and
+      // removeSchema() would throw on it too, so there is nothing to remove.
       if (compiledValidator === undefined) {
-        this.ajv.removeSchema(schema[ID_KEY] !== undefined ? schema[ID_KEY] : (schema as object));
+        const id = schema[ID_KEY];
+        if (typeof id === 'string') {
+          this.ajv.removeSchema(id);
+        } else if (!id) {
+          this.ajv.removeSchema(schema);
+        }
       }
     }
 
@@ -134,13 +137,13 @@ export default class AJV8Validator<
               error.params[key] = `'${error.params[key]}'`;
             }
           });
-          if (error.params?.deps) {
+          if (typeof error.params?.deps === 'string') {
             // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
             // For example, `A, B` is converted into `'A', 'B'`.
             // oxlint-disable-next-line no-param-reassign
             error.params.deps = error.params.deps
               .split(', ')
-              .map((v: string) => `'${v}'`)
+              .map((v) => `'${v}'`)
               .join(', ');
           }
         });
@@ -148,22 +151,23 @@ export default class AJV8Validator<
         // Revert to originals
         (compiledValidator.errors ?? []).forEach((error) => {
           ['missingProperty', 'property'].forEach((key) => {
-            if (error.params?.[key]) {
+            const quoted: unknown = error.params?.[key];
+            if (typeof quoted === 'string') {
               // oxlint-disable-next-line no-param-reassign
-              error.params[key] = error.params[key].slice(1, -1);
+              error.params[key] = quoted.slice(1, -1);
             }
           });
-          if (error.params?.deps) {
+          if (typeof error.params?.deps === 'string') {
             // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
             // oxlint-disable-next-line no-param-reassign
             error.params.deps = error.params.deps
               .split(', ')
-              .map((v: string) => v.slice(1, -1))
+              .map((v) => v.slice(1, -1))
               .join(', ');
           }
         });
       }
-      errors = compiledValidator.errors || undefined;
+      errors = compiledValidator.errors ?? undefined;
 
       // Clear errors to prevent persistent errors, see #1104
       compiledValidator.errors = null;
@@ -185,17 +189,20 @@ export default class AJV8Validator<
    * @param [customValidate] - An optional function that is used to perform custom validation
    * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
    * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     return processRawValidationErrors(
-      this,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -203,6 +210,7 @@ export default class AJV8Validator<
       transformErrors,
       uiSchema,
       this.suppressDuplicateFiltering,
+      getCustomValidateFormData,
     );
   }
 
@@ -216,7 +224,9 @@ export default class AJV8Validator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
+    // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
+    // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
+    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // if schema validator instance doesn't exist, add it.
     // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
@@ -238,7 +248,7 @@ export default class AJV8Validator<
    * @param formData - The form data to validate
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S) {
+  isValid(schema: S, formData: unknown, rootSchema: S) {
     // schemaId and compiled are declared outside the try so the catch block can
     // conditionally remove the broken schema from AJV's registry.
     let schemaId: string | undefined;
@@ -249,23 +259,29 @@ export default class AJV8Validator<
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      schemaId = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
-      let compiledValidator: ValidateFunction | undefined;
-      compiledValidator = this.ajv.getSchema(schemaId);
-      if (compiledValidator === undefined) {
-        // Add schema by an explicit ID so it can be fetched later
-        // Fall back to using compile if necessary
-        // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
-        compiledValidator =
-          this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ||
-          this.ajv.compile(schemaWithIdRefPrefix);
-      }
+      schemaId = schemaKey(schemaWithIdRefPrefix);
+      // Add schema by an explicit ID so it can be fetched later
+      // Fall back to using compile if necessary
+      // https://ajv.js.org/guide/managing-schemas.html#pre-adding-all-schemas-vs-adding-on-demand
+      const compiledValidator =
+        this.ajv.getSchema(schemaId) ??
+        this.ajv.addSchema(schemaWithIdRefPrefix, schemaId).getSchema(schemaId) ??
+        this.ajv.compile(schemaWithIdRefPrefix);
       compiled = true;
       const result = compiledValidator(formData);
       return result;
     } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered compiling schema:', e);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning, and
+      // `compiled` distinguishes a schema that wouldn't compile from one that did and then threw on the form data,
+      // which would otherwise share a key whenever the two errors read alike
+      const named = schemaId === undefined ? '' : ` "${schemaId}"`;
+      logOnce(
+        compiled
+          ? `Error encountered validating form data against schema${named}:`
+          : `Error encountered compiling schema${named}:`,
+        'warn',
+        e,
+      );
       // Remove the broken schema from AJV's registry so a subsequent rawValidation
       // or isValid call does not silently reuse a cached entry that bypassed
       // meta-schema validation. Guard with !compiled so that a runtime error thrown

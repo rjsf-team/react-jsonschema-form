@@ -1,5 +1,5 @@
-import type { Options, ErrorObject } from 'ajv';
-import type Ajv from 'ajv';
+import type { CustomMergeAllOf, RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
+import type { Options, ErrorObject, Ajv } from 'ajv';
 import type { FormatsPluginOptions } from 'ajv-formats';
 
 /** The type describing the value for the `suppressDuplicateFiltering` option */
@@ -29,6 +29,26 @@ export interface CustomValidatorOptionsType {
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
 }
 
+/** The options a schema is compiled into precompiled validator functions with: everything `customizeValidator()` takes,
+ * plus the `SchemaParserOptions` the schema is parsed for its sub-schemas with. Those options are shared with
+ * `schemaParser()` rather than restated, so an option added there needs no mirroring in the validators
+ */
+export type CompileValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> = CustomValidatorOptionsType &
+  SchemaParserOptions<S>;
+
+/** The options a precompiled validator is constructed with, all optional */
+export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> {
+  /** If provided, is used to localize a list of Ajv `ErrorObject`s */
+  localizer?: Localizer;
+  /** Controls which duplicate error filtering is suppressed; see `filterDuplicateErrors` */
+  suppressDuplicateFiltering?: SuppressDuplicateFilteringType;
+  /** The form's `customMergeAllOf`, used when resolving this validator's own root schema to check the schema it is
+   * handed against it. Without it that resolution uses the default `allOf` merge, so a form with a `customMergeAllOf`
+   * and an `allOf` in its root schema is rejected with "the schema ... differs from the rootSchema"
+   */
+  customMergeAllOf?: CustomMergeAllOf<S>;
+}
+
 /** The type describing a function that takes a list of Ajv `ErrorObject`s and localizes them
  */
 export type Localizer = (errors?: null | ErrorObject[]) => void;
@@ -43,7 +63,7 @@ export interface CompiledValidateFunction {
   /** This is simplified version of a `ValidateFunction` type definition which describes the interface that our
    * precompiled validator will call.
    */
-  (this: Ajv | any, data: any): boolean;
+  (data: any): boolean;
 }
 
 /** The definition of precompiled validator functions

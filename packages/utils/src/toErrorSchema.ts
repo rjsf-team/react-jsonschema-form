@@ -21,7 +21,7 @@ import type { ErrorSchema, RJSFValidationError } from './types.ts';
  * @param errors - The list of RJSFValidationError objects
  * @returns - The `ErrorSchema` built from the list of `RJSFValidationErrors`
  */
-export default function toErrorSchema<T = any>(errors: RJSFValidationError[]): ErrorSchema<T> {
+export default function toErrorSchema<T = unknown>(errors: RJSFValidationError[]): ErrorSchema<T> {
   const builder = new ErrorSchemaBuilder<T>();
   if (errors.length) {
     errors.forEach((error) => {

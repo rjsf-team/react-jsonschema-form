@@ -12,9 +12,9 @@ const INPUT_STYLE = {
  * @param props - The `WidgetProps` for this component
  */
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   disabled,
   registry,
@@ -53,7 +53,7 @@ export default function TextareaWidget<
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
-      rows={options.rows || 4}
+      rows={options.rows ?? 4}
       style={INPUT_STYLE}
       value={value}
       {...extraProps}

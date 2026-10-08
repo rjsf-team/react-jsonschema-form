@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasVisibleErrors, isWholeValueSelect } from '@rjsf/utils';
 import { Form } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -11,9 +11,9 @@ const VERTICAL_WRAPPER_COL = { span: 24 };
  * @param props - The `FieldTemplateProps` for this component
  */
 export default function FieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     children,
@@ -26,6 +26,7 @@ export default function FieldTemplate<
     id,
     label,
     rawErrors,
+    hideError,
     rawDescription,
     registry,
     required,
@@ -42,12 +43,9 @@ export default function FieldTemplate<
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
 
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
     return <div className='rjsf-field-hidden'>{children}</div>;
@@ -67,18 +65,29 @@ export default function FieldTemplate<
       break;
   }
   const isCheckbox = uiOptions.widget === 'checkbox';
+  // Help and errors share antd's only below-field slot, and antd draws an empty explain block for a node that renders
+  // nothing, so each one is gated on whether it has anything to say
+  const helpNode = rawHelp ? help : undefined;
+  const errorNode = hasError ? errors : undefined;
+  const explainNode =
+    errorNode || helpNode ? (
+      <>
+        {errorNode}
+        {helpNode}
+      </>
+    ) : undefined;
   return (
     <WrapIfAdditionalTemplate {...props}>
       <Form.Item
         colon={colon}
-        hasFeedback={schema.type !== 'array' && schema.type !== 'object'}
-        help={(!!rawHelp && help) || (rawErrors?.length ? errors : undefined)}
+        hasFeedback={(schema.type !== 'array' && schema.type !== 'object') || isWholeValueSelect<S>(schema)}
+        help={explainNode}
         htmlFor={id}
         label={displayLabel && !isCheckbox && label}
         labelCol={labelCol}
         required={required}
         style={wrapperStyle}
-        validateStatus={rawErrors?.length ? 'error' : undefined}
+        validateStatus={hasError ? 'error' : undefined}
         wrapperCol={wrapperCol}
         {...descriptionProps}
       >

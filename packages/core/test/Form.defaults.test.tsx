@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import {
   expectToHaveBeenCalledWithFormData,
@@ -9,7 +9,7 @@ import {
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
-const renderErrorSuppression = setupConsoleErrorSuppression();
+setupConsoleErrorSuppression();
 
 describeRepeated('Form common: schema definitions and defaults', (createFormComponent) => {
   describe('Schema definitions', () => {
@@ -171,9 +171,6 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       };
 
       expect(() => createFormComponent({ schema })).toThrow(/#\/definitions\/nonexistent/);
-      expect(renderErrorSuppression.consoleSpy).toHaveBeenCalledWith(
-        expect.stringContaining('The above error occurred in the <Form> component'),
-      );
     });
 
     it('should propagate referenced definition defaults', () => {
@@ -259,7 +256,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       await user.click(node.querySelector('.btn-add')!);
 
-      expect(node.querySelector<HTMLInputElement>('input[type=number]')).toHaveValue(0);
+      expect(node.querySelector<HTMLInputElement>('input[inputmode=decimal]')).toHaveValue('0');
     });
 
     it('should recursively handle referenced definitions', async () => {
@@ -401,7 +398,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     };
 
     it('should not set default when a text field is cleared', async () => {
-      const { node } = createFormComponent({ schema, formData: 'bar' });
+      const { node } = createFormComponent({ schema, initialFormData: 'bar' });
 
       await user.clear(node.querySelector<HTMLInputElement>('input')!);
 

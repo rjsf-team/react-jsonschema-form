@@ -1,9 +1,17 @@
-import { createRef, useEffect, useRef, useState, useCallback } from 'react';
-import type { ErrorSchema, Experimental_DefaultFormStateBehavior, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId } from '@rjsf/utils';
+import { createRef, useEffect, useLayoutEffect, useMemo, useRef, useState, useCallback } from 'react';
+import type {
+  CustomValidator,
+  DefaultFormStateBehavior,
+  ErrorSchema,
+  FieldProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
+import { bracketNameGenerator, buttonId, dotNotationNameGenerator, optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
@@ -12,12 +20,15 @@ import {
   actWrappedDelayPromise,
   createComponent,
   createFormComponent,
+  createFormRef,
   delayPromise,
+  errorListMessages,
   expectToHaveBeenCalledWithFormData,
+  fieldErrorsById,
   setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils.tsx';
-import widgetsSchema from './widgets_schema.json';
+import widgetsSchema from './widgets_schema.json' with { type: 'json' };
 
 const user = userEvent.setup();
 
@@ -38,16 +49,11 @@ describe('Error paths that collide with prototype keys', () => {
         constructor: constructorFieldSchema,
       },
     };
-    const formRef = createRef<Form>();
-    const { node } = createFormComponent({ ref: formRef, schema, formData: { constructor: 'ab' } });
+    const { node } = createFormComponent({ schema, formData: { constructor: 'ab' } });
 
     await submitForm(node, user);
 
-    expect(node.querySelectorAll('.error-detail')).toHaveLength(1);
-    expect(node.querySelector('.error-detail')).toHaveTextContent('must NOT have fewer than 5 characters');
-    expect(formRef.current!.state.errorSchema).toEqual({
-      constructor: { __errors: ['must NOT have fewer than 5 characters'] },
-    });
+    expect(fieldErrorsById(node)).toEqual({ root_constructor: ['must NOT have fewer than 5 characters'] });
     // No actual prototype pollution occurred while building the error schema.
     expect(({} as { __errors?: string[] }).__errors).toBeUndefined();
   });
@@ -134,6 +140,753 @@ describe('Live validation onBlur', () => {
     );
     expect(onChange).toHaveBeenCalledTimes(changeCallCount + 1);
   });
+
+  it('does not occur when noValidate is set', async () => {
+    const onBlur = vi.fn();
+    const { node, onChange } = createFormComponent({
+      schema,
+      onBlur,
+      liveValidate: 'onBlur',
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
+      noValidate: true,
+    });
+    const element = node.querySelector<HTMLInputElement>('input[type=text]')!;
+    await user.type(element, 'short');
+    const changeCallCount = onChange.mock.calls.length;
+
+    await user.tab();
+
+    expect(onBlur).toHaveBeenLastCalledWith('root', 'short');
+    // `noValidate` turns validation off everywhere else, so the blur produces no errors and no state update
+    expect(onChange).toHaveBeenCalledTimes(changeCallCount);
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ errorSchema: {} }), 'root');
+  });
+
+  it('does not occur while typing when a controlled parent recreates an identity prop on every render', async () => {
+    function InlineCallbackParent() {
+      const [value, setValue] = useState<string | null>(null);
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          formData={value}
+          onChange={(event) => setValue(event.formData ?? null)}
+          // Recreated on every render of the parent, which is what makes the form see a changed identity prop on
+          // every keystroke
+          transformErrors={(errors) => errors}
+        />
+      );
+    }
+    const { container } = render(<InlineCallbackParent />);
+
+    await user.type(container.querySelector<HTMLInputElement>('input[type=text]')!, 'short');
+
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+
+    await user.tab();
+
+    expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+  });
+
+  describe('when the data is replaced from outside the form', () => {
+    const objectSchema: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
+    };
+
+    function ReplacingParent({
+      extraErrors,
+      liveValidate = 'onBlur',
+    }: Pick<FormProps, 'extraErrors' | 'liveValidate'>) {
+      const [value, setValue] = useState<{ name?: string; other?: string }>({ name: 'longenough', other: 'b' });
+      return (
+        <>
+          <button type='button' onClick={() => setValue({ name: 'short', other: 'zzz' })}>
+            replace
+          </button>
+          <Form
+            schema={objectSchema}
+            validator={validator}
+            liveValidate={liveValidate}
+            extraErrors={extraErrors}
+            formData={value}
+            onChange={(event) => setValue(event.formData)}
+          />
+        </>
+      );
+    }
+
+    it('does not validate: the errors still wait for a blur', async () => {
+      const { container } = render(<ReplacingParent />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+
+      await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+      await user.tab();
+
+      expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+    });
+
+    it('carries each extraError over exactly once', async () => {
+      const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+      const { container } = render(<ReplacingParent extraErrors={extraErrors} />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(errorListMessages(container)).toEqual(['.name from the server']);
+    });
+
+    it('keeps the extraErrors alongside the schema errors under onChange', async () => {
+      const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+      const { container } = render(<ReplacingParent liveValidate='onChange' extraErrors={extraErrors} />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(errorListMessages(container)).toEqual([
+        '.name must NOT have fewer than 8 characters',
+        '.name from the server',
+      ]);
+    });
+
+    it('carries each extraError over exactly once when a prop other than the data changes', async () => {
+      const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+      // Reference-stable so that re-rendering the parent is a change to `className` and nothing else
+      const shortName = { name: 'short' };
+      function RestylingParent() {
+        const [className, setClassName] = useState<string | undefined>(undefined);
+        return (
+          <>
+            <button type='button' onClick={() => setClassName('x')}>
+              restyle
+            </button>
+            <Form
+              schema={objectSchema}
+              validator={validator}
+              liveValidate='onChange'
+              extraErrors={extraErrors}
+              formData={shortName}
+              className={className}
+            />
+          </>
+        );
+      }
+      const { container } = render(<RestylingParent />);
+
+      await user.click(container.querySelector('button')!);
+
+      expect(fieldErrorsById(container)).toEqual({ root_name: ['from the server'] });
+    });
+  });
+});
+
+describe('Error state consistency when deriving from new props', () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
+  };
+  const relaxedSchema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string' }, other: { type: 'string' } },
+  };
+  const serverErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+  const otherServerErrors: ErrorSchema = { other: { __errors: ['from the server'] } };
+  const shortName = { name: 'short' };
+  /** Raises a custom error on every keystroke, the way a widget validating as the user types does */
+  const errorRaisingWidgets = {
+    TextWidget: ({ id, value, onChange, onBlur }: WidgetProps) => (
+      <input
+        id={id}
+        type='text'
+        value={value ?? ''}
+        onChange={(event) => onChange(event.target.value, { __errors: [`custom:${event.target.value}`] })}
+        onBlur={(event) => onBlur(id, event.target.value)}
+      />
+    ),
+  };
+
+  /** A root field that renders the `ObjectField` and hands its props out, so a test can raise through `onChange` the
+   * way a custom root `Field` does
+   */
+  const captureRootField = vi.fn<(fieldProps: FieldProps) => void>();
+  beforeEach(() => {
+    captureRootField.mockClear();
+  });
+  function rootField() {
+    const fieldProps = captureRootField.mock.lastCall?.[0];
+    if (!fieldProps) {
+      throw new Error('CapturingRootField has not rendered');
+    }
+    return fieldProps;
+  }
+  function CapturingRootField(fieldProps: FieldProps) {
+    captureRootField(fieldProps);
+    const { ObjectField } = fieldProps.registry.fields;
+    return <ObjectField {...fieldProps} />;
+  }
+  const capturingUiSchema: UiSchema = { 'ui:field': CapturingRootField };
+
+  /** A parent that never follows `onChange`, so every edit the user makes is declined
+   */
+  function IgnoringParent() {
+    const [className, setClassName] = useState<string | undefined>(undefined);
+    return (
+      <>
+        <button type='button' onClick={() => setClassName('x')}>
+          restyle
+        </button>
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onChange'
+          extraErrors={serverErrors}
+          formData={shortName}
+          className={className}
+        />
+      </>
+    );
+  }
+
+  /** A controlled parent that echoes `onChange` back into `formData`, the ordinary controlled setup */
+  function EchoingParent({ liveValidate }: Pick<FormProps, 'liveValidate'>) {
+    const [value, setValue] = useState<{ name?: string; other?: string }>(shortName);
+    return (
+      <>
+        <button type='button' onClick={() => setValue({ name: 'longenoughvalue' })}>
+          replace
+        </button>
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate={liveValidate}
+          formData={value}
+          onChange={(event) => setValue(event.formData)}
+        />
+      </>
+    );
+  }
+
+  it('does not duplicate an extraError once the parent declined an edit', async () => {
+    const { container } = render(<IgnoringParent />);
+
+    // The parent keeps handing back `shortName`, so this keystroke is only a proposal, and the errors validated for it
+    // go with it
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'x');
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector<HTMLInputElement>('#root_name')!.value).toBe('short');
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['from the server'] });
+    expect(errorListMessages(container)).toEqual(['.name from the server']);
+  });
+
+  it('drops the stored validator errors when the schema stops producing them under onBlur', async () => {
+    function SchemaSwappingParent() {
+      const [current, setCurrent] = useState(schema);
+      const [className, setClassName] = useState<string | undefined>(undefined);
+      return (
+        <>
+          <button type='button' onClick={() => setCurrent(relaxedSchema)}>
+            relax
+          </button>
+          <button type='button' onClick={() => setClassName('x')}>
+            restyle
+          </button>
+          <Form
+            schema={current}
+            validator={validator}
+            liveValidate='onBlur'
+            formData={shortName}
+            className={className}
+          />
+        </>
+      );
+    }
+    const { container } = render(<SchemaSwappingParent />);
+    const buttons = container.querySelectorAll('button');
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.click(buttons[0]);
+    expect(fieldErrorsById(container)).toEqual({});
+
+    // The schema no longer has the rule, so no later prop change may bring its error back
+    await user.click(buttons[1]);
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it('keeps a custom error raised on a path that already carries a validator error', async () => {
+    // Restyles without a click, so the field the user is typing in is not blurred, which would validate it afresh
+    function RestylingParent({ className }: { className?: string }) {
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          widgets={errorRaisingWidgets}
+          initialFormData={shortName}
+          className={className}
+        />
+      );
+    }
+    const { container, rerender } = render(<RestylingParent />);
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+    // The raise replaced the validator error at its path, so the `ErrorList` says the same as the field does, and a
+    // re-derivation rebuilds both from a base that carries the raise
+    rerender(<RestylingParent className='x' />);
+
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['custom:shorty'] });
+    expect(errorListMessages(container)).toEqual(['.name custom:shorty']);
+  });
+
+  /** A controlled parent that holds the data still and restyles the form, so a click is a non-data prop change */
+  function RestylingParent(formProps: Pick<FormProps, 'extraErrors' | 'liveValidate' | 'onChange'>) {
+    const [className, setClassName] = useState<string | undefined>(undefined);
+    return (
+      <>
+        <button type='button' onClick={() => setClassName('x')}>
+          restyle
+        </button>
+        <Form
+          schema={schema}
+          uiSchema={capturingUiSchema}
+          validator={validator}
+          formData={shortName}
+          className={className}
+          {...formProps}
+        />
+      </>
+    );
+  }
+  const nameStreetPath = toFieldPath('name');
+
+  it('keeps a root-path raise across a later prop change', async () => {
+    const { container } = render(<RestylingParent />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    // What a custom root `Field` hands to `onChange`: like a raise at any other path, it replaces every error below it
+    act(() => rootField().onChange(shortName, rootField().fieldPath, { __errors: ['root level problem'] }));
+    expect(fieldErrorsById(container)).toEqual({ root: ['root level problem'] });
+
+    await user.click(container.querySelector('button')!);
+
+    expect(fieldErrorsById(container)).toEqual({ root: ['root level problem'] });
+    expect(errorListMessages(container)).toEqual(['. root level problem']);
+  });
+
+  it('lists a supplied error once when a root raise hands back the displayed errorSchema', async () => {
+    const { container } = render(<RestylingParent extraErrors={otherServerErrors} />);
+    const expected = ['.name must NOT have fewer than 8 characters', '.other from the server'];
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(errorListMessages(container)).toEqual(expected);
+
+    // What a root-level `ArrayField` reorder or an optional-data Remove does with the errors it displays
+    act(() => rootField().onChange(shortName, rootField().fieldPath, rootField().errorSchema));
+    expect(errorListMessages(container)).toEqual(expected);
+
+    await user.click(container.querySelector('button')!);
+    expect(errorListMessages(container)).toEqual(expected);
+  });
+
+  it('clears a validator error when a field raises an empty error list', async () => {
+    const { container } = render(<RestylingParent />);
+
+    await submitForm(container.querySelector('form')!, user);
+    // The shape `createErrorHandler()` and `ErrorSchemaBuilder.clearErrors()` produce
+    act(() => rootField().onChange('short', nameStreetPath, { __errors: [] }));
+
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it.each([
+    { name: 'an empty error list', cleared: { __errors: [] } },
+    { name: 'an empty errorSchema', cleared: {} },
+  ] satisfies { name: string; cleared: ErrorSchema }[])(
+    'clears a root custom error when a root raise has $name',
+    async ({ cleared }) => {
+      const { container } = render(<RestylingParent />);
+
+      act(() => rootField().onChange(shortName, rootField().fieldPath, { __errors: ['root own'] }));
+      expect(errorListMessages(container)).toEqual(['. root own']);
+      act(() => rootField().onChange(shortName, rootField().fieldPath, cleared));
+
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+    },
+  );
+
+  it('keeps the nested errors of a root raise with no validator error below it', async () => {
+    const { container } = render(<RestylingParent />);
+
+    act(() => rootField().onChange(shortName, rootField().fieldPath, { other: { __errors: ['x'] } }));
+    await user.click(container.querySelector('button')!);
+
+    expect(fieldErrorsById(container)).toEqual({ root_other: ['x'] });
+    expect(errorListMessages(container)).toEqual(['.other x']);
+  });
+
+  it('clears a validator error when a field raises only the supplied error it still displays', async () => {
+    const { container } = render(<RestylingParent extraErrors={serverErrors} />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(fieldErrorsById(container)).toEqual({
+      root_name: ['must NOT have fewer than 8 characters', 'from the server'],
+    });
+    act(() => rootField().onChange('short', nameStreetPath, { __errors: ['from the server'] }));
+    await user.click(container.querySelector('button')!);
+
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['from the server'] });
+    expect(errorListMessages(container)).toEqual(['.name from the server']);
+  });
+
+  it('keeps the validator error objects a raise hands back unchanged', async () => {
+    const onChange = vi.fn();
+    const { container } = render(<RestylingParent extraErrors={otherServerErrors} onChange={onChange} />);
+
+    await submitForm(container.querySelector('form')!, user);
+    const name: ErrorSchema<string> | undefined = rootField().errorSchema?.name;
+    expect(name).toEqual({ __errors: ['must NOT have fewer than 8 characters'] });
+    act(() => rootField().onChange('short', nameStreetPath, name));
+
+    const [{ errors }] = onChange.mock.calls.at(-1)!;
+    expect(errors).toEqual([
+      expect.objectContaining({ property: '.name', name: 'minLength', params: { limit: 8 } }),
+      expect.objectContaining({ property: '.other', message: 'from the server' }),
+    ]);
+  });
+
+  it('does not leave an emptied validator entry for an ancestor raise to mistake for an error', async () => {
+    const addrSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } },
+        other: { type: 'string' },
+      },
+    };
+    const { container } = render(
+      <Form
+        schema={addrSchema}
+        uiSchema={capturingUiSchema}
+        validator={validator}
+        liveValidate='onBlur'
+        initialFormData={{ addr: { street: 'a' } }}
+      />,
+    );
+
+    await submitForm(container.querySelector('form')!, user);
+    // `FallbackField` clearing the errors of the value its type change replaced
+    act(() => rootField().onChange('a', toFieldPath('street', toFieldPath('addr')), {}));
+    // With no validator error left at `addr`, this is a custom error, which a later validation pass keeps
+    act(() => rootField().onChange({ street: 'a' }, toFieldPath('addr'), { __errors: ['addr problem'] }));
+    await user.click(container.querySelector<HTMLInputElement>('#root_other')!);
+    await user.tab();
+
+    expect(fieldErrorsById(container)).toEqual(expect.objectContaining({ root_addr: ['addr problem'] }));
+  });
+
+  describe('after an ArrayField reorder moved an invalid item', () => {
+    const arraySchema: RJSFSchema = {
+      type: 'object',
+      properties: { arr: { type: 'array', items: { type: 'string', minLength: 3 } } },
+    };
+    const arrayData = { arr: ['a', 'bbbb', 'cccc'] };
+    function Parent({
+      restyles = 0,
+      ...formProps
+    }: Pick<FormProps, 'formData' | 'initialFormData'> & { restyles?: number }) {
+      return <Form schema={arraySchema} validator={validator} className={`restyled-${restyles}`} {...formProps} />;
+    }
+    function inputValues(container: HTMLElement) {
+      return Array.from(container.querySelectorAll('input'), (input) => input.value);
+    }
+    async function submitAndMoveFirstItemDown(container: HTMLElement) {
+      await submitForm(container.querySelector('form')!, user);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+      await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+    }
+
+    it('keeps the error on the moved item in an uncontrolled form across later prop changes', async () => {
+      const { container, rerender } = render(<Parent initialFormData={arrayData} />);
+
+      await submitAndMoveFirstItemDown(container);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
+      rerender(<Parent initialFormData={arrayData} restyles={1} />);
+
+      expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
+    });
+
+    it('keeps the error on the original item when a controlled parent declines the reorder', async () => {
+      // The parent never follows `onChange`, so the reorder is only a proposal and its own order stays shown
+      const { container, rerender } = render(<Parent formData={arrayData} />);
+
+      await submitAndMoveFirstItemDown(container);
+      expect(inputValues(container)).toEqual(['a', 'bbbb', 'cccc']);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+      rerender(<Parent formData={arrayData} restyles={1} />);
+
+      expect(inputValues(container)).toEqual(['a', 'bbbb', 'cccc']);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+    });
+
+    it('clears the moved items errors when a controlled parent echoes the reorder', async () => {
+      function EchoingArrayParent({ restyles = 0 }: { restyles?: number }) {
+        const [value, setValue] = useState<unknown>(arrayData);
+        return (
+          <Form
+            schema={arraySchema}
+            validator={validator}
+            className={`restyled-${restyles}`}
+            formData={value}
+            onChange={(event) => setValue(event.formData)}
+          />
+        );
+      }
+      const { container, rerender } = render(<EchoingArrayParent />);
+
+      await submitForm(container.querySelector('form')!, user);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+      // The echo counts both moved items as changed, which clears their errors
+      await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+
+      expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+
+      rerender(<EchoingArrayParent restyles={1} />);
+
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+    });
+  });
+
+  // Add, copy, move and remove all remap through `remapItemErrors()`, so a move covers them
+  describe('after an ArrayField remaps its items in an uncontrolled form', () => {
+    const items: RJSFSchema = { type: 'array', minItems: 4, items: { type: 'string', minLength: 3 } };
+    it.each<[string, RJSFSchema, unknown, string]>([
+      ['a root array', items, ['aaa', 'bbbb', 'cccc'], 'root'],
+      ['a nested array', { type: 'object', properties: { arr: items } }, { arr: ['aaa', 'bbbb', 'cccc'] }, 'root_arr'],
+    ])("keeps %s's own errors across later prop changes", async (_, schema, data, id) => {
+      function Parent({ restyles = 0 }: { restyles?: number }) {
+        return <Form schema={schema} validator={validator} className={`restyled-${restyles}`} initialFormData={data} />;
+      }
+      const { container, rerender } = render(<Parent />);
+      const ownErrors = { [id]: ['must NOT have fewer than 4 items'] };
+
+      await submitForm(container.querySelector('form')!, user);
+      expect(fieldErrorsById(container)).toEqual(ownErrors);
+      await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+      expect(fieldErrorsById(container)).toEqual(ownErrors);
+      rerender(<Parent restyles={1} />);
+
+      expect(fieldErrorsById(container)).toEqual(ownErrors);
+      expect(errorListMessages(container)).toHaveLength(1);
+    });
+  });
+
+  it('lets the parent clear the extraErrors an ArrayField reorder remapped', async () => {
+    const arraySchema: RJSFSchema = {
+      type: 'object',
+      properties: { arr: { type: 'array', items: { type: 'string', minLength: 3 } } },
+    };
+    const arrayData = { arr: ['a', 'bbbb', 'cccc'] };
+    const arrayServerErrors: ErrorSchema = { arr: { 2: { __errors: ['server'] } } };
+    function Parent({ extraErrors }: { extraErrors?: ErrorSchema }) {
+      return <Form schema={arraySchema} validator={validator} formData={arrayData} extraErrors={extraErrors} />;
+    }
+    const { container, rerender } = render(<Parent extraErrors={arrayServerErrors} />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(errorListMessages(container)).toEqual(['.arr.0 must NOT have fewer than 3 characters', '.arr.2 server']);
+
+    // The reorder raises the remapped item errors, `server` among them, which must not become part of the stored
+    // validator result
+    await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[1]);
+    rerender(<Parent />);
+
+    expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
+    expect(errorListMessages(container)).toEqual(['.arr.0 must NOT have fewer than 3 characters']);
+  });
+
+  it.each([
+    {
+      name: 'a server message of its own',
+      street: { type: 'string', minLength: 3 },
+      server: 'server',
+      expected: ['.addr.street must NOT have fewer than 3 characters'],
+    },
+    {
+      name: 'the message the validator reports',
+      street: { type: 'string', minLength: 3 },
+      server: 'must NOT have fewer than 3 characters',
+      expected: ['.addr.street must NOT have fewer than 3 characters'],
+    },
+    { name: 'the only error on the path', street: { type: 'string' }, server: 'server', expected: [] },
+  ] satisfies { name: string; street: RJSFSchema; server: string; expected: string[] }[])(
+    'lets the parent clear the extraErrors an optional object Remove sent back, with $name',
+    async ({ street, server, expected }) => {
+      const addrSchema: RJSFSchema = {
+        type: 'object',
+        properties: { addr: { type: 'object', properties: { street } } },
+      };
+      const addrUiSchema: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } };
+      const addrData = { addr: { street: 'a' } };
+      const addrServerErrors: ErrorSchema = { addr: { street: { __errors: [server] } } };
+      function Parent({ extraErrors, className }: { extraErrors?: ErrorSchema; className?: string }) {
+        return (
+          <Form
+            schema={addrSchema}
+            uiSchema={addrUiSchema}
+            validator={validator}
+            formData={addrData}
+            extraErrors={extraErrors}
+            className={className}
+          />
+        );
+      }
+      const { container, rerender } = render(<Parent extraErrors={addrServerErrors} />);
+
+      await submitForm(container.querySelector('form')!, user);
+      expect(errorListMessages(container)).toEqual([...expected, `.addr.street ${server}`]);
+
+      // Remove hands back the displayed `errorSchema`, `server` included, which must not outlive the prop supplying it
+      await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
+      rerender(<Parent />);
+      rerender(<Parent className='x' />);
+
+      expect(errorListMessages(container)).toEqual(expected);
+      expect(Object.values(fieldErrorsById(container)).flat()).toEqual(
+        expected.map((stack) => stack.replace('.addr.street ', '')),
+      );
+    },
+  );
+
+  it('lets the parent clear the root extraErrors a root-path raise sent back', async () => {
+    const streetSchema: RJSFSchema = { type: 'object', properties: { street: { type: 'string' } } };
+    const rootServerErrors: ErrorSchema = { __errors: ['server'] };
+    function Parent({ extraErrors, className }: { extraErrors?: ErrorSchema; className?: string }) {
+      return (
+        <Form
+          schema={streetSchema}
+          uiSchema={capturingUiSchema}
+          validator={validator}
+          formData={{ street: 'a' }}
+          extraErrors={extraErrors}
+          className={className}
+        />
+      );
+    }
+    const { container, rerender } = render(<Parent extraErrors={rootServerErrors} />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(errorListMessages(container)).toEqual(['. server']);
+
+    // A custom root `Field` handing back the `errorSchema` it displays, `server` included
+    act(() => rootField().onChange({ street: 'b' }, rootField().fieldPath, rootField().errorSchema));
+    rerender(<Parent />);
+    rerender(<Parent className='x' />);
+
+    expect(errorListMessages(container)).toEqual([]);
+    expect(fieldErrorsById(container)).toEqual({});
+  });
+
+  it('keeps the validator error when a raise hands back only errors supplied elsewhere', async () => {
+    const addrSchema: RJSFSchema = {
+      type: 'object',
+      properties: { addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } } },
+    };
+    const minLengthError = 'must NOT have fewer than 3 characters';
+    const streetPath = toFieldPath('street', toFieldPath('addr'));
+    const { container } = render(
+      <Form
+        schema={addrSchema}
+        uiSchema={capturingUiSchema}
+        validator={validator}
+        initialFormData={{ addr: { street: 'a' } }}
+      />,
+    );
+
+    act(() => rootField().onChange('a', streetPath, { __errors: [minLengthError] }));
+    await submitForm(container.querySelector('form')!, user);
+    const street: ErrorSchema<string> | undefined = rootField().errorSchema?.addr?.street;
+    expect(street).toEqual({ __errors: [minLengthError] });
+    act(() => rootField().onChange('a', streetPath, street));
+
+    expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
+    // Listed twice, the raise's copy and the validator's own: what the form does today, not a guarantee
+    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`, `.addr.street ${minLengthError}`]);
+
+    // An empty raise at `street` must unset its node rather than leave `{ addr: { street: {} } }`, which the empty
+    // raise at `addr` would read as the validator's error still being there
+    act(() => rootField().onChange('a', streetPath, {}));
+    // The validator's own copy is gone; the raise's is cleared by the empty raise at `addr` below
+    expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
+    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`]);
+    act(() => rootField().onChange({ street: 'a' }, toFieldPath('addr'), {}));
+
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
+    const { container } = render(<EchoingParent liveValidate='onBlur' />);
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it('drops the errors of data the parent replaced under onBlur', async () => {
+    const { container } = render(<EchoingParent liveValidate='onBlur' />);
+
+    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.tab();
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector<HTMLInputElement>('#root_name')!).toHaveValue('longenoughvalue');
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it('lists a server error once when a field raises a custom error with live validation off', async () => {
+    // Uncontrolled, so nothing re-derives state from props afterwards and the merge below is the last word
+    const { container } = render(
+      <Form
+        schema={schema}
+        validator={validator}
+        extraErrors={otherServerErrors}
+        widgets={errorRaisingWidgets}
+        initialFormData={shortName}
+      />,
+    );
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+
+    expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
+  });
 });
 
 describe('omitExtraData and live omit onBlur', () => {
@@ -151,7 +904,7 @@ describe('omitExtraData and live omit onBlur', () => {
     const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
-      formData: formData1,
+      initialFormData: formData1,
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -172,7 +925,7 @@ describe('omitExtraData and live omit onBlur', () => {
     const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
-      formData, // Use form data with nothing to omit to test case
+      initialFormData: formData, // Use form data with nothing to omit to test case
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -191,7 +944,7 @@ describe('omitExtraData and live omit onBlur', () => {
     const onBlur = vi.fn();
     const { node, onChange } = createFormComponent({
       schema,
-      formData: formData1,
+      initialFormData: formData1,
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -219,70 +972,9 @@ describe('omitExtraData and live omit onBlur', () => {
 });
 
 describe('Form omitExtraData and liveOmit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true and liveOmit is true', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: 'bar',
-    };
-    const omitExtraData = true;
-    const liveOmit = true;
-    const ref = createRef<Form>();
-
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      formData,
-      omitExtraData,
-      liveOmit,
-    });
-
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await user.clear(node.querySelector('[type=text]')!);
-    await user.type(node.querySelector('[type=text]')!, 'new');
-
-    expect(theSpy).toHaveBeenCalled();
-  });
-
-  it('should not call omitExtraData when the omitExtraData prop is true and liveOmit is unspecified', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: 'bar',
-    };
-    const omitExtraData = true;
-    const ref = createRef<Form>();
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      formData,
-      omitExtraData,
-    });
-
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
-
-    await user.clear(node.querySelector('[type=text]')!);
-    await user.type(node.querySelector('[type=text]')!, 'new');
-
-    expect(theSpy).not.toHaveBeenCalled();
-  });
-
-  it('should not omit data on change with omitExtraData=false and liveOmit=false', async () => {
+  it('should not omit data on change with omitExtraData=false and liveOmit unset', async () => {
     const omitExtraData = false;
-    const liveOmit = false;
+    const liveOmit = undefined;
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -294,7 +986,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const { node, onChange } = createFormComponent({
       ref: createRef(),
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -310,9 +1002,9 @@ describe('Form omitExtraData and liveOmit', () => {
     );
   });
 
-  it('should not omit data on change with omitExtraData=true and liveOmit=false', async () => {
+  it('should not omit data on change with omitExtraData=true and liveOmit unset', async () => {
     const omitExtraData = true;
-    const liveOmit = false;
+    const liveOmit = undefined;
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -323,7 +1015,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const formData = { foo: 'foo', baz: 'baz' };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -336,7 +1028,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
   it('should not omit data on change with omitExtraData=false and liveOmit=true', async () => {
     const omitExtraData = false;
-    const liveOmit = true;
+    const liveOmit = 'onChange';
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -347,7 +1039,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const formData = { foo: 'foo', baz: 'baz' };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -360,7 +1052,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
   it('should omit data on change with omitExtraData=true and liveOmit=true', async () => {
     const omitExtraData = true;
-    const liveOmit = true;
+    const liveOmit = 'onChange';
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -371,7 +1063,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const formData = { foo: 'foo', baz: 'baz' };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -384,7 +1076,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
   it('should not omit additionalProperties on change with omitExtraData=true and liveOmit=true', async () => {
     const omitExtraData = true;
-    const liveOmit = true;
+    const liveOmit = 'onChange';
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -399,7 +1091,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const formData = { foo: 'foo', baz: 'baz', add: { prop: 123 } };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData,
       liveOmit,
     });
@@ -420,9 +1112,9 @@ describe('Form omitExtraData and liveOmit', () => {
           },
         },
       },
-      formData: { nested: { key1: 'value' } },
+      initialFormData: { nested: { key1: 'value' } },
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     const textNode = node.querySelector<HTMLInputElement>('#root_nested_key1-key')!;
@@ -456,9 +1148,9 @@ describe('Form omitExtraData and liveOmit', () => {
           },
         ],
       },
-      formData: { lorum: '' },
+      initialFormData: { lorum: '' },
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     const textNode = node.querySelector('#root_lorem')!;
@@ -490,9 +1182,9 @@ describe('Form omitExtraData and liveOmit', () => {
           },
         ],
       },
-      formData: { ipsum: '' },
+      initialFormData: { ipsum: '' },
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     const textNode = node.querySelector('#root_ipsum')!;
@@ -530,9 +1222,9 @@ describe('Form omitExtraData and liveOmit', () => {
     const { node, onChange } = createFormComponent({
       ref: createRef(),
       schema,
-      formData,
+      initialFormData: formData,
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     const otherPropInput = node.querySelector<HTMLInputElement>('#root_nested_otherProperty')!;
@@ -552,7 +1244,7 @@ describe('Form omitExtraData and liveOmit', () => {
     );
   });
 
-  it('should keep schema errors when extraErrors set after submit and liveValidate is false', async () => {
+  it('should keep schema errors when extraErrors set after submit and liveValidate is unset', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -565,16 +1257,16 @@ describe('Form omitExtraData and liveOmit', () => {
       foo: {
         __errors: ['foo'],
       },
-    } as unknown as ErrorSchema;
+    };
 
     const onSubmit = vi.fn();
 
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
       onSubmit,
-      liveValidate: false,
+      liveValidate: undefined,
     };
     const { rerender, node } = createFormComponent(props);
     // forceFireEvent=true: clicking the submit button focuses it, blurring the
@@ -595,76 +1287,33 @@ describe('Form omitExtraData and liveOmit', () => {
 });
 
 describe('omitExtraData on submit', () => {
-  it('should call omitExtraData when the omitExtraData prop is true', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: {
-          type: 'string',
-        },
-      },
-    };
-    const formData = {
-      foo: '',
-    };
-    const omitExtraData = true;
-    const ref = createRef<Form>();
-    const { node } = createFormComponent({
-      ref,
-      schema,
-      formData,
-      omitExtraData,
-    });
+  // `additionalProperties: false` makes the extra field a validation error, so which data got validated is visible in
+  // whether the submission goes through
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      foo: { type: 'string' },
+    },
+    additionalProperties: false,
+  };
+  const formData = { foo: 'bar', baz: 'baz' };
 
-    const theSpy = vi.spyOn(ref.current!, 'omitExtraData').mockReturnValue({ foo: '' });
+  it('validates the current formData, extra fields included, if omitExtraData is false', async () => {
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData, omitExtraData: false });
 
     await submitForm(node, user);
 
-    expect(theSpy).toHaveBeenCalledTimes(1);
+    expect(onError).toHaveBeenCalledWith([expect.objectContaining({ name: 'additionalProperties' })]);
+    expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  it('Should call validateFormWithFormData with the current formData if omitExtraData is false', async () => {
-    const omitExtraData = false;
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: { type: 'string' },
-      },
-    };
-    const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
-      ref: formRef,
-      schema,
-      formData,
-      omitExtraData,
-    };
-    const { node } = createFormComponent(props);
-    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
-    await submitForm(node, user);
-    expect(theSpy).toHaveBeenCalledWith(formData);
-  });
+  it('validates and submits only the fields the schema describes if omitExtraData is true', async () => {
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData, omitExtraData: true });
 
-  it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', async () => {
-    const omitExtraData = true;
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: { type: 'string' },
-      },
-    };
-    const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
-      ref: formRef,
-      schema,
-      formData,
-      omitExtraData,
-    };
-    const { node } = createFormComponent(props);
-    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
     await submitForm(node, user);
-    expect(theSpy).toHaveBeenCalledWith({ foo: 'bar' });
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ formData: { foo: 'bar' } }), expect.anything());
   });
 });
 
@@ -737,9 +1386,9 @@ describe('omitExtraData prunes empty optional objects', () => {
   it('prunes an empty optional object on change when omitExtraData and liveOmit are true', async () => {
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { name: 'Alice', address: { street: 'value' } },
+      initialFormData: { name: 'Alice', address: { street: 'value' } },
       omitExtraData: true,
-      liveOmit: true,
+      liveOmit: 'onChange',
     });
 
     await user.clear(node.querySelector('#root_address_street')!);
@@ -750,7 +1399,7 @@ describe('omitExtraData prunes empty optional objects', () => {
   it('prunes an empty optional object on blur when omitExtraData is true and liveOmit is onBlur', async () => {
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { name: 'Alice', address: { street: 'value' } },
+      initialFormData: { name: 'Alice', address: { street: 'value' } },
       omitExtraData: true,
       liveOmit: 'onBlur',
     });
@@ -791,14 +1440,14 @@ describe('Async errors', () => {
           __errors: ['some other error that got added as a prop'],
         },
       },
-    } as unknown as ErrorSchema;
+    };
 
     const { node } = createFormComponent({ schema, extraErrors });
 
     expect(node.querySelectorAll('.error-detail li')).toHaveLength(2);
   });
 
-  it('should not block form submission', async () => {
+  it('should not block form submission when extraErrorsAreWarnings is set', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -810,11 +1459,32 @@ describe('Async errors', () => {
       foo: {
         __errors: ['some error that got added as a prop'],
       },
-    } as unknown as ErrorSchema;
+    };
 
-    const { node, onSubmit } = createFormComponent({ schema, extraErrors });
+    const { node, onSubmit } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings: true });
     await submitForm(node, user);
     expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('should block form submission by default when extraErrors are present', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    const extraErrors = {
+      foo: {
+        __errors: ['some error that got added as a prop'],
+      },
+    };
+
+    const onError = vi.fn();
+    const { node, onSubmit } = createFormComponent({ schema, extraErrors, onError });
+    await submitForm(node, user);
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
   });
 
   it('should reset when props extraErrors changes and noValidate is true', () => {
@@ -829,30 +1499,30 @@ describe('Async errors', () => {
       foo: {
         __errors: ['foo'],
       },
-    } as unknown as ErrorSchema;
+    };
 
-    const formRef = createRef<Form>();
     const props: NoValFormProps = {
-      ref: formRef,
       schema,
+      // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
       noValidate: true,
     };
 
-    const { rerender } = createFormComponent({
+    const { node, rerender } = createFormComponent({
       ...props,
       extraErrors,
     });
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ['foo'] });
 
     rerender({
       ...props,
       extraErrors: {},
     });
 
-    expect(formRef.current!.state.errorSchema).toEqual({});
-    expect(formRef.current!.state.errors).toEqual([]);
+    expect(fieldErrorsById(node)).toEqual({});
+    expect(errorListMessages(node)).toEqual([]);
   });
 
-  it('should reset when props extraErrors changes and liveValidate is false', () => {
+  it('should reset when props extraErrors changes and liveValidate is unset', () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -864,26 +1534,25 @@ describe('Async errors', () => {
       foo: {
         __errors: ['foo'],
       },
-    } as unknown as ErrorSchema;
-
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
-      ref: formRef,
-      schema,
-      liveValidate: false,
     };
-    const { rerender } = createFormComponent({
+
+    const props: NoValFormProps = {
+      schema,
+      liveValidate: undefined,
+    };
+    const { node, rerender } = createFormComponent({
       ...props,
       extraErrors,
     });
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ['foo'] });
 
     rerender({
       ...props,
       extraErrors: {},
     });
 
-    expect(formRef.current!.state.errorSchema).toEqual({});
-    expect(formRef.current!.state.errors).toEqual([]);
+    expect(fieldErrorsById(node)).toEqual({});
+    expect(errorListMessages(node)).toEqual([]);
   });
 
   it('should reset when schema changes', async () => {
@@ -895,9 +1564,7 @@ describe('Async errors', () => {
       required: ['foo'],
     };
 
-    const formRef = createRef<Form>();
-    const { rerender, node } = createFormComponent({
-      ref: formRef,
+    const { rerender, node, onError } = createFormComponent({
       schema,
     });
 
@@ -906,8 +1573,8 @@ describe('Async errors', () => {
     // the submit handler runs. fireEvent.submit bypasses that side-effect chain.
     await submitForm(node, user, true);
 
-    expect(formRef.current!.state.errorSchema).toEqual({ foo: { __errors: ["must have required property 'foo'"] } });
-    expect(formRef.current!.state.errors).toEqual([
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ["must have required property 'foo'"] });
+    expect(onError).toHaveBeenLastCalledWith([
       {
         message: "must have required property 'foo'",
         property: 'foo',
@@ -923,7 +1590,6 @@ describe('Async errors', () => {
 
     // Changing schema to reset errors state.
     rerender({
-      ref: formRef,
       schema: {
         type: 'object',
         properties: {
@@ -931,8 +1597,8 @@ describe('Async errors', () => {
         },
       },
     });
-    expect(formRef.current!.state.errorSchema).toEqual({});
-    expect(formRef.current!.state.errors).toEqual([]);
+    expect(fieldErrorsById(node)).toEqual({});
+    expect(errorListMessages(node)).toEqual([]);
   });
 
   it('should display extraErrors on first async set with array field and controlled formData', async () => {
@@ -952,8 +1618,6 @@ describe('Async errors', () => {
       },
     };
 
-    const formRef = createRef<Form>();
-
     function Wrapper() {
       const [formData, setFormData] = useState<Record<string, unknown>>({ values: [] });
       const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
@@ -965,12 +1629,11 @@ describe('Async errors', () => {
             0: { __errors: ['ERROR MESSAGE'] },
           },
           __errors: ['Root error'],
-        } as unknown as ErrorSchema);
+        });
       }, []);
 
       return (
         <Form
-          ref={formRef}
           schema={schema}
           validator={validator}
           formData={formData}
@@ -987,7 +1650,7 @@ describe('Async errors', () => {
     // Add an array item and fill it with a valid number
     const addBtn = form.querySelector('.btn-add');
     await user.click(addBtn!);
-    const input = form.querySelector<HTMLInputElement>('input[type="number"]')!;
+    const input = form.querySelector<HTMLInputElement>('input[inputmode="decimal"]')!;
     await user.clear(input);
     await user.type(input, '42');
 
@@ -996,12 +1659,8 @@ describe('Async errors', () => {
     await actWrappedDelayPromise();
 
     // The extra errors should be displayed on the FIRST submit
-    expect(formRef.current!.state.errors.length).toBeGreaterThan(0);
-    expect(formRef.current!.state.errorSchema).toEqual(
-      expect.objectContaining({
-        __errors: ['Root error'],
-      }),
-    );
+    expect(errorListMessages(form)).toEqual(['. Root error', '.values.0 ERROR MESSAGE']);
+    expect(fieldErrorsById(form)).toEqual(expect.objectContaining({ root_values_0: ['ERROR MESSAGE'] }));
   });
 });
 
@@ -1028,7 +1687,10 @@ describe('Calling onChange right after updating a Form with props formData', () 
         return;
       }
       changed = true;
-      latestProps.current.onChange('test', [latestProps.current.formData.length]);
+      latestProps.current.onChange(
+        'test',
+        toFieldPath((latestProps.current.formData as unknown[]).length, latestProps.current.fieldPath),
+      );
     });
     return <ArrayField {...fieldProps} />;
   };
@@ -1044,7 +1706,7 @@ describe('Calling onChange right after updating a Form with props formData', () 
   };
 
   const Container = (containerProps: FormProps) => {
-    const [state, setState] = useState<{ formData?: any }>({});
+    const [state, setState] = useState<Pick<FormProps, 'formData'>>({ formData: [] });
     const onChange = useCallback(({ formData }: IChangeEvent) => {
       setState({ formData });
     }, []);
@@ -1061,13 +1723,183 @@ describe('Calling onChange right after updating a Form with props formData', () 
   });
 });
 
+describe('Deriving state from changed props', () => {
+  const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 8 } } };
+  const identity: FormProps['transformErrors'] = (errors) => errors;
+  const alsoIdentity: FormProps['transformErrors'] = (errors) => errors;
+
+  type ParentProps = Partial<Pick<FormProps, 'extraErrors' | 'transformErrors' | 'customValidate' | 'className'>> & {
+    formContext?: FormProps['formContext'];
+  };
+
+  function Parent({ steps }: { steps: ParentProps[] }) {
+    const [step, setStep] = useState(0);
+    const [formData, setFormData] = useState({ name: 'short' });
+    return (
+      <>
+        <button type='button' onClick={() => setStep(step + 1)}>
+          next
+        </button>
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onChange'
+          formData={formData}
+          onChange={(event) => setFormData(event.formData)}
+          {...steps[step]}
+        />
+      </>
+    );
+  }
+
+  it('keeps the inline error of the field being typed in when the parent echoes the data back', async () => {
+    const { container } = render(<Parent steps={[{}]} />);
+
+    await user.type(container.querySelector('input')!, 'x');
+
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+    expect(errorListMessages(container)).toEqual(['.name must NOT have fewer than 8 characters']);
+  });
+
+  it('does not validate untouched data when a prop that takes no part in validation changes', async () => {
+    const { container } = render(<Parent steps={[{ formContext: { n: 1 } }, { formContext: { n: 2 } }]} />);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+  });
+
+  it('re-validates unchanged data when a prop that takes part in validation changes', async () => {
+    const { container } = render(<Parent steps={[{ transformErrors: identity }, { transformErrors: alsoIdentity }]} />);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
+  });
+
+  it('clears extraErrors the parent drops after a re-validation of unchanged data', async () => {
+    const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+    const { container } = render(
+      <Parent
+        steps={[
+          { extraErrors, transformErrors: identity },
+          { extraErrors, transformErrors: alsoIdentity },
+          { transformErrors: alsoIdentity },
+        ]}
+      />,
+    );
+    expect(container.querySelector('.error-detail li')).toHaveTextContent('from the server');
+
+    await user.click(container.querySelector('button')!);
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(2);
+    await user.click(container.querySelector('button')!);
+
+    const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
+    expect(messages).toEqual(['must NOT have fewer than 8 characters']);
+  });
+
+  it('carries each extraError over exactly once when a non-validation prop changes', async () => {
+    const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
+    const { container } = render(<Parent steps={[{ extraErrors }, { extraErrors, className: 'x' }]} />);
+
+    await user.click(container.querySelector('button')!);
+
+    const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
+    expect(messages).toEqual(['from the server']);
+  });
+
+  it('re-resolves the retrieved schema when customMergeAllOf changes', async () => {
+    const allOfSchema: RJSFSchema = {
+      type: 'object',
+      allOf: [
+        { properties: { a: { type: 'string', title: 'A1' } } },
+        { properties: { a: { type: 'string', title: 'A2' } } },
+      ],
+    };
+    const firstWins: FormProps['customMergeAllOf'] = (s) => s.allOf![0] as RJSFSchema;
+    const lastWins: FormProps['customMergeAllOf'] = (s) => s.allOf![1] as RJSFSchema;
+    function MergeParent() {
+      const [merge, setMerge] = useState(() => firstWins);
+      return (
+        <>
+          <button type='button' onClick={() => setMerge(() => lastWins)}>
+            swap
+          </button>
+          <Form schema={allOfSchema} validator={validator} formData={{ a: 'x' }} customMergeAllOf={merge} />
+        </>
+      );
+    }
+    const { container } = render(<MergeParent />);
+    expect(container.querySelector('label')).toHaveTextContent('A1');
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector('label')).toHaveTextContent('A2');
+  });
+});
+
+describe('customValidate', () => {
+  it('hands customValidate data computed with the defaultFormStateBehavior of the form', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string', default: 'Jo' }, fixed: { type: 'string', const: 'constant' } },
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    const { node } = createFormComponent({
+      schema,
+      customValidate,
+      defaultFormStateBehavior: { constAsDefaults: 'never' },
+    });
+
+    await submitForm(node, user);
+
+    expect(customValidate).toHaveBeenCalled();
+    expect(customValidate.mock.lastCall![0]).toEqual({ name: 'Jo' });
+  });
+});
+
+describe('a self-owned form whose customMergeAllOf changes', () => {
+  it('validates a blur against the schema the new customMergeAllOf resolves', async () => {
+    const allOfSchema: RJSFSchema = {
+      type: 'object',
+      allOf: [{ properties: { a: { type: 'string', minLength: 5 } } }, { properties: { a: { type: 'string' } } }],
+    };
+    const firstWins: FormProps['customMergeAllOf'] = (s) => s.allOf![0] as RJSFSchema;
+    const lastWins: FormProps['customMergeAllOf'] = (s) => s.allOf![1] as RJSFSchema;
+    function MergeParent() {
+      const [merge, setMerge] = useState(() => firstWins);
+      return (
+        <>
+          <button type='button' onClick={() => setMerge(() => lastWins)}>
+            swap
+          </button>
+          <Form
+            schema={allOfSchema}
+            validator={validator}
+            initialFormData={{ a: 'abc' }}
+            liveValidate='onBlur'
+            customMergeAllOf={merge}
+          />
+        </>
+      );
+    }
+    const { container } = render(<MergeParent />);
+
+    await user.click(container.querySelector('button')!);
+    await user.click(container.querySelector('#root_a')!);
+    await user.tab();
+
+    expect(container.querySelector('.error-detail')).toBeNull();
+  });
+});
+
 describe('Calling reset from ref object', () => {
   it('Reset API test', async () => {
     const schema: RJSFSchema = {
       title: 'Test form',
       type: 'string',
     };
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -1086,8 +1918,9 @@ describe('Calling reset from ref object', () => {
     const schema: RJSFSchema = {
       title: 'Test form',
       type: 'number',
+      minimum: 100,
     };
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -1095,17 +1928,17 @@ describe('Calling reset from ref object', () => {
     const { node } = createFormComponent(props);
     expect(formRef.current!.reset).toBeDefined();
     expect(node.querySelector<HTMLInputElement>('input')).toBeInTheDocument();
-    await user.type(node.querySelector<HTMLInputElement>('input')!, 'Some Value');
-    expect(formRef.current!.state.errors).toHaveLength(0);
+    // A value that satisfies the number field's native `pattern` (so the browser lets the form submit)
+    // but violates the schema's `minimum`, so RJSF's own validation is what produces the error.
+    await user.type(node.querySelector<HTMLInputElement>('input')!, '5');
+    expect(errorListMessages(node)).toHaveLength(0);
     await submitForm(node, user);
-    expect(formRef.current!.state.errors).toHaveLength(1);
-    expect(node.querySelector('.errors')).toBeInTheDocument();
+    expect(errorListMessages(node)).toHaveLength(1);
     act(() => {
       formRef.current!.reset();
     });
-    expect(node.querySelector('.errors')).not.toBeInTheDocument();
+    expect(errorListMessages(node)).toHaveLength(0);
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', '');
-    expect(formRef.current!.state.errors).toHaveLength(0);
   });
 
   it('Reset button test with default value', async () => {
@@ -1114,7 +1947,7 @@ describe('Calling reset from ref object', () => {
       type: 'string',
       default: 'Some-Value',
     };
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const props: NoValFormProps = {
       ref: formRef,
       schema: schemaWithDefault,
@@ -1138,7 +1971,7 @@ describe('Calling reset from ref object', () => {
 
   it('Reset button test with complex schema', async () => {
     const schema = widgetsSchema as RJSFSchema;
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const props: NoValFormProps = {
       ref: formRef,
       schema,
@@ -1173,7 +2006,7 @@ describe('Calling reset from ref object', () => {
       title: 'Test form',
       type: 'string',
     };
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const props: NoValFormProps = {
       ref: formRef,
       initialFormData: 'foo',
@@ -1194,57 +2027,163 @@ describe('Calling reset from ref object', () => {
   });
 });
 
-describe('validateForm()', () => {
-  it('Should call validateFormWithFormData with the current formData if omitExtraData is false', () => {
-    const omitExtraData = false;
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: { type: 'string' },
-      },
-    };
-    const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
+describe('Committing a handler result', () => {
+  it('keeps the errors that validateForm() queued from inside onBlur while liveOmit runs on blur', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 8 } } };
+    const formRef = createFormRef();
+    const { node } = createFormComponent({
       ref: formRef,
       schema,
-      formData,
-      omitExtraData,
-    };
-    createFormComponent(props);
-    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
-    act(() => {
-      formRef.current!.validateForm();
+      formData: { name: 'short', extra: 'x' },
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+      onBlur: () => formRef.current!.validateForm(),
     });
-    expect(theSpy).toHaveBeenCalledWith(formData);
+
+    await user.click(node.querySelector('input')!);
+    await user.tab();
+
+    expect(errorListMessages(node)).toEqual(['.name must NOT have fewer than 8 characters']);
+    expect(fieldErrorsById(node)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
   });
 
-  it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', () => {
-    const omitExtraData = true;
+  it('renders the data its parent holds when a prop change lands in the same render as a blur validation', async () => {
+    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 5 } } };
+    const recordParentData = vi.fn<(formData: { name?: string } | undefined) => void>();
+    const onBlur = vi.fn();
+    function Parent() {
+      const [formData, setFormData] = useState<{ name?: string } | undefined>({});
+      recordParentData(formData);
+      return (
+        <Form
+          schema={schema}
+          validator={validator}
+          liveValidate='onBlur'
+          formData={formData}
+          onChange={(e) => setFormData(e.formData)}
+          onBlur={() => {
+            onBlur();
+            setFormData({ name: 'hello' });
+          }}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.type(container.querySelector('input')!, 'ab');
+    await user.tab();
+
+    // The blur's own `onChange` hands the parent `ab` after its `hello`, as on `v7`; what this pins is that the form
+    // renders the value the parent ends up holding rather than the `hello` it saw in between
+    expect(onBlur).toHaveBeenCalledTimes(1);
+    expect(recordParentData.mock.lastCall?.[0]?.name).toBe('ab');
+    expect(container.querySelector('input')).toHaveValue('ab');
+  });
+
+  it('keeps an edit when the parent re-renders in the same event, before it has been told of the edit', async () => {
+    const renderedValues: unknown[] = [];
+    function RecordingWidget(props: WidgetProps<string>) {
+      renderedValues.push(props.value);
+      return <input value={props.value ?? ''} onChange={(event) => props.onChange(event.target.value)} />;
+    }
+    function Parent() {
+      const [formData, setFormData] = useState<string | undefined>('');
+      const [changeCount, setChangeCount] = useState(0);
+      return (
+        <div onChange={() => setChangeCount((count) => count + 1)}>
+          <Form
+            schema={{ type: 'string' }}
+            validator={validator}
+            formData={formData}
+            className={`changes-${changeCount}`}
+            widgets={{ TextWidget: RecordingWidget }}
+            onChange={(e) => setFormData(e.formData)}
+          />
+        </div>
+      );
+    }
+    const { container } = render(<Parent />);
+
+    await user.type(container.querySelector('input')!, 'x');
+
+    expect(renderedValues.filter((value, i) => value !== renderedValues[i - 1])).toEqual(['', 'x']);
+  });
+});
+
+describe('validateForm()', () => {
+  // `additionalProperties: false` makes the extra field a validation error, so what got validated is visible in
+  // whether the call passes
+  const strictSchema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      foo: { type: 'string' },
+    },
+    additionalProperties: false,
+  };
+  const formData = { foo: 'bar', baz: 'baz' };
+
+  it('reads ui:required with the formContext of the props it validates with, before the form commits them', () => {
+    const formRef = createFormRef();
     const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        foo: { type: 'string' },
-      },
+      type: 'array',
+      items: { type: 'object', properties: { name: { type: 'string' } } },
     };
-    const formData = { foo: 'bar', baz: 'baz' };
-    const formRef = createRef<Form>();
-    const props: NoValFormProps = {
-      ref: formRef,
-      schema,
-      formData,
-      omitExtraData,
+    const uiSchema: UiSchema = {
+      items: (_item: unknown, _index: number, formContext?: { strict?: boolean }) =>
+        formContext?.strict ? { name: { 'ui:required': true } } : {},
     };
-    createFormComponent(props);
-    const theSpy = vi.spyOn(formRef.current!, 'validateFormWithFormData').mockReturnValue(true);
+    const listData = [{}];
+    const results: boolean[] = [];
+    function Parent({ strict }: { strict: boolean }) {
+      const formContext = useMemo(() => ({ strict }), [strict]);
+      // Runs after the form's own componentDidUpdate but before the state it queues there commits
+      useLayoutEffect(() => {
+        if (strict) {
+          results.push(formRef.current!.validateForm());
+        }
+      }, [strict]);
+      return (
+        <Form
+          ref={formRef}
+          schema={schema}
+          uiSchema={uiSchema}
+          validator={validator}
+          formData={listData}
+          formContext={formContext}
+        />
+      );
+    }
+    const { rerender } = render(<Parent strict={false} />);
+
+    rerender(<Parent strict />);
+
+    expect(results).toEqual([false]);
+  });
+
+  it('validates the current formData, extra fields included, if omitExtraData is false', () => {
+    const formRef = createFormRef();
+    const { onError } = createFormComponent({ ref: formRef, schema: strictSchema, formData, omitExtraData: false });
+
     act(() => {
-      formRef.current!.validateForm();
+      expect(formRef.current!.validateForm()).toBe(false);
     });
-    expect(theSpy).toHaveBeenCalledWith({ foo: 'bar' });
+
+    expect(onError).toHaveBeenCalledWith([expect.objectContaining({ name: 'additionalProperties' })]);
+  });
+
+  it('validates only the fields the schema describes if omitExtraData is true', () => {
+    const formRef = createFormRef();
+    const { onError } = createFormComponent({ ref: formRef, schema: strictSchema, formData, omitExtraData: true });
+
+    act(() => {
+      expect(formRef.current!.validateForm()).toBe(true);
+    });
+
+    expect(onError).not.toHaveBeenCalled();
   });
 
   it('Should update state when data updated from invalid to valid', async () => {
-    const ref = createRef<Form>();
+    const ref = createFormRef();
     const props: NoValFormProps = {
       schema: {
         type: 'object',
@@ -1286,8 +2225,8 @@ describe('validateForm()', () => {
     expect(errors).toHaveLength(0);
   });
 
-  it('Should keep non-blocking extraErrors in state when schema is valid and extraErrorsBlockSubmit is not set', () => {
-    const formRef = createRef<Form>();
+  it('Should keep non-blocking extraErrors in state when schema is valid and extraErrorsAreWarnings is set', () => {
+    const formRef = createFormRef();
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -1298,30 +2237,30 @@ describe('validateForm()', () => {
       foo: {
         __errors: ['async error for foo'],
       },
-    } as unknown as ErrorSchema;
+    };
     const props: NoValFormProps = {
       ref: formRef,
       schema,
       formData: { foo: 'valid' },
       extraErrors,
+      extraErrorsAreWarnings: true,
     };
-    const { onError } = createFormComponent(props);
+    const { node, onError } = createFormComponent(props);
 
     act(() => {
       // Should return true (non-blocking)
       expect(formRef.current!.validateForm()).toBe(true);
     });
 
-    // extraErrors should remain visible in state
-    expect(formRef.current!.state.errors).toHaveLength(1);
-    expect(formRef.current!.state.errors[0].message).toBe('async error for foo');
-    expect(formRef.current!.state.errorSchema).toEqual(extraErrors);
+    // extraErrors should remain visible
+    expect(errorListMessages(node)).toEqual(['.foo async error for foo']);
+    expect(fieldErrorsById(node)).toEqual({ root_foo: ['async error for foo'] });
     // onError should NOT be called for non-blocking errors
     expect(onError).not.toHaveBeenCalled();
   });
 
-  it('Should return false and call onError when extraErrors are present with extraErrorsBlockSubmit set', () => {
-    const formRef = createRef<Form>();
+  it('Should return false and call onError when extraErrors are present by default', () => {
+    const formRef = createFormRef();
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -1332,32 +2271,30 @@ describe('validateForm()', () => {
       foo: {
         __errors: ['blocking async error'],
       },
-    } as unknown as ErrorSchema;
+    };
     const props: NoValFormProps = {
       ref: formRef,
       schema,
       formData: { foo: 'valid' },
       extraErrors,
-      extraErrorsBlockSubmit: true,
     };
-    const { onError } = createFormComponent(props);
+    const { node, onError } = createFormComponent(props);
 
     act(() => {
       // Should return false (non-blocking)
       expect(formRef.current!.validateForm()).toBe(false);
     });
 
-    // Merged errors should be in state
-    expect(formRef.current!.state.errors).toHaveLength(1);
-    expect(formRef.current!.state.errors[0].message).toBe('blocking async error');
+    // Merged errors should be displayed
+    expect(errorListMessages(node)).toEqual(['.foo blocking async error']);
     // onError SHOULD be called
     expect(onError).toHaveBeenCalledWith(
       expect.arrayContaining([expect.objectContaining({ message: 'blocking async error' })]),
     );
   });
 
-  it('Should show both schema and extraErrors in state when schema is invalid regardless of extraErrorsBlockSubmit', () => {
-    const formRef = createRef<Form>();
+  it('Should show both schema and extraErrors in state when schema is invalid regardless of extraErrorsAreWarnings', () => {
+    const formRef = createFormRef();
     const schema: RJSFSchema = {
       type: 'object',
       required: ['foo'],
@@ -1369,29 +2306,71 @@ describe('validateForm()', () => {
       foo: {
         __errors: ['async error for foo'],
       },
-    } as unknown as ErrorSchema;
+    };
     const props: NoValFormProps = {
       ref: formRef,
       schema,
       formData: {},
       extraErrors,
-      // extraErrorsBlockSubmit intentionally omitted
+      extraErrorsAreWarnings: true,
     };
-    createFormComponent(props);
+    const { node } = createFormComponent(props);
 
     act(() => {
       // Schema error blocks submission → false
       expect(formRef.current!.validateForm()).toBe(false);
     });
 
-    // Both schema error and extra error should be in state
-    const errorMessages = formRef.current!.state.errors.map((e) => e.message);
-    expect(errorMessages).toContain("must have required property 'foo'");
-    expect(errorMessages).toContain('async error for foo');
+    // Both schema error and extra error should be displayed
+    expect(errorListMessages(node)).toEqual(["must have required property 'foo'", '.foo async error for foo']);
+  });
+
+  it('Should block submission and keep a customError raised by a widget in state', async () => {
+    const formRef = createFormRef();
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    // See "Raising errors from within a custom widget or field" in the custom-widgets-fields docs
+    function RaisingWidget(props: WidgetProps) {
+      const { id, value, onChange } = props;
+      return (
+        <input
+          id={id}
+          value={(value as string) || ''}
+          onChange={(event) => {
+            const newValue = event.target.value;
+            const errorSchema = newValue === 'bad' ? { __errors: ['custom widget error'] } : undefined;
+            onChange(newValue, errorSchema, id);
+          }}
+        />
+      );
+    }
+
+    const uiSchema: UiSchema = {
+      foo: { 'ui:widget': RaisingWidget },
+    };
+
+    const { node, onError } = createFormComponent({ ref: formRef, schema, uiSchema });
+
+    const input = node.querySelector<HTMLInputElement>('#root_foo')!;
+    await user.type(input, 'bad');
+
+    act(() => {
+      expect(formRef.current!.validateForm()).toBe(false);
+    });
+
+    expect(errorListMessages(node)).toEqual(['.foo custom widget error']);
+    expect(onError).toHaveBeenCalledWith(
+      expect.arrayContaining([expect.objectContaining({ message: 'custom widget error' })]),
+    );
   });
 
   it('Should clear extraErrors from state when extraErrors prop is removed and validateForm is called again', () => {
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -1402,41 +2381,41 @@ describe('validateForm()', () => {
       foo: {
         __errors: ['async error for foo'],
       },
-    } as unknown as ErrorSchema;
+    };
     const props: NoValFormProps = {
       ref: formRef,
       schema,
       formData: { foo: 'valid' },
       extraErrors,
     };
-    const { rerender } = createFormComponent(props);
+    const { node, rerender } = createFormComponent(props);
 
-    // First call: extraErrors should appear in state
+    // First call: extraErrors should be displayed
     act(() => {
       formRef.current!.validateForm();
     });
-    expect(formRef.current!.state.errors).toHaveLength(1);
+    expect(errorListMessages(node)).toHaveLength(1);
 
     // Rerender without extraErrors
     rerender({ ...props, extraErrors: undefined });
 
-    // Second call: no extraErrors, no schema errors → state should be cleared
+    // Second call: no extraErrors, no schema errors → nothing displayed
     act(() => {
       formRef.current!.validateForm();
     });
-    expect(formRef.current!.state.errors).toHaveLength(0);
-    expect(formRef.current!.state.errorSchema).toEqual({});
+    expect(errorListMessages(node)).toHaveLength(0);
+    expect(fieldErrorsById(node)).toEqual({});
   });
 });
 
 describe('setFieldValue()', () => {
   it('Sets root to value using ""', () => {
-    const ref = createRef<Form>();
+    const ref = createFormRef();
     const props: NoValFormProps = {
       schema: {
         type: 'string',
       },
-      formData: {},
+      initialFormData: {},
       ref,
     };
     const { onChange, node } = createFormComponent(props);
@@ -1449,18 +2428,19 @@ describe('setFieldValue()', () => {
       expect.objectContaining({
         formData: 'populated value',
       }),
-      'root_',
+      // `setFieldValue('')` addresses the root, so the change is reported against the root id
+      'root',
     );
 
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', 'populated value');
   });
   it('Sets root to value using []', () => {
-    const ref = createRef<Form>();
+    const ref = createFormRef();
     const props: NoValFormProps = {
       schema: {
         type: 'string',
       },
-      formData: {},
+      initialFormData: {},
       ref,
     };
     const { onChange, node } = createFormComponent(props);
@@ -1479,7 +2459,7 @@ describe('setFieldValue()', () => {
     expect(node.querySelector<HTMLInputElement>('input')).toHaveAttribute('value', 'populated value');
   });
   it('Sets field to new value via dotted path', () => {
-    const ref = createRef<Form>();
+    const ref = createFormRef();
     const props: NoValFormProps = {
       schema: {
         type: 'object',
@@ -1496,9 +2476,9 @@ describe('setFieldValue()', () => {
         },
         required: ['foo'],
       },
-      formData: {},
+      initialFormData: {},
       ref,
-      liveValidate: true,
+      liveValidate: 'onChange',
     };
     const { onChange, node } = createFormComponent(props);
     // trigger programmatic validation and make sure an error appears.
@@ -1533,7 +2513,7 @@ describe('setFieldValue()', () => {
     expect(errors).toHaveLength(0);
   });
   it('Sets field to new value via field path list', () => {
-    const ref = createRef<Form>();
+    const ref = createFormRef();
     const props: NoValFormProps = {
       schema: {
         type: 'object',
@@ -1550,9 +2530,9 @@ describe('setFieldValue()', () => {
         },
         required: ['foo'],
       },
-      formData: {},
+      initialFormData: {},
       ref,
-      liveValidate: true,
+      liveValidate: 'onChange',
     };
     const { onChange, node } = createFormComponent(props);
     // trigger programmatic validation and make sure an error appears.
@@ -1585,6 +2565,60 @@ describe('setFieldValue()', () => {
     // screen.debug();
     // change formData and make sure the error disappears.
     expect(errors).toHaveLength(0);
+  });
+  it("gives a property named the empty string an id of its own, not its parent's", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { obj: { type: 'object', properties: { '': { type: 'string' } } } },
+    };
+
+    const { node } = createFormComponent({ schema });
+    const ids = Array.from(node.querySelectorAll('[id]')).map((element) => element.id);
+
+    expect(node.querySelector('input#root_obj_')).toBeInTheDocument();
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+  it('keeps a root-level property named the empty string apart from the form itself', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { '': { type: 'string' }, other: { type: 'string' } },
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { other: 'kept' } });
+
+    const input = node.querySelector('input#root_');
+    expect(input).toBeInTheDocument();
+    await user.type(input!, 'x');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { '': 'x', other: 'kept' } }),
+      'root_',
+    );
+  });
+  it('Sets a field whose property name is the empty string', () => {
+    const ref = createFormRef();
+    const props: NoValFormProps = {
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'object',
+            properties: { '': { type: 'object', properties: { bar: { type: 'string' } } } },
+          },
+        },
+      },
+      initialFormData: {},
+      ref,
+    };
+    const { onChange } = createFormComponent(props);
+
+    act(() => {
+      ref.current!.setFieldValue(['foo', '', 'bar'], 'populated value');
+    });
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { foo: { '': { bar: 'populated value' } } } }),
+      'root_foo__bar',
+    );
   });
 });
 
@@ -1623,7 +2657,7 @@ describe('optionalDataControls', () => {
       enableOptionalDataFieldForType: ['object', 'array'],
     },
   };
-  const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+  const defaultFormStateBehavior: DefaultFormStateBehavior = {
     // Set the emptyObjectFields to only populate required defaults to highlight the code working
     emptyObjectFields: 'populateRequiredDefaults',
   };
@@ -1639,7 +2673,7 @@ describe('optionalDataControls', () => {
   it('does not render any optional data control messages when not turned on and readonly and disabled', () => {
     const props: NoValFormProps = {
       schema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
       readonly: true,
       disabled: true,
     };
@@ -1666,7 +2700,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: bothOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
       readonly: true,
     };
     const { node } = createFormComponent(props);
@@ -1692,7 +2726,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: bothOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
       disabled: true,
     };
     const { node } = createFormComponent(props);
@@ -1717,7 +2751,7 @@ describe('optionalDataControls', () => {
   it('does not render any optional data controls when not turned on', () => {
     const props: NoValFormProps = {
       schema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
     };
     const { node } = createFormComponent(props);
     const addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
@@ -1738,7 +2772,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: objectOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
     };
     const { node } = createFormComponent(props);
     const addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
@@ -1775,11 +2809,29 @@ describe('optionalDataControls', () => {
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).toEqual(null);
   });
+  it('applies ui:initialValue to a field revealed by the object optional data Add control', async () => {
+    const uiSchema: UiSchema = {
+      ...objectOnUiSchema,
+      nestedObjectOptional: {
+        test: { 'ui:initialValue': 'default text' },
+      },
+    };
+    const props: NoValFormProps = {
+      schema,
+      uiSchema,
+      defaultFormStateBehavior,
+    };
+    const { node } = createFormComponent(props);
+    const addObjectControlNode = node.querySelector<HTMLButtonElement>(`#${objectControlAddId}`)!;
+    await user.click(addObjectControlNode);
+    const testInput = node.querySelector<HTMLInputElement>(`#${objectId}_test`);
+    expect(testInput).toHaveValue('default text');
+  });
   it('only render array optional data controls when only array is turned on', async () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: arrayOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
     };
     const { node } = createFormComponent(props);
     let addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
@@ -1820,7 +2872,7 @@ describe('optionalDataControls', () => {
     const props: NoValFormProps = {
       schema,
       uiSchema: bothOnUiSchema,
-      experimental_defaultFormStateBehavior,
+      defaultFormStateBehavior,
     };
     const { node } = createFormComponent(props);
     let addArrayControlNode = node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`);
@@ -1870,6 +2922,101 @@ describe('optionalDataControls', () => {
     expect(addObjectControlNode).not.toEqual(null);
     expect(removeObjectControlNode).toEqual(null);
     expect(testInput).toEqual(null);
+  });
+  it('gives the controls of an object that is itself a oneOf a distinct id from those of the selected option', () => {
+    const oneOfObjectSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        nestedObjectOptional: {
+          type: 'object',
+          properties: { shared: { type: 'string' } },
+          oneOf: [
+            { title: 'A', properties: { a: { type: 'string' } } },
+            { title: 'B', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema: oneOfObjectSchema, uiSchema: objectOnUiSchema });
+    const ids = [...node.querySelectorAll('[id]')].map((element) => element.id);
+
+    expect(new Set(ids).size).toEqual(ids.length);
+    expect(ids).toContain(objectControlAddId);
+    expect(ids).toContain(optionalControlsId(`${objectId}_XxxOf`, 'Add'));
+  });
+  it('renders the controls for an object and an array with an empty option list, and adds and removes the value', async () => {
+    const emptyOptionsSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        nestedObjectOptional: { ...(schema.properties!.nestedObjectOptional as RJSFSchema), oneOf: [] },
+        nestedArrayOptional: { ...(schema.properties!.nestedArrayOptional as RJSFSchema), anyOf: [] },
+      },
+    };
+    const { node, onChange } = createFormComponent({ schema: emptyOptionsSchema, uiSchema: bothOnUiSchema });
+
+    expect(node.querySelector(`#${objectId}_test`)).toEqual(null);
+    expect(node.querySelector(`#${arrayAddId}`)).toEqual(null);
+
+    await user.click(node.querySelector<HTMLButtonElement>(`#${objectControlAddId}`)!);
+    await user.click(node.querySelector<HTMLButtonElement>(`#${arrayControlAddId}`)!);
+
+    expectToHaveBeenCalledWithFormData(onChange, { nestedObjectOptional: {}, nestedArrayOptional: [] }, arrayId);
+    expect(node.querySelector(`#${objectControlRemoveId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${objectId}_test`)).not.toEqual(null);
+    expect(node.querySelector(`#${arrayControlRemoveId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${arrayAddId}`)).not.toEqual(null);
+
+    await user.click(node.querySelector<HTMLButtonElement>(`#${objectControlRemoveId}`)!);
+    await user.click(node.querySelector<HTMLButtonElement>(`#${arrayControlRemoveId}`)!);
+
+    expectToHaveBeenCalledWithFormData(
+      onChange,
+      { nestedObjectOptional: undefined, nestedArrayOptional: undefined },
+      arrayId,
+    );
+    expect(node.querySelector(`#${objectControlAddId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${objectId}_test`)).toEqual(null);
+    expect(node.querySelector(`#${arrayControlAddId}`)).not.toEqual(null);
+    expect(node.querySelector(`#${arrayAddId}`)).toEqual(null);
+  });
+  it('submits past a ui:required field of an anyOf object option that is hidden behind its Add button', async () => {
+    const thingSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { allOf: [{ anyOf: [{ type: 'object', properties: { a: { type: 'string' } } }] }] },
+      },
+    };
+    const { node, onSubmit, onError } = createFormComponent({
+      schema: thingSchema,
+      uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
+      formData: { thing: {} },
+    });
+
+    expect(node.querySelector('#root_thing_a')).toEqual(null);
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalled();
+  });
+  it('blocks submit on a ui:required property an object renders beside anyOf options that name no type', async () => {
+    const thingSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { type: 'object', properties: { a: { type: 'string' } }, anyOf: [{ minProperties: 0 }] },
+      },
+    };
+    const { node, onSubmit, onError } = createFormComponent({
+      schema: thingSchema,
+      uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
+      formData: { thing: {} },
+      noHtml5Validate: true,
+    });
+
+    expect(node.querySelector('#root_thing_a')).not.toEqual(null);
+    await submitForm(node, user);
+
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).toHaveBeenCalled();
   });
 });
 
@@ -2130,10 +3277,13 @@ describe('initialFormData feature to prevent form reset', () => {
       name: { type: 'string', title: 'Name' },
     },
   };
-  const data = { name: 'initial_id' };
+  interface ResetData {
+    name?: string;
+  }
+  const data: ResetData = { name: 'initial_id' };
   /** This was adapted from the [example](https://playcode.io/2038613) provided in issue #391
    */
-  const FormWrapper = ({ formData, initialFormData }: { formData?: any; initialFormData?: any }) => {
+  const FormWrapper = ({ formData, initialFormData }: { formData?: ResetData; initialFormData?: ResetData }) => {
     const [isPending, setIsPending] = useState(false);
 
     const handleSubmit = () => {
@@ -2156,7 +3306,8 @@ describe('initialFormData feature to prevent form reset', () => {
       />
     );
   };
-  it('show that Form resets without initial data when it is controlled', async () => {
+  it('show that a controlled Form keeps rendering the parent value when the parent does not accept edits', async () => {
+    // The parent owns `formData` and never hands a proposal back, so the edit is proposed but never rendered
     const { container } = render(<FormWrapper formData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
@@ -2164,7 +3315,7 @@ describe('initialFormData feature to prevent form reset', () => {
     await user.clear(input);
     await user.type(input, 'new value');
     input = container.querySelector('input')!;
-    expect(input).toHaveAttribute('value', 'new value');
+    expect(input).toHaveAttribute('value', data.name);
 
     await submitForm(container.querySelector('form')!, user);
 
@@ -2201,13 +3352,13 @@ describe('extraErrors set after submit (#4965)', () => {
       foo: {
         __errors: ['Sample error on field foo'],
       },
-    } as unknown as ErrorSchema;
+    };
 
     function Wrapper() {
-      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
 
       const onSubmit = useCallback(async () => {
-        setExtraErrors({} as ErrorSchema);
+        setExtraErrors({});
         await delayPromise(50);
         setExtraErrors(sampleErrors);
       }, []);
@@ -2239,13 +3390,13 @@ describe('extraErrors set after submit (#4965)', () => {
       __errors: ['Simulated submit failure.'],
       a: { __errors: ['Sample error on field a'] },
       b: { __errors: ['Sample error on field b'] },
-    } as unknown as ErrorSchema;
+    };
 
     function Wrapper() {
-      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
 
       const onSubmit = useCallback(async () => {
-        setExtraErrors({} as ErrorSchema);
+        setExtraErrors({});
         await delayPromise();
         setExtraErrors(sampleErrors);
       }, []);
@@ -2278,20 +3429,18 @@ describe('extraErrors set after submit (#4965)', () => {
 
     const sampleErrors: ErrorSchema = {
       foo: { __errors: ['Server-side error'] },
-    } as unknown as ErrorSchema;
-
-    const formRef = createRef<Form>();
+    };
 
     function Wrapper() {
-      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({} as ErrorSchema);
+      const [extraErrors, setExtraErrors] = useState<ErrorSchema>({});
 
       const onSubmit = useCallback(async () => {
-        setExtraErrors({} as ErrorSchema);
+        setExtraErrors({});
         await delayPromise();
         setExtraErrors(sampleErrors);
       }, []);
 
-      return <Form ref={formRef} schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} />;
+      return <Form schema={schema} validator={validator} onSubmit={onSubmit} extraErrors={extraErrors} />;
     }
 
     const { container } = render(<Wrapper />);
@@ -2301,14 +3450,8 @@ describe('extraErrors set after submit (#4965)', () => {
 
     await actWrappedDelayPromise(200);
 
-    // Check the form state directly
-    const { state } = formRef.current!;
-    expect(state.errors.length).toBeGreaterThan(0);
-    expect(state.errorSchema).toEqual(sampleErrors);
-
-    // Also check DOM
-    const errorItems = container.querySelectorAll('.error-detail li');
-    expect(errorItems.length).toBeGreaterThan(0);
+    expect(errorListMessages(container)).toEqual(['.foo Server-side error']);
+    expect(fieldErrorsById(container)).toEqual({ root_foo: ['Server-side error'] });
   });
 });
 
@@ -2331,12 +3474,10 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
 
     const extraErrors: ErrorSchema = {
       name: { __errors: ['Name is required'] },
-    } as unknown as ErrorSchema;
-
-    const formRef = createRef<Form>();
+    };
 
     function Wrapper() {
-      return <Form ref={formRef} schema={schema} validator={validator} extraErrors={extraErrors} />;
+      return <Form schema={schema} validator={validator} extraErrors={extraErrors} />;
     }
 
     const { container } = render(<Wrapper />);
@@ -2347,10 +3488,36 @@ describe('extraErrors not duplicated when sibling array field mutated (#5041)', 
     await user.click(addBtn!);
 
     // The name field's extraErrors should still contain exactly one error
-    const { state } = formRef.current!;
-    const nameErrors = (state.errorSchema as any)?.name?.__errors ?? [];
-    expect(nameErrors).toHaveLength(1);
-    expect(nameErrors[0]).toBe('Name is required');
+    expect(fieldErrorsById(form).root_name).toEqual(['Name is required']);
+  });
+
+  it('should not accumulate duplicate extraErrors in the error list when a field raises a custom error', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      required: ['bar'],
+      properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+    };
+    function RaisingField({ formData, onChange, fieldPath }: FieldProps) {
+      return (
+        <input
+          type='text'
+          value={typeof formData === 'string' ? formData : ''}
+          onChange={(event) => onChange(event.target.value, fieldPath, { __errors: ['custom!'] })}
+        />
+      );
+    }
+    const { node } = createFormComponent({
+      schema,
+      fields: { StringField: RaisingField },
+      extraErrors: { foo: { __errors: ['extra!'] } },
+    });
+    // A submit puts a real validation error into `schemaValidationErrorSchema`, which is the base the custom-error
+    // path re-merges onto
+    await submitForm(node, user);
+
+    await user.type(node.querySelectorAll<HTMLInputElement>('input[type=text]')[0], 'abc');
+
+    expect(errorListMessages(node).filter((message) => message.endsWith('extra!'))).toHaveLength(1);
   });
 });
 
@@ -2386,7 +3553,7 @@ describe('patternProperties with fixed properties (#4518)', () => {
 
     const { container, node, onSubmit, onError } = createFormComponent({
       schema,
-      formData: { annotations: {} },
+      initialFormData: { annotations: {} },
     });
 
     await submitForm(node, user);
@@ -2483,48 +3650,8 @@ describe('clearing a field with a schema default does not re-apply the default (
   });
 });
 
-// The data the form reports for a cleared field holds the key with an `undefined` value, which `omitExtraData` strips,
-// so these live outside `describeRepeated`, where that key is what the parent's later prop change removes
-describe('a parent dropping data the form reported as absent', () => {
-  it('re-applies the default of a key the parent removed after replying', async () => {
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: { keep: { type: 'string' }, defaulted: { type: 'string', default: 'preset' } },
-    };
-    let currentFormData: unknown;
-    const props = {
-      schema,
-      onChange: (event: IChangeEvent) => {
-        currentFormData = event.formData;
-      },
-    };
-    const { node, rerender } = createFormComponent({ ...props, formData: { keep: 'a', defaulted: 'typed' } });
-
-    await user.clear(node.querySelector<HTMLInputElement>('#root_defaulted')!);
-    rerender({ ...props, formData: currentFormData });
-    rerender({ ...props, formData: { keep: 'a' } });
-
-    expect(node.querySelector<HTMLInputElement>('#root_defaulted')).toHaveValue('preset');
-  });
-
-  it('re-applies the defaults when the parent empties the data after replying', async () => {
-    const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', default: 'preset' } } };
-    let currentFormData: unknown;
-    const props = {
-      schema,
-      onChange: (event: IChangeEvent) => {
-        currentFormData = event.formData;
-      },
-    };
-    const { node, rerender } = createFormComponent({ ...props, formData: { name: 'typed' } });
-
-    await user.clear(node.querySelector<HTMLInputElement>('#root_name')!);
-    rerender({ ...props, formData: currentFormData });
-    rerender({ ...props, formData: {} });
-
-    expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('preset');
-  });
-});
+// NOTE: Some v6 tests labeled `a parent dropping data the form reported as absent` have been deleted
+//       This comment left as a marker for them so that a future merge commit will cause a conflict
 
 describe('dependency defaults in controlled forms', () => {
   const triggersSchema: RJSFSchema = {
@@ -2571,7 +3698,7 @@ describe('dependency defaults in controlled forms', () => {
   it('preserves an empty array already present when enabling the dependency branch', async () => {
     const { node, onChange } = createFormComponent({
       schema,
-      formData: {
+      initialFormData: {
         triggersOverride: false,
         triggers: [],
         repoData: { triggersOverride: true, triggers: [] },
@@ -2641,7 +3768,7 @@ describe('enum-based array values do not update when dependencies change (#1357 
     const { node, onChange } = createFormComponent({
       schema,
       uiSchema,
-      formData: { opt: false },
+      initialFormData: { opt: false },
     });
 
     const checkboxC = node.querySelector('#root_arr-0');
@@ -2705,13 +3832,13 @@ describe('enum-based array values do not update when dependencies change (#1357 
         },
       },
     };
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema,
-      formData: { select_item: 'item1' },
-      experimental_defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } },
+      initialFormData: { select_item: 'item1' },
+      defaultFormStateBehavior: { arrayMinItems: { mergeExtraDefaults: true } },
     });
 
-    expectToHaveBeenCalledWithFormData(onChange, {
+    expect(getFormData()).toEqual({
       select_item: 'item1',
       item_detail: ['item_detail1', 'item_detail2'],
     });

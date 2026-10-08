@@ -1,13 +1,13 @@
-import { ANY_OF_KEY, ONE_OF_KEY, PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
-import { getByPath, hasByPath } from '../pathUtils.ts';
+import { PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
+import { getByPath } from '../pathUtils.ts';
 import type {
-  Experimental_CustomMergeAllOf,
   FormContextType,
   FoundFieldType,
   RJSFSchema,
+  SchemaContext,
   SchemaFieldPath,
   StrictRJSFSchema,
-  ValidatorType,
 } from '../types.ts';
 import findSelectedOptionInXxxOf from './findSelectedOptionInXxxOf.ts';
 import getFromSchema from './getFromSchema.ts';
@@ -19,26 +19,24 @@ export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };
  * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
  * field is in the `required` list for its parent and if so, it is marked as required on return.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param schema - The node within the JSON schema in which to search
  * @param path - The keys in the path to the desired field
  * @param [formData={}] - The form data that is used to determine which anyOf/oneOf option to descend
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - An object that contains the field and its required state. If no field can be found then
  *            `{ field: undefined, isRequired: undefined }` is returned.
  */
 export default function findFieldInSchema<
-  T = undefined,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: SchemaContext<S, F>,
   rootSchema: S,
   schema: S,
   path: SchemaFieldPath,
   formData: T = {} as T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): FoundFieldType<S> {
   const pathList = Array.isArray(path) ? [...path] : path.split('.');
   let parentField = schema;
@@ -50,85 +48,41 @@ export default function findFieldInSchema<
   if (pathList.length) {
     // drilling into the schema for each sub-path and taking into account of the any/oneOfs
     pathList.forEach((subPath) => {
-      parentField = getFromSchema<T, S, F>(
-        validator,
-        rootSchema,
-        parentField,
-        [PROPERTIES_KEY, subPath],
-        {} as S,
-        experimental_customMergeAllOf,
-      );
-      if (hasByPath(parentField, ONE_OF_KEY)) {
-        // if this sub-path has a `oneOf` then use the formData to drill into the schema with the selected option
+      parentField = getFromSchema<T, S, F>(context, rootSchema, parentField, [PROPERTIES_KEY, subPath], {} as S);
+      // if this sub-path has an `anyOf` or `oneOf` then use the formData to drill into the schema with the selected option
+      const xxxOfKey = parentField && getXxxOfKey<S>(parentField);
+      if (xxxOfKey) {
         parentField = findSelectedOptionInXxxOf(
-          validator,
+          context,
           rootSchema,
           parentField,
           fieldNameKey,
-          ONE_OF_KEY,
+          xxxOfKey,
           getByPath<T>(formData, subPath),
-          experimental_customMergeAllOf,
-        )!;
-      } else if (hasByPath(parentField, ANY_OF_KEY)) {
-        // if this sub-path has a `anyOf` then use the formData to drill into the schema with the selected option
-        parentField = findSelectedOptionInXxxOf(
-          validator,
-          rootSchema,
-          parentField,
-          fieldNameKey,
-          ANY_OF_KEY,
-          getByPath<T>(formData, subPath),
-          experimental_customMergeAllOf,
         )!;
       }
     });
   }
 
-  if (hasByPath(parentField, ONE_OF_KEY)) {
-    // When oneOf is in the root schema, use the formData to drill into the schema with the selected option
-    parentField = findSelectedOptionInXxxOf(
-      validator,
-      rootSchema,
-      parentField,
-      fieldNameKey,
-      ONE_OF_KEY,
-      formData,
-      experimental_customMergeAllOf,
-    )!;
-  } else if (hasByPath(parentField, ANY_OF_KEY)) {
-    // When anyOf is in the root schema, use the formData to drill into the schema with the selected option
-    parentField = findSelectedOptionInXxxOf(
-      validator,
-      rootSchema,
-      parentField,
-      fieldNameKey,
-      ANY_OF_KEY,
-      formData,
-      experimental_customMergeAllOf,
-    )!;
+  // When the root schema has an `anyOf` or `oneOf`, use the formData to drill into the schema with the selected option
+  const xxxOfKey = parentField && getXxxOfKey<S>(parentField);
+  if (xxxOfKey) {
+    parentField = findSelectedOptionInXxxOf(context, rootSchema, parentField, fieldNameKey, xxxOfKey, formData)!;
   }
 
   // taking the most updated `parentField`, get our desired field
   let field: S | undefined = getFromSchema<T, S, F>(
-    validator,
+    context,
     rootSchema,
     parentField,
     [PROPERTIES_KEY, fieldName],
     NOT_FOUND_SCHEMA as S,
-    experimental_customMergeAllOf,
   );
   if (field === NOT_FOUND_SCHEMA) {
     field = undefined;
   }
   // check to see if our desired field is in the `required` list for its parent
-  const requiredArray = getFromSchema<T, S, F>(
-    validator,
-    rootSchema,
-    parentField,
-    REQUIRED_KEY,
-    [] as T,
-    experimental_customMergeAllOf,
-  );
+  const requiredArray = getFromSchema<T, S, F>(context, rootSchema, parentField, REQUIRED_KEY, [] as T);
   let isRequired: boolean | undefined;
   if (field && Array.isArray(requiredArray)) {
     isRequired = requiredArray.includes(fieldNameKey);

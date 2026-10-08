@@ -1,16 +1,16 @@
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 import type { ArrayFieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
 
 export default function ArrayFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     disabled,
-    fieldPathId,
+    id,
     uiSchema,
     items,
     optionalDataControl,
@@ -22,16 +22,7 @@ export default function ArrayFieldTemplate<
     title,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
@@ -40,7 +31,7 @@ export default function ArrayFieldTemplate<
   return (
     <Box>
       <ArrayFieldTitleTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         title={uiOptions.title || title}
         schema={schema}
         uiSchema={uiSchema}
@@ -49,13 +40,13 @@ export default function ArrayFieldTemplate<
         optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-      <Grid key={`array-item-list-${fieldPathId.$id}`}>
+      <Grid key={`array-item-list-${id}`}>
         <GridItem>
           {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
           {items}
@@ -64,7 +55,7 @@ export default function ArrayFieldTemplate<
           <GridItem justifySelf='flex-end'>
             <Box mt={2}>
               <AddButton
-                id={buttonId(fieldPathId, 'add')}
+                id={buttonId(id, 'add')}
                 className='rjsf-array-item-add'
                 onClick={onAddClick}
                 disabled={disabled || readonly}

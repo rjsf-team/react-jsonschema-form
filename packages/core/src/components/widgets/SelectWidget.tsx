@@ -1,24 +1,33 @@
 import type { ChangeEvent, FocusEvent, SyntheticEvent } from 'react';
-import { useCallback } from 'react';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { useCallback, useMemo } from 'react';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
+  flattenGroupedOptions,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
 
-function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
+/** A multiple select only ever reports its selection in document order, and `optgroups` is presentational, so the
+ * options are put back into enum order via `enumIndexByPosition` before they reach form data: turning a group on or
+ * off must not reorder the array a form submits.
+ */
+function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean, enumIndexByPosition: number[]) {
+  const select = event.target as HTMLSelectElement;
   if (multiple) {
-    return Array.from((event.target as HTMLSelectElement).options)
-      .slice()
-      .filter((o) => o.selected)
-      .map((o) => o.value);
+    return Array.from(select.options)
+      .map((option, position) => ({ option, position }))
+      .filter(({ option }) => option.selected)
+      .sort((a, b) => enumIndexByPosition[a.position] - enumIndexByPosition[b.position])
+      .map(({ option }) => option.value);
   }
-  return (event.target as HTMLSelectElement).value;
+  return select.value;
 }
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
@@ -26,7 +35,11 @@ function getValue(event: SyntheticEvent<HTMLSelectElement>, multiple: boolean) {
  *
  * @param props - The `WidgetProps` for this component
  */
-function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function SelectWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   schema,
   id,
   options,
@@ -44,37 +57,55 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
+
+  const groupedOptions = useMemo(
+    () => groupEnumOptions<S>(enumOptions, optgroups, enumDisabled),
+    [enumOptions, optgroups, enumDisabled],
+  );
+  const enumIndexByPosition = useMemo(
+    () => flattenGroupedOptions<S>(groupedOptions).map((option) => option.index),
+    [groupedOptions],
+  );
 
   const handleFocus = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      return onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
+      const newValue = getValue(event, multiple, enumIndexByPosition);
+      onFocus(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
     },
-    [onFocus, id, multiple, enumOptions, optEmptyVal, optionValueFormat],
+    [onFocus, id, multiple, enumOptions, optEmptyVal, optionValueFormat, enumIndexByPosition],
   );
 
   const handleBlur = useCallback(
     (event: FocusEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      return onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
+      const newValue = getValue(event, multiple, enumIndexByPosition);
+      onBlur(id, enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
     },
-    [onBlur, id, multiple, enumOptions, optEmptyVal, optionValueFormat],
+    [onBlur, id, multiple, enumOptions, optEmptyVal, optionValueFormat, enumIndexByPosition],
   );
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLSelectElement>) => {
-      const newValue = getValue(event, multiple);
-      return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
+      const newValue = getValue(event, multiple, enumIndexByPosition);
+      onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
     },
-    [onChange, multiple, enumOptions, optEmptyVal, optionValueFormat],
+    [onChange, multiple, enumOptions, optEmptyVal, optionValueFormat, enumIndexByPosition],
   );
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, multiple, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, multiple, optionValueFormat, emptyValue);
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
+
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <option key={option.index} value={domValues[option.index]} disabled={option.disabled}>
+        {option.label}
+      </option>
+    );
+  }
 
   return (
     <>
@@ -86,7 +117,6 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         uiSchema={uiSchema}
         value={value}
       />
-      {/* oxlint-disable-next-line jsx-a11y/no-autofocus */}
       <select
         id={id}
         name={htmlName || id}
@@ -102,19 +132,15 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <option value=''>{placeholder}</option>}
-        {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
-            const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
-            return (
-              <option
-                key={String(enumValue)}
-                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-                disabled={isDisabled}
-              >
-                {enumLabel}
-              </option>
-            );
-          })}
+        {groupedOptions.map((item) =>
+          isEnumOptionsGroup<S>(item) ? (
+            <optgroup key={`optgroup-${item.label}`} label={item.label}>
+              {item.options.map(renderOption)}
+            </optgroup>
+          ) : (
+            renderOption(item)
+          ),
+        )}
       </select>
     </>
   );

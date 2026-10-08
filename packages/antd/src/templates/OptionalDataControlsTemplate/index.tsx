@@ -11,9 +11,9 @@ import { AddButton, RemoveButton } from '../IconButton/index.tsx';
  * @param props - The `OptionalDataControlsTemplateProps` for the template
  */
 export default function OptionalDataControlsTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: OptionalDataControlsTemplateProps<T, S, F>) {
   const { id, registry, label, onAddClick, onRemoveClick } = props;
   if (onAddClick) {

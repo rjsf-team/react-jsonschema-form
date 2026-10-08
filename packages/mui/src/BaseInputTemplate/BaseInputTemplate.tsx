@@ -13,7 +13,15 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getExampleSuggestions,
+  getInputProps,
+  getNumericInputTitle,
+  hasVisibleErrors,
+  labelValue,
+} from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -24,7 +32,7 @@ export interface BaseInputTemplateMuiProps extends GenericObjectType {
   /** Native MUI `TextField` slotProps for targeting specific sub-components. */
   slotProps?: {
     /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
-    htmlInput?: React.HTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
+    htmlInput?: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
     /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
@@ -41,9 +49,9 @@ const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -66,7 +74,7 @@ export default function BaseInputTemplate<
     options,
     schema,
     uiSchema,
-    rawErrors = [],
+    rawErrors,
     errorSchema,
     registry,
     InputLabelProps,
@@ -76,20 +84,29 @@ export default function BaseInputTemplate<
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
-  const { step, min, max, accept, autoCapitalize, ...rest } = getInputProps<T, S, F>(schema, type, options);
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  const { step, min, max, accept, inputMode, pattern, autoCapitalize, ...rest } = derivedInputProps;
 
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
+  const callerHtmlInput = { ...slotProps?.htmlInput, ...muiSlotProps?.htmlInput };
+
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
+  // The derived attributes come first so a caller's `slotProps.htmlInput` overrides any of them. The title explains
+  // the derived `pattern`, so a caller replacing that pattern drops it rather than describing a rule no longer in force
   const htmlInputProps = {
-    ...slotProps?.htmlInput,
-    ...muiSlotProps?.htmlInput,
+    title: 'pattern' in callerHtmlInput ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
     step,
     min,
     max,
     accept,
-    ...(autoCapitalize === undefined ? {} : { autoCapitalize }),
-    ...(schema.examples ? { list: examplesId(id) } : undefined),
+    inputMode,
+    pattern,
+    autoCapitalize,
+    ...callerHtmlInput,
+    ...(hasExamples ? { list: examplesId(id) } : undefined),
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -142,14 +159,14 @@ export default function BaseInputTemplate<
         }}
         {...rest}
         value={value || value === 0 ? value : ''}
-        error={rawErrors.length > 0}
-        onChange={onChangeOverride || handleChange}
+        error={hasVisibleErrors({ rawErrors, hideError })}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, hasExamples)}
       />
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

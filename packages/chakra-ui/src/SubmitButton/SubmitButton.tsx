@@ -3,9 +3,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, SubmitButtonProps }
 import { getSubmitButtonOptions } from '@rjsf/utils';
 
 export default function SubmitButton<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const { submitText, norender, props: submitButtonProps } = getSubmitButtonOptions(uiSchema);
   if (norender) {

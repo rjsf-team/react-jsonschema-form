@@ -1,16 +1,18 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { useMemo } from 'react';
-import { createListCollection, NativeSelect } from '@chakra-ui/react';
-import type { EnumOptionsType, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { NativeSelect } from '@chakra-ui/react';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  groupEnumOptions,
+  hasVisibleErrors,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
 } from '@rjsf/utils';
-import type { OptionsOrGroups } from 'chakra-react-select';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
@@ -26,9 +28,9 @@ import { getChakra } from '../utils.ts';
  * @returns {JSX.Element} - The rendered component.
  */
 export default function NativeSelectWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -45,11 +47,10 @@ export default function NativeSelectWidget<
     onChange,
     onBlur,
     onFocus,
-    rawErrors = [],
     schema,
     uiSchema,
   } = props;
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
 
   const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) =>
     onChange(enumOptionsValueForIndex<S>(target?.value, enumOptions, emptyValue));
@@ -62,45 +63,24 @@ export default function NativeSelectWidget<
 
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
-  const { valueLabelMap, displayEnumOptions } = useMemo((): {
-    valueLabelMap: Record<string | number, string>;
-    displayEnumOptions: OptionsOrGroups<any, any>;
-  } => {
-    const computedValueLabelMap: Record<string | number, string> = {};
-    let computedOptions: OptionsOrGroups<any, any> = [];
-    if (Array.isArray(enumOptions)) {
-      computedOptions = enumOptions.map((option: EnumOptionsType<S>, index: number) => {
-        const { value: enumValue, label: enumLabel } = option;
-        computedValueLabelMap[index] = enumLabel || String(enumValue);
-        return {
-          label: enumLabel,
-          value: String(index),
-          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(enumValue),
-        };
-      });
-    }
-    return { valueLabelMap: computedValueLabelMap, displayEnumOptions: computedOptions };
-  }, [enumDisabled, enumOptions]);
+
+  const groupedOptions = useMemo(
+    () => groupEnumOptions<S>(enumOptions, optgroups, enumDisabled),
+    [enumDisabled, enumOptions, optgroups],
+  );
 
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, false);
-
-  const getSingleValue = () =>
-    typeof selectedIndex !== 'undefined'
-      ? [
-          {
-            label: valueLabelMap[selectedIndex as string] || '',
-            value: selectedIndex.toString(),
-          },
-        ]
-      : [];
-
-  const formValue = getSingleValue()[0]?.value || '';
-
-  const selectOptions = createListCollection({
-    items: displayEnumOptions.filter((item) => item.value),
-  });
+  const formValue = typeof selectedIndex !== 'undefined' ? selectedIndex.toString() : '';
 
   const chakraProps = getChakra({ uiSchema });
+
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <option key={option.index} value={String(option.index)} disabled={option.disabled}>
+        {option.label}
+      </option>
+    );
+  }
 
   return (
     <Field
@@ -108,7 +88,7 @@ export default function NativeSelectWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
+      invalid={hasVisibleErrors(props)}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >
@@ -128,11 +108,15 @@ export default function NativeSelectWidget<
               {placeholder || ''}
             </option>
           ) : undefined}
-          {selectOptions.items.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.label}
-            </option>
-          ))}
+          {groupedOptions.map((item) =>
+            isEnumOptionsGroup<S>(item) ? (
+              <optgroup key={`optgroup-${item.label}`} label={item.label}>
+                {item.options.map(renderOption)}
+              </optgroup>
+            ) : (
+              renderOption(item)
+            ),
+          )}
         </NativeSelect.Field>
         <NativeSelect.Indicator />
       </NativeSelect.Root>

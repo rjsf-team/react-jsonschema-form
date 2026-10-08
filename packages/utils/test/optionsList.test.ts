@@ -207,13 +207,13 @@ describe('optionsList()', () => {
           },
         ],
       };
-      const anyOfUiSchema: UiSchema = {
+      const anyOfUiSchema = {
         anyOf: [
           {
             'ui:title': 'Alternate',
           },
         ],
-      };
+      } satisfies UiSchema;
       expect(optionsList(anyOfSchema, anyOfUiSchema)).toEqual(
         anyOfSchema.anyOf!.map((schema, index) => ({
           schema,
@@ -517,13 +517,13 @@ describe('optionsList()', () => {
           },
         ],
       };
-      const oneOfUiSchema: UiSchema = {
+      const oneOfUiSchema = {
         oneOf: [
           {
             'ui:title': 'Alternate',
           },
         ],
-      };
+      } satisfies UiSchema;
       expect(optionsList(oneOfSchema, oneOfUiSchema)).toEqual(
         oneOfSchema.oneOf!.map((schema, index) => ({
           schema,
@@ -726,6 +726,136 @@ describe('optionsList()', () => {
           value: getByPath(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
         })),
       );
+    });
+  });
+  it('should label an untitled object or array constant with its JSON', () => {
+    const schema: RJSFSchema = { oneOf: [{ const: { a: 1 } }, { const: [1, 2] }, { const: null }] };
+    expect(optionsList(schema)?.map(({ label }) => label)).toEqual(['{"a":1}', '[1,2]', 'null']);
+  });
+  it('should label an untitled object enum value with its JSON', () => {
+    const schema: RJSFSchema = { enum: [{ a: 1 }] };
+    expect(optionsList(schema)?.map(({ label }) => label)).toEqual(['{"a":1}']);
+  });
+  it('should not label object or array enum values from a map-based enumNames', () => {
+    const schema: RJSFSchema = { enum: [{ tier: 1 }, [2], 'free'] };
+    const uiSchema: UiSchema = { 'ui:enumNames': { '[object Object]': 'Tier', '2': 'Two', free: 'Free' } };
+    expect(optionsList(schema, uiSchema)?.map(({ label }) => label)).toEqual(['{"tier":1}', '[2]', 'Free']);
+  });
+  it('should reorder object and array enum values by deep equality', () => {
+    const schema: RJSFSchema = { enum: [{ tier: 1 }, { tier: 2 }, [1, 2], [3], 'free'] };
+    const uiSchema = { 'ui:enumOrder': [{ tier: 2 }, [3], '*'] } as unknown as UiSchema;
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([
+      { tier: 2 },
+      [3],
+      { tier: 1 },
+      [1, 2],
+      'free',
+    ]);
+  });
+  it('should reorder an enum value by the entry equal to it before one that only shares its string', () => {
+    const schema: RJSFSchema = { enum: [1, '1', { tier: 1 }] };
+    const uiSchema = { 'ui:enumOrder': [1, { tier: 2 }, '*'] } as unknown as UiSchema;
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([1, '1', { tier: 1 }]);
+  });
+  it('should list an enum value several ui:enumOrder entries find only once', () => {
+    const schema: RJSFSchema = { enum: [1, 2, { tier: 1 }] };
+    const uiSchema = { 'ui:enumOrder': ['2', 2, { tier: 1 }, { tier: 1 }, '*'] } as unknown as UiSchema;
+    expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([2, { tier: 1 }, 1]);
+  });
+  describe('anyOf and oneOf together', () => {
+    it('should read anyOf, the list isSelect() reads, when both are constants', () => {
+      const schema: RJSFSchema = {
+        oneOf: [{ const: 'a' }, { const: 'b' }],
+        anyOf: [{ const: 1 }, { const: 2 }],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual([1, 2]);
+    });
+    it('should return undefined rather than throw when the list it reads is not all constants', () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        anyOf: [{ minLength: 1 }],
+        oneOf: [{ const: 'a' }, { const: 'b' }],
+      };
+      expect(optionsList(schema)).toBeUndefined();
+    });
+    it('should return undefined rather than throw for a boolean option', () => {
+      const schema: RJSFSchema = { oneOf: [{ const: 'a' }, true] };
+      expect(optionsList(schema)).toBeUndefined();
+    });
+    it('should read constant options by their constants under a discriminator', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'kind' },
+        oneOf: [{ const: 'a' }, { const: 'b' }],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['a', 'b']);
+    });
+    it('should read object constants that declare the discriminator property by that property', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { type: 'object', title: 'Cat', properties: { kind: { const: 'cat' } }, enum: [{ kind: 'cat' }] },
+          { type: 'object', title: 'Dog', properties: { kind: { const: 'dog' } }, enum: [{ kind: 'dog' }] },
+        ],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['cat', 'dog']);
+    });
+    it('should read a constant option that does not declare the discriminator property by its constant', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'kind' },
+        oneOf: [
+          { type: 'object', title: 'Cat', properties: { kind: { const: 'cat' } }, enum: [{ kind: 'cat' }] },
+          { title: 'None', const: 'none' },
+        ],
+      };
+      expect(optionsList(schema)?.map(({ value }) => value)).toEqual(['cat', 'none']);
+    });
+    it('should read constant options by their constants under ui:optionsSchemaSelector', () => {
+      const schema: RJSFSchema = { anyOf: [{ const: true }, { const: false }] };
+      const uiSchema: UiSchema = { 'ui:options': { optionsSchemaSelector: 'kind' } };
+      expect(optionsList(schema, uiSchema)?.map(({ value }) => value)).toEqual([true, false]);
+    });
+  });
+  describe('fallbackLabel', () => {
+    const fallbackLabel = (value: unknown) => (value === true ? 'Yes' : undefined);
+
+    it('should label an enum value ui:enumNames does not name, by the value itself when it returns undefined', () => {
+      const uiSchema: UiSchema = { 'ui:enumNames': { false: 'false' } };
+      expect(optionsList({ enum: [true, false, null] }, uiSchema, fallbackLabel)).toEqual([
+        { label: 'Yes', value: true },
+        { label: 'false', value: false },
+        { label: 'null', value: null },
+      ]);
+    });
+
+    it('should label a constant option with no title or ui:title', () => {
+      const schema: RJSFSchema = { anyOf: [{ const: true }, { const: true, title: '' }, { const: true }] };
+      const uiSchema: UiSchema = { anyOf: [{}, {}, { 'ui:title': 'Sure' }] };
+      expect(optionsList(schema, uiSchema, fallbackLabel)?.map(({ label }) => label)).toEqual(['Yes', '', 'Sure']);
+    });
+
+    it('should label a discriminated option with no title', () => {
+      const schema: RJSFSchema = {
+        discriminator: { propertyName: 'flag' },
+        oneOf: [
+          { type: 'object', properties: { flag: { const: true } } },
+          { type: 'object', properties: { flag: { const: false } } },
+        ],
+      };
+      expect(optionsList(schema, undefined, fallbackLabel)?.map(({ label }) => label)).toEqual(['Yes', 'false']);
+    });
+
+    it('should be called once for each enum value without a name, including one ui:enumOrder drops', () => {
+      const spy = vi.fn(fallbackLabel);
+      const uiSchema: UiSchema = { 'ui:enumNames': { a: 'A', b: '' }, 'ui:enumOrder': ['a', 'b'] };
+      optionsList({ enum: ['a', 'b', 'c'] }, uiSchema, spy);
+      expect(spy.mock.calls).toEqual([['b'], ['c']]);
+    });
+
+    it('should be called once for each constant option without a name', () => {
+      const spy = vi.fn(fallbackLabel);
+      const schema: RJSFSchema = { anyOf: [{ const: 'a', title: 'A' }, { const: 'b' }, { const: 'c' }] };
+      optionsList(schema, { anyOf: [{}, {}, { 'ui:title': 'C' }] }, spy);
+      expect(spy.mock.calls).toEqual([['b']]);
     });
   });
 });

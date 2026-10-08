@@ -7,7 +7,11 @@ import { ariaDescribedByIds } from '@rjsf/utils';
  *
  * @param props - The `WidgetProps` for this component
  */
-function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function TextareaWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   options,
   placeholder,

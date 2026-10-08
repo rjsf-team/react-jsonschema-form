@@ -1,20 +1,20 @@
 import enumOptionsIsSelected from './enumOptionsIsSelected.ts';
-import getTemplate from './getTemplate.ts';
+import getTemplates from './getTemplates.ts';
 import getUiOptions from './getUiOptions.ts';
 import { descriptionId } from './idGenerators.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 export type SelectedOptionDescriptionProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = Pick<WidgetProps<T, S, F>, 'id' | 'multiple' | 'options' | 'registry' | 'uiSchema' | 'value' | 'hideLabel'>;
 
 /** Renders the description associated with the selected oneOf or anyOf option in a single-select widget. */
 export default function SelectedOptionDescription<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({ hideLabel, id, multiple, options, registry, uiSchema, value }: SelectedOptionDescriptionProps<T, S, F>) {
   if (multiple || hideLabel) {
     return null;
@@ -25,17 +25,13 @@ export default function SelectedOptionDescription<
     return null;
   }
 
-  const option = options.enumOptions?.find(({ value: enumValue }) => enumOptionsIsSelected(enumValue, value));
+  const option = options.enumOptions?.find(({ value: enumValue }) => enumOptionsIsSelected(enumValue, value, false));
   const description = option?.schema?.description;
   if (!description) {
     return null;
   }
 
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <DescriptionFieldTemplate
       id={descriptionId(id)}

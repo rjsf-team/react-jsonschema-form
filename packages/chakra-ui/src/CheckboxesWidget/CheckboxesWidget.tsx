@@ -1,60 +1,41 @@
-import type { FocusEvent } from 'react';
 import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
-  optionId,
+  hasVisibleErrors,
   labelValue,
+  optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { getChakra } from '../utils.ts';
 
 export default function CheckboxesWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    disabled,
-    options,
-    value,
-    readonly,
-    onChange,
-    onBlur,
-    onFocus,
-    required,
-    label,
-    rawErrors = [],
-    hideLabel,
-    uiSchema,
-  } = props;
+  const { id, htmlName, disabled, options, value, readonly, onChange, onBlur, onFocus, label, hideLabel, uiSchema } =
+    props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   const row = options ? options.inline : false;
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
+  const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
   const chakraProps = getChakra({ uiSchema });
+  const hasError = hasVisibleErrors(props);
 
   return (
-    <FieldsetRoot
-      mb={1}
-      disabled={disabled || readonly}
-      invalid={rawErrors && rawErrors.length > 0}
-      {...(chakraProps as any)}
-    >
+    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={hasError} {...(chakraProps as any)}>
       {!hideLabel && label && <FieldsetLegend>{labelValue(label)}</FieldsetLegend>}
       <CheckboxGroup
         onValueChange={(option) =>
@@ -63,21 +44,23 @@ export default function CheckboxesWidget<
         value={selectValue}
         aria-describedby={ariaDescribedByIds(id)}
         readOnly={readonly}
-        invalid={required && value.length === 0}
+        invalid={hasError}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+              const itemDisabled =
+                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
               return (
                 <Checkbox
-                  key={String(option.value)}
+                  // oxlint-disable-next-line react/no-array-index-key
+                  key={index}
                   id={optionId(id, index)}
                   name={htmlName || id}
-                  value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+                  value={domValues[index]}
                   disabled={disabled || itemDisabled || readonly}
-                  onBlur={handleBlur}
-                  onFocus={handleFocus}
+                  onBlur={blurHandlers[index]}
+                  onFocus={focusHandlers[index]}
                 >
                   {option.label && <Text>{option.label}</Text>}
                 </Checkbox>

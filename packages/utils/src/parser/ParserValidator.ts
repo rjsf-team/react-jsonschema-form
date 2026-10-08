@@ -1,6 +1,6 @@
 import { ID_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import hashForSchema from '../hashForSchema.ts';
+import { schemaKey } from '../hashForSchema.ts';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -26,10 +26,9 @@ export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = Record<string, 
  * schema IF that schema doesn't already have an $id, prior to putting the schema into the map.
  */
 export default class ParserValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The rootSchema provided during construction of the class */
   readonly rootSchema: S;
 
@@ -43,7 +42,7 @@ export default class ParserValidator<
    */
   constructor(rootSchema: S) {
     this.rootSchema = rootSchema;
-    this.addSchema(rootSchema, hashForSchema<S>(rootSchema));
+    this.addSchema(rootSchema);
   }
 
   /** Resets the internal AJV validator to clear schemas from it. Can be helpful for resetting the validator for tests.
@@ -52,15 +51,13 @@ export default class ParserValidator<
     this.schemaMap = {};
   }
 
-  /** Adds the given `schema` to the `schemaMap` keyed by the `hash` or `ID_KEY` if present on the `schema`. If the
-   * schema does not have an `ID_KEY`, then the `hash` will be added as the `ID_KEY` to allow the schema to be
-   * associated with it's `hash` for future use (by a schema compiler).
+  /** Adds the given `schema` to the `schemaMap` under its `schemaKey()`, the same key a validator looks its compiled
+   * function up by, and carries that key on the schema as its `ID_KEY` so a schema compiler can associate the two.
    *
    * @param schema - The schema which is to be added to the map
-   * @param hash - The hash value at which to map the schema
    */
-  addSchema(schema: S, hash: string) {
-    const key = schema[ID_KEY] ?? hash;
+  addSchema(schema: S) {
+    const key = schemaKey<S>(schema);
     const identifiedSchema = { ...schema, [ID_KEY]: key };
     const existing = this.schemaMap[key];
     if (!existing) {
@@ -90,11 +87,11 @@ export default class ParserValidator<
    * @param rootSchema - The root schema associated with the schema
    * @throws - Error when the given `rootSchema` differs from the root schema provided during construction
    */
-  isValid(schema: S, _formData: T, rootSchema: S): boolean {
+  isValid(schema: S, _formData: unknown, rootSchema: S): boolean {
     if (!deepEquals(rootSchema, this.rootSchema)) {
       throw new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema');
     }
-    this.addSchema(schema, hashForSchema<S>(schema));
+    this.addSchema(schema);
 
     return false;
   }
@@ -104,7 +101,7 @@ export default class ParserValidator<
    * @param _schema - The schema parameter that is ignored
    * @param _formData - The formData parameter that is ignored
    */
-  rawValidation<Result = any>(_schema: S, _formData?: T): { errors?: Result[]; validationError?: Error } {
+  rawValidation<Result = any>(_schema: S, _formData?: unknown): { errors?: Result[]; validationError?: Error } {
     throw new Error('Unexpectedly calling the `rawValidation()` method during schema parsing');
   }
 
@@ -113,7 +110,7 @@ export default class ParserValidator<
    * @param _errorSchema - The error schema parameter that is ignored
    * @param _fieldPath - The field path parameter that is ignored
    */
-  toErrorList(_errorSchema?: ErrorSchema<T>, _fieldPath?: string[]): RJSFValidationError[] {
+  toErrorList<T = unknown>(_errorSchema?: ErrorSchema<T>, _fieldPath?: string[]): RJSFValidationError[] {
     throw new Error('Unexpectedly calling the `toErrorList()` method during schema parsing');
   }
 
@@ -126,8 +123,8 @@ export default class ParserValidator<
    * @param _transformErrors - The transformErrors parameter that is ignored
    * @param _uiSchema - The uiSchema parameter that is ignored
    */
-  validateFormData(
-    _formData: T,
+  validateFormData<T = unknown>(
+    _formData: T | undefined,
     _schema: S,
     _customValidate?: CustomValidator<T, S, F>,
     _transformErrors?: ErrorTransformer<T, S, F>,

@@ -3,43 +3,30 @@ import { useCallback } from 'react';
 import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
+  enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
-  enumOptionsIndexForValue,
+  enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
-  const {
-    id,
-    htmlName,
-    value,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    hideLabel,
-    rawErrors,
-    options,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
+  const { id, htmlName, value, required, disabled, readonly, autofocus, options, onChange, onBlur, onFocus } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
@@ -69,35 +56,45 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     [onFocus, id, enumOptions, emptyValue, optionValueFormat],
   );
 
-  const selected = enumOptionsIndexForValue<S>(value, enumOptions) as string;
+  // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
+  const selected: string | undefined = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat);
+
+  const { groupProps, optionProps } = useGroupAriaProps('RadioGroup', props);
 
   return (
     <Radio.Group
       id={id}
       name={htmlName || id}
       value={selected}
-      label={!hideLabel ? label : undefined}
       onChange={handleChange}
       required={required}
       readOnly={disabled || readonly}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      aria-describedby={ariaDescribedByIds(id)}
       {...themeProps}
+      {...groupProps}
+      {...getDescriptionProps(props)}
     >
       {Array.isArray(enumOptions) ? (
         <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
-          {enumOptions.map((option, i) => (
-            <Radio
-              key={String(option.value)}
-              id={optionId(id, i)}
-              value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
-              label={option.label}
-              disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
-              autoFocus={i === 0 && autofocus}
-              onBlur={handleBlur}
-              onFocus={handleFocus}
-            />
-          ))}
+          <GroupOptions optionProps={optionProps}>
+            {(describedOptionProps) =>
+              enumOptions.map((option, i) => (
+                <Radio
+                  // oxlint-disable-next-line react/no-array-index-key
+                  key={i}
+                  id={optionId(id, i)}
+                  value={domValues[i]}
+                  label={option.label}
+                  disabled={
+                    Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
+                  }
+                  autoFocus={i === 0 && autofocus}
+                  onBlur={handleBlur}
+                  onFocus={handleFocus}
+                  {...describedOptionProps}
+                />
+              ))
+            }
+          </GroupOptions>
         </Flex>
       ) : null}
     </Radio.Group>

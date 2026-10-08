@@ -1,4 +1,11 @@
-import type { ErrorSchema, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import type {
+  ErrorSchema,
+  FormValidation,
+  RJSFSchema,
+  RJSFValidationError,
+  UiSchema,
+  ValidatorType,
+} from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
 import customizeValidator from '../src/customizeValidator.ts';
@@ -248,7 +255,7 @@ describe('processRawValidationErrors()', () => {
   const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
 
   it('returns errors and an errorSchema for normal validation failures', () => {
-    const out = processRawValidationErrors(stubValidator, { errors: [ataError()] }, undefined, schema);
+    const out = processRawValidationErrors({ validator: stubValidator }, { errors: [ataError()] }, undefined, schema);
     expect(out.errors.length).toBeGreaterThan(0);
     expect(out.errorSchema).toBeDefined();
   });
@@ -256,7 +263,7 @@ describe('processRawValidationErrors()', () => {
   it('appends the validationError message to the error list', () => {
     const compileErr = new Error('schema invalid');
     const out = processRawValidationErrors(
-      stubValidator,
+      { validator: stubValidator },
       { errors: [], validationError: compileErr },
       undefined,
       schema,
@@ -268,9 +275,9 @@ describe('processRawValidationErrors()', () => {
   });
 
   it('runs the transformErrors hook and returns transformed output', () => {
-    const transform = vi.fn((errs) => errs.map((e: any) => ({ ...e, message: 'transformed' })));
+    const transform = vi.fn((errs: RJSFValidationError[]) => errs.map((e) => ({ ...e, message: 'transformed' })));
     const out = processRawValidationErrors(
-      stubValidator,
+      { validator: stubValidator },
       { errors: [ataError()] },
       undefined,
       schema,
@@ -282,11 +289,17 @@ describe('processRawValidationErrors()', () => {
   });
 
   it('runs the customValidate hook and merges the user errorSchema', () => {
-    const customValidate = vi.fn((_data, errorHandler) => {
-      errorHandler.x.addError('user error');
+    const customValidate = vi.fn((_data: unknown, errorHandler: FormValidation<{ x?: string }>) => {
+      errorHandler.x?.addError('user error');
       return errorHandler;
     });
-    const out = processRawValidationErrors(stubValidator, { errors: [] }, { x: 'a' }, schema, customValidate);
+    const out = processRawValidationErrors(
+      { validator: stubValidator },
+      { errors: [] },
+      { x: 'a' },
+      schema,
+      customValidate,
+    );
     expect(customValidate).toHaveBeenCalled();
     expect((out.errorSchema.x as ErrorSchema & { __errors?: string[] }).__errors).toContain('user error');
   });

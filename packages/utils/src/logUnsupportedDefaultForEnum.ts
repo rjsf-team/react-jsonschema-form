@@ -1,4 +1,6 @@
 import enumOptionsIndexForValue from './enumOptionsIndexForValue.ts';
+import logOnce from './logOnce.ts';
+import toDisplayString from './toDisplayString.ts';
 import type { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Logs a warning when a single-select enum widget has a schema default that is not one of its enum options.
@@ -20,9 +22,10 @@ export default function logUnsupportedDefaultForEnum<S extends StrictRJSFSchema 
     schema.default !== undefined &&
     enumOptionsIndexForValue<S>(schema.default, enumOptions, multiple) === undefined
   ) {
-    // oxlint-disable-next-line no-console
-    console.error(
-      `The schema default value "${schema.default}" is not one of the values in the enum options for "${id}"`,
+    const defaultText = toDisplayString(schema.default);
+    logOnce(
+      `The schema default value "${defaultText}" is not one of the values in the enum options for "${id}"`,
+      'error',
     );
   }
 }

@@ -28,25 +28,7 @@ import OptionalDataControlsTemplate from './OptionalDataControlsTemplate/index.t
 import TitleFieldTemplate from './TitleField/TitleField.tsx';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate/index.ts';
 
-/** Function that generates all the template components required for the DaisyUI theme.
- *
- * This provides a complete set of styled components that implement the DaisyUI design system
- * for use with react-jsonschema-form.
- *
- * The templates include:
- * - Array field templates (for rendering array items and controls)
- * - Button templates (for add, submit, copy, move, remove actions)
- * - Input templates (for rendering form controls)
- * - Layout templates (for fields, objects, additional properties)
- * - Helper templates (for titles, descriptions, errors, help text)
- *
- * @returns A partial `TemplatesType` object with all required template components
- */
-export function generateTemplates<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): Partial<TemplatesType<T, S, F>> {
+export function createTemplates() {
   return {
     ArrayFieldDescriptionTemplate,
     ArrayFieldItemTemplate,
@@ -78,5 +60,27 @@ export function generateTemplates<
   };
 }
 
+/** Function that generates all the template components required for the DaisyUI theme.
+ *
+ * This provides a complete set of styled components that implement the DaisyUI design system
+ * for use with react-jsonschema-form.
+ *
+ * The templates include:
+ * - Array field templates (for rendering array items and controls)
+ * - Button templates (for add, submit, copy, move, remove actions)
+ * - Input templates (for rendering form controls)
+ * - Layout templates (for fields, objects, additional properties)
+ * - Helper templates (for titles, descriptions, errors, help text)
+ *
+ * @returns A partial `TemplatesType` object with all required template components
+ */
+export function generateTemplates<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(): Partial<TemplatesType<T, S, F>> {
+  return createTemplates();
+}
+
 /** Default export of all generated templates for the DaisyUI theme */
-export default generateTemplates();
+export default createTemplates();

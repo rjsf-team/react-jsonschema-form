@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
@@ -12,24 +12,52 @@ import type {
 import {
   getByPath,
   setByPath,
-  ANY_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
+  getOptionUiSchema,
   hashObject,
-  ID_KEY,
+  fieldPathToName,
   ONE_OF_KEY,
   optionsList,
   PROPERTIES_KEY,
-  getTemplate,
+  descriptionId,
+  getDeprecatedHandling,
+  getTemplates,
+  getFieldClassNames,
   getPropertySchema,
   getUiOptions,
-  getWidget,
+  getXxxOfKey,
+  getVisibleErrors,
   noop,
+  omitConsumedStyling,
+  TranslatableString,
+  resolveWidget,
+  uiBooleanOption,
 } from '@rjsf/utils';
 
 import formDataForNewOption from './formDataForNewOption.ts';
+
+/** Gets the index of the selected option in the list of `options`, the way `getSelectedOption()` finds the option
+ *
+ * @param options - The list of schemas each representing a choice in the `oneOf`
+ * @param selectorField - The name of the field that is common in all of the schemas that represents the selector field
+ * @param value - The current value of the selector field from the data
+ * @returns - The index of the selected option, or -1 when none matches
+ */
+function getSelectedOptionIndex<S extends StrictRJSFSchema = RJSFSchema>(
+  options: EnumOptionsType<S>[],
+  selectorField: string,
+  value: unknown,
+): number {
+  const defaultValue = '!@#!@$@#$!@$#';
+  return options.findIndex(({ schema: option }) => {
+    const selector = option![PROPERTIES_KEY]?.[selectorField];
+    const result = getByPath(selector, DEFAULT_KEY, getByPath(selector, CONST_KEY, defaultValue));
+    return result === value;
+  });
+}
 
 /** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
  * the `properties[selectorField].default(or const)` that matches the given `value`.
@@ -43,13 +71,7 @@ export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
   selectorField: string,
   value: unknown,
 ): S | undefined {
-  const defaultValue = '!@#!@$@#$!@$#';
-  const schemaOptions: S[] = options.map(({ schema }) => schema!);
-  return schemaOptions.find((option) => {
-    const selector = option[PROPERTIES_KEY]?.[selectorField];
-    const result = getByPath(selector, DEFAULT_KEY, getByPath(selector, CONST_KEY, defaultValue));
-    return result === value;
-  });
+  return options[getSelectedOptionIndex<S>(options, selectorField, value)]?.schema;
 }
 
 /** Computes the `enumOptions` array from the schema and options.
@@ -62,7 +84,11 @@ export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
  * @returns - The list of enumOptions for the `schema` and `options`
  * @throws - Error when no enum options were computed
  */
-export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function computeEnumOptions<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   schema: S,
   options: S[],
   schemaUtils: SchemaUtilsType<T, S, F>,
@@ -71,10 +97,9 @@ export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSch
 ): EnumOptionsType<S>[] {
   const realOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
   let tempSchema = schema;
-  if (ONE_OF_KEY in schema) {
-    tempSchema = { ...schema, [ONE_OF_KEY]: realOptions };
-  } else if (ANY_OF_KEY in schema) {
-    tempSchema = { ...schema, [ANY_OF_KEY]: realOptions };
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  if (xxxOfKey) {
+    tempSchema = { ...schema, [xxxOfKey]: realOptions };
   }
   const enumOptions = optionsList<T, S, F>(tempSchema, uiSchema);
   if (!enumOptions) {
@@ -90,16 +115,17 @@ export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSch
  * is active. If no `selectorField` is specified, then an error is thrown.
  */
 export default function LayoutMultiSchemaField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const {
     name,
     baseType,
     disabled = false,
     formData,
-    fieldPathId,
+    fieldPath,
+    id,
     onBlur,
     onChange,
     options,
@@ -113,30 +139,61 @@ export default function LayoutMultiSchemaField<
     errorSchema,
     hideError = false,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions } = registry;
-  const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
-  const id = fieldPathId[ID_KEY];
+  const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const discriminator = getDiscriminatorFieldFromSchema(schema);
-  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, options);
-  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, options);
   const schemaHash = hashObject(schema);
   const optionsHash = hashObject(options);
   const uiSchemaHash = uiSchema ? hashObject(uiSchema) : '';
   const formDataHash = formData ? hashObject(formData) : '';
 
-  useEffect(() => {
-    setEnumOptions(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
+  // Derived rather than held in state: `computeEnumOptions()` retrieves every option's schema, so recomputing it is
+  // only worth doing when one of the hashes below moves, and holding it in state would render the previous options
+  // for a pass before an effect could re-sync them
+  const enumOptions = useMemo(
+    () => computeEnumOptions(schema, options, schemaUtils, uiSchema, formData),
     // We are using hashes in place of the dependencies
     // oxlint-disable-next-line react-hooks/exhaustive-deps
-  }, [schemaHash, optionsHash, schemaUtils, uiSchemaHash, formDataHash]);
+    [schemaHash, optionsHash, schemaUtils, uiSchemaHash, formDataHash],
+  );
   const {
     widget = discriminator ? 'radio' : 'select',
     title = '',
     placeholder = '',
     optionsSchemaSelector: selectorField = discriminator,
     hideError: uiSchemaHideError,
+    // See #439: the class names and style this field's `FieldTemplate` consumes must not reach the widget below, so
+    // they are destructured out of the options it is handed and stripped from the `uiSchema` it is handed as well
+    classNames: uiClassNames,
+    style,
     ...uiOptions
-  } = getUiOptions<T, S, F>(uiSchema);
+  } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+  // Memoized so a selector widget deriving anything from its `uiSchema` isn't invalidated by a new object each render.
+  // A `memo` boundary around it is not what this buys: `widgetOptions` below is rebuilt on every render regardless
+  const widgetUiSchema = useMemo(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
+  const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
+  // `ui:disabled` and the deprecation modes are resolved from the UI options the way `SchemaField` resolves them, so
+  // a discriminated cell behaves like the same schema rendered outside a layout grid. A selector with nothing to
+  // select from is this field's own reason to be disabled, which no other field has
+  const isDisabled =
+    uiBooleanOption(uiOptions.disabled ?? disabled) || deprecatedHandling === 'disable' || enumOptions.length === 0;
+  const widgetLabel = (title || schema.title) ?? '';
+  // Only the template's label carries the deprecation marker, as in `SchemaField`: the widget's own label names its
+  // control, and decorating it would make a group pointing at it announce the decoration twice.
+  //
+  // A label that is empty is left empty, which is the one place this deliberately parts from `SchemaField`: that
+  // falls back to the property name, so it reaches a marker-only `' (deprecated)'` for a root field alone, while a
+  // discriminated cell has no such fallback and a typeless one -- the usual shape, and one `getDisplayLabel()` does
+  // not suppress -- is commonly titleless, so decorating it would render a `<label>` naming nothing as the norm
+  const label =
+    deprecatedHandling === 'label' && widgetLabel
+      ? registry.translateString(TranslatableString.DeprecatedLabel, [widgetLabel])
+      : widgetLabel;
+  // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
+  // `ui:FieldTemplate`/`ui:FieldErrorTemplate` override on this field is silently ignored
+  const { DescriptionFieldTemplate, FieldErrorTemplate, FieldHelpTemplate, FieldTemplate } = getTemplates<T, S, F>(
+    registry,
+    uiOptions,
+  );
   if (!selectorField) {
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
   }
@@ -144,12 +201,12 @@ export default function LayoutMultiSchemaField<
   let optionSchema = getPropertySchema<S>(enumOptions[0]?.schema, selectorField);
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
   // If the subschema doesn't declare a type, infer the type from the parent schema
-  optionSchema = optionSchema?.type ? optionSchema : ({ ...optionSchema, type: option?.type || baseType } as S);
-  const Widget = getWidget<T, S, F>(optionSchema, widget, widgets);
+  optionSchema = optionSchema?.type ? optionSchema : { ...optionSchema, type: option?.type || baseType };
+  const { Widget } = resolveWidget<T, S, F>(optionSchema, widget, widgets);
 
   // The following code was copied from `@rjsf`'s `SchemaField`
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideFieldError = uiSchemaHideError === undefined ? hideError : Boolean(uiSchemaHideError);
+  const hideFieldError = uiBooleanOption(uiSchemaHideError) ?? hideError;
 
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
@@ -163,40 +220,90 @@ export default function LayoutMultiSchemaField<
    *      will use it as the index of the new option to select
    */
   const onOptionChange = (opt?: unknown) => {
-    if (disabled || readonly) {
+    // `isDisabled`, not the `disabled` prop: a `ui:disabled` of `false` re-enables the selector inside a disabled
+    // form, and the prop alone would render a clickable control whose every selection is dropped here
+    if (isDisabled || readonly) {
       return;
     }
-    const newOption = getSelectedOption<S>(enumOptions, selectorField, opt);
-    const oldOption = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
+    const newOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, opt);
+    const oldOptionIndex = getSelectedOptionIndex<S>(enumOptions, selectorField, selectedOption);
+    const newOption = enumOptions[newOptionIndex]?.schema;
+    const oldOption = enumOptions[oldOptionIndex]?.schema;
 
-    const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema);
+    // The newly-selected option's own uiSchema is resolved the same way AnyOfField's optionsUiSchema/optionUiSchema
+    // does — `uiSchema.oneOf[i]`/`uiSchema.anyOf[i]` when declared as an array reaching that option's index, falling
+    // back to this field's own uiSchema otherwise — so per-option ui:initialValue/ui:emptyValue overrides apply the
+    // same way here as they do when the same schema is rendered through plain SchemaField/AnyOfField.
+    // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
+    // never carries the root's `ui:definitions` itself.
+    const keyword = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
+    const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
+      newOptionUiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex),
+      oldOptionUiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex),
+      uiSchemaDefinitions,
+    });
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
     }
     // Pass the component name in the path
-    onChange(newFormData, fieldPathId.path, undefined, id);
+    onChange(newFormData, fieldPath, undefined, id);
   };
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };
-  const errors =
-    !hideFieldError && rawErrors.length > 0 ? (
-      <FieldErrorTemplate fieldPathId={fieldPathId} schema={schema} errors={rawErrors} registry={registry} />
-    ) : undefined;
+  const visibleErrors = getVisibleErrors({ rawErrors, hideError: hideFieldError });
+  const hasErrors = visibleErrors.length > 0;
+  const errors = hasErrors ? (
+    <FieldErrorTemplate id={id} schema={schema} errors={visibleErrors} registry={registry} />
+  ) : undefined;
+  const { help, description: uiDescription } = uiOptions;
+  const description = uiDescription || schema.description || '';
+  const descriptionComponent = (
+    <DescriptionFieldTemplate
+      id={descriptionId(id)}
+      description={description}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  );
+  const helpComponent = (
+    <FieldHelpTemplate
+      help={help}
+      id={id}
+      schema={schema}
+      uiSchema={uiSchema}
+      hasErrors={hasErrors}
+      registry={registry}
+    />
+  );
 
   return (
     <FieldTemplate
-      fieldPathId={fieldPathId}
+      fieldPath={fieldPath}
       id={id}
       schema={schema}
-      label={(title || schema.title) ?? ''}
-      disabled={disabled || (Array.isArray(enumOptions) && enumOptions.length === 0)}
+      label={label}
+      keyName={name}
+      disabled={isDisabled}
       uiSchema={uiSchema}
       required={required}
       readonly={!!readonly}
       registry={registry}
       displayLabel={displayLabel}
+      classNames={getFieldClassNames<S>(schema, hasErrors, uiClassNames)}
+      style={style}
+      // `widget` carries the resolved value, so a `ui:widget` of `hidden` is what this matches, not its default
+      hidden={widget === 'hidden' || deprecatedHandling === 'hide'}
+      formData={formData}
+      description={descriptionComponent}
+      rawDescription={description}
       errors={errors}
+      help={helpComponent}
+      rawHelp={help}
+      rawErrors={hideFieldError ? undefined : rawErrors}
+      errorSchema={errorSchema}
+      hideError={hideFieldError}
       onChange={onChange}
       onKeyRename={noop}
       onKeyRenameBlur={noop}
@@ -206,9 +313,9 @@ export default function LayoutMultiSchemaField<
         id={id}
         name={name}
         schema={schema}
-        label={(title || schema.title) ?? ''}
-        disabled={disabled || (Array.isArray(enumOptions) && enumOptions.length === 0)}
-        uiSchema={uiSchema}
+        label={widgetLabel}
+        disabled={isDisabled}
+        uiSchema={widgetUiSchema}
         autofocus={autofocus}
         readonly={readonly}
         required={required}
@@ -224,7 +331,7 @@ export default function LayoutMultiSchemaField<
         onFocus={onFocus}
         value={selectedOption}
         options={widgetOptions}
-        htmlName={fieldPathId.name}
+        htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
       />
     </FieldTemplate>
   );

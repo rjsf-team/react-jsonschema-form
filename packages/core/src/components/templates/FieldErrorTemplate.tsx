@@ -6,15 +6,15 @@ import { errorId } from '@rjsf/utils';
  * @param props - The `FieldErrorProps` for the errors being rendered
  */
 export default function FieldErrorTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldErrorProps<T, S, F>) {
-  const { errors = [], fieldPathId } = props;
+  const { errors = [], id: fieldId } = props;
   if (errors.length === 0) {
     return null;
   }
-  const id = errorId(fieldPathId);
+  const id = errorId(fieldId);
 
   return (
     <div>

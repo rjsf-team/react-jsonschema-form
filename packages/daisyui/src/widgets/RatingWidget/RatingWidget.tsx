@@ -2,6 +2,8 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
+import { getGroupProps } from '../../utils.ts';
+
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
  *
  * Features:
@@ -18,12 +20,15 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
  * @param props - The `WidgetProps` for this component
  */
 export default function RatingWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   value,
+  label,
+  name,
+  hideLabel,
   required,
   disabled,
   readonly,
@@ -38,7 +43,7 @@ export default function RatingWidget<
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
-  const min = schema.minimum || 0;
+  const min = schema.minimum ?? 0;
 
   // Generate shape class
   const maskClass = shape === 'heart' ? 'mask-heart' : 'mask-star-2';
@@ -94,7 +99,10 @@ export default function RatingWidget<
 
   return (
     <div className='form-control w-full'>
-      <div className={`rating gap-1 ${sizeClass}`}>
+      <div
+        className={`rating gap-1 ${sizeClass}`}
+        {...getGroupProps({ id, label, name, hideLabel, role: 'radiogroup' })}
+      >
         {[...Array(numStars)].map((_, index) => {
           const starValue = min + index;
           return (

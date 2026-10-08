@@ -32,7 +32,7 @@ export default function ThemeSelector({ theme, themes, select }: ThemeSelectorPr
 
   const onChange = useCallback(
     ({ formData }: IChangeEvent) => {
-      if (formData) {
+      if (typeof formData === 'string') {
         select(formData, themes[formData]);
       }
     },

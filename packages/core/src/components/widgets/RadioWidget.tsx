@@ -4,7 +4,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   enumOptionsIsSelected,
   getOptionValueFormat,
   optionId,
@@ -15,7 +15,11 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   options,
   value,
   required,
@@ -30,6 +34,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
@@ -47,8 +52,9 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     <div className='field-radio-group' id={id} role='radiogroup'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
-          const checked = enumOptionsIsSelected<S>(option.value, value);
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const checked = enumOptionsIsSelected<S>(option.value, value, false);
+          const itemDisabled =
+            Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
           const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
 
           const handleChange = () => onChange(option.value);
@@ -61,7 +67,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
                 checked={checked}
                 name={htmlName || id}
                 required={required}
-                value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+                value={domValues[i]}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && i === 0}
                 onChange={handleChange}
@@ -74,11 +80,13 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
           );
 
           return inline ? (
-            <label key={String(option.value)} className={`radio-inline ${disabledCls}`}>
+            // oxlint-disable-next-line react/no-array-index-key
+            <label key={i} className={`radio-inline ${disabledCls}`}>
               {radio}
             </label>
           ) : (
-            <div key={String(option.value)} className={`radio ${disabledCls}`}>
+            // oxlint-disable-next-line react/no-array-index-key
+            <div key={i} className={`radio ${disabledCls}`}>
               <label>{radio}</label>
             </div>
           );

@@ -1,42 +1,29 @@
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import type { ThemeProps } from '@rjsf/core';
-import { getDefaultRegistry } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-import { generateTemplates } from '../templates/Templates.tsx';
-import { generateWidgets } from '../widgets/Widgets.tsx';
+import { createTemplates } from '../templates/Templates.tsx';
+import { createWidgets } from '../widgets/Widgets.tsx';
 
-/** Generates a complete theme configuration for RJSF with DaisyUI styling
- *
- * Combines templates and widgets with default fields to create a complete theme
- * that can be used with react-jsonschema-form.
+function createTheme() {
+  const widgets = createWidgets();
+  return { templates: createTemplates(), widgets: { ...widgets, boolean: widgets.toggle } };
+}
+
+/** Generates the DaisyUI theme: its templates and widgets, as overrides on the core defaults
  *
  * @returns A ThemeProps object containing all necessary components for the theme
  */
 export function generateTheme<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): ThemeProps<T, S, F> {
-  const { fields } = getDefaultRegistry<T, S, F>();
-  const generatedWidgets = generateWidgets<T, S, F>();
-  const templates = generateTemplates<T, S, F>();
-
-  return {
-    templates,
-    widgets: {
-      ...generatedWidgets,
-      boolean: generatedWidgets.toggle,
-    },
-    fields,
-  };
+  return createTheme();
 }
 
-/** Default theme export with pre-generated theme components */
-const Theme = generateTheme();
-
-export default Theme;
+export default createTheme();
 
 /** Interface for the theme context that manages and provides the current DaisyUI theme */
 interface ThemeContextType {

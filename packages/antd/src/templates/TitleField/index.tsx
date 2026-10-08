@@ -7,13 +7,11 @@ import classNames from 'classnames';
  *
  * @param props - The `TitleFieldProps` for this component
  */
-export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  required,
-  registry,
-  title,
-  optionalDataControl,
-}: TitleFieldProps<T, S, F>) {
+export default function TitleField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, required, registry, title, optionalDataControl }: TitleFieldProps<T, S, F>) {
   const { formContext } = registry;
   const { colon = true } = formContext;
 

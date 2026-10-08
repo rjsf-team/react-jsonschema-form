@@ -1,11 +1,22 @@
 import { createRef } from 'react';
-import type { FieldProps, FormValidation, GenericObjectType, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FieldProps,
+  FieldTemplateProps,
+  FormValidation,
+  GenericObjectType,
+  MultiSchemaFieldTemplateProps,
+  ObjectFieldTemplateProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
-import userEvent from '@testing-library/user-event';
+import { screen } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
+import { createFormComponent, getSelectedOptionValue, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -90,7 +101,7 @@ describe('oneOf', () => {
   });
 
   it('should assign a default value and set defaults on option change', async () => {
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema: {
         oneOf: [
           {
@@ -109,11 +120,7 @@ describe('oneOf', () => {
       },
     });
 
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: { foo: 'defaultfoo' },
-      }),
-    );
+    expect(getFormData()).toEqual({ foo: 'defaultfoo' });
 
     const $select = node.querySelector('select');
 
@@ -156,7 +163,7 @@ describe('oneOf', () => {
   });
 
   it('should assign a default value and set defaults on option change when using refs', async () => {
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema: {
         oneOf: [
           {
@@ -178,11 +185,7 @@ describe('oneOf', () => {
       },
     });
 
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: { foo: 'defaultfoo' },
-      }),
-    );
+    expect(getFormData()).toEqual({ foo: 'defaultfoo' });
 
     const $select = node.querySelector('select');
 
@@ -421,7 +424,7 @@ describe('oneOf', () => {
       };
       const { node, onChange } = createFormComponent({
         schema,
-        experimental_defaultFormStateBehavior: { constAsDefaults: 'never' },
+        defaultFormStateBehavior: { constAsDefaults: 'never' },
       });
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -445,7 +448,7 @@ describe('oneOf', () => {
       const { node, onChange } = createFormComponent({
         schema: { oneOf: [optionFor('a'), optionFor('b')] },
         formData: { kind: 'a', runner: { name: 'a' } },
-        experimental_defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
+        defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
       });
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -557,6 +560,26 @@ describe('oneOf', () => {
     );
   });
 
+  it("should replace a value the old option's own uiSchema filled in", async () => {
+    const optionFor = (name: string, mode: string): RJSFSchema => ({
+      title: name,
+      type: 'object',
+      properties: { kind: { type: 'string', const: name, default: name }, mode: { type: 'string', default: mode } },
+    });
+    const { node, onChange } = createFormComponent({
+      schema: { oneOf: [optionFor('a', 'x'), optionFor('b', 'y')] },
+      uiSchema: { oneOf: [{ mode: { 'ui:initialValue': 'A0' } }, {}] },
+      initialFormData: { kind: 'a', mode: 'A0' },
+    });
+
+    await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { kind: 'b', mode: 'y' } }),
+      'root__oneof_select',
+    );
+  });
+
   it('should switch the same way wherever required is declared', async () => {
     // The field renders each option merged with the parent's `required` and `type`, so the defaults compared here
     // have to come from that same schema or the two placements disagree about what the old option had written
@@ -574,10 +597,10 @@ describe('oneOf', () => {
       ...(requiredOnParent ? { required: ['arr'] } : {}),
       oneOf: requiredOnParent ? [optionFor('a'), optionFor('b')] : [optionFor('a', ['arr']), optionFor('b', ['arr'])],
     });
-    const switchToB = async (requiredOnParent: boolean) => {
+    const switchToB = async (requiredOnParent: boolean): Promise<unknown> => {
       const { node, onChange } = createFormComponent({
         schema: schemaFor(requiredOnParent),
-        experimental_defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
+        defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
       });
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -675,7 +698,7 @@ describe('oneOf', () => {
   });
 
   it("should assign a default value and set defaults on option change with 'type': 'object' missing", async () => {
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema: {
         type: 'object',
         oneOf: [
@@ -693,11 +716,7 @@ describe('oneOf', () => {
       },
     });
 
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: { foo: 'defaultfoo' },
-      }),
-    );
+    expect(getFormData()).toEqual({ foo: 'defaultfoo' });
 
     const $select = node.querySelector('select');
 
@@ -712,7 +731,7 @@ describe('oneOf', () => {
   });
 
   it('should assign a default value and set defaults on option change for scalar types schemas', async () => {
-    const { node, onChange } = createFormComponent({
+    const { node, onChange, getFormData } = createFormComponent({
       schema: {
         type: 'object',
         properties: {
@@ -725,11 +744,7 @@ describe('oneOf', () => {
         },
       },
     });
-    expect(onChange).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        formData: { foo: 'defaultfoo' },
-      }),
-    );
+    expect(getFormData()).toEqual({ foo: 'defaultfoo' });
 
     const $select = node.querySelector('select');
 
@@ -1029,7 +1044,7 @@ describe('oneOf', () => {
       schema,
       uiSchema: { choice: { 'ui:placeholder': 'None' } },
       widgets: { SelectWidget: CustomSelectWidget },
-      formData: { choice: 'first' },
+      initialFormData: { choice: 'first' },
     });
 
     const select = node.querySelector('select');
@@ -1068,11 +1083,11 @@ describe('oneOf', () => {
     function CustomSchemaField(props: FieldProps) {
       const {
         registry: { formContext },
-        fieldPathId,
+        id,
       } = props;
       return (
         <>
-          <code id={formContext[fieldPathId.$id]}>Ha</code>
+          <code id={formContext[id]}>Ha</code>
           <SchemaField {...props} />
         </>
       );
@@ -1080,7 +1095,7 @@ describe('oneOf', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData: { userId: 'foobarbaz' },
+      initialFormData: { userId: 'foobarbaz' },
       formContext,
       fields: { SchemaField: CustomSchemaField },
     });
@@ -1111,7 +1126,7 @@ describe('oneOf', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData: {
+      initialFormData: {
         userId: 'foobarbaz',
       },
     });
@@ -1139,6 +1154,7 @@ describe('oneOf', () => {
     const { rerender, node } = createFormComponent({
       ref: createRef(),
       schema,
+      formData: {},
     });
 
     expect(node.querySelector('select')).toHaveValue('0');
@@ -1221,7 +1237,7 @@ describe('oneOf', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData: {
+      initialFormData: {
         foo: 1,
         bar: 'abc',
       },
@@ -1257,7 +1273,7 @@ describe('oneOf', () => {
 
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { lorem: {} },
+      initialFormData: { lorem: {} },
     });
 
     const $select = node.querySelector('select');
@@ -1317,7 +1333,7 @@ describe('oneOf', () => {
 
     const { node, onChange } = createFormComponent({
       schema,
-      formData: { testProperty: { newKey: { prop2: 'foo' } } },
+      initialFormData: { testProperty: { newKey: { prop2: 'foo' } } },
     });
 
     const $select: HTMLSelectElement | null = node.querySelector('select#root_testProperty_newKey__oneof_select');
@@ -1390,7 +1406,7 @@ describe('oneOf', () => {
 
     const { node } = createFormComponent({
       schema,
-      formData: {
+      initialFormData: {
         contactPreference: {
           contactMethod: 'phone',
           phoneNumber: '1231231231',
@@ -1484,7 +1500,7 @@ describe('oneOf', () => {
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           items: [
             {},
             {
@@ -1537,7 +1553,7 @@ describe('oneOf', () => {
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           items: [{}, {}],
         },
       });
@@ -1595,7 +1611,7 @@ describe('oneOf', () => {
       };
       const { node } = createFormComponent({
         schema,
-        formData: [{ ipsum: { night: 'nicht' } }],
+        initialFormData: [{ ipsum: { night: 'nicht' } }],
       });
       const outerOneOf = node.querySelector('select#root_0__oneof_select');
       expect(outerOneOf).toHaveValue('1');
@@ -1877,11 +1893,12 @@ describe('oneOf', () => {
         schema,
         uiSchema: {
           'ui:title': 'My Title',
+          // @ts-expect-error: TS2353, deliberately not an array, to exercise the runtime warning below
           oneOf: { 'ui:title': 'UiSchema title' },
         },
       });
 
-      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "My Title"');
+      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "root"');
 
       const $select = node.querySelector('select');
 
@@ -1890,6 +1907,60 @@ describe('oneOf', () => {
       expect($select).toHaveValue('0');
       const inputLabel = node.querySelector('legend#root__title');
       expect(inputLabel?.innerHTML).toEqual('My Title');
+      consoleWarnSpy.mockRestore();
+    });
+
+    it('names a non-root oneOf field by its path as well as its id when warning', () => {
+      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          choice: {
+            type: 'object',
+            oneOf: [{ properties: { foo: { type: 'string' } } }, { properties: { bar: { type: 'string' } } }],
+          },
+        },
+      };
+      createFormComponent({
+        schema,
+        uiSchema: {
+          // A nested field's uiSchema isn't checked as strictly as the root's, so unlike the test above this needs no
+          // `@ts-expect-error` to hold a non-array `oneOf`
+          choice: {
+            oneOf: { 'ui:title': 'UiSchema title' },
+          },
+        },
+      });
+
+      expect(consoleWarnSpy).toHaveBeenLastCalledWith('uiSchema.oneOf is not an array for "root_choice" (choice)');
+      consoleWarnSpy.mockRestore();
+    });
+
+    describe('a non-array uiSchema.oneOf', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      // Both forms use the default idPrefix, so both warnings name `root` and are the same message. Two forms meant to
+      // coexist on a page need distinct idPrefixes anyway, or their fields collide on the same DOM ids.
+      it('should warn once, however many forms render it and however often they re-render', async () => {
+        const schema: RJSFSchema = {
+          oneOf: [
+            { title: 'Foo', properties: { foo: { type: 'string' } } },
+            { title: 'Bar', properties: { bar: { type: 'string' } } },
+          ],
+        };
+        const uiSchema: UiSchema = {
+          // @ts-expect-error: TS2353, deliberately not an array, to exercise the runtime warning below
+          oneOf: { 'ui:title': 'UiSchema title' },
+        };
+        const { node } = createFormComponent({ schema, uiSchema });
+        createFormComponent({ schema, uiSchema });
+        await user.type(node.querySelector('input')!, 'abc');
+
+        const warnings = consoleWarnSuppression.consoleSpy.mock.calls.filter(
+          ([message]) => message === 'uiSchema.oneOf is not an array for "root"',
+        );
+        expect(warnings).toHaveLength(1);
+      });
     });
 
     it('should correctly render mixed types for oneOf inside array items', async () => {
@@ -1995,7 +2066,7 @@ describe('oneOf', () => {
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           id: 'chain',
           components: [
             {
@@ -2085,16 +2156,12 @@ describe('oneOf', () => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({
+      const { node, onChange, getFormData } = createFormComponent({
         schema,
       });
 
       // Added an empty array initially
-      expect(onChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          formData: { craftTypes: [{ daysOfYear: [undefined] }] },
-        }),
-      );
+      expect(getFormData()).toEqual({ craftTypes: [{ daysOfYear: [undefined] }] });
 
       const select: HTMLSelectElement | null = node.querySelector('select#root_craftTypes_0__oneof_select');
 
@@ -2128,7 +2195,7 @@ describe('oneOf', () => {
       },
     };
 
-    function customValidate(_: any, errors: FormValidation) {
+    function customValidate(_: unknown, errors: FormValidation<{ userId?: number | string }>) {
       errors.userId?.addError('test');
       return errors;
     }
@@ -2144,7 +2211,7 @@ describe('oneOf', () => {
       await user.type(userIdInput, '12345');
       await submitForm(node, user);
 
-      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[inputmode=decimal]');
       expect(inputs[0]).toHaveAttribute('id', 'root_userId');
 
       const $select = node.querySelector('select');
@@ -2173,7 +2240,7 @@ describe('oneOf', () => {
       await user.type(userIdInput, '12345');
       await submitForm(node, user);
 
-      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[inputmode=decimal]');
       expect(inputs).toHaveLength(0);
 
       const $select = node.querySelector('select');
@@ -2187,6 +2254,27 @@ describe('oneOf', () => {
 
       inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs).toHaveLength(0);
+    });
+
+    it('should tell the oneOf selector widget that its errors are hidden', async () => {
+      const recordSelectorProps = vi.fn<(props: WidgetProps) => void>();
+      function RecordingSelectWidget(props: WidgetProps) {
+        if (props.name?.endsWith('__oneof_select')) {
+          recordSelectorProps(props);
+        }
+        return <SelectWidget {...props} />;
+      }
+
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:hideError': true },
+        customValidate,
+        widgets: { SelectWidget: RecordingSelectWidget },
+      });
+
+      await submitForm(node, user);
+
+      expect(recordSelectorProps.mock.lastCall?.[0]?.hideError).toBe(true);
     });
   });
 
@@ -2236,20 +2324,25 @@ describe('oneOf', () => {
     it('Selects the 3rd node by default when there is formData that points to it', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { code: 'baz_coding' },
+        initialFormData: { code: 'baz_coding' },
       });
       const select = node.querySelector('select#root__oneof_select');
       expect(select).toHaveValue('2');
     });
-    it('warns when discriminator.propertyName is not a string', () => {
-      const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
-      const badSchema = { ...schema, discriminator: { propertyName: 5 } };
-      const { node } = createFormComponent({
-        schema: badSchema,
+    describe('a non-string discriminator.propertyName', () => {
+      const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+      it('warns when discriminator.propertyName is not a string', () => {
+        const badSchema = { ...schema, discriminator: { propertyName: 5 } };
+        const { node } = createFormComponent({
+          schema: badSchema,
+        });
+        const select = node.querySelector('select#root__oneof_select');
+        expect(select).toHaveValue('0');
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenLastCalledWith(
+          'Expecting discriminator to be a string, got "number" instead',
+        );
       });
-      const select = node.querySelector('select#root__oneof_select');
-      expect(select).toHaveValue('0');
-      expect(consoleWarnSpy).toHaveBeenLastCalledWith('Expecting discriminator to be a string, got "number" instead');
     });
   });
   describe('Custom Field without ui:fieldReplacesAnyOrOneOf', () => {
@@ -2337,10 +2430,10 @@ describe('oneOf', () => {
 
       const { node, onChange } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           items: [{ type: 'typeA', showField: true }],
         },
-        experimental_defaultFormStateBehavior: {
+        defaultFormStateBehavior: {
           mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
         },
       });
@@ -2388,10 +2481,10 @@ describe('oneOf', () => {
 
       const { node, onChange } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           items: [{ type: 'typeA' }], // No showField defined
         },
-        experimental_defaultFormStateBehavior: {
+        defaultFormStateBehavior: {
           mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
         },
       });
@@ -2408,6 +2501,1105 @@ describe('oneOf', () => {
       }
     });
   });
+  describe('constant options without a type (#4666)', () => {
+    it('should render a select for a oneOf of consts without a type', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          myprop: {
+            oneOf: [
+              { title: 'none', const: 'X' },
+              { title: 'some', const: 'some' },
+            ],
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema, formData: { myprop: 'X' } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
+      expect(select).toBeInTheDocument();
+      expect(getSelectedOptionValue(select!)).toEqual('none');
+      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+    });
+
+    it('should render a select for single value enum options without a type', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { type: 'string', enum: ['1'] },
+          { type: 'string', enum: ['2'] },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      const option = [...select!.options].find((o) => o.text === '2');
+      await user.selectOptions(select!, option!);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: '2' }), 'root');
+    });
+
+    it('should render a select for a nested oneOf of consts selected through a $ref option', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          myprop: {
+            oneOf: [{ title: 'none', type: 'object' }, { $ref: '#/$defs/some' }, { $ref: '#/$defs/mylist' }],
+          },
+        },
+        $defs: {
+          some: { title: 'some', const: 'some' },
+          mylist: { oneOf: [{ const: 'foo' }, { const: 'bar' }] },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, formData: { myprop: 'foo' } });
+
+      expect(node.querySelector('#root_myprop__oneof_select')).toHaveValue('2');
+      const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
+      expect(select).toBeInTheDocument();
+      expect(getSelectedOptionValue(select!)).toEqual('foo');
+
+      await user.selectOptions(select!, '1');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { myprop: 'bar' } }),
+        'root_myprop',
+      );
+    });
+
+    it('should preserve the value types of consts with mixed types', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'A', const: 'a' },
+          { title: 'One', const: 1 },
+          { title: 'Nothing', const: null },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+
+      await user.selectOptions(select!, '1');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
+
+      await user.selectOptions(select!, '2');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: null }), 'root');
+    });
+
+    it.each([
+      ['null', [null, 'a', 1]],
+      ['boolean', [true, 'maybe']],
+      ['number', [1, '10']],
+    ])('should render a select of mixed type consts when the first const is %s', async (_, consts) => {
+      const schema: RJSFSchema = { oneOf: consts.map((value) => ({ const: value })) };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      expect(select!.options).toHaveLength(consts.length + 1);
+
+      await user.selectOptions(select!, select!.options[2]);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: consts[1] }), 'root');
+    });
+
+    it('should render a select of number consts that includes null', async () => {
+      const schema: RJSFSchema = { oneOf: [{ const: null }, { const: 1 }, { const: 2 }] };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+
+      await user.selectOptions(select!, select!.options[2]);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 1 }), 'root');
+
+      await user.selectOptions(select!, select!.options[1]);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: null }), 'root');
+    });
+
+    it.each([
+      ['null, true and false', [null, true, false]],
+      ['null and true', [null, true]],
+      ['only true', [true]],
+    ])('should render a select of boolean consts with %s', async (_, consts) => {
+      const schema: RJSFSchema = { oneOf: consts.map((value) => ({ const: value })) };
+      const { node, onChange } = createFormComponent({ schema });
+
+      expect(node.querySelector('input[type=checkbox]')).not.toBeInTheDocument();
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      expect(select!.options).toHaveLength(consts.length + 1);
+
+      await user.selectOptions(select!, select!.options[1]);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: consts[0] }), 'root');
+    });
+
+    it('should render a select with the titles of boolean consts of exactly true and false', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'Yes', const: true },
+          { title: 'No', const: false },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      expect(node.querySelector('input[type=checkbox]')).not.toBeInTheDocument();
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      expect([...select!.options].map((option) => option.text)).toEqual(['', 'Yes', 'No']);
+
+      await user.selectOptions(select!, select!.options[2]);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
+    });
+
+    it('should keep the boolean type on the schema the field and widget are given', () => {
+      const schemas: RJSFSchema[] = [];
+      const FieldTemplate = ({ schema, children }: FieldTemplateProps) => {
+        schemas.push(schema);
+        return <div>{children}</div>;
+      };
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'Yes', const: true },
+          { title: 'No', const: false },
+        ],
+      };
+      createFormComponent({ schema, templates: { FieldTemplate } });
+
+      expect(schemas.map(({ type }) => type)).toEqual(['boolean']);
+    });
+
+    it('should keep the label displayed for a select inferred from boolean consts', () => {
+      // `getDisplayLabel()` hides the label of a `boolean` that has no `ui:widget`, so the inferred `select` is the
+      // only reason this field still has one. A theme's FieldTemplate is where that label gets rendered, because the
+      // select widget has none of its own
+      const FieldTemplate = ({ displayLabel, label, children }: FieldTemplateProps) => (
+        <div>
+          {displayLabel && <span className='shown-label'>{label}</span>}
+          {children}
+        </div>
+      );
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          answer: {
+            title: 'My Answer',
+            oneOf: [
+              { title: 'Yes', const: true },
+              { title: 'No', const: false },
+            ],
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema, templates: { FieldTemplate } });
+
+      expect(node.querySelector('.shown-label')).toHaveTextContent('My Answer');
+    });
+
+    it('should let the uiSchema override the select widget that boolean consts default to', () => {
+      const schema: RJSFSchema = {
+        oneOf: [
+          { title: 'Yes', const: true },
+          { title: 'No', const: false },
+        ],
+      };
+      const { node } = createFormComponent({ schema, uiSchema: { 'ui:widget': 'checkbox' } });
+
+      expect(node.querySelector('select#root')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root[type=checkbox]')).toBeInTheDocument();
+    });
+
+    it('should keep ui:widget winning over ui:options.widget when a widget is inferred', () => {
+      // `getUiOptions()` reduces over the uiSchema in key order, so an inferred `ui:widget` merged into it would
+      // decide that contest by where it landed rather than leaving the caller's own precedence alone
+      const uiSchema: UiSchema = { 'ui:options': { widget: 'checkbox' }, 'ui:widget': 'radio' };
+      const typeless: RJSFSchema = {
+        oneOf: [
+          { title: 'Yes', const: true },
+          { title: 'No', const: false },
+        ],
+      };
+      const typed: RJSFSchema = { type: 'boolean' };
+
+      const inferred = createFormComponent({ schema: typeless, uiSchema });
+      const explicit = createFormComponent({ schema: typed, uiSchema });
+
+      expect(inferred.node.querySelectorAll('input#root-0[type=radio]')).toHaveLength(1);
+      expect(explicit.node.querySelectorAll('input#root-0[type=radio]')).toHaveLength(1);
+    });
+
+    it('should keep the label when the caller spells the widget as a ui:option', () => {
+      // `getDisplayLabel()` only reads `ui:widget`, so a widget named the other way has to reach it as that key or a
+      // boolean loses the title that inferring the widget exists to preserve
+      const FieldTemplate = ({ displayLabel, label, children }: FieldTemplateProps) => (
+        <div>
+          {displayLabel && <span className='shown-label'>{label}</span>}
+          {children}
+        </div>
+      );
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          answer: {
+            title: 'My Answer',
+            oneOf: [
+              { title: 'Yes', const: true },
+              { title: 'No', const: false },
+            ],
+          },
+        },
+      };
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { answer: { 'ui:options': { widget: 'select' } } },
+        templates: { FieldTemplate },
+      });
+
+      expect(node.querySelector('.shown-label')).toHaveTextContent('My Answer');
+    });
+
+    it('should render the anyOf options when a constant oneOf and anyOf disagree on the type', async () => {
+      const schema: RJSFSchema = {
+        oneOf: [{ const: 'a' }],
+        anyOf: [{ const: 1 }, { const: 2 }],
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', '1', '2']);
+      await user.selectOptions(select, '2');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: 2 }), 'root');
+    });
+
+    it('should render the anyOf options when a constant oneOf and anyOf agree on the type', () => {
+      const schema: RJSFSchema = {
+        oneOf: [{ const: 'a' }],
+        anyOf: [{ const: 'b' }, { const: 'c' }],
+      };
+      const { node } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect([...select!.options].map((option) => option.text)).toEqual(['', 'b', 'c']);
+    });
+
+    it('should not infer a type or write form data for an empty oneOf', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { myprop: { oneOf: [] } } };
+      const { node, onChange } = createFormComponent({ schema, formData: {} });
+
+      expect(node.querySelector('.unsupported-field')).toBeInTheDocument();
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it.each([
+      ['0', 0, 'input#root_myprop'],
+      ['false', false, 'input#root_myprop[type=checkbox]'],
+      ['an empty string', '', 'input#root_myprop[type=text]'],
+    ])('should render a falsy const of %s selected through a $ref option', (_, value, selector) => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { myprop: { oneOf: [{ title: 'none', type: 'object' }, { $ref: '#/$defs/falsy' }] } },
+        $defs: { falsy: { title: 'falsy', const: value } },
+      };
+      const { node } = createFormComponent({ schema, formData: { myprop: value } });
+
+      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector(selector)).toBeInTheDocument();
+    });
+
+    it('should render a select for a oneOf of only a null const', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { myprop: { title: 'X', oneOf: [{ title: 'None', const: null }] } },
+      };
+      const { node } = createFormComponent({ schema, formData: { myprop: null } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
+      expect(select).toBeInTheDocument();
+      expect([...select!.options].map((option) => option.text)).toEqual(['', 'None']);
+      expect(select!.options[1].selected).toBe(true);
+    });
+
+    describe.each(['indexed', 'realValue'])('object and array consts (#5317) in the %s format', (optionValueFormat) => {
+      const uiSchema: UiSchema = { v: { 'ui:options': { optionValueFormat } } };
+
+      it('should render a select of object consts and select the one in the form data', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: {
+              oneOf: [
+                { const: { a: 1 }, title: 'One' },
+                { const: { a: 2 }, title: 'Two' },
+              ],
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({ schema, uiSchema, formData: { v: { a: 1 } } });
+
+        expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+        const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
+        expect(getSelectedOptionValue(select)).toEqual('One');
+        await user.selectOptions(select, 'Two');
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 2 } } }), 'root_v');
+      });
+
+      it('should render a select of array and null consts labelled with their JSON', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { v: { anyOf: [{ const: [1, 2] }, { const: [3] }, { const: null }] } },
+        };
+        const { node, onChange } = createFormComponent({ schema, uiSchema, formData: {} });
+
+        const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
+        expect([...select.options].map((option) => option.text)).toEqual(['', '[1,2]', '[3]', 'null']);
+        await user.selectOptions(select, '[3]');
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: [3] } }), 'root_v');
+      });
+
+      it('should select the array const in the form data', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { v: { anyOf: [{ const: [1, 2] }, { const: [3] }] } },
+        };
+        const { node } = createFormComponent({ schema, uiSchema, formData: { v: [3] } });
+
+        expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('select#root_v')!)).toEqual('[3]');
+      });
+    });
+
+    it.each<[string, RJSFSchema, unknown]>([
+      [
+        'object',
+        {
+          type: 'object',
+          oneOf: [
+            { const: { a: 1 }, title: 'One' },
+            { const: { a: 2 }, title: 'Two' },
+          ],
+        },
+        { a: 2 },
+      ],
+      [
+        'array',
+        {
+          type: 'array',
+          anyOf: [
+            { const: [1], title: 'One' },
+            { const: [2], title: 'Two' },
+          ],
+        },
+        [2],
+      ],
+    ])('should render a select for a typed %s with constant options (#5317)', async (_, v, expected) => {
+      const schema: RJSFSchema = { type: 'object', properties: { v } };
+      const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'One', 'Two']);
+      await user.selectOptions(select, 'Two');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: expected } }), 'root_v');
+      expect(getSelectedOptionValue(select)).toEqual('Two');
+    });
+
+    it('should keep the declared type and label of a typed object select (#5317)', () => {
+      const schemaTypes: unknown[] = [];
+      const CustomSelect = (props: WidgetProps) => {
+        schemaTypes.push(props.schema.type);
+        return <SelectWidget {...props} />;
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            type: 'object',
+            title: 'Pick one',
+            oneOf: [
+              { const: { a: 1 }, title: 'One' },
+              { const: { a: 2 }, title: 'Two' },
+            ],
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema: { v: { 'ui:widget': CustomSelect } } });
+
+      expect(schemaTypes).toContain('object');
+      expect(schemaTypes).not.toContain('string');
+      expect(node.querySelector('label[for=root_v]')).toHaveTextContent('Pick one');
+    });
+
+    it('should keep the object type of a typeless object select, as a typed one does (#5317)', () => {
+      const schemaTypes: unknown[] = [];
+      const CustomSelect = (props: WidgetProps) => {
+        schemaTypes.push(props.schema.type);
+        return <SelectWidget {...props} />;
+      };
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            oneOf: [
+              { const: { a: 1 }, title: 'One' },
+              { const: { a: 2 }, title: 'Two' },
+            ],
+          },
+        },
+      };
+      createFormComponent({ schema, uiSchema: { v: { 'ui:widget': CustomSelect } } });
+
+      expect(schemaTypes).toContain('object');
+      expect(schemaTypes).not.toContain('string');
+    });
+
+    it('should render a select, not NullField, for constant options whose type list starts with null', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            type: ['null', 'object', 'string'],
+            oneOf: [
+              { const: null, title: 'None' },
+              { const: { a: 1 }, title: 'One' },
+              { const: 'b', title: 'Bee' },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, formData: {} });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'None', 'One', 'Bee']);
+      await user.selectOptions(select, 'One');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 1 } } }), 'root_v');
+    });
+
+    it.each<[string, RJSFSchema['type']]>([
+      ['starts with null', ['null', 'number', 'boolean']],
+      ['does not start with null', ['number', 'null', 'boolean']],
+    ])(
+      'should keep the value of each constant whose type list %s, rather than cast it to the first type',
+      async (_, type) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: {
+              type,
+              oneOf: [
+                { const: null, title: 'None' },
+                { const: 1, title: 'One' },
+                { const: true, title: 'Yes' },
+              ],
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
+
+        const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
+        await user.selectOptions(select, 'Yes');
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: true } }), 'root_v');
+        expect(getSelectedOptionValue(select)).toEqual('Yes');
+      },
+    );
+
+    it('should label a select whose type list starts with boolean among other types', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: { title: 'Answer', type: ['boolean', 'string'], oneOf: [{ const: true }, { const: 'maybe' }] },
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema: { v: {} } });
+
+      expect(node.querySelector('select#root_v')).toBeInTheDocument();
+      expect(node.querySelector('label[for=root_v]')).toHaveTextContent('Answer');
+    });
+
+    it('should render a select, not a checkbox, for a nullable boolean whose unlabelled constants include null', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: { type: ['boolean', 'null'], oneOf: [{ const: true }, { const: false }, { const: null }] },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['', 'Yes', 'No', 'null']);
+      await user.selectOptions(select, 'null');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: null } }), 'root_v');
+    });
+
+    it('should edit the properties of a typed object whose oneOf is empty rather than render a select', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: { type: 'object', properties: { name: { type: 'string' } }, oneOf: [] },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root_v_name')).toBeInTheDocument();
+      expect(node.querySelector('select#root_v')).not.toBeInTheDocument();
+    });
+
+    it.each(['select', 'radio'])(
+      'should show only the array constant that is the whole form data as selected in a %s',
+      (widget) => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: {
+              oneOf: [
+                { const: 'a', title: 'A' },
+                { const: 'b', title: 'B' },
+                { const: ['a', 'b'], title: 'Both' },
+              ],
+            },
+          },
+        };
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { v: { 'ui:widget': widget } },
+          initialFormData: { v: ['a', 'b'] },
+        });
+
+        if (widget === 'select') {
+          expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('select#root_v')!)).toEqual('Both');
+        } else {
+          const checked = [...node.querySelectorAll<HTMLInputElement>('input[type=radio]')].filter((r) => r.checked);
+          expect(checked.map((radio) => radio.closest('label')?.textContent)).toEqual(['Both']);
+        }
+      },
+    );
+
+    it('should check only the selected object constant in a radio group, with no duplicate keys', async () => {
+      const consoleErrorSpy = vi.spyOn(console, 'error');
+      try {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            v: {
+              oneOf: [
+                { const: { a: 1 }, title: 'One' },
+                { const: { a: 2 }, title: 'Two' },
+              ],
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({ schema, uiSchema: { v: { 'ui:widget': 'radio' } } });
+
+        await user.click(node.querySelector('input[type=radio][value="1"]')!);
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 2 } } }), 'root_v');
+        const radios = node.querySelectorAll<HTMLInputElement>('input[type=radio]');
+        expect([...radios].map((radio) => radio.checked)).toEqual([false, true]);
+        expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      } finally {
+        consoleErrorSpy.mockRestore();
+      }
+    });
+
+    it('should render a radio group for typed array constants and pick one whole array', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            type: 'array',
+            oneOf: [
+              { const: [1], title: 'One' },
+              { const: [2], title: 'Two' },
+            ],
+          },
+        },
+      };
+      const { node, onChange } = createFormComponent({ schema, uiSchema: { v: { 'ui:widget': 'radio' } } });
+
+      await user.click(node.querySelector('input[type=radio][value="1"]')!);
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: [2] } }), 'root_v');
+    });
+
+    it.each<[string, RJSFSchema, unknown]>([
+      ['object', { type: 'object', title: 'Pick one', enum: [{ a: 1 }, { a: 2 }] }, { a: 2 }],
+      ['array', { type: 'array', title: 'Pick one', enum: [[1], [2]] }, [2]],
+    ])('should render a labelled select for a typed %s enum, as for its oneOf spelling', async (_, v, expected) => {
+      const schema: RJSFSchema = { type: 'object', properties: { v } };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v');
+      expect(select).toBeInTheDocument();
+      expect(node.querySelector('label[for=root_v]')).toHaveTextContent('Pick one');
+      await user.selectOptions(select!, select!.options[2]);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: expected } }), 'root_v');
+    });
+
+    it('should render a select, not NullField, for an enum whose type list starts with null', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { v: { type: ['null', 'object', 'array'], enum: [null, { a: 1 }, [2]] } },
+      };
+      const { node, onChange } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v');
+      expect(select).toBeInTheDocument();
+      await user.selectOptions(select!, select!.options[2]);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: { a: 1 } } }), 'root_v');
+    });
+
+    it('should fill a required null select typed null with null, as NullField does', async () => {
+      const schema: RJSFSchema = { type: 'object', required: ['v'], properties: { v: { type: 'null', enum: [null] } } };
+      const { node, onSubmit } = createFormComponent({ schema });
+
+      await submitForm(node, user);
+
+      expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { v: null } }), expect.anything());
+    });
+
+    describe('sanitizing the data a condition on an object constant select allows once another is picked', () => {
+      const plan: RJSFSchema = {
+        type: 'object',
+        oneOf: [
+          { const: { tier: 1 }, title: 'Basic' },
+          { const: { tier: 2 }, title: 'Pro' },
+        ],
+      };
+      const colorsByTier: RJSFSchema = {
+        then: { properties: { color: { enum: ['red', 'green'] } } },
+        else: { properties: { color: { enum: ['blue'] } } },
+      };
+
+      it.each<[string, RJSFSchema]>([
+        [
+          'a property',
+          {
+            type: 'object',
+            properties: { plan, color: { type: 'string' } },
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+        [
+          'a property an allOf declares',
+          {
+            type: 'object',
+            allOf: [{ properties: { plan } }],
+            properties: { color: { type: 'string' } },
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+        [
+          'a property beside an anyOf of required lists',
+          {
+            type: 'object',
+            properties: { plan, color: { type: 'string' } },
+            anyOf: [{ required: ['plan'] }, { required: ['color'] }],
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+        [
+          'a property a oneOf option declares',
+          {
+            type: 'object',
+            properties: { color: { type: 'string' } },
+            oneOf: [{ properties: { plan } }],
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+        [
+          'a property the oneOf of a oneOf option declares',
+          {
+            type: 'object',
+            properties: { color: { type: 'string' } },
+            oneOf: [{ oneOf: [{ properties: { plan } }] }],
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+        [
+          'a property the closest-matching option of a nested oneOf declares',
+          {
+            type: 'object',
+            properties: { color: { type: 'string' } },
+            oneOf: [
+              {
+                oneOf: [{ properties: { size: { type: 'number' } }, required: ['size'] }, { properties: { plan } }],
+              },
+            ],
+            if: { properties: { plan: { const: { tier: 1 } } } },
+            ...colorsByTier,
+          },
+        ],
+      ])('should sanitize for %s', async (_, schema) => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          initialFormData: { plan: { tier: 1 }, color: 'red' },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('select#root_plan')!, 'Pro');
+
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { plan: { tier: 2 }, color: 'blue' } }),
+          'root_plan',
+        );
+      });
+
+      it('should sanitize for an array item', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { plans: { type: 'array', items: plan }, color: { type: 'string' } },
+          if: { properties: { plans: { items: { const: { tier: 1 } } } } },
+          ...colorsByTier,
+        };
+        const { node, onChange } = createFormComponent({
+          schema,
+          initialFormData: { plans: [{ tier: 1 }], color: 'red' },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('select#root_plans_0')!, 'Pro');
+
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { plans: [{ tier: 2 }], color: 'blue' } }),
+          'root_plans_0',
+        );
+      });
+    });
+
+    it('should keep the schema a typeless select infers its type into when its uiSchema changes', () => {
+      const schemas: RJSFSchema[] = [];
+      const RecordingSelectWidget = (props: WidgetProps) => {
+        schemas.push(props.schema);
+        return <SelectWidget {...props} />;
+      };
+      const schema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [{ const: 'a' }, { const: 'b' }] } } };
+      const widgets = { SelectWidget: RecordingSelectWidget };
+      const { rerender } = createFormComponent({ schema, widgets, uiSchema: { v: { 'ui:title': 'Pick' } } });
+      rerender({ schema, widgets, uiSchema: { v: { 'ui:title': 'Pick one' } } });
+
+      expect(schemas.length).toBeGreaterThan(1);
+      expect(new Set(schemas).size).toBe(1);
+    });
+
+    it('should not hand a custom ui:field the select widget inferred for labelled boolean consts', () => {
+      const uiWidgets: unknown[] = [];
+      const MyToggle = ({ uiSchema }: FieldProps) => {
+        uiWidgets.push(uiSchema?.['ui:widget']);
+        return null;
+      };
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        oneOf: [
+          { const: true, title: 'On' },
+          { const: false, title: 'Off' },
+        ],
+      };
+      createFormComponent({ schema, uiSchema: { 'ui:field': 'MyToggle' }, fields: { MyToggle } });
+
+      expect(uiWidgets.length).toBeGreaterThan(0);
+      expect(uiWidgets.every((widget) => widget === undefined)).toBe(true);
+    });
+
+    it('should keep the inferred select for a field named in ui:options that delegates to BooleanField', async () => {
+      const MyField = (props: FieldProps) => {
+        const { BooleanField } = props.registry.fields;
+        return <BooleanField {...props} />;
+      };
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        title: 'Status',
+        oneOf: [
+          { const: true, title: 'Enabled' },
+          { const: false, title: 'Disabled' },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema, uiSchema: { 'ui:options': { field: MyField } } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      expect(node.querySelector('label[for=root]')).toHaveTextContent('Status');
+      await user.selectOptions(select!, 'Disabled');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
+    });
+
+    describe('with a ui:globalOptions.field', () => {
+      setupConsoleWarnSuppression();
+
+      it.each<[string, UiSchema]>([
+        ['alone', { 'ui:globalOptions': { field: 'MyGlobal' } }],
+        ['behind a ui:field that names nothing', { 'ui:globalOptions': { field: 'MyGlobal' }, 'ui:field': 'Typo' }],
+      ])('should hand the field it names the inferred select %s', (_, uiSchema) => {
+        const uiWidgets: unknown[] = [];
+        const MyGlobal = ({ uiSchema: fieldUiSchema }: FieldProps) => {
+          uiWidgets.push(fieldUiSchema?.['ui:widget']);
+          return null;
+        };
+        const schema: RJSFSchema = {
+          type: 'boolean',
+          oneOf: [
+            { const: true, title: 'On' },
+            { const: false, title: 'Off' },
+          ],
+        };
+        createFormComponent({ schema, uiSchema, fields: { MyGlobal } });
+
+        expect(uiWidgets.length).toBeGreaterThan(0);
+        expect(uiWidgets.every((widget) => widget === 'select')).toBe(true);
+      });
+    });
+
+    it('should render a select for an empty enum beside a oneOf of object constants', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { v: { type: 'object', enum: [], oneOf: [{ const: { a: 1 } }, { const: { b: 2 } }] } },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('select#root_v')).toBeInTheDocument();
+    });
+
+    it('should keep the inferred select when ui:field names the BooleanField that reads it', async () => {
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        oneOf: [
+          { const: true, title: 'On' },
+          { const: false, title: 'Off' },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema, uiSchema: { 'ui:field': 'BooleanField' } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root');
+      expect(select).toBeInTheDocument();
+      await user.selectOptions(select!, 'Off');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: false }), 'root');
+    });
+
+    it('should keep the inferred select and the label for a custom field chosen by the schema $id', () => {
+      const uiWidgets: unknown[] = [];
+      const MyToggle = ({ uiSchema }: FieldProps) => {
+        uiWidgets.push(uiSchema?.['ui:widget']);
+        return null;
+      };
+      const schema: RJSFSchema = {
+        $id: 'MyToggle',
+        type: 'boolean',
+        title: 'Power',
+        oneOf: [
+          { const: true, title: 'On' },
+          { const: false, title: 'Off' },
+        ],
+      };
+      const { node } = createFormComponent({ schema, fields: { MyToggle } });
+
+      expect(uiWidgets.length).toBeGreaterThan(0);
+      expect(uiWidgets.every((widget) => widget === 'select')).toBe(true);
+      expect(node.querySelector('label[for=root]')).toHaveTextContent('Power');
+    });
+
+    it('should render a select, not an option selector, for an empty enum beside a non-constant oneOf', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { v: { type: 'string', enum: [], oneOf: [{ type: 'string' }, { type: 'number' }] } },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('select#root_v')).toBeInTheDocument();
+      expect(node.querySelector('[id$=__oneof_select]')).not.toBeInTheDocument();
+    });
+
+    it('should label the anyOf options from uiSchema.anyOf when the schema also has a oneOf', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            anyOf: [
+              { type: 'string', title: 'A' },
+              { type: 'number', title: 'B' },
+            ],
+            oneOf: [{ minLength: 1 }, { minLength: 2 }],
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        v: {
+          anyOf: [{ 'ui:title': 'From anyOf A' }, { 'ui:title': 'From anyOf B' }],
+          oneOf: [{ 'ui:title': 'From oneOf C' }, { 'ui:title': 'From oneOf D' }],
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_v__anyof_select')!;
+      expect([...select.options].map((option) => option.text)).toEqual(['From anyOf A', 'From anyOf B']);
+    });
+
+    it('should render the anyOf, not throw, when only the oneOf of a typed schema is made of consts (#5309)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          myprop: { type: 'string', anyOf: [{ minLength: 1 }], oneOf: [{ const: 'a' }, { const: 'b' }] },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('#root_myprop__anyof_select')).toBeInTheDocument();
+      expect(node.querySelector('input#root_myprop[type=text]')).toBeInTheDocument();
+    });
+
+    it('should render the anyOf when a schema has both a const oneOf and a non-const anyOf', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          myprop: { anyOf: [{ type: 'string', minLength: 1 }], oneOf: [{ const: 'a' }, { const: 'b' }] },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_myprop__anyof_select')).toBeInTheDocument();
+      expect(node.querySelector('input#root_myprop[type=text]')).toBeInTheDocument();
+    });
+
+    it('should still render a select when both the oneOf and the anyOf are consts', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          myprop: { anyOf: [{ const: 'a' }, { const: 'b' }], oneOf: [{ const: 'a' }, { const: 'b' }] },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
+      expect(select).toBeInTheDocument();
+      expect([...select!.options].map((option) => option.text)).toEqual(['', 'a', 'b']);
+    });
+
+    it('should select a null const in the realValue format (#5309)', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            oneOf: [
+              { const: null, title: 'Unknown' },
+              { const: true, title: 'Yes' },
+              { const: false, title: 'No' },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { p: { 'ui:options': { optionValueFormat: 'realValue' } } };
+      const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { p: true } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_p')!;
+      expect(new Set([...select.options].map((option) => option.value)).size).toBe(select.options.length);
+      await user.selectOptions(select, 'Unknown');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: null } }), 'root_p');
+      expect(getSelectedOptionValue(select)).toEqual('Unknown');
+    });
+
+    it('should keep a null const apart from a 0 const in the realValue format (#5309)', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { p: { oneOf: [{ const: null, title: 'None' }, { const: 0, title: 'Zero' }, { const: 1 }] } },
+      };
+      const uiSchema: UiSchema = { p: { 'ui:options': { optionValueFormat: 'realValue' } } };
+      const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { p: 1 } });
+
+      const select = node.querySelector<HTMLSelectElement>('select#root_p')!;
+      expect(new Set([...select.options].map((option) => option.value)).size).toBe(select.options.length);
+      await user.selectOptions(select, 'Zero');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: 0 } }), 'root_p');
+      expect(getSelectedOptionValue(select)).toEqual('Zero');
+      await user.selectOptions(select, 'None');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: null } }), 'root_p');
+      expect(getSelectedOptionValue(select)).toEqual('None');
+    });
+
+    describe.each(['select', 'radio'])('consts whose String() is the same (#5315) as a %s', (widget) => {
+      it('should select each of them in the realValue format', async () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            p: {
+              oneOf: [
+                { const: 1, title: 'Number' },
+                { const: '1', title: 'String' },
+                { const: true, title: 'True' },
+                { const: 'true', title: 'String true' },
+              ],
+            },
+          },
+        };
+        const uiSchema: UiSchema = { p: { 'ui:widget': widget, 'ui:options': { optionValueFormat: 'realValue' } } };
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { p: 1 } });
+        const optionValues = [...node.querySelectorAll<HTMLInputElement | HTMLOptionElement>('option, input')]
+          .map((option) => option.value)
+          .filter((value) => value !== '');
+        expect(new Set(optionValues).size).toBe(4);
+
+        const select = widget === 'select' ? node.querySelector<HTMLSelectElement>('select#root_p')! : undefined;
+        const pickAndExpect = async (label: string, value: unknown) => {
+          await (select ? user.selectOptions(select, label) : user.click(screen.getByLabelText(label)));
+          expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: value } }), 'root_p');
+          // A select fires its change whatever it showed before, so what it shows now is checked on its own
+          if (select) {
+            expect(getSelectedOptionValue(select)).toEqual(label);
+          } else {
+            expect(screen.getByLabelText(label)).toBeChecked();
+          }
+        };
+        await pickAndExpect('String', '1');
+        await pickAndExpect('Number', 1);
+        await pickAndExpect('String true', 'true');
+        await pickAndExpect('True', true);
+      });
+    });
+
+    it('should check each of the consts whose String() is the same in the realValue format (#5315)', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          p: {
+            type: 'array',
+            uniqueItems: true,
+            items: {
+              anyOf: [
+                { const: 1, title: 'Number' },
+                { const: '1', title: 'String' },
+              ],
+            },
+          },
+        },
+      };
+      const uiSchema: UiSchema = {
+        p: { 'ui:widget': 'checkboxes', 'ui:options': { optionValueFormat: 'realValue' } },
+      };
+      const { onChange } = createFormComponent({ schema, uiSchema, initialFormData: { p: ['1'] } });
+
+      const numberBox = screen.getByLabelText<HTMLInputElement>('Number');
+      const stringBox = screen.getByLabelText<HTMLInputElement>('String');
+      expect(numberBox.value).not.toBe(stringBox.value);
+      expect(stringBox).toBeChecked();
+      expect(numberBox).not.toBeChecked();
+      await user.click(numberBox);
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { p: [1, '1'] } }), 'root_p');
+    });
+
+    it('should render a null const property the same way as an explicit type of null', () => {
+      const constSchema: RJSFSchema = { type: 'object', properties: { note: { const: null } } };
+      const typeSchema: RJSFSchema = { type: 'object', properties: { note: { type: 'null' } } };
+      const fromConst = createFormComponent({ schema: constSchema });
+      const fromType = createFormComponent({ schema: typeSchema });
+
+      expect(fromConst.node.innerHTML).toEqual(fromType.node.innerHTML);
+      // The constant is a seed default, so it is in the data on mount; a self-owned form reports edits only, so no
+      // `onChange` fires for it
+      expect(fromConst.getFormData()).toEqual({ note: null });
+      expect(fromConst.onChange).not.toHaveBeenCalled();
+    });
+  });
+
   describe('primitive type with non-select oneOf', () => {
     const ipSchema: RJSFSchema = {
       type: 'string',
@@ -2548,10 +3740,137 @@ describe('oneOf', () => {
       },
     };
     const formData = { status: {} };
-    const { node } = createFormComponent({ schema, formData });
+    const { node } = createFormComponent({ schema, initialFormData: formData });
     const select = node.querySelector('#root_status__oneof_select');
     await user.selectOptions(select!, '1');
 
     expect(select).toHaveValue('1');
+  });
+
+  it("gives the object's own errors to the option's field, not to the object the selector is rendered for", () => {
+    function RawErrorsObjectFieldTemplate({ id, properties, rawErrors }: ObjectFieldTemplateProps) {
+      return (
+        <div>
+          {properties.map((property) => property.content)}
+          {rawErrors?.map((error) => (
+            <p key={error} className='object-errors' data-id={id}>
+              {error}
+            </p>
+          ))}
+        </div>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', oneOf: [{ properties: { a: { type: 'string' } } }] },
+      templates: { ObjectFieldTemplate: RawErrorsObjectFieldTemplate },
+      extraErrors: { __errors: ['Own error'] },
+      showErrorList: false,
+    });
+
+    const errors = node.querySelectorAll('.object-errors');
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toHaveAttribute('data-id', 'root');
+  });
+
+  it('passes MultiSchemaFieldTemplate the id of the field whose option is selected', () => {
+    function IdMultiSchemaFieldTemplate({ id, selector, optionSchemaField }: MultiSchemaFieldTemplateProps) {
+      return (
+        <div className='multi' data-id={id}>
+          {selector}
+          {optionSchemaField}
+        </div>
+      );
+    }
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+      templates: { MultiSchemaFieldTemplate: IdMultiSchemaFieldTemplate },
+    });
+
+    expect(node.querySelector('.multi')).toHaveAttribute('data-id', 'root_foo');
+  });
+
+  it.each([
+    ['rendered beside its selector', 'root_XxxOf__add'],
+    ['rendered as the selected option', 'root__add'],
+  ])('keeps the own errors of an array %s when it adds an item', async (_, addButtonId) => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'array',
+        items: { type: 'string' },
+        minItems: 2,
+        oneOf: [{ items: { type: 'string' }, maxItems: 5 }],
+      },
+      uiSchema: { 'ui:field': 'ArrayField' },
+      initialFormData: [],
+      showErrorList: false,
+    });
+    await submitForm(node, user);
+
+    await user.click(node.querySelector(`[id="${addButtonId}"]`)!);
+
+    expect(onChange.mock.lastCall![0].errorSchema.__errors).toEqual(['must NOT have fewer than 2 items']);
+  });
+
+  it('keeps the fields of an object beside its selector mounted as its own errors come and go', () => {
+    const props = {
+      schema: {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        oneOf: [{ properties: { a: { type: 'string' } } }],
+      } satisfies RJSFSchema,
+      showErrorList: false as const,
+    };
+    const { node, rerender } = createFormComponent(props);
+    const input = node.querySelector('#root_name');
+    expect(input).toBeInTheDocument();
+
+    rerender({ ...props, extraErrors: { __errors: ['Own error'] } });
+    expect(node.querySelector('#root_name')).toBe(input);
+    rerender(props);
+
+    expect(node.querySelector('#root_name')).toBe(input);
+  });
+
+  it('keeps the own errors of an object beside its selector out of the errors an array inside it raises', async () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { list: { type: 'array', items: { type: 'string' } } },
+        oneOf: [{ required: ['list'] }],
+      },
+      initialFormData: { list: [] },
+      extraErrors: { __errors: ['Own error'] },
+      showErrorList: false,
+    });
+
+    await user.click(node.querySelector('button[id$="list__add"]')!);
+
+    expect(onChange.mock.lastCall![0].errorSchema.list).toBeUndefined();
+  });
+
+  it('lets a ui:field rendered beside its selector clear an error it raised at its own path', async () => {
+    function RaisingField({ fieldPath, onChange }: FieldProps) {
+      return (
+        <>
+          <button type='button' onClick={() => onChange('b', fieldPath, { __errors: ['Custom error'] })}>
+            Raise
+          </button>
+          <button type='button' onClick={() => onChange('c', fieldPath, {})}>
+            Clear
+          </button>
+        </>
+      );
+    }
+    const { onChange } = createFormComponent({
+      schema: { type: 'string', oneOf: [{ minLength: 1 }, { maxLength: 5 }] },
+      // The options get their own uiSchema, so only the field beside the selector is the `ui:field`
+      uiSchema: { 'ui:field': RaisingField, oneOf: [{}, {}] },
+      initialFormData: 'a',
+    });
+    await user.click(screen.getByRole('button', { name: 'Raise' }));
+    expect(onChange.mock.lastCall![0].errorSchema).toEqual({ __errors: ['Custom error'] });
+    await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+    expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
   });
 });

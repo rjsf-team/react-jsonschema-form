@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 
 import { cn } from '../lib/utils.ts';
 
@@ -9,14 +9,15 @@ import { cn } from '../lib/utils.ts';
  * @param props - The `FieldTemplateProps` for this component
  */
 export default function FieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   children,
   displayLabel,
-  rawErrors = [],
+  rawErrors,
+  hideError,
   errors,
   help,
   description,
@@ -25,10 +26,12 @@ export default function FieldTemplate<
   style,
   disabled,
   label,
+  keyName,
   hidden,
   onKeyRename,
   onKeyRenameBlur,
   onRemoveProperty,
+  propertyNamesEnum,
   readonly,
   required,
   schema,
@@ -36,11 +39,8 @@ export default function FieldTemplate<
   registry,
 }: FieldTemplateProps<T, S, F>) {
   const uiOptions = getUiOptions(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }
@@ -52,10 +52,12 @@ export default function FieldTemplate<
       disabled={disabled}
       id={id}
       label={label}
+      keyName={keyName}
       displayLabel={displayLabel}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
       rawDescription={rawDescription}
       readonly={readonly}
       required={required}
@@ -68,7 +70,7 @@ export default function FieldTemplate<
           <label
             className={cn(
               'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-              { ' text-destructive': rawErrors.length > 0 },
+              { ' text-destructive': hasError },
             )}
             htmlFor={id}
           >
@@ -78,9 +80,7 @@ export default function FieldTemplate<
         )}
         {children}
         {displayLabel && rawDescription && !isCheckbox && (
-          <span
-            className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': rawErrors.length > 0 })}
-          >
+          <span className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': hasError })}>
             {description}
           </span>
         )}

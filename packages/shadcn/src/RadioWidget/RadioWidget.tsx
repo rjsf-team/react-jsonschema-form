@@ -4,7 +4,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -18,20 +18,14 @@ import { cn } from '../lib/utils.ts';
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  options,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-  className,
-}: WidgetProps<T, S, F>) {
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, options, value, required, disabled, readonly, onChange, onBlur, onFocus, className }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = (enumValue: string) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
@@ -41,7 +35,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const inline = Boolean(options?.inline);
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, '');
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '');
 
   return (
     <div className='mb-0'>
@@ -60,14 +54,11 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+            const itemDisabled =
+              Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>
-                <RadioGroupItem
-                  value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-                  id={optionId(id, index)}
-                  disabled={itemDisabled}
-                />
+                <RadioGroupItem value={domValues[index]} id={optionId(id, index)} disabled={itemDisabled} />
                 <Label className='leading-tight' htmlFor={optionId(id, index)}>
                   {option.label}
                 </Label>

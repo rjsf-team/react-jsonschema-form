@@ -56,19 +56,9 @@ Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
 
-## experimental_componentUpdateStrategy
+Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
 
-Experimental feature to specify an alternative component update strategy that accepts one of the following value:
-React's default `Component` rendering strategy is to re-render on every state change, see `shouldComponentUpdate` docs.
-`PureComponent`'s strategy uses shallow equality. One can also always update (not recommended for performance reasons, but can be useful for testing)
-
-| Option     | Description                                       |
-| ---------- | ------------------------------------------------- |
-| customDeep | Legacy behavior - uses RJSF's deepEquals function |
-| shallow    | shallow equality                                  |
-| always     | component always rerenders                        |
-
-## experimental_defaultFormStateBehavior
+## defaultFormStateBehavior
 
 Experimental features to specify different form state behavior.
 Currently, this only affects the handling of optional array fields where `minItems` is set and handling of setting defaults based on the value of `emptyObjectFields`.
@@ -96,16 +86,19 @@ Optional enumerated flag controlling how array minItems are populated, defaultin
 
 The signature and documentation for this property is as follow:
 
-##### computeSkipPopulate &lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+##### computeSkipPopulate &lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
-A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema.
+A function that determines whether to skip populating the array with default values based on the provided `SchemaContext`, schema, and root schema.
 If the function returns `true`, the array will not be populated with default values.
 If the function returns `false`, the array will be populated with default values according to the `populate` option.
 
+Replacing the callback alone does not take effect: the form compares a new `defaultFormStateBehavior` against the one it holds, and that comparison treats any two functions as equal, so a form keeps calling the callback it was first given until some other setting, the `validator` or the `schema` changes.
+Define the behavior the callback needs from its `schema` and `rootSchema` arguments rather than from values captured when it was created, since a callback closing over changing state goes stale.
+
 ###### Parameters
 
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
-- schema: S - The schema for which resolving a condition is desired
+- context: SchemaContext&lt;S, F> - The [`SchemaContext`](./utility-functions.md#types) in effect, holding the form's `validator`, `customMergeAllOf` and `defaultFormStateBehavior`; pass it along to any schema function the callback calls. Within a `oneOf` of a primitive type under `constAsDefaults: 'skipOneOf'`, its `constAsDefaults` is `'never'`
+- schema: S - The array schema whose defaults are being computed
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
 ###### Returns
@@ -135,17 +128,17 @@ const schema: RJSFSchema = {
   required: ['stringArray', 'numberArray'],
 };
 
-const computeSkipPopulateNumberArrays = (validator, schema, rootSchema) =>
+const computeSkipPopulateNumberArrays = (context, schema, rootSchema) =>
   // These conditions are needed to narrow down the type of the schema.items
   !Array.isArray(schema?.items) &&
   typeof schema?.items !== 'boolean' &&
-  schema?.items?.type === 'number',
+  schema?.items?.type === 'number';
 
 render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       arrayMinItems: {
         computeSkipPopulate: computeSkipPopulateNumberArrays,
       },
@@ -188,7 +181,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       emptyObjectFields: 'populateRequiredDefaults',
     }}
   />,
@@ -251,7 +244,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       allOf: 'populateDefaults',
     }}
   />,
@@ -287,7 +280,7 @@ NOTE: If there is a default for a field and the `formData` is unspecified, the d
 Optional enumerated flag controlling how defaults defined on multiple levels are merged together for overlapping properties, defaulting to `descendantWins`.
 
 | Flag Value       | Description                                                                                       |
-| -----------------| --------------------------------------------------------------------------------------------------|
+| ---------------- | ------------------------------------------------------------------------------------------------- |
 | `descendantWins` | The innermost (descendant) default value definition takes precedence over its ancestor's defaults |
 | `ancestorWins`   | The outermost (ancestor) default value definition takes precedence over any descendant's defaults |
 
@@ -318,7 +311,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       nestedDefaultsPrecedence: 'ancestorWins',
     }}
   />,
@@ -331,14 +324,14 @@ render(
 Optional enumerated flag controlling whether a boolean listed in its parent's `required` array, with no `default` of its own, is populated with `false`, defaulting to `populateFalse`.
 An explicit schema `default`, a parent default and an existing `formData` value always take precedence; this flag only decides what happens when none of them provides a value.
 
-| Flag Value      | Description                                                                                                                    |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `populateFalse` | A required boolean with no `default` is set to `false`                                                                         |
+| Flag Value      | Description                                                                                                                   |
+| --------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `populateFalse` | A required boolean with no `default` is set to `false`                                                                        |
 | `skip`          | No value is synthesized; the property stays `undefined` until the user answers it, so `required` remains a validation concern |
 
 #### Example
 
-In the following example, `agree` is required but has no `default`. By default it would start as `false`, and the form would report `{ agree: false }` through `onChange` on mount. With `requiredBooleanDefault` set to `skip`, `formData` stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
+In the following example, `agree` is required but has no `default`. By default it would start as `false`, so [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) would return `{ agree: false }` before the user touched it. With `requiredBooleanDefault` set to `skip`, the data stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
 
 ```tsx
 import { Form } from '@rjsf/core';
@@ -360,7 +353,7 @@ render(
   <Form
     schema={schema}
     validator={validator}
-    experimental_defaultFormStateBehavior={{
+    defaultFormStateBehavior={{
       requiredBooleanDefault: 'skip',
     }}
   />,
@@ -368,9 +361,9 @@ render(
 );
 ```
 
-## experimental_customMergeAllOf
+## customMergeAllOf
 
-The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
+The `customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in case the where the default merge library ([@x0k/json-schema-merge](https://github.com/x0k/json-schema-merge/)) doesn't satisfy your functional or performance requirements.
 
 By providing your own implementation, you can potentially achieve significant performance improvements. For instance, if your use case only requires a subset of JSON Schema features, you can implement a faster, more tailored merging strategy.
 
@@ -387,7 +380,7 @@ const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
 };
 
 render(
-  <Form schema={schema} validator={validator} experimental_customMergeAllOf={customMergeAllOf} />,
+  <Form schema={schema} validator={validator} customMergeAllOf={customMergeAllOf} />,
   document.getElementById('app'),
 );
 ```
@@ -435,12 +428,12 @@ The value of this prop will be passed to the `enctype` [HTML attribute on the fo
 ## extraErrors
 
 This prop allows passing in custom errors that are augmented with the existing JSON Schema errors on the form; it can be used to implement asynchronous validation.
-By default, these are non-blocking errors, meaning that you can still submit the form when these are the only errors displayed to the user.
+By default, these errors block form submission just like JSON Schema errors do.
 See [Validation](../usage/validation.md) for more information.
 
-## extraErrorsBlockSubmit
+## extraErrorsAreWarnings
 
-If set to true, causes the `extraErrors` to become blocking when the form is submitted.
+If set to true, treats `extraErrors` as warnings instead of blocking form submission.
 
 ## fields
 
@@ -473,11 +466,25 @@ render(<Form schema={schema} validator={validator} focusOnFirstError={focusOnErr
 You can provide a `formContext` object to the Form, which is passed down to all fields and widgets. Useful for implementing context aware fields and widgets.
 
 See [AntD Customization](themes/antd/uiSchema.md#formcontext) for formContext customizations for the `antd` theme.
-See [Semantic UI Customization](themes/semantic-ui/uiSchema.md#formcontext) for formContext customizations for the `semantic-ui` theme.
 
 ## formData
 
-The data for the form, used to load a "controlled" form with its current data. If you want an "uncontrolled" form with initial data, then use `initialFormData` instead.
+The data of a form whose value you own, the way `value` works on an `<input>`. The form renders exactly what you pass, proposes every edit through [`onChange`](#onchange), and changes nothing until you pass the new value back:
+
+```tsx
+const [data, setData] = useState(record);
+<Form schema={schema} validator={validator} formData={data} onChange={(event) => setData(event.formData)} />;
+```
+
+Ownership is decided when the form mounts and does not change afterwards: a form that mounts with `formData` defined is yours to update for its whole life, and one that mounts without it owns its data and ignores a `formData` prop that arrives later. Pass it from the first render, either by mounting the form once the data is there (give it a `key` to switch records) or by mounting with a complete fallback such as `formData={record ?? {}}`.
+
+Only `undefined` means "not passed". `null`, `false`, `0` and `''` are values, since each is valid JSON; this differs from `<input>`, where `value={null}` is uncontrolled. A form that mounts with `formData` stays yours if the prop later becomes `undefined`: it renders empty fields, generates no defaults and calls no `onChange`, and renders your next `formData` as usual. A field edit under a `null` or `undefined` root proposes the object or array the field lives in, with the defaults the edit creates.
+
+Update `formData` from `onChange` with a plain state update in the handler, as for a controlled `<input>`. Edits made in the same tick are applied one after another, each to the value you stored for the previous one, so a value you transform or decline stays that way. Updating from a Transition, `useDeferredValue`, a timeout or after an `await` is not supported: which value an edit made before your update lands is applied to is unspecified and may change. For expensive work downstream, keep this state synchronous and derive a deferred copy from it.
+
+The value includes its defaults: the form generates none for data it does not own, on mount or when the schema changes. Seed them yourself with `createSchemaUtils({ validator, customMergeAllOf, defaultFormStateBehavior }, schema).getDefaultFormState(schema, record)`, passing the same `customMergeAllOf` and `defaultFormStateBehavior` you pass to the form: computing defaults merges `allOf`s, so a context missing either setting seeds data the form itself would not produce.
+
+`reset()` on such a form clears its local errors only; the data is yours to reset by passing a new `formData`. For an editable form that should own its data, use [`initialFormData`](#initialformdata) instead.
 
 ## id
 
@@ -527,7 +534,7 @@ id="root_first">` when rendering `first`.
 
 ## initialFormData
 
-The initial data for the form, used to fill an "uncontrolled" form with existing data on the initial render and when `reset()` is called programmatically.
+The seed of a form that owns its data, the way `defaultValue` works on an `<input>`. It is filled in with the schema's defaults on the initial render, and again when `reset()` is called, and every edit is the form's own, reported through [`onChange`](#onchange). Read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). A later change to this prop does not replace the data the form holds.
 
 ## nameGenerator
 
@@ -575,24 +582,18 @@ You can also create a custom generator by implementing the `NameGeneratorFunctio
 Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
 to `true` and the form's data is updated by the user.
 
-If no value (or `false`) is provided, then live omit will not happen. If `true` or `onChange` is provided for
-the flag, then live omit will be performed after processing of all pending changes has completed. If `onBlur`
-is provided, then live omit will be performed when a field that was updated is blurred (as a performance
-optimization).
-
-> NOTE: The `boolean` options for this flag is deprecated and will be removed in a future major release
+If no value is provided, then live omit will not happen. If `onChange` is provided for the flag, then live omit
+will be performed after processing of all pending changes has completed. If `onBlur` is provided, then live omit
+will be performed when a field that was updated is blurred (as a performance optimization).
 
 ## liveValidate
 
 Flag that describes when live validation will be performed. Live validation means that the form will perform
 validation and show any validation errors whenever the form data is updated, rather than just on submit.
 
-If no value (or `false`) is provided, then live validation will not happen. If `true` or `onChange` is provided for
-the flag, then live validation will be performed after processing of all pending changes has completed. If `onBlur`
-is provided, then live validation will be performed when a field that was updated is blurred (as a performance
-optimization).
-
-> NOTE: The `boolean` options for this flag is deprecated and will be removed in a future major release
+If no value is provided, then live validation will not happen. If `onChange` is provided for the flag, then live
+validation will be performed after processing of all pending changes has completed. If `onBlur` is provided, then
+live validation will be performed when a field that was updated is blurred (as a performance optimization).
 
 ## method
 
@@ -622,7 +623,7 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onChange
 
-If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same first argument as `onSubmit` any time a value is updated in the form.
+Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, and blur validation or omission. It is never called on mount or when a prop changes. For a form whose data you own, the event is a proposal: see [`formData`](#formdata) for how to apply it.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
@@ -669,14 +670,6 @@ render(<Form schema={schema} validator={validator} onSubmit={onSubmit} />, docum
 
 > Note: If there are fields in the `formData` that are not represented in the schema, they will be retained by default. If you would like to remove those extra values on form submission, you may need to set the `omitExtraData` and/or `liveOmit` props.
 
-## removeEmptyOptionalObjects
-
-> **Deprecated**: This prop no longer has any effect and will be removed in a future release. The behavior of pruning optional empty objects is now built into [`omitExtraData`](#omitextradata) — enable that prop instead.
-
-When a JSON Schema has a required field inside an optional object, any user interaction with that optional object "activates" it. Even if the user clears all the fields within that object, the empty object property (e.g., `{ test: {} }` or `{ test: { field1: "" } }`) remains in the `formData`. Because the object contains required fields that are now empty, the form becomes unsubmittable.
-
-Previously, setting `removeEmptyOptionalObjects` to `true` caused the form to recursively prune these optional empty objects from the `formData` during `onChange`, `onBlur`, and `onSubmit`. This pruning is now performed automatically by `omitExtraData`.
-
 ## schema
 
 **Required**! Form schema. We support JSON schema draft-07 by default. See [Schema Reference](https://json-schema.org/draft-07/json-schema-release-notes.html) for more information.
@@ -719,6 +712,8 @@ Dictionary of registered templates in the form. See [Custom Templates](../advanc
 
 A function can be passed to this prop in order to make modifications to the default errors resulting from JSON Schema validation. See [Validation](../usage/validation.md) for more information.
 
+Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
+
 ## translateString
 
 Optional string translation function, if provided, allows users to change the translation of the RJSF internal strings.
@@ -726,7 +721,7 @@ Some strings contain replaceable parameter values as indicated by `%1`, `%2`, et
 The number after the `%` indicates the order of the parameter.
 The ordering of parameters is important because some languages may choose to put the second parameter before the first in its translation. In addition to replaceable parameters, some of the strings support the use of markdown and simple html.
 
-One can use the [documentation](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts) of the `TranslatableString` enums to determine which enum values contain replaceable parameters and which support markdown and simple html.
+One can use the [documentation](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/enums.ts) of the `TranslatableString` values to determine which contain replaceable parameters and which support markdown and simple html.
 
 One could use this function to alter one or more of the existing english strings to better suit one's application or fully translate all strings into a different language.
 Below is an example of changing a few of the english strings to something else:
@@ -752,7 +747,10 @@ Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
 ## useFallbackUiForUnsupportedType
 
-If set to true, when an unsupported schema type is encountered, the form will render a fallback UI instead of displaying an error. The fallback UI will display a widget that allows the user to select a JSON Schema primitive type, and a field containing the form data that matches the selected type. Set to false by default.
+If set to true, when an unsupported schema type is encountered, the form will render a fallback UI instead of displaying an error.
+The fallback UI will display a widget that allows the user to select a JSON Schema type, and a field containing the form data that matches the selected type.
+It is also what renders a schema that allows [multiple types](../json-schema/single.md#multiple-types), offering exactly those types, and a property the schema puts no constraint on, such as an `additionalProperties: true` entry, offering every type.
+Set to false by default.
 
 ## validator
 

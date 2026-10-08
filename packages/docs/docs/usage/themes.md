@@ -10,12 +10,11 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | antd                  | Published | `@rjsf/antd`            |
 | Chakra UI             | Published | `@rjsf/chakra-ui`       |
 | Bootstrap 3 (default) | Published | `@rjsf/core`            |
+| Daisy UI              | Published | `@rjsf/daisyui`         |
 | fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
 | mantine               | Published | `@rjsf/mantine`         |
 | material-ui           | Published | `@rjsf/mui`             |
-| PrimeReact            | Published | `@rjsf/primereact`      |
 | react-bootstrap       | Published | `@rjsf/react-bootstrap` |
-| Semantic UI           | Published | `@rjsf/semantic-ui`     |
 | shadcn                | Published | `@rjsf/shadcn`          |
 
 ## Using themes
@@ -28,10 +27,10 @@ import Form from '@rjsf/mui';
 ```
 
 Each theme renders against its own UI framework, so the framework's stylesheet has to be loaded for the form to look
-right. `@rjsf/shadcn` in particular carries no styling of its own: it expects your application to build Tailwind and
-scan the package for class names, or to import one of its prebuilt stylesheets. See the
+right. `@rjsf/shadcn` ships no stylesheet of its own: it is styled by your application's Tailwind build and CSS
+variables, the same way shadcn components are. See the
 [`@rjsf/shadcn` README](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/shadcn/README.md#theming)
-for both routes.
+for the one-line `@source` setup.
 
 If you would like to contribute a theme with a new UI framework, please develop the theme using the `withTheme` component described in [Theme Customization](../advanced-customization/custom-themes.md) and make a PR!
 
@@ -47,10 +46,10 @@ For example, to use the standard bootstrap 3 form, you can run:
 import Form from '@rjsf/core';
 ```
 
-To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/material-ui`. Then, you can run:
+To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/mui`. Then, you can run:
 
 ```ts
-import Form from '@rjsf/material-ui';
+import Form from '@rjsf/mui';
 ```
 
 For more information on how to create a custom theme, see documentation on the `withTheme` component.

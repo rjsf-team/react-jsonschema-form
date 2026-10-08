@@ -65,7 +65,6 @@ Exports `chakra-ui` theme, fields and widgets for `react-jsonschema-form`.
 ### Prerequisites
 
 - `@chakra-ui/react >= 3`
-- `chakra-react-select >= 6`
 - `@rjsf/core >= 6`
 - `@rjsf/utils >= 6`
 - `@rjsf/validator-ajv8 >= 6`
@@ -77,7 +76,7 @@ Refer to the [rjsf installation guide](https://rjsf-team.github.io/react-jsonsch
 ### Installation
 
 ```bash
-yarn add @chakra-ui/react chakra-react-select @rjsf/core @rjsf/utils @rjsf/validator-ajv8
+yarn add @chakra-ui/react @rjsf/core @rjsf/utils @rjsf/validator-ajv8
 ```
 
 ## Usage

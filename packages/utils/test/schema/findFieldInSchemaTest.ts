@@ -41,7 +41,7 @@ const nestedAnyOf: RJSFSchema = {
 
 export default function findFieldInSchemaTest(testValidator: TestValidatorType) {
   // Root schema is not needed for these tests
-  const schemaUtils = createSchemaUtils(testValidator, {});
+  const schemaUtils = createSchemaUtils({ validator: testValidator }, {});
   const expectedAnswerField = getByPath(CHOICES[0], [PROPERTIES_KEY, 'answer']);
 
   describe('findFieldInSchema', () => {
@@ -121,6 +121,13 @@ export default function findFieldInSchemaTest(testValidator: TestValidatorType) 
         field: expectedAnswerField,
         isRequired: true,
       });
+    });
+    it('drills into the anyOf when the schema also has a oneOf (#5309)', () => {
+      const schema: RJSFSchema = {
+        ...testAnyOfSchema,
+        oneOf: [{ type: 'object', properties: { answer: { type: 'number', title: 'Other' } } }],
+      };
+      expect(schemaUtils.findFieldInSchema(schema, 'answer', ANSWER_1).field).toEqual(expectedAnswerField);
     });
     it('schema has oneOf in nested field in properties key and isRequired true', () => {
       const path = 'nested.answer';

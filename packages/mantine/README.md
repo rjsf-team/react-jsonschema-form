@@ -39,7 +39,7 @@
   - [Installation](#installation)
 - [Usage](#usage)
 - [Optional Mantine Theme properties](#optional-mantine-theme-properties)
-    - [Mantine Widget Optional Properties](#mantine-widget-optional-properties)
+  - [Mantine Widget Optional Properties](#mantine-widget-optional-properties)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -65,9 +65,10 @@
 
 ### Prerequisites
 
-- `@mantine/core >= 8`
-- `@mantine/hooks >= 8`
-- `@mantine/dates >= 8`
+- `@mantine/core >= 9.6.3`
+- `@mantine/hooks >= 9.6.3`
+- `@mantine/dates >= 9.6.3`
+- `react >= 19.2`
 - `dayjs >= 1.8.0`
 - `@rjsf/core >= 6.0.0`
 

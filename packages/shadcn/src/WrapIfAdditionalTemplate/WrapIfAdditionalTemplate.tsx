@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import { AdditionalPropertyKeySelect, ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
 
 import { Input } from '../components/ui/input.tsx';
 import { Separator } from '../components/ui/separator.tsx';
@@ -10,9 +10,9 @@ import { Separator } from '../components/ui/separator.tsx';
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   classNames,
   style,
@@ -20,9 +20,12 @@ export default function WrapIfAdditionalTemplate<
   disabled,
   id,
   label,
+  keyName,
   displayLabel,
   onRemoveProperty,
+  onKeyRename,
   onKeyRenameBlur,
+  propertyNamesEnum,
   rawDescription,
   readonly,
   required,
@@ -50,7 +53,7 @@ export default function WrapIfAdditionalTemplate<
 
   return (
     <>
-      <div className={`grid grid-cols-12 col-span-12 items-center gap-2 ${classNames}`} style={style}>
+      <div className={`grid grid-cols-12 col-span-12 items-center gap-2 ${classNames ?? ''}`.trim()} style={style}>
         <div className='grid gap-2 col-span-5'>
           <div className='flex flex-col gap-2'>
             {displayLabel && (
@@ -59,17 +62,32 @@ export default function WrapIfAdditionalTemplate<
               </label>
             )}
             <div className='pl-0.5'>
-              <Input
-                key={label}
-                required={required}
-                defaultValue={label}
-                disabled={disabled || readonly}
-                id={keyId}
-                name={keyId}
-                onBlur={!readonly ? onKeyRenameBlur : undefined}
-                type='text'
-                className='w-full border shadow-sm'
-              />
+              {propertyNamesEnum ? (
+                <AdditionalPropertyKeySelect<T, S, F>
+                  id={keyId}
+                  label={keyLabel}
+                  hideLabel
+                  value={keyName}
+                  propertyNamesEnum={propertyNamesEnum}
+                  onKeyRename={onKeyRename}
+                  disabled={disabled}
+                  readonly={readonly}
+                  required={required}
+                  registry={registry}
+                />
+              ) : (
+                <Input
+                  key={keyName}
+                  required={required}
+                  defaultValue={keyName}
+                  disabled={disabled || readonly}
+                  id={keyId}
+                  name={keyId}
+                  onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  type='text'
+                  className='w-full border shadow-sm'
+                />
+              )}
             </div>
             {!!rawDescription && (
               <span className='text-xs font-medium text-muted-foreground'>

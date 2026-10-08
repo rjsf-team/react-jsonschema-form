@@ -1,5 +1,11 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, buttonId, TranslatableString } from '@rjsf/utils';
+import {
+  AdditionalPropertyKeySelect,
+  ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
+  hasVisibleErrors,
+  TranslatableString,
+} from '@rjsf/utils';
 
 import Label from './FieldTemplate/Label.tsx';
 
@@ -9,9 +15,9 @@ import Label from './FieldTemplate/Label.tsx';
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     id,
@@ -20,8 +26,11 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     displayLabel,
     label,
+    keyName,
+    onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     rawDescription,
     readonly,
     required,
@@ -40,7 +49,7 @@ export default function WrapIfAdditionalTemplate<
   const hasDescription = !!rawDescription;
 
   const classNamesList = ['form-group', classNames];
-  if (!hideError && rawErrors && rawErrors.length > 0) {
+  if (hasVisibleErrors({ rawErrors, hideError })) {
     classNamesList.push('has-error has-danger');
   }
   const uiClassNames = classNamesList.join(' ').trim();
@@ -60,14 +69,29 @@ export default function WrapIfAdditionalTemplate<
           <div className='form-group'>
             {displayLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
             {displayLabel && rawDescription && <div>&nbsp;</div>}
-            <input
-              key={label}
-              className='form-control'
-              type='text'
-              id={`${id}-key`}
-              onBlur={onKeyRenameBlur}
-              defaultValue={label}
-            />
+            {propertyNamesEnum ? (
+              <AdditionalPropertyKeySelect<T, S, F>
+                id={`${id}-key`}
+                label={keyLabel}
+                hideLabel
+                value={keyName}
+                propertyNamesEnum={propertyNamesEnum}
+                onKeyRename={onKeyRename}
+                disabled={disabled}
+                readonly={readonly}
+                required={required}
+                registry={registry}
+              />
+            ) : (
+              <input
+                key={keyName}
+                className='form-control'
+                type='text'
+                id={`${id}-key`}
+                onBlur={onKeyRenameBlur}
+                defaultValue={keyName}
+              />
+            )}
           </div>
         </div>
         <div className='form-additional form-group col-xs-5'>{children}</div>

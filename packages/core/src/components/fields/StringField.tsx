@@ -1,19 +1,20 @@
 import { useCallback } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, ErrorSchema } from '@rjsf/utils';
-import { getWidget, getUiOptions, resolveDefaultWidget } from '@rjsf/utils';
+import { fieldPathToName, getUiOptions, resolveDefaultWidget, resolveWidget } from '@rjsf/utils';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
  * @param props - The `FieldProps` for this template
  */
-function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+function StringField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
   const {
     schema,
     name,
     uiSchema,
-    fieldPathId,
+    fieldPath,
+    id: fieldId,
     formData,
     required,
     disabled = false,
@@ -33,18 +34,17 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const { widget = defaultWidget, placeholder = '', title: uiTitle, ...options } = getUiOptions<T, S, F>(uiSchema);
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   const label = uiTitle ?? title ?? schemaTitle ?? name;
-  const Widget = getWidget<T, S, F>(schema, widget, widgets);
+  const { Widget } = resolveWidget<T, S, F>(schema, widget, widgets);
   const onWidgetChange = useCallback(
-    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) =>
-      onChange(value, fieldPathId.path, errorSchema, id),
-    [onChange, fieldPathId],
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => onChange(value, fieldPath, errorSchema, id),
+    [onChange, fieldPath],
   );
   return (
     <Widget
       options={{ ...options, enumOptions }}
       schema={schema}
       uiSchema={uiSchema}
-      id={fieldPathId.$id}
+      id={fieldId}
       name={name}
       label={label}
       hideLabel={!displayLabel}
@@ -60,7 +60,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       registry={registry}
       placeholder={placeholder}
       rawErrors={rawErrors}
-      htmlName={fieldPathId.name}
+      htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />
   );
 }

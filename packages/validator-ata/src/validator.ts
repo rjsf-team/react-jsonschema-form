@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
@@ -24,10 +24,9 @@ import type { CustomValidatorOptionsType, Localizer, SuppressDuplicateFilteringT
  * still resolves between schemas RJSF passes in.
  */
 export default class ATAValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** Stable copy of the constructor options, used when (re)building per-schema
    * `Validator` instances on demand.
    *
@@ -116,7 +115,7 @@ export default class ATAValidator<
     const optionsWithSchemas = {
       ...this.options,
       ataOptionsOverrides: {
-        ...(this.options.ataOptionsOverrides || {}),
+        ...(this.options.ataOptionsOverrides ?? {}),
         ...(siblingRoots.length ? { schemas: siblingRoots } : {}),
       },
     };
@@ -128,13 +127,16 @@ export default class ATAValidator<
   /** Runs raw validation against the given schema. Equivalent to
    * `AJV8Validator#rawValidation`: returns ata's error array (already in
    * AJV-compatible shape) plus any compilation error encountered.
+   *
+   * @param schema - The schema against which to validate the form data
+   * @param [formData] - The form data to validate
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined;
     let errors: ValidationError[] | undefined;
 
     try {
-      const id = schema[ID_KEY] ?? hashForSchema(schema);
+      const id = schemaKey(schema);
       const validator = this.getOrBuild(id, schema);
       const result = validator.validate(ATAValidator.cloneForValidation(formData));
       errors = result.valid ? undefined : result.errors;
@@ -159,17 +161,26 @@ export default class ATAValidator<
   /** Validates `formData` and returns RJSF's `ValidationData<T>`. See
    * `processRawValidationErrors` for the shape of the post-processing
    * pipeline (custom validation, transform hook, ui-title resolution).
+   *
+   * @param formData - The form data to validate
+   * @param schema - The schema against which to validate the form data
+   * @param [customValidate] - An optional function that is used to perform custom validation
+   * @param [transformErrors] - An optional function that is used to transform errors after ata validation
+   * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ValidationError>(schema, formData);
     return processRawValidationErrors(
-      this,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -177,6 +188,7 @@ export default class ATAValidator<
       transformErrors,
       uiSchema,
       this.suppressDuplicateFiltering,
+      getCustomValidateFormData,
     );
   }
 
@@ -188,7 +200,9 @@ export default class ATAValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    const rootSchemaId = rootSchema[ID_KEY] ?? ROOT_SCHEMA_PREFIX;
+    // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
+    // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
+    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
     // Inject $id into a copy of the rootSchema so ata's schema registry can
     // resolve `<rootSchemaId>#/...` refs produced by `withIdRefPrefix`.
     // The original user-supplied schema is left untouched.
@@ -208,16 +222,22 @@ export default class ATAValidator<
   /** Boolean validation entrypoint. Returns false on validation failure or
    * compilation error. Mirrors `AJV8Validator#isValid` semantics.
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S) {
+  isValid(schema: S, formData: unknown, rootSchema: S) {
+    // Declared outside the try so the catch block can say which schema the error is about
+    let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;
     } catch (e) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered compiling schema:', e);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning. Which of
+      // the schema and the form data is at fault is deliberately not claimed: ata doesn't check the whole schema when
+      // the validator is built, so a schema defect such as an unparseable `pattern` throws from `validate()` and would
+      // be reported as a problem with the data
+      const named = id === undefined ? '' : ` "${id}"`;
+      logOnce(`Error encountered validating schema${named}:`, 'warn', e);
       return false;
     }
   }

@@ -6,73 +6,30 @@
   },
   "extends": "nx/presets/npm.json",
   "targetDefaults": {
-    "build:ts": {
-      "dependsOn": ["^build:ts"],
-      "cache": true,
-      "//": "the tsc-only lib/ build, measured by size-limit; declaring lib/ as an output means a cache hit restores it to disk, and the tsbuildinfo keeps the next tsc -b incremental",
-      "outputs": ["{projectRoot}/lib", "{projectRoot}/tsconfig.tsbuildinfo"]
-    },
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": true,
-      "//": "outputs = nx's defaults (dist/build/public) plus lib/ and the tsbuildinfo that build:ts emits; without lib/ a cache hit reports success without restoring it to disk, and without the tsbuildinfo the next tsc -b after a restore does a needless full rebuild",
-      "outputs": [
-        "{projectRoot}/lib",
-        "{projectRoot}/tsconfig.tsbuildinfo",
-        "{projectRoot}/dist",
-        "{projectRoot}/build",
-        "{projectRoot}/public"
-      ]
-    },
-    "cs-check": {
-      "cache": true
-    },
-    "cs-format": {
-      "cache": true
-    },
-    "lint": {
-      "cache": true
+      "//": "outputs = nx's defaults (dist/build/public) plus lib/, which tsdown emits; without it a cache hit reports success without restoring lib/ to disk",
+      "outputs": ["{projectRoot}/lib", "{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/public"],
+      "//inputs": "the shared tsdown config and the tsconfig.base.json that every package's tsconfig.lib.json extends live outside project roots; without it a warm cache serves stale output when it changes",
+      "inputs": ["default", "^default", "{workspaceRoot}/tsdown.base.mts", "{workspaceRoot}/tsconfig.base.json"]
     },
     "test": {
       "cache": true,
       "//test": "the shared vitest base/setup live outside project roots; without these inputs a warm cache serves stale results when they change",
-      "inputs": [
-        "default",
-        "^default",
-        "{workspaceRoot}/testing/*",
-        "{workspaceRoot}/vitest.config.mts"
-      ]
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.mts"]
     },
     "test:update": {
       "cache": true,
-      "inputs": [
-        "default",
-        "^default",
-        "{workspaceRoot}/testing/*",
-        "{workspaceRoot}/vitest.config.mts"
-      ]
+      "inputs": ["default", "^default", "{workspaceRoot}/testing/*", "{workspaceRoot}/vitest.config.mts"]
     },
     "test:watch": {
-      "cache": true
-    },
-    "precommit": {
       "cache": true
     },
     "publish-to-npm": {
       "cache": true
     },
     "test-coverage": {
-      "cache": true
-    },
-    "build:lib": {
-      "cache": true
-    },
-    "prepublishOnly": {
-      "cache": true
-    },
-    "build:dist": {
       "cache": true
     },
     "publish-to-gh-pages": {
@@ -83,9 +40,7 @@
   "defaultBase": "main",
   "useLegacyCache": true,
   "release": {
-    "projects": [
-      "*"
-    ],
+    "projects": ["*"],
     "version": {
       "generatorOptions": {
         "updateDependents": "always"

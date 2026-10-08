@@ -12,7 +12,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  *          determine which option is selected
  * @returns - The index of the matched option or undefined if there is no match
  */
-export default function getOptionMatchingSimpleDiscriminator<T = any, S extends StrictRJSFSchema = RJSFSchema>(
+export default function getOptionMatchingSimpleDiscriminator<T = unknown, S extends StrictRJSFSchema = RJSFSchema>(
   formData: T | undefined,
   options: S[],
   discriminatorField?: string,

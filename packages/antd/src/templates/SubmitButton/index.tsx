@@ -8,9 +8,9 @@ type ButtonType = NonNullable<ButtonProps['type']>;
 /** The `SubmitButton` renders a button that represent the `Submit` action on a form
  */
 export default function SubmitButton<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({ uiSchema }: SubmitButtonProps<T, S, F>) {
   const { submitText, norender, props: submitButtonProps } = getSubmitButtonOptions(uiSchema);
   if (norender) {

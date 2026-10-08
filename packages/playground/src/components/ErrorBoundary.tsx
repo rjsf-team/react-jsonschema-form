@@ -33,6 +33,7 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   /** You can render any custom fallback UI */
+  // oxlint-disable-next-line typescript/promise-function-async -- ReactNode's type includes Promise for async components; this render is always synchronous
   render() {
     const { children } = this.props;
     const { error, hasError } = this.state;

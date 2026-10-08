@@ -2,7 +2,13 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getInputProps, ariaDescribedByIds, examplesId } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getExampleSuggestions,
+  getInputProps,
+  getNumericInputTitle,
+} from '@rjsf/utils';
 
 /** The `BaseInputTemplate` component is a template for rendering basic input elements
  * with DaisyUI styling. It's used as the foundation for various input types in forms.
@@ -10,7 +16,6 @@ import { getInputProps, ariaDescribedByIds, examplesId } from '@rjsf/utils';
  * Features:
  * - Wraps input in DaisyUI's form-control for proper spacing
  * - Uses DaisyUI's input and input-bordered classes for styling
- * - Includes a hidden label for accessibility
  * - Handles common input properties like disabled and readonly states
  * - Processes input props based on schema type and options
  * - Supports schema examples with datalist
@@ -19,9 +24,9 @@ import { getInputProps, ariaDescribedByIds, examplesId } from '@rjsf/utils';
  * @param props - The `WidgetProps` for the component
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -39,7 +44,6 @@ export default function BaseInputTemplate<
     options,
     schema,
     type,
-    label,
     placeholder,
     registry,
   } = props;
@@ -54,7 +58,9 @@ export default function BaseInputTemplate<
   }
   // Extract step, min, max, accept from inputProps
   const { step, min, max, accept, ...rest } = inputProps;
-  const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
+  const htmlInputProps = { step, min, max, accept, ...(hasExamples ? { list: examplesId(id) } : undefined) };
 
   const handleChange = useCallback(
     ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
@@ -84,9 +90,6 @@ export default function BaseInputTemplate<
   return (
     <>
       <div className='form-control'>
-        <label htmlFor={id} className='label hidden' style={{ display: 'none' }}>
-          <span className='label-text'>{label}</span>
-        </label>
         <div style={{ position: 'relative' }}>
           <input
             id={id}
@@ -98,19 +101,20 @@ export default function BaseInputTemplate<
             autoFocus={autofocus}
             className={className}
             multiple={isMulti}
+            title={getNumericInputTitle(inputProps, registry.translateString)}
             {...rest}
             {...htmlInputProps}
             onChange={onChangeOverride || handleChange}
             onBlur={handleBlur}
             onFocus={handleFocus}
-            aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+            aria-describedby={ariaDescribedByIds(id, hasExamples)}
           />
           {options.allowClearTextInputs && !readonly && !disabled && value && (
             <ClearButton registry={registry} onClick={handleClear} />
           )}
         </div>
       </div>
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

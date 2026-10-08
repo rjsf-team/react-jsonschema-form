@@ -9,14 +9,16 @@ import type {
 } from '@rjsf/utils';
 
 export type ChakraIconButtonProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > = RJSFIconButtonProps<T, S, F> & Omit<IconButtonProps, 'onClick'>;
 
-function ChakraIconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ChakraIconButtonProps<T, S, F>,
-) {
+function ChakraIconButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ChakraIconButtonProps<T, S, F>) {
   const { icon, iconType, uiSchema, registry, ...otherProps } = props;
 
   return (

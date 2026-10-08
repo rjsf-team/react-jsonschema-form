@@ -7,12 +7,11 @@ import { Separator } from '../components/ui/separator.tsx';
  *
  * @param props - The `TitleFieldProps` for this component
  */
-export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  title,
-  uiSchema,
-  optionalDataControl,
-}: TitleFieldProps<T, S, F>) {
+export default function TitleField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, title, uiSchema, optionalDataControl }: TitleFieldProps<T, S, F>) {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   let heading = <h5>{uiOptions.title || title}</h5>;
   if (optionalDataControl) {

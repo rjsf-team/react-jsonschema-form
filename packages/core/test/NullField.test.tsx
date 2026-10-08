@@ -1,4 +1,4 @@
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import { createFormComponent, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
 
@@ -28,14 +28,14 @@ describe('NullField', () => {
     });
 
     it('should assign a default value', () => {
-      const { onChange } = createFormComponent({
+      const { getFormData } = createFormComponent({
         schema: {
           type: 'null',
           default: null,
         },
       });
 
-      expectToHaveBeenCalledWithFormData(onChange, null);
+      expect(getFormData()).toBe(null);
     });
 
     it('should not overwrite existing data', async () => {
@@ -44,6 +44,7 @@ describe('NullField', () => {
           type: 'null',
         },
         formData: 3,
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
 

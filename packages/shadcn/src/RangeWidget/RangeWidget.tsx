@@ -32,16 +32,11 @@ const allowedProps = [
  * @param {string} props.id - The unique identifier for the widget
  * @returns {JSX.Element} The rendered range widget
  */
-export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  value,
-  readonly,
-  disabled,
-  options,
-  schema,
-  onChange,
-  label,
-  id,
-}: WidgetProps<T, S, F>) {
+export default function RangeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ value, readonly, disabled, options, schema, onChange, label, id }: WidgetProps<T, S, F>) {
   const handleChange = (newValue: number[]) => onChange(newValue[0]);
 
   const sliderProps = { value, label, id, ...rangeSpec<S>(schema) };

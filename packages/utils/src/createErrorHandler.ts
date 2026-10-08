@@ -2,12 +2,7 @@ import { ERRORS_KEY } from './constants.ts';
 import isPlainObject from './isPlainObject.ts';
 import type { FieldValidation, FormValidation } from './types.ts';
 
-/** Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
- *
- * @param formData - The form data around which the error handler is created
- * @returns - A `FormValidation` object based on the `formData` structure
- */
-export default function createErrorHandler<T = any>(formData: T): FormValidation<T> {
+function buildErrorHandler(formData: unknown): FieldValidation {
   const handler: FieldValidation = {
     // We store the list of errors for this node in a property named __errors
     // to avoid name collision with a possible sub schema field named
@@ -17,14 +12,18 @@ export default function createErrorHandler<T = any>(formData: T): FormValidation
       this[ERRORS_KEY]!.push(message);
     },
   };
-  if (Array.isArray(formData)) {
-    return formData.reduce((acc, value, key) => ({ ...acc, [key]: createErrorHandler(value) }), handler);
-  }
-  if (isPlainObject(formData)) {
-    return Object.keys(formData).reduce(
-      (acc, key) => ({ ...acc, [key]: createErrorHandler(formData[key]) }),
-      handler as FormValidation<T>,
-    );
-  }
-  return handler as FormValidation<T>;
+  const children: [string, unknown][] =
+    Array.isArray(formData) || isPlainObject(formData) ? Object.entries<unknown>(formData) : [];
+  return { ...handler, ...Object.fromEntries(children.map(([key, value]) => [key, buildErrorHandler(value)])) };
+}
+
+/** Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
+ *
+ * @param formData - The form data around which the error handler is created
+ * @returns - A `FormValidation` object based on the `formData` structure
+ */
+export default function createErrorHandler<T = unknown>(formData: T): FormValidation<T> {
+  // The tree mirrors `formData`'s runtime shape, which the type system cannot follow through `buildErrorHandler`, so
+  // this is the one place it is asserted to match `T`
+  return buildErrorHandler(formData) as FormValidation<T>;
 }

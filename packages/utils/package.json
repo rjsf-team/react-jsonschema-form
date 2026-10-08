@@ -1,8 +1,7 @@
 {
   "name": "@rjsf/utils",
   "version": "6.11.0",
-  "main": "dist/index.js",
-  "module": "lib/index.js",
+  "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "module",
   "sideEffects": false,
@@ -10,72 +9,34 @@
   "exports": {
     ".": {
       "@rjsf/source": "./src/index.ts",
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
+      "default": "./lib/index.js"
     },
-    "./lib": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
-    },
-    "./lib/*.js": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
-    },
-    "./dist": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
-    },
-    "./dist/*.cjs": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
-    }
+    "./lib": "./lib/index.js",
+    "./lib/describeElementGivenAsComponent.js": null,
+    "./lib/*.js": "./lib/*.js"
   },
   "files": [
-    "dist",
     "lib",
     "src"
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "scripts": {
-    "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/utils.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/utils.esm.js --format=umd --file=dist/utils.umd.js --name=@rjsf/utils",
-    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
-    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
-    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
-    "lint": "oxlint src test",
-    "precommit": "lint-staged",
+    "build": "tsdown -c ../../tsdown.base.mts",
     "test": "vitest run",
     "test:debug": "node --inspect-brk ../../node_modules/.bin/vitest --pool=forks"
   },
-  "lint-staged": {
-    "{src,test}/**/*.{ts,tsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
-  },
   "peerDependencies": {
-    "react": ">=18"
+    "react": ">=19"
   },
   "dependencies": {
     "@x0k/json-schema-merge": "^1.1.0",
-    "fast-equals": "^6.0.4",
-    "fast-uri": "^4.2.1",
-    "jsonpointer": "^5.0.1",
-    "react-is": "^18.3.1"
+    "fast-equals": "^6.0.4"
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.15",
-    "@types/react-is": "^18.3.1",
     "deep-freeze-es6": "^5.0.0"
   },
   "publishConfig": {

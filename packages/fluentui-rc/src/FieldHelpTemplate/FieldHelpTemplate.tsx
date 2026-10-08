@@ -8,17 +8,17 @@ import { helpId } from '@rjsf/utils';
  * @param props - The `FieldHelpProps` to be rendered
  */
 export default function FieldHelpTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldHelpProps<T, S, F>) {
-  const { fieldPathId, help, uiSchema = {}, registry } = props;
+  const { id, help, uiSchema = {}, registry } = props;
 
   if (!help) {
     return null;
   }
   return (
-    <Caption1 id={helpId(fieldPathId)}>
+    <Caption1 id={helpId(id)}>
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </Caption1>
   );

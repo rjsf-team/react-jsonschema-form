@@ -1,17 +1,27 @@
 import { useMemo, useState } from 'react';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GenericObjectType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
+  groupEnumOptions,
+  isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
+import type { DefaultOptionType } from 'antd/es/select/index.js';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -23,9 +33,9 @@ const SELECT_STYLE = {
  * @param props - The `WidgetProps` for this component
  */
 export default function SelectWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   autofocus,
   disabled,
@@ -47,17 +57,24 @@ export default function SelectWidget<
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = useMemo(
+    () => enumOptionsDomValues<S>(enumOptions, optionValueFormat),
+    [enumOptions, optionValueFormat],
+  );
 
   const handleChange = (nextValue: any) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
 
-  const handleBlur = () => onBlur(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
-
-  const handleFocus = () => onFocus(id, enumOptionValueDecoder<S>(value, enumOptions, optionValueFormat, emptyValue));
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
 
   const filterOption: SelectProps['filterOption'] = (input, option) => {
+    // A group is offered here before its own options are, and matching one keeps every option it holds, including the
+    // ones the search rules out, so groups are rejected and left to be kept by whichever of their options match
+    if (option?.options) {
+      return false;
+    }
     if (option && typeof option.label === 'string') {
       // labels are strings in this context
       return option.label.toLowerCase().includes(input.toLowerCase());
@@ -67,7 +84,7 @@ export default function SelectWidget<
 
   const getPopupContainer = SelectWidget.getPopupContainerCallback();
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, !!multiple, optionValueFormat, emptyValue);
 
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
@@ -80,13 +97,17 @@ export default function SelectWidget<
 
   const selectOptions: DefaultOptionType[] | undefined = useMemo(() => {
     if (Array.isArray(enumOptions)) {
-      const enumOptionsList: DefaultOptionType[] = enumOptions.map(
-        ({ value: optionValue, label: optionLabel }, index) => ({
-          disabled: Array.isArray(enumDisabled) && enumDisabled.includes(optionValue),
-          key: String(index),
-          value: enumOptionValueEncoder(optionValue, index, optionValueFormat),
-          label: optionLabel,
-        }),
+      const toOptionType = (option: IndexedEnumOptionType<S>): DefaultOptionType => ({
+        disabled: option.disabled,
+        key: String(option.index),
+        value: domValues[option.index],
+        label: option.label,
+      });
+      const enumOptionsList: DefaultOptionType[] = groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map(
+        (item) =>
+          isEnumOptionsGroup<S>(item)
+            ? { label: item.label, options: item.options.map(toOptionType) }
+            : toOptionType(item),
       );
 
       if (showPlaceholderOption) {
@@ -95,7 +116,7 @@ export default function SelectWidget<
       return enumOptionsList;
     }
     return undefined;
-  }, [enumDisabled, enumOptions, placeholder, showPlaceholderOption, optionValueFormat]);
+  }, [enumDisabled, enumOptions, optgroups, placeholder, showPlaceholderOption, domValues]);
 
   return (
     <>
@@ -133,6 +154,9 @@ export default function SelectWidget<
 
 /** Give the playground a place to hook into the `getPopupContainer` callback generation function so that it can be
  * disabled while in the playground. Since the callback is a simple function, it can be returned by this static
- * "generator" function.
+ * "generator" function. The default never returns `undefined`; the return type allows it because that is how the
+ * playground's replacement turns the callback off. A trigger without a parent element gets `document.body`, antd's own
+ * default container.
  */
-SelectWidget.getPopupContainerCallback = () => (node: any) => node.parentElement;
+SelectWidget.getPopupContainerCallback = (): ((node: HTMLElement) => HTMLElement) | undefined => (node) =>
+  node.parentElement ?? document.body;

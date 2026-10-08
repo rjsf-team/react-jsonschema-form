@@ -11,7 +11,6 @@ import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 import { ConfigProvider } from 'antd';
-import { PrimeReactProvider } from 'primereact/api';
 import type { FrameComponentProps } from 'react-frame-component';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 
@@ -23,9 +22,7 @@ const { SelectWidget, DateWidget } = Widgets;
 // function because, when it is active, the `SelectPatcher` code below along with the `ConfigProvider` for the antd
 // theme conditional branch won't take effect as the antd component `getPopupContainer()` supercedes it, so we make it
 // return undefined to disable it.
-// @ts-expect-error TS2339 because the Widget interface doesn't have the static function on it
 SelectWidget.getPopupContainerCallback = () => undefined;
-// @ts-expect-error TS2339 because the Widget interface doesn't have the static function on it
 // DateWidget also covers DateTimeWidget since it delegates to DateWidget internally
 DateWidget.getPopupContainerCallback = () => undefined;
 
@@ -68,7 +65,7 @@ SOFTWARE.
  *
  * @param frameDoc - The iFrame document of the playground
  */
-function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
+function AntdPopupPatcher({ frameDoc }: { frameDoc?: Document }) {
   useEffect(() => {
     if (!frameDoc) {
       return () => {};
@@ -85,7 +82,7 @@ function AntdPopupPatcher({ frameDoc }: { frameDoc: Document }) {
         return;
       }
 
-      const trigger = frameDoc.querySelector(triggerSelector) as HTMLElement | null;
+      const trigger = frameDoc.querySelector(triggerSelector);
       if (!trigger) {
         // The popup is still visible but the trigger's open class is already gone — it's in the
         // process of closing. Restore our last known position so it doesn't flash to (0, 0)
@@ -174,7 +171,7 @@ interface DemoFrameProps extends FrameComponentProps {
   /** override children to be ReactElement to avoid Typescript issue. In this case we don't need to worry about
    * children being of the other valid ReactNode types, undefined and string as it always contains an RJSF `Form`
    */
-  children: ReactElement;
+  children: ReactElement<any>;
   subtheme: string;
 }
 
@@ -183,23 +180,24 @@ export default function DemoFrame(props: DemoFrameProps) {
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
-  const [container, setContainer] = useState();
-  const [window, setWindow] = useState();
+  const [container, setContainer] = useState<HTMLElement>();
+  const [window, setWindow] = useState<Window>();
 
-  const instanceRef = useRef<any>();
+  const instanceRef = useRef<HTMLIFrameElement>(null);
 
   const onContentDidMount = useCallback(() => {
+    const frameDoc = instanceRef.current?.contentDocument;
     setReady(true);
     setEmotionCache(
       createCache({
         key: 'css',
         prepend: true,
-        container: instanceRef.current.contentWindow[DEMO_FRAME_JSS],
+        container: frameDoc?.getElementById(DEMO_FRAME_JSS) ?? undefined,
       }),
     );
-    setContainer(instanceRef.current.contentDocument.body);
-    setWindow(() => instanceRef.current.contentWindow);
-  }, [instanceRef]);
+    setContainer(frameDoc?.body);
+    setWindow(instanceRef.current?.contentWindow ?? undefined);
+  }, []);
 
   let body: ReactNode = children;
   if (theme === 'mui') {
@@ -220,13 +218,17 @@ export default function DemoFrame(props: DemoFrameProps) {
     body = ready ? (
       <FrameContextConsumer>
         {({ document: frameDoc }) => {
-          const jssContainer =
-            frameDoc?.getElementById(DEMO_FRAME_JSS) || instanceRef.current.contentWindow[DEMO_FRAME_JSS];
+          if (!frameDoc) {
+            return null;
+          }
+          const jssContainer = frameDoc.getElementById(DEMO_FRAME_JSS) ?? undefined;
           return (
             <>
-              <AntdPopupPatcher frameDoc={frameDoc || instanceRef.current.contentDocument} />
+              <AntdPopupPatcher frameDoc={frameDoc} />
               <AntdStyleProvider container={jssContainer}>
-                <ConfigProvider getPopupContainer={() => jssContainer.parentElement}>{children}</ConfigProvider>
+                <ConfigProvider getPopupContainer={() => jssContainer?.parentElement ?? frameDoc.body}>
+                  {children}
+                </ConfigProvider>
               </AntdStyleProvider>
             </>
           );
@@ -241,14 +243,6 @@ export default function DemoFrame(props: DemoFrameProps) {
           subtheme: { dataTheme: subtheme },
         })}
       </FrameContextConsumer>
-    ) : null;
-  } else if (theme === 'primereact') {
-    body = ready ? (
-      <>
-        <style>{`html { font-weight: 400; font-size: 14px; color: var(--text-color); }`}</style>
-        <link href='//cdn.jsdelivr.net/npm/primeicons@7.0.0/primeicons.min.css' rel='stylesheet' />
-        <PrimeReactProvider value={{ styleContainer: container, appendTo: 'self' }}>{children}</PrimeReactProvider>
-      </>
     ) : null;
   } else if (theme === 'mantine') {
     body = ready ? (

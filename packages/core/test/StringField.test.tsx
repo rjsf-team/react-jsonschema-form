@@ -1,9 +1,10 @@
-import type { ErrorSchema, FieldPathList, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldPath, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { parseDateString, toDateString, TranslatableString, utcToLocal } from '@rjsf/utils';
 import { fireEvent, act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
 import StringField from '../src/components/fields/StringField.tsx';
+import MarkdownTemplate from '../src/markdown.tsx';
 import {
   createFormComponent,
   getSelectedOptionValue,
@@ -16,22 +17,20 @@ import { TextWidgetTest } from './TextWidgetTest.tsx';
 const consoleErrorSuppression = setupConsoleErrorSuppression();
 
 const mockFileReader = {
-  // oxlint-disable-next-line no-unused-vars
   set onload(fn: (event: { target: { result: string } }) => void) {
     fn({ target: { result: 'data:text/plain;base64,x=' } });
   },
-  // oxlint-disable-next-line no-empty-function
   readAsDataURL() {},
 } as unknown as FileReader;
 
 function StringFieldTest(props: FieldProps) {
-  const onChangeTest = (newFormData: any, path: FieldPathList, errorSchema?: ErrorSchema, id?: string) => {
+  const onChangeTest = (newFormData: any, path: FieldPath, errorSchema?: ErrorSchema, id?: string) => {
     const value = newFormData;
     let raiseError = errorSchema;
     if (value !== 'test') {
       raiseError = {
         __errors: ['Value must be "test"'],
-      } as ErrorSchema;
+      };
     }
     props.onChange(newFormData, path, raiseError, id);
   };
@@ -147,6 +146,50 @@ describe('StringField', () => {
       expect(node.querySelector('.rjsf-field input')).toHaveAttribute('list', datalistId);
     });
 
+    it('should render examples that share a String() as one option, without duplicate keys (#5315)', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          default: 'true',
+          examples: [1, '1', true, 2],
+        },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['1', 'true', '2']);
+      expect(consoleErrorSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+
+    it('should not suggest a null default or example as the string "null"', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: ['string', 'null'],
+          default: null,
+          examples: ['a', null],
+        },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['a']);
+    });
+
+    it('should render no datalist and point the input at none when no example can be suggested (#5315)', () => {
+      const { node } = createFormComponent({
+        schema: { type: ['string', 'null'], examples: [null, { a: 1 }] },
+      });
+      const input = node.querySelector('.rjsf-field input');
+      expect(node.querySelector('.rjsf-field datalist')).toBeNull();
+      expect(input).not.toHaveAttribute('list');
+      expect(input?.getAttribute('aria-describedby')).not.toContain('__examples');
+    });
+
+    it('should not suggest an undefined example as the string "undefined"', () => {
+      const { node } = createFormComponent({
+        // JSON can't hold `undefined`, but a schema built in code can
+        schema: { type: 'string', examples: ['a', undefined] as unknown as string[] },
+      });
+      const options = node.querySelectorAll<HTMLOptionElement>('.rjsf-field datalist > option');
+      expect([...options].map((option) => option.value)).toEqual(['a']);
+    });
+
     it('should include default in datalist when types mismatch and values differ', () => {
       const { node } = createFormComponent({
         schema: {
@@ -164,6 +207,7 @@ describe('StringField', () => {
     it('should default submit value to undefined', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: { type: 'string' },
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
       await submitForm(node, user);
@@ -205,7 +249,7 @@ describe('StringField', () => {
           type: 'string',
         },
         onFocus,
-        formData: 'yo',
+        initialFormData: 'yo',
       });
       const input = node.querySelector('input')!;
       await user.click(input);
@@ -216,7 +260,7 @@ describe('StringField', () => {
     it('should handle an empty string change event', async () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.clear(node.querySelector('input')!);
@@ -228,7 +272,7 @@ describe('StringField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:emptyValue': 'default' },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.clear(node.querySelector('input')!);
@@ -240,7 +284,7 @@ describe('StringField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:allowClearTextInputs': true },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.click(node.querySelector('button.btn-clear')!);
@@ -252,7 +296,7 @@ describe('StringField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:allowClearTextInputs': true, 'ui:emptyValue': 'default' },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.click(node.querySelector('button.btn-clear')!);
@@ -278,7 +322,7 @@ describe('StringField', () => {
         schema: {
           type: 'string',
         },
-        formData: 'plip',
+        initialFormData: 'plip',
       });
 
       expect(node.querySelector('.rjsf-field input')).toHaveValue('plip');
@@ -311,7 +355,7 @@ describe('StringField', () => {
       const { node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:autocomplete': 'family-name' },
-        formData: undefined,
+        initialFormData: undefined,
       });
 
       expect(node.querySelector('input')).toHaveAttribute('autocomplete', 'family-name');
@@ -321,7 +365,7 @@ describe('StringField', () => {
       const { node } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:autocapitalize': 'words' },
-        formData: undefined,
+        initialFormData: undefined,
       });
 
       expect(node.querySelector('input')).toHaveAttribute('autocapitalize', 'words');
@@ -331,7 +375,7 @@ describe('StringField', () => {
       const { node, rerender } = createFormComponent({
         schema: { type: 'string' },
         formData: null,
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       // trigger the errors by submitting the form since initial render no longer shows them
@@ -342,7 +386,7 @@ describe('StringField', () => {
       const errorMessageContent = node.querySelector('#root__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
-      rerender({ schema: { type: 'string' }, formData: 'hello', liveValidate: true });
+      rerender({ schema: { type: 'string' }, formData: 'hello', liveValidate: 'onChange' });
 
       expect(node.querySelectorAll('#root__error')).toHaveLength(0);
     });
@@ -356,7 +400,7 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'hello');
+      await user.type(inputs[0], 'hello');
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
@@ -373,7 +417,7 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'test');
+      await user.type(inputs[0], 'test');
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(0);
@@ -388,18 +432,37 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'hello');
+      await user.type(inputs[0], 'hello');
 
       let errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
       const errorMessageContent = node.querySelector('#root__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('Value must be "test"');
 
-      await user.clear(inputs[0] as HTMLElement);
-      await user.type(inputs[0] as HTMLElement, 'test');
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'test');
 
       errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(0);
+    });
+
+    it('should clear an error from the error list as well as the field', async () => {
+      const { node } = createFormComponent({
+        schema: { type: 'string' },
+        fields: {
+          StringField: StringFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
+      await user.type(inputs[0], 'hello');
+
+      expect(node.querySelectorAll('.panel-danger.errors li')).toHaveLength(1);
+
+      await user.clear(inputs[0]);
+      await user.type(inputs[0], 'test');
+
+      expect(node.querySelectorAll('.panel-danger.errors li')).toHaveLength(0);
     });
 
     it('raise an error and check if the error is displayed using custom text widget', async () => {
@@ -411,7 +474,7 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'hello');
+      await user.type(inputs[0], 'hello');
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(1);
@@ -428,7 +491,7 @@ describe('StringField', () => {
       });
 
       const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      await user.type(inputs[0] as HTMLElement, 'test');
+      await user.type(inputs[0], 'test');
 
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).toHaveLength(0);
@@ -445,7 +508,7 @@ describe('StringField', () => {
             { const: 'bar', title: 'Bar', description: 'Bar description' },
           ],
         },
-        formData: 'foo',
+        initialFormData: 'foo',
       });
 
       expect(node).toHaveTextContent('Foo description');
@@ -609,7 +672,7 @@ describe('StringField', () => {
           type: 'string',
           enum: ['foo', 'bar'],
         },
-        formData: 'bar',
+        initialFormData: 'bar',
       });
       await submitForm(node, user);
 
@@ -703,6 +766,166 @@ describe('StringField', () => {
       expect(options[0]).toHaveTextContent('');
       expect(options).toHaveLength(1);
     });
+
+    it('should render optgroups when ui:options.optgroups is provided', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar', 'baz', 'qux'],
+        },
+        uiSchema: {
+          'ui:options': {
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz', 'qux'],
+            },
+          },
+        },
+      });
+
+      const optgroups = node.querySelectorAll('optgroup');
+      expect(optgroups).toHaveLength(2);
+      expect(optgroups[0]).toHaveAttribute('label', 'Group A');
+      expect(optgroups[1]).toHaveAttribute('label', 'Group B');
+      expect(optgroups[0].querySelectorAll('option')).toHaveLength(2);
+      expect(optgroups[1].querySelectorAll('option')).toHaveLength(2);
+    });
+
+    it('should render ungrouped options after the optgroups', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar', 'baz', 'qux'],
+        },
+        uiSchema: {
+          'ui:options': {
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+            },
+          },
+        },
+      });
+
+      const select = node.querySelector('select')!;
+      const optgroups = select.querySelectorAll('optgroup');
+      expect(optgroups).toHaveLength(1);
+
+      // Ungrouped options (baz, qux) render as direct children of the select, not inside an optgroup
+      const directOptions = Array.from(select.children).filter((child) => child.tagName === 'OPTION');
+      // placeholder + baz + qux = 3 direct option children
+      expect(directOptions).toHaveLength(3);
+    });
+
+    it('should disable enumDisabled options inside an optgroup', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar', 'baz'],
+        },
+        uiSchema: {
+          'ui:options': {
+            enumDisabled: ['bar'],
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz'],
+            },
+          },
+        },
+      });
+
+      const optgroups = node.querySelectorAll('optgroup');
+      const groupAOptions = optgroups[0].querySelectorAll('option');
+      expect(groupAOptions[0]).not.toBeDisabled();
+      expect(groupAOptions[1]).toBeDisabled();
+    });
+
+    it('should render sibling options sharing a value without duplicate key warnings', () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          oneOf: [
+            { const: 'a', title: 'A1' },
+            { const: 'a', title: 'A2' },
+          ],
+        },
+      });
+
+      const options = Array.from(node.querySelectorAll('option')).map((option) => option.textContent);
+      expect(options).toEqual(expect.arrayContaining(['A1', 'A2']));
+      expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      consoleError.mockRestore();
+    });
+
+    it('should not collide a group label with an option index key', () => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['alpha', 'beta'],
+        },
+        uiSchema: {
+          'ui:options': {
+            // '0' is also the index key of the first ungrouped option under the default 'indexed' format
+            optgroups: { '0': ['beta'] },
+          },
+        },
+      });
+
+      expect(node.querySelectorAll('optgroup')).toHaveLength(1);
+      expect(Array.from(node.querySelectorAll('option')).map((option) => option.textContent)).toEqual(
+        expect.arrayContaining(['alpha', 'beta']),
+      );
+      expect(consoleError).not.toHaveBeenCalledWith(expect.stringContaining('same key'), expect.anything());
+      consoleError.mockRestore();
+    });
+
+    it('should reflect the change event for a grouped option', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'string',
+          enum: ['foo', 'bar', 'baz'],
+        },
+        uiSchema: {
+          'ui:options': {
+            optgroups: {
+              'Group A': ['foo', 'bar'],
+              'Group B': ['baz'],
+            },
+          },
+        },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select')!;
+      const groupBOption = node.querySelector<HTMLOptionElement>('optgroup[label="Group B"] option')!;
+      await user.selectOptions(select, groupBOption);
+
+      expectToHaveBeenCalledWithFormData(onChange, 'baz', 'root');
+    });
+
+    it('should report a multiple select in enum order even when optgroups reorders the options', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b', 'c', 'd'] },
+        uniqueItems: true,
+      };
+      // 'd' and 'c' lead the rendered list while 'a' and 'b' trail it, so a browser reporting the selection in
+      // document order would swap the two picks below
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: {
+          'ui:widget': 'select',
+          'ui:options': { optgroups: { Zed: ['d', 'c'] } },
+        },
+      });
+
+      const select = node.querySelector<HTMLSelectElement>('select')!;
+      const optionFor = (label: string) =>
+        Array.from(select.querySelectorAll('option')).find((option) => option.textContent === label)!;
+      await user.selectOptions(select, [optionFor('a'), optionFor('c')]);
+
+      expectToHaveBeenCalledWithFormData(onChange, ['a', 'c'], 'root');
+    });
   });
 
   describe('TextareaWidget', () => {
@@ -710,7 +933,7 @@ describe('StringField', () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'string' },
         uiSchema: { 'ui:widget': 'textarea' },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.clear(node.querySelector('textarea')!);
@@ -725,7 +948,7 @@ describe('StringField', () => {
           'ui:widget': 'textarea',
           'ui:emptyValue': 'default',
         },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       await user.clear(node.querySelector('textarea')!);
@@ -740,7 +963,7 @@ describe('StringField', () => {
           'ui:widget': 'textarea',
           'ui:options': { rows: 20 },
         },
-        formData: 'x',
+        initialFormData: 'x',
       });
 
       expect(node.querySelector('textarea')).toHaveAttribute('rows', '20');
@@ -799,7 +1022,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'date-time',
         },
-        formData: datetime,
+        initialFormData: datetime,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
@@ -843,6 +1066,76 @@ describe('StringField', () => {
 
       expect(node.querySelector('#custom')).toBeInTheDocument();
     });
+
+    describe('with format=iso-date-time', () => {
+      it('should render a datetime-local field', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+        });
+
+        expect(node.querySelectorAll('.rjsf-field [type=datetime-local]')).toHaveLength(1);
+      });
+
+      it('should submit the value without a timezone offset', async () => {
+        const datetime = '2016-04-05T14:01:30';
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+          initialFormData: datetime,
+        });
+        await submitForm(node, user);
+        expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
+      });
+
+      it('should reflect the change into the dom without conversion', async () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+        });
+
+        const newDatetime = '2016-04-05T14:01';
+        const dateNode = node.querySelector<HTMLInputElement>('[type=datetime-local]')!;
+        await user.click(dateNode);
+        await user.paste(newDatetime);
+
+        expect(dateNode).toHaveValue(newDatetime);
+      });
+
+      it('should strip a timezone offset from a stored value for display', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+          initialFormData: '2016-04-05T14:01:30.000Z',
+        });
+
+        expect(node.querySelector<HTMLInputElement>('[type=datetime-local]')).toHaveValue('2016-04-05T14:01:30');
+      });
+
+      it('should pad seconds without adding a timezone offset when changed', async () => {
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-date-time',
+          },
+        });
+
+        const dateNode = node.querySelector<HTMLInputElement>('[type=datetime-local]')!;
+        await user.click(dateNode);
+        await user.paste('2016-04-05T14:01');
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, '2016-04-05T14:01:00', true);
+      });
+    });
   });
 
   describe('DateWidget', () => {
@@ -869,6 +1162,7 @@ describe('StringField', () => {
           default: datetime,
         },
         uiSchema,
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
       await submitForm(node, user);
@@ -900,7 +1194,8 @@ describe('StringField', () => {
           type: 'string',
           format: 'date',
         },
-        formData: datetime,
+        initialFormData: datetime,
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
       await submitForm(node, user);
@@ -926,7 +1221,7 @@ describe('StringField', () => {
           format: 'date',
         },
         uiSchema,
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       const input = node.querySelector<HTMLInputElement>('[type=date]')!;
@@ -980,7 +1275,7 @@ describe('StringField', () => {
     });
 
     it('should assign a default value', async () => {
-      const time = '01:10:00';
+      const time = '01:10:00Z';
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
@@ -1019,9 +1314,42 @@ describe('StringField', () => {
 
       const newTime = '11:10:12';
       const input = node.querySelector<HTMLInputElement>('[type=time]')!;
+      // fireEvent.change is used instead of user.click() + user.paste() because user-event cannot enter a
+      // seconds-precision time at all: every edit to a type=time input goes through its buildTimeValue, which
+      // strips non-digits and rebuilds the value as HH:MM with minutes capped at 59, so '11:10:12' lands on
+      // '11:59' — and the step=1 this schema's multipleOf produces renders that as '11:59:00'
       fireEvent.change(input, { target: { value: newTime } });
 
       expect(input).toHaveValue(newTime);
+    });
+
+    it('should append the local timezone offset to formData when the value is changed', async () => {
+      const { node, onSubmit } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+      });
+
+      const input = node.querySelector<HTMLInputElement>('[type=time]')!;
+      await user.click(input);
+      await user.paste('11:10');
+      await submitForm(node, user);
+
+      const [[submission]] = onSubmit.mock.calls;
+      expect(submission.formData).toMatch(/^11:10:00(?:Z|[+-]\d{2}:\d{2})$/);
+    });
+
+    it('should strip the timezone offset from formData for display in the dom', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'time',
+        },
+        initialFormData: '13:10:30+02:00',
+      });
+
+      expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
     });
 
     it('should render stored minute precision values without seconds', () => {
@@ -1030,7 +1358,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'time',
         },
-        formData: '13:10:00',
+        initialFormData: '13:10:00',
       });
 
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10');
@@ -1043,7 +1371,7 @@ describe('StringField', () => {
           format: 'time',
           multipleOf: 1,
         },
-        formData: '13:10:00',
+        initialFormData: '13:10:00',
       });
 
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:00');
@@ -1055,20 +1383,20 @@ describe('StringField', () => {
           type: 'string',
           format: 'time',
         },
-        formData: '13:10:30',
+        initialFormData: '13:10:30',
       });
 
       expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
     });
 
     it('should fill field with data', async () => {
-      const time = '13:10:00';
+      const time = '13:10:00Z';
       const { node, onSubmit } = createFormComponent({
         schema: {
           type: 'string',
           format: 'time',
         },
-        formData: time,
+        initialFormData: time,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, time, true);
@@ -1111,6 +1439,72 @@ describe('StringField', () => {
       });
 
       expect(node.querySelector('#custom')).toBeInTheDocument();
+    });
+
+    describe('with format=iso-time', () => {
+      it('should render a time field', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+        });
+
+        expect(node.querySelectorAll('.rjsf-field [type=time]')).toHaveLength(1);
+      });
+
+      it('should submit the value without a timezone offset', async () => {
+        const time = '13:10:00';
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+          initialFormData: time,
+        });
+        await submitForm(node, user);
+        expectToHaveBeenCalledWithFormData(onSubmit, time, true);
+      });
+
+      it('should display a stored value as-is', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+          initialFormData: '13:10:30',
+        });
+
+        expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
+      });
+
+      it('should still strip a timezone offset from a stored value for display', () => {
+        const { node } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+          initialFormData: '13:10:30+02:00',
+        });
+
+        expect(node.querySelector<HTMLInputElement>('[type=time]')).toHaveValue('13:10:30');
+      });
+
+      it('should append seconds without a timezone offset when changed', async () => {
+        const { node, onSubmit } = createFormComponent({
+          schema: {
+            type: 'string',
+            format: 'iso-time',
+          },
+        });
+
+        const input = node.querySelector<HTMLInputElement>('[type=time]')!;
+        await user.click(input);
+        await user.paste('11:10');
+        await submitForm(node, user);
+
+        expectToHaveBeenCalledWithFormData(onSubmit, '11:10:00', true);
+      });
     });
   });
 
@@ -1194,7 +1588,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'date-time',
         },
-        formData: datetime,
+        initialFormData: datetime,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
@@ -1571,7 +1965,7 @@ describe('StringField', () => {
           format: 'date',
         },
         uiSchema,
-        formData: datetime,
+        initialFormData: datetime,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
@@ -1648,8 +2042,8 @@ describe('StringField', () => {
           format: 'date',
         },
         uiSchema,
-        liveValidate: true,
-        formData: '2012-12-12',
+        liveValidate: 'onChange',
+        initialFormData: '2012-12-12',
       });
 
       expect(onError).not.toHaveBeenCalled();
@@ -1663,8 +2057,8 @@ describe('StringField', () => {
             format: 'date',
           },
           uiSchema,
-          liveValidate: true,
-          formData: '2012-1212',
+          liveValidate: 'onChange',
+          initialFormData: '2012-1212',
         }),
       ).toThrow('Unable to parse date 2012-1212');
     });
@@ -1856,7 +2250,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'email',
         },
-        formData: email,
+        initialFormData: email,
       });
 
       await submitForm(node, user);
@@ -1880,7 +2274,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'email',
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       await user.type(node.querySelector('[type=email]')!, 'invalid');
@@ -1991,7 +2385,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'uri',
         },
-        formData: url,
+        initialFormData: url,
       });
 
       await submitForm(node, user);
@@ -2016,7 +2410,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'uri',
         },
-        liveValidate: true,
+        liveValidate: 'onChange',
       });
 
       await user.type(node.querySelector('[type=url]')!, 'invalid');
@@ -2096,8 +2490,9 @@ describe('StringField', () => {
 
       const newColor = '#654321';
 
-      // fireEvent.change is used instead of user.type() because jsdom enforces the HTML spec sanitization algorithm
-      // for color inputs, rejecting each intermediate value as an invalid string and resetting it to ''.
+      // fireEvent.change is used because user-event cannot edit a color input at all: `color` is absent from its
+      // editableInputTypes list, so click() + paste() is a silent no-op that would leave this assertion testing
+      // nothing rather than failing.
       act(() => {
         fireEvent.change(node.querySelector('[type=color]')!, {
           target: { value: newColor },
@@ -2113,7 +2508,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'color',
         },
-        formData: color,
+        initialFormData: color,
       });
       await submitForm(node, user);
 
@@ -2239,6 +2634,22 @@ describe('StringField', () => {
       expectToHaveBeenCalledWithFormData(onChange, `data:text/plain;name=${uriEncodedValue};base64,x=`, 'root');
     });
 
+    it('should keep the current value when a change event carries an empty file list', () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'data-url',
+        },
+        initialFormData: 'data:text/plain;name=file1.txt;base64,x=',
+      });
+
+      // fireEvent.change is used instead of user.upload() because this clears the selection rather than making
+      // one, and user.upload() has no way to express an empty file list
+      fireEvent.change(node.querySelector('[type=file]')!, { target: { files: [] } });
+
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
     it('should render the file widget with accept attribute', () => {
       const { node } = createFormComponent({
         schema: {
@@ -2316,6 +2727,22 @@ describe('StringField', () => {
       expect(download).toHaveTextContent(TranslatableString.PreviewLabel);
     });
 
+    it('should render the file info through the MarkdownTemplate when the field enables markdown', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          format: 'data-url',
+        },
+        uiSchema: { 'ui:enableMarkdownInDescription': true },
+        initialFormData: 'data:text/plain;name=file1.txt;base64,YQ==',
+        templates: { MarkdownTemplate },
+        translateString: (stringToTranslate, params) =>
+          stringToTranslate === TranslatableString.FilesInfo ? `**${params?.[0]}**` : stringToTranslate,
+      });
+
+      expect(node.querySelector('li strong')).toHaveTextContent('file1.txt');
+    });
+
     it('should delete the file when delete button is pressed (single)', async () => {
       const formData = 'data:text/plain;name=file1.txt;base64,YQ==';
       const { node, onChange } = createFormComponent({
@@ -2348,7 +2775,7 @@ describe('StringField', () => {
             format: 'data-url',
           },
         },
-        formData,
+        initialFormData: formData,
       });
 
       // Find the 2nd file and check the file name

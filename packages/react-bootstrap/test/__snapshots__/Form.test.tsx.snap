@@ -1,5 +1,77 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`format iso-date-time 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <input
+          aria-describedby="root__error root__description root__help"
+          class="form-control"
+          id="root"
+          name="root"
+          placeholder=""
+          type="datetime-local"
+          value=""
+        />
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`format iso-time 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <input
+          aria-describedby="root__error root__description root__help"
+          class="form-control"
+          id="root"
+          name="root"
+          placeholder=""
+          type="time"
+          value=""
+        />
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 <DocumentFragment>
   <form
@@ -807,6 +879,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-0"
                         name="root[choices][]"
                         type="checkbox"
+                        value="0"
                       />
                       <label
                         class="form-check-label"
@@ -825,6 +898,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-1"
                         name="root[choices][]"
                         type="checkbox"
+                        value="1"
                       />
                       <label
                         class="form-check-label"
@@ -843,6 +917,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         id="root_choices-2"
                         name="root[choices][]"
                         type="checkbox"
+                        value="2"
                       />
                       <label
                         class="form-check-label"
@@ -1218,19 +1293,16 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       value=""
                     />
                     <option
-                      id="red"
                       value="0"
                     >
                       red
                     </option>
                     <option
-                      id="green"
                       value="1"
                     >
                       green
                     </option>
                     <option
-                      id="blue"
                       value="2"
                     >
                       blue
@@ -1320,10 +1392,12 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     aria-describedby="root_age__error root_age__description root_age__help"
                     class="form-control"
                     id="root_age"
+                    inputmode="decimal"
                     name="root[age]"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                     placeholder=""
-                    step="any"
-                    type="number"
+                    title="Enter a number"
+                    type="text"
                     value=""
                   />
                 </div>
@@ -2466,19 +2540,16 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       value=""
                     />
                     <option
-                      id="red"
                       value="0"
                     >
                       red
                     </option>
                     <option
-                      id="green"
                       value="1"
                     >
                       green
                     </option>
                     <option
-                      id="blue"
                       value="2"
                     >
                       blue
@@ -2568,10 +2639,12 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     aria-describedby="root_age__error root_age__description root_age__help"
                     class="form-control"
                     id="root_age"
+                    inputmode="decimal"
                     name="root.age"
+                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                     placeholder=""
-                    step="any"
-                    type="number"
+                    title="Enter a number"
+                    type="text"
                     value=""
                   />
                 </div>
@@ -2617,6 +2690,474 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`radio widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <div
+          class="mb-0"
+        >
+          <div
+            class="form-check"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              class="form-check-input"
+              id="root-0"
+              name="root"
+              type="radio"
+              value="__rjsf_index:0"
+            />
+            <label
+              class="form-check-label"
+              for="root-0"
+              title=""
+            >
+              Number
+            </label>
+          </div>
+          <div
+            class="form-check"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              checked=""
+              class="form-check-input"
+              id="root-1"
+              name="root"
+              type="radio"
+              value="__rjsf_index:1"
+            />
+            <label
+              class="form-check-label"
+              for="root-1"
+              title=""
+            >
+              String
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
+                <div>
+                  <label
+                    class="form-label"
+                    for="root_region"
+                  >
+                    region
+                  </label>
+                  <div
+                    class="card"
+                    style="margin-bottom: 1rem;"
+                  >
+                    <div
+                      class="card-body"
+                    >
+                      <select
+                        aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                        class="form-select"
+                        id="root_region__oneof_select"
+                        name="root_region__oneof_select"
+                      >
+                        <option
+                          value="0"
+                        >
+                          None
+                        </option>
+                        <option
+                          value="1"
+                        >
+                          Europe
+                        </option>
+                      </select>
+                    </div>
+                    <div
+                      class="card-body"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-string"
+                      >
+                        <div>
+                          <label
+                            class="form-label"
+                            for="root_region"
+                          >
+                            Europe
+                          </label>
+                          <select
+                            aria-describedby="root_region__error root_region__description root_region__help"
+                            class="form-select"
+                            id="root_region"
+                            name="root_region"
+                          >
+                            <option
+                              value=""
+                            />
+                            <option
+                              value="0"
+                            >
+                              France
+                            </option>
+                            <option
+                              value="1"
+                            >
+                              Germany
+                            </option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from a single anyOf boolean constant without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="0"
+          >
+            Subscribed
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="0"
+          >
+            Never
+          </option>
+          <option
+            value="1"
+          >
+            Once
+          </option>
+          <option
+            value="2"
+          >
+            Unlimited
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf boolean constants with a null option without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="0"
+          >
+            Unknown
+          </option>
+          <option
+            value="1"
+          >
+            Yes
+          </option>
+          <option
+            value="2"
+          >
+            No
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="0"
+          >
+            Foo
+          </option>
+          <option
+            value="1"
+          >
+            Bar
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf true and false constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="0"
+          >
+            Yes
+          </option>
+          <option
+            value="1"
+          >
+            No
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <option
+            value="__rjsf_index:0"
+          >
+            Number
+          </option>
+          <option
+            value="__rjsf_index:1"
+          >
+            String
+          </option>
+        </select>
       </div>
     </div>
     <div>
@@ -3020,6 +3561,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-0"
               name="root"
               type="checkbox"
+              value="0"
             />
             <label
               class="form-check-label"
@@ -3038,6 +3580,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-1"
               name="root"
               type="checkbox"
+              value="1"
             />
             <label
               class="form-check-label"
@@ -3056,6 +3599,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-2"
               name="root"
               type="checkbox"
+              value="2"
             />
             <label
               class="form-check-label"
@@ -3074,6 +3618,7 @@ exports[`single fields > checkboxes field 1`] = `
               id="root-3"
               name="root"
               type="checkbox"
+              value="3"
             />
             <label
               class="form-check-label"
@@ -3124,6 +3669,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-0"
               name="root"
               type="checkbox"
+              value="0"
             />
             <label
               class="form-check-label"
@@ -3142,6 +3688,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-1"
               name="root"
               type="checkbox"
+              value="1"
             />
             <label
               class="form-check-label"
@@ -3160,6 +3707,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               id="root-2"
               name="root"
               type="checkbox"
+              value="2"
             />
             <label
               class="form-check-label"
@@ -3227,6 +3775,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-0"
               name="root"
               type="checkbox"
+              value="0"
             />
             <label
               class="form-check-label"
@@ -3245,6 +3794,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-1"
               name="root"
               type="checkbox"
+              value="1"
             />
             <label
               class="form-check-label"
@@ -3263,6 +3813,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               id="root-2"
               name="root"
               type="checkbox"
+              value="2"
             />
             <label
               class="form-check-label"
@@ -3932,10 +4483,12 @@ exports[`single fields > number field 0 1`] = `
           aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
+          inputmode="decimal"
           name="root"
+          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
           placeholder=""
-          step="any"
-          type="number"
+          title="Enter a number"
+          type="text"
           value="0"
         />
       </div>
@@ -3969,10 +4522,12 @@ exports[`single fields > number field 1`] = `
           aria-describedby="root__error root__description root__help"
           class="form-control"
           id="root"
+          inputmode="decimal"
           name="root"
+          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
           placeholder=""
-          step="any"
-          type="number"
+          title="Enter a number"
+          type="text"
           value=""
         />
       </div>
@@ -4722,19 +5277,16 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalObjectWithOneofs__oneof_select"
                       >
                         <option
-                          id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
                           value="2"
                         >
                           Option 3
@@ -4836,19 +5388,16 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalArrayWithAnyofs__anyof_select"
                       >
                         <option
-                          id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
                           value="2"
                         >
                           Option 3
@@ -5697,19 +6246,16 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalObjectWithOneofs__oneof_select"
                       >
                         <option
-                          id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
                           value="2"
                         >
                           Option 3
@@ -5812,19 +6358,16 @@ exports[`single fields > optional data controls > does not show optional control
                         name="root_optionalArrayWithAnyofs__anyof_select"
                       >
                         <option
-                          id="Option 1"
                           value="0"
                         >
                           Option 1
                         </option>
                         <option
-                          id="Option 2"
                           value="1"
                         >
                           Option 2
                         </option>
                         <option
-                          id="Option 3"
                           value="2"
                         >
                           Option 3
@@ -9159,11 +9702,13 @@ exports[`single fields > schema examples with mixed types (string examples and n
           aria-describedby="root__error root__description root__help root__examples"
           class="form-control"
           id="root"
+          inputmode="numeric"
           list="root__examples"
           name="root"
+          pattern="[+\\-]?([0-9]+[.][0-9]+[eE]\\+?[0-9]+|[0-9]+([eE]\\+?[0-9]+|[.]0*)?|[.])"
           placeholder=""
-          step="1"
-          type="number"
+          title="Enter a whole number"
+          type="text"
           value="5432"
         />
         <datalist
@@ -9216,13 +9761,11 @@ exports[`single fields > select field 1`] = `
             value=""
           />
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
             value="1"
           >
             bar
@@ -9263,25 +9806,21 @@ exports[`single fields > select field multiple choice 1`] = `
           name="root"
         >
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
             value="3"
           >
             qux
@@ -9322,26 +9861,22 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
           name="root"
         >
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
             disabled=""
-            id="bar"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
             value="3"
           >
             qux
@@ -9384,6 +9919,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-0"
               name="root"
               type="checkbox"
+              value="0"
             />
             <label
               class="form-check-label"
@@ -9403,6 +9939,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-1"
               name="root"
               type="checkbox"
+              value="1"
             />
             <label
               class="form-check-label"
@@ -9421,6 +9958,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-2"
               name="root"
               type="checkbox"
+              value="2"
             />
             <label
               class="form-check-label"
@@ -9439,6 +9977,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               id="root-3"
               name="root"
               type="checkbox"
+              value="3"
             />
             <label
               class="form-check-label"
@@ -9484,25 +10023,21 @@ exports[`single fields > select field multiple choice formData 1`] = `
           name="root"
         >
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
             value="1"
           >
             bar
           </option>
           <option
-            id="fuzz"
             value="2"
           >
             fuzz
           </option>
           <option
-            id="qux"
             value="3"
           >
             qux
@@ -9543,19 +10078,16 @@ exports[`single fields > select field multiple choice with labels 1`] = `
           name="root"
         >
           <option
-            id="Blue"
             value="0"
           >
             Blue
           </option>
           <option
-            id="Red"
             value="1"
           >
             Red
           </option>
           <option
-            id="Green"
             value="2"
           >
             Green
@@ -9598,14 +10130,12 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             value=""
           />
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
             disabled=""
-            id="bar"
             value="1"
           >
             bar
@@ -9790,16 +10320,145 @@ exports[`single fields > select field single choice formData 1`] = `
             value=""
           />
           <option
-            id="foo"
             value="0"
           >
             foo
           </option>
           <option
-            id="bar"
             value="1"
           >
             bar
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select field single choice optgroups 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <optgroup
+            label="Group A"
+          >
+            <option
+              value="0"
+            >
+              foo
+            </option>
+            <option
+              value="1"
+            >
+              bar
+            </option>
+          </optgroup>
+          <optgroup
+            label="Group B"
+          >
+            <option
+              value="2"
+            >
+              baz
+            </option>
+          </optgroup>
+          <option
+            value="3"
+          >
+            qux
+          </option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select field single choice optgroups with enumDisabled 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div>
+        <label
+          class="form-label"
+          for="root"
+        />
+        <select
+          aria-describedby="root__error root__description root__help"
+          class="form-select"
+          id="root"
+          name="root"
+        >
+          <option
+            value=""
+          />
+          <optgroup
+            label="Group A"
+          >
+            <option
+              value="0"
+            >
+              foo
+            </option>
+            <option
+              disabled=""
+              value="1"
+            >
+              bar
+            </option>
+          </optgroup>
+          <optgroup
+            label="Group B"
+          >
+            <option
+              value="2"
+            >
+              baz
+            </option>
+          </optgroup>
+          <option
+            value="3"
+          >
+            qux
           </option>
         </select>
       </div>
@@ -9912,13 +10571,11 @@ exports[`single fields > select widget with description in schema and FieldTempl
             value=""
           />
           <option
-            id="Yes"
             value="0"
           >
             Yes
           </option>
           <option
-            id="No"
             value="1"
           >
             No
@@ -9973,13 +10630,11 @@ exports[`single fields > select widget with selected oneOf option description 1`
             value=""
           />
           <option
-            id="Foo"
             value="0"
           >
             Foo
           </option>
           <option
-            id="Bar"
             value="1"
           >
             Bar
@@ -10026,13 +10681,11 @@ exports[`single fields > select widget with selected oneOf option description an
             value=""
           />
           <option
-            id="Foo"
             value="0"
           >
             Foo
           </option>
           <option
-            id="Bar"
             value="1"
           >
             Bar
@@ -10125,7 +10778,16 @@ exports[`single fields > string field > field with markdown help and description
               class="mb-3"
               id="root__description"
             >
-              This is a *description* with **markdown**
+              <span>
+                This is a 
+                <em>
+                  description
+                </em>
+                 with 
+                <strong>
+                  markdown
+                </strong>
+              </span>
             </div>
           </div>
         </small>
@@ -10227,7 +10889,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields > string field > field with markdown help text without enabling markdown 1`] = `
+exports[`single fields > string field > field with markdown help text without a MarkdownTemplate 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -10745,17 +11407,7 @@ exports[`single fields > unsupported field 1`] = `
           class="unsupported-field"
         >
           <p>
-            <span>
-              Unsupported field schema for field 
-              <code>
-                root
-              </code>
-              : 
-              <em>
-                Unknown field type undefined
-              </em>
-              .
-            </span>
+            Unsupported field schema for field root: Unknown field type undefined.
           </p>
           <pre>
             {}
@@ -10794,6 +11446,7 @@ exports[`single fields > up/down field 1`] = `
           id="root"
           name="root"
           placeholder=""
+          step="any"
           type="number"
           value=""
         />
@@ -10870,6 +11523,75 @@ exports[`string field with autocapitalize 1`] = `
           type="text"
           value=""
         />
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`titled select widget from oneOf boolean constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div>
+        <div
+          class="p-0 container-fluid"
+        >
+          <div
+            class="row"
+            style="margin-bottom: 10px;"
+          >
+            <div
+              class="col-12"
+            >
+               
+              <div
+                class="rjsf-field rjsf-field-boolean"
+              >
+                <div>
+                  <label
+                    class="form-label"
+                    for="root_answer"
+                  >
+                    My Answer
+                  </label>
+                  <select
+                    aria-describedby="root_answer__error root_answer__description root_answer__help"
+                    class="form-select"
+                    id="root_answer"
+                    name="root_answer"
+                  >
+                    <option
+                      value=""
+                    />
+                    <option
+                      value="0"
+                    >
+                      Yes
+                    </option>
+                    <option
+                      value="1"
+                    >
+                      No
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div>

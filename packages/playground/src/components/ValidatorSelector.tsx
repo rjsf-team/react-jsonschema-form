@@ -23,7 +23,7 @@ export default function ValidatorSelector({ validator, validators, select }: Val
 
   const onChange = useCallback(
     ({ formData }: IChangeEvent) => {
-      if (formData) {
+      if (typeof formData === 'string') {
         select(formData);
       }
     },

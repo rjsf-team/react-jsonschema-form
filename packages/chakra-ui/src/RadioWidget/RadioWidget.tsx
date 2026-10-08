@@ -5,7 +5,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   labelValue,
   optionId,
@@ -15,7 +15,11 @@ import { Field } from '../components/ui/field.tsx';
 import { Radio, RadioGroup } from '../components/ui/radio.tsx';
 import { getChakra } from '../utils.ts';
 
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   htmlName,
   options,
@@ -32,6 +36,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = ({ target: { value: enumValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
@@ -41,7 +46,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onFocus(id, enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
 
   const row = options ? options.inline : false;
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, null);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null);
 
   const chakraProps = getChakra({ uiSchema });
 
@@ -65,12 +70,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+              const itemDisabled =
+                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
 
               return (
                 <Radio
-                  value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-                  key={String(option.value)}
+                  value={domValues[index]}
+                  // oxlint-disable-next-line react/no-array-index-key
+                  key={index}
                   id={optionId(id, index)}
                   disabled={disabled || itemDisabled || readonly}
                 >

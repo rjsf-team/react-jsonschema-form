@@ -1,37 +1,34 @@
-import { CONST_KEY, DEFAULT_KEY, PROPERTIES_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
+import isObject from '../isObject.ts';
+import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
-import type {
-  Experimental_CustomMergeAllOf,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types.ts';
+import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
 
-function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): any[] | undefined {
-  if (Array.isArray(schema.enum)) {
+function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
+  // An empty `enum` lists no value to check against, which is how the `anyOf`/`oneOf` below and `isConstantSelect()`
+  // both read one, so it offers no constraint rather than rejecting everything
+  if (Array.isArray(schema.enum) && schema.enum.length > 0) {
     return schema.enum;
   }
 
-  const options = (schema.oneOf || schema.anyOf) as S[] | undefined;
-  if (!Array.isArray(options)) {
+  const xxxOfKey = getXxxOfKey<S>(schema);
+  if (!xxxOfKey) {
+    return undefined;
+  }
+  const options = schema[xxxOfKey] as (S | boolean)[];
+  // An option with neither a `const` nor an `enum` accepts values beyond the listed ones, so a value outside them may
+  // still be valid and there is no list to check it by
+  if (!options.every((option) => isObject(option) && (CONST_KEY in option || Array.isArray(option.enum)))) {
     return undefined;
   }
 
-  const values = options
-    .map((option) => {
-      if (CONST_KEY in option) {
-        return option[CONST_KEY];
-      }
-      return Array.isArray(option.enum) && option.enum.length === 1 ? option.enum[0] : NO_VALUE;
-    })
-    .filter((value) => value !== NO_VALUE);
+  const values = (options as S[]).flatMap((option) => (CONST_KEY in option ? [option[CONST_KEY]] : option.enum!));
 
   return values.length > 0 ? values : undefined;
 }
@@ -64,9 +61,10 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *     - Retrieve the schema for any refs within each `oldKeySchema` and/or `newKeySchema`
  *     - Get the types of the old and new keyed schemas and if the old doesn't exist or the old & new are the same then:
  *       - If `removeOldSchemaData` has an entry for the key, delete it since the new schema has the same property
- *       - If type of the key in the new schema is `object`:
+ *       - If type of the key in the new schema is `object`, or `array` with array data, and the key isn't a select
+ *         over object or array constants (see `isWholeValueSelect()`):
  *         - Store the value from the recursive `sanitizeDataForNewSchema` call in `nestedData[key]`
- *       - Otherwise, check for default or const values:
+ *       - Otherwise, check for default, const or enum values:
  *         - Get the old and new `default` values from the schema and check:
  *           - If the new `default` value does not match the form value:
  *             - If the key is new and its form value is undefined, or the old `default` matches the form value, then:
@@ -77,39 +75,35 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *           - If the old `const` value DOES match the form value, then:
  *             - Replace `removeOldSchemaData[key]` with the new `const`
  *             - Otherwise, replace `removeOldSchemaData[key]` with undefined
+ *         - If the form value is none of the new `enum` or constant options, replace it with the new `default` when that
+ *           is an option, the only option when there is one, or undefined
  *   - Once all keys have been processed, return an object built as follows:
  *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
  * - If the new and old schema types are array and the `data` is an array then:
  *   - If the type of the old and new schema `items` are a non-array objects:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
- *       - If the type is "object", then:
+ *       - If the type is "object" and the items aren't a select over object constants (see `isWholeValueSelect()`),
+ *         then:
  *         - For each element in the `data` recursively sanitize the data, stopping at `maxItems` if specified
- *       - Otherwise, just return the `data` removing any values after `maxItems` if it is set
+ *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
+ *         any values after `maxItems` if it is set
  *   - If the type of the old and new schema `items` are booleans of the same value, return `data` as is
  * - Otherwise return `undefined`
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
 export default function sanitizeDataForNewSchema<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(
-  validator: ValidatorType<T, S, F>,
-  rootSchema: S,
-  newSchema?: S,
-  oldSchema?: S,
-  data: any = {},
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-): T {
+  F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}): T {
   // By default, we will clear the form data
   let newFormData;
   const newProperties = newSchema?.[PROPERTIES_KEY];
@@ -135,20 +129,19 @@ export default function sanitizeDataForNewSchema<
       const newRawKeyedSchema = getPropertySchema<S>(newSchema, key);
       // Resolve refs, dependencies, if/then/else and allOf so a dependency nested inside this key
       // (not just at the root schema) is taken into account when sanitizing its data (#5250)
-      const oldKeyedSchema = retrieveSchema<T, S, F>(
-        validator,
-        oldRawKeyedSchema,
-        rootSchema,
-        formValue,
-        experimental_customMergeAllOf,
-      );
+      const oldKeyedSchema = retrieveSchema<T, S, F>(context, oldRawKeyedSchema, rootSchema, formValue);
       // The old and new raw schema for a key are usually identical (most keys aren't touched by whatever changed),
       // so skip resolving (and re-running any oneOf/dependency validity checks) a second time in that common case.
       const newKeyedSchema = deepEquals(oldRawKeyedSchema, newRawKeyedSchema)
         ? oldKeyedSchema
-        : retrieveSchema<T, S, F>(validator, newRawKeyedSchema, rootSchema, formValue, experimental_customMergeAllOf);
-      // Now get types and see if they are the same
-      const oldSchemaTypeForKey = oldKeyedSchema.type;
+        : retrieveSchema<T, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
+      // Now get types and see if they are the same. A type that was guessed from the data of an `additionalProperties`
+      // entry the schema puts no constraint on describes what that data was rather than what the schema requires, so
+      // it is treated as no type at all: the data changing type is a change of data, not a change of schema. That only
+      // holds while both sides are free to hold anything — once the new schema names a type of its own, it is that
+      // type the data has to satisfy, so data of the type the old side merely happened to hold is still cleared
+      const isUnconstrainedOnBothSides = GUESSED_TYPE_FLAG in oldKeyedSchema && GUESSED_TYPE_FLAG in newKeyedSchema;
+      const oldSchemaTypeForKey = isUnconstrainedOnBothSides ? undefined : oldKeyedSchema.type;
       const newSchemaTypeForKey = newKeyedSchema.type;
       // Check if the old option has the same key with the same type
       if (!oldSchemaTypeForKey || oldSchemaTypeForKey === newSchemaTypeForKey) {
@@ -156,16 +149,19 @@ export default function sanitizeDataForNewSchema<
           // SIDE-EFFECT: remove the undefined value for a key that has the same type between the old and new schemas
           delete removeOldSchemaData[key];
         }
-        // If it is an object, we'll recurse and store the resulting sanitized data for the key
-        if (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) {
+        // If it is an object, we'll recurse and store the resulting sanitized data for the key. A select over object or
+        // array constants holds one of them as a whole, so it's checked against its options like any other select
+        const isContainer =
+          (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) &&
+          !isWholeValueSelect<S>(newKeyedSchema);
+        if (isContainer) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
           const itemData = sanitizeDataForNewSchema<T, S, F>(
-            validator,
+            context,
             rootSchema,
             newKeyedSchema,
             isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
             formValue,
-            experimental_customMergeAllOf,
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -177,8 +173,8 @@ export default function sanitizeDataForNewSchema<
           // value to be properly selected
           const newOptionDefault = getByPath(newKeyedSchema, DEFAULT_KEY, NO_VALUE);
           const oldOptionDefault = getByPath(oldKeyedSchema, DEFAULT_KEY, NO_VALUE);
-          if (newOptionDefault !== NO_VALUE && newOptionDefault !== formValue) {
-            if ((isNewProperty && formValue === undefined) || oldOptionDefault === formValue) {
+          if (newOptionDefault !== NO_VALUE && !deepEquals(newOptionDefault, formValue)) {
+            if ((isNewProperty && formValue === undefined) || deepEquals(oldOptionDefault, formValue)) {
               // Initialize a newly entered property or replace an old default with the new default.
               removeOldSchemaData[key] = newOptionDefault;
             } else if (newKeyedSchema.readOnly === true) {
@@ -189,9 +185,9 @@ export default function sanitizeDataForNewSchema<
 
           const newOptionConst = getByPath(newKeyedSchema, CONST_KEY, NO_VALUE);
           const oldOptionConst = getByPath(oldKeyedSchema, CONST_KEY, NO_VALUE);
-          if (newOptionConst !== NO_VALUE && newOptionConst !== formValue) {
+          if (newOptionConst !== NO_VALUE && !deepEquals(newOptionConst, formValue)) {
             // Since this is a const, if the old value matches, replace the value with the new const otherwise clear it
-            removeOldSchemaData[key] = oldOptionConst === formValue ? newOptionConst : undefined;
+            removeOldSchemaData[key] = deepEquals(oldOptionConst, formValue) ? newOptionConst : undefined;
           }
 
           if (hasByPath(data, key)) {
@@ -227,50 +223,35 @@ export default function sanitizeDataForNewSchema<
       const newSchemaItemsRaw = newSchemaItems as S;
       // Resolve refs, dependencies, if/then/else and allOf, not just a direct `$ref`, so the type check below
       // reflects an items schema whose object type is only reachable through one of those keywords (#5250)
-      oldSchemaItems = retrieveSchema<T, S, F>(
-        validator,
-        oldSchemaItemsRaw,
-        rootSchema,
-        data as T,
-        experimental_customMergeAllOf,
-      );
-      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case
-      newSchemaItems = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+      oldSchemaItems = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data as T);
+      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case.
+      // Neither changes per element, so compare them once rather than inside the per-element loop below
+      const sameItemsSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw);
+      newSchemaItems = sameItemsSchema
         ? oldSchemaItems
-        : retrieveSchema<T, S, F>(validator, newSchemaItemsRaw, rootSchema, data as T, experimental_customMergeAllOf);
+        : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data as T);
       // Now get types and see if they are the same
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
       // Check if the old option has the same key with the same type
       if (!oldSchemaType || oldSchemaType === newSchemaType) {
         const maxItems = newSchema.maxItems ?? -1;
-        if (newSchemaType === 'object') {
-          newFormData = data.reduce((newValue, aValue) => {
+        // An item picked from object constants is one of them as a whole, so it's filtered against the options below
+        // rather than sanitized property by property, which would find no properties and drop it
+        if (newSchemaType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
+          newFormData = data.reduce<unknown[]>((newValue, aValue: T) => {
             // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
             // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
-            const oldItemSchema = retrieveSchema<T, S, F>(
-              validator,
-              oldSchemaItemsRaw,
-              rootSchema,
-              aValue,
-              experimental_customMergeAllOf,
-            );
-            const newItemSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw)
+            const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
+            const newItemSchema = sameItemsSchema
               ? oldItemSchema
-              : retrieveSchema<T, S, F>(
-                  validator,
-                  newSchemaItemsRaw,
-                  rootSchema,
-                  aValue,
-                  experimental_customMergeAllOf,
-                );
+              : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
             const itemValue = sanitizeDataForNewSchema<T, S, F>(
-              validator,
+              context,
               rootSchema,
               newItemSchema,
               oldItemSchema,
               aValue,
-              experimental_customMergeAllOf,
             );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
@@ -283,7 +264,9 @@ export default function sanitizeDataForNewSchema<
           const filteredData = newItemEnumValues
             ? data.filter((item: any) => newItemEnumValues.some((v: any) => deepEquals(v, item)))
             : data;
-          newFormData = maxItems > 0 && filteredData.length > maxItems ? filteredData.slice(0, maxItems) : filteredData;
+          // `maxItems` of 0 allows no item at all, which is how the per-element path above reads it too
+          newFormData =
+            maxItems >= 0 && filteredData.length > maxItems ? filteredData.slice(0, maxItems) : filteredData;
         }
       }
     } else if (

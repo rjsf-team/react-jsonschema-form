@@ -1,15 +1,9 @@
 import type { RJSFSchema } from '@rjsf/utils';
 
+import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
-
-// Evaluate generated CJS module source into an exports object.
-function loadModule(code: string) {
-  const module = { exports: {} as Record<string, any> };
-  // oxlint-disable-next-line no-new-func, no-implied-eval
-  new Function('module', 'exports', code)(module, module.exports);
-  return module.exports;
-}
+import loadModule from './harness/loadModule.ts';
 
 const schema: RJSFSchema = {
   $id: 'root',
@@ -117,6 +111,9 @@ describe('compileSchemaValidatorsCode', () => {
     };
     const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(apSchema)), apSchema);
     const { errors } = validator.validateFormData({ a: 'x', bad: 'notnum', also: 'nope' }, apSchema);
-    expect(errors.map((e) => e.property).sort()).toEqual(['.also', '.bad']);
+    expect(errors.map((e) => e.property ?? '').sort()).toEqual(['.also', '.bad']);
   });
+  precompiledCoverageTests((rootSchema, options) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema, options)), rootSchema, options),
+  );
 });

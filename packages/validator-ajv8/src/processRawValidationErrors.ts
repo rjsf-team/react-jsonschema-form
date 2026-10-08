@@ -4,9 +4,9 @@ import type {
   FormContextType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -78,9 +78,9 @@ export function filterDuplicateErrors(
  * @param [schema] - The schema for the validation
  */
 export function transformRJSFValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   errors: ErrorObject[] = [],
   uiSchema?: UiSchema<T, S, F>,
@@ -94,7 +94,7 @@ export function transformRJSFValidationErrors<
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
     const rawPropertyNames: string[] = [
-      ...(params.deps?.split(', ') || []),
+      ...(typeof params.deps === 'string' ? params.deps.split(', ') : []),
       params.missingProperty,
       params.property,
     ].filter((item) => item);
@@ -169,9 +169,9 @@ export function transformRJSFValidationErrors<
       }
     }
 
-    // If params.missingProperty is undefined, it is removed from rawPropertyNames by filter((item) => item).
-    if ('missingProperty' in params) {
-      property = property ? `${property}.${params.missingProperty}` : params.missingProperty;
+    const { missingProperty } = params;
+    if (typeof missingProperty === 'string') {
+      property = property ? `${property}.${missingProperty}` : missingProperty;
     }
 
     // put data in expected format
@@ -193,7 +193,7 @@ export function transformRJSFValidationErrors<
  * supports a `transformErrors` function that will take the raw AJV validation errors, prior to custom validation and
  * transform them in what ever way it chooses.
  *
- * @param validator - The `ValidatorType` implementation used for the `getDefaultFormState()` call
+ * @param context - The `SchemaContext` of the form, used when computing the defaults handed to `customValidate`
  * @param rawErrors - The list of raw `ErrorObject`s to process
  * @param formData - The form data to validate
  * @param schema - The schema against which to validate the form data
@@ -201,13 +201,16 @@ export function transformRJSFValidationErrors<
  * @param [transformErrors] - An optional function that is used to transform errors after AJV validation
  * @param [uiSchema] - An optional uiSchema that is passed to `transformErrors` and `customValidate`
  * @param [suppressDuplicateFiltering] - Controls which duplicate filtering is suppressed; see `filterDuplicateErrors`
+ * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's defaults
+ *        already applied. `Form` supplies it so those defaults honor its `customMergeAllOf` and
+ *        `defaultFormStateBehavior`; without it they are computed here with the default `allOf` merge
  */
 export default function processRawValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: SchemaContext<S, F>,
   rawErrors: RawValidationErrorsType<ErrorObject>,
   formData: T | undefined,
   schema: S,
@@ -215,6 +218,7 @@ export default function processRawValidationErrors<
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  getCustomValidateFormData?: () => T,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
@@ -241,8 +245,18 @@ export default function processRawValidationErrors<
     return { errors, errorSchema };
   }
 
-  // Include form data with undefined values, which is required for custom validation.
-  const newFormData = getDefaultFormState<T, S, F>(validator, schema, formData, schema, true) as T;
+  // Include form data with undefined values, which is required for custom validation. `uiSchema` is threaded through
+  // so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed and rendered.
+  // Called rather than read, so defaults that come out `undefined` are not mistaken for "not supplied"
+  const newFormData = getCustomValidateFormData
+    ? getCustomValidateFormData()
+    : (getDefaultFormState<T, S, F>(context, {
+        schema,
+        formData,
+        rootSchema: schema,
+        includeUndefinedValues: true,
+        uiSchema,
+      }) as T);
 
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);

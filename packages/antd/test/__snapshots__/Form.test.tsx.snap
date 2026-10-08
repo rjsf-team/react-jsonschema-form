@@ -134,6 +134,148 @@ exports[`antd specific tests > descriptionLocation tooltip in formContext 1`] = 
 </DocumentFragment>
 `;
 
+exports[`format iso-date-time 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-picker ant-picker-outlined ant-picker-has-feedback css-dev-only-do-not-override-oc1rc0 css-var-root ant-picker-css-var"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-picker-input"
+                  >
+                    <input
+                      aria-describedby="root__error root__description root__help"
+                      aria-invalid="false"
+                      autocomplete="off"
+                      id="root"
+                      name="root"
+                      placeholder=""
+                      size="21"
+                      value=""
+                    />
+                    <span
+                      class="ant-picker-suffix"
+                    >
+                      <span
+                        aria-hidden="true"
+                        aria-label="calendar"
+                        class="anticon anticon-calendar"
+                        role="img"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          data-icon="calendar"
+                          fill="currentColor"
+                          focusable="false"
+                          height="1em"
+                          viewBox="64 64 896 896"
+                          width="1em"
+                        >
+                          <path
+                            d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"
+                          />
+                        </svg>
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`format iso-time 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <span
+                  class="ant-input-affix-wrapper css-dev-only-do-not-override-oc1rc0 ant-input-outlined css-var-root ant-input-css-var"
+                  style="width: 100%;"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    class="ant-input css-dev-only-do-not-override-oc1rc0"
+                    id="root"
+                    name="root"
+                    placeholder=""
+                    type="time"
+                    value=""
+                  />
+                  <span
+                    class="ant-input-suffix"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
 <DocumentFragment>
   <form
@@ -356,7 +498,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                                 id="root_tasks_0_done"
                                                                                 name="root[tasks][0][done]"
                                                                                 type="checkbox"
-                                                                                value=""
                                                                               />
                                                                             </span>
                                                                             <span
@@ -628,7 +769,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                                 id="root_tasks_1_done"
                                                                                 name="root[tasks][1][done]"
                                                                                 type="checkbox"
-                                                                                value=""
                                                                               />
                                                                             </span>
                                                                             <span
@@ -2399,7 +2539,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                                         id="root_active"
                                         name="root[active]"
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span
@@ -2768,7 +2907,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                                 id="root_tasks_0_done"
                                                                                 name="root.tasks.0.done"
                                                                                 type="checkbox"
-                                                                                value=""
                                                                               />
                                                                             </span>
                                                                             <span
@@ -3040,7 +3178,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                                 id="root_tasks_1_done"
                                                                                 name="root.tasks.1.done"
                                                                                 type="checkbox"
-                                                                                value=""
                                                                               />
                                                                             </span>
                                                                             <span
@@ -4507,7 +4644,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                                         id="root_active"
                                         name="root.active"
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span
@@ -4525,6 +4661,846 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     </div>
                   </div>
                 </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`radio widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  aria-describedby="root__error root__description root__help"
+                  class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
+                  id="root"
+                  role="radiogroup"
+                >
+                  <label
+                    class="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
+                  >
+                    <span
+                      class="ant-radio ant-wave-target"
+                    >
+                      <input
+                        class="ant-radio-input"
+                        id="root-0"
+                        name="root"
+                        type="radio"
+                        value="__rjsf_index:0"
+                      />
+                    </span>
+                    <span
+                      class="ant-radio-label"
+                    >
+                      Number
+                    </span>
+                  </label>
+                  <label
+                    class="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
+                  >
+                    <span
+                      class="ant-radio ant-wave-target ant-radio-checked"
+                    >
+                      <input
+                        checked=""
+                        class="ant-radio-input"
+                        id="root-1"
+                        name="root"
+                        type="radio"
+                        value="__rjsf_index:1"
+                      />
+                    </span>
+                    <span
+                      class="ant-radio-label"
+                    >
+                      String
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from a nested oneOf of constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    style="margin-inline: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-undefined"
+                      >
+                        <div
+                          class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+                        >
+                          <div
+                            class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                          >
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            >
+                              <label
+                                class=""
+                                for="root_region"
+                                title="region"
+                              >
+                                region
+                              </label>
+                            </div>
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            >
+                              <div
+                                class="ant-form-item-control-input"
+                              >
+                                <div
+                                  class="ant-form-item-control-input-content"
+                                >
+                                  <div>
+                                    <div>
+                                      <div
+                                        class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                                        name="root_region__oneof_select"
+                                        style="width: 100%;"
+                                      >
+                                        <div
+                                          class="ant-select-content ant-select-content-has-value"
+                                          title="Europe"
+                                        >
+                                          Europe
+                                          <input
+                                            aria-autocomplete="list"
+                                            aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                                            aria-expanded="false"
+                                            aria-haspopup="listbox"
+                                            autocomplete="new-password"
+                                            class="ant-select-input"
+                                            id="root_region__oneof_select"
+                                            role="combobox"
+                                            type="text"
+                                            value=""
+                                          />
+                                        </div>
+                                        <div
+                                          class="ant-select-suffix"
+                                        >
+                                          <span
+                                            aria-label="down"
+                                            class="anticon anticon-down"
+                                            role="img"
+                                          >
+                                            <svg
+                                              aria-hidden="true"
+                                              data-icon="down"
+                                              fill="currentColor"
+                                              focusable="false"
+                                              height="1em"
+                                              viewBox="64 64 896 896"
+                                              width="1em"
+                                            >
+                                              <path
+                                                d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                                              />
+                                            </svg>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="rjsf-field rjsf-field-string"
+                                    >
+                                      <div
+                                        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+                                      >
+                                        <div
+                                          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                        >
+                                          <div
+                                            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                          >
+                                            <label
+                                              class=""
+                                              for="root_region"
+                                              title="Europe"
+                                            >
+                                              Europe
+                                            </label>
+                                          </div>
+                                          <div
+                                            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                          >
+                                            <div
+                                              class="ant-form-item-control-input"
+                                            >
+                                              <div
+                                                class="ant-form-item-control-input-content"
+                                              >
+                                                <div
+                                                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                                                  name="root_region"
+                                                  style="width: 100%;"
+                                                >
+                                                  <div
+                                                    class="ant-select-content ant-select-content-has-value"
+                                                    title="Germany"
+                                                  >
+                                                    Germany
+                                                    <input
+                                                      aria-autocomplete="list"
+                                                      aria-describedby="root_region__error root_region__description root_region__help"
+                                                      aria-expanded="false"
+                                                      aria-haspopup="listbox"
+                                                      autocomplete="new-password"
+                                                      class="ant-select-input"
+                                                      id="root_region"
+                                                      role="combobox"
+                                                      type="text"
+                                                      value=""
+                                                    />
+                                                  </div>
+                                                  <div
+                                                    class="ant-select-suffix"
+                                                  >
+                                                    <span
+                                                      aria-label="down"
+                                                      class="anticon anticon-down"
+                                                      role="img"
+                                                    >
+                                                      <svg
+                                                        aria-hidden="true"
+                                                        data-icon="down"
+                                                        fill="currentColor"
+                                                        focusable="false"
+                                                        height="1em"
+                                                        viewBox="64 64 896 896"
+                                                        width="1em"
+                                                      >
+                                                        <path
+                                                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                                                        />
+                                                      </svg>
+                                                    </span>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from a single anyOf boolean constant without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content ant-select-content-has-value"
+                    title="Subscribed"
+                  >
+                    Subscribed
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="new-password"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from anyOf constants of mixed types without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content ant-select-content-has-value"
+                    title="Once"
+                  >
+                    Once
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="new-password"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf boolean constants with a null option without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content ant-select-content-has-value"
+                    title="Unknown"
+                  >
+                    Unknown
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="new-password"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content ant-select-content-has-value"
+                    title="Bar"
+                  >
+                    Bar
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="new-password"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget from oneOf true and false constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-boolean"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content ant-select-content-has-value"
+                    title="No"
+                  >
+                    No
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="new-password"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`select widget with options sharing a String() in the realValue format (#5315) > renders each option with a value of its own 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content ant-select-content-has-value"
+                    title="String"
+                  >
+                    String
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="new-password"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -4767,7 +5743,6 @@ exports[`single fields > checkbox field 1`] = `
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                 </label>
@@ -4824,7 +5799,6 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                   <span
@@ -4899,7 +5873,6 @@ exports[`single fields > checkbox field with label 1`] = `
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                   <span
@@ -4961,7 +5934,6 @@ exports[`single fields > checkbox field with label and description 1`] = `
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                   <span
@@ -5036,7 +6008,6 @@ exports[`single fields > checkbox field with label and rich text description 1`]
                       id="root"
                       name="root"
                       type="checkbox"
-                      value=""
                     />
                   </span>
                   <span
@@ -6443,8 +7414,16 @@ exports[`single fields > help and error display 1`] = `
                   style="height: 0px; opacity: 0;"
                 >
                   <div
+                    id="root__error"
+                  >
+                    <div>
+                      an error
+                    </div>
+                  </div>
+                  <div
                     class="help-block"
                     id="root__help"
+                    style="color: rgba(0, 0, 0, 0.45);"
                   >
                     help me!
                   </div>
@@ -14323,7 +15302,6 @@ exports[`single fields > required checkbox field 1`] = `
                                         name="root_agree"
                                         required=""
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span
@@ -14425,7 +15403,6 @@ exports[`single fields > required checkbox field, default true 1`] = `
                                         name="root_agree"
                                         required=""
                                         type="checkbox"
-                                        value=""
                                       />
                                     </span>
                                     <span
@@ -15736,6 +16713,184 @@ exports[`single fields > select field single choice formData 1`] = `
 </DocumentFragment>
 `;
 
+exports[`single fields > select field single choice optgroups 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content"
+                  >
+                    <div
+                      class="ant-select-placeholder"
+                    />
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="new-password"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`single fields > select field single choice optgroups with enumDisabled 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-string"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <div
+                  class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                  name="root"
+                  style="width: 100%;"
+                >
+                  <div
+                    class="ant-select-content"
+                  >
+                    <div
+                      class="ant-select-placeholder"
+                    />
+                    <input
+                      aria-autocomplete="list"
+                      aria-describedby="root__error root__description root__help"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
+                      autocomplete="new-password"
+                      class="ant-select-input"
+                      id="root"
+                      role="combobox"
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                  <div
+                    class="ant-select-suffix"
+                  >
+                    <span
+                      aria-label="down"
+                      class="anticon anticon-down"
+                      role="img"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        data-icon="down"
+                        fill="currentColor"
+                        focusable="false"
+                        height="1em"
+                        viewBox="64 64 896 896"
+                        width="1em"
+                      >
+                        <path
+                          d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`single fields > select field single choice uiSchema disabled using radio widget 1`] = `
 <DocumentFragment>
   <form
@@ -16275,7 +17430,16 @@ exports[`single fields > string field > field with markdown help and description
                 <span
                   id="root__description"
                 >
-                  This is a *description* with **markdown**
+                  <span>
+                    This is a 
+                    <em>
+                      description
+                    </em>
+                     with 
+                    <strong>
+                      markdown
+                    </strong>
+                  </span>
                 </span>
               </div>
             </div>
@@ -16403,7 +17567,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
 </DocumentFragment>
 `;
 
-exports[`single fields > string field > field with markdown help text without enabling markdown 1`] = `
+exports[`single fields > string field > field with markdown help text without a MarkdownTemplate 1`] = `
 <DocumentFragment>
   <form
     class="rjsf"
@@ -17256,17 +18420,7 @@ exports[`single fields > unsupported field 1`] = `
                   class="unsupported-field"
                 >
                   <p>
-                    <span>
-                      Unsupported field schema for field 
-                      <code>
-                        root
-                      </code>
-                      : 
-                      <em>
-                        Unknown field type undefined
-                      </em>
-                      .
-                    </span>
+                    Unsupported field schema for field root: Unknown field type undefined.
                   </p>
                   <pre>
                     {}
@@ -17507,6 +18661,143 @@ exports[`string field with autocapitalize 1`] = `
                     class="ant-input-suffix"
                   />
                 </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      class="ant-btn css-dev-only-do-not-override-oc1rc0 css-var-root ant-btn-submit"
+      type="submit"
+    >
+      <span>
+        Submit
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`titled select widget from oneOf boolean constants without a type 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-object"
+    >
+      <div
+        class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+      >
+        <div
+          class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+        >
+          <div
+            class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+          >
+            <div
+              class="ant-form-item-control-input"
+            >
+              <div
+                class="ant-form-item-control-input-content"
+              >
+                <fieldset
+                  id="root"
+                >
+                  <div
+                    class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                    style="margin-inline: -12px;"
+                  >
+                    <div
+                      class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
+                      style="padding-inline: 12px;"
+                    >
+                      <div
+                        class="rjsf-field rjsf-field-boolean"
+                      >
+                        <div
+                          class="ant-form-item css-var-root ant-form-css-var css-dev-only-do-not-override-oc1rc0 ant-form-item-horizontal"
+                        >
+                          <div
+                            class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
+                          >
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            >
+                              <label
+                                class=""
+                                for="root_answer"
+                                title="My Answer"
+                              >
+                                My Answer
+                              </label>
+                            </div>
+                            <div
+                              class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
+                            >
+                              <div
+                                class="ant-form-item-control-input"
+                              >
+                                <div
+                                  class="ant-form-item-control-input-content"
+                                >
+                                  <div
+                                    class="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-var-root ant-select-css-var css-dev-only-do-not-override-oc1rc0 ant-select-single ant-select-show-arrow ant-select-show-search"
+                                    name="root_answer"
+                                    style="width: 100%;"
+                                  >
+                                    <div
+                                      class="ant-select-content ant-select-content-has-value"
+                                      title="Yes"
+                                    >
+                                      Yes
+                                      <input
+                                        aria-autocomplete="list"
+                                        aria-describedby="root_answer__error root_answer__description root_answer__help"
+                                        aria-expanded="false"
+                                        aria-haspopup="listbox"
+                                        autocomplete="new-password"
+                                        class="ant-select-input"
+                                        id="root_answer"
+                                        role="combobox"
+                                        type="text"
+                                        value=""
+                                      />
+                                    </div>
+                                    <div
+                                      class="ant-select-suffix"
+                                    >
+                                      <span
+                                        aria-label="down"
+                                        class="anticon anticon-down"
+                                        role="img"
+                                      >
+                                        <svg
+                                          aria-hidden="true"
+                                          data-icon="down"
+                                          fill="currentColor"
+                                          focusable="false"
+                                          height="1em"
+                                          viewBox="64 64 896 896"
+                                          width="1em"
+                                        >
+                                          <path
+                                            d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+                                          />
+                                        </svg>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </fieldset>
               </div>
             </div>
           </div>

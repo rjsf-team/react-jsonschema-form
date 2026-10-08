@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import type { ArrayFieldTemplateProps, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplate, getUiOptions, TranslatableString, buttonId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, TranslatableString, buttonId } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -15,14 +15,16 @@ import { getTemplate, getUiOptions, TranslatableString, buttonId } from '@rjsf/u
  *
  * @param props - The `ArrayFieldTemplateProps` for the component
  */
-export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayFieldTemplateProps<T, S, F>,
-) {
+export default function ArrayFieldTemplate<
+  T = unknown,
+  S extends RJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     className,
     disabled,
-    fieldPathId,
+    id,
     items,
     optionalDataControl,
     onAddClick,
@@ -35,16 +37,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
@@ -67,7 +60,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
   return (
     <div className={`array-field-template ${className}`}>
       <ArrayFieldTitleTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         title={uiOptions.title || title}
         schema={schema}
         uiSchema={uiSchema}
@@ -76,7 +69,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
-        fieldPathId={fieldPathId}
+        id={id}
         description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
@@ -93,7 +86,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         {canAdd && (
           <div className='flex justify-end'>
             <AddButton
-              id={buttonId(fieldPathId, 'add')}
+              id={buttonId(id, 'add')}
               className='rjsf-array-item-add btn btn-primary btn-sm'
               onClick={handleAddClick}
               disabled={disabled || readonly}

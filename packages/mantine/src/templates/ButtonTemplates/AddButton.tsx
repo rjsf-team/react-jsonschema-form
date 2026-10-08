@@ -6,9 +6,11 @@ import IconButton from './IconButton.tsx';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
  */
-export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
-) {
+export default function AddButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: IconButtonProps<T, S, F>) {
   const {
     registry: { translateString },
   } = props;

@@ -1,12 +1,12 @@
-import type { FocusEvent } from 'react';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
+  useOptionFocusHandlers,
 } from '@rjsf/utils';
 import { Checkbox } from 'antd';
 
@@ -16,9 +16,9 @@ import { Checkbox } from 'antd';
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxesWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   autofocus,
   disabled,
@@ -37,25 +37,18 @@ export default function CheckboxesWidget<
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = (nextValue: any) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target.value, enumOptions, optionValueFormat, emptyValue));
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target.value, enumOptions, optionValueFormat, emptyValue));
+  // Antd's typescript definitions for `Checkbox.Group` do not contain `id`, which it does use when provided, so it is
+  // spread on via `extraProps` to avoid a typescript error
+  const extraProps = { id };
 
-  // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
-  // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
-  const extraProps = {
-    id,
-    onBlur: !readonly ? handleBlur : undefined,
-    onFocus: !readonly ? handleFocus : undefined,
-  };
-
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, true, optionValueFormat, []) as string[];
+  const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
@@ -74,8 +67,12 @@ export default function CheckboxesWidget<
               id={optionId(id, i)}
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
-              disabled={Array.isArray(enumDisabled) && enumDisabled.includes(option.value)}
-              value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+              disabled={
+                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
+              }
+              value={domValues[i]}
+              onBlur={!readonly ? blurHandlers[i] : undefined}
+              onFocus={!readonly ? focusHandlers[i] : undefined}
             >
               {option.label}
             </Checkbox>

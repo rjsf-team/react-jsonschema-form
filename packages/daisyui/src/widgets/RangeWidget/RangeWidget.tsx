@@ -13,17 +13,11 @@ import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from 
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange,
-  onFocus,
-  onBlur,
-  schema,
-}: WidgetProps<T, S, F>) {
+export default function RangeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, value, required, disabled, readonly, onChange, onFocus, onBlur, schema }: WidgetProps<T, S, F>) {
   /** Handle focus events
    *
    * @param event - The focus event
@@ -67,7 +61,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
           disabled={disabled || readonly}
           min={schema.minimum}
           max={schema.maximum}
-          step={schema.multipleOf || 1}
+          step={schema.multipleOf ?? 1}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}

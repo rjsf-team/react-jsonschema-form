@@ -8,7 +8,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import { ariaDescribedByIds, examplesId, getExampleSuggestions, getInputProps } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
 
 const INPUT_STYLE = {
@@ -22,9 +22,9 @@ const INPUT_STYLE = {
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     disabled,
@@ -50,11 +50,10 @@ export default function BaseInputTemplate<
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { ClearButton } = registry.templates.ButtonTemplates;
 
-  const handleNumberChange = (nextValue: number | null) =>
-    onChange(nextValue === null ? options.emptyValue : nextValue);
+  const handleNumberChange = (nextValue: number | null) => onChange(nextValue ?? options.emptyValue);
 
   const handleTextChange =
-    onChangeOverride ||
+    onChangeOverride ??
     (({ target }: ChangeEvent<HTMLInputElement>) => onChange(target.value === '' ? options.emptyValue : target.value));
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
@@ -72,44 +71,49 @@ export default function BaseInputTemplate<
 
   const { min, max, ...restInputProps } = inputProps;
 
-  const input =
-    inputProps.type === 'number' || inputProps.type === 'integer' ? (
-      <InputNumber
-        disabled={disabled || (readonlyAsDisabled && readonly)}
-        id={id}
-        name={htmlName || id}
-        onBlur={!readonly ? handleBlur : undefined}
-        onChange={!readonly ? handleNumberChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
-        placeholder={placeholder}
-        required={required}
-        style={INPUT_STYLE}
-        changeOnWheel={false}
-        list={schema.examples ? examplesId(id) : undefined}
-        {...restInputProps}
-        min={typeof min === 'number' ? min : undefined}
-        max={typeof max === 'number' ? max : undefined}
-        type={undefined}
-        value={value}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    ) : (
-      <Input
-        disabled={disabled || (readonlyAsDisabled && readonly)}
-        id={id}
-        name={htmlName || id}
-        onBlur={!readonly ? handleBlur : undefined}
-        onChange={!readonly ? handleTextChange : undefined}
-        onFocus={!readonly ? handleFocus : undefined}
-        placeholder={placeholder}
-        required={required}
-        style={INPUT_STYLE}
-        list={schema.examples ? examplesId(id) : undefined}
-        {...inputProps}
-        value={value}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    );
+  // `InputNumber` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared to
+  // receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
+  const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
+
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
+  const input = isNumeric ? (
+    <InputNumber
+      disabled={disabled || (readonlyAsDisabled && readonly)}
+      id={id}
+      name={htmlName || id}
+      onBlur={!readonly ? handleBlur : undefined}
+      onChange={!readonly ? handleNumberChange : undefined}
+      onFocus={!readonly ? handleFocus : undefined}
+      placeholder={placeholder}
+      required={required}
+      style={INPUT_STYLE}
+      changeOnWheel={false}
+      list={hasExamples ? examplesId(id) : undefined}
+      {...restInputProps}
+      min={typeof min === 'number' ? min : undefined}
+      max={typeof max === 'number' ? max : undefined}
+      type={undefined}
+      value={value}
+      aria-describedby={ariaDescribedByIds(id, hasExamples)}
+    />
+  ) : (
+    <Input
+      disabled={disabled || (readonlyAsDisabled && readonly)}
+      id={id}
+      name={htmlName || id}
+      onBlur={!readonly ? handleBlur : undefined}
+      onChange={!readonly ? handleTextChange : undefined}
+      onFocus={!readonly ? handleFocus : undefined}
+      placeholder={placeholder}
+      required={required}
+      style={INPUT_STYLE}
+      list={hasExamples ? examplesId(id) : undefined}
+      {...inputProps}
+      value={value}
+      aria-describedby={ariaDescribedByIds(id, hasExamples)}
+    />
+  );
 
   return (
     <>
@@ -117,7 +121,7 @@ export default function BaseInputTemplate<
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

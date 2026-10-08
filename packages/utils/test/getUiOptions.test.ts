@@ -1,6 +1,7 @@
+import { createElement, forwardRef, lazy, memo } from 'react';
 import type { MockInstance } from 'vitest';
 
-import type { GlobalUISchemaOptions, UIOptionsType, UiSchema } from '../src/index.ts';
+import type { GlobalUISchemaOptions, UIOptionsType, UiSchema, Widget, WidgetProps } from '../src/index.ts';
 import { getUiOptions, noop } from '../src/index.ts';
 
 const uiSchema: UiSchema = {
@@ -30,6 +31,9 @@ const uiSchema: UiSchema = {
     junk: 'not-shown',
   },
 };
+
+const MyWidget = (_props: WidgetProps) => null;
+const ForwardedWidget = forwardRef<unknown, WidgetProps>((_props, _ref) => null);
 
 const globalOptions: GlobalUISchemaOptions = {
   addable: false,
@@ -87,5 +91,22 @@ describe('getUiOptions()', () => {
   it('returns multiple options as options', () => {
     expect(getUiOptions(uiSchema.multiOptions)).toEqual(results.multiOptions);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+  });
+  test.each<[string, Widget]>([
+    ['memo()', memo(MyWidget)],
+    ['forwardRef()', ForwardedWidget],
+    ['memo(forwardRef())', memo(ForwardedWidget)],
+    ['lazy()', lazy(async () => ({ default: MyWidget }))],
+  ])('returns a widget given as a %s component as the widget', (_name, widget) => {
+    // The spy counts every call in the file, so it is cleared to see only what this call logs
+    consoleErrorSpy.mockClear();
+    expect(getUiOptions({ 'ui:widget': widget })).toEqual({ widget });
+    expect(consoleErrorSpy).not.toHaveBeenCalled();
+  });
+  it('drops a widget given as a React element, as it does any object that is not a component', () => {
+    expect(getUiOptions({ 'ui:widget': createElement(MyWidget) as unknown as string })).toEqual({});
+    expect(consoleErrorSpy).toHaveBeenLastCalledWith(
+      'ui:widget is a React element rather than a component (pass MyWidget, not <MyWidget />), so it is ignored.',
+    );
   });
 });

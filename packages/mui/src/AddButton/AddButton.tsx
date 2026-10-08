@@ -8,11 +8,11 @@ import { getMuiProps } from '../util.ts';
 
 /** The `AddButton` renders a button that represent the `Add` action on a form
  */
-export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  uiSchema,
-  registry,
-  ...props
-}: IconButtonProps<T, S, F>) {
+export default function AddButton<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ uiSchema, registry, ...props }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const muiProps = getMuiProps<T, S, F, MuiIconButtonProps>(uiOptions, [

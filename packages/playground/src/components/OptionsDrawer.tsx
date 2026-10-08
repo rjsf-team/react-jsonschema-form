@@ -1,10 +1,10 @@
-import type { ButtonHTMLAttributes, Dispatch, MutableRefObject, PropsWithChildren, SetStateAction } from 'react';
+import type { ButtonHTMLAttributes, Dispatch, PropsWithChildren, RefObject, SetStateAction } from 'react';
 import { useCallback } from 'react';
 import Drawer from '@mui/material/Drawer';
 import type { IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/core';
 import type { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
-import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR } from '@rjsf/utils';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, isObject } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 import base64 from '../utils/base64.ts';
@@ -34,15 +34,15 @@ function HeaderButton({ title, onClick, children, ...buttonProps }: PropsWithChi
   );
 }
 
-function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: MutableRefObject<any> }) {
+function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: RefObject<Form | null> }) {
   const submitClick = useCallback(() => {
-    playGroundFormRef.current.submit();
+    playGroundFormRef.current?.submit();
   }, [playGroundFormRef]);
   const validateClick = useCallback(() => {
-    playGroundFormRef.current.validateForm();
+    playGroundFormRef.current?.validateForm();
   }, [playGroundFormRef]);
   const resetClick = useCallback(() => {
-    playGroundFormRef.current.reset();
+    playGroundFormRef.current?.reset();
   }, [playGroundFormRef]);
   return (
     <>
@@ -73,15 +73,15 @@ const liveSettingsBooleanSchema: RJSFSchema = {
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
     useFallbackUiForUnsupportedType: { type: 'boolean', title: 'Use Fallback UI', default: false },
     omitExtraData: { type: 'boolean', title: 'Omit extra data' },
-    liveOmit: { type: 'string', title: 'Live omit', default: false, enum: [false, 'onChange', 'onBlur'] },
-    liveValidate: { type: 'string', title: 'Live validation', default: false, enum: [false, 'onChange', 'onBlur'] },
+    liveOmit: { type: 'string', title: 'Live omit', default: 'off', enum: ['off', 'onChange', 'onBlur'] },
+    liveValidate: { type: 'string', title: 'Live validation', default: 'off', enum: ['off', 'onChange', 'onBlur'] },
     showErrorList: {
       type: 'string',
       default: 'top',
       title: 'Show Error List',
       enum: [false, 'top', 'bottom'],
     },
-    experimental_defaultFormStateBehavior: {
+    defaultFormStateBehavior: {
       title: 'Default Form State Behavior (Experimental)',
       type: 'object',
       properties: {
@@ -262,7 +262,7 @@ const liveSettingsBooleanUiSchema: UiSchema = {
       inline: true,
     },
   },
-  experimental_defaultFormStateBehavior: {
+  defaultFormStateBehavior: {
     'ui:options': {
       label: false,
     },
@@ -299,7 +299,7 @@ interface OptionsDrawerProps {
   validators: Record<string, ValidatorType>;
   validator: string;
   liveSettings: LiveSettings;
-  playGroundFormRef: MutableRefObject<any>;
+  playGroundFormRef: RefObject<Form | null>;
   setValidator: Dispatch<SetStateAction<string>>;
   setLiveSettings: Dispatch<SetStateAction<LiveSettings>>;
   setShareURL: Dispatch<SetStateAction<string | null>>;
@@ -329,7 +329,10 @@ export default function OptionsDrawer({
 
   const handleSetLiveSettings = useCallback(
     ({ formData: settingsData }: IChangeEvent) => {
-      setLiveSettings((previousLiveSettings) => ({ ...previousLiveSettings, ...settingsData }));
+      setLiveSettings((previousLiveSettings) => ({
+        ...previousLiveSettings,
+        ...(isObject(settingsData) ? settingsData : {}),
+      }));
     },
     [setLiveSettings],
   );

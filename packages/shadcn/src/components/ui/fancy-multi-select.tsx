@@ -2,27 +2,15 @@
 
 import type { FocusEvent, FocusEventHandler, KeyboardEvent, ReactElement } from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { deepEquals } from '@rjsf/utils';
+import { deepEquals, enumOptionValueLabel } from '@rjsf/utils';
 import { Command as CommandPrimitive } from 'cmdk';
 import { X } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
 import { Badge } from './badge.tsx';
 import { Command, CommandGroup, CommandItem, CommandList } from './command.tsx';
-
-/**
- * Represents an item in the fancy multi-select dropdown
- */
-export interface FancySelectItem {
-  /** The value of the item */
-  value: any;
-  /** The display label for the item */
-  label: string;
-  /** The index position of the item */
-  index: number;
-  /** Whether the item is disabled */
-  disabled?: boolean;
-}
+import { UNGROUPED_SECTION_KEY } from './fancy-select.tsx';
+import type { FancySelectItem, FancySelectSection } from './fancy-select.tsx';
 
 /**
  * Props interface for the FancyMultiSelect component
@@ -32,6 +20,8 @@ interface FancyMultiSelectProps {
   multiple: boolean;
   /** Array of items to display in the dropdown */
   items?: FancySelectItem[];
+  /** When provided, renders `items` grouped into these labeled sections instead of one flat list */
+  sections?: FancySelectSection[];
   /** Array of selected item values */
   selected: string[];
   /** Callback function when value changes */
@@ -54,6 +44,8 @@ interface FancyMultiSelectProps {
   id: string;
 }
 
+const NO_ITEMS: FancySelectItem[] = [];
+
 /**
  * A fancy multi-select component that allows users to select multiple items from a dropdown
  * @param props - The component props
@@ -61,7 +53,8 @@ interface FancyMultiSelectProps {
  */
 export function FancyMultiSelect({
   multiple,
-  items = [],
+  items = NO_ITEMS,
+  sections,
   selected,
   onValueChange,
   autoFocus = false,
@@ -86,6 +79,20 @@ export function FancyMultiSelect({
     () => items.filter((framework) => !selectedItems.some((item) => deepEquals(item.value, framework.value))),
     [items, selectedItems],
   );
+
+  const selectableSections = useMemo(() => {
+    if (!sections) {
+      return undefined;
+    }
+    return sections
+      .map((section) => ({
+        label: section.label,
+        items: section.items.filter(
+          (framework) => !selectedItems.some((item) => deepEquals(item.value, framework.value)),
+        ),
+      }))
+      .filter((section) => section.items.length > 0);
+  }, [sections, selectedItems]);
 
   const handleUnselect = useCallback(
     (framework: FancySelectItem) => {
@@ -136,6 +143,34 @@ export function FancyMultiSelect({
     [disabled, onFocus],
   );
 
+  function renderItem(item: FancySelectItem) {
+    // Keyed and identified by index, since `String()` turns every object value into `[object Object]`. cmdk searches
+    // its `value`, which stays text spelled the way an untitled option is labelled, and its `keywords`, which carry the
+    // label so a titled option is found by what it shows
+    const itemId = `${id}-${item.index}-command-item`;
+    return (
+      <CommandItem
+        disabled={item.disabled}
+        key={item.index}
+        value={enumOptionValueLabel(item.value)}
+        keywords={[item.label]}
+        onMouseDown={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        aria-controls={itemId}
+        aria-labelledby={itemId}
+        id={itemId}
+        onSelect={() => handleSelect(item)}
+        className='cursor-pointer'
+      >
+        {item.label}
+      </CommandItem>
+    );
+  }
+
+  const hasSelectableOptions = selectableSections ? selectableSections.length > 0 : selectables.length > 0;
+
   return (
     <Command
       onKeyDown={handleKeyDown}
@@ -155,7 +190,7 @@ export function FancyMultiSelect({
       >
         <div className='flex gap-1 flex-wrap'>
           {selectedItems.map((item) => (
-            <Badge key={item.value} variant='secondary'>
+            <Badge key={item.index} variant='secondary'>
               {item.label}
               <button
                 type='button'
@@ -192,31 +227,25 @@ export function FancyMultiSelect({
           />
         </div>
       </div>
-      {open && !disabled && selectables.length > 0 && (
+      {open && !disabled && hasSelectableOptions && (
         <div className='relative mt-2'>
           <div className='absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
-            <CommandGroup className='h-full overflow-auto'>
-              <CommandList>
-                {selectables.map((item) => (
-                  <CommandItem
-                    disabled={item.disabled}
-                    key={`${item.value}-command-item`}
-                    value={String(item.value)}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    aria-controls={`${item.value}-command-item`}
-                    aria-labelledby={`${item.value}-command-item`}
-                    id={`${item.value}-command-item`}
-                    onSelect={() => handleSelect(item)}
-                    className='cursor-pointer'
+            {selectableSections ? (
+              <CommandList className='h-full overflow-auto'>
+                {selectableSections.map((section) => (
+                  <CommandGroup
+                    key={section.label === undefined ? UNGROUPED_SECTION_KEY : `optgroup-${section.label}`}
+                    heading={section.label}
                   >
-                    {item.label}
-                  </CommandItem>
+                    {section.items.map(renderItem)}
+                  </CommandGroup>
                 ))}
               </CommandList>
-            </CommandGroup>
+            ) : (
+              <CommandGroup className='h-full overflow-auto'>
+                <CommandList>{selectables.map(renderItem)}</CommandList>
+              </CommandGroup>
+            )}
           </div>
         </div>
       )}

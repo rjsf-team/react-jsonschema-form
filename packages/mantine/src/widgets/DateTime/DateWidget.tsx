@@ -6,9 +6,11 @@ import DateTimeInput from './DateTimeInput.tsx';
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function DateWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const { valueFormat = 'YYYY-MM-DD', displayFormat, ...otherOptions } = props.options;
 
   return (

@@ -5,7 +5,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -14,16 +14,16 @@ import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId 
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     className,
     description,
     disabled,
     formData,
-    fieldPathId,
+    id,
     onAddProperty,
     optionalDataControl,
     properties,
@@ -35,16 +35,11 @@ export default function ObjectFieldTemplate<
     uiSchema,
   } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
   // For "pure union" schemas (oneOf/anyOf without properties), skip rendering the empty fieldset wrapper.
   // The AnyOfField/OneOfField will handle rendering the union selector and selected variant's content directly.
-  const isPureUnionSchema = (schema.oneOf || schema.anyOf) && !schema.properties && properties.length === 0;
+  const isPureUnionSchema = (schema.oneOf ?? schema.anyOf) && !schema.properties && properties.length === 0;
 
   if (isPureUnionSchema) {
     return null;
@@ -56,10 +51,10 @@ export default function ObjectFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <fieldset className={className} id={fieldPathId.$id}>
+    <fieldset className={className} id={id}>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -70,7 +65,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -78,10 +73,10 @@ export default function ObjectFieldTemplate<
         />
       )}
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-      {properties.map((prop: ObjectFieldTemplatePropertyType) => prop.content)}
+      {properties.map((prop: ObjectFieldTemplatePropertyType<T, S, F>) => prop.content)}
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <AddButton
-          id={buttonId(fieldPathId, 'add')}
+          id={buttonId(id, 'add')}
           className='rjsf-object-property-expand'
           onClick={onAddProperty}
           disabled={disabled || readonly}

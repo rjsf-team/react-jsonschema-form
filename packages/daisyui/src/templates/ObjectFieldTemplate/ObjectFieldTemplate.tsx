@@ -1,5 +1,5 @@
 import type { FormContextType, ObjectFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import { canExpand, descriptionId, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` component renders a layout for object fields in the form
  * with DaisyUI styling. It handles:
@@ -13,9 +13,9 @@ import { canExpand, descriptionId, getTemplate, getUiOptions, titleId, buttonId 
  * @param props - The `ObjectFieldTemplateProps` for the component
  */
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
@@ -25,7 +25,7 @@ export default function ObjectFieldTemplate<
     disabled,
     readonly,
     uiSchema,
-    fieldPathId,
+    id,
     schema,
     formData,
     optionalDataControl,
@@ -33,12 +33,7 @@ export default function ObjectFieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
@@ -46,13 +41,13 @@ export default function ObjectFieldTemplate<
   } = registry.templates;
 
   // Check if this is the root object
-  const isRoot = fieldPathId.$id === 'root';
+  const isRoot = id === 'root';
 
   return (
     <div className={`form-control ${isRoot ? 'bg-base-100 p-6 rounded-xl shadow-lg' : ''}`}>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -63,7 +58,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -76,7 +71,7 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <div key={element.name} className={fieldPathId.$id === 'root' && element.name === 'tasks' ? 'mt-2' : ''}>
+            <div key={element.name} className={id === 'root' && element.name === 'tasks' ? 'mt-2' : ''}>
               {element.content}
             </div>
           ),
@@ -84,7 +79,7 @@ export default function ObjectFieldTemplate<
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <div className='flex justify-end'>
             <AddButton
-              id={buttonId(fieldPathId, 'add')}
+              id={buttonId(id, 'add')}
               className='rjsf-object-property-expand btn btn-primary btn-sm'
               onClick={onAddProperty}
               disabled={disabled || readonly}

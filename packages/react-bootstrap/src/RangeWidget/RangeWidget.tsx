@@ -1,11 +1,13 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { rangeSpec } from '@rjsf/utils';
-import FormRange from 'react-bootstrap/FormRange';
+import { Form } from 'react-bootstrap';
 
-export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function RangeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const { id, value, disabled, onChange, onBlur, onFocus, schema } = props;
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) => onChange(newValue);
@@ -25,7 +27,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <>
-      <FormRange {...rangeProps} />
+      <Form.Range {...rangeProps} />
       <span className='range-view'>{value}</span>
     </>
   );

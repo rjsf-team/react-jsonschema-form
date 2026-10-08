@@ -273,7 +273,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
-        aria-labelledby="fieldset:::r3:::legend"
+        aria-labelledby="fieldset::_r_3_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -285,7 +285,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field:::r4:"
+            id="field::_r_4_"
             role="group"
           >
             <div
@@ -626,7 +626,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
-        aria-labelledby="fieldset:::r5:::legend"
+        aria-labelledby="fieldset::_r_5_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -638,7 +638,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field:::r6:"
+            id="field::_r_6_"
             role="group"
           >
             <div
@@ -1006,7 +1006,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset:::r0:::legend"
+        aria-labelledby="fieldset::_r_0_::legend"
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -1022,7 +1022,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset:::r1:::legend"
+                  aria-labelledby="fieldset::_r_1_::legend"
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1034,15 +1034,15 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2:"
+                      id="field::_r_2_"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for=":r2:"
-                        id="field:::r2:::label"
+                        for="_r_2_"
+                        id="field::_r_2_::label"
                       >
                         color
                       </label>

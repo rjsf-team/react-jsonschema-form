@@ -4,135 +4,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Commands
 
-```bash
-# Install dependencies
-pnpm install
+- `pnpm run build-serial` builds sequentially; use it if the parallel `pnpm run build` causes issues.
+- `pnpm run cs-check` / `pnpm run cs-format` run oxfmt once from the root over every file type it supports (versioned docs excluded). CI does not run `cs-check` — only the pre-commit hook formats staged files — so run `cs-format` yourself when committing without the hook (fresh worktree, `--no-verify`).
+- `pnpm run test:update` fans out to the 9 packages that own snapshots (`@rjsf/snapshot-tests` for core's, plus the 8 themes); `cd packages/<pkg> && pnpm run test:update` updates one.
 
-# Build all packages (parallel)
-pnpm run build
+CI runs lint (which is also the typecheck), knip, build, and test in that order, so run those before pushing. The per-package configs are build-only (see below).
 
-# Build all packages (sequential, use if parallel causes issues)
-pnpm run build-serial
-
-# Run all tests
-pnpm test
-
-# Lint (oxlint, type-aware)
-pnpm run lint
-
-# Typecheck every package and its tests
-pnpm run typecheck
-
-# Dead code / unused dependency check
-pnpm run knip
-
-# Format check / format source files (oxfmt)
-pnpm run cs-check
-pnpm run cs-format
-
-# Format check / format every file in the repo, including configs and markdown
-pnpm run format-check
-pnpm run format
-
-# Run a single package's tests
-cd packages/core && pnpm test
-
-# Watch mode for a single package
-cd packages/core && pnpm run test:watch
-
-# Update snapshots
-cd packages/snapshot-tests && pnpm run test:update
-
-# Start the playground (interactive demo)
-cd packages/playground && pnpm start
-
-# Full sanity check (lint + knip + build + test)
-pnpm run sanity-check
-```
-
-CI runs lint, knip, build, typecheck, and test in that order, so run those before pushing. Per-package `tsc` misses the test and playground projects; only the root `typecheck` covers them.
-
-Individual package builds run `build:ts` (`tsc -b`, emits `lib/`) and then bundle `dist/` in three formats: `build:cjs` and `build:esm` via esbuild, `build:umd` via rollup.
+Each package build is one `tsdown -c ../../tsdown.base.mts` run: it emits per-file ESM and declarations into `lib/`, the only published output (the packages are ESM-only). It doesn't typecheck: its declaration build runs `tsgo --noCheck`. `pnpm run lint` (`oxlint --type-check`) is the typecheck as well as the lint, and nothing else runs tsc. It checks the repo as two programs: `tsconfig.typecheck.json` under `nodenext` (every package's `src` and tests, and `testing/`), and `tsconfig.typecheck-bundler.json` for chakra-ui, whose `@chakra-ui/react` declarations only resolve under `bundler`, and the playground, a Vite app that runs under a bundler's resolution and takes Vite's types from `src/vite-env.d.ts`. Both resolve `@rjsf/*` to source through the `@rjsf/source` export condition every package declares, so nothing has to be built first. Both carry the tests' Node and Vitest globals, so `no-restricted-globals`, `no-restricted-properties` (`globalThis.process`) and `no-restricted-imports` overrides in `.oxlintrc.json` are what keep the published packages' `src` off them and off Node's built-in modules, and another keeps the validators' `src` off the DOM globals it lists (`document`, `window`, `navigator`, the common constructors such as `HTMLElement`, `DOMParser` and `XMLHttpRequest`, and `globalThis.document`/`globalThis.window`). What still gets through: type-only uses such as `NodeJS.Timeout` or `HTMLElement`, any DOM global a validator reaches under a name that list doesn't ban (`HTMLInputElement`, `MutationObserver`, `globalThis.navigator`), and ambient module declarations from any package's tests or from `vite/client` (`import.meta.env`, `*.css`, `*.svg`), which a published `src` sees too, so an import of a module its package doesn't depend on, such as `ajv-i18n` from `validator-ajv8/test/ajv-i18n.d.ts`, type-checks. Keep new code inside those two rather than adding a program per package: each program re-resolves the variance of the shared `T`/`S`/`F` type graph (`UiSchema` → `SlotComponent<…Props>` → `Registry` → `FieldProps` → `UiSchema`), about 1.5s and over 2M type instantiations apiece. The root `tsconfig.json` only references those two programs. Lint and editors open the nearest `tsconfig.json` and use the first referenced program that contains the file. A `tsconfig.json` inside a package would be found first and become a program of its own, re-resolving the type graph again and slowing lint by that much. Lint reports each file's type errors from that one program, so a theme's `src`, which the bundler program also loads through the playground, is type-checked only under `nodenext`, and a path in `.oxlintrc.json`'s `ignorePatterns` is neither linted nor type-checked. Each package's `tsconfig.lib.json` just extends `tsconfig.base.json` (chakra-ui adds bundler resolution) and is read only by tsdown, whose declaration build (`tsgo --noCheck`) takes the package directory from that file's location; it doesn't typecheck.
 
 ## Architecture
 
-This is an **pnpm workspaces + Nx** monorepo. All packages live under `packages/` and are scoped as `@rjsf/*`.
-
-### Package roles
-
-| Package                                                             | Role                                                                     |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| `@rjsf/utils`                                                       | Shared types, 80+ utility functions, schema helpers. No UI dependencies. |
-| `@rjsf/core`                                                        | Core `Form` component, Bootstrap 3 as default theme, `withTheme()` HOC.  |
-| `@rjsf/validator-ajv8`                                              | AJV 8-based validator. Exported via `customizeValidator()`.              |
-| `@rjsf/snapshot-tests`                                              | Shared snapshot test suite consumed by all theme packages.               |
-| Theme packages (`@rjsf/mui`, `@rjsf/antd`, `@rjsf/chakra-ui`, etc.) | UI-library-specific implementations of fields, widgets, and templates.   |
-| `@rjsf/playground`                                                  | Vite app importing all themes, used for manual testing and demos.        |
-| `@rjsf/docs`                                                        | Docusaurus documentation site.                                           |
-
-### Registry pattern (the plugin system)
-
-The `Registry` object is the core extension point passed to every field/widget/template:
-
-```typescript
-Registry = {
-  fields, // Map of field type → Field component
-  widgets, // Map of widget name → Widget component
-  templates, // Layout/structural templates
-  rootSchema, // Root JSON Schema
-  formContext, // Arbitrary context object threaded to all components
-  schemaUtils, // Schema parsing & validation helpers
-  translateString,
-  globalFormOptions, // Form-level options available to every template, field, and widget
-  globalUiOptions, // Optional; global ui:options applied to every field
-  uiSchemaDefinitions, // Optional; uiSchema fragments keyed by $ref path, applied when that $ref resolves
-};
-```
-
-Override fields/widgets/templates per-form via props, or globally via `withTheme()`.
-
-### Theme pattern
-
-Every theme package follows the same structure:
-
-1. Imports `withTheme` from `@rjsf/core`
-2. Defines custom `Templates`, `Widgets`, and optionally `Fields`
-3. Calls `withTheme({ templates, widgets, fields })` to produce a themed `Form`
-4. Exports: `Form` (default), `Theme`, `Templates`, `Widgets`
-
-### Field → Widget → Template hierarchy
-
-- **Fields** handle schema-level logic (ObjectField, ArrayField, MultiSchemaField for oneOf/anyOf, etc.)
-- **Widgets** handle individual input rendering (TextWidget, SelectWidget, CheckboxWidget, etc.)
-- **Templates** control structural/layout rendering (FieldTemplate, ArrayFieldTemplate, ButtonTemplates, etc.)
-
-Fields select which widget to render based on schema `type` and `ui:widget`. Templates wrap the output for consistent styling.
-
 When making a change to a widget or template, consider if the change should be generalized to all theme packages. If substantial logic is duplicated across themes, consider refactoring the logic to `@rjsf/utils` or `@rjsf/core`.
 
-### Form rendering flow
-
-1. Caller provides `schema`, `validator` (required), `formData`, and `uiSchema`
-2. `Form` creates `schemaUtils` from validator + schema
-3. Schema is recursively decomposed into fields → widgets → templates
-4. On change/blur: callbacks fire with updated `formData` and `errorSchema`
-5. On submit: full validation runs, then `onSubmit` fires (or `onError` if invalid)
-
-### Key `@rjsf/utils` exports to know
-
-- Schema helpers: `findSchemaDefinition`, `mergeSchemas`, `getSchemaType`, `createSchemaUtils`
-- Form data: `mergeDefaultsWithFormData`, `removeOptionalEmptyObjects`
-- Error handling: `toErrorSchema`, `toErrorList`
-- Enum helpers: `enumOptionsSelectValue`, `enumOptionsDeselectValue`
-- React hooks: `useDeepCompareMemo`, `useFileWidgetProps`, `useAltDateWidgetProps`
+Check what `@rjsf/utils` already shares before writing theme logic, e.g. `enumOptionsSelectValue` / `enumOptionsDeselectValue` and the `useFileWidgetProps` / `useAltDateWidgetProps` hooks.
 
 ## Code style
 
 - **TypeScript strict mode**, `esnext` target, `verbatimModuleSyntax` (type-only imports must be `import type`), relative imports include the `.ts`/`.tsx` extension
-- **oxfmt** (`.oxfmtrc.json`): single quotes, JSX single quotes, 120-char print width, sorted imports with React first
-- **oxlint** (`.oxlintrc.json`): the `airbnb-typescript` rule set translated to oxlint, plus `typescript`, `react`, `jsx-a11y`, and `import` plugins; enforces curly braces, no-console, React rules of hooks
-- **knip** (`knip.jsonc`): fails CI on unused files, exports, and dependencies
-- Pre-commit hook (Husky + lint-staged) runs `oxlint --fix` and `oxfmt` on staged files
+- Formatting is oxfmt (`.oxfmtrc.json`), linting is type-aware oxlint (`.oxlintrc.json`); the Husky + lint-staged pre-commit hook runs `oxlint --fix` and `oxfmt` on staged files
+- `pnpm run lint` is one `oxlint --type-check` run from the root over the whole workspace, not an Nx target, so it is never cached; it peaks around 7 GB, and a lower `GOMAXPROCS` slows it without saving much memory. It is also the typecheck (see Commands). The pre-commit hook's `oxlint --fix` runs the type-aware rules but not `--type-check`, so a commit isn't type-checked
 
 ## Code comments
 
@@ -146,8 +36,8 @@ When making a change to a widget or template, consider if the change should be g
 
 ## Testing
 
-- Vitest, jsdom, Testing Library; shared config in `testing/vitest.base.mts`, extended per package
-- Tests resolve `@rjsf/*` imports to TypeScript source via the `@rjsf/source` export condition, so no build is needed before running them
+- Load the `rjsf-testing` skill (`.claude/skills/rjsf-testing/SKILL.md`) whenever you write or modify a test — including a regression test added as part of a bug fix. It covers the test helpers, when `fireEvent` is still correct, and the fake-timer and snapshot gotchas.
+- Tests resolve `@rjsf/*` imports to TypeScript source, so no build is needed before running them.
+- Drive interactions with `@testing-library/user-event`, not `fireEvent`. Every `fireEvent` that remains needs a comment saying why user-event can't express the interaction, and an assertion is never weakened to make a `fireEvent` → user-event conversion pass.
+- user-event hangs under Vitest's fake timers; fake only the clock with `vi.useFakeTimers({ toFake: ['Date'] })`.
 - `@rjsf/utils` and the validator packages enforce 100% coverage
-- Snapshot tests in `@rjsf/snapshot-tests` are shared across theme packages — run `test:update` there when changing core rendering
-- Node >=20 required; `.nvmrc` pins 24

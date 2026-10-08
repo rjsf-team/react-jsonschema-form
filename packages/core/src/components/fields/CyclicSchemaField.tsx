@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions, RJSF_REF_CYCLE_KEY } from '@rjsf/utils';
+import { getTemplates, getUiOptions, RJSF_REF_CYCLE_KEY } from '@rjsf/utils';
 
 /** The `CyclicSchemaField` component is used to render a field in the schema that is marked with RJSF_REF_CYCLE_KEY ===
  * true
@@ -8,20 +8,16 @@ import { getTemplate, getUiOptions, RJSF_REF_CYCLE_KEY } from '@rjsf/utils';
  * @param props - The `FieldProps` for this template
  */
 export default function CyclicSchemaField<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const [expanded, setExpanded] = useState(false);
-  const { name, registry, schema, uiSchema, fieldPathId } = props;
+  const { name, registry, schema, uiSchema, id } = props;
   const { globalUiOptions } = registry;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const CyclicSchemaExpandTemplate = getTemplate<'CyclicSchemaExpandTemplate', T, S, F>(
-    'CyclicSchemaExpandTemplate',
-    registry,
-    uiOptions,
-  );
+  const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (!expanded) {
     return (
       <CyclicSchemaExpandTemplate
@@ -29,7 +25,7 @@ export default function CyclicSchemaField<
         schema={schema}
         uiSchema={uiSchema}
         name={name}
-        fieldPathId={fieldPathId}
+        id={id}
         onExpand={() => setExpanded(true)}
       />
     );

@@ -1,15 +1,10 @@
 import type { ComponentType } from 'react';
 import type { FormProps } from '@rjsf/core';
-import type { RJSFSchema, ErrorSchema, UiSchema, Experimental_DefaultFormStateBehavior } from '@rjsf/utils';
+import MarkdownTemplate from '@rjsf/core/markdown';
+import type { RJSFSchema, ErrorSchema, UiSchema, DefaultFormStateBehavior } from '@rjsf/utils';
 import { bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
-
-vi.mock('@rjsf/utils', async (importOriginal) => ({
-  ...(await importOriginal()),
-  // Disable the getTestIds within the snapshot tests by returning an empty object
-  getTestIds: vi.fn(() => ({})),
-}));
 
 export function formTests(Form: ComponentType<FormProps>) {
   describe('single fields', () => {
@@ -52,22 +47,24 @@ export function formTests(Form: ComponentType<FormProps>) {
           description: 'A field with markdown help text',
         };
         const uiSchema: UiSchema = {
-          'ui:help': 'This is **markdown** help text with [a link](https://example.com)',
           'ui:enableMarkdownInHelp': true,
+          'ui:help': 'This is **markdown** help text with [a link](https://example.com)',
         };
-        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+        const { asFragment } = render(
+          <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+        );
         expect(asFragment()).toMatchSnapshot();
       });
 
-      test('field with markdown help text without enabling markdown', () => {
+      test('field with markdown help text without a MarkdownTemplate', () => {
         const schema: RJSFSchema = {
           type: 'string',
           title: 'Raw Help Test',
           description: 'A field with raw help text',
         };
         const uiSchema: UiSchema = {
+          'ui:enableMarkdownInHelp': true,
           'ui:help': 'This is **markdown** help text with [a link](https://example.com)',
-          'ui:enableMarkdownInHelp': false,
         };
         const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
         expect(asFragment()).toMatchSnapshot();
@@ -80,11 +77,14 @@ export function formTests(Form: ComponentType<FormProps>) {
           description: 'This is a *description* with **markdown**',
         };
         const uiSchema: UiSchema = {
-          'ui:help': 'This is **help** text with [a link](https://example.com)',
           'ui:enableMarkdownInHelp': true,
+          'ui:enableMarkdownInDescription': true,
+          'ui:help': 'This is **help** text with [a link](https://example.com)',
           'ui:description': 'This is a *description* with **markdown**',
         };
-        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+        const { asFragment } = render(
+          <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+        );
         expect(asFragment()).toMatchSnapshot();
       });
 
@@ -95,10 +95,18 @@ export function formTests(Form: ComponentType<FormProps>) {
           description: 'A required field with markdown help',
         };
         const uiSchema: UiSchema = {
-          'ui:help': 'This field is **required**. Please provide a value.',
           'ui:enableMarkdownInHelp': true,
+          'ui:help': 'This field is **required**. Please provide a value.',
         };
-        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={{}} />);
+        const { asFragment } = render(
+          <Form
+            schema={schema}
+            uiSchema={uiSchema}
+            validator={validator}
+            formData={{}}
+            templates={{ MarkdownTemplate }}
+          />,
+        );
         expect(asFragment()).toMatchSnapshot();
       });
       test('string field with placeholder', async () => {
@@ -350,6 +358,39 @@ export function formTests(Form: ComponentType<FormProps>) {
       const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
       expect(asFragment()).toMatchSnapshot();
     });
+    test('select field single choice optgroups', async () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar', 'baz', 'qux'],
+      };
+      const uiSchema: UiSchema = {
+        'ui:options': {
+          optgroups: {
+            'Group A': ['foo', 'bar'],
+            'Group B': ['baz'],
+          },
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
+    test('select field single choice optgroups with enumDisabled', async () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar', 'baz', 'qux'],
+      };
+      const uiSchema: UiSchema = {
+        'ui:enumDisabled': ['bar'],
+        'ui:options': {
+          optgroups: {
+            'Group A': ['foo', 'bar'],
+            'Group B': ['baz'],
+          },
+        },
+      };
+      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      expect(asFragment()).toMatchSnapshot();
+    });
     test('checkboxes widget with custom options and labels', () => {
       const schema: RJSFSchema = {
         type: 'array',
@@ -447,7 +488,9 @@ export function formTests(Form: ComponentType<FormProps>) {
         description: '**test** __description__',
       };
       const uiSchema: UiSchema = { 'ui:enableMarkdownInDescription': true };
-      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+      );
       expect(asFragment()).toMatchSnapshot();
     });
 
@@ -646,7 +689,9 @@ export function formTests(Form: ComponentType<FormProps>) {
       const uiSchema = {
         'my-field': { 'ui:enableMarkdownInDescription': true },
       };
-      const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+      const { asFragment } = render(
+        <Form schema={schema} uiSchema={uiSchema} validator={validator} templates={{ MarkdownTemplate }} />,
+      );
       expect(asFragment()).toMatchSnapshot();
     });
     test('field with markdown description in uiSchema', async () => {
@@ -665,7 +710,9 @@ export function formTests(Form: ComponentType<FormProps>) {
           'ui:enableMarkdownInDescription': true,
         },
       };
-      const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
+      const { asFragment } = render(
+        <Form schema={schema} validator={validator} uiSchema={uiSchema} templates={{ MarkdownTemplate }} />,
+      );
       expect(asFragment()).toMatchSnapshot();
     });
     test('title field', async () => {
@@ -755,7 +802,7 @@ export function formTests(Form: ComponentType<FormProps>) {
     describe('optional data controls', () => {
       let schema: RJSFSchema;
       let uiSchema: UiSchema;
-      let experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;
+      let defaultFormStateBehavior: DefaultFormStateBehavior;
       let formData: any;
       beforeAll(() => {
         schema = {
@@ -914,7 +961,7 @@ export function formTests(Form: ComponentType<FormProps>) {
             },
           },
         };
-        experimental_defaultFormStateBehavior = {
+        defaultFormStateBehavior = {
           // Set the emptyObjectFields to only populate required defaults to highlight the code working
           emptyObjectFields: 'populateRequiredDefaults',
         };
@@ -930,7 +977,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema: {},
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
         };
         const { asFragment } = render(<Form {...formProps} />);
         expect(asFragment()).toMatchSnapshot();
@@ -940,7 +987,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema,
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
         };
         const { asFragment } = render(<Form {...formProps} />);
         expect(asFragment()).toMatchSnapshot();
@@ -950,7 +997,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema,
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
           formData,
         };
         const { asFragment } = render(<Form {...formProps} />);
@@ -961,7 +1008,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema: {},
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
           readonly: true,
         };
         const { asFragment } = render(<Form {...formProps} />);
@@ -972,7 +1019,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema,
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
           disabled: true,
         };
         const { asFragment } = render(<Form {...formProps} />);
@@ -983,7 +1030,7 @@ export function formTests(Form: ComponentType<FormProps>) {
           schema,
           uiSchema,
           validator,
-          experimental_defaultFormStateBehavior,
+          defaultFormStateBehavior,
           formData,
           readonly: true,
         };
@@ -1319,4 +1366,128 @@ export function formTests(Form: ComponentType<FormProps>) {
     const { asFragment } = render(<Form schema={schema} validator={validator} uiSchema={uiSchema} />);
     expect(asFragment()).toMatchSnapshot();
   });
+
+  // Appended at the end of the suite, rather than alongside the other `format` tests, so this doesn't shift the
+  // `useId()`-derived ids baked into every snapshot that follows it in file order.
+  test('format iso-time', async () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      format: 'iso-time',
+    };
+    const { asFragment } = render(<Form schema={schema} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('format iso-date-time', async () => {
+    const schema: RJSFSchema = {
+      type: 'string',
+      format: 'iso-date-time',
+    };
+    const { asFragment } = render(<Form schema={schema} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from oneOf constants without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: 'foo', title: 'Foo' },
+        { const: 'bar', title: 'Bar' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData='bar' validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from anyOf constants of mixed types without a type', async () => {
+    const schema: RJSFSchema = {
+      anyOf: [
+        { const: false, title: 'Never' },
+        { const: 1, title: 'Once' },
+        { const: 'unlimited', title: 'Unlimited' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={1} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from a nested oneOf of constants without a type', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        region: {
+          oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }],
+        },
+      },
+      $defs: {
+        europe: {
+          title: 'Europe',
+          oneOf: [
+            { const: 'FR', title: 'France' },
+            { const: 'DE', title: 'Germany' },
+          ],
+        },
+      },
+    };
+    const { asFragment } = render(<Form schema={schema} formData={{ region: 'DE' }} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from oneOf boolean constants with a null option without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: null, title: 'Unknown' },
+        { const: true, title: 'Yes' },
+        { const: false, title: 'No' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={null} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from a single anyOf boolean constant without a type', async () => {
+    const schema: RJSFSchema = {
+      anyOf: [{ const: true, title: 'Subscribed' }],
+    };
+    const { asFragment } = render(<Form schema={schema} formData validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  test('select widget from oneOf true and false constants without a type', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { const: true, title: 'Yes' },
+        { const: false, title: 'No' },
+      ],
+    };
+    const { asFragment } = render(<Form schema={schema} formData={false} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  // The title is the point: a boolean rendered as a select still has to show it, even in a theme that hides the label
+  // for the checkbox that boolean fields otherwise get
+  test('titled select widget from oneOf boolean constants without a type', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        answer: {
+          title: 'My Answer',
+          oneOf: [
+            { const: true, title: 'Yes' },
+            { const: false, title: 'No' },
+          ],
+        },
+      },
+    };
+    const { asFragment } = render(<Form schema={schema} formData={{ answer: true }} validator={validator} />);
+    expect(asFragment()).toMatchSnapshot();
+  });
+  // A theme whose select keys or validates its items by value, like chakra's or mantine's, fails on options sharing one
+  describe.each(['select', 'radio'])(
+    '%s widget with options sharing a String() in the realValue format (#5315)',
+    (widget) => {
+      test('renders each option with a value of its own', () => {
+        const schema: RJSFSchema = {
+          oneOf: [
+            { const: 1, title: 'Number' },
+            { const: '1', title: 'String' },
+          ],
+        };
+        const uiSchema: UiSchema = { 'ui:widget': widget, 'ui:options': { optionValueFormat: 'realValue' } };
+        const { asFragment } = render(<Form schema={schema} uiSchema={uiSchema} formData='1' validator={validator} />);
+        expect(asFragment()).toMatchSnapshot();
+      });
+    },
+  );
 }

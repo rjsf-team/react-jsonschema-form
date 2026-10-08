@@ -1,5 +1,5 @@
 import type { WrapIfAdditionalTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { buttonId, ADDITIONAL_PROPERTY_FLAG, TranslatableString } from '@rjsf/utils';
+import { AdditionalPropertyKeySelect, buttonId, ADDITIONAL_PROPERTY_FLAG, TranslatableString } from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -7,16 +7,18 @@ import { buttonId, ADDITIONAL_PROPERTY_FLAG, TranslatableString } from '@rjsf/ut
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
     classNames,
+    style,
     disabled,
     id,
     label,
+    keyName,
     displayLabel,
     readonly,
     required,
@@ -25,6 +27,7 @@ export default function WrapIfAdditionalTemplate<
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     rawDescription,
     registry,
     ...rest
@@ -39,11 +42,15 @@ export default function WrapIfAdditionalTemplate<
   const margin = displayLabel ? 32 + marginDesc : 10;
 
   if (!additional) {
-    return <div className={`flex-grow ${classNames}`}>{children}</div>;
+    return (
+      <div className={`flex-grow ${classNames ?? ''}`.trim()} style={style}>
+        {children}
+      </div>
+    );
   }
 
   return (
-    <div className={`wrap-if-additional-template ${classNames}`} {...rest}>
+    <div className={`wrap-if-additional-template ${classNames ?? ''}`.trim()} style={style} {...rest}>
       <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
         <div>
           {displayLabel && (
@@ -51,15 +58,30 @@ export default function WrapIfAdditionalTemplate<
               <span className='label-text'>{keyLabel}</span>
             </label>
           )}
-          <input
-            key={label}
-            type='text'
-            className='input input-bordered'
-            id={`${id}-key`}
-            onBlur={onKeyRenameBlur}
-            defaultValue={label}
-            disabled={disabled || readonly}
-          />
+          {propertyNamesEnum ? (
+            <AdditionalPropertyKeySelect<T, S, F>
+              id={`${id}-key`}
+              label={keyLabel}
+              hideLabel
+              value={keyName}
+              propertyNamesEnum={propertyNamesEnum}
+              onKeyRename={onKeyRename}
+              disabled={disabled}
+              readonly={readonly}
+              required={required}
+              registry={registry}
+            />
+          ) : (
+            <input
+              key={keyName}
+              type='text'
+              className='input input-bordered'
+              id={`${id}-key`}
+              onBlur={onKeyRenameBlur}
+              defaultValue={keyName}
+              disabled={disabled || readonly}
+            />
+          )}
         </div>
         {children}
         <div className='flex self-start' style={{ marginTop: `${margin}px` }}>

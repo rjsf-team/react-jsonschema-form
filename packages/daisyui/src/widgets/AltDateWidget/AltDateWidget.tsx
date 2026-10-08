@@ -1,5 +1,7 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+
+import { getGroupProps } from '../../utils.ts';
 
 /** The `AltDateWidget` component provides an alternative date/time input
  * with individual fields for year, month, day, and optionally time components.
@@ -15,26 +17,43 @@ import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/ut
  * @param props - The `WidgetProps` for this component
  */
 export default function AltDateWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { disabled = false, readonly = false, autofocus = false, options, id, name, registry, onBlur, onFocus } = props;
+  const {
+    disabled = false,
+    readonly = false,
+    autofocus = false,
+    options,
+    id,
+    name,
+    label,
+    hideLabel,
+    registry,
+    onBlur,
+    onFocus,
+  } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
   return (
-    <div className='space-y-3'>
+    <div className='space-y-3' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
       <div className='grid grid-cols-3 gap-2'>
         {elements.map((elemProps, i) => (
           // oxlint-disable-next-line react/no-array-index-key
           <div key={i} className='form-control'>
-            <label className='label'>
+            {/* Naming each select, which is otherwise left to whatever it happens to be displaying. A single control is
+                named by this association alone, and announces the value it displays after it */}
+            <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
               <span className='label-text capitalize'>{elemProps.type}</span>
             </label>
             <DateElement
               rootId={id}
-              name={name}
+              // The part's own id, as `@rjsf/mantine` and `@rjsf/chakra-ui` name theirs: each select is a control in
+              // its own right, and a field with no property name of its own — a root field, an array item — would
+              // otherwise leave the label above replacing the value its select displays rather than preceding it
+              name={dateElementId(id, elemProps.type)}
               className='select select-bordered select-sm'
               select={handleChange}
               type={elemProps.type}

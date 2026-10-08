@@ -21,16 +21,16 @@ Below is the table that lists all the `templates`, their props interface, their 
 
 | Template                                                        | Props Type                         | UiSchema name                    | Origin                                                                                                                                                               |
 | --------------------------------------------------------------- | ---------------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ArrayFieldTemplate](#arrayfieldtemplate)                           | ArrayFieldTemplateProps            | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                                  |
-| [ArrayFieldDescriptionTemplate](#arrayfielddescriptiontemplate)     | ArrayFieldDescriptionProps         | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                                 |
-| [ArrayFieldItemTemplate](#arrayfielditemtemplate)                   | ArrayFieldItemTemplateProps        | ui:ArrayFieldItemTemplate        | Formerly an internal class for `ArrayFieldTemplate`s in all themes, refactored as a template in each theme, used in all `ArrayFieldTemplate` implementations         |
-| [ArrayFieldItemButtonsTemplate](#arrayfielditembuttonstemplate)     | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButonsTemplate  | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
-| [ArrayFieldTitleTemplate](#arrayfieldtitletemplate)                 | ArrayFieldTitleProps               | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                                |
-| [BaseInputTemplate](#baseinputtemplate)                             | WidgetProps                        | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
-| [CyclicSchemaExpandTemplate](#cyclicschemaexpandtemplate)           | CyclicSchemaExpandProps            | ui:CyclicSchemaExpandTemplate    | Added in RJSF v6 to support circular `$ref` cycle detection                                                                                                          |
-| [DescriptionFieldTemplate](#descriptionfieldtemplate)               | DescriptionFieldProps              | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
-| [ErrorListTemplate](#errorlisttemplate)                             | ErrorListProps                     | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                                    |
-| [FallbackFieldTemplate](#fallbackfieldtemplate)                     | FallbackFieldTemplateProps         | ui:FallbackFieldTemplate         | Added in RJSF v6                                                                                                                                                     |
+| [ArrayFieldTemplate](#arrayfieldtemplate)                       | ArrayFieldTemplateProps            | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                                  |
+| [ArrayFieldDescriptionTemplate](#arrayfielddescriptiontemplate) | ArrayFieldDescriptionProps         | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                                 |
+| [ArrayFieldItemTemplate](#arrayfielditemtemplate)               | ArrayFieldItemTemplateProps        | ui:ArrayFieldItemTemplate        | Formerly an internal class for `ArrayFieldTemplate`s in all themes, refactored as a template in each theme, used in all `ArrayFieldTemplate` implementations         |
+| [ArrayFieldItemButtonsTemplate](#arrayfielditembuttonstemplate) | ArrayFieldItemButtonsTemplateProps | ui:ArrayFieldItemButonsTemplate  | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
+| [ArrayFieldTitleTemplate](#arrayfieldtitletemplate)             | ArrayFieldTitleProps               | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                                |
+| [BaseInputTemplate](#baseinputtemplate)                         | WidgetProps                        | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
+| [CyclicSchemaExpandTemplate](#cyclicschemaexpandtemplate)       | CyclicSchemaExpandProps            | ui:CyclicSchemaExpandTemplate    | Added in RJSF v6 to support circular `$ref` cycle detection                                                                                                          |
+| [DescriptionFieldTemplate](#descriptionfieldtemplate)           | DescriptionFieldProps              | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
+| [ErrorListTemplate](#errorlisttemplate)                         | ErrorListProps                     | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                                    |
+| [FallbackFieldTemplate](#fallbackfieldtemplate)                 | FallbackFieldTemplateProps         | ui:FallbackFieldTemplate         | Added in RJSF v6                                                                                                                                                     |
 | [FieldErrorTemplate](#fielderrortemplate)                       | FieldErrorProps                    | ui:FieldErrorTemplate            | Formerly internal `ErrorList` component accessible only to `SchemaField`                                                                                             |
 | [FieldHelpTemplate](#fieldhelptemplate)                         | FieldHelpProps                     | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                                  |
 | [FieldTemplate](#fieldtemplate)                                 | FieldTemplateProps                 | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                            |
@@ -108,7 +108,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
-- `fieldPathId`: An object containing the id for this object & ids for its properties.
+- `id`: The id of the field in the hierarchy.
 - `items`: An array of React nodes representing the items in the array.
 - `onAddClick: (event?) => void`: A function that adds a new item to the end of the array.
 - `readonly`: A boolean value stating if the array is read-only.
@@ -119,7 +119,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `title`: A string value containing the title for the array.
 - `formData`: The formData for this array.
 - `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget
+- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
 - `registry`: The `registry` object.
 
 > Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
@@ -142,10 +142,9 @@ const schema: RJSFSchema = {
 };
 
 function ArrayFieldDescriptionTemplate(props: ArrayFieldDescriptionProps) {
-  const { description, fieldPathId } = props;
-  const id = descriptionId(fieldPathId);
+  const { description, id } = props;
   return (
-    <details id={id}>
+    <details id={descriptionId(id)}>
       <summary>Description</summary>
       {description}
     </details>
@@ -182,7 +181,7 @@ const uiSchema: UiSchema = {
 The following props are passed to each `ArrayFieldDescriptionTemplate`:
 
 - `description`: The description of the array field being rendered.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `schema`: The schema object for this array field.
 - `uiSchema`: The uiSchema object for this array field.
 - `registry`: The `registry` object.
@@ -252,7 +251,7 @@ const schema: RJSFSchema = {
 };
 
 function ArrayFieldItemButtonsTemplate(props: ArrayFieldTemplateItemButtonsType) {
-  const { disabled, readonly, hasCopy, fieldPathId, index, onCopyIndexClick, registry, uiSchema } = props;
+  const { disabled, readonly, hasCopy, id, index, onCopyIndexClick, registry, uiSchema } = props;
   const { CopyButton } = registry.templates.ButtonTemplates;
   const onCopyClick = useMemo(() => onCopyIndexClick(index), [index, onCopyIndexClick]);
   if (!hasCopy) {
@@ -260,7 +259,7 @@ function ArrayFieldItemButtonsTemplate(props: ArrayFieldTemplateItemButtonsType)
   }
   return (
     <CopyButton
-      id={buttonId(fieldPathId, 'copy')}
+      id={buttonId(id, 'copy')}
       className='array-item-copy'
       disabled={disabled || readonly}
       onClick={onCopyClick}
@@ -285,7 +284,7 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 - `hasMoveDown`: A boolean value stating whether the array item can be moved down.
 - `hasMoveUp`: A boolean value stating whether the array item can be moved up.
 - `hasRemove`: A boolean value stating whether the array item can be removed.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy.
+- `id`: The id of the field in the hierarchy.
 - `index`: A number stating the index the array item occurs in `items`.
 - `totalItems`: A number stating the total number `items` in the array.
 - `onAddItem: event?) => void`: Callback function that adds a new item below this item.
@@ -317,9 +316,8 @@ const schema: RJSFSchema = {
 };
 
 function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
-  const { title, fieldPathId } = props;
-  const id = titleId(fieldPathId);
-  return <h1 id={id}>{title}</h1>;
+  const { title, id } = props;
+  return <h1 id={titleId(id)}>{title}</h1>;
 }
 
 render(
@@ -352,7 +350,7 @@ const uiSchema: UiSchema = {
 The following props are passed to each `ArrayFieldTitleTemplate`:
 
 - `title`: The title of the array field being rendered.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy.
+- `id`: The id of the field in the hierarchy.
 - `schema`: The schema object for this array field.
 - `uiSchema`: The uiSchema object for this array field.
 - `required`: A boolean value stating if the field is required
@@ -370,7 +368,7 @@ For instance, say you have a `CustomTextInput` component that you want to integr
 
 ```tsx
 import { ChangeEvent, FocusEvent } from 'react';
-import { getInputProps, RJSFSchema, BaseInputTemplateProps } from '@rjsf/utils';
+import { getInputProps, getVisibleErrors, RJSFSchema, BaseInputTemplateProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import CustomTextInput from '../CustomTextInput';
@@ -412,7 +410,10 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
 
   const inputProps = { ...rest, ...getInputProps(schema, type, options) };
-  const hasError = rawErrors.length > 0 && !hideError;
+  // `rawErrors` is still provided while `ui:hideError` is in effect, so `getVisibleErrors()` is what decides the
+  // error state a widget renders. Both stay destructured so that `...rest` does not spread them onto the input
+  const visibleErrors = getVisibleErrors({ rawErrors, hideError });
+  const hasError = visibleErrors.length > 0;
 
   return (
     <CustomTextInput
@@ -424,7 +425,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
       readOnly={readonly}
       autoFocus={autofocus}
       error={hasError}
-      errors={hasError ? rawErrors : undefined}
+      errors={hasError ? visibleErrors : undefined}
       onChange={onChangeOverride || onTextChange}
       onBlur={onTextBlur}
       onFocus={onTextFocus}
@@ -446,13 +447,7 @@ The way to do this varies based upon whether you are using `core` or some other 
 
 ```tsx
 import { BaseInputTemplateProps } from '@rjsf/utils';
-import { getDefaultRegistry } from '@rjsf/core';
-import { Templates } from '@rjsf/mui';
-
-const {
-  templates: { BaseInputTemplate },
-} = getDefaultRegistry(); // To get templates from core
-// const { BaseInputTemplate } = Templates; // To get templates from a theme do this
+import { BaseInputTemplate } from '@rjsf/core'; // or from a theme: `const { BaseInputTemplate } = Templates` with `import { Templates } from '@rjsf/mui'`
 
 function MyBaseInputTemplate(props: BaseInputTemplateProps) {
   const customProps = {};
@@ -509,13 +504,13 @@ const schema: RJSFSchema = {
   },
 };
 
-function CyclicSchemaExpandTemplate<T = any>(props: CyclicSchemaExpandProps<T>) {
-  const { name, fieldPathId, onExpand } = props;
-  const buttonId = `${fieldPathId.$id}-button`;
+function CyclicSchemaExpandTemplate<T = unknown>(props: CyclicSchemaExpandProps<T>) {
+  const { name, id, onExpand } = props;
+  const buttonId = `${id}-button`;
   return (
     <div className='cyclic-expand'>
       <span className='warning'>Circular reference detected for field &quot;{name}&quot;</span>
-      <button id={buttonId} type='button' onClick={() => onExpand(fieldPathId.$id)}>
+      <button id={buttonId} type='button' onClick={() => onExpand(id)}>
         Expand
       </button>
     </div>
@@ -552,7 +547,7 @@ const uiSchema: UiSchema = {
 The following props are passed to the `CyclicSchemaExpandTemplate` as defined by `CyclicSchemaExpandProps` in `@rjsf/utils`:
 
 - `name`: The unique name of the field at the cycle boundary, usually the property name within its parent object.
-- `fieldPathId`: The `FieldPathId` of the field in the hierarchy; use `fieldPathId.$id` to get the HTML id string.
+- `id`: The id of the field in the hierarchy.
 - `onExpand`: Callback to call when the user wants to render one additional level; receives the field's id string.
 - `schema`: The schema object for the field at the cycle boundary.
 - `uiSchema`: The uiSchema object for this field.
@@ -723,7 +718,7 @@ The following props are passed to the `FieldErrorTemplate`:
 
 - `schema`: The schema for the field
 - `uiSchema`: The uiSchema for the field
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `errors`: An array of all errors for this field
 - `errorSchema`: The `ErrorSchema` for this field
 - `registry`: The `Registry` object
@@ -744,9 +739,8 @@ const schema: RJSFSchema = {
 };
 
 function FieldHelpTemplate(props: FieldHelpProps) {
-  const { help, fieldPathId } = props;
-  const id = helpId(fieldPathId);
-  return <aside id={id}>{help}</aside>;
+  const { help, id } = props;
+  return <aside id={helpId(id)}>{help}</aside>;
 }
 
 render(
@@ -759,7 +753,7 @@ The following props are passed to the `FieldHelpTemplate`:
 
 - `schema`: The schema for the field
 - `uiSchema`: The uiSchema for the field
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `help`: The help information to be rendered
 - `registry`: The `Registry` object
 
@@ -820,21 +814,25 @@ const uiSchema: UiSchema = {
 };
 ```
 
-If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`.
+If you want to handle the rendering of each element yourself, you can use the props `rawHelp`, `rawDescription` and `rawErrors`. `rawErrors` holds only the errors the field is displaying, so it is `undefined` while [`ui:hideError`](../api-reference/uiSchema.md#hideerror) is in effect; read `errorSchema` instead to render the withheld errors your own way.
 
 The following props are passed to a custom field template component:
 
+- `fieldPath`: The `FieldPath` string identifying where this field's data lives, such as `friends[0].firstName`.
 - `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
+- `keyName`: The name of this field's property in its parent object, carrying none of the decoration `label` may have picked up — a `ui:title`, or the marker a `deprecated` schema adds.
+  The key of an `additionalProperties` property is this rather than its `label`, so renaming one reads and writes the real key.
 - `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionFieldTemplate`](#descriptionfieldtemplate) defined in the `templates` passed to the `Form`).
 - `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
 - `children`: The field or widget component instance for this field row.
 - `errors`: A component instance listing any encountered errors for this field.
-- `rawErrors`: An array of strings listing all generated error messages from encountered errors for this field.
+- `rawErrors`: An array of strings listing the generated error messages this field is displaying, `undefined` while `ui:hideError` is in effect.
+- `errorSchema`: The tree of errors for this field and its children, carrying every error whatever `hideError` says.
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined.
-- `rawHelp`: A string containing any `ui:help` uiSchema directive defined. **NOTE:** `rawHelp` will be `undefined` if passed `ui:help` is a React component instead of a string.
+- `rawHelp`: The `ui:help` uiSchema directive as it was given, a `string` or a `ReactElement`, resolved the same way as the `help` component that renders it, so it is a truthy check for whether the field has any help at all.
 - `hidden`: A boolean value stating if the field should be hidden.
 - `required`: A boolean value stating if the field is required.
 - `readonly`: A boolean value stating if the field is read-only.
@@ -884,6 +882,55 @@ The following props are passed to the `GridTemplate`:
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
 
+## MarkdownTemplate
+
+The `MarkdownTemplate` renders field descriptions, `ui:help` text and the translatable strings that allow markdown.
+The core default renders them as plain text, so no markdown library is bundled.
+`@rjsf/core/markdown` exports a `MarkdownTemplate` built on [`markdown-to-jsx`](https://markdown-to-jsx.quantizor.dev/) with raw HTML parsing disabled; `markdown-to-jsx` is an optional peer dependency, so install it alongside `@rjsf/core` when you use this entry point.
+Register it and enable markdown for descriptions or help independently:
+
+```tsx
+import { Form } from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string', description: '**bolded** text in the description' };
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    templates={{ MarkdownTemplate }}
+    uiSchema={{ 'ui:globalOptions': { enableMarkdownInDescription: true, enableMarkdownInHelp: true } }}
+  />,
+  document.getElementById('app'),
+);
+```
+
+Like any template it can also be registered in a theme, or swapped per field with the `ui:MarkdownTemplate` uiSchema directive.
+
+Because the template is the renderer, any markdown behaviour is yours to choose: register your own component to use a different library, or to pass different options to `markdown-to-jsx`.
+Raw HTML, which the `@rjsf/core/markdown` renderer disables, is the common case:
+
+```tsx
+import { Markdown } from 'markdown-to-jsx/react';
+import { MarkdownTemplateProps } from '@rjsf/utils';
+
+/** Renders raw HTML embedded in markdown. Only register this when you control the markdown text — HTML from an
+ * untrusted source can inject scripts and styles into your page.
+ */
+function UnsafeHtmlMarkdownTemplate({ children }: MarkdownTemplateProps) {
+  return <Markdown>{children}</Markdown>;
+}
+```
+
+The following props are passed to the `MarkdownTemplate`:
+
+- `children`: The markdown text to render.
+- `uiSchema`: The uiSchema of the field whose text is being rendered, so a renderer can honour per-field `ui:options`.
+- `registry`: The `registry` object.
+
 ## MultiSchemaFieldTemplate
 
 Each theme implements a `MultiSchemaFieldTemplate` used to render the layout of a MultiSchemaField, i.e. a field described by a `oneOf` or `anyOf` schema.
@@ -932,6 +979,7 @@ render(
 
 The following props are passed to the `MultiSchemaFieldTemplate`:
 
+- `id`: The id of the field whose option is selected, which the selected option's field shares, and whose own errors the `selector` is given. It is unset when the template renders `FallbackFieldTemplate`'s type selector, which isn't given them.
 - `selector`: The rendered Widget used to select a multischema option.
 - `optionSchemaField`: The rendered SchemaField representing the selected option.
 - `schema`: The schema object for the field.
@@ -1011,8 +1059,9 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `hideError`: A boolean value stating if the field is hiding its errors.
 - `schema`: The schema object for this object.
 - `uiSchema`: The uiSchema object for this object field.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `errorSchema`: The optional validation errors in the form of an `ErrorSchema`
+- `rawErrors`: An array of strings listing the object's own errors, which `errorSchema` doesn't hold. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
 - `formData`: The form data for the object.
 - `registry`: The `registry` object.
 
@@ -1058,7 +1107,7 @@ const uiSchema = {
     enableOptionalDataFieldForType: ['object', 'array'],
   },
 };
-const experimental_defaultFormStateBehavior = {
+const defaultFormStateBehavior = {
   // Set the emptyObjectFields to only populate required defaults to highlight the code working
   emptyObjectFields: 'populateRequiredDefaults',
 };
@@ -1086,7 +1135,7 @@ render(
     schema={schema}
     validator={validator}
     uiSchema={uiSchema}
-    experimental_defaultFormStateBehavior={experimental_defaultFormStateBehavior}
+    defaultFormStateBehavior={defaultFormStateBehavior}
     templates={{ OptionalDataControlsTemplate }}
   />,
   document.getElementById('app'),
@@ -1176,7 +1225,7 @@ render(
 The following props are passed to each `UnsupportedFieldTemplate`:
 
 - `schema`: The schema object for this unsupported field.
-- `fieldPathId`: The FieldPathId of the field in the hierarchy
+- `id`: The id of the field in the hierarchy.
 - `reason`: The reason why the schema field has an unsupported type.
 - `registry`: The `registry` object.
 
@@ -1197,7 +1246,7 @@ const schema: RJSFSchema = {
 function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
   const {
     id,
-    label,
+    keyName,
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
@@ -1217,10 +1266,8 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
 
   return (
     <div className={classNames} style={style}>
-      <label label={keyLabel} id={`${id}-key`}>
-        Custom Field Key
-      </label>
-      <input className='form-control' type='text' id={`${id}-key`} onBlur={onKeyRenameBlur} defaultValue={label} />
+      <label htmlFor={`${id}-key`}>Custom Field Key</label>
+      <input className='form-control' type='text' id={`${id}-key`} onBlur={onKeyRenameBlur} defaultValue={keyName} />
       <div>{children}</div>
       <RemoveButton onClick={onRemoveProperty} uiSchema={uiSchema} />
     </div>
@@ -1241,6 +1288,8 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
+- `keyName`: The name of this field's property in its parent object, carrying none of the decoration `label` may have picked up — a `ui:title`, or the marker a `deprecated` schema adds.
+  The key of an `additionalProperties` property is this rather than its `label`, so renaming one reads and writes the real key.
 - `required`: A boolean value stating if the field is required.
 - `readonly`: A boolean value stating if the field is read-only.
 - `disabled`: A boolean value stating if the field is disabled.
@@ -1249,6 +1298,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `onKeyRename`: Callback used to handle the changing of an additional property key's name with the new value
 - `onKeyRenameBlur`: Callback used to handle the changing of an additional property key's name when the input is blurred. The event's target's value will be used as the new value. Its a wrapper callback around `onKeyRename`
 - `onRemoveProperty`: Callback used to handle the removal of the additionalProperty
+- `propertyNamesEnum`: The key names this property may be renamed to, derived from the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) and narrowed to the names its siblings have not already taken; `undefined` when the parent schema does not enumerate its property names. Render the key as a dropdown of those names when it is provided, which the `AdditionalPropertyKeySelect` component from `@rjsf/utils` does using the theme's own `SelectWidget`
 
 ## ButtonTemplates
 

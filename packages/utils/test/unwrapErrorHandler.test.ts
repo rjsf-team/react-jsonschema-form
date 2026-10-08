@@ -11,7 +11,7 @@ const POPULATED_WRAPPER: FormValidation = Object.entries(ERROR_MAPPER).reduce(
     propValidation?.addError(value);
     return validation;
   },
-  createErrorHandler(TEST_FORM_DATA) as FormValidation,
+  createErrorHandler(TEST_FORM_DATA),
 );
 
 describe('unwrapErrorHandler()', () => {

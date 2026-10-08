@@ -3,7 +3,7 @@ import { mergeDefaultsWithFormData } from '../src/index.ts';
 describe('mergeDefaultsWithFormData()', () => {
   it('shouldn`t mutate the provided objects', () => {
     const obj1 = { a: 1 };
-    mergeDefaultsWithFormData<any>(obj1, { b: 2 }); // oxlint-disable-line typescript/no-unnecessary-type-arguments
+    mergeDefaultsWithFormData<any>(obj1, { b: 2 });
     expect(obj1).toEqual({ a: 1 });
   });
 
@@ -112,7 +112,6 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
     expect(mergeDefaultsWithFormData<any>(obj1, obj2)).toEqual(expected);
   });
 
@@ -148,7 +147,6 @@ describe('mergeDefaultsWithFormData()', () => {
       },
       c: 3,
     };
-    // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
     expect(mergeDefaultsWithFormData<any>(obj1, obj2, true)).toEqual(expected);
   });
 
@@ -286,7 +284,6 @@ describe('mergeDefaultsWithFormData()', () => {
         },
         c: 2,
       };
-      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
       expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
@@ -324,14 +321,12 @@ describe('mergeDefaultsWithFormData()', () => {
         c: 2,
         d: 4,
       };
-      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
       expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
     });
 
     it('should deeply merge an array that sits under an object key', () => {
       const defaults = { outer: { rows: [{ name: 'Name', grade: 'A' }] } };
       const formData = { outer: { rows: [{ name: 'Name' }] } };
-      // oxlint-disable-next-line typescript/no-unnecessary-type-arguments
       expect(mergeDefaultsWithFormData<any>(defaults, formData, true, false, true)).toEqual({
         outer: { rows: [{ name: 'Name', grade: 'A' }] },
       });

@@ -1,21 +1,23 @@
 import { Fieldset, Box, Group } from '@mantine/core';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+
+import { useContainerErrors } from '../utils.tsx';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
  * @param props - The `ArrayFieldTemplateProps` props for the component
  */
 export default function ArrayFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     className,
     disabled,
-    fieldPathId,
+    id,
     items,
     optionalDataControl,
     onAddClick,
@@ -28,16 +30,7 @@ export default function ArrayFieldTemplate<
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
-    'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
@@ -46,7 +39,7 @@ export default function ArrayFieldTemplate<
 
   const legend = (uiOptions.title || title) && (
     <ArrayFieldTitleTemplate
-      fieldPathId={fieldPathId}
+      id={id}
       required={required}
       title={uiOptions.title || title}
       schema={schema}
@@ -56,12 +49,14 @@ export default function ArrayFieldTemplate<
     />
   );
 
+  const errors = useContainerErrors(props);
+
   return (
-    <Fieldset legend={legend} className={className} id={fieldPathId.$id}>
+    <Fieldset legend={legend} className={className} id={id}>
       {(uiOptions.description || schema.description) && (
         <ArrayFieldDescriptionTemplate
           description={uiOptions.description || schema.description}
-          fieldPathId={fieldPathId}
+          id={id}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -74,7 +69,7 @@ export default function ArrayFieldTemplate<
       {canAdd && (
         <Group justify='flex-end'>
           <AddButton
-            id={buttonId(fieldPathId, 'add')}
+            id={buttonId(id, 'add')}
             className='rjsf-array-item-add'
             disabled={disabled || readonly}
             onClick={onAddClick}
@@ -84,6 +79,7 @@ export default function ArrayFieldTemplate<
           />
         </Group>
       )}
+      {errors}
     </Fieldset>
   );
 }

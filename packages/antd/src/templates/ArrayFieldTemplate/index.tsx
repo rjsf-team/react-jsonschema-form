@@ -6,7 +6,7 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { getTemplate, getUiOptions, buttonId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import classNames from 'classnames';
 
@@ -15,15 +15,15 @@ import classNames from 'classnames';
  * @param props - The `ArrayFieldTemplateProps` props for the component
  */
 export default function ArrayFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     className,
     disabled,
-    fieldPathId,
+    id,
     items,
     optionalDataControl,
     onAddClick,
@@ -35,11 +35,7 @@ export default function ArrayFieldTemplate<
     uiSchema,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
-    'ArrayFieldTitleTemplate',
-    registry,
-    uiOptions,
-  );
+  const { ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   const { formContext } = registry;
   // Button templates are not overridden in the uiSchema
@@ -58,12 +54,12 @@ export default function ArrayFieldTemplate<
   );
 
   return (
-    <fieldset className={className} id={fieldPathId.$id}>
+    <fieldset className={className} id={id}>
       <Row gutter={rowGutter}>
         {(uiOptions.title || title) && (
           <Col className={labelColClassName} span={24}>
             <ArrayFieldTitleTemplate
-              fieldPathId={fieldPathId}
+              id={id}
               required={required}
               title={uiOptions.title || title}
               schema={schema}
@@ -82,7 +78,7 @@ export default function ArrayFieldTemplate<
             <Row gutter={rowGutter} justify='end'>
               <Col flex='120px'>
                 <AddButton
-                  id={buttonId(fieldPathId, 'add')}
+                  id={buttonId(id, 'add')}
                   className='rjsf-array-item-add'
                   disabled={disabled || readonly}
                   onClick={onAddClick}

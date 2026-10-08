@@ -3,32 +3,10 @@ packages:
 
 overrides:
   'sockjs>uuid': ^14.0.0
-  # Fixes security issues in form-data by overriding to safe version
-  'form-data': ^4.0.6
-  'axios>form-data': ^4.0.6
-  # Fixes security issues in tmp by overriding to safe version
-  'nx>tmp': ^0.2.7
   # Fixes security issues in dompurify by overriding to safe version
   'dompurify': ^3.4.11
-  'monaco-editor>dompurify': ^3.4.11
-  # Fixes security issues in undici by overriding to safe version
-  'undici': ^7.28.0
   # Fixes security issues in serialize-javascript by overriding to safe version
   'serialize-javascript': ^7.0.6
-  # Fixes security issues in http-proxy-middleware by overriding to safe version
-  'http-proxy-middleware': ^2.0.10
-  # Keeps optional @types/react peers on React 18 types, matching our sources
-  '@types/react': ^18.3.31
-  '@types/react-dom': ^18.3.7
-  # jsdom 30.1 extends the global Iterator, which Node 20 lacks
-  'jsdom': ~30.0.1
-
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - ata-validator
-  - core-js
-  - esbuild
-  - nx
 
 allowBuilds:
   '@parcel/watcher': true
@@ -36,3 +14,14 @@ allowBuilds:
   core-js: true
   esbuild: true
   nx: true
+
+# @mantine/hooks imports react-dom without declaring it, which a bundler can't resolve from the global virtual store.
+packageExtensions:
+  '@mantine/hooks':
+    peerDependencies:
+      react-dom: '*'
+
+virtualStoreType: global
+
+minimumReleaseAgeExclude:
+  - vite@8.3.2

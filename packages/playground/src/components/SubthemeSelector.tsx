@@ -34,11 +34,11 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
 
   const handleChange = useCallback(
     ({ formData }: IChangeEvent) => {
-      if (!formData) {
+      if (typeof formData !== 'string') {
         return;
       }
 
-      return select(formData, subthemes[formData]);
+      select(formData, subthemes[formData]);
     },
     [select, subthemes],
   );

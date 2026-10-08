@@ -11,6 +11,8 @@ export default defineConfig({
     conditions: ['@rjsf/source'],
   },
   test: {
+    // utils and validator tests fail when this is set to true
+    clearMocks: false,
     globals: true,
     environment: 'jsdom',
     // resolved against this file, so it works regardless of where a consuming config lives
@@ -27,7 +29,7 @@ export function fullCoverage(extraExcludes: string[] = []) {
     enabled: true,
     reportsDirectory: 'coverage',
     include: ['src/**'],
-    exclude: ['node_modules/**', 'test/**', '**/tsconfig.json', ...extraExcludes],
+    exclude: ['node_modules/**', 'test/**', ...extraExcludes],
     thresholds: {
       branches: 100,
       functions: 100,

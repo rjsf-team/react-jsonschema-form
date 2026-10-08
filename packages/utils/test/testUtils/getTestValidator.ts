@@ -12,7 +12,7 @@ import type { TestValidatorParams, TestValidatorType } from '../schema/types.ts'
  * All tests that use the `TestValidator` are contained within the `@rjsf/utils/test/schema` directory and are run via
  * the `schema.test.ts` file.
  */
-export default function getTestValidator<T = any>({
+export default function getTestValidator<T = unknown>({
   data = [],
   isValid = [],
   errorList = [],

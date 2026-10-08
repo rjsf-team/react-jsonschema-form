@@ -1,9 +1,9 @@
 import type { FocusEvent } from 'react';
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type {
+  EnumOptionsType,
   ErrorSchema,
-  FieldPathId,
-  FieldPathList,
+  FieldPath,
   FieldProps,
   FormContextType,
   GenericObjectType,
@@ -11,30 +11,40 @@ import type {
   RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
+  UiSchema,
 } from '@rjsf/utils';
 import {
   getByPath,
   hasByPath,
   setByPath,
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   deepEquals,
-  getTemplate,
+  getFreePropertyNames,
+  getMatchingPatternProperties,
+  getFieldTypeForWidget,
+  getTemplates,
   getPropertySchema,
   getUiOptions,
+  isConstantSelect,
   isFormDataAvailable,
+  isSchemaObject,
+  optionsList,
   orderProperties,
   shouldRenderOptionalField,
-  toFieldPathId,
-  useDeepCompareMemo,
+  toFieldPath,
+  fieldPathToId,
   ONE_OF_KEY,
   REF_KEY,
+  resolveUiSchema,
   isObject,
   TranslatableString,
+  uiBooleanOption,
 } from '@rjsf/utils';
-import { Markdown } from 'markdown-to-jsx/react';
 
-import { ADDITIONAL_PROPERTY_KEY_REMOVE } from '../constants.ts';
+import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
+import RichDescription from '../RichDescription.tsx';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -51,10 +61,11 @@ function isRequired<S extends StrictRJSFSchema = RJSFSchema>(schema: S, name: st
  * @param translateString - The string translation function from the registry
  * @param type - The type of the new additional schema property
  */
-function getDefaultValue<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  translateString: Registry<T, S, F>['translateString'],
-  type?: RJSFSchema['type'],
-) {
+function getDefaultValue<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(translateString: Registry<T, S, F>['translateString'], type?: string) {
   switch (type) {
     case 'array':
       return [];
@@ -62,6 +73,7 @@ function getDefaultValue<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
       return false;
     case 'null':
       return null;
+    case 'integer':
     case 'number':
       return 0;
     case 'object':
@@ -83,12 +95,45 @@ function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
   return Object.keys(schemaProperties).filter((property) => isAdditionalPropertySchema(schemaProperties[property]));
 }
 
+/** Picks the name a new additional property should prefer out of the `freeNames` the schema still allows. Without an
+ * `additionalProperties` schema to fall back on, a name matching none of the `patternProperties` patterns has no
+ * subschema of its own and `retrieveSchema()` stubs it as the unusable `{ type: 'null' }`, so a name that does match
+ * a pattern is worth more to the user than the first one the `enum` happens to list. It stays a preference rather
+ * than a restriction: the schema allows every name it enumerates, and a field the user can still rename beats no new
+ * property at all.
+ *
+ * @param schema - The object schema the property is being added to
+ * @param freeNames - The allowed names no property and no form data key has taken
+ * @returns - The free name to add under, or undefined when none is preferable to the first
+ */
+function findPreferredPropertyName<S extends StrictRJSFSchema = RJSFSchema>(schema: S, freeNames: string[]) {
+  if (!schema.patternProperties || isObject(schema.additionalProperties)) {
+    return undefined;
+  }
+  return freeNames.find((freeName) => Object.keys(getMatchingPatternProperties<S>(schema, freeName)).length > 0);
+}
+
 /** Props for the `ObjectFieldProperty` component */
 interface ObjectFieldPropertyProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> extends Omit<FieldProps<T, S, F>, 'name'> {
+  F extends FormContextType = FormContextType,
+> extends Pick<
+  FieldProps<T, S, F>,
+  | 'fieldPath'
+  | 'schema'
+  | 'registry'
+  | 'uiSchema'
+  | 'errorSchema'
+  | 'formData'
+  | 'onChange'
+  | 'onBlur'
+  | 'onFocus'
+  | 'disabled'
+  | 'readonly'
+  | 'required'
+  | 'hideError'
+> {
   /** The name of the property within the parent object */
   propertyName: string;
   /** Flag indicating whether this property was added by the additionalProperties UI */
@@ -97,15 +142,19 @@ interface ObjectFieldPropertyProps<
   handleKeyRename: (oldKey: string, newKey: string) => void;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
+  /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
+  propertyNamesEnum?: string[];
 }
 
 /** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
  */
-function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ObjectFieldPropertyProps<T, S, F>,
-) {
+function ObjectFieldPropertyFn<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ObjectFieldPropertyProps<T, S, F>) {
   const {
-    fieldPathId,
+    fieldPath,
     schema,
     registry,
     uiSchema,
@@ -122,13 +171,13 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
     handleKeyRename,
     handleRemoveProperty,
     addedByAdditionalProperties,
+    propertyNamesEnum,
   } = props;
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
   const { SchemaField } = fields;
-  const innerFieldIdPathId = useDeepCompareMemo<FieldPathId>(
-    toFieldPathId(propertyName, globalFormOptions, fieldPathId.path),
-  );
+  const innerFieldPath = toFieldPath(propertyName, fieldPath);
+  const innerFieldId = fieldPathToId(innerFieldPath, globalFormOptions);
 
   /** The `onChange` handler installed on this property's `SchemaField`. Handles the special case where the user
    * clears a value at this property's own path when it was added as an additional property, coercing `undefined`
@@ -136,7 +185,7 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
    * descendant of this property, is forwarded to `onChange()` untouched.
    */
   const onPropertyChange = useCallback(
-    (value: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (value: T | undefined, path: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       // An `additionalProperties` value lives at this property's own path, so clearing its widget to `undefined`
       // would drop the key from the formData and take the key input with it. Coerce that one case to the empty
       // string.
@@ -145,12 +194,12 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
       // descendant changed"; a cleared descendant must stay `undefined` so it is omitted from the formData
       // exactly like a cleared property declared in `properties` (#5222).
       let normalizedValue = value;
-      if (value === undefined && addedByAdditionalProperties && deepEquals(path, innerFieldIdPathId.path)) {
+      if (value === undefined && addedByAdditionalProperties && path === innerFieldPath) {
         normalizedValue = '' as unknown as T;
       }
       onChange(normalizedValue, path, newErrorSchema, id);
     },
-    [onChange, addedByAdditionalProperties, innerFieldIdPathId],
+    [onChange, addedByAdditionalProperties, innerFieldPath],
   );
 
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty.
@@ -192,12 +241,14 @@ function ObjectFieldPropertyFn<T = any, S extends StrictRJSFSchema = RJSFSchema,
       schema={schema}
       uiSchema={uiSchema}
       errorSchema={errorSchema}
-      fieldPathId={innerFieldIdPathId}
+      fieldPath={innerFieldPath}
+      id={innerFieldId}
       formData={formData}
       wasPropertyKeyModified={wasPropertyKeyModified}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
       onChange={onPropertyChange}
       onBlur={onBlur}
       onFocus={onFocus}
@@ -216,27 +267,32 @@ const ObjectFieldProperty = memo(ObjectFieldPropertyFn) as typeof ObjectFieldPro
  *
  * @param props - The `FieldProps` for this template
  */
-export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>,
-) {
+export default function ObjectField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: FieldProps<T, S, F>) {
   const {
     schema: rawSchema,
-    uiSchema = {},
+    uiSchema: rawUiSchema,
     formData,
     errorSchema,
-    fieldPathId,
+    fieldPath,
+    id,
     name,
     required = false,
     disabled,
     readonly,
     hideError,
+    rawErrors,
     onBlur,
     onFocus,
     onChange,
     registry,
     title,
   } = props;
-  const { fields, schemaUtils, translateString, globalUiOptions } = registry;
+  const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
+  const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
   const formDataRef = useRef(formData);
   formDataRef.current = formData;
@@ -246,16 +302,58 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   );
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
-  // All the children will use childFieldPathId if present in the props, falling back to the fieldPathId
-  const childFieldPathId = props.childFieldPathId ?? fieldPathId;
   const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
-  const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(() =>
-    getAdditionalPropertyOrder<S>(schemaProperties),
-  );
+  const schemaAdditionalProperties = useMemo(() => getAdditionalPropertyOrder<S>(schemaProperties), [schemaProperties]);
+  const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(schemaAdditionalProperties);
   const definedPropertyOrder = useMemo(() => {
-    const additionalPropertySet = new Set(getAdditionalPropertyOrder<S>(schemaProperties));
+    const additionalPropertySet = new Set(schemaAdditionalProperties);
     return Object.keys(schemaProperties).filter((property) => !additionalPropertySet.has(property));
-  }, [schemaProperties]);
+  }, [schemaProperties, schemaAdditionalProperties]);
+  // Depended on directly rather than through `schema`, which is a fresh object for every `formData` change, so the
+  // resolution below runs once per schema rather than once per keystroke anywhere in the object
+  const { propertyNames } = schema;
+  // Resolved so that a `propertyNames` written as a `$ref` or an `allOf` still yields its `enum`. Everything that
+  // reads the allowed names does so off this one schema — the dropdowns below, `onAddProperty`, and the
+  // `canExpand()` the `ObjectFieldTemplate` calls on the `schema` it is handed — so none of them can disagree with
+  // the others about which names the schema allows
+  const resolvedPropertyNames = useMemo(() => {
+    if (!isObject(propertyNames)) {
+      return undefined;
+    }
+    try {
+      return schemaUtils.retrieveSchema(propertyNames as S);
+    } catch {
+      // A `$ref` that names no definition, or one that resolves circularly, is for the validator to report: nothing
+      // else in the form reads `propertyNames`, so a throw here would take down an object that otherwise renders.
+      // The unresolved schema stands in, enumerating nothing, which is what an unconstrained object already does
+      return propertyNames as S;
+    }
+  }, [propertyNames, schemaUtils]);
+  const resolvedSchema = useMemo(
+    () => (resolvedPropertyNames ? { ...schema, propertyNames: resolvedPropertyNames } : schema),
+    [resolvedPropertyNames, schema],
+  );
+  /** The names each property may be renamed to, keyed by its current name. A name a sibling already holds is left out
+   * because renaming onto a taken name de-duplicates it to `name-1`, which `propertyNames` then rejects. A property
+   * left with no name to offer — every allowed name is taken and its own is not one of them — is absent from the map,
+   * so it keeps the free-text key input rather than getting a dropdown it can pick nothing from.
+   */
+  const allowedPropertyNames = useMemo(() => {
+    // `retrieveSchema()` stubs every key of the form data in among the properties, so the properties alone already
+    // name everything taken and the form data would add nothing but a dependency that changes on every keystroke
+    if (getFreePropertyNames<T, S>(resolvedSchema) === undefined) {
+      return undefined;
+    }
+    // Only an additional property is offered the dropdown, so a declared one has no use for a list of its own
+    return new Map(
+      getAdditionalPropertyOrder<S>(resolvedSchema.properties ?? {})
+        .map((property): [string, string[]] => [
+          property,
+          getFreePropertyNames<T, S>(resolvedSchema, undefined, property) ?? [],
+        ])
+        .filter(([, allowedNames]) => allowedNames.length > 0),
+    );
+  }, [resolvedSchema]);
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
@@ -272,7 +370,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
    */
   const getAvailableKey = useCallback(
     (preferredKey: string, existingFormData?: T) => {
-      const { duplicateKeySuffixSeparator = '-' } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
+      const { duplicateKeySuffixSeparator = '-' } = uiOptions;
 
       let index = 0;
       let newKey = preferredKey;
@@ -282,7 +380,7 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       }
       return newKey;
     },
-    [uiSchema, globalUiOptions],
+    [uiOptions],
   );
 
   /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new
@@ -292,31 +390,80 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
-    const newFormData = { ...formData } as T;
-    const newKey = getAvailableKey('newKey', newFormData);
+    // A `type` list naming `object` alongside another type can hold a value of that type here, which has no properties
+    // to keep, and a string spread into an object would turn each of its characters into one
+    const newFormData = (isObject(formData) ? { ...formData } : {}) as T;
+    // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
+    // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
+    // with none left means a custom template is offering it anyway, and adding no property beats adding one the
+    // schema forbids
+    const freeNames = getFreePropertyNames<T, S>(resolvedSchema, formData);
+    if (freeNames?.length === 0) {
+      return;
+    }
+    const preferredKey = freeNames ? (findPreferredPropertyName<S>(schema, freeNames) ?? freeNames[0]) : 'newKey';
+    const newKey = getAvailableKey(preferredKey, newFormData);
     if (schema.patternProperties) {
       setByPath(newFormData, newKey, null);
     } else {
-      let type: RJSFSchema['type'] = undefined;
+      let type: ReturnType<typeof getFieldTypeForWidget> = undefined;
       let constValue: RJSFSchema['const'] = undefined;
       let defaultValue: RJSFSchema['default'] = undefined;
-      if (isObject(schema.additionalProperties)) {
-        type = schema.additionalProperties.type;
+      let firstOption: EnumOptionsType<S> | undefined;
+      if (isSchemaObject<S>(schema.additionalProperties)) {
         constValue = schema.additionalProperties.const;
         defaultValue = schema.additionalProperties.default;
         let apSchema = schema.additionalProperties;
-        if (REF_KEY in apSchema) {
+        const wasRef = REF_KEY in apSchema;
+        if (wasRef) {
           apSchema = schemaUtils.retrieveSchema({ [REF_KEY]: apSchema[REF_KEY] } as S, formData);
-          type = apSchema.type;
           constValue = apSchema.const;
-          defaultValue = schemaUtils.getDefaultFormState(apSchema as S, defaultValue as T) as RJSFSchema['default'];
+        }
+        const apUiSchema = getByPath<UiSchema<T, S, F> | undefined>(uiSchema, ADDITIONAL_PROPERTIES_KEY);
+        // The type of the field that renders the new value, which for a `type` list follows its widget, so a
+        // `textarea` on a `['null', 'number', 'string']` starts as a string rather than as a `0` in the textarea. The
+        // widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in and
+        // without `ui:globalOptions`
+        const resolvedApUiSchema = resolveUiSchema<T, S, F>(schema.additionalProperties, apUiSchema, {
+          rootSchema,
+          uiSchemaDefinitions,
+        });
+        const { widget, enumDisabled } = getUiOptions<T, S, F>(resolvedApUiSchema);
+        type = getFieldTypeForWidget(apSchema, widget);
+        // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
+        // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled. The
+        // `ui:enumDisabled` values match strictly, and one that isn't a list disables nothing, as the widgets read it
+        if (isConstantSelect<S>(apSchema)) {
+          const enabledOptions = (optionsList<T, S, F>(apSchema, resolvedApUiSchema) ?? []).filter(
+            (option) =>
+              !(Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)),
+          );
+          const zeroValue = getDefaultValue<T, S, F>(translateString, type);
+          firstOption = enabledOptions.some((option) => deepEquals(option.value, zeroValue))
+            ? undefined
+            : enabledOptions[0];
         }
         if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
           type = 'object';
         }
+        // Route through the normal default pipeline (the same one an existing additionalProperties entry already
+        // goes through) for every additionalProperties shape — not just object/$ref — so nested schema defaults and
+        // ui:initialValue/ui:emptyValue on uiSchema.additionalProperties apply the same way they do when Form first
+        // mounts with that key already present in formData.
+        defaultValue = schemaUtils.getDefaultFormState(
+          apSchema,
+          defaultValue as T,
+          undefined,
+          undefined,
+          apUiSchema,
+          uiSchemaDefinitions,
+        ) as RJSFSchema['default'];
       }
 
-      const newValue = constValue ?? defaultValue ?? getDefaultValue<T, S, F>(translateString, type);
+      let newValue: unknown = constValue !== undefined ? constValue : defaultValue;
+      if (newValue === undefined) {
+        newValue = firstOption ? firstOption.value : getDefaultValue<T, S, F>(translateString, type);
+      }
       setByPath(newFormData, newKey, newValue);
     }
 
@@ -325,8 +472,20 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
       lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
     }
     setAdditionalPropertyOrder((order) => [...order, newKey]);
-    onChange(newFormData, childFieldPathId.path);
-  }, [formData, onChange, translateString, schemaUtils, childFieldPathId, getAvailableKey, schema]);
+    onChange(newFormData, fieldPath);
+  }, [
+    formData,
+    onChange,
+    translateString,
+    schemaUtils,
+    fieldPath,
+    getAvailableKey,
+    schema,
+    resolvedSchema,
+    uiSchema,
+    uiSchemaDefinitions,
+    rootSchema,
+  ]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.
@@ -357,10 +516,10 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
         }
         lastRenamedProperty.current.currentKey = actualNewKey;
         setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
-        onChange(renamedObj, childFieldPathId.path);
+        onChange(renamedObj, fieldPath);
       }
     },
-    [onChange, childFieldPathId, getAvailableKey],
+    [onChange, fieldPath, getAvailableKey],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
@@ -369,9 +528,9 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleRemoveProperty = useCallback(
     (key: string) => {
       setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
-      onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, [...childFieldPathId.path, key]);
+      onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, toFieldPath(key, fieldPath));
     },
-    [onChange, childFieldPathId],
+    [onChange, fieldPath],
   );
 
   /** Returns the stable React key for a property. For the most recently renamed
@@ -389,17 +548,32 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
   if (!renderOptionalField || hasFormData) {
     try {
       const definedPropertySet = new Set(definedPropertyOrder);
-      const currentAdditionalProperties = additionalPropertyOrder.filter(
+      // A set, since an add or rename the parent declined leaves its key in the order, and proposing that key again
+      // appends it a second time
+      const orderedSet = new Set(additionalPropertyOrder);
+      const currentAdditionalProperties = [...orderedSet].filter(
         (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
       );
-      orderedProperties = orderProperties([...definedPropertyOrder, ...currentAdditionalProperties], uiOptions.order);
+      // A property in the data but not in the order was not added or renamed here: the parent supplied it, or it kept
+      // the name a rename proposed away because the parent declined the rename. Either way it renders, after the ones
+      // whose order is known
+      const unorderedAdditionalProperties = schemaAdditionalProperties.filter((property) => !orderedSet.has(property));
+      orderedProperties = orderProperties(
+        [...definedPropertyOrder, ...currentAdditionalProperties, ...unorderedAdditionalProperties],
+        uiOptions.order,
+      );
     } catch (err) {
       return (
         <div>
           <p className='rjsf-config-error' style={{ color: 'red' }}>
-            <Markdown options={{ disableParsingRawHTML: true }}>
-              {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
-            </Markdown>
+            <RichDescription
+              description={translateString(TranslatableString.InvalidObjectField, [
+                name || 'root',
+                err instanceof Error ? err.message : String(err),
+              ])}
+              registry={registry}
+              uiSchema={uiSchema}
+            />
           </p>
           <pre>{JSON.stringify(schema)}</pre>
         </div>
@@ -407,18 +581,22 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     }
   }
 
-  const Template = getTemplate<'ObjectFieldTemplate', T, S, F>('ObjectFieldTemplate', registry, uiOptions);
+  const { ObjectFieldTemplate: Template } = getTemplates<T, S, F>(registry, uiOptions);
   const optionalDataControl = renderOptionalField ? (
-    <OptionalDataControlsField {...props} fieldPathId={childFieldPathId} schema={schema} />
+    <OptionalDataControlsField {...props} schema={schema} />
   ) : undefined;
 
+  // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
+  const showLabel = uiBooleanOption(uiOptions.label) ?? true;
   const templateProps = {
-    // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
-    title: uiOptions.label === false ? '' : templateTitle,
-    description: uiOptions.label === false ? undefined : description,
+    title: showLabel ? templateTitle : '',
+    description: showLabel ? description : undefined,
     properties: orderedProperties.map((propertyName) => {
       const addedByAdditionalProperties = isAdditionalPropertySchema(schema.properties?.[propertyName]);
-      const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[propertyName];
+      const fieldUiSchema = getByPath<UiSchema<T, S, F> | undefined>(
+        uiSchema,
+        addedByAdditionalProperties ? ADDITIONAL_PROPERTIES_KEY : propertyName,
+      );
       const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
       const content = (
         <ObjectFieldProperty<T, S, F>
@@ -428,11 +606,12 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
           schema={getPropertySchema<S>(schema, propertyName)}
           uiSchema={fieldUiSchema}
           errorSchema={getByPath(errorSchema, propertyName)}
-          fieldPathId={childFieldPathId}
+          fieldPath={fieldPath}
           formData={getByPath(formData, propertyName)}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
           addedByAdditionalProperties={addedByAdditionalProperties}
+          propertyNamesEnum={addedByAdditionalProperties ? allowedPropertyNames?.get(propertyName) : undefined}
           onChange={onChange}
           onBlur={onBlur}
           onFocus={onFocus}
@@ -454,10 +633,12 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     readonly,
     disabled,
     required,
-    fieldPathId,
+    hideError,
+    rawErrors,
+    id,
     uiSchema,
     errorSchema,
-    schema,
+    schema: resolvedSchema,
     formData,
     registry,
     optionalDataControl,

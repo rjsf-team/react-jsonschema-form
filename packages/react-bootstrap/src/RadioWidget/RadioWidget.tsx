@@ -3,27 +3,21 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   enumOptionsIsSelected,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
-import Form from 'react-bootstrap/Form';
+import { Form } from 'react-bootstrap';
 
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  htmlName,
-  options,
-  value,
-  required,
-  disabled,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps<T, S, F>) {
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, htmlName, options, value, required, disabled, readonly, onChange, onBlur, onFocus }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = ({ target: { value: enumValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(enumOptionValueDecoder<S>(enumValue, enumOptions, optionValueFormat, emptyValue));
@@ -38,21 +32,23 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     <Form.Group className='mb-0'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
-          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
-          const checked = enumOptionsIsSelected<S>(option.value, value);
+          const itemDisabled =
+            Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
+          const checked = enumOptionsIsSelected<S>(option.value, value, false);
 
           const radio = (
             <Form.Check
               inline={inline}
               label={option.label}
               id={optionId(id, index)}
-              key={String(option.value)}
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
               name={htmlName || id}
               type='radio'
               disabled={disabled || itemDisabled || readonly}
               checked={checked}
               required={required}
-              value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
+              value={domValues[index]}
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}

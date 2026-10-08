@@ -2,10 +2,10 @@ import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
-import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps, labelValue } from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
+import { examplesId, getExampleSuggestions, getInputProps, labelValue } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -14,9 +14,9 @@ import { cleanupOptions } from '../utils.ts';
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  T = unknown,
+  S extends RJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -36,25 +36,22 @@ export default function BaseInputTemplate<
     onBlur,
     onFocus,
     options,
-    rawErrors,
     children,
     registry,
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const description = hideLabel ? undefined : options.description || schema.description;
   const themeProps = cleanupOptions(options);
+  const descriptionProps = getDescriptionProps(props);
 
   const handleNumberChange = useCallback((newValue: number | string) => onChange(newValue), [onChange]);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const handler = onChangeOverride || onChange;
-      const newValue = e.target.value === '' ? options.emptyValue : e.target.value;
-      handler(newValue);
+      onChange(e.target.value === '' ? options.emptyValue : e.target.value);
     },
-    [onChange, onChangeOverride, options],
+    [onChange, options.emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -80,6 +77,8 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   const componentProps = {
     id,
     name: htmlName || id,
@@ -90,38 +89,45 @@ export default function BaseInputTemplate<
     onBlur: !readonly ? handleBlur : undefined,
     onFocus: !readonly ? handleFocus : undefined,
     placeholder,
-    error: rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined,
-    list: schema.examples ? examplesId(id) : undefined,
+    error: useVisibleErrors(props),
+    list: hasExamples ? examplesId(id) : undefined,
   };
 
   const { min, max, ...restInputProps } = inputProps;
 
-  const input =
-    inputProps.type === 'number' || inputProps.type === 'integer' ? (
-      <NumberInput
-        onChange={!readonly ? handleNumberChange : undefined}
-        {...componentProps}
-        {...restInputProps}
-        {...themeProps}
-        step={typeof inputProps.step === 'number' ? inputProps.step : 1}
-        type='text'
-        description={description}
-        value={value ?? ''}
-        min={typeof min === 'number' ? min : undefined}
-        max={typeof max === 'number' ? max : undefined}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    ) : (
-      <TextInput
-        onChange={!readonly ? handleChange : undefined}
-        {...componentProps}
-        {...inputProps}
-        {...themeProps}
-        description={description}
-        value={value ?? ''}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
-      />
-    );
+  // Mantine's `NumberInput` reports only the parsed value, never the `ChangeEvent` an `onChangeOverride` is declared
+  // to receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
+  const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
+
+  const ariaDescribedByProps = useAriaDescribedByProps(isNumeric ? 'NumberInput' : 'TextInput', id, options, {
+    includeExamples: hasExamples,
+  });
+
+  const input = isNumeric ? (
+    <NumberInput
+      onChange={!readonly ? handleNumberChange : undefined}
+      {...componentProps}
+      {...restInputProps}
+      {...themeProps}
+      step={typeof inputProps.step === 'number' ? inputProps.step : 1}
+      type='text'
+      {...ariaDescribedByProps}
+      {...descriptionProps}
+      value={value ?? ''}
+      min={typeof min === 'number' ? min : undefined}
+      max={typeof max === 'number' ? max : undefined}
+    />
+  ) : (
+    <TextInput
+      onChange={!readonly ? (onChangeOverride ?? handleChange) : undefined}
+      {...componentProps}
+      {...inputProps}
+      {...themeProps}
+      {...ariaDescribedByProps}
+      {...descriptionProps}
+      value={value ?? ''}
+    />
+  );
 
   return (
     <>
@@ -130,7 +136,7 @@ export default function BaseInputTemplate<
         <ClearButton registry={registry} onClick={handleClear} />
       )}
       {children}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

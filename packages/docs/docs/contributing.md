@@ -41,7 +41,7 @@ pnpm run clean-build
 ```
 
 The first command will delete all of the `node_modules` directories in the environment and then rerun `pnpm install`.
-The second command cleans up the typescript build cache files before retrying the build.
+The second command deletes every package's built `lib/` before retrying the build.
 
 Worst case scenario when neither of those commands work, try running `pnpm run nuke-build-env` and then rerun the two commands.
 
@@ -51,10 +51,10 @@ When building in environments with limited memory, such as Netlify, it's recomme
 
 ## Coding style
 
-All the JavaScript/Typescript code in this project conforms to the [prettier](https://github.com/prettier/prettier) coding style.
-Code is automatically prettified upon commit using precommit hooks, assuming you followed the `First time step` above.
+All the JavaScript/Typescript code in this project is formatted with [oxfmt](https://oxc.rs/docs/guide/usage/formatter) and linted with [oxlint](https://oxc.rs/docs/guide/usage/linter).
+Staged files are automatically formatted upon commit using precommit hooks, assuming you followed the `First time step` above.
 
-You can also run `pnpm cs-format` within any package directory you are changing.
+You can also run `pnpm cs-format` from the repository root.
 
 ## Documentation
 
@@ -78,13 +78,9 @@ pnpm run test
 ### Snapshot testing
 
 All the themes, including `core` use snapshot testing (NOTE: `core` also has extensive non-snapshot tests).
-The source-code of these snapshot tests reside in the `core` package in the `testSnap` directory and are shared with all the themes.
-In order to support the various themes, the code for the tests are actually functions that take two parameters:
-
-- `Form`: ComponentType&lt;FormProps> - The component from the theme implementation
-- `[customOptions]`: \{ [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
-
-There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `objectTests`, each with its own definition of `customOptions`
+The source-code of these snapshot tests resides in the `snapshot-tests` package and is shared with all the themes. `core`'s own snapshot tests live in `packages/snapshot-tests/test`, since `snapshot-tests` depends on `core`.
+In order to support the various themes, the code for the tests are actually functions that take the theme's `Form` component (`ComponentType<FormProps>`).
+The `snapshot-tests` package provides `arrayTests`, `formTests` and `objectTests`, plus `gridTests`, which also takes a map of the props (such as `className`s) that the theme's layout grid needs for each row and column width.
 
 Each theme will basically run these functions by creating a `Xxx.test.tsx` file (where `Xxx` is `Array`, `Form` or `Object`) that looks like the following:
 
@@ -100,7 +96,17 @@ arrayTests(Form); // OR
 // objectTests(Form);
 ```
 
-Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `testSnap` directory and do `pnpm run test` from the root directory to update all the snapshots.
+The suites expect `getTestIds` from `@rjsf/utils` to be mocked out before the theme's `Form` is imported, so each theme's `vitest.config.mts` also lists the shared setup file. Without it the tests still pass, but the snapshots pick up numbered `data-testid` values that the other themes don't produce:
+
+```ts
+export default mergeConfig(base, {
+  test: {
+    setupFiles: ['../snapshot-tests/src/setup.ts'],
+  },
+});
+```
+
+Anytime you add a new feature, be sure to update the appropriate `xxxTests()` function in the `snapshot-tests` package and do `pnpm run test:update` from the root directory to update all the snapshots.
 If you add a theme-only feature, it is ok to update the appropriate `Xxx.test.tsx` file to add (or update) the theme-specific `describe()` block.
 For example:
 

@@ -3,7 +3,7 @@ import FormControl from '@mui/material/FormControl';
 import type { TypographyProps } from '@mui/material/Typography';
 import Typography from '@mui/material/Typography';
 import type { FieldTemplateProps, FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
 
@@ -24,9 +24,9 @@ export interface FieldTemplateMuiProps extends GenericObjectType {
  * @param props - The `FieldTemplateProps` for this component
  */
 export default function FieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
@@ -37,12 +37,15 @@ export default function FieldTemplate<
     displayLabel,
     hidden,
     label,
+    keyName,
     onKeyRename,
     onKeyRenameBlur,
     onRemoveProperty,
+    propertyNamesEnum,
     readonly,
     required,
-    rawErrors = [],
+    rawErrors,
+    hideError,
     errors,
     help,
     description,
@@ -52,11 +55,8 @@ export default function FieldTemplate<
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
-    'WrapIfAdditionalTemplate',
-    registry,
-    uiOptions,
-  );
+  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
@@ -73,11 +73,13 @@ export default function FieldTemplate<
       disabled={disabled}
       id={id}
       label={label}
+      keyName={keyName}
       displayLabel={displayLabel}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
       readonly={readonly}
       required={required}
       schema={schema}
@@ -86,7 +88,7 @@ export default function FieldTemplate<
     >
       <FormControl
         fullWidth
-        error={!!rawErrors.length}
+        error={hasError}
         required={required}
         {...muiSlotProps?.fieldFormControl}
         sx={otherMuiProps.sx}

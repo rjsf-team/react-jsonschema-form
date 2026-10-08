@@ -4,7 +4,7 @@ import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -16,7 +16,11 @@ import { Radio } from 'antd';
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   autofocus,
   disabled,
   registry,
@@ -34,6 +38,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = ({ target: { value: nextValue } }: RadioChangeEvent) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
@@ -44,7 +49,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
-  const selectValue = enumOptionSelectedValue<S>(value, enumOptions, false, optionValueFormat, emptyValue);
+  const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, emptyValue);
 
   return (
     <Radio.Group
@@ -63,9 +68,13 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             id={optionId(id, i)}
             name={htmlName || id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.includes(option.value))}
-            key={String(option.value)}
-            value={enumOptionValueEncoder(option.value, i, optionValueFormat)}
+            disabled={
+              disabled ||
+              (Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value))
+            }
+            // oxlint-disable-next-line react/no-array-index-key
+            key={i}
+            value={domValues[i]}
           >
             {option.label}
           </Radio>

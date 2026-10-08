@@ -2,16 +2,16 @@ import type { FocusEvent } from 'react';
 import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
 import { Field as ChakraField, Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplate, getUiOptions, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, descriptionId, getTemplates, getUiOptions, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Field } from '../components/ui/field.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, isInputElement } from '../utils.ts';
 
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -30,19 +30,17 @@ export default function CheckboxWidget<
     schema,
     required,
   } = props;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
+  const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const uiOptions = getUiOptions(uiSchema);
   const isCheckbox = uiOptions.widget === 'checkbox';
   const description = isCheckbox ? undefined : (options.description ?? schema.description);
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
   const handleChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target?.checked);
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target?.checked);
+  const handleBlur = ({ target }: FocusEvent<HTMLElement>) =>
+    onBlur(id, isInputElement(target) ? target.checked : undefined);
+  const handleFocus = ({ target }: FocusEvent<HTMLElement>) =>
+    onFocus(id, isInputElement(target) ? target.checked : undefined);
 
   const chakraProps = getChakra({ uiSchema });
 

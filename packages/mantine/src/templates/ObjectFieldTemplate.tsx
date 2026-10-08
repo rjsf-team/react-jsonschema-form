@@ -7,7 +7,9 @@ import type {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import { buttonId, canExpand, descriptionId, getTemplates, getUiOptions, titleId } from '@rjsf/utils';
+
+import { useContainerErrors } from '../utils.tsx';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -16,9 +18,9 @@ import { buttonId, canExpand, descriptionId, getTemplate, getUiOptions, titleId 
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
 export default function ObjectFieldTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     title,
@@ -31,17 +33,12 @@ export default function ObjectFieldTemplate<
     required,
     schema,
     uiSchema,
-    fieldPathId,
+    id,
     formData,
     registry,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
-  );
+  const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
@@ -50,12 +47,13 @@ export default function ObjectFieldTemplate<
   const gridCols = (typeof uiOptions?.gridCols === 'number' && uiOptions?.gridCols) || undefined;
   const gridSpacing = uiOptions?.gridSpacing;
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
+  const errors = useContainerErrors(props);
 
   return (
-    <Container id={fieldPathId.$id} p={0} fluid>
+    <Container id={id} p={0} fluid>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -66,7 +64,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(fieldPathId)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -82,14 +80,14 @@ export default function ObjectFieldTemplate<
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties
           .filter((e) => !e.hidden)
-          .map((element: ObjectFieldTemplatePropertyType) => (
+          .map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
             <Box key={element.name}>{element.content}</Box>
           ))}
       </SimpleGrid>
       {canExpand(schema, uiSchema, formData) && (
         <Group mt='xs' justify='flex-end'>
           <AddButton
-            id={buttonId(fieldPathId, 'add')}
+            id={buttonId(id, 'add')}
             disabled={disabled || readonly}
             onClick={onAddProperty}
             className='rjsf-object-property-expand'
@@ -98,6 +96,7 @@ export default function ObjectFieldTemplate<
           />
         </Group>
       )}
+      {errors}
     </Container>
   );
 }

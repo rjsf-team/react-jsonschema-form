@@ -1,11 +1,11 @@
-import type { ChangeEvent, FocusEvent, ReactElement } from 'react';
+import type { ChangeEvent, ComponentType, FocusEvent, ReactElement } from 'react';
+import { forwardRef, memo } from 'react';
 import type {
   ErrorSchema,
-  FieldPathId,
+  FieldPath,
   FieldPathList,
   FieldProps,
   GenericObjectType,
-  GlobalFormOptions,
   Registry,
   RJSFSchema,
   UiSchema,
@@ -16,13 +16,15 @@ import {
   DISCRIMINATOR_PATH,
   ErrorSchemaBuilder,
   getUiOptions,
-  ID_KEY,
   LOOKUP_MAP_NAME,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   retrieveSchema,
   sortedJSONStringify,
-  toFieldPathId,
+  toFieldPath,
+  fieldPathToId,
+  fieldPathToList,
+  ROOT_FIELD_PATH,
   UI_GLOBAL_OPTIONS_KEY,
   getByPath,
   hasByPath,
@@ -31,7 +33,7 @@ import {
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
 import type { LayoutGridFieldProps } from '../src/components/fields/LayoutGridField.tsx';
@@ -47,8 +49,9 @@ import LayoutGridField, {
   LAYOUT_GRID_OPTION,
   Operators,
 } from '../src/components/fields/LayoutGridField.tsx';
-import getTestRegistry from '../src/getTestRegistry.tsx';
+import { getTestRegistry } from '../src/testing.ts';
 import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData.ts';
+import { setupConsoleWarnSuppression } from './testUtils.tsx';
 
 const ColumnWidth3 = 'col-xs-3';
 const ColumnWidth4 = 'col-xs-4';
@@ -654,7 +657,6 @@ const DEFAULT_ID = 'test-id';
 // Stringify the FieldProps, minus the registry, hasFormData and optionalObjectNode in the uiSchema
 // The registry causes an infinite loop and hasFormData & optionalObjectNode are tested elsewhere
 function stringifyProps(props: Partial<FieldProps>) {
-  // oxlint-disable-next-line no-unused-vars
   const { uiSchema, registry, ...otherProps } = props;
   const { ...otherUIOptions } = getUiOptions(uiSchema);
   return sortedJSONStringify({ ...otherProps, otherUIOptions });
@@ -665,26 +667,28 @@ function TestRenderer({ 'data-testid': testId, ...props }: Readonly<FieldProps>)
   return <strong data-testid={testId}>{stringifyProps(props)}</strong>;
 }
 
+// An element where a component was expected, given as a `render` or found under a `render`'s lookup name
+// @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+const testRendererElement = <TestRenderer />;
+
 // Render a div with the props stringified in a span, also render an input to test the onXXXX callbacks
 function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProps>) {
-  const { fieldPathId, formData, onChange, onBlur, onFocus, uiSchema } = props;
-  const { [ID_KEY]: id } = fieldPathId;
+  const { fieldPath, id, formData, onChange, onBlur, onFocus, uiSchema } = props;
   // Special test case that will pass an error schema into on change to allow coverage
   const error = hasByPath(uiSchema, UI_GLOBAL_OPTIONS_KEY) ? EXTRA_ERROR : undefined;
   const onTextChange = ({ target: { value: val } }: ChangeEvent<HTMLInputElement>) => {
-    onChange(val, fieldPathId.path, error, id);
+    onChange(val, fieldPath, error, id);
   };
   const onTextBlur = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
   return (
     <div data-testid={testId}>
       <span id={id}>{stringifyProps(props)}</span>
-      <input value={formData} onChange={onTextChange} onBlur={onTextBlur} onFocus={onTextFocus} />
+      <input value={formData as string} onChange={onTextChange} onBlur={onTextBlur} onFocus={onTextFocus} />
     </div>
   );
 }
 
-// oxlint-disable-next-line no-unused-vars
 const LOOKUP_MAP: Record<string, string | ((props: FieldProps) => ReactElement)> = {
   FooClass: 'Foo',
   BarClass: 'Bar',
@@ -750,17 +754,17 @@ const FORWARDED_PROPS = ['disabled', 'autofocus', 'readonly', 'formContext'];
 /** Children for rows and columns
  */
 const GRID_CHILDREN = ['simpleString', 'simpleInt'];
-const FIELD_PATH_ID = toFieldPathId(DEFAULT_ID, readonlySchemaRegistry.globalFormOptions);
+const FIELD_PATH = toFieldPath(DEFAULT_ID);
 const NO_SCHEMA_OR_OPTIONS = {
   schema: undefined,
   isRequired: false,
   isReadonly: undefined,
   optionsInfo: undefined,
-  fieldPathId: FIELD_PATH_ID,
+  fieldPath: FIELD_PATH,
 };
 
-function fieldPathIdFromPaths(paths: FieldPathList, globalFormOptions: GlobalFormOptions, base: FieldPathId) {
-  return toFieldPathId('', globalFormOptions, [...base.path, ...paths]);
+function fieldPathFromPaths(paths: FieldPathList, base: FieldPath) {
+  return paths.reduce<FieldPath>((acc, segment) => toFieldPath(segment, acc), base);
 }
 
 /** Function used to transform `props` the `field` additional `otherProps` and `otherUiProps` into a set of
@@ -794,16 +798,16 @@ function getExpectedPropsForField(
   const readonly = getByPath<boolean>(schema, 'readOnly');
   // Get the options from the schema's oneOf, if any
   const options = getByPath<RJSFSchema[]>(schema, ONE_OF_KEY);
-  // Drill down in the uiSchema, errorSchema, fieldPathId and formData to the field
+  // Drill down in the uiSchema, errorSchema, fieldPath and formData to the field
   const uiSchema = getByPath<UiSchema>(props.uiSchema, toPath(field));
   const errorSchema = getByPath<ErrorSchema>(props.errorSchema, toPath(field));
-  const fieldPathId = fieldPathIdFromPaths(paths, globalFormOptions, props.fieldPathId!);
+  const fieldPath = fieldPathFromPaths(paths, props.fieldPath!);
   const formData = getByPath<GenericObjectType>(props.formData, toPath(field));
   // Also extract any global props
   const global = getByPath<GenericObjectType>(props.uiSchema, [UI_GLOBAL_OPTIONS_KEY]);
   const fieldUISchema = getByPath<UiSchema>(props.uiSchema, toPath(field));
   const { readonly: uiReadonly } = getUiOptions(fieldUISchema);
-  // The expected props are the FORWARDED_PROPS, the field name, sub-schema, sub-uiSchema and sub-fieldPathId
+  // The expected props are the FORWARDED_PROPS, the field name, sub-schema, sub-uiSchema and sub-fieldPath
   return {
     ...Object.fromEntries(
       FORWARDED_PROPS.filter((key) => key in props).map((key) => [key, (props as GenericObjectType)[key]]),
@@ -820,7 +824,8 @@ function getExpectedPropsForField(
       [UI_OPTIONS_KEY]: { ...global, ...otherUiProps }, // spread the global and other ui keys into the ui:options
       ...(global ? { [UI_GLOBAL_OPTIONS_KEY]: global } : {}), // ensure the globals are maintained
     },
-    fieldPathId,
+    fieldPath,
+    id: fieldPathToId(fieldPath, globalFormOptions),
     errorSchema,
   };
 }
@@ -847,7 +852,8 @@ describe('LayoutGridField', () => {
       disabled,
       formData,
       errorSchema,
-      fieldPathId: FIELD_PATH_ID,
+      fieldPath: FIELD_PATH,
+      id: fieldPathToId(FIELD_PATH, registry.globalFormOptions),
       registry,
       schema,
       uiSchema,
@@ -945,34 +951,35 @@ describe('LayoutGridField', () => {
     });
   });
   describe('computeArraySchemasIfPresent()', () => {
-    test('returns undefined rawSchema and given fieldPathId for non-numeric potentialIndex', () => {
-      expect(computeArraySchemasIfPresent(undefined, FIELD_PATH_ID, 'string')).toEqual({
+    test('returns undefined rawSchema and index for non-numeric potentialIndex', () => {
+      expect(computeArraySchemasIfPresent(undefined, 'string')).toEqual({
         rawSchema: undefined,
-        fieldPathId: FIELD_PATH_ID,
+        index: undefined,
       });
     });
-    test('returns undefined rawSchema and given fieldPathId for numeric potentialIndex, no schema', () => {
-      expect(computeArraySchemasIfPresent(undefined, FIELD_PATH_ID, '0')).toEqual({
+    test('returns undefined rawSchema and index for numeric potentialIndex, no schema', () => {
+      expect(computeArraySchemasIfPresent(undefined, '0')).toEqual({
         rawSchema: undefined,
-        fieldPathId: FIELD_PATH_ID,
+        index: undefined,
       });
     });
-    test('returns undefined rawSchema and given fieldPathId for numeric potentialIndex, non-array schema', () => {
-      expect(computeArraySchemasIfPresent(readonlySchema, FIELD_PATH_ID, '0')).toEqual({
+    test('returns undefined rawSchema and index for numeric potentialIndex, non-array schema', () => {
+      expect(computeArraySchemasIfPresent(readonlySchema, '0')).toEqual({
         rawSchema: undefined,
-        fieldPathId: FIELD_PATH_ID,
+        index: undefined,
       });
     });
-    test('returns outer array rawSchema and generated fieldPathId for numeric potentialIndex, array schema', () => {
-      const startPathId = toFieldPathId('0', arraySchemaRegistry.globalFormOptions, FIELD_PATH_ID);
-      const fieldPathId = {
-        [ID_KEY]: startPathId[ID_KEY],
-        path: [DEFAULT_ID, 0],
-      };
-      expect(computeArraySchemasIfPresent(outerArraySchema, startPathId, '0')).toEqual({
+    test('returns outer array rawSchema and the numeric index for numeric potentialIndex, array schema', () => {
+      const result = computeArraySchemasIfPresent(outerArraySchema, '0');
+      expect(result).toEqual({
         rawSchema: outerArraySchema.items,
-        fieldPathId,
+        index: 0,
       });
+      // The index is recorded as a number, but the generated id is unchanged
+      expect(fieldPathToList(toFieldPath(result.index!, FIELD_PATH))).toEqual([DEFAULT_ID, 0]);
+      expect(fieldPathToId(toFieldPath(result.index!, FIELD_PATH), arraySchemaRegistry.globalFormOptions)).toEqual(
+        fieldPathToId(toFieldPath('0', FIELD_PATH), arraySchemaRegistry.globalFormOptions),
+      );
     });
   });
   describe('getSchemaDetailsForField(), blank schema', () => {
@@ -988,11 +995,11 @@ describe('LayoutGridField', () => {
       retrieveSchemaSpy.mockRestore();
     });
     test('returns no schema or options when name is empty string', () => {
-      expect(getSchemaDetailsForField(registry, '', {}, {}, FIELD_PATH_ID)).toEqual(NO_SCHEMA_OR_OPTIONS);
+      expect(getSchemaDetailsForField(registry, '', {}, {}, FIELD_PATH)).toEqual(NO_SCHEMA_OR_OPTIONS);
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
     });
     test('returns no schema or options when schema is empty', () => {
-      expect(getSchemaDetailsForField(registry, 'name', {}, {}, FIELD_PATH_ID)).toEqual(NO_SCHEMA_OR_OPTIONS);
+      expect(getSchemaDetailsForField(registry, 'name', {}, {}, FIELD_PATH)).toEqual(NO_SCHEMA_OR_OPTIONS);
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
     });
   });
@@ -1013,35 +1020,35 @@ describe('LayoutGridField', () => {
       const path = paths.join('.');
       // pop off the `bad` since it won't end up in the fieldId
       paths.pop();
-      const fieldPathId = fieldPathIdFromPaths(paths, sampleSchemaRegistry.globalFormOptions, FIELD_PATH_ID);
-      expect(getSchemaDetailsForField(sampleSchemaRegistry, path, SAMPLE_SCHEMA, {}, FIELD_PATH_ID)).toEqual({
+      const fieldPath = fieldPathFromPaths(paths, FIELD_PATH);
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, path, SAMPLE_SCHEMA, {}, FIELD_PATH)).toEqual({
         ...NO_SCHEMA_OR_OPTIONS,
-        fieldPathId,
+        fieldPath,
       });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
     });
     test('returns no schema or options when leaf field is not found in the schema', () => {
-      const fieldPathId = toFieldPathId('ignored', sampleSchemaRegistry.globalFormOptions, FIELD_PATH_ID);
-      expect(getSchemaDetailsForField(sampleSchemaRegistry, 'ignored', SAMPLE_SCHEMA, {}, FIELD_PATH_ID)).toEqual({
+      const fieldPath = toFieldPath('ignored', FIELD_PATH);
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, 'ignored', SAMPLE_SCHEMA, {}, FIELD_PATH)).toEqual({
         ...NO_SCHEMA_OR_OPTIONS,
-        fieldPathId,
-      }); // `path` digs into `fieldPathId`
+        fieldPath,
+      }); // `path` digs into `fieldPath`
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
     });
-    test('returns schema, isRequired: true, isReadonly: undefined, options: undefined, and fieldPathId when simple schema is used', () => {
+    test('returns schema, isRequired: true, isReadonly: undefined, options: undefined, and fieldPath when simple schema is used', () => {
       const path = 'ranges';
       const schema = retrieveSchema(
-        validator,
+        { validator },
         getByPath<RJSFSchema>(SAMPLE_SCHEMA, [PROPERTIES_KEY, path]),
         SAMPLE_SCHEMA,
         {},
       );
-      expect(getSchemaDetailsForField(sampleSchemaRegistry, path, SAMPLE_SCHEMA, {}, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, path, SAMPLE_SCHEMA, {}, FIELD_PATH)).toEqual({
         schema,
         isRequired: true,
         isReadonly: undefined,
         optionsInfo: undefined,
-        fieldPathId: toFieldPathId(path, sampleSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: toFieldPath(path, FIELD_PATH),
       });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
     });
@@ -1063,12 +1070,12 @@ describe('LayoutGridField', () => {
       const selectedSchema = getByPath(SIMPLE_ONEOF, [ONE_OF_KEY, 1]);
       const schema = getByPath(selectedSchema, [PROPERTIES_KEY, path]);
       const formData = { [path]: SIMPLE_ONEOF_OPTIONS[1].value };
-      expect(getSchemaDetailsForField(simpleOneOfRegistry, path, SIMPLE_ONEOF, formData, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(simpleOneOfRegistry, path, SIMPLE_ONEOF, formData, FIELD_PATH)).toEqual({
         schema,
         isRequired: false,
         isReadonly: true,
         optionsInfo: undefined,
-        fieldPathId: toFieldPathId(path, simpleOneOfRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: toFieldPath(path, FIELD_PATH),
       });
       expect(findSelectedOptionInXxxOf).toHaveBeenCalledWith(SIMPLE_ONEOF, path, ONE_OF_KEY, formData);
     });
@@ -1089,11 +1096,11 @@ describe('LayoutGridField', () => {
       const path = 'employment';
       const { field: schema } = gridFormSchemaRegistry.schemaUtils.findFieldInSchema(GRID_FORM_SCHEMA, path);
       retrieveSchemaSpy.mockClear();
-      expect(getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, {}, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, {}, FIELD_PATH)).toEqual({
         schema,
         isRequired: false,
         isReadonly: undefined,
-        fieldPathId: toFieldPathId(path, gridFormSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: toFieldPath(path, FIELD_PATH),
         optionsInfo: {
           options: getByPath(schema, [ONE_OF_KEY]),
           hasDiscriminator: true,
@@ -1105,20 +1112,18 @@ describe('LayoutGridField', () => {
       const path = 'employment.location.state';
       const paths = path.split('.');
       const formData = { employment: { job_type: 'company' } };
-      const schema: RJSFSchema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
+      const schema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
         GRID_FORM_SCHEMA,
         [DEFINITIONS_KEY, 'Location', PROPERTIES_KEY, 'state'],
         {},
-      );
-      expect(getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, formData, FIELD_PATH_ID)).toEqual(
-        {
-          schema,
-          isRequired: true,
-          isReadonly: undefined,
-          optionsInfo: undefined,
-          fieldPathId: fieldPathIdFromPaths(paths, gridFormSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
-        },
-      );
+      ) as RJSFSchema;
+      expect(getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, formData, FIELD_PATH)).toEqual({
+        schema,
+        isRequired: true,
+        isReadonly: undefined,
+        optionsInfo: undefined,
+        fieldPath: fieldPathFromPaths(paths, FIELD_PATH),
+      });
       const subschemaSchema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
         GRID_FORM_SCHEMA,
         [PROPERTIES_KEY, 'employment'],
@@ -1148,11 +1153,11 @@ describe('LayoutGridField', () => {
       const path = 'stringSelect';
       const { field: schema } = readonlySchemaRegistry.schemaUtils.findFieldInSchema(readonlySchema, path);
       retrieveSchemaSpy.mockClear();
-      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH)).toEqual({
         schema,
         isRequired: false,
         isReadonly: undefined,
-        fieldPathId: toFieldPathId(path, readonlySchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: toFieldPath(path, FIELD_PATH),
         optionsInfo: {
           options: getByPath(schema, [ONE_OF_KEY]),
           hasDiscriminator: false,
@@ -1163,11 +1168,11 @@ describe('LayoutGridField', () => {
     test('returns schema, isRequired: true, isReadonly: true, options: undefined when selecting readonly field', () => {
       const path = 'roString';
       const schema = readonlySchema.properties![path];
-      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH)).toEqual({
         schema,
         isRequired: false,
         isReadonly: true,
-        fieldPathId: toFieldPathId(path, readonlySchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: toFieldPath(path, FIELD_PATH),
         optionsInfo: undefined,
       });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
@@ -1176,11 +1181,11 @@ describe('LayoutGridField', () => {
       const path = 'nested.roNumber';
       const paths = path.split('.');
       const schema = getByPath(readonlySchema, [PROPERTIES_KEY, 'nested', PROPERTIES_KEY, 'roNumber']);
-      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH)).toEqual({
         schema,
         isRequired: false,
         isReadonly: true,
-        fieldPathId: fieldPathIdFromPaths(paths, gridFormSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: fieldPathFromPaths(paths, FIELD_PATH),
         optionsInfo: undefined,
       });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
@@ -1190,11 +1195,11 @@ describe('LayoutGridField', () => {
       const paths = path.split('.');
       const { field: schema } = readonlySchemaRegistry.schemaUtils.findFieldInSchema(readonlySchema, path);
       retrieveSchemaSpy.mockClear();
-      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH)).toEqual({
         schema,
         isRequired: true,
         isReadonly: false,
-        fieldPathId: fieldPathIdFromPaths(paths, gridFormSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: fieldPathFromPaths(paths, FIELD_PATH),
         optionsInfo: undefined,
       });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
@@ -1216,11 +1221,11 @@ describe('LayoutGridField', () => {
       const paths = ['example', 0];
       const path = paths.join('.');
       const schema = innerArraySchema;
-      expect(getSchemaDetailsForField(arraySchemaRegistry, path, arraySchema, {}, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(arraySchemaRegistry, path, arraySchema, {}, FIELD_PATH)).toEqual({
         schema,
         isRequired: false,
         isReadonly: undefined,
-        fieldPathId: fieldPathIdFromPaths(paths, gridFormSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: fieldPathFromPaths(paths, FIELD_PATH),
         optionsInfo: undefined,
       });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
@@ -1229,22 +1234,31 @@ describe('LayoutGridField', () => {
       const paths = ['example', 0, 1];
       const path = paths.join('.');
       const schema = getByPath(innerArraySchema.items, '1');
-      expect(getSchemaDetailsForField(arraySchemaRegistry, path, arraySchema, {}, FIELD_PATH_ID)).toEqual({
+      expect(getSchemaDetailsForField(arraySchemaRegistry, path, arraySchema, {}, FIELD_PATH)).toEqual({
         schema,
         isRequired: false,
         isReadonly: undefined,
-        fieldPathId: fieldPathIdFromPaths(paths, gridFormSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        fieldPath: fieldPathFromPaths(paths, FIELD_PATH),
         optionsInfo: undefined,
       });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
     });
   });
   describe('getCustomRenderComponent()', () => {
-    test('returns null when render is not a string or function', () => {
-      expect(getCustomRenderComponent({} as string, registry)).toBeNull();
-    });
-    test('returns null when render is a string without a lookup', () => {
-      expect(getCustomRenderComponent('nonexistant', registry)).toBeNull();
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    test.each<[string, string | ComponentType, Registry]>([
+      ['a value that is not a string or component', {} as ComponentType, registry],
+      ['a name without a lookup', 'nonexistant', registry],
+      ['a name whose lookup is not a component', 'FooClass', registry],
+      [
+        'a name whose lookup is a React element',
+        'Nav',
+        getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { Nav: testRendererElement } }),
+      ],
+      ['a React element', testRendererElement as unknown as ComponentType, registry],
+    ])('returns null, without warning, for %s', (_, render, lookupRegistry) => {
+      expect(getCustomRenderComponent(render, lookupRegistry)).toBeNull();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
     });
     test('returns the render function when render is a string with a lookup', () => {
       expect(getCustomRenderComponent('TestRenderer', registry)).toBe(TestRenderer);
@@ -1252,8 +1266,35 @@ describe('LayoutGridField', () => {
     test('returns the given function when render is a function', () => {
       expect(getCustomRenderComponent(TestRenderer, registry)).toBe(TestRenderer);
     });
+    test.each([
+      ['memo()', memo(TestRenderer)],
+      ['forwardRef()', forwardRef<HTMLDivElement>((_props, ref) => <div ref={ref} />)],
+    ])('returns a %s component, given directly or looked up', (_, component) => {
+      const lookupRegistry = getTestRegistry({}, {}, {}, {}, { [LOOKUP_MAP_NAME]: { WrappedRenderer: component } });
+      expect(getCustomRenderComponent(component, registry)).toBe(component);
+      expect(getCustomRenderComponent('WrappedRenderer', lookupRegistry)).toBe(component);
+    });
   });
   describe('computeFieldUiSchema()', () => {
+    test.each([
+      ['a string', 'oops'],
+      ['a number', 42],
+      ['true', true],
+    ])('ignores a field uiSchema that is %s instead of spreading it', (_label, value) => {
+      const uiSchema = { foo: value } as unknown as UiSchema;
+      expect(computeFieldUiSchema('foo', {}, uiSchema)).toEqual({ fieldUiSchema: {}, uiReadonly: undefined });
+    });
+    test.each([
+      ['a string', 'oops'],
+      ['a number', 42],
+      ['true', true],
+    ])('ignores a field ui:options that is %s instead of spreading it', (_label, value) => {
+      const uiSchema = { foo: { 'ui:widget': 'bar', [UI_OPTIONS_KEY]: value } } as unknown as UiSchema;
+      expect(computeFieldUiSchema('foo', { fullWidth: true }, uiSchema)).toEqual({
+        fieldUiSchema: { 'ui:widget': 'bar', [UI_OPTIONS_KEY]: { fullWidth: true } },
+        uiReadonly: undefined,
+      });
+    });
     test('field with empty uiProps', () => {
       const uiProps = {};
       expect(computeFieldUiSchema('foo', uiProps)).toEqual({
@@ -1430,6 +1471,82 @@ describe('LayoutGridField', () => {
     const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(expectedProps));
   });
+  test('renderField with a memo() render via LAYOUT_GRID_OPTION and name is not provided', () => {
+    const options = { myProp: true };
+    const props = getProps({
+      uiSchema: {
+        [LAYOUT_GRID_OPTION]: { ...options, render: memo(TestRenderer) },
+      },
+    });
+    render(<LayoutGridField {...props} />);
+    const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    expect(uiComponent).toHaveTextContent(stringifyProps(options));
+  });
+  describe('a render that resolves to nothing', () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    test.each<[string, unknown, Record<string, unknown>, string]>([
+      ['is not a string or component', {}, {}, 'is not a component (got object)'],
+      ['names nothing', 'nonexistant', {}, `names no value in formContext.${LOOKUP_MAP_NAME} ('nonexistant')`],
+      [
+        'names a value that is not a component',
+        'FooClass',
+        { FooClass: 'Foo' },
+        `names a value in formContext.${LOOKUP_MAP_NAME} ('FooClass') that is not a component (got string)`,
+      ],
+      [
+        'names a React element',
+        'Nav',
+        { Nav: testRendererElement },
+        `names a value in formContext.${LOOKUP_MAP_NAME} ('Nav') that is a React element rather than a component ` +
+          '(pass MyRenderer, not <MyRenderer />)',
+      ],
+      [
+        'is a React element',
+        testRendererElement,
+        {},
+        'is a React element rather than a component (pass MyRenderer, not <MyRenderer />)',
+      ],
+    ])(
+      'renderField warns about a render that %s, naming the field the grid belongs to',
+      (_, cellRender, lookup, why) => {
+        const registry = getTestRegistry({}, REGISTRY_FIELDS, {}, {}, { [LOOKUP_MAP_NAME]: lookup });
+        const props = getProps({ uiSchema: { [LAYOUT_GRID_OPTION]: { render: cellRender } }, registry });
+        render(<LayoutGridField {...props} />);
+        expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
+        expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+          `ui:layoutGrid render for a cell in "${props.id}" (${props.fieldPath}) ${why}, so it is ignored.`,
+        );
+      },
+    );
+    test.each(['', false, 0, null])('renderField does not warn about a render of %j, which asks for none', (empty) => {
+      const props = getProps({ uiSchema: { [LAYOUT_GRID_OPTION]: { render: empty } } });
+      render(<LayoutGridField {...props} />);
+      expect(screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent)).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+    test('renderField names a cell whose name resolves to no schema in the warning', () => {
+      const props = getProps({
+        schema: SAMPLE_SCHEMA,
+        uiSchema: { [LAYOUT_GRID_OPTION]: { name: 'notInSchema', render: 'nonexistant' } },
+        registry: sampleSchemaRegistry,
+      });
+      render(<LayoutGridField {...props} />);
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:layoutGrid render for cell 'notInSchema' in "${props.id}" (${props.fieldPath}) names no value in ` +
+          `formContext.${LOOKUP_MAP_NAME} ('nonexistant'), so it is ignored.`,
+      );
+    });
+    test('renderField does not warn about the render of a cell whose name resolves to a schema, which never uses it', () => {
+      const props = getProps({
+        schema: SAMPLE_SCHEMA,
+        uiSchema: { [LAYOUT_GRID_OPTION]: { name: 'simpleString', render: 'nonexistant' } },
+        registry: sampleSchemaRegistry,
+      });
+      render(<LayoutGridField {...props} />);
+      expect(screen.getByTestId(LayoutGridField.TEST_IDS.field)).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+  });
   test('renderField with render=TestRenderer via LAYOUT_GRID_OPTION and name is not provided', () => {
     const options = { myProp: true };
     const props = getProps({
@@ -1450,8 +1567,8 @@ describe('LayoutGridField', () => {
       layoutGridSchema: fieldName,
       registry: sampleSchemaRegistry,
     });
-    const fieldPathId = toFieldPathId(fieldName, props.registry.globalFormOptions, props.fieldPathId);
-    const { [ID_KEY]: fieldId } = fieldPathId;
+    const fieldPath = toFieldPath(fieldName, props.fieldPath);
+    const fieldId = fieldPathToId(fieldPath, props.registry.globalFormOptions);
     render(<LayoutGridField {...props} />);
     // Renders a field
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
@@ -1463,7 +1580,7 @@ describe('LayoutGridField', () => {
     expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
-    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, undefined, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPath, undefined, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
     expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
@@ -1476,8 +1593,8 @@ describe('LayoutGridField', () => {
       layoutGridSchema: fieldName,
       registry: nestedSchemaRegistry,
     });
-    const fieldPathId = toFieldPathId(fieldName, props.registry.globalFormOptions, props.fieldPathId);
-    const { [ID_KEY]: fieldId } = fieldPathId;
+    const fieldPath = toFieldPath(fieldName, props.fieldPath);
+    const fieldId = fieldPathToId(fieldPath, props.registry.globalFormOptions);
     render(<LayoutGridField {...props} />);
     // Renders a field
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
@@ -1489,7 +1606,7 @@ describe('LayoutGridField', () => {
     expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
-    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, undefined, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPath, undefined, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
     expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
@@ -1502,8 +1619,8 @@ describe('LayoutGridField', () => {
       layoutGridSchema: fieldName,
       registry: nestedSchemaRegistry,
     });
-    const fieldPathId = toFieldPathId(fieldName, props.registry.globalFormOptions, props.fieldPathId);
-    const { [ID_KEY]: fieldId } = fieldPathId;
+    const fieldPath = toFieldPath(fieldName, props.fieldPath);
+    const fieldId = fieldPathToId(fieldPath, props.registry.globalFormOptions);
     render(<LayoutGridField {...props} />);
     // Renders a field
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
@@ -1515,7 +1632,7 @@ describe('LayoutGridField', () => {
     expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
-    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, undefined, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPath, undefined, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
     expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
@@ -1536,10 +1653,8 @@ describe('LayoutGridField', () => {
       },
       formData: {},
       errorSchema: { employment: {} },
-      fieldPathId: {
-        [ID_KEY]: gridFormSchemaRegistry.globalFormOptions.idPrefix,
-        path: [],
-      },
+      fieldPath: ROOT_FIELD_PATH,
+      id: gridFormSchemaRegistry.globalFormOptions.idPrefix,
       layoutGridSchema: {
         name: fieldName,
         ...otherUIProps,
@@ -1552,6 +1667,25 @@ describe('LayoutGridField', () => {
       stringifyProps(getExpectedPropsForField(props, fieldName, otherProps, otherUIProps)),
     );
   });
+  test.each([0, null])(
+    'renderField passes a ui:required of %s to a required discriminated field as required: false',
+    (uiRequired) => {
+      const fieldName = 'employment';
+      const uiRequiredFromJson: GenericObjectType = { 'ui:required': uiRequired };
+      const props = getProps({
+        schema: { ...GRID_FORM_SCHEMA, required: [fieldName] },
+        uiSchema: { ...gridFormUISchema, [fieldName]: uiRequiredFromJson },
+        formData: {},
+        fieldPath: ROOT_FIELD_PATH,
+        id: gridFormSchemaRegistry.globalFormOptions.idPrefix,
+        layoutGridSchema: { name: fieldName },
+        registry: gridFormSchemaRegistry,
+      });
+      render(<LayoutGridField {...props} />);
+      const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
+      expect(field).toHaveTextContent('"required":false');
+    },
+  );
   test('renderField via object explicit readonlySchema, and uiSchema readonly override', () => {
     const fieldName = 'string';
     const props = getProps({
@@ -1559,10 +1693,8 @@ describe('LayoutGridField', () => {
       uiSchema: readonlyUISchema,
       formData: {},
       errorSchema: { string: {} },
-      fieldPathId: {
-        [ID_KEY]: readonlySchemaRegistry.globalFormOptions.idPrefix,
-        path: [],
-      },
+      fieldPath: ROOT_FIELD_PATH,
+      id: readonlySchemaRegistry.globalFormOptions.idPrefix,
       layoutGridSchema: {
         name: fieldName,
       },
@@ -1687,8 +1819,8 @@ describe('LayoutGridField', () => {
       },
       registry: sampleSchemaRegistry,
     });
-    const fieldPathId = toFieldPathId(fieldName, props.registry.globalFormOptions, props.fieldPathId);
-    const { [ID_KEY]: fieldId } = fieldPathId;
+    const fieldPath = toFieldPath(fieldName, props.fieldPath);
+    const fieldId = fieldPathToId(fieldPath, props.registry.globalFormOptions);
     render(<LayoutGridField {...props} />);
     // Renders 2 fields
     const fields = screen.getAllByTestId(LayoutGridField.TEST_IDS.field);
@@ -1699,9 +1831,9 @@ describe('LayoutGridField', () => {
     expect(fields[1]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
     // Test onChange and value in the input
     const input = within(fields[0]).getByRole('textbox');
-    expect(input).toHaveValue(props.formData[fieldName]);
+    expect(input).toHaveValue((props.formData as GenericObjectType)[fieldName]);
     await userEvent.type(input, '!');
-    expect(props.onChange).toHaveBeenCalledWith('foo!', fieldPathId.path, EXTRA_ERROR, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo!', fieldPath, EXTRA_ERROR, fieldId);
   });
   test('renderCondition, condition fails, field and null value, NONE operator, no data', () => {
     const gridProps = {

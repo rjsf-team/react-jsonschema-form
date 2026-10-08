@@ -1,16 +1,11 @@
-import { ONE_OF_KEY, REF_KEY, JUNK_OPTION_ID, ANY_OF_KEY } from '../constants.ts';
+import { REF_KEY, JUNK_OPTION_ID } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
+import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
-import type {
-  Experimental_CustomMergeAllOf,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
 import retrieveSchema, { resolveAllReferences } from './retrieveSchema.ts';
 
@@ -32,91 +27,82 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  * the object are processed as follows after obtaining the formValue from `formData` using the `key`:
  * - If the `value` contains a `$ref`, `calculateIndexScore()` is called recursively with the formValue and the new
  *   schema that is the result of the ref in the schema being resolved and that sub-schema's resulting score is added to
- *   the total.
- * - If the `value` contains a `oneOf` and there is a formValue, then score based on the index returned from calling
- *   `getClosestMatchingOption()` of that oneOf.
+ *   the total, as long as the formValue has data to score; a `$ref` with no form data left is not followed.
+ * - If the `value` contains an `anyOf` or `oneOf` and the formValue is neither `undefined` nor `null`, then score based
+ *   on the index returned from calling `getClosestMatchingOption()` of that `anyOf`/`oneOf`.
  * - If the type of the `value` is 'object', `calculateIndexScore()` is called recursively with the formValue and the
  *   `value` itself as the sub-schema, and the score is added to the total.
  * - If the type of the `value` matches the guessed-type of the `formValue`, the score is incremented by 1, UNLESS the
- *   value has a `default` or `const`. In those case, if the `default` or `const` and the `formValue` match, the score
- *   is incremented by another 1 otherwise it is decremented by 1.
+ *   value has a truthy `default` or a `const`. In those case, if the `default` or `const` and the `formValue` match,
+ *   the score is incremented by another 1 otherwise it is decremented by 1. A missing formValue is not compared to a
+ *   `const`.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
  * @param schema - The schema for which the score is being calculated
  * @param formData - The form data associated with the schema, used to calculate the score
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The score a schema against the formData
  */
-export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
-  rootSchema: S,
-  schema?: S,
-  formData?: any,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-): number {
+export function calculateIndexScore<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, rootSchema: S, schema?: S, formData?: any): number {
   let totalScore = 0;
   if (schema) {
     if (isObject(schema.properties)) {
       totalScore += Object.entries(schema.properties).reduce((score, [key, value]) => {
-        const formValue = formData?.[key];
+        // An own-property read, so a schema property legally named `toString`, `constructor` or `valueOf` reads the
+        // data's own value rather than the one every object inherits, which would never look like missing data
+        const formValue = getByPath<T>(formData, key);
         if (typeof value === 'boolean') {
           return score;
         }
         if (hasByPath(value, REF_KEY)) {
-          const newSchema = retrieveSchema<T, S, F>(
-            validator,
-            value as S,
-            rootSchema,
-            formValue,
-            experimental_customMergeAllOf,
-          );
-          return (
-            score +
-            calculateIndexScore<T, S, F>(
-              validator,
-              rootSchema,
-              newSchema,
-              formValue || {},
-              experimental_customMergeAllOf,
-            )
-          );
+          // `resolveAllReferences()` leaves a recursive `$ref` in place, so `retrieveSchema()` below resolves the same
+          // definition again and hands back a schema holding that same `$ref` one level down. The descent is bounded
+          // only by the form data being consumed a key at a time, so it never terminates once that data runs out.
+          // Descending anyway could only ever add points for the absence of data — an empty object matching a
+          // property-less `type: 'object'`, `undefined` matching a `type: 'null'` property — so a `$ref` is followed
+          // only as far as the form data goes.
+          if (formValue == null) {
+            return score;
+          }
+          const newSchema = retrieveSchema<T, S, F>(context, value as S, rootSchema, formValue);
+          return score + calculateIndexScore<T, S, F>(context, rootSchema, newSchema, formValue);
         }
-        if ((hasByPath(value, ONE_OF_KEY) || hasByPath(value, ANY_OF_KEY)) && formValue) {
-          const xxxOfKey = hasByPath(value, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+        const xxxOfKey = getXxxOfKey<S>(value as S);
+        if (xxxOfKey && formValue != null) {
           const discriminator = getDiscriminatorFieldFromSchema<S>(value as S);
           return (
             score +
             getClosestMatchingOption<T, S, F>(
-              validator,
+              context,
               rootSchema,
               formValue,
               getByPath<S[]>(value, xxxOfKey),
               -1,
               discriminator,
-              experimental_customMergeAllOf,
             )
           );
         }
         if (value.type === 'object') {
           // If the structure is matching then give it a little boost in score
           const structureBoost = typeof formValue === 'object' && formValue !== null ? 1 : 0;
-          return (
-            score +
-            structureBoost +
-            calculateIndexScore<T, S, F>(validator, rootSchema, value as S, formValue, experimental_customMergeAllOf)
-          );
+          return score + structureBoost + calculateIndexScore<T, S, F>(context, rootSchema, value as S, formValue);
         }
         if (value.type === guessType(formValue)) {
           // If the types match, then we bump the score by one
           let newScore = score + 1;
           if (value.default) {
-            // If the schema contains a readonly default value score the value that matches the default higher and
-            // any non-matching value lower
+            // Score a value that matches the default higher and any other value lower. Only a truthy default is
+            // scored, as before: the check doesn't require `readOnly`, so scoring `default: false` would penalize a
+            // user who ticks the box, the same way a truthy default already penalizes one who clears it
             newScore += formValue === value.default ? 1 : -1;
-          } else if (value.const) {
-            // If the schema contains a const value score the value that matches the default higher and
-            // any non-matching value lower
+          } else if (value.const !== undefined && formValue !== undefined) {
+            // If the schema contains a const value score the value that matches the const higher and any non-matching
+            // value lower. A missing value is skipped: `guessType(undefined)` is 'null', so it reaches here for a
+            // `const: null` property and would otherwise be penalized for not being `null`
             newScore += formValue === value.const ? 1 : -1;
           }
           // TODO eventually, deal with enums/arrays
@@ -144,28 +130,26 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
  * `calculateIndexScore()` on each, comparing it against the current best score, and returning the index of the one that
  * eventually has the best score.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
  * @param formData - The form data associated with the schema
  * @param options - The list of options that can be selected from
  * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
  * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
  *          determine which option is selected
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
  */
 export default function getClosestMatchingOption<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: SchemaContext<S, F>,
   rootSchema: S,
   formData: T | undefined,
   options: S[],
   selectedOption = -1,
   discriminatorField?: string,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): number {
   // First resolve any refs in the options
   const resolvedOptions = options.map((option) => resolveAllReferences<S>(option, rootSchema, []));
@@ -178,7 +162,7 @@ export default function getClosestMatchingOption<
   // Reduce the array of options down to a list of the indexes that are considered matching options
   const allValidIndexes = resolvedOptions.reduce((validList: number[], option, index: number) => {
     const testOptions: S[] = [JUNK_OPTION as S, option];
-    const match = getFirstMatchingOption<T, S, F>(validator, formData, testOptions, rootSchema, discriminatorField);
+    const match = getFirstMatchingOption<T, S, F>(context, formData, testOptions, rootSchema, discriminatorField);
     // The match is the real option, so add its index to list of valid indexes
     if (match === 1) {
       validList.push(index);
@@ -204,7 +188,7 @@ export default function getClosestMatchingOption<
     (scoreData: BestType, index: number) => {
       const { bestScore } = scoreData;
       const option = resolvedOptions[index];
-      const score = calculateIndexScore(validator, rootSchema, option, formData, experimental_customMergeAllOf);
+      const score = calculateIndexScore(context, rootSchema, option, formData);
       scoreCount.add(score);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };

@@ -2,22 +2,21 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Textarea } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
+import { labelValue } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
  * @param props - The `WidgetProps` for this component
  */
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): ReactElement {
   const {
     id,
-    name,
     htmlName,
     value,
     placeholder,
@@ -27,7 +26,6 @@ export default function TextareaWidget<
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -62,10 +60,13 @@ export default function TextareaWidget<
     [onFocus, id],
   );
 
+  const ariaDescribedByProps = useAriaDescribedByProps('Textarea', id, options);
+  const error = useVisibleErrors(props);
+
   return (
     <Textarea
       id={id}
-      name={htmlName || name}
+      name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
       required={required}
@@ -75,9 +76,10 @@ export default function TextareaWidget<
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      aria-describedby={ariaDescribedByIds(id)}
+      error={error}
       {...themeProps}
+      {...ariaDescribedByProps}
+      {...getDescriptionProps(props)}
     />
   );
 }

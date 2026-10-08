@@ -1,13 +1,14 @@
-import { forwardRef } from 'react';
+import type { ComponentProps, Ref } from 'react';
 import { Slider as ChakraSlider, HStack } from '@chakra-ui/react';
 
-export interface SliderProps extends ChakraSlider.RootProps {
+export interface SliderProps extends ComponentProps<typeof ChakraSlider.Root> {
   marks?: (number | { value: number; label: React.ReactNode })[];
   showValue?: boolean;
 }
 
 interface SliderMarksProps {
   marks?: (number | { value: number; label: React.ReactNode })[];
+  ref?: Ref<HTMLDivElement>;
 }
 
 /**
@@ -17,8 +18,7 @@ interface SliderMarksProps {
  * @param [props.marks] - The marks to display on the slider.
  * @returns - The rendered slider marks component or null if no marks are provided.
  */
-const SliderMarks = forwardRef<HTMLDivElement, SliderMarksProps>((props, ref) => {
-  const { marks } = props;
+const SliderMarks = ({ marks, ref }: SliderMarksProps) => {
   if (!marks?.length) {
     return null;
   }
@@ -38,20 +38,19 @@ const SliderMarks = forwardRef<HTMLDivElement, SliderMarksProps>((props, ref) =>
       })}
     </ChakraSlider.MarkerGroup>
   );
-});
+};
 
 /**
  * Slider component that allows users to select a value from a range.
  *
- * @param {SliderProps} props - The properties for the slider component.
- * @param {Array<number | { value: number; label: React.ReactNode }>} [props.marks] - The marks to display on the slider.
- * @param {React.ReactNode} [props.label] - The label for the slider.
- * @param {boolean} [props.showValue] - Whether to show the current value of the slider.
- * @returns {JSX.Element} The rendered slider component.
+ * @param props - The properties for the slider component.
+ * @param [props.marks] - The marks to display on the slider.
+ * @param [props.label] - The label for the slider.
+ * @param [props.showValue] - Whether to show the current value of the slider.
+ * @returns The rendered slider component.
  */
-export const Slider = forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
-  const { marks: marksProp, showValue, ...rest } = props;
-  const value = props.defaultValue ?? props.value;
+export const Slider = ({ marks: marksProp, showValue, ref, ...rest }: SliderProps) => {
+  const value = rest.defaultValue ?? rest.value;
 
   const marks = marksProp?.map((mark) => {
     if (typeof mark === 'number') {
@@ -60,7 +59,7 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
     return mark;
   });
 
-  const hasMarkLabel = !!marks?.some((mark) => mark.label);
+  const hasMarkLabel = !!marks?.some((mark) => Boolean(mark.label));
 
   return (
     <ChakraSlider.Root ref={ref} width='200px' thumbAlignment='center' {...rest}>
@@ -78,14 +77,14 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>((props, ref) => {
       </ChakraSlider.Control>
     </ChakraSlider.Root>
   );
-});
+};
 
 /**
  * SliderThumbs component that renders the thumbs for the slider.
  *
- * @param {Object} props - The properties for the slider thumbs component.
- * @param {number[]} [props.value] - The values for the thumbs.
- * @returns {JSX.Element} The rendered slider thumbs component.
+ * @param props - The properties for the slider thumbs component.
+ * @param [props.value] - The values for the thumbs.
+ * @returns The rendered slider thumbs component.
  */
 function SliderThumbs(props: { value?: number[] }) {
   const { value } = props;

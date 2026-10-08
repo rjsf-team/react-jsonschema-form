@@ -12,7 +12,7 @@ export type PathType = string | FieldPathList;
  * schema by using either dotted path or an array of path names. Once you are done building the `ErrorSchema`, you can
  * get the result and/or reset all the errors back to an initial set and start again.
  */
-export default class ErrorSchemaBuilder<T = any> {
+export default class ErrorSchemaBuilder<T = unknown> {
   /** The error schema being built
    *
    * @private

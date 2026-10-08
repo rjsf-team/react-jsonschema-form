@@ -5,9 +5,11 @@ import type { ErrorListProps, StrictRJSFSchema, RJSFSchema, FormContextType } fr
  *
  * @param props - The `ErrorListProps` for the component
  */
-export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ErrorListProps<T, S, F>,
-) {
+export default function ErrorList<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ErrorListProps<T, S, F>) {
   const { errors } = props;
   return (
     <div className='error-list'>

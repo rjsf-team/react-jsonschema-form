@@ -1,112 +1,21 @@
-import { useCallback } from 'react';
-import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplate, descriptionId, schemaRequiresTrueValue } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+
+import BooleanInput from '../BooleanInput.tsx';
 
 /** The `CheckboxWidget` component renders a single checkbox input with DaisyUI styling.
  *
  * Features:
  * - Simple boolean input with DaisyUI checkbox styling
  * - Handles required, disabled, and readonly states
- * - No label rendering (handled by the parent FieldTemplate)
- * - Proper onChange handling for boolean values
+ * - Renders its own label after the input, and its own description
  * - Manages focus and blur events for accessibility
  *
  * @param props - The `WidgetProps` for this component
  */
 export default function CheckboxWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    value,
-    required,
-    disabled,
-    hideLabel,
-    label,
-    readonly,
-    registry,
-    options,
-    schema,
-    uiSchema,
-    onChange,
-    onFocus,
-    onBlur,
-  } = props;
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    options,
-  );
-  const description = options.description || schema.description;
-  const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-
-  /** Handle focus events
-   */
-  const handleFocus: React.FocusEventHandler<HTMLInputElement> = useCallback(() => {
-    if (onFocus) {
-      onFocus(id, value);
-    }
-  }, [onFocus, id, value]);
-
-  /** Handle blur events
-   */
-  const handleBlur: React.FocusEventHandler<HTMLInputElement> = useCallback(() => {
-    if (onBlur) {
-      onBlur(id, value);
-    }
-  }, [onBlur, id, value]);
-
-  /** Handle change events
-   *
-   * @param event - The change event
-   */
-  const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(event.target.checked);
-    },
-    [onChange],
-  );
-
-  const input = (
-    <input
-      type='checkbox'
-      id={id}
-      name={htmlName || id}
-      checked={value}
-      required={required}
-      disabled={disabled || readonly}
-      onChange={handleChange}
-      onFocus={handleFocus}
-      onBlur={handleBlur}
-      className='checkbox'
-    />
-  );
-
-  return (
-    <div className='form-control'>
-      {!hideLabel && description && (
-        <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
-          schema={schema}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      )}
-      {hideLabel || !label ? (
-        input
-      ) : (
-        <label className='label cursor-pointer justify-start'>
-          <div className='mr-2'>{input}</div>
-          <span className='label-text'>
-            {label}
-            {trueValueRequired && <span className='text-error ml-1'>*</span>}
-          </span>
-        </label>
-      )}
-    </div>
-  );
+  return <BooleanInput {...props} inputClassName='checkbox' labelClassName='label cursor-pointer justify-start' />;
 }

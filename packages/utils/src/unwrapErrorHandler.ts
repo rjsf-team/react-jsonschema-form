@@ -6,7 +6,7 @@ import type { ErrorSchema, FormValidation } from './types.ts';
  * @param errorHandler - The `FormValidation` error handling structure
  * @returns - The `ErrorSchema` resulting from the stripping of the `addError()` function
  */
-export default function unwrapErrorHandler<T = any>(errorHandler: FormValidation<T>): ErrorSchema<T> {
+export default function unwrapErrorHandler<T = unknown>(errorHandler: FormValidation<T>): ErrorSchema<T> {
   return unwrapErrors<T>(errorHandler);
 }
 

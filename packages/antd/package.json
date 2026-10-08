@@ -2,73 +2,38 @@
   "name": "@rjsf/antd",
   "version": "6.11.0",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
-  "main": "dist/index.js",
-  "module": "lib/index.js",
+  "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "module",
   "sideEffects": false,
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
+      "@rjsf/source": "./src/index.ts",
+      "default": "./lib/index.js"
     },
-    "./lib": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
-    },
-    "./lib/*.js": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
-    },
-    "./dist": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
-    },
-    "./dist/*.cjs": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
-    }
+    "./lib": "./lib/index.js",
+    "./lib/*.js": "./lib/*.js"
   },
   "scripts": {
-    "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/antd.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/antd.esm.js --format=umd --file=dist/antd.umd.js --name=@rjsf/antd",
-    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
-    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
-    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
-    "lint": "oxlint src test",
-    "precommit": "lint-staged",
+    "build": "tsdown -c ../../tsdown.base.mts",
     "test": "vitest run",
     "test:update": "vitest run --update"
   },
-  "lint-staged": {
-    "{src,test}/**/*.{ts,tsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
-  },
   "files": [
-    "dist",
     "lib",
     "src"
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "peerDependencies": {
     "@ant-design/icons": "^6.0.0",
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "antd": "^5 || >6.3.5",
+    "antd": "^6.3.6",
     "dayjs": "^1.8.0",
-    "react": ">=18"
+    "react": ">=19"
   },
   "dependencies": {
     "classnames": "^2.5.1"

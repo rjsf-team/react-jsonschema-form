@@ -1,19 +1,31 @@
-import type { ChangeEvent, FocusEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
+import ListSubheader from '@mui/material/ListSubheader';
 import MenuItem from '@mui/material/MenuItem';
 import type { SelectProps as MuiSelectProps } from '@mui/material/Select';
 import type { TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  FormContextType,
+  GenericObjectType,
+  IndexedEnumOptionType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   getOptionValueFormat,
+  groupEnumOptions,
+  hasVisibleErrors,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
@@ -34,9 +46,11 @@ export interface SelectWidgetMuiProps extends GenericObjectType {
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function SelectWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const {
     schema,
     id,
@@ -56,16 +70,17 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onBlur,
     onFocus,
     errorSchema,
-    rawErrors = [],
+    rawErrors,
     registry,
     uiSchema,
     hideError,
     ...textFieldProps
   } = props;
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
-  const isMultiple = typeof multiple === 'undefined' ? false : !!multiple;
+  const isMultiple = multiple ?? false;
 
   const emptyValue = isMultiple ? [] : '';
   const isEmpty =
@@ -73,15 +88,21 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<{ value: string }>) =>
     onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
-  const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, optEmptyVal));
+  // MUI's select focuses a `div` with no value of its own
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>(props);
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SelectWidgetMuiProps>(options);
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
+
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <MenuItem key={option.index} value={domValues[option.index]} disabled={option.disabled}>
+        {option.label}
+      </MenuItem>
+    );
+  }
 
   return (
     <>
@@ -89,13 +110,13 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         id={id}
         name={htmlName || id}
         label={labelValue(label || undefined, hideLabel, undefined)}
-        value={enumOptionSelectedValue<S>(value, enumOptions, isMultiple, optionValueFormat, emptyValue)}
+        value={enumOptionSelectedValue(value, enumOptions, isMultiple, optionValueFormat, emptyValue)}
         required={required}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         autoComplete={autocomplete}
         placeholder={placeholder}
-        error={rawErrors.length > 0}
+        error={hasVisibleErrors({ rawErrors, hideError })}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
@@ -115,19 +136,20 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
-        {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value: enumValue, label: enumLabel }, i: number) => {
-            const isDisabled: boolean = Array.isArray(enumDisabled) && enumDisabled.includes(enumValue);
-            return (
-              <MenuItem
-                key={String(enumValue)}
-                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-                disabled={isDisabled}
-              >
-                {enumLabel}
-              </MenuItem>
-            );
-          })}
+        {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item) =>
+          isEnumOptionsGroup<S>(item)
+            ? [
+                // MUI's `SelectInput` clones every direct child with `role='option'` and has no group primitive, so a
+                // heading can't be exposed as a `role='group'` label the way a native `<optgroup>` is. `aria-disabled`
+                // is the closest available: the label is still announced, but not as something selectable (clicking it
+                // is already a no-op, since `handleItemClick` bails on the missing `tabindex`).
+                <ListSubheader key={`optgroup-${item.label}`} aria-disabled>
+                  {item.label}
+                </ListSubheader>,
+                ...item.options.map(renderOption),
+              ]
+            : [renderOption(item)],
+        )}
       </TextField>
       <SelectedOptionDescription {...props} />
     </>

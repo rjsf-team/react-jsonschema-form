@@ -5,8 +5,8 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionValueDecoder,
-  enumOptionValueEncoder,
-  enumOptionsIndexForValue,
+  enumOptionSelectedValue,
+  enumOptionsDomValues,
   getOptionValueFormat,
   labelValue,
   optionId,
@@ -17,7 +17,11 @@ import {
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function RadioWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   htmlName,
   options,
@@ -33,6 +37,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
   const handleChange = (_: any, data: RadioGroupOnChangeData) =>
     onChange(enumOptionValueDecoder<S>(data.value, enumOptions, optionValueFormat, emptyValue));
@@ -41,7 +46,8 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
-  const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions) ?? undefined;
+  // Compared against the options' own values, which are encoded in the `optionValueFormat` rather than always indexes
+  const selectedValue: string | undefined = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat);
 
   return (
     <>
@@ -55,7 +61,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         id={id}
         name={htmlName || id}
         layout={inline ? 'horizontal' : 'vertical'}
-        value={selectedIndex as string | undefined}
+        value={selectedValue}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
@@ -63,13 +69,15 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+            const itemDisabled =
+              Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
             return (
               <Radio
                 id={optionId(id, index)}
                 label={option.label}
-                value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-                key={String(option.value)}
+                value={domValues[index]}
+                // oxlint-disable-next-line react/no-array-index-key
+                key={index}
                 disabled={disabled || itemDisabled || readonly}
               />
             );

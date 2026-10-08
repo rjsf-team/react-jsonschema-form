@@ -1,4 +1,5 @@
 import type {
+  CustomValidator,
   ErrorSchema,
   FormValidation,
   RJSFSchema,
@@ -6,12 +7,12 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, noop } from '@rjsf/utils';
-import type Ajv from 'ajv';
-import localize from 'ajv-i18n';
-import Ajv2019 from 'ajv/dist/2019';
-import Ajv2020 from 'ajv/dist/2020';
-import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json';
+import { ErrorSchemaBuilder, getFirstMatchingOption, noop, retrieveSchema } from '@rjsf/utils';
+import type { Ajv } from 'ajv';
+import ajvI18n from 'ajv-i18n';
+import { Ajv2019 } from 'ajv/dist/2019.js';
+import { Ajv2020 } from 'ajv/dist/2020.js';
+import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
 import type { Localizer } from '../src/index.ts';
@@ -54,12 +55,50 @@ describe('AJV8Validator', () => {
 
         expect(validator.isValid(schema, { foo: 12345 }, schema)).toBe(false);
       });
+      it('should key a schema whose $id is empty by its hash, since an empty $id names nothing', () => {
+        const emptyIdRootSchema: RJSFSchema = { type: 'object' };
+
+        expect(validator.isValid({ $id: '', type: 'string' }, 'a', emptyIdRootSchema)).toBe(true);
+        // Keyed by the empty `$id`, this would be answered by the function compiled for the schema above
+        expect(validator.isValid({ $id: '', type: 'number' }, 'a', emptyIdRootSchema)).toBe(false);
+      });
+      it("should resolve a local $ref when the root schema's $id is empty, since an empty $id names nothing", () => {
+        const emptyIdRootSchema: RJSFSchema = {
+          $id: '',
+          type: 'object',
+          definitions: { aStr: { type: 'string' } },
+          properties: { a: { $ref: '#/definitions/aStr' } },
+        };
+
+        // Registered under the empty `$id`, the root would not answer the `__rjsf_rootSchema#/...` ref rewritten here
+        expect(validator.isValid({ $ref: '#/definitions/aStr' }, 'hello', emptyIdRootSchema)).toBe(true);
+      });
       it('should return false if the schema is invalid', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
 
         const isValid = expectWarn(
           () => validator.isValid(schema, { foo: 'bar' }, schema),
+          // The throw happens before the schema's id is known, so there is no schema to name
           'Error encountered compiling schema:',
+          expect.any(Error),
+        );
+        expect(isValid).toBe(false);
+      });
+      it('says the form data is what failed when the schema compiled and validating it threw', () => {
+        // A custom format that throws runs during validation, not compilation. The two are told apart so a schema
+        // that won't compile and one that throws on its data don't share a key when the errors read alike
+        const localValidator = new AJV8Validator({
+          customFormats: {
+            boom: () => {
+              throw new Error('custom format threw');
+            },
+          },
+        });
+        const schema: RJSFSchema = { $id: 'throws-on-data', type: 'string', format: 'boom' };
+
+        const isValid = expectWarn(
+          () => localValidator.isValid(schema, 'anything', { type: 'string' }),
+          'Error encountered validating form data against schema "throws-on-data":',
           expect.any(Error),
         );
         expect(isValid).toBe(false);
@@ -152,7 +191,7 @@ describe('AJV8Validator', () => {
             validator.isValid(schema, formData, rootSchema);
             validator.isValid(schema, formData, rootSchema);
           },
-          'Error encountered compiling schema:',
+          'Error encountered compiling schema "schema-id-2":',
           expect.any(Error),
         );
 
@@ -208,6 +247,30 @@ describe('AJV8Validator', () => {
         removeSchemaSpy.mockRestore();
       });
     });
+    describe('scoring an option whose $id is the base of a relative $ref', () => {
+      const pickOptions: RJSFSchema[] = [
+        { type: 'object', properties: { other: { type: 'number' } }, required: ['other'] },
+        { $ref: '#/definitions/a' },
+      ];
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          b: { $id: 'http://example.com/b.json', type: 'string', minLength: 3 },
+          a: {
+            $id: 'http://example.com/a.json',
+            type: 'object',
+            properties: { x: { type: 'string', not: { $ref: 'b.json' } } },
+          },
+        },
+        type: 'object',
+        properties: { pick: { oneOf: pickOptions } },
+      };
+
+      it('resolves the $ref against the option it augments, which the derived $id keeps as its base', () => {
+        const retrieved = pickOptions.map((option) => retrieveSchema({ validator }, option, rootSchema, {}));
+
+        expect(getFirstMatchingOption({ validator }, { x: 'ab' }, retrieved, rootSchema)).toBe(1);
+      });
+    });
     describe('compilation error caching (issue #3933)', () => {
       // AJV 8 registers a schema in its internal cache *before* running meta-schema
       // validation (validateSchema: true by default). When that validation throws (e.g.
@@ -240,6 +303,15 @@ describe('AJV8Validator', () => {
 
         const result2 = v.rawValidation(schema, {});
         expect(result2.validationError).toBeInstanceOf(Error);
+      });
+
+      it.each([null, 5, true, {}])('rawValidation returns a validationError for a schema whose $id is %j', (id) => {
+        const v = new AJV8Validator({});
+        const schema: RJSFSchema = { type: 'string' };
+        Reflect.set(schema, '$id', id);
+
+        expect(v.rawValidation(schema, 'a').validationError).toBeInstanceOf(Error);
+        expect(v.rawValidation(schema, 'a').validationError).toBeInstanceOf(Error);
       });
 
       it('rawValidation returns a validationError when the schema was previously cached by isValid', () => {
@@ -573,12 +645,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -637,9 +711,14 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: unknown,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: UiSchema,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },
@@ -670,6 +749,15 @@ describe('AJV8Validator', () => {
               "must have required property 'pass1'",
               'custom error from customValidate',
             ]);
+          });
+        });
+        describe('uiSchema declares ui:initialValue', () => {
+          it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
+            const validate = vi.fn((_formData: unknown, errors: FormValidation) => errors);
+            const schema: RJSFSchema = { type: 'object', properties: { country: { type: 'string' } } };
+            const uiSchema: UiSchema = { country: { 'ui:initialValue': 'US' } };
+            validator.validateFormData({}, schema, validate, undefined, uiSchema);
+            expect(validate).toHaveBeenCalledWith({ country: 'US' }, expect.any(Object), uiSchema, expect.any(Object));
           });
         });
       });
@@ -1054,12 +1142,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -1118,9 +1208,14 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: unknown,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: UiSchema,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },
@@ -2187,12 +2282,14 @@ describe('AJV8Validator', () => {
             foo: { 'ui:label': false },
           };
 
-          validate = vi.fn((formData: any, errors: FormValidation) => {
-            if (formData.pass1 !== formData.pass2) {
-              errors.pass2!.addError('passwords don`t match.');
-            }
-            return errors;
-          });
+          validate = vi.fn(
+            (formData: { pass1?: string; pass2?: string }, errors: FormValidation<{ pass2?: string }>) => {
+              if (formData.pass1 !== formData.pass2) {
+                errors.pass2?.addError('passwords don`t match.');
+              }
+              return errors;
+            },
+          );
         });
         describe('formData is provided', () => {
           beforeAll(() => {
@@ -2251,9 +2348,14 @@ describe('AJV8Validator', () => {
 
           beforeAll(() => {
             validate = vi.fn(
-              (_formData: any, errors: any, _uiSchema?: any, errorSchema?: ErrorSchema<{ pass1: string }>) => {
+              (
+                _formData: unknown,
+                errors: FormValidation<{ pass1?: string }>,
+                _uiSchema?: UiSchema,
+                errorSchema?: ErrorSchema<{ pass1: string }>,
+              ) => {
                 if ((errorSchema?.pass1?.__errors?.length ?? 0) > 0) {
-                  errors.pass1!.addError('custom error from customValidate');
+                  errors.pass1?.addError('custom error from customValidate');
                 }
                 return errors;
               },
@@ -2688,7 +2790,7 @@ describe('AJV8Validator', () => {
     });
     describe('validating dependencies', () => {
       beforeAll(() => {
-        validator = new AJV8Validator({ AjvClass: Ajv2019 }, localize.en as Localizer);
+        validator = new AJV8Validator({ AjvClass: Ajv2019 }, ajvI18n.en);
       });
       it('should return an error when a dependent is missing', () => {
         schema = {
@@ -3085,5 +3187,70 @@ describe('AJV8Validator', () => {
       });
       expect(validator.suppressDuplicateFiltering).toBe('all');
     });
+  });
+  describe('time and date-time formats (RFC 3339 timezone requirement)', () => {
+    let validator: AJV8Validator;
+    beforeAll(() => {
+      validator = new AJV8Validator({});
+    });
+    const timeSchema: RJSFSchema = { type: 'string', format: 'time' };
+    const dateTimeSchema: RJSFSchema = { type: 'string', format: 'date-time' };
+    const isoTimeSchema: RJSFSchema = { type: 'string', format: 'iso-time' };
+    const isoDateTimeSchema: RJSFSchema = { type: 'string', format: 'iso-date-time' };
+
+    it('should accept a "time" value with a "Z" offset', () => {
+      expect(validator.isValid(timeSchema, '20:20:39Z', timeSchema)).toBe(true);
+    });
+    it('should accept a "time" value with a numeric offset', () => {
+      expect(validator.isValid(timeSchema, '20:20:39+05:30', timeSchema)).toBe(true);
+    });
+    it('should reject a "time" value with no timezone offset', () => {
+      expect(validator.isValid(timeSchema, '20:20:39', timeSchema)).toBe(false);
+    });
+    it('should accept a "date-time" value with a "Z" offset', () => {
+      expect(validator.isValid(dateTimeSchema, '2016-04-05T14:01:30.000Z', dateTimeSchema)).toBe(true);
+    });
+    it('should reject a "date-time" value with no timezone offset', () => {
+      expect(validator.isValid(dateTimeSchema, '2016-04-05T14:01:30', dateTimeSchema)).toBe(false);
+    });
+    it('should accept an "iso-time" value with no timezone offset, for backwards compatibility', () => {
+      expect(validator.isValid(isoTimeSchema, '20:20:39', isoTimeSchema)).toBe(true);
+    });
+    it('should accept an "iso-date-time" value with no timezone offset, for backwards compatibility', () => {
+      expect(validator.isValid(isoDateTimeSchema, '2016-04-05T14:01:30', isoDateTimeSchema)).toBe(true);
+    });
+  });
+});
+
+describe('validateFormData() and the data handed to customValidate', () => {
+  it('hands customValidate the formData whose defaults the caller computed', () => {
+    const validator = new AJV8Validator({});
+    const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    // `Form` computes these with its own `SchemaUtils`, so they honor the `customMergeAllOf` and
+    // `defaultFormStateBehavior` it was given, which a validator has no way to know
+    validator.validateFormData({}, schema, customValidate, undefined, undefined, () => ({ a: 'fromTheForm' }));
+    expect(customValidate.mock.calls[0][0]).toEqual({ a: 'fromTheForm' });
+  });
+
+  it('hands customValidate an undefined the caller computed, rather than recomputing its own defaults', () => {
+    const validator = new AJV8Validator({});
+    // A root whose defaults legitimately come out `undefined` for the form: read rather than called, the parameter
+    // could not say that, and the validator would recompute `[]` here with neither of the form's settings
+    const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    validator.validateFormData(undefined, schema, customValidate, undefined, undefined, () => undefined);
+    expect(customValidate.mock.calls[0][0]).toBeUndefined();
+  });
+
+  it('computes them itself, with the default allOf merge, when the caller supplies none', () => {
+    const validator = new AJV8Validator({});
+    const schema: RJSFSchema = {
+      type: 'object',
+      allOf: [{ properties: { merged: { type: 'string', default: 'fromAllOf' } } }],
+    };
+    const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
+    validator.validateFormData({}, schema, customValidate);
+    expect(customValidate.mock.calls[0][0]).toEqual({ merged: 'fromAllOf' });
   });
 });

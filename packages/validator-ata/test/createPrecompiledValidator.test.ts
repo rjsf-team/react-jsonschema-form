@@ -2,26 +2,15 @@ import type { RJSFSchema } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import createPrecompiledValidator from '../src/createPrecompiledValidator.ts';
-import type { Localizer, ValidatorFunctions } from '../src/index.ts';
+import type { Localizer } from '../src/index.ts';
 import ATAPrecompiledValidator from '../src/precompiledValidator.ts';
-import superSchemaObj from './harness/superSchema.json';
+import loadModule from './harness/loadModule.ts';
+import superSchemaObj from './harness/superSchema.json' with { type: 'json' };
 
 vi.mock('../src/precompiledValidator');
 
-interface TestType {
-  foo: string;
-  bar: boolean;
-}
-
-function loadModule(code: string) {
-  const module = { exports: {} as Record<string, any> };
-  // oxlint-disable-next-line no-new-func, no-implied-eval
-  new Function('module', 'exports', code)(module, module.exports);
-  return module.exports;
-}
-
 const rootSchema = superSchemaObj as unknown as RJSFSchema;
-const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema)) as ValidatorFunctions;
+const validateFns = loadModule(compileSchemaValidatorsCode(rootSchema));
 const mockedValidator = vi.mocked(ATAPrecompiledValidator);
 
 describe('createPrecompiledValidator()', () => {
@@ -29,13 +18,13 @@ describe('createPrecompiledValidator()', () => {
     let custom: any;
     beforeAll(() => {
       mockedValidator.mockClear();
-      custom = createPrecompiledValidator<TestType>(validateFns, rootSchema);
+      custom = createPrecompiledValidator(validateFns, rootSchema);
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);
     });
     it('precompiledValidator was constructed with validateFns and rootSchema', () => {
-      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined, undefined);
+      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined);
     });
   });
   describe('passing validatorFns, rootSchema and localizer to createPrecompiledValidator', () => {
@@ -44,26 +33,28 @@ describe('createPrecompiledValidator()', () => {
     beforeAll(() => {
       localizer = vi.fn();
       mockedValidator.mockClear();
-      custom = createPrecompiledValidator<TestType>(validateFns, rootSchema, localizer);
+      custom = createPrecompiledValidator(validateFns, rootSchema, { localizer });
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);
     });
     it('defaultValidator was constructed with validateFns, rootSchema and the localizer', () => {
-      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, localizer, undefined);
+      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, { localizer });
     });
   });
   describe('passing suppressDuplicateFiltering to createPrecompiledValidator', () => {
     let custom: any;
     beforeAll(() => {
       mockedValidator.mockClear();
-      custom = createPrecompiledValidator<TestType>(validateFns, rootSchema, undefined, 'all');
+      custom = createPrecompiledValidator(validateFns, rootSchema, { suppressDuplicateFiltering: 'all' });
     });
     it('precompiled validator was created', () => {
       expect(custom).toBeInstanceOf(ATAPrecompiledValidator);
     });
     it('precompiledValidator was constructed with validateFns, rootSchema, undefined, and suppressDuplicateFiltering', () => {
-      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, undefined, 'all');
+      expect(ATAPrecompiledValidator).toHaveBeenCalledWith(validateFns, rootSchema, {
+        suppressDuplicateFiltering: 'all',
+      });
     });
   });
 });

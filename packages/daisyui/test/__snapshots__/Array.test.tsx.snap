@@ -9,7 +9,7 @@ exports[`array fields > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -91,7 +91,7 @@ exports[`array fields > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -109,34 +109,11 @@ exports[`array fields > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -262,34 +239,11 @@ exports[`array fields > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -474,38 +428,34 @@ exports[`array fields > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -603,7 +553,7 @@ exports[`array fields > empty errors array 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -618,11 +568,12 @@ exports[`array fields > empty errors array 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -633,17 +584,6 @@ exports[`array fields > empty errors array 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -700,7 +640,7 @@ exports[`array fields > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -718,34 +658,11 @@ exports[`array fields > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -778,34 +695,11 @@ exports[`array fields > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -813,11 +707,13 @@ exports[`array fields > fixed array 1`] = `
                           aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
+                          inputmode="decimal"
                           name="root_1"
+                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                           placeholder=""
                           required=""
-                          step="any"
-                          type="number"
+                          title="Enter a number"
+                          type="text"
                           value=""
                         />
                       </div>
@@ -876,7 +772,7 @@ exports[`array fields > has errors 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -891,11 +787,12 @@ exports[`array fields > has errors 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string rjsf-field-error"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string rjsf-field-error"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -906,17 +803,6 @@ exports[`array fields > has errors 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -977,7 +863,7 @@ exports[`array fields > no errors 1`] = `
       class="flex-grow rjsf-field rjsf-field-object"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-object"
+        class="field-template mb-3"
       >
         <div
           class="form-control bg-base-100 p-6 rounded-xl shadow-lg"
@@ -992,11 +878,12 @@ exports[`array fields > no errors 1`] = `
                 class="flex-grow rjsf-field rjsf-field-string"
               >
                 <div
-                  class="field-template mb-3 rjsf-field rjsf-field-string"
+                  class="field-template mb-3"
                 >
                   <label
                     class="label"
                     for="root_name"
+                    id="root_name__label"
                   >
                     <span
                       class="label-text font-medium"
@@ -1007,17 +894,6 @@ exports[`array fields > no errors 1`] = `
                   <div
                     class="form-control"
                   >
-                    <label
-                      class="label hidden"
-                      for="root_name"
-                      style="display: none;"
-                    >
-                      <span
-                        class="label-text"
-                      >
-                        name
-                      </span>
-                    </label>
                     <div
                       style="position: relative;"
                     >
@@ -1074,7 +950,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
@@ -1092,7 +968,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control "
@@ -1107,11 +983,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
                                 for="root_0_name"
+                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1122,17 +999,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1164,11 +1030,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-number"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
                                 for="root_0_value"
+                                id="root_0_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1179,17 +1046,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1197,10 +1053,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                     class="input input-bordered w-full"
                                     id="root_0_value"
+                                    inputmode="decimal"
                                     name="root[0][value]"
+                                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                                     placeholder=""
-                                    step="any"
-                                    type="number"
+                                    title="Enter a number"
+                                    type="text"
                                     value="10"
                                   />
                                 </div>
@@ -1306,7 +1164,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control "
@@ -1321,11 +1179,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
                                 for="root_1_name"
+                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1336,17 +1195,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1378,11 +1226,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-number"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
                                 for="root_1_value"
+                                id="root_1_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -1393,17 +1242,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -1411,10 +1249,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                     class="input input-bordered w-full"
                                     id="root_1_value"
+                                    inputmode="decimal"
                                     name="root[1][value]"
+                                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                                     placeholder=""
-                                    step="any"
-                                    type="number"
+                                    title="Enter a number"
+                                    type="text"
                                     value="20"
                                   />
                                 </div>
@@ -1579,7 +1419,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -1597,34 +1437,11 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -1729,34 +1546,11 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -1920,38 +1714,34 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
-        <label
-          class="label"
-          for="root"
-        >
-          <span
-            class="label-text font-medium"
-          />
-        </label>
         <div
           class="form-control w-full"
         >
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Select...
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -2049,7 +1839,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -2067,34 +1857,11 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -2127,34 +1894,11 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -2162,11 +1906,13 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                           aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
+                          inputmode="decimal"
                           name="root[1]"
+                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                           placeholder=""
                           required=""
-                          step="any"
-                          type="number"
+                          title="Enter a number"
+                          type="text"
                           value="42"
                         />
                       </div>
@@ -2188,17 +1934,17 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-boolean"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-boolean"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
                     >
                       <input
+                        aria-describedby="root_2__error root_2__description root_2__help"
                         checked=""
                         class="checkbox"
                         id="root_2"
                         name="root[2]"
-                        required=""
                         type="checkbox"
                       />
                     </div>
@@ -2245,7 +1991,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-array"
@@ -2263,7 +2009,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   class="flex-grow rjsf-field rjsf-field-array"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-array"
+                    class="field-template mb-3"
                   >
                     <div
                       class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -2281,34 +2027,11 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
-                                class="field-template mb-3 rjsf-field rjsf-field-string"
+                                class="field-template mb-3"
                               >
-                                <label
-                                  class="label"
-                                  for="root_0_0"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_0_0"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2413,34 +2136,11 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
-                                class="field-template mb-3 rjsf-field rjsf-field-string"
+                                class="field-template mb-3"
                               >
-                                <label
-                                  class="label"
-                                  for="root_0_1"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_0_1"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2663,7 +2363,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                   class="flex-grow rjsf-field rjsf-field-array"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-array"
+                    class="field-template mb-3"
                   >
                     <div
                       class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -2681,34 +2381,11 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
-                                class="field-template mb-3 rjsf-field rjsf-field-string"
+                                class="field-template mb-3"
                               >
-                                <label
-                                  class="label"
-                                  for="root_1_0"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_1_0"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -2813,34 +2490,11 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="flex-grow rjsf-field rjsf-field-string"
                             >
                               <div
-                                class="field-template mb-3 rjsf-field rjsf-field-string"
+                                class="field-template mb-3"
                               >
-                                <label
-                                  class="label"
-                                  for="root_1_1"
-                                >
-                                  <span
-                                    class="label-text font-medium"
-                                  >
-                                    <span
-                                      class="text-error ml-1"
-                                    >
-                                      *
-                                    </span>
-                                  </span>
-                                </label>
                                 <div
                                   class="form-control"
                                 >
-                                  <label
-                                    class="label hidden"
-                                    for="root_1_1"
-                                    style="display: none;"
-                                  >
-                                    <span
-                                      class="label-text"
-                                    />
-                                  </label>
                                   <div
                                     style="position: relative;"
                                   >
@@ -3122,7 +2776,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
@@ -3140,7 +2794,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control "
@@ -3155,11 +2809,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
                                 for="root_0_name"
+                                id="root_0_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3170,17 +2825,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3212,11 +2856,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-number"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
                                 for="root_0_value"
+                                id="root_0_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3227,17 +2872,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_0_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3245,10 +2879,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                     class="input input-bordered w-full"
                                     id="root_0_value"
+                                    inputmode="decimal"
                                     name="root.0.value"
+                                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                                     placeholder=""
-                                    step="any"
-                                    type="number"
+                                    title="Enter a number"
+                                    type="text"
                                     value="10"
                                   />
                                 </div>
@@ -3354,7 +2990,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   class="flex-grow rjsf-field rjsf-field-object"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-object"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control "
@@ -3369,11 +3005,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-string"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-string"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
                                 for="root_1_name"
+                                id="root_1_name__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3384,17 +3021,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_name"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    name
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3426,11 +3052,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="flex-grow rjsf-field rjsf-field-number"
                           >
                             <div
-                              class="field-template mb-3 rjsf-field rjsf-field-number"
+                              class="field-template mb-3"
                             >
                               <label
                                 class="label"
                                 for="root_1_value"
+                                id="root_1_value__label"
                               >
                                 <span
                                   class="label-text font-medium"
@@ -3441,17 +3068,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               <div
                                 class="form-control"
                               >
-                                <label
-                                  class="label hidden"
-                                  for="root_1_value"
-                                  style="display: none;"
-                                >
-                                  <span
-                                    class="label-text"
-                                  >
-                                    value
-                                  </span>
-                                </label>
                                 <div
                                   style="position: relative;"
                                 >
@@ -3459,10 +3075,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                     class="input input-bordered w-full"
                                     id="root_1_value"
+                                    inputmode="decimal"
                                     name="root.1.value"
+                                    pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                                     placeholder=""
-                                    step="any"
-                                    type="number"
+                                    title="Enter a number"
+                                    type="text"
                                     value="20"
                                   />
                                 </div>
@@ -3627,7 +3245,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -3645,34 +3263,11 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_0"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -3777,34 +3372,11 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
-                    <label
-                      class="label"
-                      for="root_1"
-                    >
-                      <span
-                        class="label-text font-medium"
-                      >
-                        <span
-                          class="text-error ml-1"
-                        >
-                          *
-                        </span>
-                      </span>
-                    </label>
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        />
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -3968,7 +3540,7 @@ exports[`with title and description > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -4064,7 +3636,7 @@ exports[`with title and description > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -4096,11 +3668,12 @@ exports[`with title and description > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4116,17 +3689,6 @@ exports[`with title and description > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4262,11 +3824,12 @@ exports[`with title and description > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4282,17 +3845,6 @@ exports[`with title and description > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4487,11 +4039,12 @@ exports[`with title and description > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -4505,22 +4058,26 @@ exports[`with title and description > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Test field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -4628,7 +4185,7 @@ exports[`with title and description > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -4660,11 +4217,12 @@ exports[`with title and description > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4680,17 +4238,6 @@ exports[`with title and description > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4733,11 +4280,12 @@ exports[`with title and description > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4753,17 +4301,6 @@ exports[`with title and description > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -4771,11 +4308,13 @@ exports[`with title and description > fixed array 1`] = `
                           aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
+                          inputmode="decimal"
                           name="root_1"
+                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                           placeholder=""
                           required=""
-                          step="any"
-                          type="number"
+                          title="Enter a number"
+                          type="text"
                           value=""
                         />
                       </div>
@@ -4833,7 +4372,7 @@ exports[`with title and description from both > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -4929,7 +4468,7 @@ exports[`with title and description from both > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -4961,11 +4500,12 @@ exports[`with title and description from both > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -4981,17 +4521,6 @@ exports[`with title and description from both > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5127,11 +4656,12 @@ exports[`with title and description from both > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5147,17 +4677,6 @@ exports[`with title and description from both > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5352,11 +4871,12 @@ exports[`with title and description from both > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -5370,22 +4890,26 @@ exports[`with title and description from both > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 My Field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -5493,7 +5017,7 @@ exports[`with title and description from both > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -5525,11 +5049,12 @@ exports[`with title and description from both > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5545,17 +5070,6 @@ exports[`with title and description from both > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5598,11 +5112,12 @@ exports[`with title and description from both > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5618,17 +5133,6 @@ exports[`with title and description from both > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5636,11 +5140,13 @@ exports[`with title and description from both > fixed array 1`] = `
                           aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
+                          inputmode="decimal"
                           name="root_1"
+                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                           placeholder=""
                           required=""
-                          step="any"
-                          type="number"
+                          title="Enter a number"
+                          type="text"
                           value=""
                         />
                       </div>
@@ -5698,7 +5204,7 @@ exports[`with title and description from uiSchema > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5794,7 +5300,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -5826,11 +5332,12 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -5846,17 +5353,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -5992,11 +5488,12 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -6012,17 +5509,6 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6217,11 +5703,12 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <label
           class="label"
           for="root"
+          id="root__label"
         >
           <span
             class="label-text font-medium"
@@ -6235,22 +5722,26 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 My Field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -6358,7 +5849,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -6390,11 +5881,12 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_0"
+                      id="root_0__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -6410,17 +5902,6 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6463,11 +5944,12 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <label
                       class="label"
                       for="root_1"
+                      id="root_1__label"
                     >
                       <span
                         class="label-text font-medium"
@@ -6483,17 +5965,6 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          My Item
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6501,11 +5972,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
+                          inputmode="decimal"
                           name="root_1"
+                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                           placeholder=""
                           required=""
-                          step="any"
-                          type="number"
+                          title="Enter a number"
+                          type="text"
                           value=""
                         />
                       </div>
@@ -6563,7 +6036,7 @@ exports[`with title and description with global label off > array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6645,7 +6118,7 @@ exports[`with title and description with global label off > array icons 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
@@ -6663,22 +6136,11 @@ exports[`with title and description with global label off > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -6804,22 +6266,11 @@ exports[`with title and description with global label off > array icons 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -7004,7 +6455,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="form-control w-full"
@@ -7012,22 +6463,26 @@ exports[`with title and description with global label off > checkboxes 1`] = `
           <div
             class="dropdown w-full"
           >
-            <div
+            <button
+              aria-describedby="root__error root__description root__help"
               class="btn btn-outline w-full text-left flex justify-between items-center "
-              role="button"
+              id="root"
               tabindex="0"
+              type="button"
             >
               <span
                 class="truncate"
+                id="root__value"
               >
                 Test field
               </span>
               <span
+                aria-hidden="true"
                 class="ml-2"
               >
                 ▼
               </span>
-            </div>
+            </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               role="listbox"
@@ -7125,7 +6580,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
       class="flex-grow rjsf-field rjsf-field-array"
     >
       <div
-        class="field-template mb-3 rjsf-field rjsf-field-array"
+        class="field-template mb-3"
       >
         <div
           class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
@@ -7143,22 +6598,11 @@ exports[`with title and description with global label off > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-string"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-string"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_0"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-1
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -7191,22 +6635,11 @@ exports[`with title and description with global label off > fixed array 1`] = `
                   class="flex-grow rjsf-field rjsf-field-number"
                 >
                   <div
-                    class="field-template mb-3 rjsf-field rjsf-field-number"
+                    class="field-template mb-3"
                   >
                     <div
                       class="form-control"
                     >
-                      <label
-                        class="label hidden"
-                        for="root_1"
-                        style="display: none;"
-                      >
-                        <span
-                          class="label-text"
-                        >
-                          Test field-2
-                        </span>
-                      </label>
                       <div
                         style="position: relative;"
                       >
@@ -7214,11 +6647,13 @@ exports[`with title and description with global label off > fixed array 1`] = `
                           aria-describedby="root_1__error root_1__description root_1__help"
                           class="input input-bordered w-full"
                           id="root_1"
+                          inputmode="decimal"
                           name="root_1"
+                          pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                           placeholder=""
                           required=""
-                          step="any"
-                          type="number"
+                          title="Enter a number"
+                          type="text"
                           value=""
                         />
                       </div>

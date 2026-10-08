@@ -8,9 +8,9 @@ import { Input } from 'antd';
  * @param props - The `WidgetProps` for this component
  */
 export default function PasswordWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
   const { disabled, registry, id, onBlur, onChange, onFocus, options, placeholder, readonly, value } = props;
   const { formContext } = registry;

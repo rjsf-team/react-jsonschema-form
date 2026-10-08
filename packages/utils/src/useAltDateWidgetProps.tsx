@@ -1,12 +1,12 @@
 'use client';
 
 import type { MouseEvent } from 'react';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 import dateRangeOptions from './dateRangeOptions.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps from './getDateElementProps.ts';
-import { ariaDescribedByIds } from './idGenerators.ts';
+import { ariaDescribedByIds, dateElementId } from './idGenerators.ts';
 import parseDateString from './parseDateString.ts';
 import toDateString from './toDateString.ts';
 import type { DateObject, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
@@ -21,7 +21,11 @@ function readyForChange(state: DateObject) {
 }
 
 /** The Props for the `DateElement` component */
-export type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = Pick<
+export type DateElementProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = Pick<
   WidgetProps<T, S, F>,
   'value' | 'name' | 'disabled' | 'readonly' | 'autofocus' | 'registry' | 'onBlur' | 'onFocus' | 'className'
 > & {
@@ -40,9 +44,11 @@ export type DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
  *
  * @param props - The `DateElementProps` for the date element
  */
-export function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: DateElementProps<T, S, F>,
-) {
+export function DateElement<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: DateElementProps<T, S, F>) {
   const {
     className = 'form-control',
     type,
@@ -58,7 +64,7 @@ export function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     onBlur,
     onFocus,
   } = props;
-  const id = `${rootId}_${type}`;
+  const id = dateElementId(rootId, type);
   const { SelectWidget } = registry.widgets;
   const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
   return (
@@ -103,31 +109,34 @@ export interface UseAltDateWidgetResult {
  * @param props - The `WidgetProps` for the `AltDateWidget`
  */
 export default function useAltDateWidgetProps<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>): UseAltDateWidgetResult {
   const { time = false, disabled = false, readonly = false, options, onChange, value } = props;
-  const [state, setState] = useState(parseDateString(value, time));
-
-  useEffect(() => {
-    setState(parseDateString(value, time));
-  }, [time, value]);
+  const parsed = useMemo(() => parseDateString(value, time), [value, time]);
+  // A selection that isn't complete yet, kept only for the parse it was made against, so a new value from the parent
+  // replaces it. Tagged with that parse rather than with `value`, since the memo builds a new one on every change: a
+  // value the parent replaces and then restores must not revive the draft. Dropped whenever a value is sent, so a
+  // parent that rejects it or stores it later shows the value it holds
+  const [draft, setDraft] = useState<{ basis: DateObject; state: DateObject }>();
+  const state = draft?.basis === parsed ? draft.state : parsed;
 
   const handleChange = useCallback(
     (property: keyof DateObject, newValue?: string) => {
       const nextState = {
         ...state,
-        [property]: typeof newValue === 'undefined' ? -1 : newValue,
+        [property]: newValue === undefined || newValue === '' ? -1 : Number(newValue),
       };
 
       if (readyForChange(nextState)) {
+        setDraft(undefined);
         onChange(toDateString(nextState, time));
       } else {
-        setState(nextState);
+        setDraft({ basis: parsed, state: nextState });
       }
     },
-    [state, onChange, time],
+    [state, onChange, time, parsed],
   );
 
   const handleClear = useCallback(
@@ -136,6 +145,7 @@ export default function useAltDateWidgetProps<
       if (disabled || readonly) {
         return;
       }
+      setDraft(undefined);
       onChange(undefined);
     },
     [disabled, readonly, onChange],
@@ -148,6 +158,7 @@ export default function useAltDateWidgetProps<
         return;
       }
       const nextState = parseDateString(new Date().toJSON(), time);
+      setDraft(undefined);
       onChange(toDateString(nextState, time));
     },
     [disabled, readonly, time, onChange],

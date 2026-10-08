@@ -11,17 +11,17 @@ export default function isMultiSelectTest(testValidator: TestValidatorType) {
             items: { enum: ['foo', 'bar'] },
             uniqueItems: true,
           };
-          expect(isMultiSelect(testValidator, schema)).toBe(true);
+          expect(isMultiSelect({ validator: testValidator }, schema)).toBe(true);
         });
       });
       it('should be false if items is undefined', () => {
         const schema: RJSFSchema = {};
-        expect(isMultiSelect(testValidator, schema)).toBe(false);
+        expect(isMultiSelect({ validator: testValidator }, schema)).toBe(false);
       });
       describe('schema items enum is not an array', () => {
         it('should be false if oneOf/anyOf is not in items schema', () => {
           const schema: RJSFSchema = { items: {}, uniqueItems: true };
-          expect(isMultiSelect(testValidator, schema)).toBe(false);
+          expect(isMultiSelect({ validator: testValidator }, schema)).toBe(false);
         });
         it('should be false if oneOf/anyOf schemas are not all constants', () => {
           const schema: RJSFSchema = {
@@ -30,7 +30,7 @@ export default function isMultiSelectTest(testValidator: TestValidatorType) {
             },
             uniqueItems: true,
           };
-          expect(isMultiSelect(testValidator, schema)).toBe(false);
+          expect(isMultiSelect({ validator: testValidator }, schema)).toBe(false);
         });
         it('should be true if oneOf/anyOf schemas are all constants', () => {
           const schema: RJSFSchema = {
@@ -42,7 +42,7 @@ export default function isMultiSelectTest(testValidator: TestValidatorType) {
             },
             uniqueItems: true,
           };
-          expect(isMultiSelect(testValidator, schema)).toBe(true);
+          expect(isMultiSelect({ validator: testValidator }, schema)).toBe(true);
         });
       });
       it('should retrieve reference schema definitions', () => {
@@ -53,7 +53,7 @@ export default function isMultiSelectTest(testValidator: TestValidatorType) {
           items: { $ref: '#/definitions/FooItem' },
           uniqueItems: true,
         };
-        const schemaUtils = createSchemaUtils(testValidator, schema);
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
         expect(schemaUtils.isMultiSelect(schema)).toBe(true);
       });
     });
@@ -62,7 +62,7 @@ export default function isMultiSelectTest(testValidator: TestValidatorType) {
         items: { enum: ['foo', 'bar'] },
         uniqueItems: false,
       };
-      expect(isMultiSelect(testValidator, schema)).toBe(false);
+      expect(isMultiSelect({ validator: testValidator }, schema)).toBe(false);
     });
   });
 }

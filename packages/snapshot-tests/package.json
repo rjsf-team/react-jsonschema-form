@@ -4,43 +4,37 @@
   "type": "module",
   "description": "A set of snapshot tests to be used for testing RJSF theme.",
   "scripts": {
-    "build": "tsc -b .",
-    "cs-check": "oxfmt --check \"src/**/*.{ts,tsx,js,jsx}\"",
-    "cs-format": "oxfmt \"src/**/*.{ts,tsx,js,jsx}\"",
-    "lint": "oxlint src",
-    "precommit": "lint-staged",
+    "build": "tsdown -c ../../tsdown.base.mts",
     "publish-to-npm": "pnpm run build && pnpm publish",
-    "test": "echo 'OK'",
-    "test-coverage": "echo 'OK'"
-  },
-  "lint-staged": {
-    "src/**/*.{ts,tsx,js,jsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
+    "test": "vitest run",
+    "test-coverage": "vitest run --coverage",
+    "test:update": "vitest run --update",
+    "test:watch": "vitest"
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
-    "dist",
     "lib",
     "src"
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "peerDependencies": {
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "@testing-library/jest-dom": "^7.0.1",
+    "@rjsf/validator-ajv8": "workspace:^",
     "@testing-library/react": "^16.3.3",
-    "react": ">=18"
+    "markdown-to-jsx": "^9.8.2",
+    "react": ">=19"
   },
   "devDependencies": {
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "@rjsf/validator-ajv8": "workspace:^"
+    "@rjsf/validator-ajv8": "workspace:^",
+    "@testing-library/react": "^16.3.3",
+    "markdown-to-jsx": "^9.8.2"
   },
   "repository": {
     "type": "git",
@@ -63,7 +57,6 @@
   "exports": {
     ".": {
       "@rjsf/source": "./src/index.ts",
-      "types": "./lib/index.d.ts",
       "default": "./lib/index.js"
     },
     "./package.json": "./package.json",

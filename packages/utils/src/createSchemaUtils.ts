@@ -1,6 +1,8 @@
 import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
+import logOnce from './logOnce.ts';
+import replaceEqualDeep from './replaceEqualDeep.ts';
 import {
   findFieldInSchema,
   findSelectedOptionInXxxOf,
@@ -9,66 +11,76 @@ import {
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
+  getUiRequiredErrorSchema,
   isFilesArray,
   isMultiSelect,
   isSelect,
   omitExtraData,
   retrieveSchema,
   sanitizeDataForNewSchema,
-  toPathSchema,
 } from './schema/index.ts';
 import type {
-  Experimental_CustomMergeAllOf,
-  Experimental_DefaultFormStateBehavior,
   FormContextType,
   FoundFieldType,
+  GenericObjectType,
   GlobalUISchemaOptions,
-  PathSchema,
   RJSFSchema,
+  SchemaContext,
   SchemaFieldPath,
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
+  UiSchemaDefinitions,
 } from './types.ts';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
- * that one does not have to explicitly pass the `validator`, `rootSchema`, `experimental_defaultFormStateBehavior` or
- * `experimental_customMergeAllOf` to each method. Since these generally do not change across a `Form`, this allows for
- * providing a simplified set of APIs to the `@rjsf/core` components and the various themes as well. This class
- * implements the `SchemaUtilsType` interface.
+ * that one does not have to explicitly pass the `SchemaContext` or `rootSchema` to each method. Since these generally
+ * do not change across a `Form`, this allows for providing a simplified set of APIs to the `@rjsf/core` components and
+ * the various themes as well. This class implements the `SchemaUtilsType` interface.
  */
 class SchemaUtils<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 > implements SchemaUtilsType<T, S, F> {
+  private readonly context: SchemaContext<S, F>;
   rootSchema: S;
-  validator: ValidatorType<T, S, F>;
-  experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
-
-  /** Constructs the `SchemaUtils` instance with the given `validator` and `rootSchema` stored as instance variables
-   *
-   * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
-   * @param rootSchema - The root schema that will be forwarded to all the APIs
-   * @param experimental_defaultFormStateBehavior - Configuration flags to allow users to override default form state behavior
-   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+  /** The `rootSchema` exactly as the caller passed it. A draft 2020-12 root is stored above with every relative `$ref`
+   * rewritten against its `$id`, so comparing that rewritten copy with what a caller passes back would never match and
+   * `doesSchemaUtilsDiffer()` would report a difference on every render
    */
-  constructor(
-    validator: ValidatorType<T, S, F>,
-    rootSchema: S,
-    experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-  ) {
+  private readonly rawRootSchema: S;
+  /** The last `retrieveSchema()` result per schema object, used only as the base for `replaceEqualDeep()` so a
+   * recomputed schema keeps the identity of every subschema that did not change. Nothing is served from it directly,
+   * so a `rawFormData` object mutated in place after a call is still resolved afresh. Resolving the `anyOf`/`oneOf`
+   * refs yields a differently shaped result, so it gets a slot of its own rather than evicting the plain one.
+   */
+  private lastRetrievedSchemas = new WeakMap<object, S>();
+  private lastRetrievedSchemasWithRefs = new WeakMap<object, S>();
+
+  /** Constructs the `SchemaUtils` instance with the given `context` and `rootSchema` stored as instance variables
+   *
+   * @param context - The `SchemaContext` that will be forwarded to all the APIs
+   * @param rootSchema - The root schema that will be forwarded to all the APIs
+   */
+  constructor(context: SchemaContext<S, F>, rootSchema: S) {
     if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
       this.rootSchema = makeAllReferencesAbsolute(rootSchema, rootSchema[ID_KEY] ?? '#');
     } else {
       this.rootSchema = rootSchema;
     }
-    this.validator = validator;
-    this.experimental_defaultFormStateBehavior = experimental_defaultFormStateBehavior;
-    this.experimental_customMergeAllOf = experimental_customMergeAllOf;
+    this.rawRootSchema = rootSchema;
+    // A v6 caller passing the validator here leaves `validator` undefined, which surfaces only as a `TypeError` from
+    // inside `retrieveSchema()` that names nothing. Warned rather than thrown, since TypeScript already rejects it
+    if (context && !('validator' in context) && typeof (context as GenericObjectType).isValid === 'function') {
+      logOnce(
+        'createSchemaUtils() takes a SchemaContext rather than a validator: pass `{ validator }`, plus any `customMergeAllOf` and `defaultFormStateBehavior`',
+      );
+    }
+    // Snapshotted so a caller swapping a setting on the object it passed cannot change how this instance behaves
+    // behind `doesSchemaUtilsDiffer()`, and frozen because the snapshot is what reaches `computeSkipPopulate()`. The
+    // settings objects it points at stay the caller's, as `SchemaContext` documents
+    this.context = Object.freeze({ ...context });
   }
 
   /** Returns the `rootSchema` in the `SchemaUtilsType`
@@ -84,36 +96,33 @@ class SchemaUtils<
    * @returns - The `ValidatorType`
    */
   getValidator() {
-    return this.validator;
+    return this.context.validator;
   }
 
-  /** Determines whether either the `validator` and `rootSchema` differ from the ones associated with this instance of
-   * the `SchemaUtilsType`. If either `validator` or `rootSchema` are falsy, then return false to prevent the creation
-   * of a new `SchemaUtilsType` with incomplete properties.
+  /** Determines whether either the `context` or `rootSchema` differ from the ones associated with this instance of the
+   * `SchemaUtilsType`. If either `context.validator` or `rootSchema` are falsy, then return false to prevent the
+   * creation of a new `SchemaUtilsType` with incomplete properties.
    *
-   * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
+   * @param context - The `SchemaContext` that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
-   * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
-   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
-   * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
+   * @returns - True if the `SchemaUtilsType` differs from the given `context` or `rootSchema`
    */
-  doesSchemaUtilsDiffer(
-    validator: ValidatorType<T, S, F>,
-    rootSchema: S,
-    experimental_defaultFormStateBehavior = {},
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-  ): boolean {
-    // If either validator or rootSchema are falsy, return false to prevent the creation
-    // of a new SchemaUtilsType with incomplete properties.
-    if (!validator || !rootSchema) {
+  doesSchemaUtilsDiffer(context: SchemaContext<S, F>, rootSchema: S): boolean {
+    // If either validator or rootSchema are falsy, return false to prevent the creation of a new SchemaUtilsType with
+    // incomplete properties
+    if (!context?.validator || !rootSchema) {
       return false;
     }
 
+    // `deepEquals()` treats any two functions as equal, so a `defaultFormStateBehavior` differing only in
+    // `arrayMinItems.computeSkipPopulate` reads as no difference and this instance keeps the callback it was built
+    // with. Comparing by identity would rebuild on every render for the common case of an inline callback, discarding
+    // the `retrieveSchema()` caches, so the stale read is the deliberate trade
     return (
-      this.validator !== validator ||
-      !deepEquals(this.rootSchema, rootSchema) ||
-      !deepEquals(this.experimental_defaultFormStateBehavior, experimental_defaultFormStateBehavior) ||
-      this.experimental_customMergeAllOf !== experimental_customMergeAllOf
+      this.context.validator !== context.validator ||
+      !deepEquals(this.rawRootSchema, rootSchema) ||
+      !deepEquals(this.context.defaultFormStateBehavior ?? {}, context.defaultFormStateBehavior ?? {}) ||
+      this.context.customMergeAllOf !== context.customMergeAllOf
     );
   }
 
@@ -128,14 +137,7 @@ class SchemaUtils<
    *            `{ field: undefined, isRequired: undefined }` is returned.
    */
   findFieldInSchema(schema: S, path: SchemaFieldPath, formData?: T): FoundFieldType<S> {
-    return findFieldInSchema(
-      this.validator,
-      this.rootSchema,
-      schema,
-      path,
-      formData,
-      this.experimental_customMergeAllOf,
-    );
+    return findFieldInSchema(this.context, this.rootSchema, schema, path, formData);
   }
 
   /** Finds the oneOf option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` that
@@ -149,15 +151,7 @@ class SchemaUtils<
    * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
    */
   findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData: T): S | undefined {
-    return findSelectedOptionInXxxOf(
-      this.validator,
-      this.rootSchema,
-      schema,
-      fallbackField,
-      xxx,
-      formData,
-      this.experimental_customMergeAllOf,
-    );
+    return findSelectedOptionInXxxOf(this.context, this.rootSchema, schema, fallbackField, xxx, formData);
   }
 
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
@@ -169,6 +163,11 @@ class SchemaUtils<
    *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
    *          object properties.
    * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
+   * @param [uiSchema] - Optional uiSchema, used to apply `ui:emptyValue` and `ui:initialValue` as defaults
+   * @param [uiSchemaDefinitions] - Optional `ui:definitions`, applied at every `$ref`-resolved node the same way
+   *          `SchemaField` applies them. Defaults to `uiSchema['ui:definitions']`; pass it explicitly when `uiSchema`
+   *          is itself a sub-uiSchema (an array item, a `oneOf`/`anyOf` option, `additionalProperties`, ...) that
+   *          doesn't carry the root's own `ui:definitions`.
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
@@ -176,17 +175,18 @@ class SchemaUtils<
     formData?: T,
     includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
     initialDefaultsGenerated?: boolean,
+    uiSchema?: UiSchema<T, S, F>,
+    uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
   ): T | T[] | undefined {
-    return getDefaultFormState<T, S, F>(
-      this.validator,
+    return getDefaultFormState<T, S, F>(this.context, {
       schema,
       formData,
-      this.rootSchema,
+      rootSchema: this.rootSchema,
       includeUndefinedValues,
-      this.experimental_defaultFormStateBehavior,
-      this.experimental_customMergeAllOf,
       initialDefaultsGenerated,
-    );
+      uiSchema,
+      uiSchemaDefinitions,
+    });
   }
 
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
@@ -198,14 +198,7 @@ class SchemaUtils<
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions) {
-    return getDisplayLabel<T, S, F>(
-      this.validator,
-      schema,
-      uiSchema,
-      this.rootSchema,
-      globalOptions,
-      this.experimental_customMergeAllOf,
-    );
+    return getDisplayLabel<T, S, F>(this.context, schema, uiSchema, this.rootSchema, globalOptions);
   }
 
   /** Determines which of the given `options` provided most closely matches the `formData`.
@@ -228,13 +221,12 @@ class SchemaUtils<
     discriminatorField?: string,
   ): number {
     return getClosestMatchingOption<T, S, F>(
-      this.validator,
+      this.context,
       this.rootSchema,
       formData,
       options,
       selectedOption,
       discriminatorField,
-      this.experimental_customMergeAllOf,
     );
   }
 
@@ -248,7 +240,7 @@ class SchemaUtils<
    * @returns - The firstindex of the matched option or 0 if none is available
    */
   getFirstMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string): number {
-    return getFirstMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
+    return getFirstMatchingOption<T, S, F>(this.context, formData, options, this.rootSchema, discriminatorField);
   }
 
   /** Reads the value at `path` within a schema, additionally retrieving `$ref`s as needed to resolve
@@ -263,13 +255,12 @@ class SchemaUtils<
   getFromSchema(schema: S, path: SchemaFieldPath, defaultValue: S): S;
   getFromSchema(schema: S, path: SchemaFieldPath, defaultValue: T | S): T | S {
     return getFromSchema<T, S, F>(
-      this.validator,
+      this.context,
       this.rootSchema,
       schema,
       path,
       // @ts-expect-error TS2769: No overload matches this call
       defaultValue,
-      this.experimental_customMergeAllOf,
     );
   }
 
@@ -280,7 +271,7 @@ class SchemaUtils<
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
   isFilesArray(schema: S, uiSchema?: UiSchema<T, S, F>) {
-    return isFilesArray<T, S, F>(this.validator, schema, uiSchema, this.rootSchema, this.experimental_customMergeAllOf);
+    return isFilesArray<T, S, F>(this.context, schema, uiSchema, this.rootSchema);
   }
 
   /** Checks to see if the `schema` combination represents a multi-select
@@ -289,7 +280,7 @@ class SchemaUtils<
    * @returns - True if schema contains a multi-select, otherwise false
    */
   isMultiSelect(schema: S) {
-    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
+    return isMultiSelect<T, S, F>(this.context, schema, this.rootSchema);
   }
 
   /** Checks to see if the `schema` combination represents a select
@@ -298,7 +289,7 @@ class SchemaUtils<
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S) {
-    return isSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
+    return isSelect<T, S, F>(this.context, schema, this.rootSchema);
   }
   /**
    * The function takes a `schema` and `formData` and returns a copy of the formData with any fields not defined in the schema removed.
@@ -310,7 +301,7 @@ class SchemaUtils<
    * @returns The new form data, with any fields not defined in the schema removed
    */
   omitExtraData(schema: S, formData?: T): T | undefined {
-    return omitExtraData<T, S, F>(this.validator, schema, this.rootSchema, formData);
+    return omitExtraData<T, S, F>(this.context, schema, this.rootSchema, formData);
   }
 
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
@@ -323,13 +314,45 @@ class SchemaUtils<
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
-    return retrieveSchema<T, S, F>(
-      this.validator,
-      schema,
+    // `Form` renders an error for a non-object schema instead of throwing, so one reaches here despite the type, and a
+    // `WeakMap` refuses it as a key
+    const cacheKey = schema !== null && typeof schema === 'object' ? schema : undefined;
+    const cache = resolveAnyOfOrOneOfRefs ? this.lastRetrievedSchemasWithRefs : this.lastRetrievedSchemas;
+    const result = replaceEqualDeep(
+      cacheKey && cache.get(cacheKey),
+      retrieveSchema<T, S, F>(this.context, schema, this.rootSchema, rawFormData, resolveAnyOfOrOneOfRefs),
+    );
+    if (cacheKey) {
+      cache.set(cacheKey, result);
+    }
+    return result;
+  }
+
+  /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
+   * `ui:options.required` or its shorthand) in `uiSchema` whose value is missing from `formData`.
+   *
+   * @param uiSchema - The uiSchema to scan for `ui:required` fields
+   * @param [formData] - The current formData, used to determine which `ui:required` fields are missing
+   * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
+   * @param [globalUiOptions] - Optional global ui:options applied to every field
+   * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
+   */
+  getUiRequiredErrorSchema(
+    uiSchema: UiSchema<T, S, F> | undefined,
+    formData?: T,
+    uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
+    globalUiOptions?: GlobalUISchemaOptions,
+    formContext?: F,
+  ) {
+    return getUiRequiredErrorSchema<T, S, F>(
+      this.context,
       this.rootSchema,
-      rawFormData,
-      this.experimental_customMergeAllOf,
-      resolveAnyOfOrOneOfRefs,
+      uiSchema,
+      formData,
+      uiSchemaDefinitions,
+      globalUiOptions,
+      formContext,
     );
   }
 
@@ -345,60 +368,21 @@ class SchemaUtils<
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
-    return sanitizeDataForNewSchema(
-      this.validator,
-      this.rootSchema,
-      newSchema,
-      oldSchema,
-      data,
-      this.experimental_customMergeAllOf,
-    );
-  }
-
-  /** Generates an `PathSchema` object for the `schema`, recursively
-   *
-   * @param schema - The schema for which the display label flag is desired
-   * @param [name] - The base name for the schema
-   * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @returns - The `PathSchema` object for the `schema`
-   */
-  // oxlint-disable-next-line typescript/no-deprecated
-  toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
-    // oxlint-disable-next-line typescript/no-deprecated
-    return toPathSchema<T, S, F>(
-      this.validator,
-      schema,
-      name,
-      this.rootSchema,
-      formData,
-      this.experimental_customMergeAllOf,
-    );
+    return sanitizeDataForNewSchema(this.context, this.rootSchema, newSchema, oldSchema, data);
   }
 }
 
-/** Creates a `SchemaUtilsType` interface that is based around the given `validator` and `rootSchema` parameters. The
- * resulting interface implementation will forward the `validator` and `rootSchema` to all the wrapped APIs.
+/** Creates a `SchemaUtilsType` interface that is based around the given `context` and `rootSchema` parameters. The
+ * resulting interface implementation will forward the `context` and `rootSchema` to all the wrapped APIs.
  *
- * @param validator - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
- * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - An implementation of a `SchemaUtilsType` interface
  */
 export default function createSchemaUtils<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(
-  validator: ValidatorType<T, S, F>,
-  rootSchema: S,
-  experimental_defaultFormStateBehavior = {},
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-): SchemaUtilsType<T, S, F> {
-  return new SchemaUtils<T, S, F>(
-    validator,
-    rootSchema,
-    experimental_defaultFormStateBehavior,
-    experimental_customMergeAllOf,
-  );
+  F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, rootSchema: S): SchemaUtilsType<T, S, F> {
+  return new SchemaUtils<T, S, F>(context, rootSchema);
 }

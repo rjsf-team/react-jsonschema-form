@@ -15,9 +15,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
  * @param props - The `WidgetProps` for this component
  */
 export default function RatingWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   value,
@@ -35,7 +35,7 @@ export default function RatingWidget<
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
-  const min = schema.minimum || 0;
+  const min = schema.minimum ?? 0;
 
   /** Handles clicking on a star to set the rating */
   const handleStarClick = useCallback(
@@ -52,7 +52,7 @@ export default function RatingWidget<
     (event: FocusEvent<HTMLSpanElement>) => {
       if (onFocus) {
         // Get the star value from the data attribute
-        const starValue = Number((event.target as HTMLElement).dataset.value);
+        const starValue = Number(event.target.dataset.value);
         onFocus(id, starValue);
       }
     },
@@ -64,7 +64,7 @@ export default function RatingWidget<
     (event: FocusEvent<HTMLSpanElement>) => {
       if (onBlur) {
         // Get the star value from the data attribute
-        const starValue = Number((event.target as HTMLElement).dataset.value);
+        const starValue = Number(event.target.dataset.value);
         onBlur(id, starValue);
       }
     },

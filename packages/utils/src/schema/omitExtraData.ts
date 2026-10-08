@@ -1,97 +1,15 @@
-import { NAME_KEY, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '../constants.ts';
+import type { JSONSchema7Definition } from 'json-schema';
+
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
-import isObject from '../isObject.ts';
-import { getByPath, hasByPath, setByPath, toPath } from '../pathUtils.ts';
-import type {
-  Experimental_CustomMergeAllOf,
-  FormContextType,
-  GenericObjectType,
-  PathSchema,
-  RJSFSchema,
-  StrictRJSFSchema,
-  ValidatorType,
-} from '../types.ts';
+import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
+import isConstantOptionList from '../isConstantOptionList.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
+import isWholeValueSelect from '../isWholeValueSelect.ts';
+import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import isSelect from './isSelect.ts';
-import { relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
-import shallowAllOfMerge from './shallowAllOfMerge.ts';
-
-/** Returns the `formData` with only the elements specified in the `fields` list
- *
- * @param formData - The data for the `Form`
- * @param fields - The fields to keep while filtering
- * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
- */
-export function getUsedFormData<T = any>(formData: T | undefined, fields: string[]): T | undefined {
-  // For the case of a single input form
-  if (fields.length === 0 && typeof formData !== 'object') {
-    return formData;
-  }
-
-  // Keep only the values at the given field paths; `fields` contains either dotted strings or the
-  // deep path lists produced by `getFieldNames()`
-  const data: GenericObjectType = {};
-  fields.forEach((field) => {
-    const path = Array.isArray(field) ? field : toPath(field);
-    if (hasByPath(formData, path)) {
-      setByPath(data, path, getByPath(formData, path));
-    }
-  });
-  if (Array.isArray(formData)) {
-    return Object.keys(data).map((key: string) => data[key]) as unknown as T;
-  }
-
-  return data as T;
-}
-
-/** Returns the list of field names from inspecting the `pathSchema` as well as using the `formData`
- *
- * @param pathSchema - The `PathSchema` object for the form
- * @param [formData] - The form data to use while checking for empty objects/arrays
- * @deprecated - To be removed as an exported `@rjsf/utils` function in a future release
- */
-// oxlint-disable-next-line typescript/no-deprecated
-export function getFieldNames<T = any>(pathSchema: PathSchema<T>, formData?: T): string[][] {
-  const formValueHasData = (value: unknown, isLeaf: boolean) => {
-    if (typeof value !== 'object' || value === null) {
-      return true;
-    }
-    const isEmptyValue = Array.isArray(value) ? value.length === 0 : Object.keys(value).length === 0;
-    return isEmptyValue || isLeaf;
-  };
-  const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
-    const objKeys = Object.keys(_obj);
-    objKeys.forEach((key: string) => {
-      const data = _obj[key];
-      if (typeof data === 'object') {
-        const newPaths = paths.map((path) => [...path, key]);
-        // If an object is marked with additionalProperties, all its keys are valid
-        if (data[RJSF_ADDITIONAL_PROPERTIES_FLAG] && data[NAME_KEY] !== '') {
-          acc.push(data[NAME_KEY]);
-        } else {
-          getAllPaths(data, acc, newPaths);
-        }
-      } else if (key === NAME_KEY && data !== '') {
-        paths.forEach((path) => {
-          const formValue = getByPath(formData, path);
-          const isLeaf = objKeys.length === 1;
-          // adds path to fieldNames if it points to a value or an empty object/array which is not a leaf
-          if (
-            formValueHasData(formValue, isLeaf) ||
-            (Array.isArray(formValue) && formValue.every((val: unknown) => formValueHasData(val, isLeaf)))
-          ) {
-            acc.push(path);
-          }
-        });
-      }
-    });
-    return acc;
-  };
-
-  return getAllPaths(pathSchema);
-}
+import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -112,44 +30,24 @@ export function isValueEmpty(value: unknown): boolean {
   return false;
 }
 
-/** Merges an `allOf` schema into a single flat schema, delegating to `experimental_customMergeAllOf`
- * when provided or falling back to the module-level `shallowAllOfMerge` otherwise.
- *
- * @param schema - A schema containing an `allOf` array to be merged
- * @param [experimental_customMergeAllOf] - Optional custom merge function; see `Form` documentation
- * @returns - The merged schema with `allOf` resolved into a single schema object
- */
-function doMergeAllOf<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-): S {
-  return experimental_customMergeAllOf ? experimental_customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S);
-}
-
 /** A recursive, schema-driven filter that walks `schema` and `formData` in lockstep, keeping only
  * values that are described by the schema. Handles `$ref`, `allOf`, `anyOf`, `oneOf`, `if/then/else`,
  * `patternProperties`, `additionalProperties`, `propertyNames`, and `dependencies`. Optional object
  * properties whose schema-filtered content is entirely empty (per `isValueEmpty`) are pruned; required
  * properties and scalar values are always kept when schema-defined.
  *
- * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which to filter the formData
  * @param [rootSchema] - The root schema, used primarily to look up `$ref`s
  * @param [formData] - The data for the `Form`
- * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `formData` after omitting extra data, or `undefined` when `formData` is undefined
  */
 export default function omitExtraData<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(
-  validator: ValidatorType<T, S, F>,
-  schema: S,
-  rootSchema: S = {} as S,
-  formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
-): T | undefined {
+  F extends FormContextType = FormContextType,
+>(context: SchemaContext<S, F>, schema: S, rootSchema: S = {} as S, formData?: T): T | undefined {
+  const { validator } = context;
   /** Type predicate that narrows `value` to `GenericObjectType` — true when `value` is a plain,
    * non-array object (i.e. a JSON object). Used to distinguish JSON objects from arrays and primitives.
    *
@@ -158,17 +56,6 @@ export default function omitExtraData<
    */
   function isObjectValue(value: unknown): value is GenericObjectType {
     return isObject(value);
-  }
-
-  /** Type predicate that narrows a `S | boolean` schema definition to `S` — true when `schemaDef` is
-   * a schema object rather than a JSON Schema boolean shorthand (`true` meaning allow-all, `false`
-   * meaning deny-all).
-   *
-   * @param schemaDef - The schema definition to check
-   * @returns - True if `schemaDef` is a schema object
-   */
-  function isSchemaObj(schemaDef: S | boolean): schemaDef is S {
-    return isObject(schemaDef);
   }
 
   /** Copies schema-defined properties from `source` into `target`, applying `omit` recursively for
@@ -206,7 +93,7 @@ export default function omitExtraData<
       const v = omit(schemaDef, value, target[key]);
       if (!required && isObject(v)) {
         // Resolve $ref so we can inspect the effective required list for the inner schema.
-        let sd = isSchemaObj(schemaDef) ? schemaDef : ({} as S);
+        let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
           sd = findSchemaDefinition<S>(sd.$ref, rootSchema);
         }
@@ -333,10 +220,7 @@ export default function omitExtraData<
     if (condition === undefined) {
       return target;
     }
-    // validator.isValid signature: (schema, formData, rootSchema)
-    const isThenBranch = isSchemaObj(condition as S | boolean)
-      ? validator.isValid(condition as S, source as T, rootSchema)
-      : condition;
+    const isThenBranch = isSchemaObject<S>(condition) ? validator.isValid(condition, source, rootSchema) : condition;
     const branch = isThenBranch ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
   }
@@ -354,7 +238,8 @@ export default function omitExtraData<
    * @returns - The result of applying the best-matching option, or `target` when no matching applies
    */
   function handleOneOf(oneOf: S['oneOf'], childSchema: S, source: unknown, target: unknown): unknown {
-    if (!Array.isArray(oneOf) || isSelect(validator, childSchema, rootSchema, experimental_customMergeAllOf)) {
+    // An `enum` or a list of constants is a select, whose value has no branch to omit extra data by
+    if (!Array.isArray(oneOf) || Array.isArray(childSchema.enum) || isConstantOptionList<S>(oneOf)) {
       return target;
     }
     // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
@@ -362,13 +247,12 @@ export default function omitExtraData<
     // respects additionalProperties:false during filtering.
     const scoringOptions = relaxOptionsForScoring<S>(oneOf as (S | boolean)[], true, rootSchema);
     const bestIndex = getClosestMatchingOption<T, S, F>(
-      validator,
+      context,
       rootSchema,
       source as T,
       scoringOptions,
       0,
       getDiscriminatorFieldFromSchema<S>(childSchema),
-      experimental_customMergeAllOf,
     );
     const winning = (oneOf as (S | boolean)[])[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.
@@ -434,6 +318,22 @@ export default function omitExtraData<
     return result;
   }
 
+  /** Each `allOf` schema merged once per call rather than once per data node. The `allOf` and its entries belong to
+   * the schema, so the merge yields the same result every time, while `omit()` recurses per array element and per
+   * object property: a 200-row array merged the same schema once a row. Keyed on the schema, so it is only valid for
+   * this call's `rootSchema`, which is why it lives here rather than at module scope
+   */
+  const mergedAllOfSchemas = new WeakMap<object, S>();
+
+  /** Resolves the references of one `allOf` entry
+   *
+   * @param entry - The `allOf` entry to resolve, which a boolean shorthand leaves alone
+   * @returns - The entry with its references resolved
+   */
+  function resolveAllOfEntry(entry: JSONSchema7Definition): S | boolean {
+    return isObject(entry) ? resolveAllReferences<S>(entry as S, rootSchema, []) : entry;
+  }
+
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
    * handlers (`handleObject`, `handleArray`) and keyword handlers (`handleAnyOf`, `handleOneOf`,
    * `handleConditions`, `handleDependencies`). Returns `undefined` when `source` is undefined or
@@ -463,7 +363,16 @@ export default function omitExtraData<
       return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
-      localSchema = doMergeAllOf<S>(localSchema, experimental_customMergeAllOf);
+      let merged = mergedAllOfSchemas.get(schemaDef);
+      if (!merged) {
+        // Resolve each entry's references before merging, the way `resolveSchema()` runs every `allOf` entry through
+        // `retrieveSchemaInternal()` before the parent is merged. The shallow merge hoists an entry's `$ref` onto the
+        // merged schema rather than following it, so the referenced schema's properties would be taken for extra data,
+        // and a `customMergeAllOf` would be handed a `$ref` the form's own merge never sees
+        merged = mergeAllOf<S, F>(context, { ...localSchema, allOf: allOf.map(resolveAllOfEntry) }).schema;
+        mergedAllOfSchemas.set(schemaDef, merged);
+      }
+      localSchema = merged;
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.
@@ -479,7 +388,13 @@ export default function omitExtraData<
 
     let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
 
-    const type = getSchemaType<S>(localSchema);
+    // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune. A value of
+    // another type a `type` list allows is kept as it is, rather than pruned or dropped as the type the list resolves to
+    const schemaType = isWholeValueSelect<S>(localSchema) ? undefined : getSchemaType<S>(localSchema);
+    const type =
+      Array.isArray(localSchema.type) && getSchemaTypeForValue<S>(localSchema, source) !== schemaType
+        ? undefined
+        : schemaType;
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;
@@ -506,7 +421,6 @@ export default function omitExtraData<
         : [];
       for (const key of Object.keys(afterConditions)) {
         if (!knownKeys.has(key) && !patterns.some((re) => re.test(key))) {
-          // oxlint-disable-next-line no-param-reassign
           delete afterConditions[key];
         }
       }

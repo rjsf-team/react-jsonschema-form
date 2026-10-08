@@ -1,11 +1,13 @@
 // oxlint-disable no-console
-import type { ComponentType, FormEvent } from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import type { SubmitEvent } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import type { FormProps, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
+import MarkdownTemplate from '@rjsf/core/markdown';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import { createSchemaUtils, resetLogOnce } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
 import type { Sample, UiSchemaForTheme } from '../samples/Sample.ts';
@@ -25,161 +27,260 @@ export interface PlaygroundProps {
   validators: Record<string, ValidatorType>;
 }
 
+/** Maps the `liveSettings` drawer's `'off' | 'onChange' | 'onBlur'` radio value onto the
+ * `liveValidate`/`liveOmit` prop shape `Form` actually accepts, since `Form` has no `'off'` value of its own.
+ */
+export function toLiveSetting(value: unknown): 'onChange' | 'onBlur' | undefined {
+  return value === 'onChange' || value === 'onBlur' ? value : undefined;
+}
+
+/** Converts a legacy boolean `liveValidate`/`liveOmit` value - `true` from a v5 shared link, `false` from a v5/v6
+ * one - into the current string value. Any other value (including `undefined`) passes through unchanged.
+ */
+function normalizeLiveFlag(value: unknown): unknown {
+  if (value === true) {
+    return 'onChange';
+  }
+  if (value === false) {
+    return 'off';
+  }
+  return value;
+}
+
+/** Normalizes `liveSettings` decoded from a shared playground URL or sample: defaults a missing object to `{}` (a
+ * shared URL predating `liveSettings` support omits it entirely) so callers never have to null-check it, and
+ * converts any legacy boolean `liveValidate`/`liveOmit` values to their current string equivalents.
+ */
+export function normalizeLiveSettings(loadedLiveSettings?: LiveSettings): LiveSettings {
+  const settings = loadedLiveSettings ?? {};
+  return {
+    ...settings,
+    liveValidate: normalizeLiveFlag(settings.liveValidate),
+    liveOmit: normalizeLiveFlag(settings.liveOmit),
+  };
+}
+
+const DEFAULT_VALIDATOR = 'AJV8';
+
+const INITIAL_LIVE_SETTINGS: LiveSettings = {
+  showErrorList: 'top',
+  validate: false,
+  disabled: false,
+  noHtml5Validate: false,
+  readonly: false,
+  omitExtraData: false,
+  liveOmit: 'off',
+  liveValidate: 'off',
+  defaultFormStateBehavior: {
+    arrayMinItems: 'populate',
+    emptyObjectFields: 'populateAllDefaults',
+  },
+  useFallbackField: false,
+};
+
+type LoadData = Sample & {
+  theme?: string;
+  liveSettings: LiveSettings;
+  sampleName?: string;
+  validator?: string;
+};
+
+/** Decodes the setup a shared link carries in the URL `hash`. It's read once, before the playground first renders,
+ * and a malformed link's `error` is reported after the first paint
+ */
+export function readSharedSetup(hash: string): { setup?: LoadData; error?: unknown } {
+  if (!hash) {
+    return {};
+  }
+  let data: unknown;
+  try {
+    data = JSON.parse(base64.decode(hash));
+  } catch (error) {
+    return { error };
+  }
+  if (typeof data !== 'object' || data === null || Array.isArray(data)) {
+    return { error: `A shared link's setup must be an object: ${JSON.stringify(data)}` };
+  }
+  return { setup: data as LoadData };
+}
+
+const { setup: sharedSetup, error: sharedSetupError } = readSharedSetup(
+  typeof document === 'undefined' ? '' : document.location.hash.slice(1),
+);
+
+/** The playground state that loading `data` sets: for the page's first render, a picked sample, or a shared link.
+ * `currentTheme` stands in for a theme the data doesn't name. `sampleName` and `validator` are `undefined` when the
+ * data doesn't carry them, so the caller keeps its own.
+ */
+export function loadedState(
+  data: LoadData,
+  currentTheme: string,
+  themes: PlaygroundProps['themes'],
+  validators: PlaygroundProps['validators'],
+) {
+  const {
+    schema,
+    // uiSchema is missing on some examples. Provide a default to
+    // clear the field in all cases.
+    uiSchema: loadedUiSchema = {},
+    // Always reset templates and fields
+    templates = {},
+    fields = {},
+    formData: loadedFormData,
+    theme: dataTheme = currentTheme,
+    extraErrors,
+    liveSettings: loadedLiveSettings,
+    validator,
+    sampleName,
+    ...rest
+  } = data;
+
+  // To support mui v6 `material-ui-5` was change to `mui` fix the load to update that as well
+  const namedTheme = dataTheme === 'material-ui-5' ? 'mui' : dataTheme;
+  // Old shared links still name themes the playground has since dropped, such as `semantic-ui` or `fluent-ui`
+  const theme = Object.hasOwn(themes, namedTheme) ? namedTheme : 'default';
+  const uiSchema = typeof loadedUiSchema === 'function' ? loadedUiSchema(currentTheme) : loadedUiSchema;
+  const knownSampleName = sampleName !== undefined && !Object.hasOwn(samples, sampleName) ? 'Simple' : sampleName;
+  const sampleUiSchema = knownSampleName ? samples[knownSampleName].uiSchema : undefined;
+  const liveSettings = normalizeLiveSettings(loadedLiveSettings);
+  // A hand-edited link, or one from before a validator was renamed, may name one the playground doesn't have
+  const knownValidator =
+    validator !== undefined && Object.hasOwn(validators, validator) ? validator : DEFAULT_VALIDATOR;
+
+  // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
+  let formData = loadedFormData;
+  try {
+    // A sample passes the current validator and a shared link carries its own
+    const schemaUtils = createSchemaUtils(
+      {
+        validator: validators[knownValidator],
+        defaultFormStateBehavior: liveSettings.defaultFormStateBehavior,
+      },
+      schema,
+    );
+    formData = schemaUtils.getDefaultFormState(schema, loadedFormData, false, false, uiSchema);
+  } catch (error) {
+    // A sample may deliberately carry a schema the utilities cannot resolve; it then renders the data as given
+    console.error(error);
+  }
+
+  return {
+    theme,
+    stylesheet: themes[theme].stylesheet,
+    schema,
+    uiSchema,
+    formData,
+    extraErrors,
+    liveSettings,
+    otherFormProps: { fields, templates, ...rest },
+    sampleName: knownSampleName,
+    uiSchemaGenerator: typeof sampleUiSchema === 'function' ? { generator: sampleUiSchema } : undefined,
+    validator: validator === undefined ? undefined : knownValidator,
+  };
+}
+
 export default function Playground({ themes, validators }: PlaygroundProps) {
-  const [loaded, setLoaded] = useState(false);
-  const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema);
-  const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
+  // Only the first render's result is read: every `useState` below keeps its own value from then on, so a recompute
+  // (Fast Refresh does one when this file is edited) repeats the work and logs a sample's errors again, and changes
+  // nothing
+  const initial = useMemo(
+    () =>
+      loadedState(
+        sharedSetup ?? {
+          ...samples.Simple,
+          sampleName: 'Simple',
+          liveSettings: INITIAL_LIVE_SETTINGS,
+          validator: DEFAULT_VALIDATOR,
+        },
+        'default',
+        themes,
+        validators,
+      ),
+    [themes, validators],
+  );
+  const [schema, setSchema] = useState<RJSFSchema>(initial.schema);
+  const [uiSchema, setUiSchema] = useState<UiSchema>(initial.uiSchema);
   // Store the generator inside of an object, otherwise react treats it as an initializer function
-  const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);
-  const [formData, setFormData] = useState<any>(samples.Simple.formData);
-  const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
+  const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(
+    initial.uiSchemaGenerator,
+  );
+  const [formData, setFormData] = useState<unknown>(initial.formData);
+  const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>(initial.extraErrors);
   const [shareURL, setShareURL] = useState<string | null>(null);
-  const [theme, setTheme] = useState<string>('default');
-  const [sampleName, setSampleName] = useState<string>('Simple');
+  const [theme, setTheme] = useState<string>(initial.theme);
+  const [sampleName, setSampleName] = useState<string>(initial.sampleName ?? 'Simple');
   const [subtheme, setSubtheme] = useState<string | null>(null);
-  const [stylesheet, setStylesheet] = useState<string | null>(null);
-  const [validator, setValidator] = useState<string>('AJV8');
-  const [showForm, setShowForm] = useState(false);
-  const [liveSettings, setLiveSettings] = useState<LiveSettings>({
-    showErrorList: 'top',
-    validate: false,
-    disabled: false,
-    noHtml5Validate: false,
-    readonly: false,
-    omitExtraData: false,
-    liveOmit: false,
-    experimental_componentUpdateStrategy: 'customDeep',
-    experimental_defaultFormStateBehavior: {
-      arrayMinItems: 'populate',
-      emptyObjectFields: 'populateAllDefaults',
-    },
-    useFallbackField: false,
-  });
-  const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
+  const [stylesheet, setStylesheet] = useState<string | null>(initial.stylesheet ?? null);
+  const [validator, setValidator] = useState<string>(initial.validator ?? DEFAULT_VALIDATOR);
+  const [formKey, setFormKey] = useState(0);
+  const [liveSettings, setLiveSettings] = useState<LiveSettings>(initial.liveSettings);
+  const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>(initial.otherFormProps);
 
   const playGroundFormRef = useRef<any>(null);
 
-  // oxlint-disable-next-line react/hook-use-state
-  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
+  useEffect(() => {
+    if (sharedSetupError !== undefined) {
+      // oxlint-disable-next-line no-alert
+      alert('Unable to load form setup data.');
+      console.error(sharedSetupError);
+    }
+  }, []);
+
+  // One themed Form per theme, so switching other settings doesn't remount it. It's returned inside an object
+  // because react/static-components can't tell a memoized component from one created during render
+  const { FormComponent } = useMemo(() => ({ FormComponent: withTheme(themes[theme].theme) }), [themes, theme]);
 
   const onThemeSelected = useCallback(
-    (newTheme: string, { stylesheet: newStylesheet, theme: themeObj }: ThemesType) => {
+    (newTheme: string, { stylesheet: newStylesheet }: ThemesType) => {
       setTheme(newTheme);
-      setFormComponent(withTheme(themeObj));
       setStylesheet(newStylesheet);
       if (uiSchemaGenerator) {
         setUiSchema(uiSchemaGenerator.generator(newTheme));
       }
     },
-    [uiSchemaGenerator, setTheme, setFormComponent, setStylesheet],
+    [uiSchemaGenerator, setTheme, setStylesheet],
   );
 
   const load = useCallback(
-    (
-      data: Sample & {
-        theme: string;
-        liveSettings: LiveSettings;
-        sampleName?: string;
-        validator?: string;
-      },
-    ) => {
-      const {
-        schema: loadedSchema,
-        // uiSchema is missing on some examples. Provide a default to
-        // clear the field in all cases.
-        uiSchema: loadedUiSchema = {},
-        // Always reset templates and fields
-        templates = {},
-        fields = {},
-        formData: loadedFormData,
-        theme: dataTheme = theme,
-        extraErrors: loadedExtraErrors,
-        liveSettings: loadedLiveSettings,
-        validator: theValidator,
-        sampleName: loadedSampleName,
-        ...rest
-      } = data;
-
-      // To support mui v6 `material-ui-5` was change to `mui` fix the load to update that as well
-      const theTheme = dataTheme === 'material-ui-5' ? 'mui' : dataTheme;
-
-      onThemeSelected(theTheme, themes[theTheme]);
-
-      let theUiSchema: UiSchema;
-      if (typeof loadedUiSchema === 'function') {
-        theUiSchema = loadedUiSchema(theme);
-      } else {
-        theUiSchema = loadedUiSchema;
+    (data: LoadData) => {
+      const next = loadedState(data, theme, themes, validators);
+      // The uiSchema warnings are logged once per page, and every sample renders under the default `idPrefix`, so
+      // without this the second sample to make the same mistake at the same field would warn about nothing. Checking
+      // those warnings by hand is most of what the playground is for.
+      resetLogOnce();
+      setTheme(next.theme);
+      setStylesheet(next.stylesheet ?? null);
+      if (next.sampleName) {
+        setSampleName(next.sampleName);
+        setUiSchemaGenerator(next.uiSchemaGenerator);
       }
-      if (loadedSampleName) {
-        setSampleName(loadedSampleName);
-        const sample = samples[loadedSampleName];
-        if (typeof sample.uiSchema === 'function') {
-          setUiSchemaGenerator({ generator: sample.uiSchema });
-        } else {
-          setUiSchemaGenerator(undefined);
-        }
+      setFormKey((key) => key + 1);
+      setSchema(next.schema);
+      setUiSchema(next.uiSchema);
+      setFormData(next.formData);
+      setExtraErrors(next.extraErrors);
+      setLiveSettings(next.liveSettings);
+      if (next.validator !== undefined) {
+        setValidator(next.validator);
       }
-
-      // force resetting form component instance
-      setShowForm(false);
-      setSchema(loadedSchema);
-      setUiSchema(theUiSchema);
-      setFormData(loadedFormData);
-      setExtraErrors(loadedExtraErrors);
-      setShowForm(true);
-      if (loadedLiveSettings?.liveValidate === true) {
-        // Convert v5 true value to `onChange`
-        loadedLiveSettings.liveValidate = 'onChange';
-      }
-      if (loadedLiveSettings?.liveOmit === true) {
-        // Convert v5 true value to `onChange`
-        loadedLiveSettings.liveOmit = 'onChange';
-      }
-      setLiveSettings(loadedLiveSettings);
-      if ('validator' in data && theValidator !== undefined) {
-        setValidator(theValidator);
-      }
-      setOtherFormProps({ fields, templates, ...rest });
+      setOtherFormProps(next.otherFormProps);
     },
-    [theme, onThemeSelected, themes],
+    [theme, themes, validators],
   );
 
   const onSampleSelected = useCallback(
     (selectedSampleName: string) => {
       const { liveSettings: sampleLiveSettings, ...sample } = samples[selectedSampleName];
       load({
+        validator,
         ...sample,
         sampleName: selectedSampleName,
         liveSettings: { ...liveSettings, ...sampleLiveSettings },
         theme,
       });
     },
-    [load, liveSettings, theme],
+    [load, liveSettings, theme, validator],
   );
-
-  useEffect(() => {
-    const hash = document.location.hash.match(/#(.*)/);
-
-    if (hash && typeof hash[1] === 'string' && hash[1].length > 0 && !loaded) {
-      try {
-        const decoded = base64.decode(hash[1]);
-        load(JSON.parse(decoded));
-        setLoaded(true);
-      } catch (error) {
-        // oxlint-disable-next-line no-alert
-        alert('Unable to load form setup data.');
-        console.error(error);
-      }
-
-      return;
-    }
-
-    // initialize theme
-    onThemeSelected(theme, themes[theme]);
-
-    setShowForm(true);
-  }, [onThemeSelected, load, loaded, setShowForm, theme, themes]);
 
   const onFormDataChange = useCallback(
     (event: IChangeEvent, id?: string) => {
@@ -194,7 +295,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     [setFormData, setShareURL],
   );
 
-  const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: FormEvent<any>) => {
+  const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<any>) => {
     console.log('submitted formData', submittedFormData);
     console.log('submit event', event);
     // oxlint-disable-next-line no-alert
@@ -225,39 +326,41 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         />
         <Divider variant='fullWidth' sx={{ my: 1 }} />
         <ErrorBoundary>
-          {showForm && (
-            <DemoFrame
-              head={<link rel='stylesheet' id='theme' href={stylesheet || ''} />}
-              style={{
-                width: '100%',
-                height: 1000,
-                border: 0,
+          <DemoFrame
+            head={<link rel='stylesheet' id='theme' href={stylesheet || ''} />}
+            style={{
+              width: '100%',
+              height: 1000,
+              border: 0,
+            }}
+            theme={theme}
+            subtheme={subtheme || 'light'}
+          >
+            <FormComponent
+              key={formKey}
+              {...otherFormProps}
+              {...liveSettings}
+              liveValidate={toLiveSetting(liveSettings.liveValidate)}
+              liveOmit={toLiveSetting(liveSettings.liveOmit)}
+              extraErrors={extraErrors}
+              schema={schema}
+              uiSchema={uiSchema}
+              formData={formData}
+              templates={{ MarkdownTemplate, ...otherFormProps.templates }}
+              fields={{
+                ...otherFormProps.fields,
+                geo: GeoPosition,
+                '/schemas/specialString': SpecialInput,
               }}
-              theme={theme}
-              subtheme={subtheme || 'light'}
-            >
-              <FormComponent
-                {...otherFormProps}
-                {...liveSettings}
-                extraErrors={extraErrors}
-                schema={schema}
-                uiSchema={uiSchema}
-                formData={formData}
-                fields={{
-                  ...otherFormProps.fields,
-                  geo: GeoPosition,
-                  '/schemas/specialString': SpecialInput,
-                }}
-                validator={validators[validator]}
-                onChange={onFormDataChange}
-                onSubmit={onFormDataSubmit}
-                onBlur={(id: string, value: string) => console.log(`Blurred ${id} with value ${value}`)}
-                onFocus={(id: string, value: string) => console.log(`Focused ${id} with value ${value}`)}
-                onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
-                ref={playGroundFormRef}
-              />
-            </DemoFrame>
-          )}
+              validator={validators[validator]}
+              onChange={onFormDataChange}
+              onSubmit={onFormDataSubmit}
+              onBlur={(id: string, value: unknown) => console.log(`Blurred ${id} with value`, value)}
+              onFocus={(id: string, value: unknown) => console.log(`Focused ${id} with value`, value)}
+              onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
+              ref={playGroundFormRef}
+            />
+          </DemoFrame>
         </ErrorBoundary>
       </Box>
       <OptionsDrawer

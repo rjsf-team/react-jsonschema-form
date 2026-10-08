@@ -215,7 +215,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -224,7 +224,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -247,7 +247,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -256,7 +256,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -279,7 +279,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -288,7 +288,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -311,7 +311,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-3"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="3"
                       />
                       <input
                         aria-hidden="true"
@@ -320,7 +320,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="3"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -343,7 +343,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-4"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="4"
                       />
                       <input
                         aria-hidden="true"
@@ -352,7 +352,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="4"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -523,14 +523,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-:rh:"
-                                  id="radix-:rg:"
+                                  for="radix-_r_h_"
+                                  id="radix-_r_g_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                  id="root_person_address_state"
                                   type="button"
                                 >
                                   <span
@@ -603,7 +604,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="gap-2 col-span-6 row-span-1 flex items-center"
             >
-              <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
                 <div
                   class="flex flex-col gap-2"
                 >
@@ -879,14 +882,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-:rn:"
-                        id="radix-:rm:"
+                        for="radix-_r_n_"
+                        id="radix-_r_m_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        id="root_employment_location_state"
                         type="button"
                       >
                         <span
@@ -1150,7 +1154,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -1159,7 +1163,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1182,7 +1186,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -1191,7 +1195,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1214,7 +1218,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -1223,7 +1227,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1246,7 +1250,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-3"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="3"
                       />
                       <input
                         aria-hidden="true"
@@ -1255,7 +1259,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="3"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1278,7 +1282,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-4"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="4"
                       />
                       <input
                         aria-hidden="true"
@@ -1287,7 +1291,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="4"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -1458,14 +1462,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-:rq:"
-                                  id="radix-:rp:"
+                                  for="radix-_r_q_"
+                                  id="radix-_r_p_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                  id="root_person_address_state"
                                   type="button"
                                 >
                                   <span
@@ -1538,7 +1543,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="gap-2 col-span-6 row-span-1 flex items-center"
             >
-              <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
                 <div
                   class="flex flex-col gap-2"
                 >
@@ -1846,14 +1853,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-:r10:"
-                        id="radix-:rv:"
+                        for="radix-_r_10_"
+                        id="radix-_r_v_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        id="root_employment_location_state"
                         type="button"
                       >
                         <span
@@ -2117,7 +2125,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -2126,7 +2134,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2149,7 +2157,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -2158,7 +2166,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2181,7 +2189,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -2190,7 +2198,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2213,7 +2221,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-3"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="3"
                       />
                       <input
                         aria-hidden="true"
@@ -2222,7 +2230,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="3"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2245,7 +2253,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-4"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="4"
                       />
                       <input
                         aria-hidden="true"
@@ -2254,7 +2262,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="4"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2425,14 +2433,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-:r13:"
-                                  id="radix-:r12:"
+                                  for="radix-_r_13_"
+                                  id="radix-_r_12_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                  id="root_person_address_state"
                                   type="button"
                                 >
                                   <span
@@ -2505,7 +2514,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="gap-2 col-span-6 row-span-1 flex items-center"
             >
-              <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
                 <div
                   class="flex flex-col gap-2"
                 >
@@ -2919,7 +2930,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-0"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="0"
                       />
                       <input
                         aria-hidden="true"
@@ -2928,7 +2939,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="0"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2951,7 +2962,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-1"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="1"
                       />
                       <input
                         aria-hidden="true"
@@ -2960,7 +2971,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="1"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -2983,7 +2994,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-2"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="2"
                       />
                       <input
                         aria-hidden="true"
@@ -2992,7 +3003,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="2"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3015,7 +3026,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-3"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="3"
                       />
                       <input
                         aria-hidden="true"
@@ -3024,7 +3035,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="3"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3047,7 +3058,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         id="root_person_race-4"
                         role="checkbox"
                         type="button"
-                        value="on"
+                        value="4"
                       />
                       <input
                         aria-hidden="true"
@@ -3056,7 +3067,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                         tabindex="-1"
                         type="checkbox"
-                        value="on"
+                        value="4"
                       />
                       <label
                         class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3227,14 +3238,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               >
                                 <label
                                   cmdk-label=""
-                                  for="radix-:r8:"
-                                  id="radix-:r7:"
+                                  for="radix-_r_8_"
+                                  id="radix-_r_7_"
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                  id="root_person_address_state"
                                   type="button"
                                 >
                                   <span
@@ -3307,7 +3319,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
             <div
               class="gap-2 col-span-6 row-span-1 flex items-center"
             >
-              <div>
+              <div
+                class="rjsf-field rjsf-field-undefined"
+              >
                 <div
                   class="flex flex-col gap-2"
                 >
@@ -3583,14 +3597,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <label
                         cmdk-label=""
-                        for="radix-:re:"
-                        id="radix-:rd:"
+                        for="radix-_r_e_"
+                        id="radix-_r_d_"
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        id="root_employment_location_state"
                         type="button"
                       >
                         <span
@@ -3843,7 +3858,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-0"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="0"
                     />
                     <input
                       aria-hidden="true"
@@ -3852,7 +3867,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="0"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3875,7 +3890,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-1"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="1"
                     />
                     <input
                       aria-hidden="true"
@@ -3884,7 +3899,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="1"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3907,7 +3922,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-2"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="2"
                     />
                     <input
                       aria-hidden="true"
@@ -3916,7 +3931,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="2"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3939,7 +3954,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-3"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="3"
                     />
                     <input
                       aria-hidden="true"
@@ -3948,7 +3963,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="3"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -3971,7 +3986,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       id="root_person_race-4"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="4"
                     />
                     <input
                       aria-hidden="true"
@@ -3980,7 +3995,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="4"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4132,14 +4147,15 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <label
                       cmdk-label=""
-                      for="radix-:r5:"
-                      id="radix-:r4:"
+                      for="radix-_r_5_"
+                      id="radix-_r_4_"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      id="root_person_address_state"
                       type="button"
                     >
                       <span
@@ -4394,7 +4410,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-0"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="0"
                     />
                     <input
                       aria-hidden="true"
@@ -4403,7 +4419,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="0"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4426,7 +4442,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-1"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="1"
                     />
                     <input
                       aria-hidden="true"
@@ -4435,7 +4451,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="1"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4458,7 +4474,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-2"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="2"
                     />
                     <input
                       aria-hidden="true"
@@ -4467,7 +4483,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="2"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4490,7 +4506,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-3"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="3"
                     />
                     <input
                       aria-hidden="true"
@@ -4499,7 +4515,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="3"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4522,7 +4538,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       id="root_person_race-4"
                       role="checkbox"
                       type="button"
-                      value="on"
+                      value="4"
                     />
                     <input
                       aria-hidden="true"
@@ -4531,7 +4547,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                       tabindex="-1"
                       type="checkbox"
-                      value="on"
+                      value="4"
                     />
                     <label
                       class="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
@@ -4683,14 +4699,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <label
                       cmdk-label=""
-                      for="radix-:r2:"
-                      id="radix-:r1:"
+                      for="radix-_r_2_"
+                      id="radix-_r_1_"
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                      id="root_person_address_state"
                       type="button"
                     >
                       <span

@@ -1,7 +1,10 @@
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { userEvent } from '@testing-library/user-event';
 
 import RatingWidget from '../src/widgets/RatingWidget/RatingWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+
+const user = userEvent.setup();
 
 describe('RatingWidget', () => {
   test('renders with default props (value=0)', () => {
@@ -65,7 +68,7 @@ describe('RatingWidget', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
-  test('calls onChange when rating is changed', () => {
+  test('calls onChange when rating is changed', async () => {
     const onChange = vi.fn();
     const { container } = render(
       <RatingWidget
@@ -79,7 +82,7 @@ describe('RatingWidget', () => {
     // Get the third star (index 2, value 2+1=3)
     // Note: The actual implementation returns 0-indexed value (2)
     const inputs = container.querySelectorAll('input');
-    fireEvent.click(inputs[2]);
+    await user.click(inputs[2]);
 
     // The value should be 2 (0-indexed)
     expect(onChange).toHaveBeenCalledWith(2);
@@ -87,7 +90,7 @@ describe('RatingWidget', () => {
 
   // Skip the disabled test for now as it's unreliable in the test environment
   // The actual component does prevent clicks when disabled
-  test.skip('does not call onChange when disabled', () => {
+  test.skip('does not call onChange when disabled', async () => {
     const onChange = vi.fn();
     const { container } = render(
       <RatingWidget
@@ -100,7 +103,7 @@ describe('RatingWidget', () => {
     );
 
     const inputs = container.querySelectorAll('input');
-    fireEvent.click(inputs[2]);
+    await user.click(inputs[2]);
 
     expect(onChange).not.toHaveBeenCalled();
   });

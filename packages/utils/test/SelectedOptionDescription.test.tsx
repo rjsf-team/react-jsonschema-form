@@ -1,7 +1,7 @@
 /** @vitest-environment jsdom */
 import { render } from '@testing-library/react';
 
-import type { DescriptionFieldProps, Registry, RJSFSchema, SelectedOptionDescriptionProps } from '../src/index.ts';
+import type { DescriptionFieldProps, Registry, SelectedOptionDescriptionProps } from '../src/index.ts';
 import { SelectedOptionDescription } from '../src/index.ts';
 
 function DescriptionFieldTemplate({ id, description, schema }: DescriptionFieldProps) {
@@ -67,7 +67,7 @@ describe('SelectedOptionDescription', () => {
     ['an option without a schema', { enumOptions: [{ value: 'foo', label: 'Foo' }] }],
     [
       'an option schema without a description',
-      { enumOptions: [{ value: 'foo', label: 'Foo', schema: { title: 'Foo' } as RJSFSchema }] },
+      { enumOptions: [{ value: 'foo', label: 'Foo', schema: { title: 'Foo' } }] },
     ],
   ])('does not render with %s', (_, options) => {
     const { container } = render(<SelectedOptionDescription {...baseProps} options={options} />);

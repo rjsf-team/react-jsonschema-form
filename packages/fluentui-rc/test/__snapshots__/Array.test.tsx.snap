@@ -448,8 +448,8 @@ exports[`array fields > checkboxes 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-            for="field-r5__control"
-            id="field-r5__label"
+            for="field-_r_5___control"
+            id="field-_r_5___label"
           />
           <div
             class="fui-Dropdown form-control ___11d5zms_mmbwks0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -457,7 +457,7 @@ exports[`array fields > checkboxes 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-r5__label"
+              aria-labelledby="field-_r_5___label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -653,11 +653,13 @@ exports[`array fields > fixed array 1`] = `
                       aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
+                      inputmode="decimal"
                       name="root_1"
+                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                       placeholder=""
                       required=""
-                      step="any"
-                      type="number"
+                      title="Enter a number"
+                      type="text"
                       value=""
                     />
                   </span>
@@ -922,10 +924,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_0_value"
+                              inputmode="decimal"
                               name="root[0][value]"
+                              pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                               placeholder=""
-                              step="any"
-                              type="number"
+                              title="Enter a number"
+                              type="text"
                               value="10"
                             />
                           </span>
@@ -1094,10 +1098,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_1_value"
+                              inputmode="decimal"
                               name="root[1][value]"
+                              pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                               placeholder=""
-                              step="any"
-                              type="number"
+                              title="Enter a number"
+                              type="text"
                               value="20"
                             />
                           </span>
@@ -1576,8 +1582,8 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
         >
           <label
             class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-            for="field-r2o__control"
-            id="field-r2o__label"
+            for="field-_r_2o___control"
+            id="field-_r_2o___label"
           />
           <div
             class="fui-Dropdown form-control ___11d5zms_mmbwks0 ft85np5 f1ewtqcl ftuwxu6 f1exfvgq f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv"
@@ -1585,7 +1591,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-r2o__label"
+              aria-labelledby="field-_r_2o___label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -1718,11 +1724,13 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                       aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
+                      inputmode="decimal"
                       name="root[1]"
+                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                       placeholder=""
                       required=""
-                      step="any"
-                      type="number"
+                      title="Enter a number"
+                      type="text"
                       value="42"
                     />
                   </span>
@@ -2730,10 +2738,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_0_value"
+                              inputmode="decimal"
                               name="root.0.value"
+                              pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                               placeholder=""
-                              step="any"
-                              type="number"
+                              title="Enter a number"
+                              type="text"
                               value="10"
                             />
                           </span>
@@ -2902,10 +2912,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_1_value"
+                              inputmode="decimal"
                               name="root.1.value"
+                              pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                               placeholder=""
-                              step="any"
-                              type="number"
+                              title="Enter a number"
+                              type="text"
                               value="20"
                             />
                           </span>
@@ -3884,8 +3896,8 @@ exports[`with title and description > checkboxes 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-            for="field-rn__control"
-            id="field-rn__label"
+            for="field-_r_n___control"
+            id="field-_r_n___label"
           >
             Test field
           </label>
@@ -3895,7 +3907,7 @@ exports[`with title and description > checkboxes 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-rn__label"
+              aria-labelledby="field-_r_n___label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -4074,11 +4086,13 @@ exports[`with title and description > fixed array 1`] = `
                       aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
+                      inputmode="decimal"
                       name="root_1"
+                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                       placeholder=""
                       required=""
-                      step="any"
-                      type="number"
+                      title="Enter a number"
+                      type="text"
                       value=""
                     />
                   </span>
@@ -4630,8 +4644,8 @@ exports[`with title and description from both > checkboxes 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-            for="field-r1h__control"
-            id="field-r1h__label"
+            for="field-_r_1h___control"
+            id="field-_r_1h___label"
           >
             My Field
           </label>
@@ -4641,7 +4655,7 @@ exports[`with title and description from both > checkboxes 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-r1h__label"
+              aria-labelledby="field-_r_1h___label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -4820,11 +4834,13 @@ exports[`with title and description from both > fixed array 1`] = `
                       aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
+                      inputmode="decimal"
                       name="root_1"
+                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                       placeholder=""
                       required=""
-                      step="any"
-                      type="number"
+                      title="Enter a number"
+                      type="text"
                       value=""
                     />
                   </span>
@@ -5376,8 +5392,8 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-            for="field-r14__control"
-            id="field-r14__label"
+            for="field-_r_14___control"
+            id="field-_r_14___label"
           >
             My Field
           </label>
@@ -5387,7 +5403,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             <button
               aria-describedby="root__error root__description root__help"
               aria-expanded="false"
-              aria-labelledby="field-r14__label"
+              aria-labelledby="field-_r_14___label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -5566,11 +5582,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                       aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
+                      inputmode="decimal"
                       name="root_1"
+                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                       placeholder=""
                       required=""
-                      step="any"
-                      type="number"
+                      title="Enter a number"
+                      type="text"
                       value=""
                     />
                   </span>
@@ -6146,11 +6164,13 @@ exports[`with title and description with global label off > fixed array 1`] = `
                       aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
+                      inputmode="decimal"
                       name="root_1"
+                      pattern="[+\\-]?(([0-9]+[.]?[0-9]*|[.][0-9]+)([eE][+\\-]?[0-9]+)?|[.])"
                       placeholder=""
                       required=""
-                      step="any"
-                      type="number"
+                      title="Enter a number"
+                      type="text"
                       value=""
                     />
                   </span>

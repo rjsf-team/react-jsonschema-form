@@ -3,15 +3,23 @@ import { useCallback } from 'react';
 import { Input } from '@chakra-ui/react';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, labelValue, getInputProps } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getExampleSuggestions,
+  getInputProps,
+  getNumericInputTitle,
+  hasVisibleErrors,
+  labelValue,
+} from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { getChakra } from '../utils.ts';
 
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -28,7 +36,6 @@ export default function BaseInputTemplate<
     options,
     required,
     readonly,
-    rawErrors,
     autofocus,
     placeholder,
     disabled,
@@ -53,13 +60,15 @@ export default function BaseInputTemplate<
 
   const chakraProps = getChakra({ uiSchema });
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <Field
       mb={1}
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={rawErrors && rawErrors.length > 0}
+      invalid={hasVisibleErrors(props)}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >
@@ -67,19 +76,20 @@ export default function BaseInputTemplate<
         id={id}
         name={htmlName || id}
         value={value || value === 0 ? value : ''}
-        onChange={onChangeOverride || handleChange}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
         autoFocus={autofocus}
         placeholder={placeholder}
+        title={getNumericInputTitle(inputProps, registry.translateString)}
         {...inputProps}
-        list={schema.examples ? examplesId(id) : undefined}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        list={hasExamples ? examplesId(id) : undefined}
+        aria-describedby={ariaDescribedByIds(id, hasExamples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={onClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </Field>
   );
 }

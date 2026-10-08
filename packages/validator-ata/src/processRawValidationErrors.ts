@@ -4,9 +4,9 @@ import type {
   FormContextType,
   RJSFSchema,
   RJSFValidationError,
+  SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  ValidatorType,
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
@@ -69,9 +69,9 @@ export function filterDuplicateErrors(
  * `message`), so the conversion is structural only.
  */
 export function transformRJSFValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   errors: ValidationError[] = [],
   uiSchema?: UiSchema<T, S, F>,
@@ -80,17 +80,17 @@ export function transformRJSFValidationErrors<
 ): RJSFValidationError[] {
   const errorList = errors.map((e: ValidationError) => {
     const { instancePath, keyword, params, schemaPath, parentSchema } = e;
+    // oxlint-disable-next-line typescript/no-useless-default-assignment -- ata's types say `message` is always set, but it can be missing at runtime
     let { message = '' } = e;
     let property = instancePath.replace(/\//g, '.');
     let stack = `${property} ${message}`.trim();
     let uiTitle = '';
 
-    const p = params as Record<string, any>;
-    const rawPropertyNames: string[] = [
-      ...((p?.deps as string | undefined)?.split(', ') || []),
-      p?.missingProperty,
-      p?.property,
-    ].filter((item) => Boolean(item));
+    const rawPropertyNames = [
+      ...(typeof params?.deps === 'string' ? params.deps.split(', ') : []),
+      params?.missingProperty,
+      params?.property,
+    ].filter((item): item is string => typeof item === 'string' && item !== '');
 
     if (rawPropertyNames.length > 0) {
       rawPropertyNames.forEach((currentProperty) => {
@@ -151,7 +151,7 @@ export function transformRJSFValidationErrors<
         stack = `'${uiSchemaTitle}' ${message}`.trim();
         uiTitle = uiSchemaTitle;
       } else {
-        const parentSchemaTitle = (parentSchema as { title?: string } | undefined)?.title;
+        const parentSchemaTitle = getByPath<string | undefined>(parentSchema, 'title');
 
         if (parentSchemaTitle) {
           stack = `'${parentSchemaTitle}' ${message}`.trim();
@@ -160,8 +160,9 @@ export function transformRJSFValidationErrors<
       }
     }
 
-    if (p && 'missingProperty' in p) {
-      property = property ? `${property}.${p.missingProperty}` : p.missingProperty;
+    const missingProperty = params?.missingProperty;
+    if (typeof missingProperty === 'string') {
+      property = property ? `${property}.${missingProperty}` : missingProperty;
     }
 
     return {
@@ -182,11 +183,11 @@ export function transformRJSFValidationErrors<
  * including the optional `customValidate` and `transformErrors` hooks.
  */
 export default function processRawValidationErrors<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
-  validator: ValidatorType<T, S, F>,
+  context: SchemaContext<S, F>,
   rawErrors: RawValidationErrorsType<ValidationError>,
   formData: T | undefined,
   schema: S,
@@ -194,6 +195,7 @@ export default function processRawValidationErrors<
   transformErrors?: ErrorTransformer<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
   suppressDuplicateFiltering?: SuppressDuplicateFilteringType,
+  getCustomValidateFormData?: () => T,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema, suppressDuplicateFiltering, schema);
@@ -220,7 +222,18 @@ export default function processRawValidationErrors<
     return { errors, errorSchema };
   }
 
-  const newFormData = getDefaultFormState<T, S, F>(validator, schema, formData, schema, true) as T;
+  // `uiSchema` is threaded through so `ui:initialValue`/`ui:emptyValue` defaults match what the form itself computed
+  // and rendered.
+  // Called rather than read, so defaults that come out `undefined` are not mistaken for "not supplied"
+  const newFormData = getCustomValidateFormData
+    ? getCustomValidateFormData()
+    : (getDefaultFormState<T, S, F>(context, {
+        schema,
+        formData,
+        rootSchema: schema,
+        includeUndefinedValues: true,
+        uiSchema,
+      }) as T);
 
   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema, errorSchema);
   const userErrorSchema = unwrapErrorHandler<T>(errorHandler);

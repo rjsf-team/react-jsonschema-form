@@ -1,15 +1,12 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
 import { getUiOptions } from '@rjsf/utils';
-import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import { Col, Container, Row } from 'react-bootstrap';
 
-export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
-  id,
-  title,
-  uiSchema,
-  optionalDataControl,
-}: TitleFieldProps<T, S, F>) {
+export default function TitleField<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, title, uiSchema, optionalDataControl }: TitleFieldProps<T, S, F>) {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   let heading = <h5>{uiOptions.title || title}</h5>;
   if (optionalDataControl) {

@@ -1,5 +1,17 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
-import { ADDITIONAL_PROPERTY_FLAG, UI_OPTIONS_KEY, TranslatableString, buttonId } from '@rjsf/utils';
+import type {
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  WrapIfAdditionalTemplateProps,
+} from '@rjsf/utils';
+import {
+  AdditionalPropertyKeySelect,
+  ADDITIONAL_PROPERTY_FLAG,
+  UI_OPTIONS_KEY,
+  TranslatableString,
+  buttonId,
+} from '@rjsf/utils';
 import { Col, Row, Form, Input } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -15,9 +27,9 @@ const INPUT_STYLE = {
  * @param props - The `WrapIfAdditionalProps` for this component
  */
 export default function WrapIfAdditionalTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
@@ -27,8 +39,11 @@ export default function WrapIfAdditionalTemplate<
     displayLabel,
     id,
     label,
+    keyName,
     onRemoveProperty,
+    onKeyRename,
     onKeyRenameBlur,
+    propertyNamesEnum,
     readonly,
     required,
     registry,
@@ -59,10 +74,10 @@ export default function WrapIfAdditionalTemplate<
   }
 
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead
-  const uiOptions = uiSchema ? uiSchema[UI_OPTIONS_KEY] : {};
-  const buttonUiOptions = {
-    ...uiSchema,
-    [UI_OPTIONS_KEY]: { ...uiOptions, block: true },
+  const baseUiSchema: UiSchema<T, S, F> = uiSchema ?? {};
+  const buttonUiOptions: UiSchema<T, S, F> = {
+    ...baseUiSchema,
+    [UI_OPTIONS_KEY]: { ...baseUiSchema[UI_OPTIONS_KEY], block: true },
   };
 
   return (
@@ -81,17 +96,32 @@ export default function WrapIfAdditionalTemplate<
               style={wrapperStyle}
               wrapperCol={wrapperCol}
             >
-              <Input
-                key={label}
-                className='form-control'
-                defaultValue={label}
-                disabled={disabled || (readonlyAsDisabled && readonly)}
-                id={`${id}-key`}
-                name={`${id}-key`}
-                onBlur={!readonly ? onKeyRenameBlur : undefined}
-                style={INPUT_STYLE}
-                type='text'
-              />
+              {propertyNamesEnum ? (
+                <AdditionalPropertyKeySelect<T, S, F>
+                  id={`${id}-key`}
+                  label={keyLabel}
+                  hideLabel
+                  value={keyName}
+                  propertyNamesEnum={propertyNamesEnum}
+                  onKeyRename={onKeyRename}
+                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  readonly={readonly}
+                  required={required}
+                  registry={registry}
+                />
+              ) : (
+                <Input
+                  key={keyName}
+                  className='form-control'
+                  defaultValue={keyName}
+                  disabled={disabled || (readonlyAsDisabled && readonly)}
+                  id={`${id}-key`}
+                  name={`${id}-key`}
+                  onBlur={!readonly ? onKeyRenameBlur : undefined}
+                  style={INPUT_STYLE}
+                  type='text'
+                />
+              )}
             </Form.Item>
           </div>
         </Col>

@@ -4,6 +4,6 @@ import base from '../../testing/vitest.base.mts';
 
 export default mergeConfig(base, {
   test: {
-    setupFiles: ['./test/testSetup.ts'],
+    setupFiles: ['../snapshot-tests/src/setup.ts', './test/testSetup.ts'],
   },
 });

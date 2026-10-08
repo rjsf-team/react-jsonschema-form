@@ -1,74 +1,39 @@
 {
   "name": "@rjsf/mui",
   "version": "6.11.0",
-  "main": "./dist/index.cjs",
-  "module": "./lib/index.js",
+  "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "type": "module",
   "sideEffects": false,
-  "description": "Material UI 7 theme, fields and widgets for react-jsonschema-form",
+  "description": "Material UI 9 theme, fields and widgets for react-jsonschema-form",
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
+      "@rjsf/source": "./src/index.ts",
+      "default": "./lib/index.js"
     },
-    "./lib": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
-    },
-    "./lib/*.js": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
-    },
-    "./dist": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
-    },
-    "./dist/*.cjs": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
-    }
+    "./lib": "./lib/index.js",
+    "./lib/*.js": "./lib/*.js"
   },
   "files": [
-    "dist",
     "lib",
     "src"
   ],
   "scripts": {
-    "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/mui.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/mui.esm.js --format=umd --file=dist/mui.umd.js --name=@rjsf/mui",
-    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
-    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx}\"",
-    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx}\"",
-    "lint": "oxlint src test",
-    "precommit": "lint-staged",
+    "build": "tsdown -c ../../tsdown.base.mts",
     "test": "vitest run",
     "test:update": "vitest run --update"
   },
-  "lint-staged": {
-    "{src,test}/**/*.{ts,tsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
-  },
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "peerDependencies": {
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^7.0.0 || ^9.0.0",
-    "@mui/material": "^7.0.0 || ^9.0.0",
+    "@mui/icons-material": "^9.0.0",
+    "@mui/material": "^9.0.0",
     "@rjsf/core": "workspace:^",
     "@rjsf/utils": "workspace:^",
-    "react": ">=18"
+    "react": ">=19"
   },
   "devDependencies": {
     "@emotion/jest": "^11.14.2",

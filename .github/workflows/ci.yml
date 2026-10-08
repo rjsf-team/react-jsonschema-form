@@ -2,16 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, v7]
   pull_request:
-    branches: [main]
+    branches: [main, v7]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [20.x, 22.x, 24.x]
+        node-version: [22.x, 24.x, 26.x]
 
     steps:
       - uses: actions/checkout@v7
@@ -25,9 +25,12 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
+      # Lockfile hygiene is independent of the Node version, so check it once.
+      - if: matrix.node-version == '24.x'
+        run: pnpm dedupe --check
       - run: pnpm run lint
       # Workspace-wide and independent of the Node version, so run it once.
-      - if: matrix.node-version == '22.x'
+      - if: matrix.node-version == '24.x'
         run: pnpm run knip
 
       - name: Build with Netlify badge
@@ -41,14 +44,12 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - run: pnpm run typecheck
-
-      - if: matrix.node-version == '22.x'
+      - if: matrix.node-version == '24.x'
         uses: actions/upload-artifact@v7
         with:
           name: playground
           path: packages/playground/dist
-      - if: matrix.node-version == '22.x'
+      - if: matrix.node-version == '24.x'
         uses: actions/upload-artifact@v7
         with:
           name: docs

@@ -1,15 +1,19 @@
 import type { OptionOnSelectData } from '@fluentui/react-combobox';
-import { Dropdown, Field, Option } from '@fluentui/react-components';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  enumOptionValueDecoder,
-  enumOptionValueEncoder,
+  enumOptionsDomValues,
   enumOptionsIndexForValue,
+  enumOptionValueDecoder,
   getOptionValueFormat,
+  groupEnumOptions,
+  hasVisibleErrors,
+  isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  useSelectFocusHandlers,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -24,9 +28,14 @@ function getValue(data: OptionOnSelectData, multiple: boolean) {
  *
  * @param props - The `WidgetProps` for this component
  */
-function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+function SelectWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   htmlName,
+  className,
   options,
   label,
   hideLabel,
@@ -36,7 +45,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   readonly,
   multiple = false,
   autofocus = false,
-  rawErrors = [],
+  rawErrors,
+  hideError,
   onChange,
   onBlur,
   onFocus,
@@ -45,65 +55,68 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   registry,
   uiSchema,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
-  const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-  let selectedIndexesAsArray: string[] = [];
+  // One scan of the options finds the selection, which both the displayed labels and the selected options come from.
+  // The options' own values are encoded in the `optionValueFormat`, so the selection is encoded in that format too
+  const matchedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
+  const selectedOptionsWithIndex =
+    matchedIndexes === undefined || !enumOptions
+      ? []
+      : ([] as string[])
+          .concat(matchedIndexes)
+          .map((index) => ({ index: Number(index), ...enumOptions[Number(index)] }));
+  const dropdownValue = selectedOptionsWithIndex.map((option) => option.label).join(', ');
+  const selectedOptions = selectedOptionsWithIndex.map((option) => domValues[option.index]);
 
-  if (typeof selectedIndexes === 'string') {
-    selectedIndexesAsArray = [selectedIndexes];
-  } else if (Array.isArray(selectedIndexes)) {
-    selectedIndexesAsArray = selectedIndexes.map((index) => String(index));
-  }
-
-  const dropdownValue = selectedIndexesAsArray
-    .map((index) => (enumOptions ? enumOptions[Number(index)].label : undefined))
-    .join(', ');
-
-  const handleBlur = () => onBlur(id, selectedIndexes);
-  const handleFocus = () => onFocus(id, selectedIndexes);
+  const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
   const handleChange = (_: any, data: OptionOnSelectData) => {
     const newValue = getValue(data, multiple);
-    return onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
+    onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
   };
   const showPlaceholderOption = !multiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
+  function renderOption(option: IndexedEnumOptionType<S>) {
+    return (
+      <Option key={option.index} value={domValues[option.index]} disabled={option.disabled}>
+        {option.label}
+      </Option>
+    );
+  }
+
   return (
     <Field
       label={labelValue(label, hideLabel)}
-      validationState={rawErrors.length ? 'error' : undefined}
+      validationState={hasVisibleErrors({ rawErrors, hideError }) ? 'error' : undefined}
       required={required}
     >
       <Dropdown
         id={id}
         name={htmlName || id}
         multiselect={multiple}
-        className='form-control'
+        className={className ? `form-control ${className}` : 'form-control'}
         value={dropdownValue}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         onBlur={handleBlur}
         onFocus={handleFocus}
         onOptionSelect={handleChange}
-        selectedOptions={selectedIndexesAsArray}
+        selectedOptions={selectedOptions}
         aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
-        {Array.isArray(enumOptions) &&
-          enumOptions.map(({ value: enumValue, label: enumLabel }, i) => {
-            const isDisabled = enumDisabled && enumDisabled.includes(enumValue);
-            return (
-              <Option
-                key={String(enumValue)}
-                value={enumOptionValueEncoder(enumValue, i, optionValueFormat)}
-                disabled={isDisabled}
-              >
-                {enumLabel}
-              </Option>
-            );
-          })}
+        {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>
+          isEnumOptionsGroup<S>(item) ? (
+            <OptionGroup key={`optgroup-${item.label}`} label={item.label}>
+              {item.options.map(renderOption)}
+            </OptionGroup>
+          ) : (
+            renderOption(item)
+          ),
+        )}
       </Dropdown>
       <SelectedOptionDescription
         id={id}

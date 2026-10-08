@@ -1,7 +1,14 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, examplesId, getInputProps } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  examplesId,
+  getExampleSuggestions,
+  getInputProps,
+  getNumericInputTitle,
+  getSchemaType,
+} from '@rjsf/utils';
 
 import SchemaExamples from '../SchemaExamples.tsx';
 
@@ -12,9 +19,9 @@ import SchemaExamples from '../SchemaExamples.tsx';
  * @param props - The `WidgetProps` for this template
  */
 export default function BaseInputTemplate<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -47,16 +54,24 @@ export default function BaseInputTemplate<
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
   }
+  const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
+  // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so a widget passing either keeps
+  // it. The title names the rule the derived `pattern` imposes, so a caller replacing that pattern drops the title with
+  // it rather than describing a rule no longer in force
+  const callerPattern = 'pattern' in rest ? { pattern: rest.pattern } : undefined;
   const inputProps = {
     ...rest,
-    ...getInputProps<T, S, F>(schema, type, options),
+    ...derivedInputProps,
+    ...callerPattern,
+    ...('inputMode' in rest ? { inputMode: rest.inputMode } : undefined),
   };
 
+  const schemaType = getSchemaType(schema);
   let inputValue;
-  if (inputProps.type === 'number' || inputProps.type === 'integer') {
+  if (schemaType === 'number' || schemaType === 'integer') {
     inputValue = value || value === 0 ? value : '';
   } else {
-    inputValue = value == null ? '' : value;
+    inputValue = value ?? '';
   }
 
   const handleChange = useCallback(
@@ -78,6 +93,8 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
+  const exampleSuggestions = getExampleSuggestions<S>(schema);
+  const hasExamples = exampleSuggestions.length > 0;
   return (
     <>
       <input
@@ -88,17 +105,18 @@ export default function BaseInputTemplate<
         disabled={disabled}
         autoFocus={autofocus}
         value={inputValue}
+        title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}
-        list={schema.examples ? examplesId(id) : undefined}
-        onChange={onChangeOverride || handleChange}
+        list={hasExamples ? examplesId(id) : undefined}
+        onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, hasExamples)}
       />
       {options.allowClearTextInputs && !readonly && !disabled && inputValue && (
         <ClearButton registry={registry} onClick={handleClear} />
       )}
-      <SchemaExamples id={id} schema={schema} />
+      <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>
   );
 }

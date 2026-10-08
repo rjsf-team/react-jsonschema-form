@@ -4,10 +4,12 @@ import AddButton from './AddButton.tsx';
 import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton, ClearButton } from './IconButton.tsx';
 import SubmitButton from './SubmitButton.tsx';
 
-function buttonTemplates<
-  T = any,
+export { AddButton, ClearButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, SubmitButton };
+
+export function generateButtonTemplates<
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(): TemplatesType<T, S, F>['ButtonTemplates'] {
   return {
     SubmitButton,
@@ -19,5 +21,3 @@ function buttonTemplates<
     ClearButton,
   };
 }
-
-export default buttonTemplates;

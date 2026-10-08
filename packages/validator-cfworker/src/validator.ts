@@ -1,4 +1,4 @@
-import type { OutputUnit, Schema, Validator } from '@cfworker/json-schema';
+import type { OutputUnit, Validator } from '@cfworker/json-schema';
 import type {
   CustomValidator,
   ErrorTransformer,
@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, hashForSchema, ID_KEY, ROOT_SCHEMA_PREFIX, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -35,30 +35,28 @@ interface CachedValidator {
  * @param data - The form data to normalize
  * @returns - The form data with `undefined` values converted to JSON-compatible values
  */
-export function normalizeFormDataForValidation<D>(data: D): D {
+export function normalizeFormDataForValidation(data: unknown): unknown {
   if (data === undefined) {
-    return null as D;
+    return null;
   }
   if (Array.isArray(data)) {
-    return data.map((value) => normalizeFormDataForValidation(value)) as D;
+    return data.map((value: unknown) => normalizeFormDataForValidation(value));
   }
   if (data !== null && typeof data === 'object') {
-    const normalized = Object.fromEntries(
+    return Object.fromEntries(
       Object.entries(data).flatMap(([key, value]) =>
         value === undefined ? [] : [[key, normalizeFormDataForValidation(value)]],
       ),
     );
-    return normalized as D;
   }
   return data;
 }
 
 /** `ValidatorType` implementation backed by `@cfworker/json-schema`. */
 export default class CFWorkerValidator<
-  T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> implements ValidatorType<T, S, F> {
+  F extends FormContextType = FormContextType,
+> implements ValidatorType<S, F> {
   /** The resolved options used to configure this validator.
    *
    * @private
@@ -125,7 +123,7 @@ export default class CFWorkerValidator<
       return cached.validator;
     }
 
-    const validator = createCfworkerInstance(schema as Schema, this.options, rootSchema as Schema | undefined);
+    const validator = createCfworkerInstance(schema, this.options, rootSchema);
     this.validators.set(id, { validator, schema, rootSchema });
     return validator;
   }
@@ -136,11 +134,11 @@ export default class CFWorkerValidator<
    * @param [formData] - The form data to validate
    * @returns - The raw cfworker errors and any engine exception
    */
-  rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
+  rawValidation<Result = any>(schema: S, formData?: unknown): RawValidationErrorsType<Result> {
     let validationError: Error | undefined;
     let errors: OutputUnit[] | undefined;
     try {
-      const id = schema[ID_KEY] ?? hashForSchema(schema);
+      const id = schemaKey(schema);
       const validator = this.getOrBuild(id, schema);
       const result = validator.validate(normalizeFormDataForValidation(formData));
       errors = result.valid ? undefined : result.errors;
@@ -157,18 +155,21 @@ export default class CFWorkerValidator<
    * @param [customValidate] - A function that adds application-specific validation errors
    * @param [transformErrors] - A function that transforms errors before custom validation
    * @param [uiSchema] - The uiSchema passed to error transformation and custom validation
+   * @param [getCustomValidateFormData] - Returns the `formData` to hand `customValidate`, with the form's
+   *        defaults applied; left out, they are computed here with the default `allOf` merge
    * @returns - The processed validation errors and error schema
    */
-  validateFormData(
+  validateFormData<T = unknown>(
     formData: T | undefined,
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
+    getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData);
     return processRawValidationErrors(
-      this,
+      { validator: this },
       rawErrors,
       formData,
       schema,
@@ -176,6 +177,7 @@ export default class CFWorkerValidator<
       transformErrors,
       uiSchema,
       this.options.suppressDuplicateFiltering,
+      getCustomValidateFormData,
     );
   }
 
@@ -211,16 +213,22 @@ export default class CFWorkerValidator<
    * @param rootSchema - The root schema used to provide `$ref` resolutions
    * @returns - Whether the form data is valid
    */
-  isValid(schema: S, formData: T | undefined, rootSchema: S): boolean {
+  isValid(schema: S, formData: unknown, rootSchema: S): boolean {
+    // Declared outside the try so the catch block can say which schema the error is about
+    let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
       const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
-      const id = schemaWithIdRefPrefix[ID_KEY] ?? hashForSchema(schemaWithIdRefPrefix);
+      id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
     } catch (error) {
-      // oxlint-disable-next-line no-console
-      console.warn('Error encountered validating schema:', error);
+      // The schema is named so two schemas that fail with the same error text aren't deduped into one warning. Which of
+      // the schema and the form data is at fault is deliberately not claimed: the `Validator` constructor only
+      // dereferences, leaving `$ref` resolution and keyword checks to `validate()`, so a schema defect such as a
+      // dangling `$ref` or an unparseable `pattern` throws from there and would be reported as a problem with the data
+      const named = id === undefined ? '' : ` "${id}"`;
+      logOnce(`Error encountered validating schema${named}:`, 'warn', error);
       return false;
     }
   }

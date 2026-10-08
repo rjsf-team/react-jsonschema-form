@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { renderHook, waitFor } from '@testing-library/react';
-import type { Mock } from 'vitest';
+import type { Mock, MockInstance } from 'vitest';
 
 import type { FileInfoType } from '../src/index.ts';
 import { useFileWidgetProps } from '../src/index.ts';
@@ -55,7 +55,7 @@ function toFileList(list: File[]) {
 
 describe('useFileWidgetProps()', () => {
   let onChange: Mock;
-  let windowFileReaderSpy: ReturnType<typeof vi.spyOn>;
+  let windowFileReaderSpy: MockInstance<typeof window.FileReader>;
   let FN_RESULT: any;
   beforeAll(() => {
     onChange = vi.fn();
@@ -63,7 +63,6 @@ describe('useFileWidgetProps()', () => {
     // oxlint-disable-next-line prefer-arrow-callback -- arrow functions can't be constructors (new FileReader())
     windowFileReaderSpy = vi.spyOn(window, 'FileReader').mockImplementation(function windowFileReaderSpy() {
       return {
-        // oxlint-disable-next-line no-unused-vars
         set onload(fn: (event: any) => void) {
           fn(FN_RESULT);
         },
@@ -99,6 +98,24 @@ describe('useFileWidgetProps()', () => {
     await waitFor(() => {
       // Expect the onChange handler was called with the converted file
       expect(onChange).toHaveBeenCalledWith(FILE_3_STR);
+    });
+  });
+  test('File initial value, single, handleChange with no files clears the value', async () => {
+    const { result } = renderHook(() => useFileWidgetProps(FILE_2_STR, onChange));
+    const { handleChange } = result.current;
+    // An empty selection is a cleared input
+    await handleChange(toFileList([]));
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith(undefined);
+    });
+  });
+  test('File initial value, multiple, handleChange with no files clears the value', async () => {
+    const { result } = renderHook(() => useFileWidgetProps([FILE_2_STR], onChange, true));
+    const { handleChange } = result.current;
+    // An empty selection is a cleared input, not an empty append onto the existing files
+    await handleChange(toFileList([]));
+    await waitFor(() => {
+      expect(onChange).toHaveBeenCalledWith([]);
     });
   });
   test('File initial value, single, handleRemove', async () => {

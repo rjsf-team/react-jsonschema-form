@@ -29,7 +29,7 @@ render(<Form schema={schema} validator={validator} />, document.getElementById('
 
 Fields can have titles and descriptions specified by the `title` keyword in the schema and the `description` keyword in the schema, respectively. These two can also be overridden by the `ui:title` and `ui:description` keywords in the uiSchema.
 
-Description can render markdown. This feature is disabled by default. It needs to be enabled by the `ui:enableMarkdownInDescription` keyword and setting to `true`. Read more about markdown options in the `markdown-to-jsx` official [docs](https://markdown-to-jsx.quantizor.dev/).
+Descriptions render as markdown once a markdown-capable `MarkdownTemplate` is registered; see [MarkdownTemplate](../advanced-customization/custom-templates.md#markdowntemplate). The default renders them as plain text.
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
@@ -193,7 +193,8 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ## Nullable types
 
-JSON Schema supports specifying multiple types in an array; however, react-jsonschema-form only supports a restricted subset of this -- nullable types, in which an element is either a given type or equal to null.
+JSON Schema supports specifying multiple types in an array.
+A nullable type, in which an element is either a given type or equal to `null`, renders as a field for that type.
 
 ```tsx
 import { RJSFSchema } from '@rjsf/utils';
@@ -205,3 +206,65 @@ const schema: RJSFSchema = {
 
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
+
+## Multiple types
+
+A schema that allows more than one type has no single field that can render every one of them, so by default it renders the field of the first type in the list that JSON Schema defines other than `null`, or of another listed type when only that type has the `ui:widget` it names, and the other types are unreachable.
+Turning on the [`useFallbackUiForUnsupportedType`](../api-reference/form-props.md#usefallbackuiforunsupportedtype) prop renders such a field with a selector of exactly the types the schema allows, alongside the field for the type currently selected.
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: ['string', 'boolean', 'null'],
+};
+
+render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedType />, document.getElementById('app'));
+```
+
+The same selector, offering every JSON Schema type, is rendered for a property the schema puts no constraint on at all — an `additionalProperties: true` entry, or one whose schema is empty:
+
+```tsx
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  additionalProperties: true,
+};
+
+render(<Form schema={schema} validator={validator} useFallbackUiForUnsupportedType />, document.getElementById('app'));
+```
+
+Switching the type converts the value that is already there where it can — a number becomes its string spelling, a string becomes the number it reads as — and starts from an empty value where it cannot, such as when switching to an object or an array, or to a number from text that reads as no number at all.
+Text is read as a number only in the notation a number field accepts, so `0x10` and a value naming an infinity start from an empty value rather than becoming a number nobody typed.
+
+Everything else the schema says still applies to the value: a union that also declares `properties` renders them for its `object` type, and keywords such as `items`, `format` and `minimum` are honored by the field for the type in effect.
+The field for an `object` type whose schema names no `properties`, `patternProperties` or `additionalProperties` takes any key/value pair, so it offers a button for adding them.
+Those keys are outside what the schema describes, so [`omitExtraData`](../api-reference/form-props.md#omitextradata) drops them, as it does for any such object whether or not its type is a union.
+Declaring `additionalProperties: true` on the schema keeps them.
+
+A schema that pairs multiple types with an `anyOf` or `oneOf` renders both selectors, the type selector wrapping the option selector.
+Each option renders for whichever type is currently chosen, so every member of the union is reachable from within an option, and changing the type re-renders the option for the new one.
+A schema that pins its value with an `enum`, a `const`, or an `anyOf`/`oneOf` whose options are all constants gets no type selector, since switching type would only cast the chosen value into one the schema rejects.
+A field whose `ui:widget` is a component gets none either, the same way one with a `ui:field` does: a control written for that schema handles the types it allows, so wrapping it would pin the schema to one of them and cast the value on every switch.
+A `ui:widget` naming a widget by string renders within the selector instead, since it is a theme's control for a single type, and is dropped for a chosen type the theme has no implementation of.
+A schema that allows a single type gets no selector either, since one type is nothing to choose between, and the field for that type renders alone.
+Such a schema is otherwise rendered by the field for the type it names, so this only arises when something else sent it here: a `ui:field`, a `$id` or a `ui:globalOptions.field` naming the fallback field, a `type` list that names one recognized type alongside unrecognized ones, or an `enum` or `const` whose values all have one type alongside an unrecognized `type`.
+A schema that only implies its type counts as naming it, so one declaring `properties` and no `type` renders those properties, the way it does with nothing naming the fallback field for it.
+A schema with no usable type of its own — an unrecognized `type`, or an `additionalProperties` entry left unconstrained — still gets a selector, since it lists no types for such a control to handle, and the widget renders within it for whichever type is chosen.
+An `enum` or a `const` alongside an unrecognized `type` narrows that selector to the types its values have rather than withholding it the way it does from a union, since without it no field would render such a schema at all: an `enum` of a string and a number offers those two, while one whose values are all strings is left with the single type they have, whose field then renders alone.
+A `ui:widget` component alongside an unrecognized `type` withholds nothing either, and pins nothing, so the selector still offers every type, with the component rendering within it for whichever one is chosen.
+An `anyOf` or `oneOf` alongside it does withhold it, unless its options are all constants: the option selector it renders is already the choice a type selector would offer, so the options are what supplies the types.
+That holds however the fallback field was reached for such a schema, a `ui:field` or a `$id` naming it included, since the reason is the schema's own: it says nothing about the type for a selector to offer one of.
+A `ui:field` the options are rendered in place of is not passed down to them, so no option renders the field this schema has already declined.
+An option naming a type of its own would override a type the selector had pinned, leaving the screen as it was while the value was cast on every switch; one naming no type inherits the unrecognized `type` and so gets a selector of its own, within that option rather than around the whole list.
+An `enum` or a `const` on an `additionalProperties` entry is a constraint, so such an entry is no longer one the schema puts no constraint on at all: it renders without a type selector, as the select an `enum` calls for, or, for a `const`, as the field for the type the entry's own value has.
+An entry's type is guessed from the value it holds rather than read from its `const`, so a `const` of another type does not change which field that is.
+A `ui:widget` constrains nothing, so an entry carrying one still gets the selector, with the widget rendering within it for whichever type is chosen.
+A list naming an unrecognized type alongside recognized ones offers only the recognized ones, `null` included, and renders the field for the only one left without a selector: a `['foo', 'null']` renders as the `null` it allows.
+
+The field around the value and the field for the value share one label between them, so the schema's `title` and `description` are rendered once whichever type is chosen.
+A union that resolves to a type whose field renders no label of its own — an `object` or a `boolean` first in the list — has the value field render them.
+A `ui:options.label` of `false` turns the type selector's own label off along with the field's, since the selector is one of the controls within the field the caller asked for no label of.

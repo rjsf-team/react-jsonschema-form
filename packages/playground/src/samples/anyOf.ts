@@ -8,6 +8,28 @@ const anyOf: Sample = {
         type: 'integer',
         title: 'Age',
       },
+      priority: {
+        title: 'Priority (constant options without a type)',
+        anyOf: [
+          { title: 'Low', const: 0 },
+          { title: 'Normal', const: 1 },
+          { title: 'High', const: 2 },
+        ],
+      },
+      contact: {
+        title: 'Contact (single value enum options without a type)',
+        anyOf: [
+          { title: 'Email', type: 'string', enum: ['email'] },
+          { title: 'Phone', type: 'string', enum: ['phone'] },
+        ],
+      },
+      subscribed: {
+        title: 'Subscribed (a single boolean constant with a null option)',
+        anyOf: [
+          { title: 'Not answered', const: null },
+          { title: 'Subscribed', const: true },
+        ],
+      },
       items: {
         type: 'array',
         items: {

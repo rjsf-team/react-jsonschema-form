@@ -1,15 +1,14 @@
-import type { ComponentType } from 'react';
-import type { FormProps } from '@rjsf/core';
+import type { ThemedForm } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import { generateTheme } from '../Theme/index.ts';
 
 export function generateForm<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(): ComponentType<FormProps<T, S, F>> {
+  F extends FormContextType = FormContextType,
+>(): ThemedForm<T, S, F> {
   return withTheme<T, S, F>(generateTheme<T, S, F>());
 }
 

@@ -1,8 +1,15 @@
-import type { FormContextType, RJSFSchema, SchemaUtilsType, StrictRJSFSchema } from '@rjsf/utils';
+import type {
+  FormContextType,
+  RJSFSchema,
+  SchemaUtilsType,
+  StrictRJSFSchema,
+  UiSchema,
+  UiSchemaDefinitions,
+} from '@rjsf/utils';
 import { CONST_KEY, DEFAULT_KEY, deepEquals, getPropertySchema, isPlainObject, mergeSchemas } from '@rjsf/utils';
 
 /** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
- * populates a key at all under an `experimental_defaultFormStateBehavior` keyed off `required`. A schema's defaults
+ * populates a key at all under a `defaultFormStateBehavior` keyed off `required`. A schema's defaults
  * have to be computed from this rather than from the option alone, or the same data behaves differently depending
  * on whether `required` was written on the option or on the schema holding the `oneOf`/`anyOf`.
  *
@@ -19,7 +26,7 @@ function withParentRequired<S extends StrictRJSFSchema = RJSFSchema>(parentSchem
   if (!option || !parentSchema?.required) {
     return option;
   }
-  return mergeSchemas({ required: parentSchema.required } as Partial<S>, option) as S;
+  return mergeSchemas({ required: parentSchema.required }, option) as S;
 }
 
 /** Determines whether `schema` declares a value of its own, which is what an option that is not an object has
@@ -42,17 +49,24 @@ function declaresOwnValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S): b
  * @param key - The name of the property to test
  * @returns - True when the option declares a `default` or `const` for `key`
  */
-function optionDeclaresValueFor<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  option: S,
-  key: string,
-): boolean {
+function optionDeclaresValueFor<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(schemaUtils: SchemaUtilsType<T, S, F>, option: S, key: string): boolean {
   const propertySchema = schemaUtils.retrieveSchema(getPropertySchema<S>(option, key));
   if (declaresOwnValue<S>(propertySchema)) {
     return true;
   }
   const optionDefault = option[DEFAULT_KEY];
   return isPlainObject(optionDefault) && key in optionDefault;
+}
+
+/** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped */
+interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextType> {
+  newOptionUiSchema?: UiSchema<T, S, F>;
+  oldOptionUiSchema?: UiSchema<T, S, F>;
+  uiSchemaDefinitions?: UiSchemaDefinitions<S, F>;
 }
 
 /** Computes the form data to carry across a switch from `oldOption` to `newOption` of a `oneOf`/`anyOf`.
@@ -87,7 +101,7 @@ function optionDeclaresValueFor<T = any, S extends StrictRJSFSchema = RJSFSchema
  * value whenever the two options declare different properties for it, adding an `undefined` key for one the new
  * option drops and a leaf default for one it adds, and the rewritten value no longer resembles the default it came
  * from. Both sets of defaults use `excludeObjectChildren`, the flag the fill below uses, so all three describe the
- * same thing; computing them any other way makes them disagree under an `experimental_defaultFormStateBehavior`
+ * same thing; computing them any other way makes them disagree under a `defaultFormStateBehavior`
  * that suppresses object defaults. They describe what an earlier switch through here wrote rather than every default
  * the form holds — `Form` fills the root with `includeUndefinedValues: false`. That divergence only stops a key from
  * qualifying, so the worst it costs is that the replacement does not happen.
@@ -101,19 +115,23 @@ function optionDeclaresValueFor<T = any, S extends StrictRJSFSchema = RJSFSchema
  * @param [oldOption] - The option being switched away from, if one was selected
  * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`, whose `required` is merged into each option
  *        before its defaults are computed
+ * @param [uiSchemas] - Each option's own uiSchema, so its `ui:initialValue`/`ui:emptyValue` apply to the defaults
+ *        computed for it, and the registry's `ui:definitions`, which an option's uiSchema never carries itself
  * @returns - The form data for `newOption`, or undefined when it holds nothing, as when the selection is cleared
  */
 export default function formDataForNewOption<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >(
   schemaUtils: SchemaUtilsType<T, S, F>,
   formData: T | undefined,
   newOption?: S,
   oldOption?: S,
   parentSchema?: S,
+  uiSchemas: OptionUiSchemas<T, S, F> = {},
 ): T | undefined {
+  const { newOptionUiSchema, oldOptionUiSchema, uiSchemaDefinitions } = uiSchemas;
   let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
   const newOptionForDefaults = withParentRequired<S>(parentSchema, newOption);
   if (newOptionForDefaults) {
@@ -124,7 +142,14 @@ export default function formDataForNewOption<
     const defaultsForOldOption = () => {
       if (!oldDefaultsComputed) {
         oldDefaults = oldOptionForDefaults
-          ? schemaUtils.getDefaultFormState(oldOptionForDefaults, undefined, 'excludeObjectChildren')
+          ? schemaUtils.getDefaultFormState(
+              oldOptionForDefaults,
+              undefined,
+              'excludeObjectChildren',
+              undefined,
+              oldOptionUiSchema,
+              uiSchemaDefinitions,
+            )
           : undefined;
         oldDefaultsComputed = true;
       }
@@ -136,7 +161,14 @@ export default function formDataForNewOption<
      * the fill itself need them whenever nothing is carried over, and they are the same computation. */
     const defaultsForNewOption = () => {
       if (!newDefaultsComputed) {
-        newDefaults = schemaUtils.getDefaultFormState(newOptionForDefaults, undefined, 'excludeObjectChildren') as T;
+        newDefaults = schemaUtils.getDefaultFormState(
+          newOptionForDefaults,
+          undefined,
+          'excludeObjectChildren',
+          undefined,
+          newOptionUiSchema,
+          uiSchemaDefinitions,
+        ) as T;
         newDefaultsComputed = true;
       }
       return newDefaults;
@@ -172,7 +204,7 @@ export default function formDataForNewOption<
               delete withoutBlockedKeys[key];
             }
           });
-          newFormData = withoutBlockedKeys as T;
+          newFormData = withoutBlockedKeys;
         }
       }
     } else if (
@@ -196,7 +228,14 @@ export default function formDataForNewOption<
     newFormData =
       newFormData === undefined
         ? defaultsForNewOption()
-        : (schemaUtils.getDefaultFormState(newOptionForDefaults, newFormData, 'excludeObjectChildren') as T);
+        : (schemaUtils.getDefaultFormState(
+            newOptionForDefaults,
+            newFormData,
+            'excludeObjectChildren',
+            undefined,
+            newOptionUiSchema,
+            uiSchemaDefinitions,
+          ) as T);
   }
   return newFormData;
 }

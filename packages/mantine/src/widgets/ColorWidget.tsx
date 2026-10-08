@@ -2,20 +2,22 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { ColorInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
+import { labelValue } from '@rjsf/utils';
 
-import { cleanupOptions } from '../utils.ts';
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function ColorWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
-    name,
+    htmlName,
     value,
     placeholder,
     required,
@@ -24,7 +26,6 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
@@ -58,10 +59,13 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     [onFocus, id],
   );
 
+  const ariaDescribedByProps = useAriaDescribedByProps('ColorInput', id, options);
+  const error = useVisibleErrors(props);
+
   return (
     <ColorInput
       id={id}
-      name={name}
+      name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
       required={required}
@@ -71,10 +75,11 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+      error={error}
       {...themeProps}
-      aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}
+      {...ariaDescribedByProps}
+      {...getDescriptionProps(props)}
     />
   );
 }

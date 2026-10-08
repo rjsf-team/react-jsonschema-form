@@ -1,21 +1,20 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds } from '@rjsf/utils';
-import FormControl from 'react-bootstrap/FormControl';
-import InputGroup from 'react-bootstrap/InputGroup';
+import { FormControl, InputGroup } from 'react-bootstrap';
 
-type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = WidgetProps<
-  T,
-  S,
-  F
-> & {
+type CustomWidgetProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+> = WidgetProps<T, S, F> & {
   options: any;
 };
 
 export default function TextareaWidget<
-  T = any,
+  T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
+  F extends FormContextType = FormContextType,
 >({
   id,
   htmlName,
@@ -47,7 +46,7 @@ export default function TextareaWidget<
         value={value}
         required={required}
         autoFocus={autofocus}
-        rows={options.rows || 5}
+        rows={options.rows ?? 5}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

@@ -5,21 +5,23 @@ import type {
   ObjectFieldTemplateProps,
   ObjectFieldTemplatePropertyType,
 } from '@rjsf/utils';
-import { getTemplate, getUiOptions, titleId } from '@rjsf/utils';
+import { getTemplates, getUiOptions, titleId } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
-function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ObjectFieldTemplateProps<T, S, F>,
-) {
-  const { registry, properties, title, description, uiSchema, required, schema, fieldPathId } = props;
+function ObjectFieldTemplate<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: ObjectFieldTemplateProps<T, S, F>) {
+  const { registry, properties, title, description, uiSchema, required, schema, id } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, options);
+  const { TitleFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <div>
       {title && (
         <TitleFieldTemplate
-          id={titleId(fieldPathId)}
+          id={titleId(id)}
           title={title}
           required={required}
           schema={schema}
@@ -29,7 +31,7 @@ function ObjectFieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       )}{' '}
       {description}
       <div className='row'>
-        {properties.map((prop: ObjectFieldTemplatePropertyType) => (
+        {properties.map((prop: ObjectFieldTemplatePropertyType<T, S, F>) => (
           <div className='col-lg-1 col-md-2 col-sm-4 col-xs-6' key={prop.content.key}>
             {prop.content}
           </div>

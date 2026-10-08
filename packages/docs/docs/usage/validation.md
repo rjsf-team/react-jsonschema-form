@@ -31,9 +31,9 @@ The first step in the process is to compile a schema into a set of validator fun
 The `@rjsf/validator-ajv8` package exports the `compileSchemaValidators()` function that does this.
 It is expected that this function will be used in a manner similar to the following:
 
-```cjs
-const compileSchemaValidators = require('@rjsf/validator-ajv8/compileSchemaValidators').default;
-const yourSchema = require('path_to/yourSchema'); // If your schema is a js file
+```js
+import compileSchemaValidators from '@rjsf/validator-ajv8/compileSchemaValidators';
+import yourSchema from 'path_to/yourSchema.js'; // If your schema is a js file
 
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js');
 ```
@@ -42,12 +42,13 @@ If you are currently using the `customizeValidator()` function to provide `addit
 `ajvOptionsOverrides` and/or `ajvFormatOptions` then you can pass those in as the optional third parameter to the
 `compileSchemaValidators()` function in a manner similar to:
 
-```cjs
-const { compileSchemaValidators } = require('@rjsf/validator-ajv8');
-const yourSchema = require('path_to/yourSchema.json'); // If your schema is a json file
+```js
+import { compileSchemaValidators } from '@rjsf/validator-ajv8';
+import yourSchema from 'path_to/yourSchema.json' with { type: 'json' }; // If your schema is a json file
+import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 
 const options = {
-  additionalMetaSchemas: [require('ajv/lib/refs/json-schema-draft-06.json')],
+  additionalMetaSchemas: [draft06],
   customFormats: { 'phone-us': /\(?\d{3}\)?[\s-]?\d{3}[\s-]?\d{4}$/, 'area-code': /\d{3}/ },
   ajvOptionsOverrides: {
     $data: true,
@@ -60,6 +61,25 @@ const options = {
 
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options);
 ```
+
+If your `Form` is given a `customMergeAllOf`, put it in those same options so the precompiled validator functions cover the sub-schemas it merges.
+Each function is looked up by the `$id` of the schema it validates, or by a hash of that schema when it has none, so the merge you compile with has to produce the same schemas the form's merge does; sharing one function between the form and the compile script is the simplest way to keep them the same.
+If they differ, the form can ask for a validator that was never compiled and throw `No precompiled validator function was found for the given schema`.
+Give two sub-schemas that differ distinct `$id`s, or none, since the lookup cannot tell two schemas with the same `$id` apart and the compile fails rather than leave one of them out.
+An `$id` of the empty string names nothing, so a schema carrying one is looked up by its hash instead.
+A key can match any subset of an object's `patternProperties` and a form renders it with the merge of the subset it matches, so every subset has to be compiled; an object may have at most 16 of them for the compile to cover every subset.
+An object with more is still compiled, with each pattern alone and all of them together, and the compile warns that a key matching some other subset of them has no compiled validator.
+A form that renders such a key throws `No precompiled validator function was found for the given schema` when it validates it, so a compile that succeeds with that warning is not a guarantee that every sub-schema the form reaches was covered.
+An object may likewise have at most 8 schema `dependencies` for every subset of them to be compiled, since a form applies the subset whose keys the data has filled in; an object with more is compiled with each dependency alone and all of them together, and warns the same way.
+
+```js
+import { compileSchemaValidators } from '@rjsf/validator-ajv8';
+import { customMergeAllOf } from 'path_to/yourCustomMergeAllOf.js';
+
+compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', { ...options, customMergeAllOf });
+```
+
+Give the same `customMergeAllOf` to [`createPrecompiledValidator()`](#using-the-precompiled-validator) as well, since the validator resolves the root schema it is handed with it.
 
 It is highly recommended to create a `compileYourSchema.js` file (or what ever name you want) with code similar to what is shown above and then, using node, run the code as follows:
 
@@ -109,6 +129,7 @@ const code = compileSchemaValidatorsCode(schema, options);
 ```
 
 For the most part it is the same as `compileSchemaValidators`, but instead of writing the file - it returns generated code directly.
+It takes the same options, including the `customMergeAllOf`.
 
 To use it on browser side - some modifications are needed to provide runtime dependencies in generated code needs to be provided.
 
@@ -231,7 +252,7 @@ const validator = createPrecompiledValidator(precompiledValidator, schema);
 
 By default, form data are only validated when the form is submitted or when a new `formData` prop is passed to the `Form` component.
 
-You can enable live form data validation by passing a `liveValidate` prop to the `Form` component, and set it to `true`. Then, every time a value changes within the form data tree (e.g. the user entering a character in a field), a validation operation is performed, and the validation results are reflected into the form state.
+You can enable live form data validation by passing a `liveValidate` prop to the `Form` component, and set it to `'onChange'`. Then, every time a value changes within the form data tree (e.g. the user entering a character in a field), a validation operation is performed, and the validation results are reflected into the form state.
 
 Be warned that this is an expensive strategy, with possibly strong impact on performances.
 
@@ -247,7 +268,10 @@ const schema: RJSFSchema = {
 
 const formData = 'a';
 
-render(<Form schema={schema} formData={formData} validator={validator} liveValidate />, document.getElementById('app'));
+render(
+  <Form schema={schema} formData={formData} validator={validator} liveValidate='onChange' />,
+  document.getElementById('app'),
+);
 ```
 
 ## Validate form programmatically
@@ -423,7 +447,7 @@ render((
         validator={validator}
         showErrorList='top'
         formData={""}
-        liveValidate
+        liveValidate='onChange'
         templates: {{ ErrorListTemplate }} />
 ), document.getElementById("app"));
 ```
@@ -560,7 +584,8 @@ const extraErrors: ErrorSchema = {
 render(<Form schema={schema} validator={validator} extraErrors={extraErrors} />, document.getElementById('app'));
 ```
 
-An important note is that these errors are "display only" and will not block the user from submitting the form again.
+By default, these errors also block the user from submitting the form, the same as JSON Schema validation errors.
+Set the `extraErrorsAreWarnings` prop to `true` to make them "display only" instead, so the user can still submit the form while they're the only errors shown.
 
 ### ajvOptionsOverrides
 
@@ -769,14 +794,14 @@ const validator = customizeValidator({ suppressDuplicateFiltering: 'all' });
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-For a precompiled validator, pass the value as the fourth argument to `createPrecompiledValidator()`:
+For a precompiled validator, pass the value in the options object `createPrecompiledValidator()` takes after the schema:
 
 ```tsx
 import { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import * as precompiledValidatorFns from 'path_to/yourCompiledSchema';
 import yourSchema from 'path_to/yourSchema';
 
-const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema, undefined, 'all');
+const validator = createPrecompiledValidator(precompiledValidatorFns, yourSchema, { suppressDuplicateFiltering: 'all' });
 ```
 
 ### Localization (L10n) support

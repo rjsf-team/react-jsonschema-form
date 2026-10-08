@@ -1,11 +1,11 @@
 import { createRef } from 'react';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { act } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { userEvent } from '@testing-library/user-event';
 
-import type Form from '../src/index.ts';
 import {
   createFormComponent,
+  createFormRef,
   expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
   submitForm,
@@ -15,77 +15,161 @@ const user = userEvent.setup();
 
 describe('NumberField', () => {
   describe('Number widget', () => {
-    it('should use step to represent the multipleOf keyword', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          multipleOf: 5,
-        },
+    describe('with a native number input (ui:options.inputType is number)', () => {
+      const uiSchema: UiSchema = { 'ui:options': { inputType: 'number' } };
+
+      it('should use step to represent the multipleOf keyword', () => {
+        const { node } = createFormComponent({ schema: { type: 'number', multipleOf: 5 }, uiSchema });
+
+        expect(node.querySelector('input')).toHaveAttribute('step', '5');
       });
 
-      expect(node.querySelector('input')).toHaveAttribute('step', '5');
+      it('should use min to represent the minimum keyword', () => {
+        const { node } = createFormComponent({ schema: { type: 'number', minimum: 0 }, uiSchema });
+
+        expect(node.querySelector('input')).toHaveAttribute('min', '0');
+      });
+
+      it('should use max to represent the maximum keyword', () => {
+        const { node } = createFormComponent({ schema: { type: 'number', maximum: 100 }, uiSchema });
+
+        expect(node.querySelector('input')).toHaveAttribute('max', '100');
+      });
     });
 
-    it('should use min to represent the minimum keyword', () => {
+    it('should render a nullable number like a number, since it renders through the same NumberField', () => {
       const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          minimum: 0,
-        },
+        schema: { type: ['number', 'null'], multipleOf: 0.5, minimum: 0, maximum: 10 },
       });
 
-      expect(node.querySelector('input')).toHaveAttribute('min', '0');
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('type', 'text');
+      expect(input).toHaveAttribute('inputmode', 'decimal');
+      expect(input).toHaveAttribute('pattern');
+      expect(input).toHaveAttribute('title', 'Enter a number');
+      expect(input).not.toHaveAttribute('step');
+      expect(input).not.toHaveAttribute('min');
+      expect(input).not.toHaveAttribute('max');
     });
 
-    it('should use max to represent the maximum keyword', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          maximum: 100,
-        },
-      });
+    it('should render a nullable integer like an integer, since it renders through the same NumberField', () => {
+      const { node } = createFormComponent({ schema: { type: ['integer', 'null'], minimum: 0, maximum: 10 } });
 
-      expect(node.querySelector('input')).toHaveAttribute('max', '100');
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('type', 'text');
+      expect(input).toHaveAttribute('inputmode', 'numeric');
+      expect(input).toHaveAttribute('title', 'Enter a whole number');
+      expect(input).not.toHaveAttribute('min');
+      expect(input).not.toHaveAttribute('max');
     });
 
-    it('should use step to represent the multipleOf keyword', () => {
-      const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          multipleOf: 5,
-        },
-      });
+    it('should title the default text input so the browser names the format its pattern rejects', () => {
+      const { node } = createFormComponent({ schema: { type: 'number' } });
 
-      expect(node.querySelector('input')).toHaveAttribute('step', '5');
+      expect(node.querySelector('input')).toHaveAttribute('title', 'Enter a number');
     });
 
-    it('should use min to represent the minimum keyword', () => {
+    it('should not title a native number input, which has no pattern to explain', () => {
       const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          minimum: 0,
-        },
+        schema: { type: 'number' },
+        uiSchema: { 'ui:options': { inputType: 'number' } },
       });
 
-      expect(node.querySelector('input')).toHaveAttribute('min', '0');
+      expect(node.querySelector('input')).not.toHaveAttribute('title');
     });
 
-    it('should use max to represent the maximum keyword', () => {
+    const pendingSeparatorTests = [
+      { typed: '.', display: '.', output: 0 },
+      { typed: '-.', display: '-.', output: -0 },
+      { typed: '+.', display: '+.', output: 0 },
+    ];
+
+    pendingSeparatorTests.forEach(({ typed, display, output }) => {
+      it(`should leave the default text input submittable while it shows the ${typed} it reports as ${output}`, async () => {
+        const { node, onChange } = createFormComponent({ schema: { type: 'number' } });
+
+        const $input = node.querySelector('input')!;
+        await user.type($input, typed);
+
+        // The pattern has to accept every spelling the field itself produces, or native validation blocks a submit
+        // of form data rjsf considers valid — the same 0 typed as '.00' goes through
+        expectToHaveBeenCalledWithFormData(onChange, output, 'root');
+        expect($input).toHaveValue(display);
+        expect($input.checkValidity()).toBe(true);
+      });
+    });
+
+    const integerSpellingTests = [
+      { typed: '.', output: 0 },
+      { typed: '5.', output: 5 },
+      { typed: '5.0', output: 5 },
+      { typed: '-5.', output: -5 },
+    ];
+
+    integerSpellingTests.forEach(({ typed, output }) => {
+      it(`should leave an integer field submittable while it shows the ${typed} it reports as ${output}`, async () => {
+        const { node, onChange } = createFormComponent({ schema: { type: 'integer' } });
+
+        const $input = node.querySelector('input')!;
+        await user.type($input, typed);
+
+        expectToHaveBeenCalledWithFormData(onChange, output, 'root');
+        expect($input).toHaveValue(typed);
+        expect($input.checkValidity()).toBe(true);
+      });
+    });
+
+    it('should keep an integer field unsubmittable while it shows a fraction, which is no whole number', async () => {
+      const { node, onChange } = createFormComponent({ schema: { type: 'integer' } });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, '5.5');
+
+      expectToHaveBeenCalledWithFormData(onChange, 5.5, 'root');
+      expect($input.checkValidity()).toBe(false);
+    });
+
+    it('should keep the default text input unsubmittable while it shows a lone sign, which is no number at all', async () => {
+      const { node, onChange } = createFormComponent({ schema: { type: 'number' } });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, '-');
+
+      // `asNumber()` leaves this in formData as a string, so blocking the submit is the point of the pattern
+      expectToHaveBeenCalledWithFormData(onChange, '-', 'root');
+      expect($input.checkValidity()).toBe(false);
+    });
+
+    it('should not put step, min or max, which only a native number input honors, on the default text input', () => {
       const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          maximum: 100,
-        },
+        schema: { type: 'integer', multipleOf: 5, minimum: 0, maximum: 100 },
       });
 
-      expect(node.querySelector('input')).toHaveAttribute('max', '100');
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('type', 'text');
+      expect(input).not.toHaveAttribute('step');
+      expect(input).not.toHaveAttribute('min');
+      expect(input).not.toHaveAttribute('max');
+    });
+
+    it.each([
+      ['a very small number', 'number', 0.0000001, '1e-7'],
+      ['a very large number', 'number', 1e21, '1e+21'],
+      ['a small negative number with a fraction', 'number', -1.5e-9, '-1.5e-9'],
+      ['a very large integer', 'integer', 1e21, '1e+21'],
+    ])('should let the browser accept %s that JavaScript renders with an exponent', (_, type, formData, rendered) => {
+      const { node } = createFormComponent({ schema: { type: type as 'number' | 'integer' }, formData });
+
+      const input = node.querySelector('input')!;
+      expect(input).toHaveValue(rendered);
+      expect(input.checkValidity()).toBe(true);
     });
 
     it('should handle the allowClearTextInputs clear button the same as an empty string change event, not storing "" in a number slot', async () => {
       const { node, onChange } = createFormComponent({
         schema: { type: 'number' },
         uiSchema: { 'ui:allowClearTextInputs': true },
-        formData: 3,
+        initialFormData: 3,
       });
 
       await user.click(node.querySelector('button.btn-clear')!);
@@ -103,8 +187,6 @@ describe('NumberField', () => {
       },
     ];
     for (const uiSchema of uiSchemas) {
-      // an empty uiSchema renders a native number input, so the widget yields numbers rather than strings
-      const isNumberInput = Object.keys(uiSchema).length === 0;
       it('should render a string field with a label', () => {
         const { node } = createFormComponent({
           schema: {
@@ -133,6 +215,7 @@ describe('NumberField', () => {
         const { node, onSubmit } = createFormComponent({
           schema: { type: 'number' },
           uiSchema,
+          // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
           noValidate: true,
         });
 
@@ -190,7 +273,7 @@ describe('NumberField', () => {
           },
           uiSchema,
           onFocus,
-          formData: 2,
+          initialFormData: 2,
         });
 
         const input = node.querySelector('input')!;
@@ -205,7 +288,7 @@ describe('NumberField', () => {
             type: 'number',
           },
           uiSchema,
-          formData: 2,
+          initialFormData: 2,
         });
 
         expect(node.querySelector('.rjsf-field input')).toHaveAttribute('value', '2');
@@ -269,9 +352,7 @@ describe('NumberField', () => {
             await user.type($input!, test.input);
 
             expectToHaveBeenCalledWithFormData(onChange, test.output, 'root');
-            // "2." is not really a valid number in a input field of type number
-            // so we need to use getAttribute("value") instead since .value outputs the empty string
-            expect($input).toHaveValue(isNumberInput ? test.output : test.input);
+            expect($input).toHaveValue(test.input);
           });
         });
       });
@@ -289,8 +370,86 @@ describe('NumberField', () => {
         await user.type($input!, '.00');
 
         expectToHaveBeenCalledWithFormData(onChange, 0, 'root');
-        const expected = isNumberInput ? 0 : '.00';
-        expect($input).toHaveValue(expected);
+        expect($input).toHaveValue('.00');
+      });
+
+      describe('signed values', () => {
+        const signedTests = [
+          { input: '-0.5', output: -0.5, display: '-0.5' },
+          { input: '-1.50', output: -1.5, display: '-1.50' },
+          { input: '+5', output: 5, display: '+5' },
+          { input: '-.5', output: -0.5, display: '-0.5' },
+          { input: '+.5', output: 0.5, display: '0.5' },
+          { input: '-.', output: -0, display: '-.' },
+        ];
+
+        signedTests.forEach(({ input, output, display }) => {
+          it(`should keep the sign of an input value of ${input}`, async () => {
+            const { node, onChange } = createFormComponent({
+              schema: {
+                type: 'number',
+              },
+              uiSchema,
+            });
+
+            const $input = node.querySelector('input');
+
+            await user.type($input!, input);
+
+            expectToHaveBeenCalledWithFormData(onChange, output, 'root');
+            expect($input).toHaveValue(display);
+          });
+        });
+
+        const staleTests = [
+          { typed: '-', formData: 7, display: '7' },
+          { typed: '+', formData: 7, display: '7' },
+          { typed: '-5', formData: 5, display: '5' },
+          { typed: '-0.5', formData: 0.5, display: '0.5' },
+          { typed: '5', formData: -5, display: '-5' },
+          { typed: '+5', formData: -5, display: '-5' },
+          { typed: '-0', formData: 5, display: '5' },
+          { typed: '0', formData: 7, display: '7' },
+          { typed: '.', formData: 7, display: '7' },
+          { typed: '00', formData: 7, display: '7' },
+          { typed: '.0', formData: 7, display: '7' },
+        ];
+
+        staleTests.forEach(({ typed, formData, display }) => {
+          it(`should show a formData of ${formData} set from outside instead of the typed ${typed}`, async () => {
+            const schema: RJSFSchema = {
+              type: 'number',
+            };
+            // Ownership is decided at mount, so a value set from outside later is only taken by a form mounted with one
+            const { rerender, node } = createFormComponent({
+              schema,
+              uiSchema,
+              formData: null,
+            });
+
+            const $input = node.querySelector('input')!;
+            await user.type($input, typed);
+
+            rerender({ schema, uiSchema, formData });
+
+            expect($input).toHaveValue(display);
+          });
+        });
+
+        it('should keep the minus sign of a negative zero on an integer', async () => {
+          const { node } = createFormComponent({
+            schema: {
+              type: 'integer',
+            },
+            uiSchema,
+          });
+
+          const $input = node.querySelector('input');
+
+          await user.type($input!, '-0');
+
+          expect($input).toHaveValue('-0');
+        });
       });
 
       it('should update input values correctly when formData prop changes', () => {
@@ -320,7 +479,7 @@ describe('NumberField', () => {
           default: 1,
         };
 
-        const ref = createRef<Form>();
+        const ref = createFormRef();
 
         const { node, onChange } = createFormComponent({
           ref,
@@ -332,14 +491,14 @@ describe('NumberField', () => {
 
         await user.type($input!, '231', { initialSelectionStart: 0, initialSelectionEnd: 1 });
 
-        expect($input).toHaveValue(isNumberInput ? 231 : '231');
+        expect($input).toHaveValue('231');
         expectToHaveBeenCalledWithFormData(onChange, 231, 'root');
 
         act(() => {
           ref.current?.reset();
         });
 
-        expect($input).toHaveValue(isNumberInput ? 1 : '1');
+        expect($input).toHaveValue('1');
         // No id on programmatic change
         expectToHaveBeenCalledWithFormData(onChange, 1);
       });
@@ -363,35 +522,16 @@ describe('NumberField', () => {
           uiSchema,
         });
         await user.type(node.querySelector('input')!, '2.');
-
-        if (isNumberInput) {
-          // "2." is not really a valid number in a input field of type number
-          // so we need to use getAttribute("value") instead since .value outputs the empty string
-          expect(node.querySelector('.rjsf-field input')).toHaveValue(2);
-        } else {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.');
-        }
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('2.');
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumberInput) {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
-        } else {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.0');
-        }
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('2.0');
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumberInput) {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
-        } else {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.00');
-        }
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('2.00');
 
         await user.type(node.querySelector('input')!, '0');
-        if (isNumberInput) {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue(2.0);
-        } else {
-          expect(node.querySelector('.rjsf-field input')).toHaveValue('2.000');
-        }
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('2.000');
       });
 
       it('should allow a zero to be input', async () => {
@@ -403,8 +543,7 @@ describe('NumberField', () => {
         });
 
         await user.type(node.querySelector('input')!, '0');
-        const expected = isNumberInput ? 0 : '0';
-        expect(node.querySelector('.rjsf-field input')).toHaveValue(expected);
+        expect(node.querySelector('.rjsf-field input')).toHaveValue('0');
       });
 
       it('should render customized StringField', () => {
@@ -468,17 +607,18 @@ describe('NumberField', () => {
     });
 
     it('should assign a default value', () => {
-      const { onChange } = createFormComponent({
+      const { getFormData } = createFormComponent({
         schema: {
           type: 'number',
           enum: [1, 2],
           default: 1,
         },
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });
 
       // No id on initial onChange
-      expectToHaveBeenCalledWithFormData(onChange, 1);
+      expect(getFormData()).toBe(1);
     });
 
     it('should handle a change event', async () => {
@@ -502,7 +642,7 @@ describe('NumberField', () => {
           type: 'number',
           enum: [1, 2],
         },
-        formData: 2,
+        initialFormData: 2,
       });
       await submitForm(node, user);
       expectToHaveBeenCalledWithFormData(onSubmit, 2, true);
@@ -636,7 +776,7 @@ describe('NumberField', () => {
             inputType: 'number',
           },
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       // getInputProps() gives the explicit inputType priority over the locale detection, so
@@ -743,6 +883,7 @@ describe('NumberField', () => {
         ref: createRef(),
         schema,
         uiSchema,
+        formData: null,
       });
 
       const $input = node.querySelector('input')!;
@@ -777,13 +918,32 @@ describe('NumberField', () => {
       expect($input).toHaveValue('0,05');
     });
 
+    it('should keep the sign of a negative value beginning with a comma', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:options': {
+            inputType: 'text',
+          },
+        },
+      });
+
+      const $input = node.querySelector('input')!;
+      await user.type($input, '-,05');
+
+      expectToHaveBeenCalledWithFormData(onChange, -0.05, 'root');
+      expect($input).toHaveValue('-0,05');
+    });
+
     it('should not format select widget options with comma (keep dot)', () => {
       const { node } = createFormComponent({
         schema: {
           type: 'number',
           enum: [2.3, 4.5],
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       const $select = node.querySelector<HTMLSelectElement>('select')!;
@@ -799,7 +959,7 @@ describe('NumberField', () => {
         uiSchema: {
           'ui:widget': 'radio',
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       const inputs = node.querySelectorAll<HTMLInputElement>('input[type="radio"]');
@@ -815,7 +975,7 @@ describe('NumberField', () => {
         uiSchema: {
           'ui:widget': 'hidden',
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       const input = node.querySelector<HTMLInputElement>('input[type="hidden"]')!;
@@ -823,11 +983,55 @@ describe('NumberField', () => {
     });
 
     it('should pass a number, not a string, to a custom widget', () => {
-      let receivedValue: unknown;
+      const recordValue = vi.fn<(value: unknown) => void>();
       const CustomWidget = (props: WidgetProps) => {
-        receivedValue = props.value;
+        recordValue(props.value);
         return <div id='custom-widget' />;
       };
+
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+        },
+        uiSchema: {
+          'ui:widget': 'custom',
+        },
+        widgets: {
+          custom: CustomWidget,
+        },
+        initialFormData: 2.3,
+      });
+
+      expect(node.querySelector('#custom-widget')).toBeInTheDocument();
+      expect(recordValue.mock.lastCall?.[0]).toBe(2.3);
+    });
+
+    it('should pass a number, not a string, to a format-registered widget', () => {
+      const recordValue = vi.fn<(value: unknown) => void>();
+      const CustomFormatWidget = (props: WidgetProps) => {
+        recordValue(props.value);
+        return <div id='custom-format-widget' />;
+      };
+
+      const { node } = createFormComponent({
+        schema: {
+          type: 'number',
+          format: 'custom-format',
+        },
+        widgets: {
+          'custom-format': CustomFormatWidget,
+        },
+        initialFormData: 2.3,
+      });
+
+      expect(node.querySelector('#custom-format-widget')).toBeInTheDocument();
+      expect(recordValue.mock.lastCall?.[0]).toBe(2.3);
+    });
+
+    it('should let the browser accept the "." formatted value a custom widget renders through BaseInputTemplate', () => {
+      const CustomWidget = ({ registry, ...props }: WidgetProps) => (
+        <registry.templates.BaseInputTemplate {...props} registry={registry} />
+      );
 
       const { node } = createFormComponent({
         schema: {
@@ -842,30 +1046,33 @@ describe('NumberField', () => {
         formData: 2.3,
       });
 
-      expect(node.querySelector('#custom-widget')).toBeInTheDocument();
-      expect(receivedValue).toBe(2.3);
+      // NumberField only comma-formats the value for the built-in text widget, so this input keeps "2.3"
+      const input = node.querySelector('input')!;
+      expect(input).toHaveValue('2.3');
+      expect(input.checkValidity()).toBe(true);
     });
 
-    it('should pass a number, not a string, to a format-registered widget', () => {
-      let receivedValue: unknown;
-      const CustomFormatWidget = (props: WidgetProps) => {
-        receivedValue = props.value;
-        return <div id='custom-format-widget' />;
-      };
+    it('should let a custom widget keep the pattern and inputMode it passes to BaseInputTemplate', () => {
+      const CustomWidget = ({ registry, ...props }: WidgetProps) => (
+        <registry.templates.BaseInputTemplate
+          {...props}
+          registry={registry}
+          pattern='[0-9]*[.]?[0-9]{0,2}'
+          inputMode='tel'
+        />
+      );
 
       const { node } = createFormComponent({
-        schema: {
-          type: 'number',
-          format: 'custom-format',
-        },
-        widgets: {
-          'custom-format': CustomFormatWidget,
-        },
-        formData: 2.3,
+        schema: { type: 'number' },
+        uiSchema: { 'ui:widget': 'custom' },
+        widgets: { custom: CustomWidget },
       });
 
-      expect(node.querySelector('#custom-format-widget')).toBeInTheDocument();
-      expect(receivedValue).toBe(2.3);
+      const input = node.querySelector('input')!;
+      expect(input).toHaveAttribute('pattern', '[0-9]*[.]?[0-9]{0,2}');
+      expect(input).toHaveAttribute('inputmode', 'tel');
+      // The title names the constraint the derived pattern imposes, so it goes when that pattern is replaced
+      expect(input).not.toHaveAttribute('title');
     });
   });
 });

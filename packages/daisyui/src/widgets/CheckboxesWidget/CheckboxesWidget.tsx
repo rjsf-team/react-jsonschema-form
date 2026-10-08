@@ -1,7 +1,16 @@
-import type { FocusEvent } from 'react';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { enumOptionValueDecoder, enumOptionValueEncoder, getOptionValueFormat } from '@rjsf/utils';
+import {
+  enumOptionsDeselectValue,
+  enumOptionsDomValues,
+  enumOptionsIsSelected,
+  enumOptionsSelectValue,
+  getOptionValueFormat,
+  optionId,
+  useOptionFocusHandlers,
+} from '@rjsf/utils';
+
+import { getGroupProps } from '../../utils.ts';
 
 /** The `CheckboxesWidget` component renders a set of checkboxes for multiple choice selection
  * with DaisyUI styling.
@@ -17,39 +26,28 @@ import { enumOptionValueDecoder, enumOptionValueEncoder, getOptionValueFormat } 
  *
  * @param props - The `WidgetProps` for this component
  */
-export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function CheckboxesWidget<
+  T,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({
   id,
   htmlName,
+  name,
   disabled,
   options,
   value,
+  label,
+  hideLabel,
   readonly,
-  required,
   onChange,
   onFocus,
   onBlur,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, emptyValue } = options;
+  const { enumOptions } = options;
   const optionValueFormat = getOptionValueFormat(options);
-  const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
-
-  /** Determines if a checkbox option should be checked based on the current value
-   *
-   * @param option - The option to check
-   * @returns Whether the option should be checked
-   */
-  const isChecked = useCallback(
-    (option: any) => {
-      if (!Array.isArray(value)) {
-        return false;
-      }
-      if (isEnumeratedObject) {
-        return value.some((v) => v.name === option.value.name);
-      }
-      return value.includes(option.value);
-    },
-    [value, isEnumeratedObject],
-  );
+  const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
+  const selected = useMemo((): unknown[] => (Array.isArray(value) ? value : []), [value]);
 
   /** Handles changes to a checkbox's checked state */
   const handleChange = useCallback(
@@ -60,57 +58,37 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
         return;
       }
 
-      const newValue = Array.isArray(value) ? [...value] : [];
-      const optionValue = isEnumeratedObject ? option.value : option.value;
-
-      if (isChecked(option)) {
-        onChange(newValue.filter((v) => (isEnumeratedObject ? v.name !== optionValue.name : v !== optionValue)));
+      // Compared by value, since an object option in form data is rarely the same instance as the option's constant
+      if (enumOptionsIsSelected<S>(option.value, selected)) {
+        onChange(enumOptionsDeselectValue<S>(index, selected, enumOptions));
       } else {
-        onChange([...newValue, optionValue]);
+        onChange(enumOptionsSelectValue<S>(index, selected, enumOptions));
       }
     },
-    [onChange, value, isChecked, isEnumeratedObject, enumOptions],
+    [onChange, selected, enumOptions],
   );
 
-  /** Handles focus events for accessibility */
-  const handleFocus = useCallback(
-    (event: FocusEvent<HTMLInputElement>) => {
-      if (onFocus) {
-        onFocus(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onFocus, id, enumOptions, optionValueFormat, emptyValue],
-  );
-
-  /** Handles blur events for accessibility */
-  const handleBlur = useCallback(
-    (event: FocusEvent<HTMLInputElement>) => {
-      if (onBlur) {
-        onBlur(id, enumOptionValueDecoder<S>(event.target.value, enumOptions, optionValueFormat, emptyValue));
-      }
-    },
-    [onBlur, id, enumOptions, optionValueFormat, emptyValue],
-  );
+  const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
   return (
     <div className='form-control'>
       {/* Use a vertical layout with proper spacing */}
-      <div className='flex flex-col gap-2 mt-1'>
+      <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
         {enumOptions?.map((option, index) => (
-          <label key={option.value} className='flex items-center cursor-pointer gap-2'>
+          // oxlint-disable-next-line react/no-array-index-key
+          <label key={index} className='flex items-center cursor-pointer gap-2'>
             <input
               type='checkbox'
-              id={`${id}-${option.value}`}
+              id={optionId(id, index)}
               className='checkbox'
               name={htmlName || id}
-              value={enumOptionValueEncoder(option.value, index, optionValueFormat)}
-              checked={isChecked(option)}
-              required={required}
+              value={domValues[index]}
+              checked={enumOptionsIsSelected<S>(option.value, selected)}
               disabled={disabled || readonly}
               data-index={index}
               onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
+              onFocus={focusHandlers[index]}
+              onBlur={blurHandlers[index]}
             />
             <span className='label-text'>{option.label}</span>
           </label>

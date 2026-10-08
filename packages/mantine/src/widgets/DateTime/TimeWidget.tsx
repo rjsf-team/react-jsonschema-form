@@ -2,19 +2,29 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { TimeInput } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, ariaDescribedByIds } from '@rjsf/utils';
+import { labelValue, useTimeWidgetProps } from '@rjsf/utils';
+
+import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../../utils.tsx';
 
 /** The `TimeWidget` component uses the `TimeInput` component from `@mantine/dates` for rendering.
  *
+ * On change, the local UTC offset is appended to the value so the stored `time` is compliant with the
+ * JSON Schema `time` format (RFC 3339 `full-time`), which requires a timezone; the offset is always stripped
+ * back off for display, since `TimeInput` doesn't understand it. `TimeInput` defaults to minute precision, so
+ * seconds are padded on before the offset is appended, since `full-time` requires seconds. When
+ * `schema.format` is `iso-time`, the offset is not added on change, since that format's timezone is
+ * optional, but a stored value that happens to carry one is still stripped for display.
+ *
  * @param props - The `WidgetProps` for this component
  */
-export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>,
-) {
+export default function TimeWidget<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
-    name,
-    value,
+    htmlName,
     placeholder,
     required,
     disabled,
@@ -22,20 +32,26 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     autofocus,
     label,
     hideLabel,
-    rawErrors,
     options,
     onChange,
     onBlur,
     onFocus,
   } = props;
 
+  const { localValue: displayValue, computeTimeValue } = useTimeWidgetProps(props);
   const emptyValue = options.emptyValue || '';
+  const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.value === '' ? emptyValue : e.target.value);
+      const newValue = e.target.value;
+      if (newValue === '') {
+        onChange(emptyValue);
+      } else {
+        onChange(computeTimeValue(newValue));
+      }
     },
-    [onChange, emptyValue],
+    [onChange, emptyValue, computeTimeValue],
   );
 
   const handleBlur = useCallback(
@@ -56,11 +72,14 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     [onFocus, id],
   );
 
+  const ariaDescribedByProps = useAriaDescribedByProps('TimeInput', id, options);
+  const error = useVisibleErrors(props);
+
   return (
     <TimeInput
       id={id}
-      name={name}
-      value={value || ''}
+      name={htmlName || id}
+      value={displayValue || ''}
       placeholder={placeholder || undefined}
       required={required}
       disabled={disabled || readonly}
@@ -69,9 +88,10 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       onChange={handleChange}
       onBlur={handleBlur}
       onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      {...options}
-      aria-describedby={ariaDescribedByIds(id)}
+      error={error}
+      {...themeProps}
+      {...ariaDescribedByProps}
+      {...getDescriptionProps(props)}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
     />
   );

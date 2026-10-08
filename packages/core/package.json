@@ -3,86 +3,65 @@
   "version": "6.11.0",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
-    "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
-    "build": "pnpm run build:ts && pnpm run build:cjs && pnpm run build:esm && pnpm run build:umd",
-    "cs-check": "oxfmt --check \"{src,test}/**/*.{ts,tsx,js,jsx}\"",
-    "cs-format": "oxfmt \"{src,test}/**/*.{ts,tsx,js,jsx}\"",
-    "lint": "oxlint src test",
-    "precommit": "lint-staged",
+    "build": "tsdown -c ../../tsdown.base.mts",
     "publish-to-npm": "pnpm run build && pnpm publish",
     "test": "vitest run",
     "test:debug": "node --inspect-brk ../../node_modules/.bin/vitest --pool=forks",
-    "test:update": "vitest run --update",
     "test:watch": "vitest",
     "test-coverage": "vitest run --coverage"
   },
-  "lint-staged": {
-    "{src,test}/**/*.{ts,tsx,js,jsx}": [
-      "oxlint --fix",
-      "oxfmt"
-    ]
-  },
-  "main": "dist/index.js",
-  "module": "lib/index.js",
+  "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "type": "module",
   "sideEffects": false,
   "exports": {
     ".": {
       "@rjsf/source": "./src/index.ts",
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
+      "default": "./lib/index.js"
     },
-    "./lib": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
+    "./markdown": {
+      "@rjsf/source": "./src/markdown.tsx",
+      "default": "./lib/markdown.js"
     },
-    "./lib/*.js": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
-    },
-    "./dist": {
-      "types": "./lib/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./lib/index.js"
-    },
-    "./dist/*.cjs": {
-      "types": "./lib/*.d.ts",
-      "require": "./dist/*.cjs",
-      "import": "./lib/*.js"
+    "./lib": "./lib/index.js",
+    "./lib/describeUnresolvedComponent.js": null,
+    "./lib/fieldLabelForLog.js": null,
+    "./lib/hasOptionLabels.js": null,
+    "./lib/*.js": "./lib/*.js",
+    "./testing": {
+      "@rjsf/source": "./src/testing.ts",
+      "default": "./lib/testing.js"
     }
   },
   "files": [
-    "dist",
     "lib",
     "src"
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=20"
+    "node": "^22.18.0 || ^24.11.0 || >=26.0.0"
   },
   "peerDependencies": {
     "@rjsf/utils": "workspace:^",
-    "react": ">=18"
+    "@rjsf/validator-ajv8": "workspace:^",
+    "markdown-to-jsx": "^9.10.3",
+    "react": ">=19"
   },
-  "dependencies": {
-    "markdown-to-jsx": "^9.10.3"
+  "peerDependenciesMeta": {
+    "@rjsf/validator-ajv8": {
+      "optional": true
+    },
+    "markdown-to-jsx": {
+      "optional": true
+    }
   },
   "devDependencies": {
-    "@rjsf/snapshot-tests": "workspace:^",
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
-    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
-    "@testing-library/user-event": "^14.6.7",
     "@types/json-schema": "^7.0.15",
-    "ajv": "^8.20.0"
+    "ajv": "^8.20.0",
+    "markdown-to-jsx": "^9.8.2"
   },
   "directories": {
     "test": "test"
@@ -104,21 +83,5 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
-  },
-  "nx": {
-    "targets": {
-      "build": {
-        "dependsOn": [
-          {
-            "//": "Break the dependency cycle between @rjsf/core and @rjsf/snapshot-tests by explicitly listing the dependencies needed for build",
-            "projects": [
-              "@rjsf/utils",
-              "@rjsf/validator-ajv8"
-            ],
-            "target": "build"
-          }
-        ]
-      }
-    }
   }
 }

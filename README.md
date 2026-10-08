@@ -27,15 +27,14 @@
 
 ## Supported Themes
 
-- [Ant Design v5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/antd)
+- [Ant Design v6](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/antd)
 - [Bootstrap v3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core)
 - [Chakra UI v3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
 - [Daisy UI v5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/daisyui)
 - [Fluent UI v9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluentui-rc)
-- [Mantine](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mantine)
-- [Material UI v7](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui)
+- [Mantine v9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mantine)
+- [Material UI v9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui)
 - [React-Bootstrap (Bootstrap v5)](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/react-bootstrap)
-- [Semantic UI v2](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui)
 - [Shad CN](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/shadcn)
 
 ## API Libraries
