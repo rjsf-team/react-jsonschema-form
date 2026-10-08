@@ -1567,6 +1567,126 @@ describe('ObjectField', () => {
       expect(node.querySelector('.rjsf-field-number')).not.toBeNull();
     });
 
+    // The seed takes the type of the field that renders the new value, which for a `type` list is the one its widget
+    // picks. A key a pattern describes is stubbed with the pattern's own list, exactly as an `additionalProperties` one
+    // is stubbed with its, so the widget picks its type too
+    it.each<[string, RJSFSchema['type'], unknown]>([
+      ['textarea', ['null', 'number', 'string'], 'New Value'],
+      ['checkbox', ['number', 'boolean'], false],
+    ])(
+      'should seed a pattern-matched key with the default of the field rendering a %s on its %j',
+      async (widget, type, expected) => {
+        const { onChange } = createFormComponent({
+          schema: {
+            type: 'object',
+            patternProperties: { '^n': { type } },
+            propertyNames: { enum: ['num'] },
+          },
+          uiSchema: { additionalProperties: { 'ui:widget': widget } },
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { num: expected }, 'root');
+      },
+    );
+
+    it('should seed a key unevaluatedProperties describes with the default of the field its widget renders', async () => {
+      // `unevaluatedProperties` describes the keys the other keywords leave over, so a key it describes is stubbed with
+      // its `type` list and rendered by the field the widget picks, the same as any other extra key
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          unevaluatedProperties: { type: ['null', 'number', 'string'] },
+          propertyNames: { enum: ['num'] },
+        },
+        uiSchema: { additionalProperties: { 'ui:widget': 'textarea' } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { num: 'New Value' }, 'root');
+      expect(node.querySelector('textarea')).not.toBeNull();
+    });
+
+    it('should seed a pattern-matched key with the default of the field a ui:definitions widget renders', async () => {
+      // The entry is named by the definition the pattern refers to, which the key's schema reaches only once it is
+      // resolved: a pattern-matched key is described by an `allOf` of the patterns that match it, so the `$ref` naming
+      // the entry is not at the top of the schema the way an `additionalProperties` one is. Read off the unresolved
+      // schema the widget would go unseen here and the seed would be the `0` of the list's first type, a value the
+      // textarea the field does render cannot show
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          $defs: { text: { type: ['null', 'number', 'string'] } },
+          patternProperties: { '^n': { $ref: '#/$defs/text' } },
+          propertyNames: { enum: ['num'] },
+        },
+        uiSchema: { 'ui:definitions': { '#/$defs/text': { 'ui:widget': 'textarea' } } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { num: 'New Value' }, 'root');
+      expect(node.querySelector('textarea')).not.toBeNull();
+    });
+
+    // A select over a pattern-matched key starts where one over an `additionalProperties` key does: on its type's zero
+    // value where that is an option the user can pick, and otherwise on the first option it shows enabled
+    it.each<[RJSFSchema, EnumValue[] | undefined, unknown]>([
+      [{ type: ['integer', 'null'], enum: [5, 0] }, undefined, 0],
+      [{ type: 'string', enum: ['a', 'b'] }, undefined, 'a'],
+      [{ type: 'string', enum: ['a', 'b'] }, ['a'], 'b'],
+      [{ type: ['integer', 'null'], enum: [0, 5] }, [0], 5],
+    ])(
+      'should seed a pattern-matched select over %j disabling %j with the option the user can pick',
+      async (patternSchema, enumDisabled, expected) => {
+        const { onChange } = createFormComponent({
+          schema: {
+            type: 'object',
+            patternProperties: { '^n': patternSchema },
+            propertyNames: { enum: ['num'] },
+          },
+          uiSchema: enumDisabled ? { additionalProperties: { 'ui:enumDisabled': enumDisabled } } : undefined,
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { num: expected }, 'root');
+      },
+    );
+
+    it('should re-seed an untouched new property by the widget of the pattern it is renamed onto', async () => {
+      // The rename reads the seed from the same place the add button does, so the type list of the pattern the new name
+      // matches is read through the widget there too: the `0` the number `additionalProperties` seeded is a value the
+      // textarea that list renders through cannot show. The widget is named by a `ui:definitions` entry so that it
+      // reaches the pattern-matched name alone -- both names take the same `uiSchema.additionalProperties` entry, and
+      // a `textarea` on the number one would be a widget its field has no such thing as
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          $defs: { text: { type: ['null', 'number', 'string'] } },
+          patternProperties: { '^num': { $ref: '#/$defs/text' } },
+          additionalProperties: { type: 'number' },
+        },
+        uiSchema: { 'ui:definitions': { '#/$defs/text': { 'ui:widget': 'textarea' } } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'num1');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { num1: 'New Value', newKey: undefined }, 'root');
+    });
+
     it('should render only the option selector for a key whose matching pattern options disagree about the type', async () => {
       // Naming the property an `object` would render the field for that type beside the options, and seed it with the
       // `{}` none of them accepts; the option the value matches is what renders it

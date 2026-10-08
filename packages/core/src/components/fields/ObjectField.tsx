@@ -542,9 +542,10 @@ export default function ObjectField<
           : schemaUtils.retrieveSchema(keySchema, describedKeySchema.default as T);
       const keyUiSchema = uiSchemaForKey(key);
       // The widget is read as `SchemaField` reads it, with the `ui:definitions` entry the `$ref` names merged in and
-      // without `ui:globalOptions`, so it is read off the schema the key is described by before that `$ref` is
-      // followed
-      const resolvedKeyUiSchema = resolveUiSchema<T, S, F>(keySchema, keyUiSchema, {
+      // without `ui:globalOptions`. Read off the resolved schema, which is the one `SchemaField` is handed: that
+      // carries the name of the definition it came from, where an unresolved `$ref` only names one while it sits at
+      // the top of the schema, which it does not for a key described by an `allOf` of matching patterns
+      const resolvedKeyUiSchema = resolveUiSchema<T, S, F>(resolvedKeySchema, keyUiSchema, {
         rootSchema,
         uiSchemaDefinitions,
       });
