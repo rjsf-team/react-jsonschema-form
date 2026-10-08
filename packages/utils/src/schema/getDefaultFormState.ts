@@ -893,12 +893,11 @@ export function getDefaultBasedOnSchemaType<
   const type = getFieldTypeForUiSchema<T, S, F>(rawSchema, uiSchema);
   // A value of another type a `type` list names is left as it is, as `omitExtraData()` and
   // `getUiRequiredErrorSchema()` leave it: an object held by a `['null', 'array', 'object']` has no array items spread
-  // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults
-  if (
-    isTypeList &&
-    (type === 'object' || type === 'array') &&
-    getSchemaTypeForValue<S>(rawSchema, rawFormData) !== type
-  ) {
+  // into it, and a `null` held by a `['null', 'object']` is not filled in with the object's defaults. With no value,
+  // a default of another listed type is kept the same way, so a `default: 'abc'` on a `['null', 'object', 'string']`
+  // isn't replaced by the object's. A `null` default is left to `computeDefaultBasedOnSchemaTypeAndDefaults()`
+  const value = rawFormData === undefined && defaults !== null ? defaults : rawFormData;
+  if (isTypeList && (type === 'object' || type === 'array') && getSchemaTypeForValue<S>(rawSchema, value) !== type) {
     return undefined;
   }
   switch (type) {

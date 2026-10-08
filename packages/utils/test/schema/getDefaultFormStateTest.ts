@@ -649,6 +649,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toBe(null);
         });
 
+        it.each<[string, RJSFSchema]>([
+          [
+            'object',
+            {
+              type: ['null', 'object', 'string'],
+              default: 'abc',
+              properties: { a: { type: 'string', default: 'x' } },
+            },
+          ],
+          ['array', { type: ['null', 'array', 'string'], default: 'abc', items: { type: 'string' }, minItems: 1 }],
+        ])('keeps a default of another listed type on a list resolving to %s', (_, schema) => {
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toBe('abc');
+        });
+
         it('fills in the defaults when the list holds no value yet', () => {
           const schema: RJSFSchema = {
             type: ['null', 'object', 'string'],
