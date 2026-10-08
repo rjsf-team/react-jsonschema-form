@@ -689,6 +689,21 @@ describe('makeAllReferencesAbsolute()', () => {
     expect(resolved.properties!.$id).toStrictEqual({ type: 'string' });
     expect(resolved.properties!.other).toStrictEqual({ $ref: 'https://example.com/root.json#/$defs/x' });
   });
+  it('leaves non-object entries of schema arrays untouched', () => {
+    const schemaWithArrayKeywords = {
+      $id: 'https://example.com/root.json',
+      type: 'object',
+      properties: { link: { type: ['string', 'null'], $ref: '#/$defs/x' } },
+      required: ['link'],
+      $defs: { x: { type: 'string' } },
+    } as unknown as RJSFSchema;
+    const resolved = makeAllReferencesAbsolute(schemaWithArrayKeywords, schemaWithArrayKeywords[ID_KEY]!);
+    expect(resolved.required).toStrictEqual(['link']);
+    expect(resolved.properties!.link).toStrictEqual({
+      type: ['string', 'null'],
+      $ref: 'https://example.com/root.json#/$defs/x',
+    });
+  });
   it('does not rewrite $ref-looking strings inside const, default, enum or examples', () => {
     const schemaWithDataKeywords = {
       $id: 'https://example.com/root.json',
