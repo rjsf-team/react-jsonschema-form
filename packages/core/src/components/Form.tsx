@@ -364,7 +364,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   useDevWarning(isDevelopment && ownershipWarning(state, props));
   // Hands every commit to the model in the phase in which React switches its own event handlers to the new props:
   // before any layout Effect, a callback ref or a passive Effect can issue a command, and while an `<Activity>` hides
-  // the form too. Only the cleanup of a descendant's layout Effect and a ref being detached run earlier.
+  // the form too. Only the cleanup of a descendant's layout Effect and a descendant's ref being detached run earlier.
   useInsertionEffect(() => {
     model.committed(props, state, snapshot);
   });

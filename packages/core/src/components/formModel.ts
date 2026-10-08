@@ -170,7 +170,8 @@ function createReporter<Props>(getLatestProps: () => Props) {
     },
     /** The setup of an insertion Effect, which, unlike a layout Effect, React leaves connected while an `<Activity>`
      * hides the form. Its cleanup is therefore the form unmounting, which releases what was held for a show that
-     * will not come
+     * will not come. React before 19.2 skips that cleanup for a form it removes while hidden, so there such a form
+     * goes on holding its reports
      */
     mount: () => {
       unmounted = false;
@@ -218,7 +219,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const { isDetached, reportToCaller, reportIfAttached, reportFromField, attach, detach, mount } = createReporter(
     () => committedProps,
   );
-  // A parent-owned form's last proposal, until React next commits a render of the form with the consumer told of it
+  // A parent-owned form's last proposal, until React commits a render of the form made with the consumer told of it
   // (see `committed()`). Edits made before then (two fields setting a value from mount Effects, several
   // `setFieldValue()` calls in one event) build on it, as they would if the parent had already accepted it; that commit
   // returns to the value the parent chose. Every proposal makes a new `snapshot`, so a parent that refuses one, and does
@@ -585,8 +586,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         snapshot.operations === renderedSnapshot.operations
           ? derived
           : replaceEqualDeep(derived, deriveState(nextProps, state));
-      // The commit answers the proposal the consumer was told of. A detached form has yet to tell it
-      if (!isDetached()) {
+      // The commit answers the proposal the consumer was told of, unless its render is not the latest: a field React
+      // removes or cleans up in this commit does so before this runs, and a proposal it makes then is one no render
+      // has answered, so it waits for the render it scheduled. A detached form has yet to tell the consumer of any
+      if (!isDetached() && snapshot === renderedSnapshot) {
         pending = undefined;
         epoch += 1;
       }

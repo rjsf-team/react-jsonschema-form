@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Component, useEffect, useLayoutEffect, useState } from 'react';
 import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -168,6 +168,42 @@ describe('controlled parent harnesses', () => {
     });
 
     expect(log.value).toEqual({ a: null, b: null });
+  });
+
+  it('an edit a field makes as it unmounts and one a field makes as it mounts both reach the parent', async () => {
+    // One commit removes the first field and mounts the second. React runs what the removed field does as it goes
+    // before it hands the commit to the form, and the mounting field's layout Effect after, so the hand-off comes
+    // between two proposals that no render has answered, and the second must still build on the first.
+    class EditsAsItUnmounts extends Component<WidgetProps<Data['name']>> {
+      override componentWillUnmount() {
+        this.props.onChange('left', undefined, this.props.id);
+      }
+
+      override render() {
+        return null;
+      }
+    }
+    function EditsAsItMounts({ value, id, onChange }: WidgetProps<Data['other']>) {
+      useLayoutEffect(() => {
+        if (value !== 'arrived') {
+          onChange('arrived', undefined, id);
+        }
+      }, [value, onChange, id]);
+      return null;
+    }
+    const log = createParentLog<Data>();
+    const props = { schema, initialValue: { name: 'a', other: 'b' }, log };
+    const { rerender } = render(
+      <AcceptingParent<Data> {...props} uiSchema={{ name: { 'ui:widget': EditsAsItUnmounts } }} />,
+    );
+
+    rerender(<AcceptingParent<Data> {...props} uiSchema={{ other: { 'ui:widget': EditsAsItMounts } }} />);
+
+    expect(log.proposals).toEqual([
+      { name: 'left', other: 'b' },
+      { name: 'left', other: 'arrived' },
+    ]);
+    expect(log.value).toEqual({ name: 'left', other: 'arrived' });
   });
 });
 
