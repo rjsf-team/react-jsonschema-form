@@ -545,6 +545,7 @@ export function useFieldWrapperProps<
  * @param id - The id of the field the input belongs to
  * @param [options={}] - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
  * @param [settings={}] - `includeExamples`, whether to also describe the input by the field's examples list,
+ *   `describedBy`, the ids to describe the input by in place of the field's, for an input its caller describes,
  *   `alsoDescribedBy`, further ids to describe the input by, and `wrapperOverrides`, set over the `wrapperProps` the
  *   input would otherwise take, rather than replacing them
  * @returns - An object to spread on the props of the Mantine input, after the theme props
@@ -555,10 +556,12 @@ export function useAriaDescribedByProps(
   options: GenericObjectType = {},
   {
     includeExamples = false,
+    describedBy = ariaDescribedByIds(id, includeExamples),
     alsoDescribedBy,
     wrapperOverrides,
   }: {
     includeExamples?: boolean;
+    describedBy?: string;
     alsoDescribedBy?: string;
     wrapperOverrides?: GenericObjectType;
   } = {},
@@ -581,7 +584,7 @@ export function useAriaDescribedByProps(
   return useAriaContainerProps({
     id,
     successId: successIdOf(id, ownSuccessProps),
-    describedBy: [ariaDescribedByIds(id, includeExamples), alsoDescribedBy].filter(Boolean).join(' '),
+    describedBy: [describedBy, alsoDescribedBy].filter(Boolean).join(' '),
     ownDescriptionProps: resolved.descriptionProps,
     ownErrorProps: asObject(resolved.errorProps),
     ownSuccessProps,

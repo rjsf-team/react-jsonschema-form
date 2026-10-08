@@ -146,7 +146,7 @@ export default function AltDateWidget<
   const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
-  const { wrapperProps, hiddenTitle, invalid, successId } = useFieldWrapperProps(props, true);
+  const { wrapperProps, invalid, successId } = useFieldWrapperProps(props, true);
   const { inputContainer, wrapperProps: fieldWrapperProps } = options;
   // Each part renders the field's `inputContainer` in its own wrapper, rather than the field's wrapper around them all,
   // resolved as for any input. The field's own wrapper applies the rest of its `wrapperProps`, so only their
@@ -161,40 +161,37 @@ export default function AltDateWidget<
     [fieldWrapperProps],
   );
   return (
-    <>
-      {hiddenTitle}
-      <Input.Wrapper {...wrapperProps}>
-        <Flex gap='xs' align='center' wrap='nowrap'>
-          <AltDateParts
-            id={id}
-            elements={elements}
-            inputContainer={inputContainer}
-            wrapperOverrides={wrapperOverrides}
-            disabled={disabled || readonly}
-            autofocus={autofocus}
-            required={required}
-            invalid={invalid}
-            label={label}
-            translateString={translateString}
-            fieldSuccessId={successId}
-            onChange={handleChange}
-            onBlur={onBlur}
-            onFocus={onFocus}
-          />
-          <Group wrap='nowrap' gap={3}>
-            {!options.hideNowButton && (
-              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>
-                {translateString(TranslatableString.NowLabel)}
-              </Button>
-            )}
-            {!options.hideClearButton && (
-              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleClear}>
-                {translateString(TranslatableString.ClearLabel)}
-              </Button>
-            )}
-          </Group>
-        </Flex>
-      </Input.Wrapper>
-    </>
+    <Input.Wrapper {...wrapperProps}>
+      <Flex gap='xs' align='center' wrap='nowrap'>
+        <AltDateParts
+          id={id}
+          elements={elements}
+          inputContainer={inputContainer}
+          wrapperOverrides={wrapperOverrides}
+          disabled={disabled || readonly}
+          autofocus={autofocus}
+          required={required}
+          invalid={invalid}
+          label={label}
+          translateString={translateString}
+          fieldSuccessId={successId}
+          onChange={handleChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+        />
+        <Group wrap='nowrap' gap={3}>
+          {!options.hideNowButton && (
+            <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>
+              {translateString(TranslatableString.NowLabel)}
+            </Button>
+          )}
+          {!options.hideClearButton && (
+            <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleClear}>
+              {translateString(TranslatableString.ClearLabel)}
+            </Button>
+          )}
+        </Group>
+      </Flex>
+    </Input.Wrapper>
   );
 }

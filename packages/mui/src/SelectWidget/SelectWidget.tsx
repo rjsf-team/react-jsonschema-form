@@ -76,6 +76,9 @@ export default function SelectWidget<
     registry,
     uiSchema,
     hideError,
+    // Given to the combobox below, so kept off the field's root, where `textFieldProps` are spread
+    'aria-label': _ariaLabel,
+    'aria-describedby': _ariaDescribedBy,
     ...textFieldProps
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
@@ -95,13 +98,14 @@ export default function SelectWidget<
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SelectWidgetMuiProps>(options);
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
-  // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root
+  // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root. An
+  // `htmlInput` given through `rjsfSlotProps` is the form author's own choice for that element, so it is applied last
   const ariaProps = widgetAriaProps(props);
   const htmlInput = muiSlotProps?.htmlInput;
   const htmlInputWithAria =
     typeof htmlInput === 'function'
-      ? (ownerState: Parameters<typeof htmlInput>[0]) => ({ ...htmlInput(ownerState), ...ariaProps })
-      : { ...htmlInput, ...ariaProps };
+      ? (ownerState: Parameters<typeof htmlInput>[0]) => ({ ...ariaProps, ...htmlInput(ownerState) })
+      : { ...ariaProps, ...htmlInput };
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 

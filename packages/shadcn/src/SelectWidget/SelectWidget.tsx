@@ -141,9 +141,9 @@ export default function SelectWidget<
       ) : (
         <FancyMultiSelect
           id={id}
-          // `label` is "" for an untitled root field or an explicit `ui:title: ""`, which would leave the combobox
-          // unnamed
-          label={label || placeholderText}
+          // A caller's `aria-label` names the combobox over the field's label. `label` is "" for an untitled root field or
+          // an explicit `ui:title: ""`, which would leave the combobox unnamed
+          label={ariaLabel || label || placeholderText}
           placeholder={placeholderText}
           autoFocus={autofocus}
           disabled={disabled || readonly}
@@ -160,7 +160,6 @@ export default function SelectWidget<
           }}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
-          ariaLabel={ariaLabel}
           ariaDescribedby={ariaDescribedby}
         />
       )}

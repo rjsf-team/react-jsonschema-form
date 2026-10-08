@@ -35,11 +35,15 @@ export type DateElementProps<
   /** The name of the field. Ignored: each date element is a control of its own, so it is given its own id as its name
    * rather than its field's, which a select would otherwise read as the field it names
    *
-   * @deprecated - No longer read; each date element takes `dateElementId(rootId, type)` as its name
+   * @deprecated - Ignored; each date element takes `dateElementId(rootId, type)` as its name
    */
   name?: string;
   /** The label of the field, which leads the accessible name of each date element, such as `When, year` */
   label?: string;
+  /** The translated name of the date element, for a caller that already translated it to display it. Defaults to
+   * `dateElementLabel(type, translateString)`
+   */
+  elementLabel?: string;
   /** The selector function for a specific prop within the `DateObject`, for a value */
   select: (property: keyof DateObject, value: any) => void;
   /** The type of the date element */
@@ -75,12 +79,13 @@ export function DateElement<
     onBlur,
     onFocus,
     label,
+    elementLabel: translatedElementLabel,
   } = props;
   const id = dateElementId(rootId, type);
   const { widgets, translateString } = registry;
   const { SelectWidget } = widgets;
   const onChange = useCallback((newValue: any) => select(type as keyof DateObject, newValue), [select, type]);
-  const elementLabel = dateElementLabel(type, translateString);
+  const elementLabel = translatedElementLabel ?? dateElementLabel(type, translateString);
   return (
     <SelectWidget
       schema={{ type: 'integer' } as S}

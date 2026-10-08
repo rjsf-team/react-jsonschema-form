@@ -16,7 +16,7 @@ const schema: RJSFSchema = {
   },
 };
 const uiSchema: UiSchema = {
-  when: { 'ui:widget': 'alt-date', 'ui:options': { yearsRange: [2020, 2024] } },
+  when: { 'ui:widget': 'alt-date', 'ui:help': 'Any day will do', 'ui:options': { yearsRange: [2020, 2024] } },
   at: { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [2020, 2024] } },
 };
 
@@ -50,10 +50,8 @@ export function altDateTests(Form: ComponentType<FormProps>) {
         at: { ...uiSchema.at, 'ui:label': false },
       };
       render(<Form schema={schema} uiSchema={hidden} validator={validator} />);
-      DATE_PARTS.forEach((part) => {
-        expect(getPart(`When, ${part}`)).toBeInstanceOf(HTMLElement);
-        expect(getPart(`At, ${part}`)).toBeInstanceOf(HTMLElement);
-      });
+      DATE_PARTS.forEach((part) => expect(getPart(`When, ${part}`)).toBeInstanceOf(HTMLElement));
+      [...DATE_PARTS, ...TIME_PARTS].forEach((part) => expect(getPart(`At, ${part}`)).toBeInstanceOf(HTMLElement));
     });
 
     test('names each part through translateString, separator included', () => {
@@ -73,7 +71,7 @@ export function altDateTests(Form: ComponentType<FormProps>) {
       ['heure', 'minute', 'seconde'].forEach((part) => expect(getPart(`${part} de At`)).toBeInstanceOf(HTMLElement));
     });
 
-    test("describes each part by the field's description and errors", () => {
+    test("describes each part by the field's description, help and errors", () => {
       const extraErrors = { when: { __errors: ['Too early'] } } as ErrorSchema;
       render(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />);
       DATE_PARTS.forEach((part) => {
@@ -83,6 +81,7 @@ export function altDateTests(Form: ComponentType<FormProps>) {
           .map((id) => document.getElementById(id)?.textContent ?? '')
           .join(' ');
         expect(text).toContain('The day it starts');
+        expect(text).toContain('Any day will do');
         expect(text).toContain('Too early');
       });
     });

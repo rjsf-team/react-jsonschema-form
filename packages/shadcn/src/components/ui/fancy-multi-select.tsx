@@ -30,8 +30,6 @@ interface FancyMultiSelectProps {
   onValueChange?: (value: number[]) => void;
   /** Whether the component should autofocus */
   autoFocus?: boolean;
-  /** Accessible name given to the search input, for a select that no label points at */
-  ariaLabel?: string;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
   /** Visible placeholder text for the search input */
@@ -66,7 +64,6 @@ export function FancyMultiSelect({
   onValueChange,
   autoFocus = false,
   disabled = false,
-  ariaLabel,
   ariaDescribedby,
   placeholder,
   required,
@@ -230,7 +227,6 @@ export function FancyMultiSelect({
             placeholder={placeholder}
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
             disabled={disabled}
-            aria-label={ariaLabel}
             aria-describedby={ariaDescribedby}
             aria-required={required || undefined}
           />

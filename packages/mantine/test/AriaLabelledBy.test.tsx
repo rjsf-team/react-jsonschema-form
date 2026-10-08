@@ -212,7 +212,8 @@ describe('aria-labelledby', () => {
 
     expect(partNames()).toEqual(shownNames);
     expect(screen.getByRole('combobox', { name: 'Birthday, year' })).toBeInTheDocument();
-    expect(screen.getByText('Birthday')).not.toBeVisible();
+    // Each part carries the title in its own `aria-label`, so no hidden copy of it is rendered to be referenced
+    expect(screen.queryByText('Birthday')).not.toBeInTheDocument();
   });
 
   test('alt-date widget names each part by the part alone when the field has no label', () => {
@@ -321,11 +322,11 @@ describe('aria-labelledby', () => {
   }
 
   test.each(titledCases)(
-    '%s widget hides the field title but keeps it as the name when an inputWrapperOrder from the %s leaves the label out',
+    '%s widget shows no field title but keeps it as the name when an inputWrapperOrder from the %s leaves the label out',
     (widget, source, role, schema) => {
       render(titledForm(widget, schema, source, { inputWrapperOrder: orderWithoutLabel }));
 
-      expect(screen.getByText('A title')).not.toBeVisible();
+      expect(screen.queryByText('A title', { ignore: '[hidden]' })).not.toBeInTheDocument();
       expect(screen.getAllByRole(role)[0]).toHaveAccessibleName(expect.stringMatching(/^A title/));
     },
   );
