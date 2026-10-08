@@ -21,6 +21,7 @@ import {
   SelectedOptionDescription,
   triggerValueId,
   useSelectFocusHandlers,
+  widgetAriaProps,
 } from '@rjsf/utils';
 
 import { getTriggerDescribedBy } from '../../utils.ts';
@@ -57,24 +58,25 @@ export default function SelectWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  schema,
-  id,
-  options,
-  label,
-  name,
-  hideLabel,
-  disabled,
-  placeholder,
-  readonly,
-  value,
-  multiple,
-  onChange,
-  onBlur,
-  onFocus,
-  registry,
-  uiSchema,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    schema,
+    id,
+    options,
+    label,
+    name,
+    hideLabel,
+    disabled,
+    placeholder,
+    readonly,
+    value,
+    multiple,
+    onChange,
+    onBlur,
+    onFocus,
+    registry,
+    uiSchema,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const isMultiple = typeof multiple === 'undefined' ? false : multiple;
 
@@ -145,6 +147,7 @@ export default function SelectWidget<
   const selectedIndexes = [enumOptionsIndexForValue<S>(value, optionsList, isMultiple) ?? []].flat();
   const selectedLabels = selectedIndexes.map((index) => optionsList[Number(index)].label);
   const hasValue = selectedLabels.length > 0;
+  const ariaProps = widgetAriaProps(props);
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const isSelected = selectedIndexes.includes(String(option.index));
@@ -196,10 +199,19 @@ export default function SelectWidget<
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
-          /* The label naming this button replaces its contents as its name, so the option it displays is announced
-             as its description instead — the same split a native control makes between its name and its value, and
-             the same one `DatePickerTrigger` makes, through the predicate both share */
-          aria-describedby={getTriggerDescribedBy({ id, label, name, hideLabel, hasValue })}
+          /* The label or `aria-label` naming this button replaces its contents as its name, so the option it displays
+             is announced as its description instead — the same split a native control makes between its name and its
+             value, and the same one `DatePickerTrigger` makes, through the predicate both share */
+          aria-label={ariaProps['aria-label']}
+          aria-describedby={getTriggerDescribedBy({
+            id,
+            label,
+            name,
+            hideLabel,
+            hasValue,
+            named: !!ariaProps['aria-label'],
+            describedBy: ariaProps['aria-describedby'],
+          })}
         >
           <span id={triggerValueId(id)} className='truncate'>
             {hasValue ? selectedLabels.join(', ') : placeholder || label || 'Select...'}

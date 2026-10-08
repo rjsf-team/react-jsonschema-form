@@ -1,5 +1,5 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, dateElementLabel, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import { getGroupProps } from '../../utils.ts';
 
@@ -40,34 +40,35 @@ export default function AltDateWidget<
   return (
     <div className='space-y-3' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
       <div className='grid grid-cols-3 gap-2'>
-        {elements.map((elemProps, i) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <div key={i} className='form-control'>
-            {/* Naming each select, which is otherwise left to whatever it happens to be displaying. A single control is
-                named by this association alone, and announces the value it displays after it */}
-            <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
-              <span className='label-text capitalize'>{elemProps.type}</span>
-            </label>
-            <DateElement
-              rootId={id}
-              // The part's own id, as `@rjsf/mantine` and `@rjsf/chakra-ui` name theirs: each select is a control in
-              // its own right, and a field with no property name of its own — a root field, an array item — would
-              // otherwise leave the label above replacing the value its select displays rather than preceding it
-              name={dateElementId(id, elemProps.type)}
-              className='select select-bordered select-sm'
-              select={handleChange}
-              type={elemProps.type}
-              range={elemProps.range}
-              value={elemProps.value}
-              disabled={disabled}
-              readonly={readonly}
-              registry={registry}
-              onBlur={onBlur}
-              onFocus={onFocus}
-              autofocus={autofocus && i === 0}
-            />
-          </div>
-        ))}
+        {elements.map((elemProps, i) => {
+          const elementLabel = dateElementLabel(elemProps.type, translateString);
+          return (
+            // oxlint-disable-next-line react/no-array-index-key
+            <div key={i} className='form-control'>
+              {/* The part's name as the user sees it. The select's `aria-label`, which `DateElement` builds from the
+                field's label and this same translated name, outranks this association as its accessible name */}
+              <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
+                <span className='label-text capitalize'>{elementLabel}</span>
+              </label>
+              <DateElement
+                rootId={id}
+                label={label}
+                elementLabel={elementLabel}
+                className='select select-bordered select-sm'
+                select={handleChange}
+                type={elemProps.type}
+                range={elemProps.range}
+                value={elemProps.value}
+                disabled={disabled}
+                readonly={readonly}
+                registry={registry}
+                onBlur={onBlur}
+                onFocus={onFocus}
+                autofocus={autofocus && i === 0}
+              />
+            </div>
+          );
+        })}
       </div>
       <div className='flex justify-start space-x-2'>
         {(options.hideNowButton !== undefined ? !options.hideNowButton : true) && (

@@ -2191,7 +2191,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         class="p-0.5"
                       >
                         <div
-                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           aria-disabled="false"
                           class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                           cmdk-root=""
@@ -2205,6 +2204,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3306,7 +3306,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         class="p-0.5"
                       >
                         <div
-                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           aria-disabled="false"
                           class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                           cmdk-root=""
@@ -3320,6 +3319,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3536,7 +3536,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         class="p-0.5"
                       >
                         <div
-                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           aria-disabled="false"
                           class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                           cmdk-root=""
@@ -3550,6 +3549,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"

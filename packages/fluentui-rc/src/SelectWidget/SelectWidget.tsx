@@ -2,7 +2,6 @@ import type { OptionOnSelectData } from '@fluentui/react-combobox';
 import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsDomValues,
   enumOptionsIndexForValue,
   enumOptionValueDecoder,
@@ -14,6 +13,7 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
+  widgetAriaProps,
 } from '@rjsf/utils';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
@@ -32,29 +32,30 @@ function SelectWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  className,
-  options,
-  label,
-  hideLabel,
-  value,
-  required,
-  disabled,
-  readonly,
-  multiple = false,
-  autofocus = false,
-  rawErrors,
-  hideError,
-  onChange,
-  onBlur,
-  onFocus,
-  schema,
-  placeholder,
-  registry,
-  uiSchema,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    className,
+    options,
+    label,
+    hideLabel,
+    value,
+    required,
+    disabled,
+    readonly,
+    multiple = false,
+    autofocus = false,
+    rawErrors,
+    hideError,
+    onChange,
+    onBlur,
+    onFocus,
+    schema,
+    placeholder,
+    registry,
+    uiSchema,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -89,7 +90,8 @@ function SelectWidget<
 
   return (
     <Field
-      label={labelValue(label, hideLabel)}
+      // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given
+      label={labelValue(label, hideLabel || !label)}
       validationState={hasVisibleErrors({ rawErrors, hideError }) ? 'error' : undefined}
       required={required}
     >
@@ -105,7 +107,7 @@ function SelectWidget<
         onFocus={handleFocus}
         onOptionSelect={handleChange}
         selectedOptions={selectedOptions}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...widgetAriaProps(props)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).map((item) =>

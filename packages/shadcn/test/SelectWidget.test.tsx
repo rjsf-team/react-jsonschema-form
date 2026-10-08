@@ -508,3 +508,38 @@ describe('SelectWidget', () => {
     expect(grouped).toEqual(ungrouped);
   });
 });
+
+describe('SelectWidget named and described by its caller', () => {
+  const enumOptions = [
+    { label: 'Red', value: 'red' },
+    { label: 'Blue', value: 'blue' },
+  ];
+
+  test('multi-select names its search input by the aria-label it is passed', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({ multiple: true, value: [], options: { enumOptions }, 'aria-label': 'When, year' })}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'When, year' })).toBeInTheDocument();
+  });
+
+  test('multi-select describes its search input by the ids it is passed', () => {
+    render(
+      <>
+        <p id='field-help'>Pick any.</p>
+        <SelectWidget
+          {...makeWidgetMockProps({
+            multiple: true,
+            value: [],
+            options: { enumOptions },
+            'aria-describedby': 'field-help',
+          })}
+        />
+      </>,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick any.');
+  });
+});

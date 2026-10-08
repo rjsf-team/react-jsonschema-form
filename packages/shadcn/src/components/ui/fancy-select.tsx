@@ -2,6 +2,7 @@
 
 import type { FocusEvent, FocusEventHandler, ReactElement } from 'react';
 import { useEffect, useRef, useState } from 'react';
+import { triggerValueId } from '@rjsf/utils';
 import { Check, ChevronDown } from 'lucide-react';
 
 import { cn } from '../../lib/utils.ts';
@@ -54,6 +55,11 @@ interface FancySelectInterface {
   onValueChange?: (value: any) => void;
   /** Whether the component should autofocus */
   autoFocus?: boolean;
+  /** Accessible name given to the button that opens the dropdown, for a select that no label points at */
+  ariaLabel?: string;
+  /** Whether something other than its own contents names the button, a label pointing at it or `ariaLabel`, which
+   * replaces the selected item it displays as its name, so that item is announced as its description instead */
+  named?: boolean;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
   /** Aria placeholder text */
@@ -86,6 +92,8 @@ export function FancySelect({
   autoFocus = false,
   disabled = false,
   placeholder = 'Select...',
+  ariaLabel,
+  named = false,
   ariaDescribedby,
   ariaPlaceholder,
   onFocus,
@@ -96,6 +104,8 @@ export function FancySelect({
   const selectedItem = items?.find((item) => item.value === selected);
   const selectedRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const valueId = named && selectedItem && id ? triggerValueId(id) : undefined;
+  const describedBy = [valueId, ariaDescribedby].filter(Boolean).join(' ') || undefined;
 
   useEffect(() => {
     if (open && selectedRef.current) {
@@ -150,7 +160,6 @@ export function FancySelect({
       aria-disabled={disabled}
       onBlur={handleBlur}
       onFocus={onFocus}
-      aria-describedby={ariaDescribedby}
       aria-placeholder={ariaPlaceholder}
     >
       <button
@@ -159,6 +168,8 @@ export function FancySelect({
         disabled={disabled}
         aria-expanded={open}
         aria-haspopup='listbox'
+        aria-label={ariaLabel}
+        aria-describedby={describedBy}
         onClick={() => !disabled && setOpen(!open)}
         onKeyDown={(e) => {
           if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
@@ -173,7 +184,7 @@ export function FancySelect({
           className,
         )}
       >
-        <span className={cn('flex-1 line-clamp-1', !selectedItem && 'text-muted-foreground')}>
+        <span id={valueId} className={cn('flex-1 line-clamp-1', !selectedItem && 'text-muted-foreground')}>
           {selectedItem?.label || placeholder}
         </span>
         <ChevronDown className='h-4 w-4 opacity-50' />

@@ -1,13 +1,15 @@
 /** @vitest-environment jsdom */
 import type { ChangeEvent, MouseEvent } from 'react';
 import { useState } from 'react';
-import { act, render, renderHook } from '@testing-library/react';
+import { act, render, renderHook, screen } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
 import { userEvent } from '@testing-library/user-event';
 
 import type { DateElementProp, Registry, UseAltDateWidgetResult, WidgetProps } from '../src/index.ts';
 import {
+  ariaDescribedByIds,
   DateElement,
+  englishStringTranslator,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   getDateElementProps,
@@ -15,7 +17,19 @@ import {
   useAltDateWidgetProps,
 } from '../src/index.ts';
 
-function SelectWidget({ id, options, value, required, disabled, readonly, onChange }: WidgetProps) {
+function SelectWidget({
+  id,
+  options,
+  value,
+  required,
+  disabled,
+  readonly,
+  placeholder,
+  onChange,
+  name,
+  'aria-label': ariaLabel,
+  'aria-describedby': ariaDescribedBy,
+}: WidgetProps) {
   const { enumOptions } = options;
 
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -28,11 +42,15 @@ function SelectWidget({ id, options, value, required, disabled, readonly, onChan
   return (
     <select
       id={id}
+      name={name}
       value={typeof selectedIndexes === 'undefined' ? '' : selectedIndexes}
       required={required}
       disabled={disabled || readonly}
       onChange={handleChange}
+      aria-label={ariaLabel}
+      aria-describedby={ariaDescribedBy}
     >
+      <option value=''>{placeholder}</option>
       {Array.isArray(enumOptions) &&
         enumOptions.map(({ label }, i) => (
           // oxlint-disable-next-line react/no-array-index-key
@@ -47,7 +65,7 @@ function SelectWidget({ id, options, value, required, disabled, readonly, onChan
 function DateElementsTester(
   props: WidgetProps & { elements: DateElementProp[]; handleChange: UseAltDateWidgetResult['handleChange'] },
 ) {
-  const { elements, handleChange, id, name, disabled, readonly, registry, onBlur, onFocus, autofocus } = props;
+  const { elements, handleChange, id, label, disabled, readonly, registry, onBlur, onFocus, autofocus } = props;
   return (
     <>
       {elements.map((elemProps, i) => (
@@ -55,7 +73,7 @@ function DateElementsTester(
           // oxlint-disable-next-line react/no-array-index-key
           key={i}
           rootId={id}
-          name={name}
+          label={label}
           select={handleChange}
           {...elemProps}
           disabled={disabled}
@@ -77,6 +95,7 @@ const DATE_STR = '2023-10-27';
 const MOCKED_DATE = new Date(DATE_TIME_STR);
 const REGISTRY = {
   widgets: { SelectWidget },
+  translateString: englishStringTranslator,
 } as unknown as Registry;
 const PROPS: WidgetProps = {
   id: 'root',
@@ -402,5 +421,75 @@ describe('useAltDateWidgetProps()', () => {
     handleChange('year', undefined);
     // onChange was not called due to disabled
     expect(PROPS.onChange).not.toHaveBeenCalled();
+  });
+  describe('DateElement names', () => {
+    const TIME_ELEMENTS = getDateElementProps(parseDateString(), true, PROPS.options.yearsRange);
+
+    function renderElements(props: Partial<WidgetProps>, registry: Registry = REGISTRY) {
+      return render(
+        <DateElementsTester
+          elements={TIME_ELEMENTS}
+          handleChange={vi.fn()}
+          {...TIME_PROPS}
+          {...props}
+          registry={registry}
+        />,
+      );
+    }
+
+    test('names each element by the field label and the element', () => {
+      renderElements({ label: 'When' });
+      ['year', 'month', 'day', 'hour', 'minute', 'second'].forEach((type) => {
+        const select = screen.getByRole('combobox', { name: `When, ${type}` });
+        expect(select).toHaveDisplayValue(type);
+      });
+    });
+
+    test('names each element by the element alone when the label is empty', () => {
+      renderElements({ label: '' });
+      expect(screen.getByRole('combobox', { name: 'year' })).toBeInTheDocument();
+    });
+
+    test('keeps the field label in the name when the label is hidden', () => {
+      renderElements({ label: 'When', hideLabel: true });
+      expect(screen.getByRole('combobox', { name: 'When, year' })).toBeInTheDocument();
+    });
+
+    test('gives each element its own id as its name, and describes it by the field', () => {
+      renderElements({ label: 'When' });
+      const select = screen.getByRole('combobox', { name: 'When, year' });
+      expect(select).toHaveAttribute('id', `${TIME_PROPS.id}_year`);
+      expect(select).toHaveAttribute('name', `${TIME_PROPS.id}_year`);
+      expect(select).toHaveAttribute('aria-describedby', ariaDescribedByIds(TIME_PROPS.id));
+    });
+
+    test('names an element by the translated name its caller already has, without translating it again', () => {
+      const translateString = vi.fn(englishStringTranslator);
+      render(
+        <DateElement
+          rootId='root'
+          label='When'
+          elementLabel='Année'
+          type='year'
+          range={[2020, 2024]}
+          value={-1}
+          select={vi.fn()}
+          registry={{ ...REGISTRY, translateString }}
+          onBlur={vi.fn()}
+          onFocus={vi.fn()}
+        />,
+      );
+      expect(screen.getByRole('combobox', { name: 'When, Année' })).toHaveDisplayValue('Année');
+      expect(translateString).toHaveBeenCalledTimes(1);
+    });
+
+    test('translates the name and the placeholder of each element', () => {
+      const translateString = vi.fn((key: string, params?: string[]) =>
+        params ? `${params[1]} / ${params[0]}` : `[${key}]`,
+      );
+      renderElements({ label: 'When' }, { ...REGISTRY, translateString });
+      const select = screen.getByRole('combobox', { name: '[minute] / When' });
+      expect(select).toHaveDisplayValue('[minute]');
+    });
   });
 });

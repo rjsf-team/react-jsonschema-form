@@ -14,7 +14,6 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -26,6 +25,7 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
+  widgetAriaProps,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
@@ -38,6 +38,8 @@ export interface SelectWidgetMuiProps extends GenericObjectType {
     inputLabel?: MuiInputLabelProps;
     /** Props applied to the `Select` element. */
     select?: MuiSelectProps;
+    /** Props applied to the element with the `combobox` role, as an object or as MUI's `(ownerState) => props`. */
+    htmlInput?: NonNullable<TextFieldProps['slotProps']>['htmlInput'];
   };
 }
 
@@ -74,6 +76,9 @@ export default function SelectWidget<
     registry,
     uiSchema,
     hideError,
+    // Given to the combobox below, so kept off the field's root, where `textFieldProps` are spread
+    'aria-label': _ariaLabel,
+    'aria-describedby': _ariaDescribedBy,
     ...textFieldProps
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
@@ -93,6 +98,14 @@ export default function SelectWidget<
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, SelectWidgetMuiProps>(options);
 
   const { InputLabelProps, SelectProps, autocomplete, ...textFieldRemainingProps } = textFieldProps;
+  // MUI's select gives its `inputProps` to the element with the `combobox` role, rather than to the field's root. An
+  // `htmlInput` given through `rjsfSlotProps` is the form author's own choice for that element, so it is applied last
+  const ariaProps = widgetAriaProps(props);
+  const htmlInput = muiSlotProps?.htmlInput;
+  const htmlInputWithAria =
+    typeof htmlInput === 'function'
+      ? (ownerState: Parameters<typeof htmlInput>[0]) => ({ ...ariaProps, ...htmlInput(ownerState) })
+      : { ...ariaProps, ...htmlInput };
   const showPlaceholderOption = !isMultiple && schema.default === undefined;
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, isMultiple);
 
@@ -132,8 +145,8 @@ export default function SelectWidget<
             ...muiSlotProps?.select,
             multiple,
           },
+          htmlInput: htmlInputWithAria,
         }}
-        aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
         {groupEnumOptions<S>(enumOptions, optgroups, enumDisabled).flatMap((item) =>

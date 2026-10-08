@@ -1624,7 +1624,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                     class="p-0.5"
                   >
                     <div
-                      aria-describedby="root_color__error root_color__description root_color__help"
                       aria-disabled="false"
                       class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                       cmdk-root=""
@@ -1638,6 +1637,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-describedby="root_color__error root_color__description root_color__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3167,7 +3167,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                     class="p-0.5"
                   >
                     <div
-                      aria-describedby="root_color__error root_color__description root_color__help"
                       aria-disabled="false"
                       class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                       cmdk-root=""
@@ -3181,6 +3180,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-describedby="root_color__error root_color__description root_color__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3567,7 +3567,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         class="p-0.5"
                       >
                         <div
-                          aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
                           aria-disabled="false"
                           class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                           cmdk-root=""
@@ -3581,6 +3580,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_region__oneof_select__value root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3589,6 +3589,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_region__oneof_select__value"
                             >
                               Europe
                             </span>
@@ -3632,7 +3633,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           class="p-0.5"
                         >
                           <div
-                            aria-describedby="root_region__error root_region__description root_region__help"
                             aria-disabled="false"
                             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                             cmdk-root=""
@@ -3646,6 +3646,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                             />
                             <button
+                              aria-describedby="root_region__value root_region__error root_region__description root_region__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3654,6 +3655,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             >
                               <span
                                 class="flex-1 line-clamp-1"
+                                id="root_region__value"
                               >
                                 Germany
                               </span>
@@ -3722,7 +3724,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -3736,6 +3737,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3804,7 +3806,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -3818,6 +3819,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3886,7 +3888,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -3900,6 +3901,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3968,7 +3970,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -3982,6 +3983,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -4050,7 +4052,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -4064,6 +4065,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -4132,7 +4134,6 @@ exports[`select widget with options sharing a String() in the realValue format (
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -4146,6 +4147,7 @@ exports[`select widget with options sharing a String() in the realValue format (
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -6756,7 +6758,6 @@ exports[`single fields > optional data controls > does not show optional control
                         class="p-0.5"
                       >
                         <div
-                          aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                           aria-disabled="false"
                           class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                           cmdk-root=""
@@ -6770,6 +6771,7 @@ exports[`single fields > optional data controls > does not show optional control
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -6778,6 +6780,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_optionalObjectWithOneofs__oneof_select__value"
                             >
                               Option 1
                             </span>
@@ -6903,7 +6906,6 @@ exports[`single fields > optional data controls > does not show optional control
                         class="p-0.5"
                       >
                         <div
-                          aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                           aria-disabled="false"
                           class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                           cmdk-root=""
@@ -6917,6 +6919,7 @@ exports[`single fields > optional data controls > does not show optional control
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -6925,6 +6928,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_optionalArrayWithAnyofs__anyof_select__value"
                             >
                               Option 1
                             </span>
@@ -7842,7 +7846,6 @@ exports[`single fields > optional data controls > does not show optional control
                         class="p-0.5"
                       >
                         <div
-                          aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                           aria-disabled="true"
                           class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                           cmdk-root=""
@@ -7856,6 +7859,7 @@ exports[`single fields > optional data controls > does not show optional control
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
@@ -7865,6 +7869,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_optionalObjectWithOneofs__oneof_select__value"
                             >
                               Option 1
                             </span>
@@ -7990,7 +7995,6 @@ exports[`single fields > optional data controls > does not show optional control
                         class="p-0.5"
                       >
                         <div
-                          aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                           aria-disabled="true"
                           class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                           cmdk-root=""
@@ -8004,6 +8008,7 @@ exports[`single fields > optional data controls > does not show optional control
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
@@ -8013,6 +8018,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_optionalArrayWithAnyofs__anyof_select__value"
                             >
                               Option 1
                             </span>
@@ -11827,7 +11833,6 @@ exports[`single fields > select field 1`] = `
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -11841,6 +11846,7 @@ exports[`single fields > select field 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -11928,6 +11934,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_3_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_4_"
                   autocomplete="off"
@@ -12000,6 +12007,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_i_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_j_"
                   autocomplete="off"
@@ -12295,6 +12303,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_u_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_v_"
                   autocomplete="off"
@@ -12367,6 +12376,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_6_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_7_"
                   autocomplete="off"
@@ -12418,7 +12428,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -12432,6 +12441,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -12727,7 +12737,6 @@ exports[`single fields > select field single choice formData 1`] = `
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -12741,6 +12750,7 @@ exports[`single fields > select field single choice formData 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -12809,7 +12819,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -12823,6 +12832,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -12889,7 +12899,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -12903,6 +12912,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -13087,7 +13097,6 @@ exports[`single fields > select widget with description in schema and FieldTempl
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -13101,6 +13110,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -13181,7 +13191,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -13195,6 +13204,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -13267,7 +13277,6 @@ exports[`single fields > select widget with selected oneOf option description an
           class="p-0.5"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-disabled="false"
             class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
             cmdk-root=""
@@ -13281,6 +13290,7 @@ exports[`single fields > select widget with selected oneOf option description an
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -14371,7 +14381,6 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                     class="p-0.5"
                   >
                     <div
-                      aria-describedby="root_answer__error root_answer__description root_answer__help"
                       aria-disabled="false"
                       class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                       cmdk-root=""
@@ -14385,6 +14394,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-describedby="root_answer__value root_answer__error root_answer__description root_answer__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -14393,6 +14403,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       >
                         <span
                           class="flex-1 line-clamp-1"
+                          id="root_answer__value"
                         >
                           Yes
                         </span>
