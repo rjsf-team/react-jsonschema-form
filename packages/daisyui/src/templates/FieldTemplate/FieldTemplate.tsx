@@ -7,7 +7,7 @@ import type {
   Widget,
   WidgetAliasFor,
 } from '@rjsf/utils';
-import { fieldLabelId, getSchemaType, getTemplates, getUiOptions } from '@rjsf/utils';
+import { fieldLabelId, getTemplates, getUiOptions, getWidgetType } from '@rjsf/utils';
 
 import { getDaisy } from '../../utils.ts';
 
@@ -42,7 +42,7 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
     resolved = widget;
   } else if (Object.hasOwn(registeredWidgets, widget)) {
     resolved = registeredWidgets[widget];
-  } else if (widget === CHECKBOX_ALIAS && getSchemaType(schema) === 'boolean') {
+  } else if (widget === CHECKBOX_ALIAS && getWidgetType<S>(schema, widget) === 'boolean') {
     resolved = registeredWidgets.CheckboxWidget;
   }
   return !!resolved && (resolved === registeredWidgets.CheckboxWidget || resolved === registeredWidgets.toggle);

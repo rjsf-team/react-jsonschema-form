@@ -58,10 +58,12 @@ export default function OptionalDataControlsField<
       id = optionalControlsId(fieldId, 'Add');
       onAddClick = () => {
         // Passes uiSchema/uiSchemaDefinitions so a ui:initialValue on a field beneath this control applies immediately,
-        // the same as it would if the field had been present since the initial render.
+        // the same as it would if the field had been present since the initial render. Add is only offered when there
+        // is no data to keep, so none is passed: a `null` held by a `['object', 'null']` would otherwise be kept as the
+        // value of the type it is, and nothing would be added
         let newFormData: unknown = schemaUtils.getDefaultFormState(
           schema,
-          formData,
+          undefined,
           'excludeObjectChildren',
           undefined,
           uiSchema,

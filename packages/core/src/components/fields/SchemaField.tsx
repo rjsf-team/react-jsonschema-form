@@ -22,8 +22,10 @@ import {
   getByPath,
   getDeprecatedHandling,
   getFieldClassNames,
+  getFieldTypeForWidget,
   getSchemaOwnTypes,
   getSchemaType,
+  getSelectFieldType,
   getTemplates,
   getUiOptions,
   getUnionTypes,
@@ -67,19 +69,6 @@ const COMPONENT_TYPES: Record<string, string> = {
   null: 'NullField',
 };
 
-/** Reduces the `guessType()` results of a constant option list to the single `type` that describes all of them.
- * Mixed types can't share a typed field (e.g. NumberField coerces a string const to a number), and an all-`null` list
- * would reach NullField, which renders nothing. The select widget maps each option back to its original constant, so
- * `string` can represent any of them.
- *
- * @param types - The distinct `guessType()` results of the constants in one option list
- * @returns - The `type` to give a select over those constants
- */
-function selectTypeForConstants(types: string[]): string {
-  const nonNullTypes = types.filter((type) => type !== 'null');
-  return nonNullTypes.length === 1 ? nonNullTypes[0] : 'string';
-}
-
 /** What `SchemaField` needs to know about a retrieved schema that may be a select */
 interface SelectSchemaInfo<S extends StrictRJSFSchema> {
   /** The retrieved schema, with a `type` inferred from its constants when it is a typeless `oneOf`/`anyOf` select */
@@ -112,7 +101,7 @@ function getSelectSchemaInfo<S extends StrictRJSFSchema = RJSFSchema>(retrievedS
   if (constantOptions && getSchemaType<S>(retrievedSchema) === undefined) {
     // `toConstant()` throws for an option that isn't a constant, which is why only a list of them is mapped
     const types = [...new Set(constantOptions.map((option) => guessType(toConstant<S>(option))))];
-    schema = { ...retrievedSchema, type: selectTypeForConstants(types) };
+    schema = { ...retrievedSchema, type: getSelectFieldType(types) };
   }
   return {
     schema,
@@ -157,7 +146,7 @@ function inferSelectWidget<
     (options.length > 1 &&
       (hasOptionLabels<T, S, F>(options, keyword, uiSchema) ||
         options.some((option) => toConstant<S>(option) === null) ||
-        (Array.isArray(schema.type) && selectTypeForConstants(schema.type) !== 'boolean')));
+        (Array.isArray(schema.type) && getSelectFieldType(schema.type) !== 'boolean')));
   return needsSelect ? 'select' : undefined;
 }
 
@@ -248,6 +237,7 @@ const RenderNothing = () => null;
  *
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
+ * @param ownWidget - The field's own `ui:widget`, without `ui:globalOptions`, which picks a type list's field
  * @param namedField - The field the `ui:field` resolved to through `resolveUiField()`, if it resolved to one
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
@@ -267,6 +257,7 @@ function getFieldComponent<
 >(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
+  ownWidget: UIOptionsType<T, S, F>['widget'],
   namedField: Field<T, S, F> | undefined,
   registry: Registry<T, S, F>,
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
@@ -281,15 +272,15 @@ function getFieldComponent<
   const { widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
 
-  const schemaType = getSchemaType(schema);
-  let type: string = Array.isArray(schemaType) ? schemaType[0] : schemaType || '';
   // A select's options pin its value, so a select whose declared type list names several non-null types is rendered
   // by StringField, which keeps each option's value as it is, and one naming a single non-null type by that type's
   // field. The first listed type's field would leave `null` blank, or cast every other option's value to its own type
-  // the way NumberField turns `true` into `1`
-  if (isSelectSchema && Array.isArray(schema.type)) {
-    type = selectTypeForConstants(schema.type);
-  }
+  // the way NumberField turns `true` into `1`. Any other type list renders the field of another type it names when only
+  // that type has the widget it renders with: a `textarea` on a `['null', 'number', 'string']` is rendered by
+  // `StringField`, which keeps the `'007'` typed into it as it is rather than casting it to `7` the way `NumberField`
+  // would. `getFieldTypeForWidget()` answers both, so `getDisplayLabel()` and the defaults agree with the field. Only
+  // the field's own `ui:widget` picks it, as the defaults, which never see `ui:globalOptions`, can only follow that one
+  const type = getFieldTypeForWidget<S>(schema, ownWidget) ?? '';
 
   const schemaId = schema.$id;
 
@@ -306,7 +297,6 @@ function getFieldComponent<
   // A schema that allows more than one type, or whose type was guessed from the form data of an `additionalProperties`
   // entry the schema puts no constraint on, has no one field that can render every type it accepts. `FallbackField`
   // renders a selector for choosing which of them to enter, so it takes over whenever that opt-in UI is enabled.
-  // Without it the first type the schema lists is the one rendered.
   // An `anyOf`/`oneOf` is kept, and the fallback UI wraps it: the value schema it builds pins the type but carries the
   // options along, so the option selector renders within the type selector rather than instead of it, and every member
   // of the union stays reachable from inside an option.
@@ -550,7 +540,7 @@ function SchemaFieldRender<
     T,
     S,
     F
-  >(schema, uiOptions, namedField, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
+  >(schema, uiOptions, ownUiOptions.widget, namedField, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
 

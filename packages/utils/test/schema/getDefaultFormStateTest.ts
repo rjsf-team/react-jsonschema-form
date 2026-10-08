@@ -575,6 +575,123 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ),
           ).toEqual({ agree: false });
         });
+
+        it('sets no false for a type list resolving to boolean whose widget renders another listed type', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { agree: { type: ['null', 'boolean', 'string'] } },
+            required: ['agree'],
+          };
+          const uiSchema: UiSchema = { agree: { 'ui:widget': 'textarea' } };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, uiSchema })).toEqual(
+            {},
+          );
+        });
+
+        it('sets no false for a select over a type list naming boolean first among several non-null types', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { agree: { type: ['null', 'boolean', 'string'], enum: [null, true, 'a'] } },
+            required: ['agree'],
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({});
+        });
+
+        it('sets false for a select over a nullable boolean', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { agree: { type: ['null', 'boolean'], enum: [null, true, false] } },
+            required: ['agree'],
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+            agree: false,
+          });
+        });
+
+        it('sets false for a type list whose checkbox widget renders its boolean type', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { agree: { type: ['number', 'boolean'] } },
+            required: ['agree'],
+          };
+          const uiSchema: UiSchema = { agree: { 'ui:widget': 'checkbox' } };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, uiSchema })).toEqual({
+            agree: false,
+          });
+        });
+      });
+
+      // The list resolves to its container type, but the value it holds is of another type it names, which the
+      // container's defaults would be spread into or put in place of
+      describe('a type list holding a value of another listed type', () => {
+        it('spreads no array defaults into an object held by a list resolving to array', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              v: { type: ['null', 'array', 'object'], items: { type: 'string', default: 'q' }, minItems: 2 },
+            },
+          };
+          expect(
+            getDefaultFormState(
+              { validator: testValidator },
+              { schema, rootSchema: schema, formData: { v: { a: 'x' } } },
+            ),
+          ).toEqual({ v: { a: 'x' } });
+        });
+
+        it.each<[string, RJSFSchema]>([
+          ['object', { type: ['null', 'object', 'string'], properties: { a: { type: 'string', default: 'x' } } }],
+          ['object', { type: ['null', 'object'], properties: { a: { type: 'string', default: 'x' } } }],
+          ['array', { type: ['null', 'array', 'string'], items: { type: 'string' }, minItems: 1 }],
+        ])('keeps a null held by a list resolving to %s', (_, schema) => {
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: null }),
+          ).toBe(null);
+        });
+
+        it.each<[string, RJSFSchema]>([
+          [
+            'object',
+            {
+              type: ['null', 'object', 'string'],
+              default: 'abc',
+              properties: { a: { type: 'string', default: 'x' } },
+            },
+          ],
+          ['array', { type: ['null', 'array', 'string'], default: 'abc', items: { type: 'string' }, minItems: 1 }],
+        ])('keeps a default of another listed type on a list resolving to %s', (_, schema) => {
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toBe('abc');
+        });
+
+        it('fills in the defaults when the list holds no value yet', () => {
+          const schema: RJSFSchema = {
+            type: ['null', 'object', 'string'],
+            properties: { a: { type: 'string', default: 'x' } },
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ a: 'x' });
+        });
+
+        it('fills in the array defaults of a list naming object behind a oneOf', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              list: { oneOf: [{ type: ['array', 'object'], items: { type: 'string', default: 'x' }, minItems: 2 }] },
+            },
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+            list: ['x', 'x'],
+          });
+        });
+
+        it('fills in the array defaults of a list naming object with dependencies', () => {
+          const schema: RJSFSchema = {
+            type: ['array', 'object'],
+            items: { type: 'string', default: 'x' },
+            minItems: 2,
+            dependencies: {},
+          };
+          expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(['x', 'x']);
+        });
       });
 
       describe('required boolean properties and the requiredBooleanDefault flag', () => {

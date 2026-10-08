@@ -194,7 +194,6 @@ function ArrayAsMultiSelect<
     schema,
     id,
     uiSchema,
-    formData: items = [],
     disabled = false,
     readonly = false,
     autofocus = false,
@@ -208,6 +207,9 @@ function ArrayAsMultiSelect<
     onSelectChange,
     htmlName,
   } = props;
+  // A `null` held by a `type` list naming `array` is no selection, where the widget would read it as one and keep it
+  // beside the option checked. Any other value that isn't an array is the one selection it holds
+  const items: T[] = props.formData ?? [];
   const { widgets, schemaUtils, globalUiOptions } = registry;
   const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
   // For computing `enumOptions`, fallback to the array property's uiSchema if there is no `items` schema
@@ -720,7 +722,8 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     handleRemoveItem,
     handleReorderItems,
   } = props;
-  let { formData: items = [] } = props;
+  // A `type` list naming `array` alongside another type can hold a `null` or a value of that other type here
+  let items: T[] = Array.isArray(props.formData) ? props.formData : [];
   const fieldTitle = schema.title || title || name;
   const { fields, formContext, globalUiOptions } = registry;
   const uiOptions = useMemo(() => getUiOptions<T[], S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);

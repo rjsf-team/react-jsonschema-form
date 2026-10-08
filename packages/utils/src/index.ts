@@ -50,6 +50,8 @@ import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
+import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
+import getSelectFieldType from './getSelectFieldType.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
@@ -60,7 +62,7 @@ import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
-import getWidget, { resolveWidget } from './getWidget.tsx';
+import getWidget, { getFieldTypeForWidget, getWidgetType, resolveWidget } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
@@ -90,7 +92,7 @@ import isCustomWidget from './isCustomWidget.ts';
 import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
-import isObject from './isObject.ts';
+import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isRootSchema from './isRootSchema.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
@@ -211,6 +213,7 @@ export {
   getDiscriminatorFieldFromSchema,
   getExampleSuggestions,
   getFieldClassNames,
+  getFieldTypeForWidget,
   getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
@@ -222,6 +225,8 @@ export {
   getOptionValueFormat,
   getSchemaOwnTypes,
   getSchemaType,
+  getSchemaTypeForValue,
+  getSelectFieldType,
   getByPath,
   getKnownTypes,
   getStaticItemsUiSchema,
@@ -233,6 +238,7 @@ export {
   getUnionTypes,
   getVisibleErrors,
   getWidget,
+  getWidgetType,
   getXxxOfKey,
   groupEnumOptions,
   guessType,
@@ -254,6 +260,7 @@ export {
   isObject,
   isPlainObject,
   isRootSchema,
+  isSchemaObject,
   isWholeValueSelect,
   labelValue,
   localTimeToOffsetTime,

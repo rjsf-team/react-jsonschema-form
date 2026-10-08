@@ -3,6 +3,7 @@ import type { JSONSchema7Definition } from 'json-schema';
 import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
+import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
@@ -387,8 +388,13 @@ export default function omitExtraData<
 
     let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
 
-    // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune
-    const type = isWholeValueSelect<S>(localSchema) ? undefined : getSchemaType<S>(localSchema);
+    // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune. A value of
+    // another type a `type` list allows is kept as it is, rather than pruned or dropped as the type the list resolves to
+    const schemaType = isWholeValueSelect<S>(localSchema) ? undefined : getSchemaType<S>(localSchema);
+    const type =
+      Array.isArray(localSchema.type) && getSchemaTypeForValue<S>(localSchema, source) !== schemaType
+        ? undefined
+        : schemaType;
     if (type === 'object') {
       if (!isObjectValue(source)) {
         return undefined;

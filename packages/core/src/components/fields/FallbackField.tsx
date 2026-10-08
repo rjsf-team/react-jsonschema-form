@@ -1,8 +1,7 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type {
   FallbackFieldProps,
   FormContextType,
-  RegistryWidgetsType,
   RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
@@ -14,6 +13,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   getSchemaOwnTypes,
+  getFieldTypeForWidget,
   getTemplates,
   getUiOptions,
   GUESSED_TYPE_FLAG,
@@ -44,29 +44,50 @@ function getFallbackTypes<S extends StrictRJSFSchema = RJSFSchema>(schema: S): J
 }
 
 /**
- * Get the type the selection starts on when the form data gives nothing to match: the first type the schema lists,
- * except that a leading `null` gives way to the first type that can hold a value. Starting on `null` would have
- * `NullField` write a `null` into the form data for a field the user has not touched. A schema that offers nothing but
- * `null` starts there all the same, since it is the only value that schema allows.
+ * Get the type the selection starts on when the form data gives nothing to match: for a schema listing its types, the
+ * type of the field its widget renders, and otherwise the first type the schema offers that can hold a value. Starting
+ * on `null` would have `NullField` write a `null` into the form data for a field the user has not touched. A schema
+ * that offers nothing but `null` starts there all the same, since it is the only value that schema allows.
+ * @param schema - The schema being rendered by the fallback UI.
  * @param types - The types the selection offers.
+ * @param [widget] - The `ui:widget` for the field, if any
  */
-function getDefaultType(types: JSONSchema7TypeName[]): JSONSchema7TypeName {
-  return types.find((aType) => aType !== 'null') ?? types[0];
+function getDefaultType<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  types: JSONSchema7TypeName[],
+  widget?: unknown,
+): JSONSchema7TypeName {
+  // The rule every other reader of a type list resolves it by, so the selection starts on the field `SchemaField`
+  // renders, and on the type `getDefaultFormState()` fills the value in as: a `textarea` on a
+  // `['null', 'boolean', 'string']` starts on `string` rather than on a checkbox nothing seeded with `false`. Only a
+  // schema that lists its types has its widget read, since `getDefaultFormState()` fills nothing in for the widget's
+  // type of one that names no type, which offers every type. The list itself is still resolved, so one whose types
+  // come from an `enum` of `[null, 'a']` starts on `string` rather than on `null`
+  const type = getFieldTypeForWidget({ type: types }, Array.isArray(schema.type) ? widget : undefined);
+  return types.find((aType) => aType === type) ?? types[0];
 }
 
 /**
  * Get the schema for the type selection component.
  * @param types - The types the selection offers.
  * @param title - The translated title for the type selection schema.
+ * @param defaultType - The type the selection starts on when the form data gives nothing to match.
  */
-function getFallbackTypeSelectionSchema(types: JSONSchema7TypeName[], title: string): RJSFSchema {
+function getFallbackTypeSelectionSchema(
+  types: JSONSchema7TypeName[],
+  title: string,
+  defaultType: JSONSchema7TypeName,
+): RJSFSchema {
   return {
     type: 'string',
     enum: types,
-    default: getDefaultType(types),
+    default: defaultType,
     title,
   };
 }
+
+/** The types whose field renders its value with a widget of its own choosing once the caller's one is dropped */
+const SCALAR_TYPES: JSONSchema7TypeName[] = ['string', 'number', 'integer', 'boolean'];
 
 /**
  * Determines whether the field for `type` can show data of `dataType` as the value it is. The textual types stand in
@@ -83,16 +104,28 @@ function canShowDataAsType(type: JSONSchema7TypeName, dataType: JSONSchema7TypeN
 
 /**
  * Determines which of the `types` the selection starts on, preferring the type the `formData` already has so that
- * existing data is shown by the field that matches it. An integer-only schema takes a number, and data of a type the
- * schema does not allow falls back to the first type offered, as does having no data to go on at all.
+ * existing data is shown by the field that matches it. An integer-only schema takes a number. Having no data to go on
+ * starts on the type the selection defaults to, which follows the widget, as does a `null`, which every widget shows
+ * as no value, and data of a type the schema does not allow that the field of that type can show. Other data starts on
+ * a scalar type whose field drops the widget, whatever its place in the list: the widget's type keeps the widget, which
+ * would be handed a value it can't render, and a `range` handed an object takes the form down. When every type keeps
+ * the widget, the selection starts on its default type all the same.
  * @param formData - The form data being rendered.
  * @param types - The types the selection offers.
+ * @param defaultType - The type the selection starts on when there is no form data.
+ * @param keepsWidget - Whether the value field keeps the widget when the selection is on a given type.
  */
-function getInitialType(formData: unknown, types: JSONSchema7TypeName[]): JSONSchema7TypeName {
+function getInitialType(
+  formData: unknown,
+  types: JSONSchema7TypeName[],
+  defaultType: JSONSchema7TypeName,
+  keepsWidget: (type: JSONSchema7TypeName) => boolean,
+): JSONSchema7TypeName {
   if (formData === undefined) {
-    // Nothing to match, so the schema's own first type wins, which is what the selection defaults to
-    return getDefaultType(types);
+    return defaultType;
   }
+  // Not `getSchemaTypeForValue()`, which answers data of a type the list doesn't name with the list's own resolved
+  // type, which can be `null` rather than the first type that can hold a value
   const dataType = guessType(formData);
   if (types.includes(dataType)) {
     return dataType;
@@ -100,7 +133,10 @@ function getInitialType(formData: unknown, types: JSONSchema7TypeName[]): JSONSc
   if (dataType === 'number' && types.includes('integer')) {
     return 'integer';
   }
-  return getDefaultType(types);
+  if (dataType === 'null' || canShowDataAsType(defaultType, dataType)) {
+    return defaultType;
+  }
+  return types.find((aType) => SCALAR_TYPES.includes(aType) && !keepsWidget(aType)) ?? defaultType;
 }
 
 /**
@@ -171,10 +207,11 @@ const HELP_UI_OPTION = 'help';
 /**
  * Get the `uiSchema` the value field renders with: the caller's, without what the field around the value has already
  * rendered — the help among it, shadowed wherever it was written so that a `ui:globalOptions` one does not show through
- * — and with a `ui:widget` dropped when no widget implements it for the type the selector is on. A widget
- * named for one member of a union — `textarea` for its `string` — has no implementation for the others, and
- * `getWidget()` throws rather than falling back, which would take the whole form down as soon as another type was
- * selected. A widget registered under its own name is left alone since it is expected to handle whatever it is given.
+ * — and with a `ui:widget`, its own or a `ui:globalOptions` one, shadowed when no widget implements it for the type
+ * the selector is on. A widget named for one member of a union — `textarea` for its `string` — has no implementation
+ * for the others, and `getWidget()` throws rather than falling back, which would take the whole form down as soon as
+ * another type was selected. A widget registered under its own name is left alone since it is expected to handle
+ * whatever it is given.
  * The `ui:field` is shadowed whatever it names and wherever it was written — `ui:field`, `ui:options.field` or
  * `ui:globalOptions.field` — for the reason `getValueSchema()` drops `GUESSED_TYPE_FLAG`: one naming this field routes
  * the value straight back here, and each of those renders another one, without end. Shadowed rather than deleted,
@@ -184,22 +221,15 @@ const HELP_UI_OPTION = 'help';
  * naming no field, which reaches here only when the `ui:globalOptions.field` it falls back to doesn't resolve to
  * another field either, so the value field would have nothing to render for it.
  * @param uiSchema - The uiSchema for the field being rendered.
- * @param valueSchema - The schema the value field renders, with its type pinned.
- * @param widgets - The widgets registered with the form.
+ * @param keepsWidget - Whether a widget implements the `ui:widget`, its own or a `ui:globalOptions` one, for the type
+ * the selector is on.
  * @param isLabelled - Whether the field around the value renders the schema's title and description.
  */
 function getValueUiSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  uiSchema: UiSchema<T, S, F> | undefined,
-  valueSchema: S,
-  widgets: RegistryWidgetsType<T, S, F>,
-  isLabelled: boolean,
-): UiSchema<T, S, F> {
-  const { widget } = getUiOptions<T, S, F>(uiSchema);
-  const keepsWidget = !widget || hasWidget<T, S, F>(valueSchema, widget, widgets);
+>(uiSchema: UiSchema<T, S, F> | undefined, keepsWidget: boolean, isLabelled: boolean): UiSchema<T, S, F> {
   const noUiSchema: UiSchema<T, S, F> = {};
   const valueUiSchema = { ...(uiSchema ?? noUiSchema) };
   delete valueUiSchema[HELP_UI_KEY];
@@ -215,8 +245,9 @@ function getValueUiSchema<
   // options over the global ones, so deleting the key alone would let a global one naming this field through and
   // route the value straight back here
   uiOptions.field = undefined;
+  // Set rather than deleted, for the reason `field` is: a global `widget` would otherwise show through
   if (!keepsWidget) {
-    delete uiOptions.widget;
+    uiOptions.widget = undefined;
   }
   // A field around the value that labels it labels the very same control, since the value field renders for the same
   // `id`, so a label here would be a second one pointing at it — read out as one run-on name, and both focusing the
@@ -330,7 +361,22 @@ function FallbackUiField<
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
-  const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() => getInitialType(formData, types));
+  const defaultType = useMemo(
+    () => getDefaultType<S>(schema, types, uiOptions.widget),
+    [schema, types, uiOptions.widget],
+  );
+  // Whether the value field keeps its widget, the field's own or a `ui:globalOptions` one, on a given type. Checked
+  // against the schema with its type pinned, which is all of the value schema `getWidget()` reads. The spread is what
+  // `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema` a second time
+  const { widget: valueWidget, label }: UIOptionsType<T, S, F> = { ...globalUiOptions, ...uiOptions };
+  const keepsWidget = useCallback(
+    (aType: JSONSchema7TypeName) =>
+      !valueWidget || hasWidget<T, S, F>({ ...schema, type: aType }, valueWidget, widgets),
+    [valueWidget, schema, widgets],
+  );
+  const [selectedType, setSelectedType] = useState<JSONSchema7TypeName>(() =>
+    getInitialType(formData, types, defaultType, keepsWidget),
+  );
   // The types on offer change with the schema — a `dependencies` or `oneOf` branch switch can replace them
   // wholesale — so a selection the schema no longer allows gives way to the type the current data fits. A selection
   // the data no longer fits gives way too, since data replaced from outside the form arrives without going through
@@ -356,7 +402,7 @@ function FallbackUiField<
   const isSelectionUsable =
     types.includes(selectedType) &&
     (isEmptyValue || isClearedInput || canShowDataAsType(selectedType, guessType(formData)));
-  const type = isSelectionUsable ? selectedType : getInitialType(formData, types);
+  const type = isSelectionUsable ? selectedType : getInitialType(formData, types, defaultType, keepsWidget);
   if (type !== selectedType) {
     // Storing the type the selector is showing keeps a selection the user can no longer see from coming back: with the
     // old one still in state, clearing the value would swap the field out for the type the data used to have. React
@@ -365,8 +411,8 @@ function FallbackUiField<
   }
 
   const typesOptionSchema = useMemo(
-    () => getFallbackTypeSelectionSchema(types, translateString(TranslatableString.Type)),
-    [types, translateString],
+    () => getFallbackTypeSelectionSchema(types, translateString(TranslatableString.Type), defaultType),
+    [types, translateString, defaultType],
   );
   // The selector is a control of its own within the field, so the `ui:options.label` that turns the field's own label
   // off turns the selector's off with it. Nothing else in the caller's `uiSchema` describes the selector — the rest of
@@ -378,7 +424,6 @@ function FallbackUiField<
   // one naming a template: a template says how any field renders rather than what this one holds, so a form-wide
   // `FieldTemplate` lays the selector out as it lays out every other field
   const typeSelectorUiSchema = useMemo(() => {
-    const { label } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
     const options = Object.fromEntries(
       Object.keys(globalUiOptions ?? {})
         .filter((key) => !Object.hasOwn(templates, key))
@@ -388,7 +433,7 @@ function FallbackUiField<
       options.label = false;
     }
     return { [UI_OPTIONS_KEY]: options };
-  }, [uiSchema, globalUiOptions, templates]);
+  }, [label, globalUiOptions, templates]);
 
   // The same call the field around the value makes to decide whether it renders the schema's title and description, so
   // that exactly one of the two fields renders them: the outer one when it labels the value, the value field otherwise
@@ -400,9 +445,10 @@ function FallbackUiField<
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value), isLabelled),
     [schema, type, translateString, isLabelled],
   );
+  const valueKeepsWidget = useMemo(() => keepsWidget(type), [keepsWidget, type]);
   const valueUiSchema = useMemo(
-    () => getValueUiSchema<T, S, F>(uiSchema, valueSchema, widgets, isLabelled),
-    [uiSchema, valueSchema, widgets, isLabelled],
+    () => getValueUiSchema<T, S, F>(uiSchema, valueKeepsWidget, isLabelled),
+    [uiSchema, valueKeepsWidget, isLabelled],
   );
 
   const { SchemaField } = fields;

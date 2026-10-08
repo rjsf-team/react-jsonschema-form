@@ -14,7 +14,7 @@ import type {
 } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
@@ -132,6 +132,118 @@ describe('SchemaField', () => {
       });
 
       expect(node.querySelectorAll('#custom')[0]).toHaveTextContent('Custom UnsupportedField');
+    });
+  });
+
+  describe('type list starting with null', () => {
+    it('should render the field for the first type that is not null', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'string', 'number'] } } },
+      });
+
+      expect(node.querySelector('.rjsf-field-null')).not.toBeInTheDocument();
+      await user.type(screen.getByRole('textbox'), 'hi');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 'hi' } }), 'root_val');
+    });
+
+    it('should render an input within whichever oneOf option is selected', async () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['null', 'string', 'number'], oneOf: [{ title: 'A' }, { title: 'B' }] } },
+        },
+      });
+
+      expect(node.querySelectorAll('input')).toHaveLength(1);
+      await user.selectOptions(screen.getByRole('combobox'), 'B');
+
+      expect(node.querySelectorAll('input')).toHaveLength(1);
+      expect(node.querySelector('.rjsf-field-null')).not.toBeInTheDocument();
+    });
+
+    it('should keep the text typed into a widget only the string type has, rather than convert it', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'number', 'string'] } } },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+      });
+
+      await user.type(screen.getByRole('textbox'), '007');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: '007' } }), 'root_val');
+    });
+
+    it('should render the string field for a widget named by its registered name', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'number', 'string'] } } },
+        uiSchema: { val: { 'ui:widget': 'TextareaWidget' } },
+      });
+      const textarea = screen.getByRole('textbox');
+      expect(textarea.tagName).toBe('TEXTAREA');
+
+      await user.type(textarea, '007');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: '007' } }), 'root_val');
+    });
+
+    // A `format` constrains only the list's string member, so unlike a `ui:widget` it doesn't make the number the list
+    // resolves to unreachable
+    it.each<[RJSFSchema['type']]>([[['null', 'integer', 'string']], [['number', 'string']]])(
+      'should keep the number field of a %j list whose format names a widget only its string type has',
+      async (type) => {
+        const { onChange } = createFormComponent({
+          schema: { type: 'object', properties: { val: { type, format: 'email' } } },
+        });
+        const input = screen.getByRole('textbox');
+        expect(input).toHaveAttribute('type', 'text');
+
+        await user.type(input, '42');
+
+        expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 42 } }), 'root_val');
+      },
+    );
+
+    it('should render the widget a format names for a list resolving to string', () => {
+      createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'string', 'number'], format: 'email' } } },
+      });
+
+      expect(screen.getByRole('textbox')).toHaveAttribute('type', 'email');
+    });
+
+    it('should still convert what is typed into a number for a number-first list with no string widget', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'number', 'string'], format: 'uuid' } } },
+      });
+
+      await user.type(screen.getByRole('textbox'), '7');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 7 } }), 'root_val');
+    });
+
+    it('should save a number from a widget only the number type has on a string-first list', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['string', 'number'] } } },
+        uiSchema: { val: { 'ui:widget': 'updown' } },
+      });
+
+      const input = screen.getByRole('spinbutton');
+      await user.type(input, '7.5');
+
+      // Without a `step="any"`, the browser would treat the decimal as a step mismatch and block the submit
+      expect(input).toHaveAttribute('step', 'any');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: 7.5 } }), 'root_val');
+    });
+
+    it('should save a boolean from a widget only the boolean type has on a number-first list', async () => {
+      const { onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['number', 'boolean'] } } },
+        uiSchema: { val: { 'ui:widget': 'checkbox' } },
+      });
+
+      await user.click(screen.getByRole('checkbox'));
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { val: true } }), 'root_val');
     });
   });
 

@@ -820,6 +820,176 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       }
     });
 
+    it('starts a union with no data on the type its ui:widget renders', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          required: ['val'],
+          properties: { val: { type: ['null', 'boolean', 'string'] } },
+        },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      // The defaults follow the `textarea` to the `string` type and seed no `false`, so a `boolean` selection would show
+      // an unchecked box holding no value
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector('#root_val')!.tagName).toBe('TEXTAREA');
+    });
+
+    // The defaults resolve a widget only for a schema that lists its types, so one naming no type seeds nothing for the
+    // widget's type, and a `boolean` selection would show an unchecked box holding no value
+    it('starts a schema naming no type on its first type whatever its ui:widget', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', required: ['val'], properties: { val: { title: 'val' } } },
+        uiSchema: { val: { 'ui:widget': 'checkbox' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
+    });
+
+    // The types an `enum` names are offered in the order its values come in, so the first of them can be `null`, which
+    // `NullField` would write into the data of a field nobody has touched
+    it('starts a schema naming no type on the first type its enum offers that can hold a value', () => {
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { val: { enum: [null, 'a', 'b'] } } },
+        uiSchema: { val: { 'ui:field': 'FallbackField' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      for (const [{ formData }] of onChange.mock.calls) {
+        expect(formData).not.toHaveProperty('val');
+      }
+    });
+
+    // Only a field's own `ui:widget` picks a type list's field, as the defaults never see `ui:globalOptions`, and the
+    // global widget the selected type has none of is dropped from the value field rather than throwing `No widget`
+    it('starts a union with no data on its first type whatever widget ui:globalOptions names', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
+        uiSchema: { 'ui:globalOptions': { widget: 'textarea' } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('boolean');
+      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'checkbox');
+    });
+
+    // `getWidget()` throws for a widget the selected type has none of, which would take the whole form down
+    it('drops a widget in ui:globalOptions that the type the data selects has none of', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
+        uiSchema: { 'ui:globalOptions': { widget: 'textarea' } },
+        formData: { val: true },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('boolean');
+      expect(node.querySelector('#root_val')).toBeChecked();
+    });
+
+    it('starts a union holding data of a type it does not list on the type its ui:widget renders', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['null', 'boolean', 'string'] } } },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+        formData: { val: 5 },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+    });
+
+    // The `range` would render the object as its value, which React throws for, wherever its type is in the list
+    it.each<[string, RJSFSchema['type']]>([
+      ['after', ['string', 'number']],
+      ['before', ['number', 'string']],
+    ])(
+      "starts a union holding data its ui:widget's type can't show on a type without the widget, listed %s it",
+      (_, type) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', properties: { val: { type } } },
+          uiSchema: { val: { 'ui:widget': 'range' } },
+          formData: { val: {} },
+          useFallbackUiForUnsupportedType: true,
+        });
+
+        const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+        expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+        expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
+      },
+    );
+
+    // A `null` is shown as no value by every widget, so it keeps the widget the union was given
+    it('starts a union holding a null it does not name on the type of its ui:widget', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['number', 'string'] } } },
+        uiSchema: { val: { 'ui:widget': 'textarea' } },
+        formData: { val: null },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('string');
+      expect(node.querySelector('#root_val')?.tagName).toBe('TEXTAREA');
+    });
+
+    // `ArrayField` renders a custom widget for a `uiSchema` naming one, so the widget the value field drops has to
+    // name none rather than an `undefined` one, whether it was the field's own or the one in `ui:globalOptions`
+    it.each<[string, UiSchema]>([
+      ['its own', { val: { 'ui:widget': 'textarea' } }],
+      ['a ui:globalOptions', { 'ui:globalOptions': { widget: 'textarea' } }],
+    ])('renders the array field for a union whose array type has none of %s widget', async (_, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['string', 'array'], items: { type: 'string' } } },
+        },
+        uiSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      await user.selectOptions(node.querySelector('#root_val___internal_type_selector')!, 'array');
+
+      expect(node.querySelector('#root_val')).toHaveClass('rjsf-field-array');
+    });
+
+    it('renders the array field for a union holding an array whose array type has none of its widget', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['array', 'string'], items: { type: 'string' } } },
+        },
+        uiSchema: { val: { 'ui:widget': 'text' } },
+        formData: { val: [] },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('array');
+      expect(node.querySelector('#root_val')).toHaveClass('rjsf-field-array');
+    });
+
+    // A `format` constrains only the list's string member, so it moves neither the selection nor the field to it
+    it('starts a union with no data on its first type whatever widget its format names', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { type: ['number', 'string'], format: 'email' } } },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      const typeSelect = node.querySelector<HTMLSelectElement>('#root_val___internal_type_selector')!;
+      expect(Array.from(typeSelect.options).find((o) => o.selected)).toHaveTextContent('number');
+      expect(node.querySelector('#root_val')).toHaveAttribute('type', 'text');
+    });
+
     it('renders the option content of a union listing null first alongside a oneOf', () => {
       const { node } = createFormComponent({
         schema: {

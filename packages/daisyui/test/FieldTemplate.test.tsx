@@ -132,6 +132,16 @@ describe('FieldTemplate', () => {
       expect(screen.getAllByText('Agree')).toHaveLength(1);
     });
 
+    test('leaves the label to the checkbox widget on a number-first type list, which renders the boolean field', () => {
+      const { templateLabel } = renderForm(
+        { agree: { 'ui:widget': 'checkbox' } },
+        { type: ['number', 'boolean'], title: 'Agree' },
+      );
+
+      expect(templateLabel()).toBeNull();
+      expect(screen.getAllByText('Agree')).toHaveLength(1);
+    });
+
     test('leaves the label to the checkbox widget for a boolean with no widget', () => {
       const { templateLabel } = renderForm();
 

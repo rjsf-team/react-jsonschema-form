@@ -18,14 +18,7 @@ import type {
  * @returns - All of the unique types contained within the oneOf list
  */
 export function getSchemaTypesForXxxOf<S extends StrictRJSFSchema = RJSFSchema>(schemas: S[]): string | string[] {
-  const allTypes: string[] = [
-    ...new Set(
-      schemas
-        .map((s) => (isObject(s) ? getSchemaType(s) : undefined))
-        .flat()
-        .filter((t) => t !== undefined),
-    ),
-  ];
+  const allTypes: string[] = [...new Set(schemas.flatMap((s) => (isObject(s) ? (getSchemaType<S>(s) ?? []) : [])))];
   return allTypes.length === 1 ? allTypes[0] : allTypes;
 }
 
@@ -50,7 +43,8 @@ export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSch
 }
 
 /** Determines whether the type of the field for `schema` is one that `enableOptionalDataFieldForType` turns the Optional
- * Data Controls UI on for. A field whose type is a list of several types is never one of them.
+ * Data Controls UI on for. A field whose `anyOf`/`oneOf` options name several types is never one of them, while a
+ * `type` list counts as the type `getSchemaType()` resolves it to.
  *
  * @param schema - The schema for the field
  * @param [uiSchema] - The uiSchema for the field
