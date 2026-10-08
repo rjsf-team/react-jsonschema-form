@@ -215,8 +215,6 @@ interface ObjectFieldPropertyProps<
   handleKeyRename: (oldKey: string, newKey: string) => void;
   /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
-  /** Callback that notes that the value at or below this property has been written to */
-  handlePropertyChanged: (keyName: string) => void;
   /** The key names this property may be renamed to, when the parent schema's `propertyNames` constrains them */
   propertyNamesEnum?: string[];
 }
@@ -245,7 +243,6 @@ function ObjectFieldPropertyFn<
     propertyName,
     handleKeyRename,
     handleRemoveProperty,
-    handlePropertyChanged,
     addedByAdditionalProperties,
     propertyNamesEnum,
   } = props;
@@ -273,12 +270,9 @@ function ObjectFieldPropertyFn<
       if (value === undefined && addedByAdditionalProperties && path === innerFieldPath) {
         normalizedValue = '' as unknown as T;
       }
-      // Every change this property's field reports is a change to the value it holds, whether at its own path or
-      // under it, so the parent stops counting the value as the seed it added
-      handlePropertyChanged(propertyName);
       onChange(normalizedValue, path, newErrorSchema, id);
     },
-    [onChange, addedByAdditionalProperties, innerFieldPath, handlePropertyChanged, propertyName],
+    [onChange, addedByAdditionalProperties, innerFieldPath],
   );
 
   /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty.
@@ -392,13 +386,26 @@ export default function ObjectField<
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
   const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
   /** The seed the add button wrote for each property it added here and nothing has written to since, which are the only
-   * ones a rename re-seeds. Held in a ref rather than state: it is read and written by the add, change and rename
-   * handlers, none of which renders anything of it, and a property added and renamed in the same tick has to see the
-   * add. The seed itself is kept beside the name, not just the name, because the add is a proposal: a parent that
-   * declines it, or that later writes a value of its own under the very name the button proposed, leaves a record of a
-   * seed that is not the value the property holds, and re-seeding over that value would discard the parent's.
+   * ones a rename re-seeds. Held in a ref rather than state: it is read and written by the add and rename handlers,
+   * neither of which renders anything of it, and a property added and renamed in the same tick has to see the add. The
+   * seed itself is kept beside the name because what makes a record the property's history is that the form data still
+   * holds that seed under that name, which is the one question the effect below puts to every record.
    */
   const seededProperties = useRef(new Map<string, unknown>());
+  // Every write to a property this object holds is a proposal: the parent may decline it, write a value of its own
+  // over it, or accept it, and which of those happened is only known once the form data has come back. A record whose
+  // name the data no longer holds that seed under is no longer the property's history, whatever became of it -- a
+  // value the user entered, one a parent wrote, or a name a declined rename never took -- so it is dropped here rather
+  // than where the proposal was made. The record a rename leaves behind under the old name is what a declined rename
+  // falls back on, and it goes the moment the rename is the data's
+  useLayoutEffect(() => {
+    const properties = isObject(formData) ? (formData as GenericObjectType) : {};
+    for (const [key, seed] of seededProperties.current) {
+      if (!deepEquals(properties[key], seed)) {
+        seededProperties.current.delete(key);
+      }
+    }
+  }, [formData]);
   const schemaAdditionalProperties = useMemo(() => getAdditionalPropertyOrder<S>(schemaProperties), [schemaProperties]);
   const [additionalPropertyOrder, setAdditionalPropertyOrder] = useState(schemaAdditionalProperties);
   const definedPropertyOrder = useMemo(() => {
@@ -648,14 +655,12 @@ export default function ObjectField<
         // numeric pattern describes is a value that pattern's field cannot show. Which properties those are is what
         // `seededProperties` has recorded since they were added, rather than a value that merely equals what the seed
         // would be now -- any `0`, `false` or defaulted entry equals that, the data the form mounted with included, and
-        // every one of those is the user's to keep. The recorded seed still has to be the value the property holds,
-        // since the add is a proposal a parent may decline or write over, and the value a parent put there is no more
-        // the form's to replace than one the user typed. The record follows the property through the rename, so
-        // renaming it on twice re-seeds it twice
-        const wasSeeded =
-          seededProperties.current.has(oldKey) && deepEquals(newFormData[oldKey], seededProperties.current.get(oldKey));
+        // every one of those is the user's to keep. The record goes under the new name without leaving the old one,
+        // since this rename is a proposal too: a parent that declines it leaves the property under the name it already
+        // had, where the record it kept lets the next rename re-seed it. The reconciliation above drops whichever of
+        // the two the data turns out not to hold, so renaming a property on twice re-seeds it twice
         const seed = seededProperties.current.get(oldKey);
-        seededProperties.current.delete(oldKey);
+        const wasSeeded = seededProperties.current.has(oldKey) && deepEquals(newFormData[oldKey], seed);
         if (wasSeeded) {
           if (deepEquals(schemaForKey(oldKey), schemaForKey(actualNewKey))) {
             seededProperties.current.set(actualNewKey, seed);
@@ -689,19 +694,11 @@ export default function ObjectField<
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
-      seededProperties.current.delete(key);
       setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
       onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, toFieldPath(key, fieldPath));
     },
     [onChange, fieldPath],
   );
-
-  /** Notes that a property's own value, or a value under it, has been written to, so that a later rename leaves it
-   * alone: what the add button seeded is the form's to replace until then, and everything after it is the user's.
-   */
-  const handlePropertyChanged = useCallback((key: string) => {
-    seededProperties.current.delete(key);
-  }, []);
 
   /** Returns the stable React key for a property. For the most recently renamed
    * additional property, returns the previous key so that React reuses the
@@ -782,7 +779,6 @@ export default function ObjectField<
           formData={getByPath(formData, propertyName)}
           handleKeyRename={handleKeyRename}
           handleRemoveProperty={handleRemoveProperty}
-          handlePropertyChanged={handlePropertyChanged}
           addedByAdditionalProperties={addedByAdditionalProperties}
           propertyNamesEnum={addedByAdditionalProperties ? allowedPropertyNames?.get(propertyName) : undefined}
           onChange={onChange}

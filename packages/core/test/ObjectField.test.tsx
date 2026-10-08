@@ -1232,6 +1232,68 @@ describe('ObjectField', () => {
       expect(log.value).toEqual({ num1: 'the parent wrote this' });
     });
 
+    it('should re-seed an untouched new property after a rename the parent declined', async () => {
+      // The record a rename writes under the new name is a proposal like the add itself, so the one under the old name
+      // stays until the data says which of them it holds. Moving it would leave the property, still holding the seed
+      // under the name it never left, with no history to re-seed from
+      const log = createParentLog<GenericObjectType>();
+      const { container } = render(
+        <TransformingParent<GenericObjectType>
+          schema={{ type: 'object', patternProperties: { '^[0-9]+$': { type: 'number' } } }}
+          initialValue={{}}
+          log={log}
+          transform={(proposal) => (proposal && 'abc' in proposal ? { newKey: 'New Value' } : proposal)}
+        />,
+      );
+
+      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
+      expect(log.value).toEqual({ newKey: 'New Value' });
+
+      const renameTo = async (from: string, to: string) => {
+        const keyInput = container.querySelector(`#root_${from}-key`)!;
+        await user.clear(keyInput);
+        await user.type(keyInput, to);
+        await user.tab();
+      };
+
+      await renameTo('newKey', 'abc');
+      expect(log.value).toEqual({ newKey: 'New Value' });
+
+      await renameTo('newKey', '12');
+      expect(log.value).toEqual({ '12': 0 });
+    });
+
+    it('should re-seed an untouched new property after a change the parent declined', async () => {
+      // A change is a proposal too, and one the parent turns down leaves the property holding the seed the add button
+      // wrote: nothing has written to it, so the rename re-seeds it as it would one the user never touched
+      const log = createParentLog<GenericObjectType>();
+      const { container } = render(
+        <TransformingParent<GenericObjectType>
+          schema={{
+            type: 'object',
+            additionalProperties: { type: 'string' },
+            patternProperties: { '^num': { type: 'number' } },
+          }}
+          initialValue={{}}
+          log={log}
+          transform={(proposal) => (proposal?.newKey !== undefined ? { ...proposal, newKey: 'New Value' } : proposal)}
+        />,
+      );
+
+      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
+      expect(log.value).toEqual({ newKey: 'New Value' });
+
+      await user.type(container.querySelector('#root_newKey')!, 'typed');
+      expect(log.value).toEqual({ newKey: 'New Value' });
+
+      const keyInput = container.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'num1');
+      await user.tab();
+
+      expect(log.value).toEqual({ num1: 0 });
+    });
+
     it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
       // The field the declared name brings up reads `uiSchema.count`, so seeding through `uiSchema.additionalProperties`
       // would hand that number field the `ui:initialValue` written for the string the other keys hold
