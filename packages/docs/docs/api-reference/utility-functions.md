@@ -2728,6 +2728,8 @@ Due to the nature of schemas, this sanitization happens recursively for nested o
 Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
+When the previous form data is passed as `oldData` (`Form` passes its previous `formData`), the old schema is resolved against it: a conditional that flipped between the previous and current data shows up as a real difference between the resolved old and new schemas, so values a flipped conditional no longer allows are filtered, while a stable rewrite such as a nested `allOf`, `$ref` or `additionalProperties` stub resolves the same on both sides and values the schema once offered are kept.
+Without `oldData` the old schema is resolved against the current data and the historical shape-based gates decide, so existing direct callers see no change.
 
 #### Parameters
 
@@ -2736,6 +2738,7 @@ A new schema that declares a type of its own is the type the data has to satisfy
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
 - [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
+- [oldData]: any - The previous form data, which the old schema is resolved against when given
 
 #### Returns
 

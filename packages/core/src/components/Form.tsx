@@ -834,7 +834,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
       const sanitizedFormData = replaceEqualDeep(
         formData,
-        schemaUtils.sanitizeDataForNewSchema(retrievedSchema, current?.retrievedSchema, formData),
+        schemaUtils.sanitizeDataForNewSchema(retrievedSchema, current?.retrievedSchema, formData, current?.formData),
       );
       wasSanitized = sanitizedFormData !== formData;
       if (wasSanitized) {
