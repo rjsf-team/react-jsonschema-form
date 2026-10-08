@@ -1,16 +1,9 @@
-import { getWidget } from '@rjsf/utils';
-import type * as RJSFUtils from '@rjsf/utils';
-import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 import Form from '../src/index.ts';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
-
-vi.mock('@rjsf/utils', async (importOriginal) => {
-  const actual = await importOriginal<typeof RJSFUtils>();
-  return { ...actual, getWidget: vi.fn(actual.getWidget) };
-});
 
 /** The label `FieldTemplate` renders above the control. It is the only one pointing at the field's own id: a widget's
  * own label (`CheckboxWidget`, `ToggleWidget`) has no `htmlFor`, and `AltDateWidget`'s point at their sub-controls
@@ -161,18 +154,24 @@ describe('FieldTemplate', () => {
       expect(templateLabel()).toBeNull();
       expect(screen.getAllByText('Agree')).toHaveLength(1);
     });
+  });
 
-    // `getWidget()` only resolves the registry's own keys, so a name inherited from `Object.prototype` is an alias too,
-    // and on a schema that is not a boolean it is answered without resolving it
-    test('does not resolve a widget name inherited from Object.prototype on a schema that is not a boolean', () => {
-      function OwnField() {
-        return <div />;
-      }
-      vi.mocked(getWidget).mockClear();
+  // `getWidget()` only resolves the registry's own keys, so a name inherited from `Object.prototype` is an alias that
+  // reaches no widget. Only a custom `ui:field` can carry one, since it reads its `ui:widget` itself
+  describe('a widget name inherited from Object.prototype', () => {
+    function OwnField({ uiSchema }: FieldProps) {
+      return <output data-testid='own-field'>{String(uiSchema?.['ui:widget'])}</output>;
+    }
 
-      renderForm({ agree: { 'ui:field': OwnField, 'ui:widget': 'toString' } }, { type: 'string', title: 'Agree' });
+    test.each<[string, RJSFSchema]>([
+      ['a string', { type: 'string', title: 'Agree' }],
+      ['a boolean', agree],
+    ])('renders the custom field that reads it on %s schema', (_, fieldSchema) => {
+      const { container } = renderForm({ agree: { 'ui:field': OwnField, 'ui:widget': 'toString' } }, fieldSchema);
 
-      expect(getWidget).not.toHaveBeenCalledWith(expect.anything(), 'toString', expect.anything());
+      const ownField = screen.getByTestId('own-field');
+      expect(ownField).toHaveTextContent('toString');
+      expect(container.querySelector('.field-template')).toContainElement(ownField);
     });
   });
 

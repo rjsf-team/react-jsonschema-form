@@ -5,10 +5,13 @@ import type {
   FormContextType,
   RegistryWidgetsType,
   Widget,
+  WidgetAliasFor,
 } from '@rjsf/utils';
-import { fieldLabelId, getSchemaType, getTemplates, getUiOptions, getWidget } from '@rjsf/utils';
+import { fieldLabelId, getSchemaType, getTemplates, getUiOptions } from '@rjsf/utils';
 
 import { getDaisy } from '../../utils.ts';
+
+const CHECKBOX_ALIAS: WidgetAliasFor<'boolean'> = 'checkbox';
 
 /** Whether the widget a field resolves to renders the field's label itself, which the checkbox and the toggle do,
  * after their input. The answer is the registry's own entry rather than this theme's component, so a consumer who
@@ -17,10 +20,12 @@ import { getDaisy } from '../../utils.ts';
  * here and gets the template's label too, which is the better way to be wrong — guessing the other way would leave a
  * control replaced by a label-less widget with no accessible name at all.
  *
- * A registry key and a component both answer without the schema's type. Only an alias — `checkbox`, which reaches the
- * checkbox for a `boolean` — is resolved through it, and that is the one spelling `getWidget()` reports it cannot
- * resolve by throwing an error built from a `JSON.stringify()` of the whole schema, which a `ui:widget` that a custom
- * `ui:field` consumes itself would otherwise pay for on every render just to be told no.
+ * A registry key and a component both answer without the schema's type. Only an alias is resolved through it, and
+ * `checkbox` on a `boolean` is the one alias that reaches the checkbox. Registry keys are looked up as own properties,
+ * as `getWidget()` does, so a name inherited from `Object.prototype` such as `toString` is an alias like any other.
+ * `getWidget()` itself is not called: it reports a name it cannot resolve by throwing an error built from a
+ * `JSON.stringify()` of the whole schema, which a `ui:widget` that a custom `ui:field` consumes itself would otherwise
+ * pay for on every render just to be told no.
  *
  * @param schema - The schema for the field
  * @param widget - The widget named by the field's ui options, if any
@@ -32,17 +37,15 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
   widget: Widget<T, S, F> | string | undefined,
   registeredWidgets: RegistryWidgetsType<T, S, F>,
 ) {
-  const isAlias = typeof widget === 'string' && !Object.hasOwn(registeredWidgets, widget);
-  if (!widget || (isAlias && getSchemaType(schema) !== 'boolean')) {
-    return false;
+  let resolved: Widget<T, S, F> | undefined;
+  if (typeof widget !== 'string') {
+    resolved = widget;
+  } else if (Object.hasOwn(registeredWidgets, widget)) {
+    resolved = registeredWidgets[widget];
+  } else if (widget === CHECKBOX_ALIAS && getSchemaType(schema) === 'boolean') {
+    resolved = registeredWidgets.CheckboxWidget;
   }
-  let resolved: Widget<T, S, F>;
-  try {
-    resolved = getWidget<T, S, F>(schema, widget, registeredWidgets);
-  } catch {
-    return false;
-  }
-  return resolved === registeredWidgets.CheckboxWidget || resolved === registeredWidgets.toggle;
+  return !!resolved && (resolved === registeredWidgets.CheckboxWidget || resolved === registeredWidgets.toggle);
 }
 
 /** The `FieldTemplate` component provides the main layout for each form field
