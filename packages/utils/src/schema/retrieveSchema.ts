@@ -454,9 +454,13 @@ function additionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(
   const merged: (S | boolean | undefined)[] = Array.isArray(subSchema[ALL_OF_KEY])
     ? [...(subSchema[ALL_OF_KEY] as (S | boolean)[])]
     : [];
-  merged.push(referencedDefinition<S>(subSchema, rootSchema, followedRefs));
+  // The references followed to reach this subschema, which each entry then follows without adding to the lists of the
+  // entries beside it, as an option does: two entries naming the same definition both read it, where one that shadows
+  // the definition's `type` would otherwise leave the type behind it unread
+  const refs = new Set(followedRefs);
+  merged.push(referencedDefinition<S>(subSchema, rootSchema, refs));
   for (const entry of merged.filter((candidate) => isObject(candidate))) {
-    const mergedType = additionalPropertyType<S>(entry, rootSchema, followedRefs);
+    const mergedType = additionalPropertyType<S>(entry, rootSchema, new Set(refs));
     if (mergedType !== undefined) {
       return mergedType;
     }
@@ -1041,7 +1045,10 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   const merged: (S | boolean | undefined)[] = Array.isArray(schema[ALL_OF_KEY])
     ? [...(schema[ALL_OF_KEY] as (S | boolean)[])]
     : [];
-  merged.push(referencedDefinition<S>(schema, rootSchema, followedRefs));
+  // The references followed to reach this schema, which this walk adds its own to without adding to the lists of the
+  // walks beside it
+  const refs = new Set(followedRefs);
+  merged.push(referencedDefinition<S>(schema, rootSchema, refs));
   if (IF_KEY in schema && rootSchema !== undefined) {
     const holds = context.validator.isValid(schema[IF_KEY] as S, formData, rootSchema);
     merged.push((holds ? schema[THEN_KEY] : schema[ELSE_KEY]) as S | boolean | undefined);
@@ -1059,13 +1066,16 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   for (const subSchema of merged.filter((entry) => isObject(entry))) {
     // Each merged subschema is read as `namesOptionRenders()` reads an option, so that one offering `anyOf`/`oneOf`
     // options of its own contributes the names every one of them renders: a `$ref` is how an option usually names the
-    // choice it is, and a name behind that reference has the option's field as much as one declared inline does
+    // choice it is, and a name behind that reference has the option's field as much as one declared inline does. It
+    // follows the references reaching this schema without adding to the lists of the entries beside it, as an option
+    // does, so two entries naming the same definition both read it: one that shadows the definition's `properties`
+    // would otherwise leave the names behind it to be stubbed over the field the entry beside it renders them with
     const subNames = namesOptionRenders<S, F>(
       context,
       subSchema,
       rootSchema,
       formData,
-      followedRefs,
+      new Set(refs),
       matchedOptionOnly,
     );
     if (subNames === undefined) {
@@ -1186,7 +1196,10 @@ function namesTheOptionsRender<S extends StrictRJSFSchema = RJSFSchema, F extend
  * renders for that data and so the only one evaluating anything the object holds.
  *
  * The references are resolved before the options are scored because that is the form `resolveAnyOrOneOfSchemas()`
- * scores them in, and a precompiled validator has a function compiled for the forms that pass through there.
+ * scores them in, and a precompiled validator has a function compiled for the forms that pass through there. An option
+ * whose reference names no definition, or names one circularly, is scored as it stands: it says as little about the
+ * data as `referencedDefinition()` reads off such a reference, and whatever resolves the option to render it reports
+ * the reference on its own, where a throw here would take down an object that asked nothing but which key to stub.
  *
  * @param context - The `SchemaContext` whose `validator` scores the options
  * @param schema - The object schema offering the options, read for the discriminator it names
@@ -1202,7 +1215,13 @@ function matchingOption<S extends StrictRJSFSchema = RJSFSchema, F extends FormC
   rootSchema: S,
   formData: GenericObjectType,
 ): S {
-  const resolved = options.map((option) => resolveAllReferences(option, rootSchema, []));
+  const resolved = options.map((option) => {
+    try {
+      return resolveAllReferences(option, rootSchema, []);
+    } catch {
+      return option;
+    }
+  });
   const matched = getFirstMatchingOption<GenericObjectType, S, F>(
     context,
     formData,

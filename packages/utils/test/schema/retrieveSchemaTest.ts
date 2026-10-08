@@ -203,6 +203,18 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         getAdditionalPropertyType({ allOf: [{ type: 'number' }], anyOf: [{ type: 'number' }, { type: 'string' }] }),
       ).toBe('number');
     });
+    it('reads a definition two merged entries both name, where the first of them shadows its type', () => {
+      // Each entry follows the references reaching the subschema without consuming them for the entries beside it, as
+      // an option does: the second entry resolves the definition unshadowed, so the type behind it answers for the
+      // merge even where the first replaced it with a name JSON Schema does not define
+      const rootSchema: RJSFSchema = { definitions: { n: { type: 'number' } } };
+      // `JSON.parse` because a type name JSON Schema does not define is one only an untyped caller can write, which is
+      // also what makes the first entry shadow the definition's type without naming a type of its own
+      const subSchema: RJSFSchema = JSON.parse(
+        '{ "allOf": [{ "$ref": "#/definitions/n", "type": "notAType" }, { "$ref": "#/definitions/n" }] }',
+      );
+      expect(getAdditionalPropertyType(subSchema, rootSchema)).toBe('number');
+    });
     it('returns the type an allOf entry names, since the merge holds the value to every entry at once', () => {
       expect(getAdditionalPropertyType({ allOf: [{ type: 'number' }] })).toBe('number');
       // An entry naming no type adds nothing to the one that does, whichever order they come in
@@ -3027,6 +3039,29 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           properties: { shadowed: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
         });
       });
+      it('has an anyOf option naming one definition twice, shadowing it only once', () => {
+        const schema: RJSFSchema = {
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            {
+              allOf: [
+                { $ref: '#/definitions/named', properties: { shown: { type: 'number' } } },
+                { $ref: '#/definitions/named' },
+              ],
+            },
+          ],
+        };
+        const rootSchema: RJSFSchema = { definitions: { named: { properties: { named: { type: 'boolean' } } } } };
+        const formData = { shown: 1, named: true };
+        // The second entry resolves the definition unshadowed, so the option renders the name behind it after all:
+        // each entry follows the references reaching the option without consuming them for the entries beside it, as
+        // an option of its own would, where a list shared across them would have left the first entry's shadowed read
+        // standing as the definition's only one
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, rootSchema, formData)).toEqual({
+          ...schema,
+          properties: {},
+        });
+      });
       it('has an anyOf option whose own condition shadows the one its reference names', () => {
         const schema: RJSFSchema = {
           additionalProperties: { type: 'string' },
@@ -3311,6 +3346,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
           ...schema,
           properties: { a: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
+        });
+      });
+      it('describes its extra keys with unevaluatedProperties beside an option whose reference names no definition', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          oneOf: [{ properties: { a: { type: 'number' } } }, { $ref: '#/definitions/missing' }],
+          unevaluatedProperties: { type: 'string' },
+        };
+        // The matching option leads the list, which is the option the stub validator answers with, so the reference
+        // beside it is one the walk resolves to score and reads nothing else off
+        const formData = { a: 1, extra: 'hi' };
+        // Matching the option the data belongs to resolves the references first, and an unresolvable one is scored as
+        // it stands rather than throwing: the reference says as little about the data as the walk of the options reads
+        // off it, and whatever resolves the option to render it reports the reference on its own, where a throw here
+        // would take down an object that asked nothing but which of its keys to stub
+        expect(stubExistingAdditionalProperties({ validator: testValidator }, schema, schema, formData)).toEqual({
+          ...schema,
+          properties: { extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
         });
       });
       it('describes its extra keys with additionalProperties beside unevaluatedProperties', () => {
