@@ -185,6 +185,40 @@ describe.each([
     expect(events).toEqual(['focus', 'blur']);
   });
 
+  // The playground renders the form into an iframe, where every node is an instance of that window's classes and of
+  // none of ours: a press on the trigger taken for a press elsewhere closes the popup on the way down and, the click
+  // then finding it closed, opens it again
+  test('a press on the trigger of a framed form closes the popup', async () => {
+    const frame = document.body.appendChild(document.createElement('iframe'));
+    onTestFinished(() => frame.remove());
+    const frameDocument = frame.contentDocument;
+    if (!frameDocument) {
+      throw new Error('The frame has no document');
+    }
+    const frameUser = userEvent.setup({ document: frameDocument });
+    const onChange = vi.fn();
+    const view = render(
+      <Widget
+        {...makeWidgetMockProps({
+          id: 'date',
+          value: initial,
+          autofocus: false,
+          schema: { type: 'string', format },
+          onChange,
+        })}
+      />,
+      {
+        container: frameDocument.body.appendChild(frameDocument.createElement('div')),
+        baseElement: frameDocument.body,
+      },
+    );
+    await frameUser.click(view.getByRole('button', { expanded: false }));
+    await frameUser.click(view.getByRole('button', { name: /May 17th, 2020/ }));
+    await frameUser.click(view.getByRole('button', { expanded: true }));
+    expect(view.queryByText('Done')).toBeNull();
+    expect(onChange.mock.calls).toEqual([[proposal]]);
+  });
+
   test.each([
     ['hide', 'Done'],
     ['hide', 'outside'],

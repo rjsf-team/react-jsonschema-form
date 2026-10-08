@@ -117,7 +117,8 @@ export function useDateFormatter<S extends StrictRJSFSchema = RJSFSchema>(schema
  * @returns - True if the press will reach that button
  */
 function pressOpensThePopup(target: EventTarget | null, trigger: HTMLElement | null) {
-  if (!trigger || !(target instanceof Element)) {
+  // The form's own window is asked for `Element`: a node of a form rendered into a frame is no instance of ours
+  if (!trigger || !(target instanceof windowOf(trigger).Element)) {
     return false;
   }
   return trigger.contains(target) || target.closest('label')?.control === trigger;
