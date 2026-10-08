@@ -143,6 +143,14 @@ describe('getWidget()', () => {
     expect(getWidget(union, 'radio', { RadioWidget: TestWidget })).toBe(TestWidget);
   });
 
+  it('should look a select over a type list naming no known type up by the string field rendering it', () => {
+    const union = { type: ['foo', 'bar'], enum: ['a'] } as unknown as RJSFSchema;
+    expect(getWidget(union, 'select', { SelectWidget: TestWidget })).toBe(TestWidget);
+    expect(() => getWidget(union, 'checkbox', { CheckboxWidget: TestWidget })).toThrow(
+      `No widget 'checkbox' for type 'string' in schema: ${JSON.stringify(union)}`,
+    );
+  });
+
   it('should return an array widget for a type list that resolves to array', () => {
     const union: RJSFSchema = { type: ['null', 'array', 'string'], items: { type: 'string' } };
     expect(getWidget(union, 'checkboxes', { CheckboxesWidget: TestWidget })).toBe(TestWidget);

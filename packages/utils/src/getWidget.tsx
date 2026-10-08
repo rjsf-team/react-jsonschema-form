@@ -100,46 +100,36 @@ function isWidgetMapType(type: string): type is keyof typeof widgetMap {
   return Object.hasOwn(widgetMap, type);
 }
 
-/** Gets the widget aliases the field for `type` renders `schema` with. A select over whole array constants takes a
- * whole-value select's aliases rather than a list's
- *
- * @param schema - The schema for the field
- * @param type - The type of the field that renders the schema
- * @returns - The widget aliases of that field
- */
-function getTypeWidgets<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  type: keyof typeof widgetMap,
-): Record<string, string> {
-  return type === 'array' && isWholeValueSelect<S>(schema) ? wholeValueSelectWidgetMap : widgetMap[type];
-}
-
 /** Finds the type whose field renders `widget` for `schema`, along with that type's widget aliases, so `getWidget()`
  * reads the aliases it matched rather than rebuilding them, which for an `array` scans its options again
  *
  * @param schema - The schema for the field
  * @param widget - The alias or registered name of the widget
  * @param type - The type `getSchemaType()` resolves `schema` to
+ * @param selectType - The type `getTypeListSelectType()` gives `schema`, which the caller has already worked out
  * @returns - The type and its aliases, or `undefined` when no type the schema allows has the widget
  */
 function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   widget: string,
   type: string | undefined,
+  selectType: string | undefined,
 ): { type: string; widgets: Record<string, string> } | undefined {
-  const hasWidget = (widgets: Record<string, string>) =>
-    Object.hasOwn(widgets, widget) || Object.values(widgets).includes(widget);
-  const selectType = getTypeListSelectType<S>(schema, type);
   const fieldType = selectType ?? type;
   if (fieldType === undefined || !isWidgetMapType(fieldType)) {
     return undefined;
   }
+  const hasWidget = (widgets: Record<string, string>) =>
+    Object.hasOwn(widgets, widget) || Object.values(widgets).includes(widget);
   // A select over several types naming an `object` or an `array` can hold a container, which only a widget picking an
-  // option keeps whole: a `textarea` would show an object as `[object Object]` and write a string over it
+  // option keeps whole: a `textarea` would show an object as `[object Object]` and write a string over it. A select
+  // over whole array constants likewise takes a whole-value select's aliases rather than a list's
+  const holdsContainer =
+    selectType === 'string' && getKnownTypes<S>(schema).some((aType) => aType === 'object' || aType === 'array');
   const widgets =
-    selectType === 'string' && getKnownTypes<S>(schema).some((aType) => aType === 'object' || aType === 'array')
+    holdsContainer || (fieldType === 'array' && isWholeValueSelect<S>(schema))
       ? wholeValueSelectWidgetMap
-      : getTypeWidgets<S>(schema, fieldType);
+      : widgetMap[fieldType];
   if (hasWidget(widgets)) {
     return { type: fieldType, widgets };
   }
@@ -171,7 +161,8 @@ function findWidgetType<S extends StrictRJSFSchema = RJSFSchema>(
  * @returns - The type whose field renders the widget, or `undefined` when no type the schema allows has it
  */
 export function getWidgetType<S extends StrictRJSFSchema = RJSFSchema>(schema: S, widget: string): string | undefined {
-  return findWidgetType<S>(schema, widget, getSchemaType<S>(schema))?.type;
+  const type = getSchemaType<S>(schema);
+  return findWidgetType<S>(schema, widget, type, getTypeListSelectType<S>(schema, type))?.type;
 }
 
 /** Determines whether a `type` list can render through another field than the one for the type it resolves to. Only a
@@ -226,7 +217,7 @@ function resolveFieldType<S extends StrictRJSFSchema = RJSFSchema>(
     return type;
   }
   const widget = readWidget();
-  return (typeof widget === 'string' ? findWidgetType<S>(schema, widget, type)?.type : undefined) ?? type;
+  return (typeof widget === 'string' ? findWidgetType<S>(schema, widget, type, undefined)?.type : undefined) ?? type;
 }
 
 /** Gets the type whose field `SchemaField` renders a `schema` with `widget` by, which for a `type` list naming several
@@ -316,21 +307,23 @@ export default function getWidget<
     return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
   }
 
-  if (type !== undefined) {
-    if (!isWidgetMapType(type)) {
-      throw new Error(`No widget for type '${type}' in schema: ${JSON.stringify(schema)}`);
+  // A select over a `type` list is looked up and named by the type of the field rendering it, not the type the list
+  // resolves to, which can be one that has the widget, such as the `boolean` of a `['null', 'boolean', 'string']`
+  // select, or one that has no field, such as the `foo` of a `['foo', 'bar']` one
+  const selectType = getTypeListSelectType(schema, type);
+  const fieldType = selectType ?? type;
+  if (fieldType !== undefined) {
+    if (!isWidgetMapType(fieldType)) {
+      throw new Error(`No widget for type '${fieldType}' in schema: ${JSON.stringify(schema)}`);
     }
 
-    const widgetsForType = findWidgetType(schema, widget, type)?.widgets;
+    const widgetsForType = findWidgetType(schema, widget, type, selectType)?.widgets;
     if (widgetsForType && Object.hasOwn(widgetsForType, widget)) {
       const registeredWidget = registeredWidgets[widgetsForType[widget]];
       return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
     }
   }
 
-  // A select over a `type` list is named by the type of the field rendering it, not the type the list resolves to, which
-  // can be one that has the widget: a `checkbox` on a `['null', 'boolean', 'string']` select is not a boolean's
-  const fieldType = getTypeListSelectType(schema, type) ?? type;
   throw new Error(`No widget '${widget}' for type '${String(fieldType)}' in schema: ${JSON.stringify(schema)}`);
 }
 
