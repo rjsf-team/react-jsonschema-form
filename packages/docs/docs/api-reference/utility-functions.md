@@ -170,6 +170,19 @@ Return a consistent `id` for the `btn` button element
 
 - string: The consistent id for the button from the given `id` and `btn` type
 
+### callWithDeferredThrow()
+
+Calls `callback`, and rethrows anything it throws from a `setTimeout()` instead of to the caller.
+Use it for a consumer's callback that a widget or field calls from an Effect or its cleanup: a throw there happens inside React's commit phase and unmounts everything up to the nearest error boundary.
+From a timer the throw escapes error boundaries instead.
+A browser reports it as an uncaught error, the way it reports a throw from a DOM event handler.
+A test runner reports it as an unhandled error that belongs to no test, and Node, as in server rendering, raises an `uncaughtException`.
+Tests that expect such a throw need to catch the timer's error themselves; this repository's `testing/deferredThrows.ts` is an example for Vitest.
+
+#### Parameters
+
+- callback: () => void - The consumer's callback to call
+
 ### canExpand&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
