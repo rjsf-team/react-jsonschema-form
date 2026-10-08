@@ -106,6 +106,42 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.a.b.c');
   });
 
+  describe('a type list that resolves to object', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { type: ['null', 'object', 'string'], properties: { a: { type: 'string' } } } },
+    };
+    const uiSchema: UiSchema = { v: { a: { 'ui:required': true } } };
+    it('requires no property of a string value', () => {
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: 'hello' });
+      expect(toErrorList(errorSchema)).toEqual([]);
+    });
+    it.each([{}, null])('still reports a missing property of a %j value', (v) => {
+      const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v });
+      expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+    });
+  });
+
+  it('requires no property of an object value under a type list that resolves to another type', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { type: ['string', 'object'], properties: { a: { type: 'string' } } } },
+    };
+    const uiSchema: UiSchema = { v: { a: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: { b: 1 } });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
+  it('reports a missing property of a null held by a nullable object, whose properties ObjectField renders', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { v: { type: ['null', 'object'], properties: { a: { type: 'string' } } } },
+    };
+    const uiSchema: UiSchema = { v: { a: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { v: null });
+    expect(toErrorList(errorSchema).map((error) => error.property)).toEqual(['.v.a']);
+  });
+
   it('walks into an object schema with no properties without erroring', () => {
     // A satisfied, unrelated ui:required keeps the top-level short-circuit from skipping the walk entirely, so this
     // still exercises the "no properties" branch it's meant to check.

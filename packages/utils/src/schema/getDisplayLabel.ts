@@ -1,7 +1,6 @@
 import { ADDITIONAL_PROPERTY_FLAG, UI_FIELD_KEY } from '../constants.ts';
-import getSchemaType from '../getSchemaType.ts';
 import getUiOptions from '../getUiOptions.ts';
-import { DEFAULT_BOOLEAN_WIDGET } from '../getWidget.tsx';
+import { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForUiSchema } from '../getWidget.tsx';
 import isCustomWidget from '../isCustomWidget.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type {
@@ -41,7 +40,9 @@ export default function getDisplayLabel<
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   let displayLabel = uiBooleanOption(uiOptions.label) ?? true;
   if (displayLabel) {
-    const schemaType = getSchemaType<S>(schema);
+    // The label follows the field `SchemaField` renders: a `CheckboxWidget` on a `['number', 'boolean']` is a boolean's.
+    // Only the field's own `ui:widget` picks that field, so the `ui:globalOptions` one is left out
+    const schemaType = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
 
     // An `enum` or a constant `anyOf`/`oneOf` over objects or arrays renders as one select for the whole value, which is
