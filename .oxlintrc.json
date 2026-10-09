@@ -22,7 +22,10 @@
     "**/coverage/**",
     "**/*.d.ts",
     "**/docs/**",
-    "**/harness/*.cjs"
+    "**/harness/*.cjs",
+    // Agent skill scripts: outside both type-check programs, so the type-aware rules only see error types. A full
+    // run already skips the dot-directory; this keeps lint-staged's explicit paths from linting it
+    ".claude/**"
   ],
   // These are all the `airbnb-typescript` rules, converted to their respective OxLint equivalents
   "rules": {

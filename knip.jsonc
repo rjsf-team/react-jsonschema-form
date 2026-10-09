@@ -6,8 +6,14 @@
       // .github/workflows/size-limit-comment.yml. knip cannot follow that.
       // .github/size-limit/.size-limit.js: loaded by a size-limit binary that is
       // installed in that directory's own pnpm project, so knip sees neither.
-      "entry": [".github/size-limit/report.mjs", ".github/size-limit/.size-limit.js"],
-      "ignoreBinaries": ["size-limit"],
+      // .claude/skills/run-playground/*: agent tooling run with `node` per its SKILL.md.
+      "entry": [
+        ".github/size-limit/report.mjs",
+        ".github/size-limit/.size-limit.js",
+        ".claude/skills/run-playground/*.{mjs,tsx}",
+      ],
+      // The run-playground driver runs vite from packages/playground, which lists it.
+      "ignoreBinaries": ["size-limit", "vite"],
       "ignoreDependencies": [
         // Required for nx publish
         "@nx/js",

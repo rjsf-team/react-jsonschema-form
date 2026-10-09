@@ -152,3 +152,4 @@ out/
 !.claude/skills/
 .claude/skills/*
 !.claude/skills/rjsf-testing/
+!.claude/skills/run-playground/
