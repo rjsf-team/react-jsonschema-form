@@ -1,4 +1,4 @@
-import type { FocusEvent } from 'react';
+import type { FocusEvent, ReactNode } from 'react';
 import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   EnumOptionsType,
@@ -44,8 +44,10 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
+import useFieldView from '../../hooks/useFieldView.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
+import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -186,6 +188,16 @@ function findPreferredPropertyName<S extends StrictRJSFSchema = RJSFSchema>(sche
   return firstAllowed;
 }
 
+/** A shallow copy of an object field's data to add a property to, a new object when the field holds none. A `type`
+ * list naming `object` alongside another type can hold a value of that type, which has no properties to keep, and a
+ * string spread into an object would turn each of its characters into one. The overload is the one trust point that the
+ * copy, which keeps every property of `formData`, is still the field's `T`.
+ */
+function copyObjectData<T>(formData: T | undefined): T;
+function copyObjectData(formData: unknown) {
+  return isObject(formData) ? { ...formData } : {};
+}
+
 /** Props for the `ObjectFieldProperty` component */
 interface ObjectFieldPropertyProps<
   T = unknown,
@@ -249,6 +261,7 @@ function ObjectFieldPropertyFn<
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
   const { SchemaField } = fields;
+  const readsFormData = useReadsFormData(ObjectFieldProperty);
   const innerFieldPath = toFieldPath(propertyName, fieldPath);
   const innerFieldId = fieldPathToId(innerFieldPath, globalFormOptions);
 
@@ -308,28 +321,30 @@ function ObjectFieldPropertyFn<
   }, [propertyName, handleRemoveProperty]);
 
   return (
-    <SchemaField
-      name={propertyName}
-      required={required}
-      schema={schema}
-      uiSchema={uiSchema}
-      errorSchema={errorSchema}
-      fieldPath={innerFieldPath}
-      id={innerFieldId}
-      formData={formData}
-      wasPropertyKeyModified={wasPropertyKeyModified}
-      onKeyRename={onKeyRename}
-      onKeyRenameBlur={onKeyRenameBlur}
-      onRemoveProperty={onRemoveProperty}
-      propertyNamesEnum={propertyNamesEnum}
-      onChange={onPropertyChange}
-      onBlur={onBlur}
-      onFocus={onFocus}
-      registry={registry}
-      disabled={disabled}
-      readonly={readonly}
-      hideError={hideError}
-    />
+    <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
+      <SchemaField
+        name={propertyName}
+        required={required}
+        schema={schema}
+        uiSchema={uiSchema}
+        errorSchema={errorSchema}
+        fieldPath={innerFieldPath}
+        id={innerFieldId}
+        formData={formData}
+        wasPropertyKeyModified={wasPropertyKeyModified}
+        onKeyRename={onKeyRename}
+        onKeyRenameBlur={onKeyRenameBlur}
+        onRemoveProperty={onRemoveProperty}
+        propertyNamesEnum={propertyNamesEnum}
+        onChange={onPropertyChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        registry={registry}
+        disabled={disabled}
+        readonly={readonly}
+        hideError={hideError}
+      />
+    </RawFormDataContext>
   );
 }
 
@@ -367,8 +382,13 @@ export default function ObjectField<
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
-  const formDataRef = useRef(formData);
-  formDataRef.current = formData;
+  const view = useFieldView(fieldPath, formData, ObjectField);
+  /** Every return renders through this, so a template below never inherits what was said of this field */
+  const vouchForProperties = (content: ReactNode) => (
+    <RawFormDataContext value={view.readsFormData ? ObjectFieldProperty : undefined}>{content}</RawFormDataContext>
+  );
+  const readData = useCallback(() => view.readData(view.read()), [view]);
+
   const schema: S = useMemo(
     () => schemaUtils.retrieveSchema(rawSchema, formData, true),
     [schemaUtils, rawSchema, formData],
@@ -384,7 +404,9 @@ export default function ObjectField<
   }, [schema]);
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
-  const lastRenamedProperty = useRef({ previousKey: '', currentKey: undefined as string | undefined });
+  const [lastRenamedProperty, setLastRenamedProperty] = useState<{ previousKey: string; currentKey?: string }>({
+    previousKey: '',
+  });
   /** The seed the add button wrote for each property it added here and nothing has written to since, which are the only
    * ones a rename re-seeds. Held in a ref rather than state: it is read and written by the add and rename handlers,
    * neither of which renders anything of it, and a property added and renamed in the same tick has to see the add. The
@@ -607,14 +629,13 @@ export default function ObjectField<
     if (!allowsAdditionalProperties<S>(schema)) {
       return;
     }
-    // A `type` list naming `object` alongside another type can hold a value of that type here, which has no properties
-    // to keep, and a string spread into an object would turn each of its characters into one
-    const newFormData = (isObject(formData) ? { ...formData } : {}) as T;
+    const currentFormData = readData();
+    const newFormData = copyObjectData(currentFormData);
     // A `propertyNames.enum` makes the generic `newKey` an invalid name, so the new property goes under an allowed
     // name that is still free. `canExpand()` hides the add button once every allowed name is taken, so getting here
     // with none left means a custom template is offering it anyway, and adding no property beats adding one the
     // schema forbids
-    const freeNames = getFreePropertyNames<T, S>(resolvedSchema, formData);
+    const freeNames = getFreePropertyNames<T, S>(resolvedSchema, currentFormData);
     if (freeNames?.length === 0) {
       return;
     }
@@ -626,13 +647,14 @@ export default function ObjectField<
     // of the user's that happens to equal one
     seededProperties.current.set(newKey, seed);
 
-    if (lastRenamedProperty.current.previousKey === newKey) {
-      lastRenamedProperty.current.currentKey = newKey;
-      lastRenamedProperty.current.previousKey = getAvailableKey(newKey, newFormData);
-    }
+    setLastRenamedProperty((previous) =>
+      previous.previousKey === newKey
+        ? { currentKey: newKey, previousKey: getAvailableKey(newKey, newFormData) }
+        : previous,
+    );
     setAdditionalPropertyOrder((order) => [...order, newKey]);
-    onChange(newFormData, fieldPath);
-  }, [formData, onChange, fieldPath, getAvailableKey, schema, resolvedSchema, seedForKey]);
+    view.propose(newFormData, () => onChange(newFormData, fieldPath));
+  }, [readData, view, onChange, fieldPath, getAvailableKey, schema, resolvedSchema, seedForKey]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.
@@ -644,7 +666,7 @@ export default function ObjectField<
   const handleKeyRename = useCallback(
     (oldKey: string, newKey: string) => {
       if (oldKey !== newKey) {
-        const currentFormData = formDataRef.current;
+        const currentFormData = readData();
         const actualNewKey = getAvailableKey(newKey, currentFormData);
         const newFormData: GenericObjectType = {
           ...(currentFormData as GenericObjectType),
@@ -677,16 +699,15 @@ export default function ObjectField<
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
-        formDataRef.current = renamedObj as T;
-        if (oldKey !== lastRenamedProperty.current.currentKey) {
-          lastRenamedProperty.current.previousKey = oldKey;
-        }
-        lastRenamedProperty.current.currentKey = actualNewKey;
+        setLastRenamedProperty((previous) => ({
+          previousKey: oldKey !== previous.currentKey ? oldKey : previous.previousKey,
+          currentKey: actualNewKey,
+        }));
         setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
-        onChange(renamedObj, fieldPath);
+        view.propose(renamedObj, () => onChange(renamedObj, fieldPath));
       }
     },
-    [onChange, fieldPath, getAvailableKey, schemaForKey, seedForKey],
+    [onChange, fieldPath, getAvailableKey, schemaForKey, seedForKey, view, readData],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
@@ -705,12 +726,15 @@ export default function ObjectField<
    * existing component instance instead of unmounting/remounting it. This
    * preserves DOM focus naturally without manual focus management.
    */
-  const getStableKey = useCallback((property: string) => {
-    if (lastRenamedProperty.current.currentKey === property) {
-      return lastRenamedProperty.current.previousKey;
-    }
-    return property;
-  }, []);
+  const getStableKey = useCallback(
+    (property: string) => {
+      if (lastRenamedProperty.currentKey === property) {
+        return lastRenamedProperty.previousKey;
+      }
+      return property;
+    },
+    [lastRenamedProperty],
+  );
 
   if (!renderOptionalField || hasFormData) {
     try {
@@ -730,7 +754,7 @@ export default function ObjectField<
         uiOptions.order,
       );
     } catch (err) {
-      return (
+      return vouchForProperties(
         <div>
           <p className='rjsf-config-error' style={{ color: 'red' }}>
             <RichDescription
@@ -743,7 +767,7 @@ export default function ObjectField<
             />
           </p>
           <pre>{JSON.stringify(schema)}</pre>
-        </div>
+        </div>,
       );
     }
   }
@@ -813,5 +837,5 @@ export default function ObjectField<
     optionalDataControl,
     className: renderOptionalField ? 'rjsf-optional-object-field' : undefined,
   };
-  return <Template {...templateProps} onAddProperty={onAddProperty} />;
+  return vouchForProperties(<Template {...templateProps} onAddProperty={onAddProperty} />);
 }
