@@ -1513,6 +1513,26 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           ),
         ).toEqual({ sibling: 'edited', one: 'legacy', list: ['legacy'] });
       });
+      it('replaces an object-constant select value outside the options even when its schema is unchanged, like the array path', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            pick: { oneOf: [{ const: { id: 1 } }, { const: { id: 2 } }] },
+            list: {
+              type: 'array',
+              items: { oneOf: [{ const: { id: 1 } }, { const: { id: 2 } }] },
+            },
+          },
+        };
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            schema,
+            schema,
+            { pick: { id: 3 }, list: [{ id: 3 }] },
+            { pick: { id: 3 }, list: [{ id: 3 }] },
+          ),
+        ).toEqual({ list: [] });
+      });
       it('still filters items when the flip between previous and current data narrows the enum (#5250)', () => {
         const schema: RJSFSchema = {
           type: 'object',

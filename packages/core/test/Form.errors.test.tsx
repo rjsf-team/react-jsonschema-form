@@ -1232,6 +1232,39 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         expectToHaveBeenCalledWithFormData(onChange, { list: [null, null], pick: 'x' }, 'root_pick');
       });
+
+      it('should replace a value a swapped-in schema narrows out of a $ref target enum on the next edit', async () => {
+        const makeSchema = (colorEnum: string[]): RJSFSchema => ({
+          type: 'object',
+          definitions: {
+            Color: { type: 'string', enum: colorEnum },
+          },
+          properties: {
+            color: { $ref: '#/definitions/Color' },
+            unrelated: { type: 'string' },
+          },
+          // A nested conditional, so any edit runs the sanitize pass
+          allOf: [
+            {
+              if: { properties: { unrelated: { const: 'z' } }, required: ['unrelated'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          ],
+        });
+        const { node, rerender, getFormData } = createFormComponent({
+          schema: makeSchema(['a', 'b']),
+          initialFormData: { color: 'b' },
+        });
+
+        expect(getFormData()).toEqual({ color: 'b' });
+
+        // The swap alone does not sanitize; the next edit does, and the value the narrowed `$ref` target enum
+        // rejects is replaced then, since the previous data settled under the old root schema
+        rerender({ schema: makeSchema(['a']) });
+        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'x');
+
+        expect(getFormData()).toEqual({ color: 'a', unrelated: 'x' });
+      });
     });
 
     describe('customValidate errors, live validation', () => {
