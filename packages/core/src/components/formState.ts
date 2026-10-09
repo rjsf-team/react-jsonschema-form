@@ -320,9 +320,6 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
     formContext ?? ({} as F),
   );
-  if (Object.keys(uiRequiredErrorSchema).length === 0) {
-    return schemaValidation;
-  }
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
 }
 
