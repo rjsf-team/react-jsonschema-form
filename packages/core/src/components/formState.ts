@@ -422,8 +422,9 @@ export function getAt(data: unknown, segments: FieldPathList): unknown {
   return segments.length === 0 ? data : getByPath(data, segments);
 }
 
-/** `errorSchema` with the node at `path` replaced by `node`, or removed when `node` holds nothing: an empty node is
- * one a raise at an ancestor would read as errors still being there. The `errorSchema` passed in is left as it is
+/** `errorSchema` with the node at `path` replaced by `node`, or removed when `node` holds nothing, along with every
+ * node that leaves empty: an empty node is one a raise at an ancestor would read as errors still being there. The
+ * `errorSchema` passed in is left as it is
  *
  * @param errorSchema - The `ErrorSchema` to replace the node of
  * @param path - The path of the node
@@ -438,32 +439,27 @@ function replaceErrorSchemaNode<T>(
   if (path.length === 0) {
     return node;
   }
-  const replaced = copyAlongPath(errorSchema, path);
-  if (Object.keys(node).length > 0) {
-    // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-    setByPath(replaced, path, node, true);
-  } else {
-    unsetByPath(replaced, path);
+  if (Object.keys(node).length === 0) {
+    return pruneErrorSchema(errorSchema, (pathOfError) => isPathPrefix(path, pathOfError), []);
   }
-  return replaced;
+  // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+  return setByPath(copyAlongPath(errorSchema, path), path, node, true);
 }
 
-/** Counts `errors` by where each sits below `path` and what it says, or by what it says alone when `pooled`: after an
- * array-valued raise, such as an `ArrayField` reorder, remove or copy, an item's errors may sit at an index other than
- * the one they came from, so only the message still says which is which
+/** Counts the errors of `errorSchema` by where each sits and what it says, or by what it says alone when `pooled`:
+ * after an array-valued raise, such as an `ArrayField` reorder, remove or copy, an item's errors may sit at an index
+ * other than the one they came from, so only the message still says which is which
  *
- * @param errors - The errors to count, each at or below `path`
- * @param path - The path the keys are relative to
+ * @param errorSchema - The `ErrorSchema` whose errors are counted, if any
  * @param pooled - Whether to key by the message alone
  * @returns - A function that takes one of the counted errors that match the error it is given, whose path is
- *          relative to `path`, and says whether there was one left to take
+ *          relative to `errorSchema`, and says whether there was one left to take
  */
-function countErrors(errors: RJSFValidationError[], path: FieldPathList, pooled: boolean) {
-  const keyOf = (error: RJSFValidationError, offset = 0) =>
-    pooled ? `${error.message}` : JSON.stringify([errorPath(error).slice(offset), error.message]);
+function countErrors(errorSchema: ErrorSchema | undefined, pooled: boolean) {
+  const keyOf = ({ property, message }: RJSFValidationError) => (pooled ? `${message}` : `${property} ${message}`);
   const counts = new Map<string, number>();
-  for (const error of errors) {
-    const key = keyOf(error, path.length);
+  for (const error of toErrorList(errorSchema)) {
+    const key = keyOf(error);
     counts.set(key, (counts.get(key) ?? 0) + 1);
   }
   return (error: RJSFValidationError) => {
@@ -474,33 +470,28 @@ function countErrors(errors: RJSFValidationError[], path: FieldPathList, pooled:
   };
 }
 
-/** A field's raise at `path`, told apart by whose each error is. A field may hand back the `errorSchema` it displays,
- * which carries the validator's errors and `extraErrors` beside its own: an error the validator reported there stays
- * the validator's, one `extraErrors` supplies is left to the prop, which would otherwise be outlived by its copy, and
- * the rest is the field's own. Only the message tells them apart, so a field's own error that reads the same as one of
- * the others at the same place is taken for that one (#5348)
+/** A field's raise, told apart by whose each error is. A field may hand back the `errorSchema` it displays, which
+ * carries the validator's errors and `extraErrors` beside its own: an error the validator reported there stays the
+ * validator's, one `extraErrors` supplies is left to the prop, which would otherwise be outlived by its copy, and the
+ * rest is the field's own. Only the message tells them apart, so a field's own error that reads the same as one of the
+ * others at the same place is taken for that one (#5348). The validator's errors are read off its `ErrorSchema`, which
+ * is what a field displays, rather than its list, which keeps the error of an invalid schema somewhere else
  *
- * @param raised - The `ErrorSchema` a field raised at `path`
- * @param path - The path the raise was made at
- * @param validatorErrors - The validator's errors, for the whole form
- * @param extraErrors - The `extraErrors` at `path`, if any
+ * @param raised - The `ErrorSchema` a field raised at a path
+ * @param validatorErrors - The validator's `ErrorSchema` at that path, if any
+ * @param extraErrors - The `extraErrors` at that path, if any
  * @param pooled - Whether an error is recognized by its message alone; see `countErrors()`
  * @returns - The part of `raised` the validator reported and the part that is the field's own, neither with an empty
  *          `__errors` or branch
  */
 function splitRaise<T>(
   raised: ErrorSchema<T>,
-  path: FieldPathList,
-  validatorErrors: RJSFValidationError[],
+  validatorErrors: ErrorSchema | undefined,
   extraErrors: ErrorSchema | undefined,
   pooled: boolean,
 ): { reported: ErrorSchema<T>; own: ErrorSchema<T> } {
-  const takeReported = countErrors(
-    validatorErrors.filter((error) => isPathPrefix(path, errorPath(error))),
-    path,
-    pooled,
-  );
-  const takeSupplied = countErrors(toErrorList(extraErrors), [], pooled);
+  const takeReported = countErrors(validatorErrors, pooled);
+  const takeSupplied = countErrors(extraErrors, pooled);
   const reported: RJSFValidationError[] = [];
   const own: RJSFValidationError[] = [];
   for (const error of toErrorList(raised)) {
@@ -1473,14 +1464,13 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     // True for any array-valued raise, not only an `ArrayField` reorder, remove or copy that moved item errors to new
     // indexes: the errors a custom tags or multi-select field raises are recognized by message alone too
     const isArrayRaise = Array.isArray(newValue);
+    const oldValidationError = getAt<ErrorSchema<T> | undefined>(schemaValidationErrorSchema, path);
     const { reported, own } = splitRaise(
       newErrorSchema,
-      path,
-      schemaValidationErrors,
+      oldValidationError,
       getAt<ErrorSchema | undefined>(extraErrors, path),
       isArrayRaise,
     );
-    const oldValidationError = getAt<ErrorSchema<T> | undefined>(schemaValidationErrorSchema, path);
     if (oldValidationError && Object.keys(oldValidationError).length > 0) {
       // The raise is the field's say over the validator's errors at this path: the ones it does not raise are gone
       mergeBaseErrorSchema = replaceErrorSchemaNode(schemaValidationErrorSchema, path, reported);
@@ -1497,12 +1487,14 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     }
     // The field's own errors are kept apart from the validator's, which the next validation and a parent replacing
     // the data both rewrite, so the raise outlives either until the field raises again (#5347). It replaces the
-    // field's earlier raise at this path, an empty one included. With neither there is nothing to keep: an empty
-    // `ErrorSchema` of the form's own is one more thing every later validation has to merge
+    // field's earlier raise at this path, an empty one included. With neither there is nothing to keep, and nothing
+    // is kept once no error is left: merging an empty `ErrorSchema` of the form's own into a validation whose errors
+    // have no message drops them from the list
     const ownBefore = getAt<ErrorSchema<T> | undefined>(customErrors?.ErrorSchema, path);
     if (Object.keys(own).length > 0 || (ownBefore && Object.keys(ownBefore).length > 0)) {
+      const ownAfter = replaceErrorSchemaNode(customErrors?.ErrorSchema ?? {}, path, own);
       // The committed builder is left as it is: the edit lands on a copy, which the constructor clones
-      customErrors = new ErrorSchemaBuilder<T>(replaceErrorSchemaNode(customErrors?.ErrorSchema ?? {}, path, own));
+      customErrors = toErrorList(ownAfter).length > 0 ? new ErrorSchemaBuilder<T>(ownAfter) : undefined;
     }
   }
   let clearedCustomError = false;

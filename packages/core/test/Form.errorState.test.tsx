@@ -285,25 +285,34 @@ describe('Error state consistency when deriving from new props', () => {
     ]);
   });
 
-  it('reports an error with no message after an empty raise at a path with nothing to clear', async () => {
-    const onError = vi.fn();
-    const { container } = render(
-      <Form
-        schema={schema}
-        uiSchema={raisingUiSchema}
-        validator={validator}
-        // Leaves the error in the list and out of the `ErrorSchema`, which is built from the messages
-        transformErrors={(errors) => errors.map((error) => ({ ...error, message: undefined }))}
-        initialFormData={shortName}
-        onError={onError}
-      />,
-    );
+  it.each([
+    { name: 'at a path with nothing to clear', earlier: undefined },
+    { name: "that cleared the field's only raise", earlier: { __errors: ['other own'] } },
+  ] satisfies { name: string; earlier: ErrorSchema | undefined }[])(
+    'reports an error with no message after an empty raise $name',
+    async ({ earlier }) => {
+      const onError = vi.fn();
+      const { container } = render(
+        <Form
+          schema={schema}
+          uiSchema={raisingUiSchema}
+          validator={validator}
+          // Leaves the error in the list and out of the `ErrorSchema`, which is built from the messages
+          transformErrors={(errors) => errors.map((error) => ({ ...error, message: undefined }))}
+          initialFormData={shortName}
+          onError={onError}
+        />,
+      );
 
-    await raise((field) => field.onChange(undefined, toFieldPath('other'), {}));
-    await submitForm(container, user);
+      if (earlier) {
+        await raise((field) => field.onChange(undefined, toFieldPath('other'), earlier));
+      }
+      await raise((field) => field.onChange(undefined, toFieldPath('other'), {}));
+      await submitForm(container, user);
 
-    expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ property: '.name', name: 'minLength' })]);
-  });
+      expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ property: '.name', name: 'minLength' })]);
+    },
+  );
 
   it('keeps a root-path raise across a later prop change', async () => {
     const { container } = render(<RestylingParent />);
@@ -639,6 +648,31 @@ describe('Error state consistency when deriving from new props', () => {
     expect(fieldErrorsById(container)).toEqual({});
   });
 
+  it('leaves the error an invalid schema is reported with to the validator when a root field hands it back', async () => {
+    const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
+    function Parent({ current }: { current: RJSFSchema }) {
+      return (
+        <Form
+          schema={current}
+          uiSchema={raisingUiSchema}
+          validator={validator}
+          initialFormData={{ name: 'longenoughvalue' }}
+        />
+      );
+    }
+    const { container, rerender } = render(<Parent current={invalid} />);
+
+    await submitForm(container, user);
+    expect(errorListMessages(container)).toHaveLength(1);
+
+    // The list carries the error with no `property`, the `ErrorSchema` under `$schema`: taken for the field's own, it
+    // would outlive the schema it describes
+    await raise((field) => field.onChange(field.formData, field.fieldPath, field.errorSchema));
+    rerender(<Parent current={schema} />);
+
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
   it('keeps the validator error when a raise hands back only errors supplied elsewhere', async () => {
     const addrSchema: RJSFSchema = {
       type: 'object',
@@ -666,8 +700,9 @@ describe('Error state consistency when deriving from new props', () => {
     expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`]);
 
     // An empty raise at `street` must unset its node rather than leave `{ addr: { street: {} } }`, which the empty
-    // raise at `addr` would read as the validator's error still being there
+    // raise at `addr` would read as the validator's error still being there, and the `addr` that leaves empty with it
     await raise((field) => field.onChange('a', streetPath, {}));
+    expect(rootField().errorSchema).toEqual({});
     expect(fieldErrorsById(container)).toEqual({});
     expect(errorListMessages(container)).toEqual([]);
     await raise((field) => field.onChange({ street: 'a' }, toFieldPath('addr'), {}));
