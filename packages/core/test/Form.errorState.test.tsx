@@ -201,8 +201,8 @@ describe('Error state consistency when deriving from new props', () => {
     expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
 
     await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
-    // The raise replaced the validator error at its path, so the `ErrorList` says the same as the field does, and a
-    // re-derivation rebuilds both from a base that carries the raise
+    // The raise is the field's say over its path, the validator's error there included, so the `ErrorList` says the
+    // same as the field does, and a re-derivation merges the raise onto the validator's result again
     rerender(<RestylingParent className='x' />);
 
     expect(fieldErrorsById(container)).toEqual({ root_name: ['custom:shorty'] });
