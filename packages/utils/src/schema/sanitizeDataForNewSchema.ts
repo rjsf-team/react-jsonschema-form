@@ -172,15 +172,12 @@ function sanitizeDataForNewSchemaInternal<
   // The resolve runs on first need - a child's lookup, the scalar replacement or the array filter - rather
   // than at the top of every call, since it costs a `retrieveSchema` (and its validator calls) even where
   // no enum check follows
-  // Every call site guards on `oldSchemaPrev` being passed, so the getter always has a schema to resolve
-  let oldSchemaPrevResolved: S | undefined;
-  let oldSchemaPrevResolveRan = false;
+  // Every call site guards on `oldSchemaPrev` being passed, so the getter always has a schema to resolve;
+  // the resolution returns a schema, so `??=` memoization never mistakes a computed value for "not yet run"
+  let resolvedOldSchemaPrev: S | undefined;
   const resolveOldSchemaPrev = (): S | undefined => {
-    if (!oldSchemaPrevResolveRan) {
-      oldSchemaPrevResolveRan = true;
-      oldSchemaPrevResolved = retrieveSchema<T, S, F>(context, oldSchemaPrev as S, rootSchema, oldData);
-    }
-    return oldSchemaPrevResolved;
+    resolvedOldSchemaPrev ??= retrieveSchema<T, S, F>(context, oldSchemaPrev as S, rootSchema, oldData);
+    return resolvedOldSchemaPrev;
   };
   const newProperties = newSchema?.[PROPERTIES_KEY];
   // If the new schema is of type object and that object contains a list of properties
@@ -286,20 +283,21 @@ function sanitizeDataForNewSchemaInternal<
           // when a replacement would actually happen, since it costs a resolve and a deep compare
           if (hasByPath(data, key)) {
             const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
-            if (enumReplacement !== NO_VALUE) {
-              let shouldReplace = true;
-              if (!oldIsBorrowed && oldSchemaPrev !== undefined) {
-                const oldFilterSchema = retrieveSchema<T, S, F>(
-                  context,
-                  getPropertySchema<S>(resolveOldSchemaPrev(), key),
-                  rootSchema,
-                  oldData?.[key],
-                );
-                shouldReplace = !deepEquals(oldFilterSchema, newKeyedSchema);
-              }
-              if (shouldReplace) {
-                removeOldSchemaData[key] = enumReplacement;
-              }
+            if (
+              enumReplacement !== NO_VALUE &&
+              (oldIsBorrowed ||
+                oldSchemaPrev === undefined ||
+                !deepEquals(
+                  retrieveSchema<T, S, F>(
+                    context,
+                    getPropertySchema<S>(resolveOldSchemaPrev(), key),
+                    rootSchema,
+                    oldData?.[key],
+                  ),
+                  newKeyedSchema,
+                ))
+            ) {
+              removeOldSchemaData[key] = enumReplacement;
             }
           }
         }
@@ -387,22 +385,18 @@ function sanitizeDataForNewSchemaInternal<
           // the previous and current data shows up as a real difference and the filter still runs (#5250).
           // The comparison runs only when some item would actually be dropped, since it can cost a resolve
           const newItemEnumValues = enumValuesForSchema(newSchemaItems as S);
-          let shouldFilter = true;
-          if (
-            !oldIsBorrowed &&
-            !isWholeValueSelect<S>(newSchemaItems as S) &&
-            oldSchemaPrev !== undefined &&
-            newItemEnumValues &&
-            data.some((item: any) => !newItemEnumValues.some((v: any) => deepEquals(v, item)))
-          ) {
-            const oldItemsForFilter =
-              sameRawItemsSchema && deepEquals(oldSchemaItemsPrevRaw, newSchemaItemsRaw) && deepEquals(oldData, data)
-                ? oldSchemaItems
-                : retrieveSchema<T, S, F>(context, oldSchemaItemsPrevRaw as S, rootSchema, oldData as T);
-            shouldFilter = !deepEquals(oldItemsForFilter, newSchemaItems);
-          }
           const filteredData =
-            newItemEnumValues && shouldFilter
+            newItemEnumValues &&
+            (oldIsBorrowed ||
+              isWholeValueSelect<S>(newSchemaItems as S) ||
+              oldSchemaPrev === undefined ||
+              !data.some((item: any) => !newItemEnumValues.some((v: any) => deepEquals(v, item))) ||
+              !deepEquals(
+                sameRawItemsSchema && deepEquals(oldSchemaItemsPrevRaw, newSchemaItemsRaw) && deepEquals(oldData, data)
+                  ? oldSchemaItems
+                  : retrieveSchema<T, S, F>(context, oldSchemaItemsPrevRaw as S, rootSchema, oldData as T),
+                newSchemaItems,
+              ))
               ? data.filter((item: any) => newItemEnumValues.some((v: any) => deepEquals(v, item)))
               : data;
           // `maxItems` of 0 allows no item at all, which is how the per-element path above reads it too
