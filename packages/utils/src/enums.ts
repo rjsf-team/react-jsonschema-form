@@ -42,6 +42,8 @@ export const TranslatableString = {
   ClearLabel: 'Clear',
   /** Aria date label, used by DateWidget */
   AriaDateLabel: 'Select a date',
+  /** Accessible name for a select input whose field has no title, used by SelectWidget */
+  SelectPlaceholder: 'Select ...',
   /** File preview label, used by FileWidget */
   PreviewLabel: 'Preview',
   /** Decrement button aria label, used by UpDownWidget */

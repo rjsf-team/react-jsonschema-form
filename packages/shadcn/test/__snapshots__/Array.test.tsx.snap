@@ -531,7 +531,7 @@ exports[`array fields > checkboxes 1`] = `
               id="radix-_r_1_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
-              root
+              Select ...
             </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
@@ -1814,7 +1814,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               id="radix-_r_g_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             >
-              root
+              Select ...
             </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"

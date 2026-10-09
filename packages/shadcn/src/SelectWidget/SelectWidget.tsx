@@ -19,6 +19,7 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  TranslatableString,
   useSelectFocusHandlers,
 } from '@rjsf/utils';
 
@@ -109,10 +110,10 @@ export default function SelectWidget<
 
   const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 
-  // ArrayField resolves `label` as `uiTitle ?? schema.title ?? name`, which leaves "" for an untitled root field
-  // (or an explicit `ui:title: ""`) and would leave the multi-select combobox unnamed (#5458). Fall back to the
-  // schema title, then the id-derived name, then the raw id.
-  const comboboxLabel = label || schema.title || id.replace(/^root_?/, '') || id;
+  // `label` resolves as `uiTitle ?? schema.title ?? name`, which is "" for an untitled root field (or an explicit
+  // `ui:title: ""`) and would leave the multi-select combobox unnamed (#5458). Fall back to a fixed translated
+  // string rather than the internal field id, which cmdk would announce.
+  const comboboxLabel = label || registry.translateString(TranslatableString.SelectPlaceholder);
 
   return (
     <div className='p-0.5'>

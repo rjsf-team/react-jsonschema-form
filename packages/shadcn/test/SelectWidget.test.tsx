@@ -536,19 +536,19 @@ describe('multiple SelectWidget accessible name', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Favorite colors');
   });
 
-  test('falls back to the id-derived name when the field is untitled', () => {
+  test('falls back to a fixed translated name for an untitled root field', () => {
     const schema = {
-      type: 'object' as const,
-      properties: {
-        colors: {
-          type: 'array' as const,
-          uniqueItems: true,
-          items: { type: 'string' as const, enum: ['red', 'blue'] },
-        },
-      },
+      type: 'array' as const,
+      uniqueItems: true,
+      items: { type: 'string' as const, enum: ['red', 'blue'] },
     };
     render(<Form schema={schema} validator={validator} />);
-    expect(screen.getByRole('combobox')).toHaveAccessibleName('colors');
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+  });
+
+  test('falls back to a fixed translated name for an explicit blank ui:title', () => {
+    render(<Form schema={colorsSchema} uiSchema={{ colors: { 'ui:title': '' } }} validator={validator} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
   });
 
   test('passes required and the field description to the combobox input', () => {
