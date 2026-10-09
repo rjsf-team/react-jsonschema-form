@@ -370,18 +370,13 @@ function errorPath(error: RJSFValidationError): string[] {
   return error.property ? toPath(error.property) : [];
 }
 
-/** `errorSchema` without the `__errors` of the nodes at the paths `isDropped` names, and without the nodes that leaves
- * empty: an empty node is one a raise at an ancestor would read as errors still being there
- *
- * @param errorSchema - The `ErrorSchema` to drop errors from
- * @param isDropped - Whether the errors of the node at a path are dropped
- * @param path - The path of `errorSchema` itself
- * @returns - The `ErrorSchema` that is left
+/** `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that leaves empty, which
+ * a raise at an ancestor would read as errors still being there. `path` is that of `errorSchema` itself
  */
 function pruneErrorSchema(
   errorSchema: ErrorSchema,
   isDropped: (path: FieldPathList) => boolean,
-  path: FieldPathList,
+  path: FieldPathList = [],
 ): ErrorSchema {
   const kept: ErrorSchema = {};
   for (const [key, value] of Object.entries(errorSchema)) {
@@ -399,14 +394,9 @@ function pruneErrorSchema(
   return kept;
 }
 
-/** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by the one rule. A
- * listed error is dropped with the `ErrorSchema` node `toErrorSchema()` files it at, the root's for one with no
- * `property`. One with no `message` either is filed nowhere and names no field, so no path is its own and it stays
- * listed: the error an invalid schema is reported with is one
- *
- * @param validation - The errors, as a list and as an `ErrorSchema`
- * @param isDropped - Whether the errors at a path are dropped
- * @returns - The errors that are left
+/** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by one rule. An
+ * error with neither a `property` nor a `message`, which is how an invalid schema is reported, is in the list only and
+ * names no field, so it stays
  */
 function withoutErrors<T>(
   validation: ValidationData<T>,
@@ -416,7 +406,7 @@ function withoutErrors<T>(
     errors: validation.errors.filter(
       (error) => (error.property === undefined && !error.message) || !isDropped(errorPath(error)),
     ),
-    errorSchema: pruneErrorSchema(validation.errorSchema, isDropped, []),
+    errorSchema: pruneErrorSchema(validation.errorSchema, isDropped),
   };
 }
 
@@ -822,14 +812,9 @@ interface ErrorOptions<S> {
   getChangedPaths?: () => FieldPathList[];
 }
 
-/** The path of each field that differs between two values of the form's data, split with `toPath()` the way
- * `toErrorSchema()` splits a validation error's property, so the two address the same entry. The empty path, the
- * root's own, stands for a difference that cannot be narrowed to the fields below the root: a primitive, an array, or
- * a change of type
- *
- * @param formData - The data now, sharing every unchanged subtree with `previous`
- * @param previous - The data before
- * @returns - The changed paths; none when the two are the same value
+/** The path of each field that differs between two values of the form's data, split the way `toErrorSchema()` splits
+ * an error's property, so the two address the same entry. The empty path stands for a difference that cannot be
+ * narrowed below the root: a primitive, an array, or a change of type
  */
 function changedPaths(formData: unknown, previous: unknown): FieldPathList[] {
   if (formData === previous) {
