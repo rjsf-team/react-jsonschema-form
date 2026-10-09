@@ -1,5 +1,5 @@
 import { Component, useEffect, useLayoutEffect, useState } from 'react';
-import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, RJSFSchema, RJSFValidationError, UiSchema, WidgetProps } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
@@ -15,6 +15,7 @@ import {
   createFormRef,
   createParentLog,
   createRetainingWidget,
+  errorListMessages,
   fieldErrorsById,
   handleOf,
   input,
@@ -475,5 +476,163 @@ describe('validating a controlled form again after exactly one edit', () => {
     await user.tab();
 
     expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
+  });
+});
+
+describe('extraErrors a parent sets from onSubmit, with a focusOnFirstError callback (#3827)', () => {
+  interface Log {
+    submitted: (Data | undefined)[];
+    focused: RJSFValidationError[];
+  }
+  function SubmitValidatedParent({ log, extraErrorsAreWarnings }: { log: Log; extraErrorsAreWarnings?: boolean }) {
+    const [extraErrors, setExtraErrors] = useState<ErrorSchema<Data>>();
+    return (
+      <Form<Data>
+        schema={schema}
+        validator={validator}
+        initialFormData={{}}
+        extraErrors={extraErrors}
+        extraErrorsAreWarnings={extraErrorsAreWarnings}
+        focusOnFirstError={(error) => log.focused.push(error)}
+        onSubmit={({ formData }) => {
+          log.submitted.push(formData);
+          setExtraErrors({ name: { __errors: [formData?.name ? 'name is filled' : 'name is not filled'] } });
+        }}
+      />
+    );
+  }
+
+  it('hands the callback the extra error on every submit the errors block', async () => {
+    const log: Log = { submitted: [], focused: [] };
+    const { container } = render(<SubmitValidatedParent log={log} />);
+
+    await submitForm(container, user);
+    await submitForm(container, user);
+    await submitForm(container, user);
+
+    // The first submit has no extra errors to block it; they block each one after it
+    expect(log.submitted).toEqual([{}]);
+    expect(log.focused.map((error) => error.stack)).toEqual(['.name name is not filled', '.name name is not filled']);
+  });
+
+  it('calls onSubmit on every submit, and shows what the latest one found, when the errors are warnings', async () => {
+    const log: Log = { submitted: [], focused: [] };
+    const { container } = render(<SubmitValidatedParent log={log} extraErrorsAreWarnings />);
+
+    await user.type(input(container, 'root_name'), 'x');
+    await submitForm(container, user);
+    expect(errorListMessages(container)).toEqual(['.name name is filled']);
+    await user.clear(input(container, 'root_name'));
+    await submitForm(container, user);
+
+    expect(log.submitted).toEqual([{ name: 'x' }, {}]);
+    expect(errorListMessages(container)).toEqual(['.name name is not filled']);
+  });
+
+  it('hands the callback an error inside an array item, on every submit', async () => {
+    const focused: RJSFValidationError[] = [];
+    const { container } = render(
+      <Form
+        schema={{ type: 'array', items: { type: 'object', required: ['a'], properties: { a: { type: 'string' } } } }}
+        validator={validator}
+        initialFormData={[{}]}
+        // The browser's own check of the required input would stop the submit before the schema is validated
+        noHtml5Validate
+        focusOnFirstError={(error) => focused.push(error)}
+        onError={() => undefined}
+      />,
+    );
+
+    await submitForm(container, user);
+    await submitForm(container, user);
+
+    expect(focused.map((error) => error.property)).toEqual(['.0.a', '.0.a']);
+  });
+});
+
+describe('a widget that sets its value from an Effect as it mounts (#3953)', () => {
+  interface Kinds {
+    kind?: string;
+    extra?: string;
+  }
+  const dependentSchema: RJSFSchema = {
+    type: 'object',
+    properties: { kind: { type: 'string' } },
+    dependencies: {
+      kind: {
+        oneOf: [
+          { properties: { kind: { const: 'plain' } } },
+          { properties: { kind: { const: 'detailed' }, extra: { type: 'string' } } },
+        ],
+      },
+    },
+  };
+  function ChoosesDetailedOnMount({ value, id, onChange }: WidgetProps<Kinds['kind']>) {
+    useEffect(() => {
+      if (value !== 'detailed') {
+        onChange('detailed', undefined, id);
+      }
+    }, [value, onChange, id]);
+    return <span>{value}</span>;
+  }
+  const uiSchema: UiSchema<Kinds> = { kind: { 'ui:widget': ChoosesDetailedOnMount } };
+
+  it('renders the field the schema makes depend on that value, in a parent-owned form', () => {
+    const log = createParentLog<Kinds>();
+    const { container } = render(
+      <AcceptingParent<Kinds>
+        schema={dependentSchema}
+        uiSchema={uiSchema}
+        initialValue={{ kind: 'plain' }}
+        log={log}
+      />,
+    );
+
+    expect(log.value).toEqual({ kind: 'detailed' });
+    expect(input(container, 'root_extra')).toBeVisible();
+  });
+
+  it('renders the field the schema makes depend on that value, in a self-owned form', () => {
+    const { container } = render(
+      <Form<Kinds>
+        schema={dependentSchema}
+        uiSchema={uiSchema}
+        validator={validator}
+        initialFormData={{ kind: 'plain' }}
+      />,
+    );
+
+    expect(input(container, 'root_extra')).toBeVisible();
+  });
+});
+
+describe('typing in a custom widget under a parent that renders for every change (#4299)', () => {
+  function CustomTextarea({ id, value, onChange }: WidgetProps<Data['name']>) {
+    return <textarea id={id} value={value ?? ''} onChange={(event) => onChange(event.target.value)} />;
+  }
+
+  it('keeps the element, its focus and the caret', async () => {
+    // The parent hands the form a new `uiSchema` object with every render
+    function Parent() {
+      const [data, setData] = useState<Data | undefined>({});
+      return (
+        <Form<Data>
+          schema={schema}
+          validator={validator}
+          formData={data}
+          uiSchema={{ name: { 'ui:widget': CustomTextarea } }}
+          onChange={(event) => setData(event.formData)}
+        />
+      );
+    }
+    const { container } = render(<Parent />);
+    const textarea = screen.getByRole('textbox', { name: 'name' });
+
+    await user.type(textarea, 'hello');
+    await user.keyboard('{ArrowLeft}{ArrowLeft}X');
+
+    expect(container.querySelector('#root_name')).toBe(textarea);
+    expect(textarea).toHaveFocus();
+    expect(textarea).toHaveValue('helXlo');
   });
 });

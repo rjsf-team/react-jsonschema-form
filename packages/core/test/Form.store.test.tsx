@@ -733,4 +733,27 @@ describe('validateForm() from a passive Effect after a prop change (#5034)', () 
     expect(validations.at(-1)).toEqual([schemaA, valueB, false]);
     expect(errorListMessages(container)).toEqual(['must NOT have more than 15 characters']);
   });
+
+  it('renders the data a parent passes after validating only as it mounted', async () => {
+    function ValidatedOnMountParent() {
+      const ref = useRef<FormRef<string>>(null);
+      const [formData, setFormData] = useState(valueA);
+      useEffect(() => {
+        handleOf(ref).validateForm();
+      }, []);
+      return (
+        <>
+          <Form<string> ref={ref} schema={schemaA} validator={validator} formData={formData} readonly onError={noop} />
+          <button type='button' onClick={() => setFormData(valueB)}>
+            Toggle data
+          </button>
+        </>
+      );
+    }
+    render(<ValidatedOnMountParent />);
+
+    await user.click(screen.getByRole('button', { name: 'Toggle data' }));
+
+    expect(screen.getByRole('textbox')).toHaveValue(valueB);
+  });
 });
