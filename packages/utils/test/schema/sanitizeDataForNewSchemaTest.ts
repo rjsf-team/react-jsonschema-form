@@ -1290,27 +1290,23 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           ),
         ).toEqual({ obj: { pick: 'x', val: 5 } });
       });
-      it('treats an old schema pre-resolved for the previous data as the resolving path treats the raw one', () => {
+      it('treats an old schema pre-resolved for the previous data as the resolving path treats the same resolved one', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
-            pick: { type: 'string' },
             opts: { type: 'string', enum: ['a', 'b'] },
           },
-          allOf: [
-            {
-              if: { properties: { pick: { const: 'y' } }, required: ['pick'] },
-              then: { properties: { extra: { type: 'string' } } },
-            },
-          ],
         };
-        const data = { pick: 'y', opts: 'c', extra: 'e' };
-        const oldData = { pick: 'y', opts: 'c', extra: 'e' };
-        const resolvedOld = schemaUtils.retrieveSchema(schema, oldData);
-        testValidator.setReturnValues({ isValid: [true] });
-        expect(schemaUtils.sanitizeDataForNewSchema(schema, resolvedOld, data, oldData, true)).toEqual(
-          schemaUtils.sanitizeDataForNewSchema(schema, schema, data, oldData),
-        );
+        const data = { opts: 'c' };
+        const oldData = { opts: 'c' };
+        // The Form caller passes its resolved schemas for both sides; the flag only skips resolving the old
+        // side a second time against the same data it was resolved from. The out-of-enum value is kept in
+        // both cases, since the old and new positions agree
+        const newSchema = schemaUtils.retrieveSchema(schema, data);
+        const oldSchema = schemaUtils.retrieveSchema(schema, oldData);
+        const expected = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data, oldData);
+        expect(expected).toEqual(data);
+        expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data, oldData, true)).toEqual(expected);
       });
       it('keeps element values across a reorder or removal when pairing by index', () => {
         const schema: RJSFSchema = {

@@ -520,7 +520,7 @@ function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormConte
   rootSchema: S,
   sanitizeRan: boolean,
   formData: T | undefined,
-): Pick<FormState<T, S, F>, 'formDataSchema' | 'settledFormData'> {
+): { formDataSchema: S | undefined; settledFormData: T | undefined } {
   if (sanitizeRan || current === undefined) {
     return { formDataSchema: replaceEqualDeep(current?.formDataSchema, rootSchema), settledFormData: formData };
   }
