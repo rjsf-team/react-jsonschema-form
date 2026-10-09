@@ -951,6 +951,50 @@ describe('Error state consistency when deriving from new props', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
+  it('keeps the errors of the fields an anyOf still renders when the option is switched', async () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { name: { type: 'string' }, code: { type: 'string', minLength: 3 } },
+          anyOf: [
+            {
+              title: 'Card',
+              properties: { name: { maxLength: 9 }, holder: { type: 'string' }, note: { type: 'string' } },
+            },
+            { title: 'Invoice', properties: { reference: { type: 'string' }, note: { type: 'string' } } },
+          ],
+        }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ name: 'a', code: 'b', holder: 'c', note: 'd' }}
+      />,
+    );
+    await submitForm(container, user);
+    await user.type(input(container, 'root_name'), 'x');
+    await user.type(input(container, 'root_holder'), 'y');
+    await user.type(input(container, 'root_note'), 'z');
+    expect(errorListMessages(container)).toEqual([
+      '.code must NOT have fewer than 3 characters',
+      '.name custom:ax',
+      '.holder custom:cy',
+      '.note custom:dz',
+    ]);
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Invoice');
+
+    expect(errorListMessages(container)).toEqual([
+      '.code must NOT have fewer than 3 characters',
+      '.name custom:ax',
+      '.note custom:dz',
+    ]);
+    expect(fieldErrorsById(container)).toEqual({
+      root_code: ['must NOT have fewer than 3 characters'],
+      root_name: ['custom:ax'],
+      root_note: ['custom:dz'],
+    });
+  });
+
   it('moves the errors of an additional property to the name it is renamed to, the fields own included', async () => {
     const { container } = render(
       <Form

@@ -37,6 +37,7 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
+import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 
 /** Gets the index of the selected option in the list of `options`, the way `getSelectedOption()` finds the option
@@ -140,6 +141,7 @@ export default function LayoutMultiSchemaField<
     hideError = false,
   } = props;
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
+  const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const schemaHash = hashObject(schema);
   const optionsHash = hashObject(options);
@@ -245,8 +247,8 @@ export default function LayoutMultiSchemaField<
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
     }
-    // Pass the component name in the path, and an empty raise: see `MultiSchemaField`'s option change
-    onChange(newFormData, fieldPath, {}, id);
+    // Pass the component name in the path
+    sendOptionSwitch(schema, oldOption, newOption, () => onChange(newFormData, fieldPath, undefined, id));
   };
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop

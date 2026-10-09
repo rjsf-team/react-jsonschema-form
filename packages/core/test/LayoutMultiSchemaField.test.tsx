@@ -320,7 +320,7 @@ describe('LayoutMultiSchemaField', () => {
     await user.click(input);
 
     // OnChange was called with the correct event
-    expect(props.onChange).toHaveBeenCalledWith({ [selectorField]: '2' }, props.fieldPath, {}, DEFAULT_ID);
+    expect(props.onChange).toHaveBeenCalledWith({ [selectorField]: '2' }, props.fieldPath, undefined, DEFAULT_ID);
 
     // Rerender to simulate the onChange updating the value
     const newFormData = { [selectorField]: SIMPLE_ONEOF_OPTIONS[1].value };
@@ -406,7 +406,7 @@ describe('LayoutMultiSchemaField', () => {
           [selectorField]: 'first_option',
         },
         props.fieldPath,
-        {},
+        undefined,
         DEFAULT_ID,
       );
     });
@@ -451,7 +451,7 @@ describe('LayoutMultiSchemaField', () => {
           [selectorField]: 'second_option',
         },
         props.fieldPath,
-        {},
+        undefined,
         DEFAULT_ID,
       );
     });
@@ -459,7 +459,7 @@ describe('LayoutMultiSchemaField', () => {
     expect(props.onChange).toHaveBeenCalledWith(
       expect.objectContaining({ unique_to_second: 42 }),
       props.fieldPath,
-      {},
+      undefined,
       DEFAULT_ID,
     );
   });
@@ -498,7 +498,7 @@ describe('LayoutMultiSchemaField', () => {
       expect(props.onChange).toHaveBeenCalledWith(
         expect.objectContaining({ unique_to_second: 42 }),
         props.fieldPath,
-        {},
+        undefined,
         DEFAULT_ID,
       );
     });
@@ -529,7 +529,7 @@ describe('LayoutMultiSchemaField', () => {
       expect(props.onChange).toHaveBeenCalledWith(
         expect.objectContaining({ unique_to_second: 42 }),
         props.fieldPath,
-        {},
+        undefined,
         DEFAULT_ID,
       );
     });
@@ -556,7 +556,7 @@ describe('LayoutMultiSchemaField', () => {
       expect(props.onChange).toHaveBeenCalledWith(
         expect.objectContaining({ unique_to_second: 42 }),
         props.fieldPath,
-        {},
+        undefined,
         DEFAULT_ID,
       );
     });
@@ -621,7 +621,7 @@ describe('LayoutMultiSchemaField', () => {
     await user.selectOptions(button, '');
 
     // OnChange was called with the correct event
-    expect(props.onChange).toHaveBeenCalledWith(undefined, props.fieldPath, {}, DEFAULT_ID);
+    expect(props.onChange).toHaveBeenCalledWith(undefined, props.fieldPath, undefined, DEFAULT_ID);
   });
   test('ui:hideError null reads as false, showing errors despite props.hideError true', () => {
     const uiSchemaFromJson: GenericObjectType = {
@@ -678,7 +678,7 @@ describe('LayoutMultiSchemaField', () => {
     expect(props.onChange).toHaveBeenCalledWith(
       { answer: '2', runner: { name: 'runner-2', ratio: 0 } },
       props.fieldPath,
-      {},
+      undefined,
       DEFAULT_ID,
     );
   });
@@ -987,7 +987,7 @@ describe('LayoutMultiSchemaField', () => {
 
       await user.click(screen.getAllByRole('radio')[1]);
 
-      expect(props.onChange).toHaveBeenCalledWith({ [selectorField]: '2' }, props.fieldPath, {}, DEFAULT_ID);
+      expect(props.onChange).toHaveBeenCalledWith({ [selectorField]: '2' }, props.fieldPath, undefined, DEFAULT_ID);
     });
   });
   test('a uiSchema FieldTemplate and FieldErrorTemplate override the registry ones', () => {
