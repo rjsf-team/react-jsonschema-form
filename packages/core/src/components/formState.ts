@@ -415,7 +415,8 @@ function withoutErrors<T>(
 }
 
 /** `getByPath()` reading an empty path as the root itself. The overload is the one trust point that the value at a
- * field's path has the type that field renders.
+ * path has the type its reader names: the type a field renders for the form's data, an `ErrorSchema` node for an
+ * `ErrorSchema`.
  */
 export function getAt<V>(data: unknown, segments: FieldPathList): V;
 export function getAt(data: unknown, segments: FieldPathList): unknown {

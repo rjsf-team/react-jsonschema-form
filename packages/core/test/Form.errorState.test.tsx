@@ -330,6 +330,19 @@ describe('Error state consistency when deriving from new props', () => {
     expect(errorListMessages(container)).toEqual(['. root level problem']);
   });
 
+  it('keeps the errors a raise put below its path until the field raises again', async () => {
+    const { container } = render(<RestylingParent />);
+
+    await raise((field) => field.onChange(shortName, field.fieldPath, { name: { __errors: ['own'] } }));
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['own'] });
+
+    await raise((field) => field.onChange(shortName, field.fieldPath));
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['own'] });
+
+    await raise((field) => field.onChange(shortName, field.fieldPath, {}));
+    expect(fieldErrorsById(container)).toEqual({});
+  });
+
   it('lists a supplied error once when a root raise hands back the displayed errorSchema', async () => {
     const { container } = render(<RestylingParent extraErrors={otherServerErrors} />);
     const expected = ['.name must NOT have fewer than 8 characters', '.other from the server'];
