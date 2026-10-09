@@ -164,10 +164,9 @@ function sanitizeDataForNewSchemaInternal<
   // The filter chain: the old schema resolved against the previous data. A position missing from the
   // previous data resolves it without data (a previous value of `undefined`), so a conditional an ancestor
   // flip controls resolves the way the previous data saw it
+  // `oldSchemaPrev` is given only when the caller passed previous data, so `oldData` is never `NO_VALUE` here
   const oldSchemaPrevResolved =
-    oldSchemaPrev === undefined
-      ? undefined
-      : retrieveSchema<T, S, F>(context, oldSchemaPrev, rootSchema, oldData === NO_VALUE ? undefined : oldData);
+    oldSchemaPrev === undefined ? undefined : retrieveSchema<T, S, F>(context, oldSchemaPrev, rootSchema, oldData);
   const newProperties = newSchema?.[PROPERTIES_KEY];
   // If the new schema is of type object and that object contains a list of properties
   if (newProperties) {
