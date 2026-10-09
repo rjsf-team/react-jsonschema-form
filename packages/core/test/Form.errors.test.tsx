@@ -1205,14 +1205,16 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', food: 'meat' } }, 'root_m_animal');
       });
 
+      /** The branch payload both #5349 cases below swap between, declared on the nested object's own property */
+      const dietFor = (food: string): RJSFSchema => ({
+        type: 'object',
+        default: { food },
+        properties: { food: { type: 'string' } },
+      });
+
       // The root retrieved schema is the same object either side of this swap, since `retrieveSchema()` resolves only
       // the conditionals declared on the schema it is given, so the swapped subschema is only reachable by walking in
       it("should apply a nested dependency's new branch defaults over the old branch's (#5349)", async () => {
-        const dietFor = (food: string): RJSFSchema => ({
-          type: 'object',
-          default: { food },
-          properties: { food: { type: 'string' } },
-        });
         const nestedDependentDefaultSchema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1243,11 +1245,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       });
 
       it("should apply a new branch's defaults for a dependency nested behind a $ref (#5349)", async () => {
-        const dietFor = (food: string): RJSFSchema => ({
-          type: 'object',
-          default: { food },
-          properties: { food: { type: 'string' } },
-        });
         const refDependentDefaultSchema: RJSFSchema = {
           type: 'object',
           definitions: {

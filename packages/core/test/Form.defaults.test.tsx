@@ -610,18 +610,31 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       properties: { name: { type: 'string' } },
     });
 
-    const dependencySchema: RJSFSchema = {
+    /** The shape every case below varies: a `mode` select that swaps between two `dependencies` branches, with
+     * only the branch payload differing. `mode`'s own `const` is merged in, so a branch states just what it adds
+     */
+    const modeSwap = (
+      branchA: RJSFSchema,
+      branchB: RJSFSchema,
+      extraProperties: RJSFSchema['properties'] = {},
+    ): RJSFSchema => ({
       type: 'object',
-      properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+      properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' }, ...extraProperties },
       dependencies: {
         mode: {
           oneOf: [
-            { properties: { mode: { const: 'a' }, cfg: cfgFor('a') } },
-            { properties: { mode: { const: 'b' }, cfg: cfgFor('b') } },
+            { ...branchA, properties: { mode: { const: 'a' }, ...branchA.properties } },
+            { ...branchB, properties: { mode: { const: 'b' }, ...branchB.properties } },
           ],
         },
       },
-    };
+    });
+
+    /** The two branches both declaring `key`, built from one factory — what most of the cases below need */
+    const modeSwapOn = (key: string, schemaFor: (mode: string) => RJSFSchema): RJSFSchema =>
+      modeSwap({ properties: { [key]: schemaFor('a') } }, { properties: { [key]: schemaFor('b') } });
+
+    const dependencySchema = modeSwapOn('cfg', cfgFor);
 
     /** The same two branches as `dependencySchema`, expressed as the other conditional keyword */
     const conditionalSchema: RJSFSchema = {
@@ -666,20 +679,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         default: { name },
         properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
       });
-      const { node, onChange } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
-          dependencies: {
-            mode: {
-              oneOf: [
-                { properties: { mode: { const: 'a' }, cfg: cfgWithRatio('a') } },
-                { properties: { mode: { const: 'b' }, cfg: cfgWithRatio('b') } },
-              ],
-            },
-          },
-        },
-      });
+      const { node, onChange } = createFormComponent({ schema: modeSwapOn('cfg', cfgWithRatio) });
 
       await selectMode(node, 'b');
 
@@ -687,30 +687,12 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     });
 
     it("applies the newly selected branch's array default", async () => {
-      const { node, onChange } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
-          dependencies: {
-            mode: {
-              oneOf: [
-                {
-                  properties: {
-                    mode: { const: 'a' },
-                    nums: { type: 'array', items: { type: 'number' }, default: [1] },
-                  },
-                },
-                {
-                  properties: {
-                    mode: { const: 'b' },
-                    nums: { type: 'array', items: { type: 'number' }, default: [2] },
-                  },
-                },
-              ],
-            },
-          },
-        },
+      const numsFor = (mode: string): RJSFSchema => ({
+        type: 'array',
+        items: { type: 'number' },
+        default: [mode === 'a' ? 1 : 2],
       });
+      const { node, onChange } = createFormComponent({ schema: modeSwapOn('nums', numsFor) });
 
       await selectMode(node, 'b');
 
@@ -729,23 +711,10 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
     it('keeps the old value when the new branch declares no default for the key', async () => {
       const { node, onChange } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
-          dependencies: {
-            mode: {
-              oneOf: [
-                { properties: { mode: { const: 'a' }, cfg: cfgFor('a') } },
-                {
-                  properties: {
-                    mode: { const: 'b' },
-                    cfg: { type: 'object', properties: { name: { type: 'string' } } },
-                  },
-                },
-              ],
-            },
-          },
-        },
+        schema: modeSwap(
+          { properties: { cfg: cfgFor('a') } },
+          { properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } } },
+        ),
       });
 
       await selectMode(node, 'b');
@@ -761,18 +730,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         properties: { name: { type: 'string' } },
       });
       const { node, onChange } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
-          dependencies: {
-            mode: {
-              oneOf: [
-                { properties: { mode: { const: 'a' }, cfg: cfgTitled('A') } },
-                { properties: { mode: { const: 'b' }, cfg: cfgTitled('B') } },
-              ],
-            },
-          },
-        },
+        schema: modeSwapOn('cfg', (mode) => cfgTitled(mode.toUpperCase())),
       });
 
       await selectMode(node, 'b');
@@ -790,18 +748,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         properties: { tag: { type: 'string' } },
       });
       const { node, onChange } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
-          dependencies: {
-            mode: {
-              oneOf: [
-                { properties: { mode: { const: 'a' } }, additionalProperties: extraFor('a') },
-                { properties: { mode: { const: 'b' } }, additionalProperties: extraFor('b') },
-              ],
-            },
-          },
-        },
+        schema: modeSwap({ additionalProperties: extraFor('a') }, { additionalProperties: extraFor('b') }),
         formData: { mode: 'a', extra: { tag: 'a' } },
       });
 
@@ -810,7 +757,10 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', extra: { tag: 'a' } }, 'root_mode');
     });
 
-    it('keeps a read-only object the branches declare identically', async () => {
+    // What spares `meta` is the free identity gate: both branches declare the very same subschema and its value did
+    // not change, so it is never resolved, and no default is computed for it. The read-only server-supplied shape is
+    // the one PR #5335 was reported to have wiped, so it is kept as the fixture
+    it('never looks at a property both branches declare identically', async () => {
       const meta: RJSFSchema = {
         type: 'object',
         readOnly: true,
@@ -818,18 +768,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
         properties: { createdBy: { type: 'string' } },
       };
       const { node, onChange } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
-          dependencies: {
-            mode: {
-              oneOf: [
-                { properties: { mode: { const: 'a' }, cfg: cfgFor('a'), meta } },
-                { properties: { mode: { const: 'b' }, cfg: cfgFor('b'), meta } },
-              ],
-            },
-          },
-        },
+        schema: modeSwap({ properties: { cfg: cfgFor('a'), meta } }, { properties: { cfg: cfgFor('b'), meta } }),
         formData: { mode: 'a', meta: { createdBy: 'server' } },
       });
 
@@ -845,18 +784,11 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     // A boolean subschema is no object, so neither a symbol test nor `retrieveSchema()` can be asked about it
     it('swaps alongside a property declared as a boolean subschema', async () => {
       const { node, onChange } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' }, anything: true },
-          dependencies: {
-            mode: {
-              oneOf: [
-                { properties: { mode: { const: 'a' }, cfg: cfgFor('a') } },
-                { properties: { mode: { const: 'b' }, cfg: cfgFor('b') } },
-              ],
-            },
-          },
-        },
+        schema: modeSwap(
+          { properties: { cfg: cfgFor('a') } },
+          { properties: { cfg: cfgFor('b') } },
+          { anything: true },
+        ),
         formData: { mode: 'a', anything: 'kept' },
       });
 
