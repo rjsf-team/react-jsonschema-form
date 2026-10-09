@@ -1487,15 +1487,9 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     }
     // The field's own errors are kept apart from the validator's, which the next validation and a parent replacing
     // the data both rewrite, so the raise outlives either until the field raises again (#5347). It replaces the
-    // field's earlier raise at this path, an empty one included. With neither there is nothing to keep, and nothing
-    // is kept once no error is left: merging an empty `ErrorSchema` of the form's own into a validation whose errors
-    // have no message drops them from the list
-    const ownBefore = getAt<ErrorSchema<T> | undefined>(customErrors?.ErrorSchema, path);
-    if (Object.keys(own).length > 0 || (ownBefore && Object.keys(ownBefore).length > 0)) {
-      const ownAfter = replaceErrorSchemaNode(customErrors?.ErrorSchema ?? {}, path, own);
-      // The committed builder is left as it is: the edit lands on a copy, which the constructor clones
-      customErrors = toErrorList(ownAfter).length > 0 ? new ErrorSchemaBuilder<T>(ownAfter) : undefined;
-    }
+    // field's earlier raise at this path, an empty one included. The committed builder is left as it is: the edit
+    // lands on a copy, which the constructor clones
+    customErrors = new ErrorSchemaBuilder<T>(replaceErrorSchemaNode(customErrors?.ErrorSchema ?? {}, path, own));
   }
   let clearedCustomError = false;
   // `clearErrors()` leaves an empty `__errors` behind, which is still a truthy read, so the length is what says
