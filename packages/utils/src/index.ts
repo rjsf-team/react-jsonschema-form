@@ -68,7 +68,7 @@ import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
-import getWidget, { getFieldTypeForWidget, getWidgetType, resolveWidget } from './getWidget.tsx';
+import getWidget, { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForWidget, getWidgetType, resolveWidget } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
@@ -196,6 +196,7 @@ export {
   dateElementId,
   dateRangeOptions,
   deepEquals,
+  DEFAULT_BOOLEAN_WIDGET,
   descriptionId,
   englishStringTranslator,
   enumOptionSelectedValue,
