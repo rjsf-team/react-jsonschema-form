@@ -24,7 +24,7 @@ import {
   THEN_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
+import findSchemaDefinition, { getSchemaBaseUri, splitKeyElementFromObject } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -616,7 +616,10 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
     resolvedSchema = { ...refSchema, ...localSchema, [RJSF_REF_KEY]: $ref };
     if (ID_KEY in resolvedSchema) {
-      currentBaseURI = resolvedSchema[ID_KEY];
+      currentBaseURI =
+        ID_KEY in localSchema
+          ? localSchema[ID_KEY]
+          : (getSchemaBaseUri(refSchema, rootSchema) ?? resolvedSchema[ID_KEY]);
     }
     expandedRefs?.push($ref!);
   } else if (passCount > 0) {

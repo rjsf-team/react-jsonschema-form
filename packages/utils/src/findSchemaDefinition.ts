@@ -174,17 +174,52 @@ function* subschemas<S extends StrictRJSFSchema = RJSFSchema>(schema: S): Genera
  * @param ref - The `$id` of the reference to search for
  * @returns - The schema matching the reference, or `undefined` if no match is found
  */
-function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(schema: S, ref: string): S | undefined {
-  if (typeof schema[ID_KEY] === 'string' && uriEqual(schema[ID_KEY], ref)) {
+function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  ref: string,
+  baseURI = '',
+): S | undefined {
+  const currentURI = typeof schema[ID_KEY] === 'string' ? resolveUri(baseURI, schema[ID_KEY]) : baseURI;
+  if (typeof schema[ID_KEY] === 'string' && uriEqual(currentURI, ref)) {
     return schema;
   }
   for (const subSchema of subschemas(schema)) {
-    const result = findEmbeddedSchemaRecursive<S>(subSchema, ref);
+    const result = findEmbeddedSchemaRecursive<S>(subSchema, ref, currentURI);
     if (result !== undefined) {
       return result;
     }
   }
   return undefined;
+}
+
+/** Returns the lexical base URI of a schema node in the bundle without rewriting its `$id`.
+ *
+ * @param schema - The node whose scope is needed
+ * @param rootSchema - The bundle containing the node
+ * @returns The resolved base URI, or `undefined` when the node is not in the bundle
+ */
+export function getSchemaBaseUri<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  rootSchema: S,
+): string | undefined {
+  if (rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2020_12) {
+    return undefined;
+  }
+  const visit = (node: S, parentURI: string): string | undefined => {
+    const id = node[ID_KEY];
+    const currentURI = typeof id === 'string' ? resolveUri(parentURI, id) : parentURI;
+    if (node === schema) {
+      return currentURI;
+    }
+    for (const child of subschemas(node)) {
+      const found = visit(child, currentURI);
+      if (found !== undefined) {
+        return found;
+      }
+    }
+    return undefined;
+  };
+  return visit(rootSchema, '');
 }
 
 /** Applies `fn` to the direct subschemas of `schema` (following the keyword shapes above), rebuilding only
@@ -250,13 +285,19 @@ function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(
  * @param baseURI - The base URI to be used for resolving relative references
  */
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
-  const schemaId = schema[ID_KEY];
-  const currentURI = typeof schemaId === 'string' ? schemaId : baseURI;
-  const ref = schema[REF_KEY];
-  // The mapped subschemas never touch the `$ref` data key, so its rewrite is computed up front and
-  // passed to the rebuild as `extraChanges`.
-  const refChange = typeof ref === 'string' ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
-  return mapSubschemas(schema, (subSchema) => makeAllReferencesAbsolute(subSchema, currentURI), refChange);
+  const visit = (node: S, currentURI: string): S => {
+    const ref = node[REF_KEY];
+    const refChange = typeof ref === 'string' ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
+    return mapSubschemas(
+      node,
+      (subSchema) => {
+        const id = subSchema[ID_KEY];
+        return visit(subSchema, typeof id === 'string' ? resolveUri(currentURI, id) : currentURI);
+      },
+      refChange,
+    );
+  };
+  return visit(schema, typeof schema[ID_KEY] === 'string' ? schema[ID_KEY] : baseURI);
 }
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
@@ -309,7 +350,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
     const [refId, ...refAnchor] = resolvedRef.replace(/#\/?$/, '').split('#');
     current = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
     if (current !== undefined) {
-      currentBaseURI = current[ID_KEY];
+      currentBaseURI = refId;
       if (refAnchor.length > 0) {
         current = getByPointer(current, decodeURIComponent(refAnchor.join('#')));
       }
