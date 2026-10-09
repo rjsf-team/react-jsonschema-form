@@ -24,6 +24,8 @@
       "default": "./lib/markdown.js"
     },
     "./lib": "./lib/index.js",
+    "./lib/components/formModel.js": null,
+    "./lib/components/formState.js": null,
     "./lib/describeUnresolvedComponent.js": null,
     "./lib/fieldLabelForLog.js": null,
     "./lib/hasOptionLabels.js": null,
@@ -45,7 +47,7 @@
     "@rjsf/utils": "workspace:^",
     "@rjsf/validator-ajv8": "workspace:^",
     "markdown-to-jsx": "^9.10.3",
-    "react": ">=19"
+    "react": ">=19.2"
   },
   "peerDependenciesMeta": {
     "@rjsf/validator-ajv8": {
