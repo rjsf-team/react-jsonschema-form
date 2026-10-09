@@ -399,6 +399,25 @@ describe('Error state consistency when deriving from new props', () => {
     ]);
   });
 
+  it('reports a raise in the change it is made with when the form does not validate', async () => {
+    const onChange = vi.fn();
+    render(
+      <Form
+        schema={schema}
+        uiSchema={raisingUiSchema}
+        validator={validator}
+        // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
+        noValidate
+        initialFormData={shortName}
+        onChange={onChange}
+      />,
+    );
+
+    await raise((field) => field.onChange('short', nameStreetPath, { __errors: ['name own'] }));
+
+    expect(onChange.mock.lastCall?.[0].errorSchema).toEqual({ name: { __errors: ['name own'] } });
+  });
+
   it('keeps the nested errors of a root raise with no validator error below it', async () => {
     const { container } = render(<RestylingParent />);
 
