@@ -1253,8 +1253,8 @@ describe('form data ownership', () => {
 
       const { errors } = onChange.mock.lastCall![0] as IChangeEvent;
       expect(errors.map(({ name, property, message }) => ({ name, property, message }))).toEqual([
-        { name: undefined, property: '.foo', message: 'custom!' },
         { name: 'minLength', property: '.bar', message: 'must NOT have fewer than 5 characters' },
+        { name: undefined, property: '.foo', message: 'custom!' },
       ]);
     });
 

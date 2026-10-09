@@ -109,7 +109,7 @@ describe('Error state consistency when deriving from new props', () => {
   }
 
   /** A controlled parent that echoes `onChange` back into `formData`, the ordinary controlled setup */
-  function EchoingParent({ liveValidate }: Pick<FormProps, 'liveValidate'>) {
+  function EchoingParent({ liveValidate, widgets }: Pick<FormProps, 'liveValidate' | 'widgets'>) {
     const [value, setValue] = useState<{ name?: string; other?: string }>(shortName);
     return (
       <>
@@ -120,6 +120,7 @@ describe('Error state consistency when deriving from new props', () => {
           schema={schema}
           validator={validator}
           liveValidate={liveValidate}
+          widgets={widgets}
           formData={value}
           onChange={(event) => setValue(event.formData)}
         />
@@ -227,6 +228,81 @@ describe('Error state consistency when deriving from new props', () => {
     );
   }
   const nameStreetPath = toFieldPath('name');
+
+  it("keeps a field's raise over a validator error when the parent echoes the edit (#5347)", async () => {
+    const { container } = render(<EchoingParent widgets={errorRaisingWidgets} />);
+
+    await submitForm(container.querySelector('form')!, user);
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'x');
+
+    expect(container.querySelector<HTMLInputElement>('#root_name')!).toHaveValue('shortx');
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['custom:shortx'] });
+    expect(errorListMessages(container)).toEqual(['.name custom:shortx']);
+  });
+
+  it.each([
+    { name: 'an empty error list', cleared: { __errors: [] } },
+    { name: 'an empty errorSchema', cleared: {} },
+  ] satisfies { name: string; cleared: ErrorSchema }[])(
+    "clears a field's earlier raise along with the validator error when the field raises $name (#5348)",
+    async ({ cleared }) => {
+      const { container } = render(<RestylingParent />);
+
+      await raise((field) => field.onChange('short', nameStreetPath, { __errors: ['name own'] }));
+      await submitForm(container.querySelector('form')!, user);
+      expect(fieldErrorsById(container)).toEqual({
+        root_name: ['must NOT have fewer than 8 characters', 'name own'],
+      });
+
+      await raise((field) => field.onChange('short', nameStreetPath, cleared));
+      await user.click(container.querySelector('button')!);
+
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+    },
+  );
+
+  it("lists a field's raise over a validator error beside that error once the form validates again", async () => {
+    const { container } = render(
+      <Form schema={schema} validator={validator} widgets={errorRaisingWidgets} initialFormData={shortName} />,
+    );
+
+    await submitForm(container.querySelector('form')!, user);
+    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+    expect(errorListMessages(container)).toEqual(['.name custom:shorty']);
+
+    await submitForm(container.querySelector('form')!, user);
+
+    expect(fieldErrorsById(container)).toEqual({
+      root_name: ['must NOT have fewer than 8 characters', 'custom:shorty'],
+    });
+    expect(errorListMessages(container)).toEqual([
+      '.name must NOT have fewer than 8 characters',
+      '.name custom:shorty',
+    ]);
+  });
+
+  it('reports an error with no message after an empty raise at a path with nothing to clear', async () => {
+    const onError = vi.fn();
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={raisingUiSchema}
+        validator={validator}
+        // Leaves the error in the list and out of the `ErrorSchema`, which is built from the messages
+        transformErrors={(errors) => errors.map((error) => ({ ...error, message: undefined }))}
+        initialFormData={shortName}
+        onError={onError}
+      />,
+    );
+
+    await raise((field) => field.onChange(undefined, toFieldPath('other'), {}));
+    await submitForm(container.querySelector('form')!, user);
+
+    expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ property: '.name', name: 'minLength' })]);
+  });
 
   it('keeps a root-path raise across a later prop change', async () => {
     const { container } = render(<RestylingParent />);
@@ -585,15 +661,14 @@ describe('Error state consistency when deriving from new props', () => {
     await raise((field) => field.onChange('a', streetPath, street));
 
     expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
-    // Listed twice, the raise's copy and the validator's own: what the form does today, not a guarantee
-    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`, `.addr.street ${minLengthError}`]);
+    // The copy handed back is the validator's, and it replaces the field's earlier raise of the same message
+    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`]);
 
     // An empty raise at `street` must unset its node rather than leave `{ addr: { street: {} } }`, which the empty
     // raise at `addr` would read as the validator's error still being there
     await raise((field) => field.onChange('a', streetPath, {}));
-    // The validator's own copy is gone; the raise's is cleared by the empty raise at `addr` below
-    expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
-    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`]);
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
     await raise((field) => field.onChange({ street: 'a' }, toFieldPath('addr'), {}));
 
     expect(fieldErrorsById(container)).toEqual({});
