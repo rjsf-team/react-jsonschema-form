@@ -1204,6 +1204,34 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', food: 'meat' } }, 'root_m_animal');
       });
+
+      it('should keep the empty minItems placeholders of a scalar enum array on an unrelated edit (#5451)', async () => {
+        const conditionalSiblingSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              minItems: 2,
+              items: { type: 'string', enum: ['a', 'b'] },
+            },
+            pick: { type: 'string', enum: ['x', 'y'] },
+          },
+          allOf: [
+            {
+              if: { properties: { pick: { const: 'y' } }, required: ['pick'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          ],
+        };
+        const { node, onChange } = createFormComponent({
+          schema: conditionalSiblingSchema,
+          initialFormData: { list: [null, null] },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_pick')!, '0');
+
+        expectToHaveBeenCalledWithFormData(onChange, { list: [null, null], pick: 'x' }, 'root_pick');
+      });
     });
 
     describe('customValidate errors, live validation', () => {

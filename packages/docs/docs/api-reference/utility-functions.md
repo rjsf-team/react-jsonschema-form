@@ -2818,6 +2818,7 @@ A property is considered to have changed schema when its type differs between th
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
 When the previous form data is passed as `oldData` (`Form` passes its previous `formData`), it feeds only the enum filter decision: the filter is skipped at a position whose old and new schemas, each resolved against its own data, agree, so values the schema offered when they were entered are kept.
 Without `oldData` the filter always runs, matching v6.
+`$ref`s on both sides resolve against the one `rootSchema`, so a change to a `$ref` target between the old and new root schemas is invisible to the comparison: pass `oldData` only when the root schema is unchanged, which is how `Form` calls it.
 
 #### Parameters
 
@@ -2826,7 +2827,7 @@ Without `oldData` the filter always runs, matching v6.
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
 - [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
-- [oldData]: any - The previous form data, used only to decide whether the enum filter runs; when omitted, the filter always runs
+- [oldData]: any - The previous form data, used only to decide whether the enum filter runs; when omitted, the filter always runs. Pass it only when the root schema is unchanged, since `$ref`s on both sides resolve against the one `rootSchema`
 
 #### Returns
 

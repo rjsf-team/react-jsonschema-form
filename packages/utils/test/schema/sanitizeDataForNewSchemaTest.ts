@@ -1609,10 +1609,12 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
             },
           },
         };
-        // Five `isValid` calls happen: the items schema against the current array, then for each element the
-        // current-data old side and the filter chain against the previous element (the new side shares the
-        // current-data resolution). Only the moved `t: 'y'` row takes the `then` branch, on the current side
-        testValidator.setReturnValues({ isValid: [false, false, false, true, false] });
+        // Four `isValid` calls happen: the items schema against the current array, then for each element the
+        // current-data old side, and finally the filter chain against the previous element, resolved on first
+        // need (the new side shares the current-data resolution, and the first row needs no filter decision, so
+        // its previous-element chain is never resolved). Only the moved `t: 'y'` row takes the `then` branch,
+        // on the current side
+        testValidator.setReturnValues({ isValid: [false, false, true, false] });
         // The user inserted a row at the front: the `t: 'y'` row moved from index 0 to index 1, so it has no
         // previous element at its index and the filter chain resolves against `undefined` all the way down.
         // That takes no `then` branch, so `v` is a plain string on the old side against the narrowed enum on
