@@ -1028,6 +1028,48 @@ describe('StringField', () => {
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
+    describe.each([
+      ['format=date-time', { schema: { type: 'string', format: 'date-time' } }],
+      ['ui:widget=date-time', { schema: { type: 'string' }, uiSchema: { 'ui:widget': 'date-time' } }],
+    ] as const)('with %s', (_, formProps) => {
+      const EPOCH = Date.UTC(2020, 4, 3, 14, 30);
+      const renderWithFormData = (initialFormData: unknown) =>
+        createFormComponent({ ...formProps, initialFormData }).node.querySelector<HTMLInputElement>(
+          '[type=datetime-local]',
+        )!;
+      // The local string names the same instant when read back as local time, whatever the time zone of the test run
+      const expectInstant = (input: HTMLInputElement, epoch: number) => {
+        const attributeValue = input.getAttribute('value')!;
+        expect(attributeValue).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}$/);
+        expect(new Date(attributeValue).getTime()).toEqual(epoch);
+        expect(input.value).not.toEqual('');
+      };
+
+      it('should show an epoch number', () => {
+        expectInstant(renderWithFormData(EPOCH), EPOCH);
+      });
+
+      it('should show an epoch of 0 instead of an empty field', () => {
+        expectInstant(renderWithFormData(0), 0);
+      });
+
+      it('should show a Date holding epoch 0', () => {
+        expectInstant(renderWithFormData(new Date(0)), 0);
+      });
+
+      it('should render an empty value for an invalid Date', () => {
+        const input = renderWithFormData(new Date(NaN));
+        expect(input).toHaveValue('');
+        expect(input).toHaveAttribute('value', '');
+      });
+
+      it('should render an empty value for text that is not a date', () => {
+        const input = renderWithFormData('not-a-date');
+        expect(input).toHaveValue('');
+        expect(input).toHaveAttribute('value', '');
+      });
+    });
+
     it('should render the widget with the expected id', () => {
       const { node } = createFormComponent({
         schema: {
