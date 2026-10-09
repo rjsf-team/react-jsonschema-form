@@ -77,6 +77,7 @@ export default function SelectWidget<
   className,
   registry,
   uiSchema,
+  label,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -131,6 +132,7 @@ export default function SelectWidget<
       ) : (
         <FancyMultiSelect
           id={id}
+          label={label}
           autoFocus={autofocus}
           disabled={disabled || readonly}
           multiple

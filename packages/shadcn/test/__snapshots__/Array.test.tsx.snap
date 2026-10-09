@@ -4449,7 +4449,9 @@ exports[`with title and description > checkboxes 1`] = `
               for="radix-_r_5_"
               id="radix-_r_4_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-            />
+            >
+              Test field
+            </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
             >
@@ -5282,7 +5284,9 @@ exports[`with title and description from both > checkboxes 1`] = `
               for="radix-_r_b_"
               id="radix-_r_a_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-            />
+            >
+              My Field
+            </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
             >
@@ -6115,7 +6119,9 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               for="radix-_r_8_"
               id="radix-_r_7_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-            />
+            >
+              My Field
+            </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
             >
@@ -6858,7 +6864,9 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               for="radix-_r_e_"
               id="radix-_r_d_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-            />
+            >
+              Test field
+            </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
             >
