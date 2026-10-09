@@ -1290,6 +1290,28 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           ),
         ).toEqual({ obj: { pick: 'x', val: 5 } });
       });
+      it('treats an old schema pre-resolved for the previous data as the resolving path treats the raw one', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            pick: { type: 'string' },
+            opts: { type: 'string', enum: ['a', 'b'] },
+          },
+          allOf: [
+            {
+              if: { properties: { pick: { const: 'y' } }, required: ['pick'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          ],
+        };
+        const data = { pick: 'y', opts: 'c', extra: 'e' };
+        const oldData = { pick: 'y', opts: 'c', extra: 'e' };
+        const resolvedOld = schemaUtils.retrieveSchema(schema, oldData);
+        testValidator.setReturnValues({ isValid: [true] });
+        expect(schemaUtils.sanitizeDataForNewSchema(schema, resolvedOld, data, oldData, true)).toEqual(
+          schemaUtils.sanitizeDataForNewSchema(schema, schema, data, oldData),
+        );
+      });
       it('keeps element values across a reorder or removal when pairing by index', () => {
         const schema: RJSFSchema = {
           type: 'object',

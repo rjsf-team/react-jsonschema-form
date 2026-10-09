@@ -269,6 +269,11 @@ export interface FormState<
    * whose marker matches, since both sides of that chain resolve `$ref`s against the one new root
    */
   formDataSchema?: S;
+  /** The committed data as it was when it last settled under `formDataSchema`: the snapshot the sanitize call is
+   * given as the previous data. A change no sanitize checked (a declined pass, a pushed parent value, a reset)
+   * leaves the snapshot alone, so it shows up as a real difference where the previous-data filter runs
+   */
+  settledFormData?: T;
   /** @description result of schemaHasNestedConditional(rootSchema, rootSchema). A memoized value, recomputed only
    * when `schemaUtils` (and thus the root schema) is rebuilt, to avoid re-walking the whole schema on every
    * derivation

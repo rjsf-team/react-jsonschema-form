@@ -2,11 +2,17 @@ import { createRef } from 'react';
 import type { ErrorListProps, ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import { AcceptingParent, describeRepeated, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  createFormRef,
+  describeRepeated,
+  expectToHaveBeenCalledWithFormData,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -1361,6 +1367,64 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         });
 
         rerender({ schema }, customizeValidator({}));
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
+
+        expect(getFormData()).toEqual({ list: [null, null], name: 'n' });
+      });
+
+      const placeholdersSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          list: {
+            type: 'array',
+            minItems: 2,
+            items: { type: 'string', enum: ['a'] },
+          },
+          name: { type: 'string' },
+        },
+        allOf: [
+          {
+            if: { properties: { name: { const: 'z' } }, required: ['name'] },
+            then: { properties: { extra: { type: 'string' } } },
+          },
+        ],
+      };
+
+      it('should keep placeholders through two sibling keystrokes', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: placeholdersSchema,
+          initialFormData: { list: [null, null] },
+        });
+
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'nm');
+
+        expect(getFormData()).toEqual({ list: [null, null], name: 'nm' });
+      });
+
+      it('should keep placeholders through a declined sanitize and a sibling edit', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: placeholdersSchema,
+          initialFormData: { list: [null, null] },
+        });
+
+        // The array write sanitizes nothing, and it changes nothing a conditional reads
+        await user.click(node.querySelector<HTMLButtonElement>('button[title="Add"]')!);
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
+
+        expect(getFormData()).toEqual({ list: [null, null, undefined], name: 'n' });
+      });
+
+      it('should keep placeholders through a reset and a sibling edit', async () => {
+        const formRef = createFormRef();
+        const { node, getFormData } = createFormComponent({
+          ref: formRef,
+          schema: placeholdersSchema,
+          initialFormData: { list: [null, null] },
+        });
+
+        act(() => {
+          formRef.current!.reset();
+        });
         await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
 
         expect(getFormData()).toEqual({ list: [null, null], name: 'n' });

@@ -65,6 +65,7 @@ const IS_OWNED_BY_FORM = {
   schemaUtils: false,
   formData: false,
   formDataSchema: false,
+  settledFormData: false,
   edit: false,
   errors: true,
   errorSchema: true,

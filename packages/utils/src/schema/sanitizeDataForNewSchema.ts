@@ -109,6 +109,9 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *      both sides resolve against the one `rootSchema`, so a change to a `$ref` target between the old and new
  *      root schemas is invisible to the comparison: pass `oldData` only when the root schema is unchanged,
  *      which is how `Form` calls it
+ * @param [oldSchemaResolvedForOldData] - Internal: `oldSchema` is already resolved for `oldData` at the root, so
+ *      the root frame's filter chain uses it directly instead of resolving it again. Only `Form` sets it, when its
+ *      settled snapshot is the data the schema was resolved from
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
@@ -116,7 +119,15 @@ export default function sanitizeDataForNewSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}, oldData?: any): T {
+>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  newSchema?: S,
+  oldSchema?: S,
+  data: any = {},
+  oldData?: any,
+  oldSchemaResolvedForOldData = false,
+): T {
   return sanitizeDataForNewSchemaInternal<T, S, F>(
     context,
     rootSchema,
@@ -125,6 +136,7 @@ export default function sanitizeDataForNewSchema<
     data,
     oldData,
     oldData === undefined ? undefined : () => oldSchema,
+    oldSchemaResolvedForOldData,
   );
 }
 
@@ -144,6 +156,9 @@ export default function sanitizeDataForNewSchema<
  *      data at every level lets an ancestor conditional that flipped between the previous and current data
  *      show up as a real difference where the filter runs. Kept lazy so a frame pays the resolve only when
  *      one of its own enum checks runs
+ * @param [oldSchemaPrevIsResolved] - Internal: the outermost frame's raw old schema is already resolved for
+ *      `oldData`, so it is used directly instead of paying a `retrieveSchema` for the same input pair. Only the
+ *      outermost call carries it; recursive frames resolve as usual
  * @returns - The sanitized form data
  */
 function sanitizeDataForNewSchemaInternal<
@@ -158,6 +173,7 @@ function sanitizeDataForNewSchemaInternal<
   data: any,
   oldData: any,
   getOldSchemaPrevRaw?: () => S | undefined,
+  oldSchemaPrevIsResolved = false,
 ): T {
   // By default, we will clear the form data
   let newFormData;
@@ -169,7 +185,9 @@ function sanitizeDataForNewSchemaInternal<
   // a schema, so `??=` memoization never mistakes a computed value for "not yet run"
   let resolvedOldSchemaPrev: S | undefined;
   const resolveOldSchemaPrev = (): S | undefined => {
-    resolvedOldSchemaPrev ??= retrieveSchema<T, S, F>(context, getOldSchemaPrevRaw?.() as S, rootSchema, oldData);
+    resolvedOldSchemaPrev ??= oldSchemaPrevIsResolved
+      ? getOldSchemaPrevRaw?.()
+      : retrieveSchema<T, S, F>(context, getOldSchemaPrevRaw?.() as S, rootSchema, oldData);
     return resolvedOldSchemaPrev;
   };
   const newProperties = newSchema?.[PROPERTIES_KEY];
