@@ -57,6 +57,7 @@ const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'field',
   'addable',
   'copyable',
+  'itemLabel',
   'orderable',
   'removable',
   'duplicateKeySuffixSeparator',

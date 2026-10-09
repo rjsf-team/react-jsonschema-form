@@ -221,16 +221,18 @@ render(
   <Form
     schema={schema}
     uiSchema={uiSchema}
-    formData={[{ fileName: 'report.pdf' }, { fileName: 'invoice.pdf' }]}
+    initialFormData={[{ fileName: 'report.pdf' }, { fileName: 'invoice.pdf' }]}
     validator={validator}
   />,
   document.getElementById('app'),
 );
 ```
 
-A dotted path, such as `'file.name'`, reads a nested property. An item whose value there isn't a non-empty string or a number, such as one that was just added, keeps the default titles.
+A dotted path, such as `'file.name'`, reads a nested property, and `'.'` names each item by its own value, for an array of strings or numbers. An item whose value there isn't a non-empty string or a number keeps the default titles, such as one added to an array whose items have no default for that property.
 
-The titles come from four translatable strings, `CopyItemButton`, `MoveDownItemButton`, `MoveUpItemButton` and `RemoveItemButton`, in which `%1` is the item's name. If you translate RJSF's strings with a custom [`translateString`](../api-reference/form-props.md#translatestring), translate these four as well, or the titles of named items stay in English.
+When more than one item has the same name, as when an item is copied, each of their names gets the item's position, such as `Remove report.pdf (2)`, so their buttons can still be told apart.
+
+The titles come from translatable strings: `CopyItemButton`, `MoveDownItemButton`, `MoveUpItemButton` and `RemoveItemButton`, in which `%1` is the item's name, and `ItemNameWithPosition`, which adds the position to a shared name. If you translate RJSF's strings with a custom [`translateString`](../api-reference/form-props.md#translatestring), translate these as well, or the titles of named items stay in English.
 
 ## Multiple-choice list
 

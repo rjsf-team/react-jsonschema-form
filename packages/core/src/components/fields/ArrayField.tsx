@@ -386,9 +386,39 @@ function asItemErrorSchema(errorSchema: unknown): unknown {
 /** The name `ui:options.itemLabel` gives an item from the value it points at: a non-empty string, or a number */
 function itemNameFrom(value: unknown): string | undefined {
   if (typeof value === 'string') {
-    return value.trim() ? value : undefined;
+    const name = value.trim();
+    return name || undefined;
   }
   return typeof value === 'number' && Number.isFinite(value) ? String(value) : undefined;
+}
+
+/** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
+ * item itself for `'.'`. A name that more than one item has gets each item's position added, since buttons that read
+ * the same can't be told apart, which is what naming them is for.
+ */
+function useItemNames<T>(
+  items: readonly T[],
+  itemLabel: string | undefined,
+  translateString: Registry['translateString'],
+): (string | undefined)[] | undefined {
+  return useMemo(() => {
+    if (!itemLabel) {
+      return undefined;
+    }
+    const path = toPath(itemLabel);
+    const names = items.map((item) => itemNameFrom(path.length === 0 ? item : getByPath(item, path)));
+    const counts = new Map<string, number>();
+    for (const name of names) {
+      if (name !== undefined) {
+        counts.set(name, (counts.get(name) ?? 0) + 1);
+      }
+    }
+    return names.map((name, index) =>
+      name !== undefined && (counts.get(name) ?? 0) > 1
+        ? translateString(TranslatableString.ItemNameWithPosition, [name, String(index + 1)])
+        : name,
+    );
+  }, [items, itemLabel, translateString]);
 }
 
 /** Renders the individual array item using a `SchemaField` along with the additional properties that are needed to
@@ -410,6 +440,7 @@ function ArrayFieldItemInner<
   uiOptions: UIOptionsType<T[], S, F>;
   parentUiSchema: UiSchema<T[], S, F>;
   title: string | undefined;
+  itemName?: string;
   canAdd: boolean;
   canRemove?: boolean;
   canMoveUp: boolean;
@@ -456,6 +487,7 @@ function ArrayFieldItemInner<
     rawErrors,
     totalItems,
     title,
+    itemName,
     handleAddItem,
     handleCopyItem,
     handleRemoveItem,
@@ -479,7 +511,7 @@ function ArrayFieldItemInner<
   const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
-  const { orderable = true, removable = true, copyable = false, itemLabel } = uiOptions;
+  const { orderable = true, removable = true, copyable = false } = uiOptions;
   const has: Record<string, boolean> = {
     moveUp: orderable && canMoveUp,
     moveDown: orderable && canMoveDown,
@@ -489,20 +521,22 @@ function ArrayFieldItemInner<
   };
   has.toolbar = Object.keys(has).some((key: keyof typeof has) => has[key]);
 
-  const itemName = itemLabel ? itemNameFrom(getByPath(itemData, toPath(itemLabel))) : undefined;
   const { translateString } = registry;
-  // Keyed by the name rather than the index, so reordering items doesn't re-translate their titles
+  // Keyed on the name and the ui:options rather than the index or `has`, so moving, adding or removing other items
+  // doesn't re-translate an item's titles
   const itemButtonProps = useMemo(
     () =>
       itemName === undefined
         ? undefined
         : {
-            copy: { title: translateString(TranslatableString.CopyItemButton, [itemName]) },
-            moveDown: { title: translateString(TranslatableString.MoveDownItemButton, [itemName]) },
-            moveUp: { title: translateString(TranslatableString.MoveUpItemButton, [itemName]) },
-            remove: { title: translateString(TranslatableString.RemoveItemButton, [itemName]) },
+            ...(copyable && { copy: { title: translateString(TranslatableString.CopyItemButton, [itemName]) } }),
+            ...(orderable && {
+              moveDown: { title: translateString(TranslatableString.MoveDownItemButton, [itemName]) },
+              moveUp: { title: translateString(TranslatableString.MoveUpItemButton, [itemName]) },
+            }),
+            ...(removable && { remove: { title: translateString(TranslatableString.RemoveItemButton, [itemName]) } }),
           },
-    [itemName, translateString],
+    [itemName, copyable, orderable, removable, translateString],
   );
 
   const onAddItem = useCallback(
@@ -657,6 +691,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const schemaItems: S = useMemo(() => (isObject(schema.items) ? (schema.items as S) : ({} as S)), [schema.items]);
   const itemsSchema: S = useMemo(() => schemaUtils.retrieveSchema(schemaItems), [schemaUtils, schemaItems]);
   const formData = useMemo(() => keyedToPlainFormData<T>(keyedFormData), [keyedFormData]);
+  const itemNames = useItemNames(formData, uiOptions.itemLabel, registry.translateString);
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formDataFromProps);
   const canAdd = useMemo(
@@ -689,6 +724,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         disabled,
         required,
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
+        itemName: itemNames?.[index],
         canAdd,
         canMoveUp: index > 0,
         canMoveDown: index < formData.length - 1,
@@ -766,6 +802,8 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const fieldTitle = schema.title || title || name;
   const { fields, formContext, globalUiOptions } = registry;
   const uiOptions = useMemo(() => getUiOptions<T[], S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
+  const plainItems = useMemo(() => keyedToPlainFormData<T>(keyedFormData), [keyedFormData]);
+  const itemNames = useItemNames(plainItems, uiOptions.itemLabel, registry.translateString);
   const { OptionalDataControlsField } = fields;
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formData);
@@ -825,6 +863,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         disabled,
         required,
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
+        itemName: itemNames?.[index],
         canAdd,
         canRemove: additional,
         canMoveUp: index >= schemaItems.length + 1,

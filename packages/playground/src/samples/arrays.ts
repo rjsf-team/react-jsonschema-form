@@ -145,6 +145,9 @@ const arrays: Sample = {
   },
   uiSchema: {
     listOfStrings: {
+      'ui:options': {
+        itemLabel: '.',
+      },
       items: { 'ui:emptyValue': '' },
     },
     multipleChoicesList: {

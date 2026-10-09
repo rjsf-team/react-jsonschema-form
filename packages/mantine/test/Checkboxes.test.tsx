@@ -53,6 +53,23 @@ function renderWidget(props: Partial<WidgetProps> = {}) {
   );
 }
 
+describe('CheckboxesWidget with the itemLabel array option', () => {
+  it('does not pass itemLabel on to the Mantine checkbox group', () => {
+    const consoleError = vi.spyOn(console, 'error');
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ 'ui:widget': 'CheckboxesWidget', 'ui:options': { itemLabel: 'name' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('[itemlabel], [itemLabel]')).toBeNull();
+    expect(consoleError.mock.calls.flat().join(' ')).not.toContain('itemLabel');
+    consoleError.mockRestore();
+  });
+});
+
 describe('Checkboxes', () => {
   test('renders with description from options', () => {
     const { getByText } = renderWidget({

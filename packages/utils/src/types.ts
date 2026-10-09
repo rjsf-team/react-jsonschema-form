@@ -1430,8 +1430,10 @@ type UIOptionsBaseType<
      */
     optionsSchemaSelector?: string;
     /** On an array field, the property of each item's form data whose value names that item in the titles of its
-     * buttons, such as `Remove report.pdf`. A dotted path, such as `'file.name'`, reads a nested property. Items whose
-     * value there isn't a non-empty string or a number keep the default titles
+     * buttons, such as `Remove report.pdf`. A dotted path, such as `'file.name'`, reads a nested property, and `'.'`
+     * names each item by its own value, for an array of strings or numbers. Items whose value there isn't a non-empty
+     * string or a number keep the default titles, and a name more than one item has gets each item's position added,
+     * such as `Remove report.pdf (2)`
      */
     itemLabel?: string;
     /** Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the
