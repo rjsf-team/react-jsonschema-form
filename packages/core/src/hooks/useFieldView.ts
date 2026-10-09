@@ -3,7 +3,7 @@ import type { FieldPath } from '@rjsf/utils';
 
 import { useReadsFormData } from '../components/fields/RawFormDataContext.ts';
 import FormDataContext from '../components/FormDataContext.ts';
-import type { ItemMove } from '../components/formState.ts';
+import type { KeyMove } from '../components/formState.ts';
 
 /** What a container field's event handlers read instead of render-time props. Each committed render installs the
  * field's view from an insertion Effect, so an abandoned render never publishes one, and a layout Effect of the same
@@ -40,16 +40,16 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
        * committing the form before the proposal has gone anywhere, so the record is dated once `send` has returned,
        * and only then is the form told. It is told when `send` throws too: nothing else would end the record.
        *
-       * `newIndexOf` says where the proposal put each item of the field's array, for the form to move their errors
-       * along. The indexes are those of the `formData` the field was given, which a custom parent passing the form's
-       * data on leaves as they are; one that reorders or filters the items it shows moves the errors by its own
-       * indexes.
+       * `newKeyOf` says where the proposal put what the field's array or object held under each key, for the form to
+       * move the errors along. The keys are those of the `formData` the field was given, which a custom parent passing
+       * the form's data on leaves as they are; one that reorders or filters the items it shows moves the errors by its
+       * own indexes.
        */
-      propose: (next: V, send: () => void, newIndexOf?: ItemMove) => {
+      propose: (next: V, send: () => void, newKeyOf?: KeyMove) => {
         const record = access && { view: next, epoch: access.epoch() };
         advanced.current = record;
         const proposed = access?.proposing();
-        const sendProposal = access && newIndexOf ? () => access.sendMove({ fieldPath, newIndexOf }, send) : send;
+        const sendProposal = access && newKeyOf ? () => access.sendMove({ fieldPath, newKeyOf }, send) : send;
         const settle = () => {
           if (access && advanced.current === record) {
             advanced.current = { view: next, epoch: access.epoch() };

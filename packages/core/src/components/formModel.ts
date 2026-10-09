@@ -217,7 +217,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // proposal it made is dropped with it.
   let pending: FormState<T, S, F> | undefined;
   let epoch = 0;
-  // The item move of the change an `ArrayField` is sending, see `FormDataAccess.sendMove()`
+  // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
   let announced: AnnouncedMove | undefined;
   const propose = (next: FormState<T, S, F>) => {
     // `commit()` freezes self-owned data; a proposal never reaches it
@@ -381,11 +381,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const props: OperationProps<T, S, F> = committedProps;
     const start = state;
     // Taken by the change it was announced for, so a second change at the path moves nothing again
-    const newIndexOf = announced?.fieldPath === fieldPath ? announced.newIndexOf : undefined;
-    if (newIndexOf) {
+    const newKeyOf = announced?.fieldPath === fieldPath ? announced.newKeyOf : undefined;
+    if (newKeyOf) {
       announced = undefined;
     }
-    const edit: PendingChange<T> = { newValue, fieldPath, newErrorSchema, newIndexOf };
+    const edit: PendingChange<T> = { newValue, fieldPath, newErrorSchema, newKeyOf };
     const next = applyChange(pending ?? start, edit, props);
     if (!start.isControlled) {
       // A reentrant operation may have committed while this one was being calculated, so report what was committed
@@ -396,11 +396,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // The form commits what the change does to the errors it owns, before the parent is told, so a throwing handler
     // cannot lose them. Under live validation that is the fields' own errors alone: the validated ones describe the
     // proposal, which the parent may yet refuse, so they wait for its answer in `deriveState()`. So do the validator's
-    // errors for items the proposal moved: the parent either renders the new order back, which clears the changed
-    // items' errors, or keeps its own, which the old indexes describe
+    // errors under keys the proposal moved: the parent either renders the moved data back, which clears the changed
+    // fields' errors, or keeps its own, which the old keys describe
     const withOwnedErrors = (base: FormState<T, S, F>): FormState<T, S, F> => {
       const errors = applyChangeToErrors(base, edit, props.extraErrors);
-      return isLiveValidated(props) || newIndexOf
+      return isLiveValidated(props) || newKeyOf
         ? { ...base, customErrors: errors.customErrors }
         : { ...base, ...errors };
     };

@@ -35,6 +35,7 @@ import {
 
 import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
+import { moveOfItems } from '../formState.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** An item of the `formData` paired with its stable React key */
@@ -882,7 +883,7 @@ export default function ArrayField<
       view.propose(
         newKeyedFormData,
         () => onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
-        (index) => newIndexes.get(rows[index]),
+        moveOfItems((index) => newIndexes.get(rows[index])),
       );
     },
     [view, onChange, updateKeyedFormData, fieldPath],

@@ -18,10 +18,11 @@ interface FormDataAccess {
    * already, and is not rendered for twice.
    */
   proposing(): () => void;
-  /** Calls `send`, which sends a change that moves the items of the array at `move.fieldPath`. The form moves the
-   * errors it holds for those items along when the change for that path reaches it before `send` returns, the way
-   * `startTransition()` marks the updates made inside its callback. Only the form holds them all, and a field's
-   * `onChange` has no way to say where an item went.
+  /** Calls `send`, which sends a change that moves the keys of the array or object at `move.fieldPath`: an item to
+   * another index, a property to another name, or either out of the data. The form moves the errors it holds under
+   * those keys along when the change for that path reaches it before `send` returns, the way `startTransition()` marks
+   * the updates made inside its callback. Only the form holds them all, and a field's `onChange` has no way to say
+   * where a key went.
    */
   sendMove(move: AnnouncedMove, send: () => void): void;
   /** The latest data at `path`, for a field that renders the form's own data there (see `RawFormDataContext`) */

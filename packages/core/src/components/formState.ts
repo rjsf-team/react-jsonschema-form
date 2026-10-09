@@ -111,17 +111,26 @@ export interface PendingChange<T> {
   newValue?: T;
   /** The field's own errors at `fieldPath`, if it raises any */
   newErrorSchema?: ErrorSchema<T>;
-  /** For a change that moved the items of the array at `fieldPath`, where each one went; their errors go with them */
-  newIndexOf?: ItemMove;
+  /** For a change that moved what the array or object at `fieldPath` holds, where each key went; the errors under a
+   * key go with it
+   */
+  newKeyOf?: KeyMove;
 }
 
-/** Where an array operation put the item that was at `index`: its new index, or `undefined` when it was removed */
-export type ItemMove = (index: number) => number | undefined;
+/** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
+export type KeyMove = (key: string) => string | undefined;
 
-/** An `ItemMove` with the path of the array whose items it moved */
+/** A `KeyMove` with the path of the array or object whose keys it moved */
 export interface AnnouncedMove {
   fieldPath: FieldPath;
-  newIndexOf: ItemMove;
+  newKeyOf: KeyMove;
+}
+
+/** The `KeyMove` of an array whose items went where `newIndexOf` says, `undefined` for one that was removed. A key that
+ * names no item stays where it is
+ */
+export function moveOfItems(newIndexOf: (index: number) => number | undefined): KeyMove {
+  return (key) => (/^(0|[1-9]\d*)$/.test(key) ? newIndexOf(Number(key))?.toString() : key);
 }
 
 /** The part of the state that rendering derives from the props and the data alone: the schema utilities, the root and
@@ -464,23 +473,13 @@ function replaceErrorSchemaNode<T>(
   return replaced;
 }
 
-/** The index a path segment names, if it names one */
-function itemIndex(segment: string | number | undefined): number | undefined {
-  return /^(0|[1-9]\d*)$/.test(String(segment)) ? Number(segment) : undefined;
-}
-
-/** `errorSchema` after the items of the array at `path` moved: each item's errors sit at the item's new index and those
- * of a removed item are gone. The array's own, such as `minItems`, belong to no item and stay
+/** `errorSchema` after the keys of the array or object at `path` moved: the errors under each key sit under its new
+ * one and those under a key that is gone are gone. Its own, such as `minItems`, belong to no key and stay
  */
-function moveItemErrorSchema<T>(
-  errorSchema: ErrorSchema<T>,
-  path: FieldPathList,
-  newIndexOf: ItemMove,
-): ErrorSchema<T> {
+function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList, newKeyOf: KeyMove): ErrorSchema<T> {
   const moved: ErrorSchema = {};
   for (const [key, node] of Object.entries(getAt<ErrorSchema | undefined>(errorSchema, path) ?? {})) {
-    const index = itemIndex(key);
-    const newKey = index === undefined ? key : newIndexOf(index);
+    const newKey = key === ERRORS_KEY ? key : newKeyOf(key);
     if (newKey !== undefined) {
       moved[newKey] = node;
     }
@@ -488,38 +487,34 @@ function moveItemErrorSchema<T>(
   return replaceErrorSchemaNode(errorSchema, path, moved);
 }
 
-/** `validation` after the items of the array at `path` moved, the list by the rule `moveItemErrorSchema()` moves the
- * `ErrorSchema` by. A moved error keeps what the validator said of it, under the item's new `property`
+/** `validation` after the keys of the array or object at `path` moved, the list by the rule `moveErrorSchemaKeys()`
+ * moves the `ErrorSchema` by. A moved error keeps what the validator said of it, under its new `property`
  */
-function moveItemErrors<T>(
-  validation: ValidationData<T>,
-  path: FieldPathList,
-  newIndexOf: ItemMove,
-): ValidationData<T> {
+function moveErrorKeys<T>(validation: ValidationData<T>, path: FieldPathList, newKeyOf: KeyMove): ValidationData<T> {
   const errors = validation.errors.flatMap((error) => {
     const pathOfError = errorPath(error);
-    const index = isPathPrefix(path, pathOfError) ? itemIndex(pathOfError[path.length]) : undefined;
-    const newIndex = index === undefined ? index : newIndexOf(index);
-    if (newIndex === index) {
+    const key = isPathPrefix(path, pathOfError) ? pathOfError[path.length] : undefined;
+    const newKey = key === undefined ? key : newKeyOf(key);
+    if (newKey === key) {
       return [error];
     }
-    if (newIndex === undefined) {
+    if (newKey === undefined) {
       return [];
     }
-    const property = `.${[...pathOfError.slice(0, path.length), newIndex, ...pathOfError.slice(path.length + 1)].join('.')}`;
-    // A stack that names the field by its title instead of its `property` says nothing of the index
+    const property = `.${[...pathOfError.slice(0, path.length), newKey, ...pathOfError.slice(path.length + 1)].join('.')}`;
+    // A stack that names the field by its title instead of its `property` says nothing of the key
     const isStackOfProperty = error.stack === `${error.property} ${error.message}`;
     return [{ ...error, property, stack: isStackOfProperty ? `${property} ${error.message}` : error.stack }];
   });
-  return { errors, errorSchema: moveItemErrorSchema(validation.errorSchema, path, newIndexOf) };
+  return { errors, errorSchema: moveErrorSchemaKeys(validation.errorSchema, path, newKeyOf) };
 }
 
 /** The errors of `current` after `change`, before any validation of the changed data. The fields' own errors are kept
  * apart from the validator's, which the next validation and a parent replacing the data both rewrite, so a field's
  * raise outlives either until the field raises again (#5347).
  *
- * A change that moved the items of an array moves the errors of both with them, and leaves the array's own where they
- * are. One that raises errors replaces the field's own at its path, an empty raise included, and takes the validator's
+ * A change that moved the keys of an array or object, an item to another index or a property to another name, moves
+ * the errors of both with them, drops those under a key that is gone, and leaves the container's own where they are. One that raises errors replaces the field's own at its path, an empty raise included, and takes the validator's
  * off that path until the form validates again: the raise is the field's say over its path. One that removes the key
  * at its path counts as an empty raise. Any other change clears the field's own `__errors` there.
  *
@@ -533,7 +528,7 @@ function moveItemErrors<T>(
  */
 export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
-  { fieldPath, newValue, newErrorSchema, newIndexOf }: PendingChange<T>,
+  { fieldPath, newValue, newErrorSchema, newKeyOf }: PendingChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
 ): OwnedErrorState<T> {
   const { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema } = current;
@@ -542,21 +537,21 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
   // A key that is removed leaves nothing at its path for an error to describe, which is what an empty raise says
   const raised = newErrorSchema ?? (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE ? {} : undefined);
   const hasOwnErrors = getByPath<string[]>(customErrors, [...path, ERRORS_KEY], []).length > 0;
-  if (!newIndexOf && !raised && !hasOwnErrors) {
+  if (!newKeyOf && !raised && !hasOwnErrors) {
     return { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema, customErrors };
   }
   // The validator's own result is the base `extraErrors` and the fields' own errors are merged onto again, as in
   // `reconcileErrors()`: `errors` and `errorSchema` already carry them, so merging onto those would add each a second
   // time on every change (#5041)
   let validation: ValidationData<T> = { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema };
-  if (newIndexOf) {
-    validation = moveItemErrors(validation, path, newIndexOf);
-    customErrors = customErrors && moveItemErrorSchema(customErrors, path, newIndexOf);
+  if (newKeyOf) {
+    validation = moveErrorKeys(validation, path, newKeyOf);
+    customErrors = customErrors && moveErrorSchemaKeys(customErrors, path, newKeyOf);
   }
   if (raised) {
     validation = withoutErrors(validation, (pathOfError) => isPathPrefix(path, pathOfError));
     customErrors = replaceErrorSchemaNode(customErrors ?? {}, path, raised);
-  } else if (customErrors && hasOwnErrors && !newIndexOf) {
+  } else if (customErrors && hasOwnErrors && !newKeyOf) {
     customErrors = pruneErrorSchema(
       customErrors,
       (pathOfError) => pathOfError.length === path.length && isPathPrefix(path, pathOfError),
