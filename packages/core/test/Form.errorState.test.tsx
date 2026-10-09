@@ -360,6 +360,61 @@ describe('Error state consistency when deriving from new props', () => {
     expect(errorListMessages(container)).toEqual(['.name from the server']);
   });
 
+  it("lists a field's own error that reads the same as one of the extraErrors once", async () => {
+    const { container } = render(<RestylingParent extraErrors={serverErrors} />);
+
+    await raise((field) => field.onChange('short', nameStreetPath, { __errors: ['from the server'] }));
+
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['from the server'] });
+    expect(errorListMessages(container)).toEqual(['.name from the server']);
+  });
+
+  it.each([
+    {
+      name: 'the root',
+      schema: { type: 'string', minLength: 5 },
+      id: 'root',
+      message: 'must NOT have fewer than 5 characters',
+    },
+    {
+      name: 'a required property',
+      schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'string', minLength: 5 } } },
+      id: 'root_foo',
+      message: 'must NOT have fewer than 5 characters',
+    },
+    {
+      name: 'a required property that is missing',
+      schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'string' } } },
+      id: 'root_foo',
+      message: "must have required property 'foo'",
+      emptied: true,
+    },
+  ] satisfies { name: string; schema: RJSFSchema; id: string; message: string; emptied?: boolean }[])(
+    "lists a field's own error that reads the same as the validator's once, at $name",
+    async ({ schema: validated, id, message, emptied = false }) => {
+      const widgets = {
+        TextWidget: ({ value, onChange }: WidgetProps) => (
+          <input
+            id={id}
+            type='text'
+            value={value ?? ''}
+            onChange={(event) => onChange(event.target.value || undefined, { __errors: [message] })}
+          />
+        ),
+      };
+      const { container } = render(<Form schema={validated} validator={validator} widgets={widgets} />);
+
+      await user.type(input(container, id), 'abc');
+      if (emptied) {
+        await user.clear(input(container, id));
+      }
+      await submitForm(container, user);
+
+      expect(fieldErrorsById(container)).toEqual({ [id]: [message] });
+      expect(errorListMessages(container)).toHaveLength(1);
+    },
+  );
+
   it("takes everything a raise holds for the field's own, the errors it was shown included", async () => {
     const { container, rerender } = render(<RestylingParent extraErrors={otherServerErrors} />);
 
@@ -621,6 +676,19 @@ describe('Error state consistency when deriving from new props', () => {
 
       expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
       expect(errorListMessages(container)).toEqual(['.arr.length too long']);
+    });
+
+    it('leaves an error a field raised for the array itself where it is', async () => {
+      const { container } = render(
+        <Form schema={arraySchema} uiSchema={raisingUiSchema} validator={validator} initialFormData={arrayData} />,
+      );
+      await raise((field) => field.onChange(arrayData.arr, toFieldPath('arr'), { __errors: ['too many'] }));
+      expect(errorListMessages(container)).toEqual(['.arr too many']);
+
+      await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
+
+      expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
+      expect(errorListMessages(container)).toEqual(['.arr too many']);
     });
 
     it('clears the moved items errors when a controlled parent echoes the reorder', async () => {

@@ -252,9 +252,20 @@ function mergeErrors<T>(
     errors = merged.errors;
   }
   if (customErrors) {
-    const merged = validationDataMerge({ errors, errorSchema }, customErrors, true);
-    errorSchema = merged.errorSchema;
-    errors = merged.errors;
+    const listed = errors;
+    errorSchema = validationDataMerge({ errors, errorSchema }, customErrors, true).errorSchema;
+    // The merge shows a message the field already carries once, so the list names it once too. Compared by path, since
+    // a validator may spell the `property` of the root or of a property of the root without the leading `.`
+    const own = toErrorList(customErrors).filter((raised) => {
+      const path = errorPath(raised);
+      return !listed.some((error) => {
+        const pathOfListed = errorPath(error);
+        return (
+          error.message === raised.message && pathOfListed.length === path.length && isPathPrefix(pathOfListed, path)
+        );
+      });
+    });
+    errors = [...listed, ...own];
   }
   return { errors, errorSchema };
 }
@@ -514,9 +525,10 @@ function moveItemErrors<T>(
  * apart from the validator's, which the next validation and a parent replacing the data both rewrite, so a field's
  * raise outlives either until the field raises again (#5347).
  *
- * A change that moved the items of an array moves the errors of both with them. One that raises errors replaces the
- * field's own at its path, an empty raise included, and takes the validator's off that path until the form validates
- * again: the raise is the field's say over its path. One that raises none clears the field's own `__errors` there.
+ * A change that moved the items of an array moves the errors of both with them, and leaves the array's own where they
+ * are. One that raises errors replaces the field's own at its path, an empty raise included, and takes the validator's
+ * off that path until the form validates again: the raise is the field's say over its path. Any other change clears
+ * the field's own `__errors` there.
  *
  * Reads none of the data, so a parent-owned form can apply a change to the errors it owns without deriving the data
  * the change proposes.
@@ -549,7 +561,7 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
   if (newErrorSchema) {
     validation = withoutErrors(validation, (pathOfError) => isPathPrefix(path, pathOfError));
     customErrors = replaceErrorSchemaNode(customErrors ?? {}, path, newErrorSchema);
-  } else if (customErrors && hasOwnErrors) {
+  } else if (customErrors && hasOwnErrors && !newIndexOf) {
     customErrors = pruneErrorSchema(
       customErrors,
       (pathOfError) => pathOfError.length === path.length && isPathPrefix(path, pathOfError),
