@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import type {
+  ErrorListProps,
   ErrorSchema,
   ErrorTransformer,
   FieldProps,
+  FormValidation,
   RJSFSchema,
   RJSFValidationError,
   UiSchema,
@@ -669,12 +671,28 @@ describe('Error state consistency when deriving from new props', () => {
         remaining: [],
       },
       {
-        name: 'a root array of the same length has no error left',
+        name: "a root array of the same length keeps an unchanged item's error",
         schema: list,
         before: ['short', 'brief'],
         validated: [`.0 ${tooShort}`, `.1 ${tooShort}`],
         after: ['short', 'other'],
-        remaining: [],
+        remaining: [`.0 ${tooShort}`],
+      },
+      {
+        name: 'a root object that only gained a key holding undefined keeps every error',
+        schema: pair,
+        before: { name: 'short' },
+        validated: ['must NOT have fewer than 2 properties', `.name ${tooShort}`],
+        after: { name: 'short', other: undefined },
+        remaining: ['must NOT have fewer than 2 properties', `.name ${tooShort}`],
+      },
+      {
+        name: "a root object whose changed key splits to no path keeps an unchanged field's error",
+        schema: { type: 'object', properties: { '': { type: 'string' }, name: leaf } },
+        before: { '': 'a', name: 'short' },
+        validated: [`.name ${tooShort}`],
+        after: { '': 'b', name: 'short' },
+        remaining: [`.name ${tooShort}`],
       },
       {
         name: 'a root value of another type has no error left',
@@ -719,6 +737,49 @@ describe('Error state consistency when deriving from new props', () => {
       expect(listed).toHaveLength(1);
 
       rerender({ schema: invalid, formData: { name: 'b' } });
+
+      expect(errorListMessages(container)).toEqual(listed);
+    });
+
+    it('keeps the error an invalid schema is reported with, listed and in the ErrorSchema, when the root value itself is replaced', async () => {
+      const shown = vi.fn<(errorList: Pick<ErrorListProps, 'errors' | 'errorSchema'>) => void>();
+      const props = {
+        schema: { type: 'string', minLength: -1 } satisfies RJSFSchema,
+        templates: {
+          ErrorListTemplate: ({ errors, errorSchema }: ErrorListProps) => {
+            shown({ errors, errorSchema });
+            return null;
+          },
+        },
+      };
+      const { node, rerender } = createFormComponent({ ...props, formData: 'a' });
+
+      await submitForm(node, user);
+      const validated = shown.mock.lastCall?.[0];
+      expect(validated?.errors).toHaveLength(1);
+      expect(validated?.errorSchema).not.toEqual({});
+
+      rerender({ ...props, formData: 'b' });
+
+      expect(shown.mock.lastCall?.[0]).toEqual(validated);
+    });
+
+    it('keeps every error when the parent renders a root NaN again', async () => {
+      const props = {
+        schema: { type: 'number' } satisfies RJSFSchema,
+        formData: Number.NaN,
+        customValidate: (_: unknown, errors: FormValidation) => {
+          errors.addError('is not a number');
+          return errors;
+        },
+      };
+      const { container, node, rerender } = createFormComponent(props);
+
+      await submitForm(node, user);
+      const listed = errorListMessages(container);
+      expect(listed).not.toHaveLength(0);
+
+      rerender({ ...props, className: 'rerendered' });
 
       expect(errorListMessages(container)).toEqual(listed);
     });
