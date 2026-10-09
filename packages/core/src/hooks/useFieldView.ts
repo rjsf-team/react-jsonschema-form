@@ -48,7 +48,8 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
       propose: (next: V, send: () => void, newIndexOf?: ItemMove) => {
         const record = access && { view: next, epoch: access.epoch() };
         advanced.current = record;
-        const proposed = access?.proposing(newIndexOf && { fieldPath, newIndexOf });
+        const proposed = access?.proposing();
+        const sendProposal = access && newIndexOf ? () => access.sendMove({ fieldPath, newIndexOf }, send) : send;
         const settle = () => {
           if (access && advanced.current === record) {
             advanced.current = { view: next, epoch: access.epoch() };
@@ -56,7 +57,7 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
           proposed?.();
         };
         try {
-          send();
+          sendProposal();
         } catch (error) {
           settle();
           throw error;

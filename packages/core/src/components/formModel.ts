@@ -217,8 +217,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // proposal it made is dropped with it.
   let pending: FormState<T, S, F> | undefined;
   let epoch = 0;
-  // The item move an `ArrayField` announced for the change it is sending, see `FormDataAccess.proposing()`
-  let moving: AnnouncedMove | undefined;
+  // The item move of the change an `ArrayField` is sending, see `FormDataAccess.sendMove()`
+  let announced: AnnouncedMove | undefined;
   const propose = (next: FormState<T, S, F>) => {
     // `commit()` freezes self-owned data; a proposal never reaches it
     if (isDevelopment) {
@@ -381,9 +381,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const props: OperationProps<T, S, F> = committedProps;
     const start = state;
     // Taken by the change it was announced for, so a second change at the path moves nothing again
-    const newIndexOf = moving?.fieldPath === fieldPath ? moving.newIndexOf : undefined;
+    const newIndexOf = announced?.fieldPath === fieldPath ? announced.newIndexOf : undefined;
     if (newIndexOf) {
-      moving = undefined;
+      announced = undefined;
     }
     const edit: PendingChange<T> = { newValue, fieldPath, newErrorSchema, newIndexOf };
     const next = applyChange(pending ?? start, edit, props);
@@ -558,19 +558,23 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * proposal had the form render already: one that reached the form, as an operation or as a proposal of its own,
      * made a new `snapshot`
      */
-    proposing: (move?: AnnouncedMove) => {
+    proposing: () => {
       const before = snapshot;
-      if (move) {
-        moving = move;
-      }
       return () => {
-        if (moving === move) {
-          moving = undefined;
-        }
         if (snapshot === before) {
           notify();
         }
       };
+    },
+    sendMove: (move: AnnouncedMove, send: () => void) => {
+      announced = move;
+      try {
+        send();
+      } finally {
+        if (announced === move) {
+          announced = undefined;
+        }
+      }
     },
     /** The latest value at `path`: a self-owned edit or a pending proposal, else the rendered data */
     readField: <D>(path: FieldPath) => getAt<D>((pending ?? state).formData, fieldPathToList(path)),

@@ -16,12 +16,14 @@ interface FormDataAccess {
    * render, so that its commit ends the field's record of the proposal whatever became of it: a custom parent can keep
    * one to itself, and the form would otherwise never learn of it. A proposal that reached the form had it render
    * already, and is not rendered for twice.
-   *
-   * `move` announces that the proposal moves the items of the array at its `fieldPath`: the form moves the errors it
-   * holds for them along, when the change for that path reaches it before the proposal was sent. Only the form holds
-   * them all, and a field's `onChange` has no way to say where an item went.
    */
-  proposing(move?: AnnouncedMove): () => void;
+  proposing(): () => void;
+  /** Calls `send`, which sends a change that moves the items of the array at `move.fieldPath`. The form moves the
+   * errors it holds for those items along when the change for that path reaches it before `send` returns, the way
+   * `startTransition()` marks the updates made inside its callback. Only the form holds them all, and a field's
+   * `onChange` has no way to say where an item went.
+   */
+  sendMove(move: AnnouncedMove, send: () => void): void;
   /** The latest data at `path`, for a field that renders the form's own data there (see `RawFormDataContext`) */
   readField<D>(path: FieldPath): D;
 }
