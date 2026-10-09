@@ -4,6 +4,7 @@ import { render, screen } from '@testing-library/react';
 
 import Form from '../src/index.ts';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
+import DaisyToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
 
 /** The label `FieldTemplate` renders above the control. It is the only one pointing at the field's own id: a widget's
  * own label (`CheckboxWidget`, `ToggleWidget`) has no `htmlFor`, and `AltDateWidget`'s point at their sub-controls
@@ -163,6 +164,18 @@ describe('FieldTemplate', () => {
 
       expect(templateLabel()).toBeNull();
       expect(screen.getAllByText('Agree')).toHaveLength(1);
+    });
+
+    // Of the boolean aliases only `checkbox` is recognized, so a widget that renders its own label, registered under
+    // another alias's key, gets the template's label as well. A known limitation, pinned so it changes on purpose
+    test('renders a second label for the toggle registered under the key of another boolean alias', () => {
+      const { templateLabel } = renderForm({ agree: { 'ui:widget': 'radio' } }, agree, {
+        RadioWidget: DaisyToggleWidget,
+      });
+
+      expect(templateLabel()).toHaveTextContent('Agree');
+      expect(screen.getAllByText('Agree')).toHaveLength(2);
+      expect(screen.getByRole('checkbox')).toBeInTheDocument();
     });
   });
 

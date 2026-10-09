@@ -22,8 +22,9 @@ const CHECKBOX_ALIAS: WidgetAliasFor<'boolean'> = 'checkbox';
  *
  * A registry key and a component both answer without the schema's type. Registry keys are looked up as own
  * properties, as `getWidget()` does, so a name inherited from `Object.prototype` such as `toString` is an alias like
- * any other. Of the aliases, only `checkbox` on a `boolean` is recognized, by name, and read from the registry under
- * the key `getWidget()` maps it to. That is the one alias that reaches the checkbox in the default registry; a
+ * any other. Of the aliases, only `checkbox` is recognized, by name, where `getWidgetType()` types it as `boolean`,
+ * which includes a `type` list such as `['number', 'boolean']`, and it is read from the registry under the key
+ * `getWidget()` maps it to. That is the one alias that reaches the checkbox in the default registry; a
  * consumer who registers the checkbox or the toggle under another boolean alias's key, such as `RadioWidget`, gets
  * the template's label as well as the widget's own. `getWidget()` itself is not called, since it reports a name it
  * cannot resolve by throwing an error built from a `JSON.stringify()` of the whole schema, which a `ui:widget` that a
@@ -47,7 +48,9 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
   } else if (widget === CHECKBOX_ALIAS && getWidgetType<S>(schema, widget) === 'boolean') {
     resolved = registeredWidgets[DEFAULT_BOOLEAN_WIDGET];
   }
-  return !!resolved && (resolved === registeredWidgets.CheckboxWidget || resolved === registeredWidgets.toggle);
+  return (
+    !!resolved && (resolved === registeredWidgets[DEFAULT_BOOLEAN_WIDGET] || resolved === registeredWidgets.toggle)
+  );
 }
 
 /** The `FieldTemplate` component provides the main layout for each form field
@@ -109,9 +112,7 @@ export default function FieldTemplate<
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // The checkbox and the toggle render their own label after the input, and their own description, so this template
-  // renders neither for them. A registry key and a component are resolved to the widget they name, so a wrapper or a
-  // replacement registered under the checkbox's or the toggle's key counts as that widget, and the `checkbox` alias of
-  // a `boolean` is recognized by name
+  // renders neither for them
   const widgetRendersLabel = widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
