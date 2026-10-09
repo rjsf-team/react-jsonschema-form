@@ -1205,7 +1205,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', food: 'meat' } }, 'root_m_animal');
       });
 
-      /** The branch payload both #5349 cases below swap between, declared on the nested object's own property */
+      /** The branch payload every #5349 case below swaps between, declared on the nested object's own property */
       const dietFor = (food: string): RJSFSchema => ({
         type: 'object',
         default: { food },

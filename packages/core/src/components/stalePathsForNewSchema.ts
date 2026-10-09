@@ -9,11 +9,13 @@ import type {
 import {
   ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
+  DEFAULT_KEY,
   getByPath,
   getXxxOfKey,
   isPlainObject,
   isWholeValueSelect,
   PROPERTIES_KEY,
+  REF_KEY,
   replaceEqualDeep,
   UI_DEFINITIONS_KEY,
 } from '@rjsf/utils';
@@ -41,8 +43,9 @@ interface SwappedKey<S extends StrictRJSFSchema> {
   oldSchema: S;
   /** The key could be holding a swapped-away branch's default, so it is worth computing this level's defaults to
    * decide. It is not the field the user just changed, it carried a value over — a key the data did not arrive
-   * holding cannot hold the old branch's default, since whatever is there now is this very pass's own fill — and the
-   * newly selected branch declares a value for it
+   * holding cannot hold the old branch's default, since whatever is there now is this very pass's own fill — and
+   * each branch declares a value for it: the new one so there is a default worth applying, the old one so what the
+   * key holds can be its default rather than something the fill computed for it
    */
   isReplaceable: boolean;
 }
@@ -59,17 +62,6 @@ interface LevelKeys<S extends StrictRJSFSchema> {
   changedKeySchema?: S;
 }
 
-/** Reads `key` off `record` only when it is the record's own, so a property named `constructor` or `toString` is not
- * answered for by the member every object inherits under that name.
- *
- * @param record - The object to read from
- * @param key - The name of the property to read
- * @returns - The own value at `key`, or undefined when the record declares none
- */
-function ownValue(record: Record<string, unknown>, key: string): unknown {
-  return Object.hasOwn(record, key) ? record[key] : undefined;
-}
-
 /** Determines whether any `oneOf`/`anyOf` option of `level` describes the level's properties, which is what makes the
  * level one whose keys an option switch owns.
  *
@@ -78,17 +70,31 @@ function ownValue(record: Record<string, unknown>, key: string): unknown {
  * Those options declare no properties, so no option's defaults can disagree with the fill about them and there is
  * nothing for the level to be skipped over.
  *
+ * An option written as a `$ref` is resolved to answer for, since `retrieveSchema()` hands back the level's options as
+ * they were declared and the most common way to write a `oneOf` is as a list of references. The resolution is reached
+ * only by an option that declares no `properties` inline and does carry a `$ref`, so the inline case stays free.
+ *
+ * @param schemaUtils - The `SchemaUtilsType` implementation to resolve a referenced option with
  * @param level - The level schema to test
  * @returns - True when the level carries options and at least one of them declares `properties`
  */
-function optionsDeclareProperties<S extends StrictRJSFSchema = RJSFSchema>(level: S): boolean {
+function optionsDeclareProperties<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  level: S,
+): boolean {
   const xxxOfKey = getXxxOfKey<S>(level);
   if (!xxxOfKey) {
     return false;
   }
   const options = level[xxxOfKey];
   return (
-    Array.isArray(options) && options.some((option) => isPlainObject(option) && isPlainObject(option[PROPERTIES_KEY]))
+    Array.isArray(options) &&
+    options.some(
+      (option) =>
+        isPlainObject(option) &&
+        (isPlainObject(option[PROPERTIES_KEY]) ||
+          (REF_KEY in option && isPlainObject(schemaUtils.retrieveSchema(option as S)[PROPERTIES_KEY]))),
+    )
   );
 }
 
@@ -113,11 +119,12 @@ function onlyProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S, keys
  *
  * This runs for every declared key of every walked level on every change, while in the common case no key has
  * re-resolved at all, so the two free tests come first and between them end nearly every key: the old level has to
- * declare the key at all, and then an identical declaration with an identical value cannot resolve to anything
- * different, since a conditional nested inside a key reads that key's own data. That second test compares by
- * identity on both halves, which `replaceEqualDeep()` makes meaningful for the two retrieved schemas as well as for
- * the two sets of form data. Every test after them costs something — a prototype walk, a symbol lookup, and finally
- * two resolutions — so each is reached only by a key that has already failed the cheaper ones.
+ * declare the key at all, and then an identical declaration holding an identical value, under an identical level
+ * `default` for it, cannot have been swapped — a conditional nested inside a key reads that key's own data, and the
+ * three places a value can be declared are covered between the key's schema and the level's `default`. That second
+ * test compares by identity throughout, which `replaceEqualDeep()` makes meaningful for the two retrieved schemas as
+ * well as for the two sets of form data. Every test after them costs something — a prototype walk, a symbol lookup,
+ * and finally two resolutions — so each is reached only by a key that has already failed the cheaper ones.
  *
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve each side with
  * @param newLevel - The level schema resolved for the data as it stands
@@ -139,6 +146,12 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
   let changedKeySchema: S | undefined;
   const newProperties = newLevel[PROPERTIES_KEY]!;
   const oldProperties = oldLevel[PROPERTIES_KEY]!;
+  const newLevelDefault = newLevel[DEFAULT_KEY];
+  const oldLevelDefault = oldLevel[DEFAULT_KEY];
+  // One identity test for the whole level, so the per-key reads below are reached only where the two sides can
+  // actually disagree. A level that did not re-resolve is the same object on both sides, and `replaceEqualDeep()`
+  // gives two that resolved alike the same `default` object, so this is false for every level nothing swapped at
+  const levelDefaultsDiffer = newLevelDefault !== oldLevelDefault;
   Object.keys(newProperties).forEach((key) => {
     // A key the old level never declared held no default of its own to go stale. `Object.hasOwn()`, since a plain
     // read would answer for `toString` and the other names every object inherits
@@ -147,9 +160,15 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     const newRaw = newProperties[key] as S;
     const oldRaw = oldProperties[key] as S;
-    const newKeyValue = ownValue(newValue, key);
-    const oldKeyValue = ownValue(oldValue, key);
-    if (newRaw === oldRaw && newKeyValue === oldKeyValue) {
+    const newKeyValue = getByPath(newValue, key);
+    const oldKeyValue = getByPath(oldValue, key);
+    // A level declares a value for a key through its own `default` object as well as through the key's schema, and
+    // that object lives outside `properties`. So an identical declaration holding an identical value is not enough to
+    // end the key: a branch pair differing only in its level `default` swaps what the key should hold without
+    // touching the key's schema at all, which is the one swap neither test below can see
+    const levelDefaultSwapped =
+      levelDefaultsDiffer && getByPath(newLevelDefault, key) !== getByPath(oldLevelDefault, key);
+    if (newRaw === oldRaw && newKeyValue === oldKeyValue && !levelDefaultSwapped) {
       return;
     }
     // A property may be declared as a boolean subschema (`properties: { a: true }`), which states only whether the
@@ -169,7 +188,7 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const resolvedNew = schemaUtils.retrieveSchema(newRaw, newKeyValue as T);
     const resolvedOld = schemaUtils.retrieveSchema(oldRaw, oldKeyValue as T);
     const newSchema = replaceEqualDeep(resolvedOld, resolvedNew);
-    if (newSchema === resolvedOld) {
+    if (newSchema === resolvedOld && !levelDefaultSwapped) {
       if (key === changedKey) {
         changedKeySchema = newSchema;
       }
@@ -183,7 +202,8 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
         key !== changedKey &&
         newKeyValue !== undefined &&
         oldKeyValue !== undefined &&
-        declaresValueFor<S>(newLevel, key, newSchema),
+        declaresValueFor<S>(newLevel, key, newSchema) &&
+        declaresValueFor<S>(oldLevel, key, resolvedOld),
     });
   });
   return { swapped, changedKeySchema };
@@ -215,10 +235,11 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * - Its subschema was swapped, which is what `swappedKeys()` establishes per key rather than by comparing whole root
  *   schemas: the old side is read by resolving the old declaration against the old data.
  * - It is not the field the user just changed, nor an ancestor of it. The value there is theirs, whatever it equals.
- * - The newly selected branch **declares** a value for it, as a property `default`/`const` or through the branch's own
- *   `default` object. The computed defaults say more than a branch declares, so honoring them alone would replace an
- *   untouched value with `{}` for a required object, `[]` for a required array, or with the subset of itself that the
- *   new branch's leaf defaults and `minItems` happen to fill.
+ * - **Both** branches declare a value for it, as a property `default`/`const` or through the branch's own `default`
+ *   object. The computed defaults say more than a branch declares, and that cuts both ways: reading them as the new
+ *   branch's wish would replace an untouched value with `{}` for a required object or `[]` for a required array, and
+ *   reading them as the old branch's would treat a required boolean's `false`, a required array's `[]` or a
+ *   `minItems` fill as the old branch's own default and overwrite whatever the user left there.
  * - It still holds the default the branch being swapped away would have put there. A value edited away from that
  *   default no longer matches and is kept.
  * - The newly selected branch's computed defaults also hold something for it, so the fill is certain to put a value
@@ -295,12 +316,7 @@ export default function stalePathsForNewSchema<
       !isPlainObject(newLevel[PROPERTIES_KEY]) ||
       !isPlainObject(oldLevel[PROPERTIES_KEY]) ||
       !isPlainObject(newValue) ||
-      !isPlainObject(oldValue) ||
-      // A level whose options describe its properties is `formDataForNewOption()`'s to switch, and the option
-      // `computeDefaults()` picks for a level with no data of its own need not be the one the fill picks for the data
-      // there is. Either side disqualifies the level: both are asked for their defaults, and both from no data
-      optionsDeclareProperties<S>(newLevel) ||
-      optionsDeclareProperties<S>(oldLevel)
+      !isPlainObject(oldValue)
     ) {
       return;
     }
@@ -314,7 +330,18 @@ export default function stalePathsForNewSchema<
     );
     const replaceableKeys = swapped.flatMap((entry) => (entry.isReplaceable ? [entry.key] : []));
     const staleKeys = new Set<string>();
-    if (replaceableKeys.length > 0) {
+    // A level whose options describe its properties is `formDataForNewOption()`'s to switch, and the option
+    // `computeDefaults()` picks for a level with no data of its own need not be the one the fill picks for the data
+    // there is. Either side disqualifies the level: both are asked for their defaults, and both from no data. Only
+    // this level's own defaults are off limits, though — the walk still descends, since a conditional declared on one
+    // of this level's properties is nothing to do with the options here and is reachable no other way. Asked after
+    // the keys, and only once one of them is replaceable: an option written as a `$ref` costs a `retrieveSchema()`
+    // to answer for, and the answer is wanted nowhere but here
+    if (
+      replaceableKeys.length > 0 &&
+      !optionsDeclareProperties<T, S, F>(schemaUtils, newLevel) &&
+      !optionsDeclareProperties<T, S, F>(schemaUtils, oldLevel)
+    ) {
       const levelUiSchema = levelPath.length ? getByPath<UiSchema<T, S, F> | undefined>(uiSchema, levelPath) : uiSchema;
       const computeFor = (level: S, keys: string[]) => {
         const defaults = schemaUtils.getDefaultFormState(
@@ -331,13 +358,13 @@ export default function stalePathsForNewSchema<
       // edited them that is none of them, and the new side's defaults are then never computed at all
       const oldDefaults = computeFor(oldLevel, replaceableKeys);
       const holdingKeys = replaceableKeys.filter((key) =>
-        deepEquals(ownValue(oldDefaults, key), ownValue(oldValue, key)),
+        deepEquals(getByPath(oldDefaults, key), getByPath(oldValue, key)),
       );
       if (holdingKeys.length > 0) {
         const newDefaults = computeFor(newLevel, holdingKeys);
         holdingKeys.forEach((key) => {
-          const newDefault = ownValue(newDefaults, key);
-          if (newDefault !== undefined && !deepEquals(ownValue(oldDefaults, key), newDefault)) {
+          const newDefault = getByPath(newDefaults, key);
+          if (newDefault !== undefined && !deepEquals(getByPath(oldDefaults, key), newDefault)) {
             staleKeys.add(key);
           }
         });
@@ -354,8 +381,8 @@ export default function stalePathsForNewSchema<
       walkLevel(
         newKeySchema,
         oldKeySchema,
-        ownValue(newValue, key),
-        ownValue(oldValue, key),
+        getByPath(newValue, key),
+        getByPath(oldValue, key),
         [...levelPath, key],
         key === changedKey ? keyName(changedPath[levelPath.length + 1]) : undefined,
       );
@@ -386,11 +413,12 @@ export default function stalePathsForNewSchema<
         const newRaw = newLevel[PROPERTIES_KEY][changedKey];
         const oldRaw = oldLevel[PROPERTIES_KEY][changedKey];
         if (isPlainObject(newRaw) && isPlainObject(oldRaw)) {
-          descend(
-            changedKey,
-            schemaUtils.retrieveSchema(newRaw as S, ownValue(newValue, changedKey) as T),
-            schemaUtils.retrieveSchema(oldRaw as S, ownValue(oldValue, changedKey) as T),
-          );
+          // New side first and shared against the old, exactly as `swappedKeys()` resolves a pair: the level below
+          // ends a key for free only where its two sides are one object, so two deep-equal resolutions handed down
+          // unshared would cost that whole subtree a resolution per key
+          const resolvedNew = schemaUtils.retrieveSchema(newRaw as S, getByPath(newValue, changedKey));
+          const resolvedOld = schemaUtils.retrieveSchema(oldRaw as S, getByPath(oldValue, changedKey));
+          descend(changedKey, replaceEqualDeep(resolvedOld, resolvedNew), resolvedOld);
         }
       }
     }
