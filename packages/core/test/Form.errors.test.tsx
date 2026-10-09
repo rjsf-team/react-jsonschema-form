@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import type { ErrorListProps, ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
+import { customizeValidator } from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -1264,6 +1265,105 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'x');
 
         expect(getFormData()).toEqual({ color: 'a', unrelated: 'x' });
+      });
+
+      it('should not re-settle the data on a non-sanitizing edit after a swap', async () => {
+        // A top-level `if` folds into the root retrieved schema, so an edit that keeps it false resolves the same
+        // schema and sanitizes nothing; the data must stay unsettled until a pass actually checks it
+        const makeSchema = (colorEnum: string[]): RJSFSchema => ({
+          type: 'object',
+          definitions: {
+            Color: { type: 'string', enum: colorEnum },
+          },
+          properties: {
+            color: { $ref: '#/definitions/Color' },
+            unrelated: { type: 'string' },
+          },
+          if: { properties: { unrelated: { const: 'z' } }, required: ['unrelated'] },
+          then: { properties: { extra: { type: 'string' } } },
+        });
+        const { node, rerender, getFormData } = createFormComponent({
+          schema: makeSchema(['a', 'b']),
+          initialFormData: { color: 'b' },
+        });
+
+        rerender({ schema: makeSchema(['a']) });
+        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'x');
+
+        // No sanitize ran, so the narrowed-out value is still there, still unchecked
+        expect(getFormData()).toEqual({ color: 'b', unrelated: 'x' });
+
+        // Flipping the `if` changes the retrieved schema; the sanitize then still sees data that never settled
+        // under the narrowed root, so the rejected value is replaced rather than kept
+        await user.clear(node.querySelector<HTMLInputElement>('#root_unrelated')!);
+        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'z');
+
+        expect(getFormData()).toEqual({ color: 'a', unrelated: 'z' });
+      });
+
+      it('should not treat data changed by a declined sanitize as checked', async () => {
+        // Adding a row is a container write whose sanitize is declined, but it flips the `then` onto `color`;
+        // the next sanitize must not get that post-flip data as its previous counterpart
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            pet: {
+              type: 'object',
+              properties: {
+                list: { type: 'array', items: { type: 'string' } },
+                color: { type: 'string', enum: ['r', 'g'] },
+              },
+              allOf: [
+                {
+                  if: { properties: { list: { minItems: 2 } }, required: ['list'] },
+                  then: { properties: { color: { type: 'string', enum: ['r'] } } },
+                },
+              ],
+            },
+            name: { type: 'string' },
+          },
+        };
+        const { node, getFormData } = createFormComponent({
+          schema,
+          initialFormData: { pet: { color: 'g', list: ['x'] } },
+        });
+
+        // Add a row: the `then` starts applying, but the array write sanitizes nothing
+        await user.click(node.querySelector<HTMLButtonElement>('button[title="Add"]')!);
+
+        expect(getFormData()).toEqual({ pet: { color: 'g', list: ['x', undefined] } });
+
+        // The sibling edit sanitizes; 'g' never settled under the flipped schema, so it is replaced
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
+
+        expect(getFormData()).toEqual({ pet: { color: 'r', list: ['x', undefined] }, name: 'n' });
+      });
+
+      it('should keep prior data available when only the validator instance changed', async () => {
+        // Rebuilding the schema utilities from an inline prop does not change the root schema the data settled
+        // under, so the next sanitize still receives it and the unchanged-enum placeholders survive
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: { type: 'array', minItems: 2, items: { type: 'string', enum: ['a'] } },
+            name: { type: 'string' },
+          },
+          allOf: [
+            {
+              if: { properties: { name: { const: 'z' } }, required: ['name'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          ],
+        };
+        const { node, rerender, getFormData } = createFormComponent({
+          schema,
+          initialFormData: { list: [null, null] },
+        });
+
+        rerender({ schema }, customizeValidator({}));
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
+
+        expect(getFormData()).toEqual({ list: [null, null], name: 'n' });
       });
     });
 

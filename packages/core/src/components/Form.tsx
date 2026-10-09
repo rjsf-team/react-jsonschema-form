@@ -263,12 +263,12 @@ export interface FormState<
    * live validation do not resolve it again
    */
   retrievedSchema: S;
-  /** The utilities the committed `formData` last settled under: it was sanitized against their root schema, or it
-   * has only ever lived under them. Undefined while a schema swap has left the data unchecked against the new
-   * root; the previous-data filter chain in `sanitizeDataForNewSchema()` is only fed data whose marker matches,
-   * since both sides of that chain resolve `$ref`s against the one new root
+  /** The root schema the committed `formData` last settled under: it was sanitized against that root, or it has
+   * only ever lived under it. Undefined while a schema swap or an unsanitized change has left the data unchecked
+   * against the current root; the previous-data filter chain in `sanitizeDataForNewSchema()` is only fed data
+   * whose marker matches, since both sides of that chain resolve `$ref`s against the one new root
    */
-  formDataUtils?: SchemaUtilsType<T, S, F>;
+  formDataSchema?: S;
   /** @description result of schemaHasNestedConditional(rootSchema, rootSchema). A memoized value, recomputed only
    * when `schemaUtils` (and thus the root schema) is rebuilt, to avoid re-walking the whole schema on every
    * derivation

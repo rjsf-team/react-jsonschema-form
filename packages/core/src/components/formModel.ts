@@ -64,7 +64,7 @@ const IS_OWNED_BY_FORM = {
   uiSchema: false,
   schemaUtils: false,
   formData: false,
-  formDataUtils: false,
+  formDataSchema: false,
   edit: false,
   errors: true,
   errorSchema: true,
