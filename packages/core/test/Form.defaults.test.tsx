@@ -613,13 +613,9 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     /** The shape every case below varies: a `mode` select that swaps between two `dependencies` branches, with
      * only the branch payload differing. `mode`'s own `const` is merged in, so a branch states just what it adds
      */
-    const modeSwap = (
-      branchA: RJSFSchema,
-      branchB: RJSFSchema,
-      extraProperties: RJSFSchema['properties'] = {},
-    ): RJSFSchema => ({
+    const modeSwap = (branchA: RJSFSchema, branchB: RJSFSchema): RJSFSchema => ({
       type: 'object',
-      properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' }, ...extraProperties },
+      properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
       dependencies: {
         mode: {
           oneOf: [
@@ -781,13 +777,16 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       );
     });
 
-    // A boolean subschema is no object, so neither a symbol test nor `retrieveSchema()` can be asked about it
-    it('swaps alongside a property declared as a boolean subschema', async () => {
+    // A boolean subschema is no object, so neither a symbol test nor `retrieveSchema()` can be asked about it. The
+    // free identity test ends a key the two branches declare identically, so reaching that test needs a pair that
+    // declares the key differently: `anything` for the old side, and `unvalued` for the new one, which is the side
+    // the symbol test is applied to. `unvalued` is left out of the data so that neither the sanitize nor
+    // `omitExtraData` has a value of its own to act on, leaving the swap as the only thing under test
+    it('swaps alongside a property one branch declares as a boolean subschema', async () => {
       const { node, onChange } = createFormComponent({
         schema: modeSwap(
-          { properties: { cfg: cfgFor('a') } },
-          { properties: { cfg: cfgFor('b') } },
-          { anything: true },
+          { properties: { cfg: cfgFor('a'), anything: true, unvalued: { type: 'string' } } },
+          { properties: { cfg: cfgFor('b'), anything: { type: 'string' }, unvalued: true } },
         ),
         formData: { mode: 'a', anything: 'kept' },
       });
