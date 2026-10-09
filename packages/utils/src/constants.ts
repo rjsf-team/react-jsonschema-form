@@ -31,6 +31,7 @@ export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
 export const THEN_KEY = 'then';
+export const UNEVALUATED_PROPERTIES_KEY = 'unevaluatedProperties';
 export const RJSF_REF_KEY = Symbol('__rjsf_ref');
 export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
 export const SCHEMA_KEY = '$schema';

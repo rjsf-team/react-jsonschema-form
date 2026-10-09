@@ -1,7 +1,13 @@
+import {
+  allowsAdditionalProperties,
+  getAdditionalPropertySchema,
+  getMatchingPatternProperties,
+} from './additionalPropertiesUtils.ts';
 import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
 import asNumber from './asNumber.ts';
+import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
@@ -62,8 +68,9 @@ import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
-import getWidget, { getFieldTypeForWidget, getWidgetType, resolveWidget } from './getWidget.tsx';
+import getWidget, { DEFAULT_BOOLEAN_WIDGET, getFieldTypeForWidget, getWidgetType, resolveWidget } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
+import getXxxOfOptions from './getXxxOfOptions.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
@@ -176,9 +183,11 @@ export type {
 export {
   AdditionalPropertyKeySelect,
   allowAdditionalItems,
+  allowsAdditionalProperties,
   ariaDescribedByIds,
   asNumber,
   buttonId,
+  callWithDeferredThrow,
   canExpand,
   createErrorHandler,
   createSchemaUtils,
@@ -187,6 +196,7 @@ export {
   dateElementId,
   dateRangeOptions,
   deepEquals,
+  DEFAULT_BOOLEAN_WIDGET,
   descriptionId,
   englishStringTranslator,
   enumOptionSelectedValue,
@@ -205,6 +215,7 @@ export {
   fieldLabelId,
   findSchemaDefinition,
   flattenGroupedOptions,
+  getAdditionalPropertySchema,
   getChangedFields,
   getDateElementProps,
   getDateTimeLocalValue,
@@ -217,6 +228,7 @@ export {
   getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
+  getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
   getOptionMatchingSimpleDiscriminator,
@@ -240,6 +252,7 @@ export {
   getWidget,
   getWidgetType,
   getXxxOfKey,
+  getXxxOfOptions,
   groupEnumOptions,
   guessType,
   hasByPath,

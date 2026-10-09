@@ -7,7 +7,7 @@ import type {
   Widget,
   WidgetAliasFor,
 } from '@rjsf/utils';
-import { fieldLabelId, getTemplates, getUiOptions, getWidgetType } from '@rjsf/utils';
+import { DEFAULT_BOOLEAN_WIDGET, fieldLabelId, getTemplates, getUiOptions, getWidgetType } from '@rjsf/utils';
 
 import { getDaisy } from '../../utils.ts';
 
@@ -20,12 +20,14 @@ const CHECKBOX_ALIAS: WidgetAliasFor<'boolean'> = 'checkbox';
  * here and gets the template's label too, which is the better way to be wrong — guessing the other way would leave a
  * control replaced by a label-less widget with no accessible name at all.
  *
- * A registry key and a component both answer without the schema's type. Only an alias is resolved through it, and
- * `checkbox` on a `boolean` is the one alias that reaches the checkbox. Registry keys are looked up as own properties,
- * as `getWidget()` does, so a name inherited from `Object.prototype` such as `toString` is an alias like any other.
- * `getWidget()` itself is not called: it reports a name it cannot resolve by throwing an error built from a
- * `JSON.stringify()` of the whole schema, which a `ui:widget` that a custom `ui:field` consumes itself would otherwise
- * pay for on every render just to be told no.
+ * A registry key and a component both answer without the schema's type. Registry keys are looked up as own
+ * properties, as `getWidget()` does, so a name inherited from `Object.prototype` such as `toString` is an alias like
+ * any other. Of the aliases, only `checkbox` on a `boolean` is recognized, by name, and read from the registry under
+ * the key `getWidget()` maps it to. That is the one alias that reaches the checkbox in the default registry; a
+ * consumer who registers the checkbox or the toggle under another boolean alias's key, such as `RadioWidget`, gets
+ * the template's label as well as the widget's own. `getWidget()` itself is not called, since it reports a name it
+ * cannot resolve by throwing an error built from a `JSON.stringify()` of the whole schema, which a `ui:widget` that a
+ * custom `ui:field` consumes itself would otherwise pay for on every render just to be told no.
  *
  * @param schema - The schema for the field
  * @param widget - The widget named by the field's ui options, if any
@@ -43,7 +45,7 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
   } else if (Object.hasOwn(registeredWidgets, widget)) {
     resolved = registeredWidgets[widget];
   } else if (widget === CHECKBOX_ALIAS && getWidgetType<S>(schema, widget) === 'boolean') {
-    resolved = registeredWidgets.CheckboxWidget;
+    resolved = registeredWidgets[DEFAULT_BOOLEAN_WIDGET];
   }
   return !!resolved && (resolved === registeredWidgets.CheckboxWidget || resolved === registeredWidgets.toggle);
 }
@@ -107,8 +109,9 @@ export default function FieldTemplate<
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // The checkbox and the toggle render their own label after the input, and their own description, so this template
-  // renders neither for them. Which widget the ui options name is resolved rather than matched against how it is
-  // spelled, since an alias, a registry key and the component itself all have to reach the same answer
+  // renders neither for them. A registry key and a component are resolved to the widget they name, so a wrapper or a
+  // replacement registered under the checkbox's or the toggle's key counts as that widget, and the `checkbox` alias of
+  // a `boolean` is recognized by name
   const widgetRendersLabel = widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
   const daisy = getDaisy<T, S, F>({ uiSchema });
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);

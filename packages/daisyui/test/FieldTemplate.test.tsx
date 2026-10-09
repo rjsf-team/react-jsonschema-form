@@ -166,22 +166,30 @@ describe('FieldTemplate', () => {
     });
   });
 
-  // `getWidget()` only resolves the registry's own keys, so a name inherited from `Object.prototype` is an alias that
-  // reaches no widget. Only a custom `ui:field` can carry one, since it reads its `ui:widget` itself
+  // A custom `ui:field` reads its `ui:widget` itself, so the name can be one no widget has, such as `toString`, which
+  // is inherited from `Object.prototype`. `FieldTemplate` still asks whether that widget renders its own label, and has
+  // to answer without a failed widget lookup's `JSON.stringify()` of the field's schema on every render
   describe('a widget name inherited from Object.prototype', () => {
     function OwnField({ uiSchema }: FieldProps) {
       return <output data-testid='own-field'>{String(uiSchema?.['ui:widget'])}</output>;
     }
 
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
     test.each<[string, RJSFSchema]>([
       ['a string', { type: 'string', title: 'Agree' }],
       ['a boolean', agree],
-    ])('renders the custom field that reads it on %s schema', (_, fieldSchema) => {
+    ])('is answered without stringifying %s schema', (_, fieldSchema) => {
+      const stringify = vi.spyOn(JSON, 'stringify');
+
       const { container } = renderForm({ agree: { 'ui:field': OwnField, 'ui:widget': 'toString' } }, fieldSchema);
 
       const ownField = screen.getByTestId('own-field');
       expect(ownField).toHaveTextContent('toString');
       expect(container.querySelector('.field-template')).toContainElement(ownField);
+      expect(stringify).not.toHaveBeenCalledWith(expect.objectContaining(fieldSchema));
     });
   });
 

@@ -255,6 +255,19 @@ describe('schemaParser()', () => {
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'pp1' }));
     expect(schemas).toContainEqual(expect.objectContaining({ const: 'ap1' }));
   });
+  it('parses the options of an unevaluatedProperties a form renders extra keys with', () => {
+    // The keyword describes the keys the other keywords leave over, which is what a form renders an extra key with
+    // where no `additionalProperties` evaluates it, so the sub-schemas under it are the ones that key's options are
+    // scored against
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' } },
+      unevaluatedProperties: { oneOf: [{ const: 'up1' }, { const: 'up2' }] },
+    };
+    const schemas = Object.values(schemaParser(rootSchema));
+    expect(schemas).toContainEqual(expect.objectContaining({ const: 'up1' }));
+    expect(schemas).toContainEqual(expect.objectContaining({ const: 'up2' }));
+  });
   it('parses no additionalItems of an items that is not a tuple, as a form renders none', () => {
     const rootSchema: RJSFSchema = {
       type: 'array',

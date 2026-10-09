@@ -1,6 +1,7 @@
 import type { MouseEvent } from 'react';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { callWithDeferredThrow } from '@rjsf/utils';
 import { format, isSameMonth, isValid, parseISO } from 'date-fns';
 
 /** The document the form is rendered into, which is a document away from the one this module runs in wherever that is
@@ -13,6 +14,15 @@ import { format, isSameMonth, isValid, parseISO } from 'date-fns';
  */
 function documentOf(element: Element | null) {
   return element?.ownerDocument ?? document;
+}
+
+/** Whether the focus is on an element, going by the document that element is in.
+ *
+ * @param element - The element to look for the focus on
+ * @returns - Whether `element` holds the focus
+ */
+function hasFocus(element: Element | null) {
+  return element !== null && documentOf(element).activeElement === element;
 }
 
 /** The window of the document above, which is the only way to a viewport and to the events that belong to one.
@@ -107,7 +117,8 @@ export function useDateFormatter<S extends StrictRJSFSchema = RJSFSchema>(schema
  * @returns - True if the press will reach that button
  */
 function pressOpensThePopup(target: EventTarget | null, trigger: HTMLElement | null) {
-  if (!trigger || !(target instanceof Element)) {
+  // The form's own window is asked for `Element`: a node of a form rendered into a frame is no instance of ours
+  if (!trigger || !(target instanceof windowOf(trigger).Element)) {
     return false;
   }
   return trigger.contains(target) || target.closest('label')?.control === trigger;
@@ -198,6 +209,13 @@ export function useDatePicker<V>({
   onBlur,
 }: UseDatePickerProps<V>) {
   const [isOpen, setIsOpen] = useState(false);
+  // What a close leaves for the commit that renders it: the blur to report should that commit unmount the widget
+  // instead, and whether the close was a press elsewhere, which is yet to take the focus from a trigger that holds it
+  const pendingClose = useRef<{ reportBlur: () => void; isPressElsewhere: boolean } | null>(null);
+  // Whether the consumer has been told that the field has the focus. Every report goes through it, so the consumer
+  // hears focus and blur in turn however many of the ways in and out of the popup see the same one: opening it and the
+  // trigger's own focus event, closing it and the trigger's own blur event
+  const isFocusReported = useRef(false);
   // A new object for every new value, where `initialDate` alone is `undefined` for every empty one: a value the parent
   // replaces and then restores must not revive a draft made against it
   const basis = useMemo(() => ({ date: initialDate }), [initialDate]);
@@ -222,17 +240,6 @@ export function useDatePicker<V>({
     setSavedDraft({ basis, date: basis.date, month: basis.date ?? new Date(), picked: false });
   }, [basis]);
 
-  /** Return focus to the trigger, which closing the popup does from anywhere inside it: the element focus was on is
-   * about to be unmounted, and focus would fall to the document body, losing a keyboard user their place in the form.
-   * A press outside moved focus itself, so that one is left where the user put it
-   */
-  const returnFocusFromPopup = useCallback(() => {
-    const popup = containerRef.current;
-    if (popup?.contains(documentOf(popup).activeElement)) {
-      triggerRef.current?.focus();
-    }
-  }, []);
-
   /** Store what the popup is holding, which closing it does whenever the user chose a date. A field holding a `''`
    * left over from a cleared one commits its empty value instead, since `''` is no more a date than it is a date-time
    * and fails the format the field declares. That `''` is the only value dismissing the picker rewrites: a field
@@ -247,27 +254,95 @@ export function useDatePicker<V>({
     }
   }, [draft, emptyValue, formatDate, onChange, value]);
 
-  /** Close the popup, storing the date it holds, which every way out of it but Escape does
+  /** Tell the consumer the field has the focus, unless they have been told so already: where the popup is open, and
+   * so for a focus a close returns to the trigger, which `reportHeldFocus()` reports after that close's blur
    */
-  const closePicker = useCallback(() => {
-    setIsOpen(false);
-    commitDate();
-    // Manually invoke the blur handler to ensure blur event is triggered
-    if (onBlur) {
-      onBlur(id, value);
+  const reportFocus = useCallback(() => {
+    if (!isFocusReported.current) {
+      isFocusReported.current = true;
+      onFocus?.(id, value);
     }
-  }, [commitDate, id, onBlur, value]);
+  }, [id, onFocus, value]);
+
+  /** Tell the consumer the field has lost the focus, unless they have been told so already
+   */
+  const reportBlur = useCallback(() => {
+    if (isFocusReported.current) {
+      isFocusReported.current = false;
+      onBlur?.(id, value);
+    }
+  }, [id, onBlur, value]);
+
+  /** Report the focus the trigger holds once a close has reported its blur, which is how the consumer hears that the
+   * field was left and is now back in use: the trigger kept the focus through the close, or was handed it by one
+   */
+  const reportHeldFocus = useCallback(() => {
+    if (hasFocus(triggerRef.current)) {
+      reportFocus();
+    }
+  }, [reportFocus]);
+
+  /** Close the popup, storing the date it holds, which every way out of it but Escape does. Blur is reported from the
+   * close Effect rather than here, so the parent's update to `value` is in hand before the consumer hears about it
+   *
+   * @param [isPressElsewhere=false] - Whether the close is a press elsewhere, which moves the focus only once this
+   *          returns, if it does: a trigger that still holds the focus is then left to report its own loss of it
+   */
+  const closePicker = useCallback(
+    (isPressElsewhere = false) => {
+      pendingClose.current = { reportBlur, isPressElsewhere };
+      setIsOpen(false);
+      commitDate();
+    },
+    [commitDate, reportBlur],
+  );
 
   /** Close the popup without storing anything, which Escape does: a date the user was trying out in the calendar is
    * not one they asked to store
    */
   const cancelPicker = useCallback(() => {
-    returnFocusFromPopup();
-    setIsOpen(false);
-    if (onBlur) {
-      onBlur(id, value);
+    // Closing from inside the popup returns focus to the trigger: the element focus was on is about to be unmounted,
+    // and focus would fall to the document body, losing a keyboard user their place in the form. It moves before the
+    // blur is reported, so whatever takes it afterwards keeps it, as the consumer's `onBlur` can
+    const popup = containerRef.current;
+    if (popup?.contains(documentOf(popup).activeElement)) {
+      triggerRef.current?.focus();
     }
-  }, [id, onBlur, returnFocusFromPopup, value]);
+    pendingClose.current = { reportBlur, isPressElsewhere: false };
+    setIsOpen(false);
+    // Here rather than from the close Effect, there being no save to wait for. The focus the trigger holds is still
+    // that Effect's to report: by then the trigger's blur handler is a closed popup's, and reports a loss of it
+    reportBlur();
+  }, [reportBlur]);
+
+  // The close commit includes ordinary parent updates, but cannot await a later transition or async response. Being
+  // inside the commit, a `flushSync` the consumer calls from `onBlur`, or from the `onFocus` that follows it, is
+  // deferred to the next render rather than flushed, and React logs an error saying so
+  useEffect(() => {
+    const pending = pendingClose.current;
+    if (!isOpen && pending) {
+      pendingClose.current = null;
+      // Whether a press elsewhere takes the focus from a trigger that holds it is not known until the press is over,
+      // so the trigger's own blur event is what reports it
+      if (!pending.isPressElsewhere || !hasFocus(triggerRef.current)) {
+        callWithDeferredThrow(reportBlur);
+        callWithDeferredThrow(reportHeldFocus);
+      }
+    }
+  }, [isOpen, reportBlur, reportHeldFocus]);
+
+  // A save can replace this widget before the close Effect runs. There is no new
+  // value to read in that case, so preserve the notification with its previous value.
+  useEffect(
+    () => () => {
+      const pending = pendingClose.current;
+      pendingClose.current = null;
+      if (pending) {
+        callWithDeferredThrow(pending.reportBlur);
+      }
+    },
+    [],
+  );
 
   const latestCancel = useLatest(cancelPicker);
   const latestClose = useLatest(closePicker);
@@ -287,7 +362,7 @@ export function useDatePicker<V>({
       if (containerRef.current?.contains(e.target as Node) || pressOpensThePopup(e.target, triggerRef.current)) {
         return;
       }
-      latestClose.current();
+      latestClose.current(true);
     };
     // The document the form is in rather than this module's: neither a press nor a key inside a framed form reaches
     // ours, which would leave Done and the trigger as the only ways out of the popup
@@ -337,36 +412,30 @@ export function useDatePicker<V>({
       }
       resetToStoredValue();
       setIsOpen(true);
-      if (onFocus) {
-        onFocus(id, value);
-      }
+      reportFocus();
     },
-    [closePicker, id, isOpen, onFocus, resetToStoredValue, value],
+    [closePicker, isOpen, reportFocus, resetToStoredValue],
   );
 
-  /** Report focus on the trigger
-   */
-  const handleFocus = useCallback(() => {
-    if (onFocus) {
-      onFocus(id, value);
-    }
-  }, [id, onFocus, value]);
-
-  /** Report blur on the trigger, which the popup's own close paths report for themselves
+  /** Report blur on the trigger, unless the popup is open: the focus has moved into it, which the field still holds,
+   * and each way out of the popup reports the blur for itself
    */
   const handleBlur = useCallback(() => {
-    if (!isOpen && onBlur) {
-      onBlur(id, value);
+    if (!isOpen) {
+      reportBlur();
     }
-  }, [id, isOpen, onBlur, value]);
+  }, [isOpen, reportBlur]);
 
   /** Close the popup from its Done button, returning focus to the trigger it was opened from — unconditionally, where
    * Escape returns it only from inside the popup: a browser that does not focus a button on click, as Safari does not,
-   * leaves this press with no focus inside the popup to return from
+   * leaves this press with no focus inside the popup to return from. Focus moves while the popup that holds it is
+   * still mounted, so it never falls to the document body on the way, and before the save, so a save the parent
+   * renders at once, and the close Effect with it, already finds the focus returned and whatever takes it in that
+   * commit keeps it, as an `autoFocus` can
    */
   const handleDone = useCallback(() => {
-    closePicker();
     triggerRef.current?.focus();
+    closePicker();
   }, [closePicker]);
 
   // What the trigger displays and the calendar selects: the date the user is choosing while the popup is open, and
@@ -382,7 +451,7 @@ export function useDatePicker<V>({
     chooseDate,
     handleMonthChange,
     togglePicker,
-    handleFocus,
+    handleFocus: reportFocus,
     handleBlur,
     handleDone,
   };

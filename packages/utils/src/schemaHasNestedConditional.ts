@@ -11,17 +11,18 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   THEN_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its
- * top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or a
- * `patternProperties` entry. `retrieveSchema()` only resolves the `dependencies`/`if` declared directly on the
- * schema it is given, so a root-level retrieved schema never reflects a conditional branch switch that happens
- * deeper in the tree. `Form` uses this to detect when a comparison of root-level retrieved schemas can't be trusted
- * to decide whether sanitization is needed.
+ * top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or an
+ * `additionalProperties`, `unevaluatedProperties` or `patternProperties` entry. `retrieveSchema()` only resolves the
+ * `dependencies`/`if` declared directly on the schema it is given, so a root-level retrieved schema never reflects a
+ * conditional branch switch that happens deeper in the tree. `Form` uses this to detect when a comparison of
+ * root-level retrieved schemas can't be trusted to decide whether sanitization is needed.
  *
  * @param schema - The raw schema node to search
  * @param rootSchema - The root schema, used to resolve any `$ref`s encountered while searching
@@ -77,6 +78,10 @@ export default function schemaHasNestedConditional<S extends StrictRJSFSchema = 
     ...(isObject(patternProperties) ? (Object.values(patternProperties) as (S | boolean)[]) : []),
     ...(Array.isArray(items) ? items : [items]),
     resolved[ADDITIONAL_PROPERTIES_KEY] as S | boolean | undefined,
+    // Both keywords, rather than the one `additionalPropertiesKeyword()` gives precedence to: the question here is
+    // whether a conditional is hidden anywhere below, and a form that renders the keys either of them describes
+    // renders the branches inside it
+    (resolved as S & { unevaluatedProperties?: S | boolean })[UNEVALUATED_PROPERTIES_KEY],
     ...((resolved[ALL_OF_KEY] as (S | boolean)[] | undefined) ?? []),
     ...((resolved[ANY_OF_KEY] as (S | boolean)[] | undefined) ?? []),
     ...((resolved[ONE_OF_KEY] as (S | boolean)[] | undefined) ?? []),
