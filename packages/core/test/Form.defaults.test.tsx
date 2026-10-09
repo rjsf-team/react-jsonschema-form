@@ -602,4 +602,267 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onSubmit, { foo: "I'm the only one" }, true);
     });
   });
+
+  describe('a dependency or if/then/else swap replaces the old branch defaults (#5349)', () => {
+    const cfgFor = (name: string): RJSFSchema => ({
+      type: 'object',
+      default: { name },
+      properties: { name: { type: 'string' } },
+    });
+
+    const dependencySchema: RJSFSchema = {
+      type: 'object',
+      properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+      dependencies: {
+        mode: {
+          oneOf: [
+            { properties: { mode: { const: 'a' }, cfg: cfgFor('a') } },
+            { properties: { mode: { const: 'b' }, cfg: cfgFor('b') } },
+          ],
+        },
+      },
+    };
+
+    /** The same two branches as `dependencySchema`, expressed as the other conditional keyword */
+    const conditionalSchema: RJSFSchema = {
+      type: 'object',
+      properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+      if: { properties: { mode: { const: 'a' } } },
+      then: { properties: { cfg: cfgFor('a') } },
+      else: { properties: { cfg: cfgFor('b') } },
+    };
+
+    const selectMode = (node: Element, mode: string) =>
+      user.selectOptions(node.querySelector<HTMLSelectElement>('#root_mode')!, mode);
+
+    it("applies the newly selected branch's object default", async () => {
+      const { node, onChange } = createFormComponent({ schema: dependencySchema });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' } }, 'root_mode');
+    });
+
+    it("applies the newly selected branch's object default for if/then/else", async () => {
+      const { node, onChange } = createFormComponent({ schema: conditionalSchema });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' } }, 'root_mode');
+    });
+
+    it('restores the first branch default on switching back', async () => {
+      const { node, onChange } = createFormComponent({ schema: dependencySchema });
+
+      await selectMode(node, 'b');
+      await selectMode(node, 'a');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'a', cfg: { name: 'a' } }, 'root_mode');
+    });
+
+    it("merges the new branch's default with the leaf defaults it declares", async () => {
+      const cfgWithRatio = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          dependencies: {
+            mode: {
+              oneOf: [
+                { properties: { mode: { const: 'a' }, cfg: cfgWithRatio('a') } },
+                { properties: { mode: { const: 'b' }, cfg: cfgWithRatio('b') } },
+              ],
+            },
+          },
+        },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b', ratio: 0 } }, 'root_mode');
+    });
+
+    it("applies the newly selected branch's array default", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          dependencies: {
+            mode: {
+              oneOf: [
+                {
+                  properties: {
+                    mode: { const: 'a' },
+                    nums: { type: 'array', items: { type: 'number' }, default: [1] },
+                  },
+                },
+                {
+                  properties: {
+                    mode: { const: 'b' },
+                    nums: { type: 'array', items: { type: 'number' }, default: [2] },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', nums: [2] }, 'root_mode');
+    });
+
+    it('keeps a value the user edited away from the old branch default', async () => {
+      const { node, onChange } = createFormComponent({ schema: dependencySchema });
+
+      await user.clear(node.querySelector<HTMLInputElement>('#root_cfg_name')!);
+      await user.type(node.querySelector<HTMLInputElement>('#root_cfg_name')!, 'mine');
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'mine' } }, 'root_mode');
+    });
+
+    it('keeps the old value when the new branch declares no default for the key', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          dependencies: {
+            mode: {
+              oneOf: [
+                { properties: { mode: { const: 'a' }, cfg: cfgFor('a') } },
+                {
+                  properties: {
+                    mode: { const: 'b' },
+                    cfg: { type: 'object', properties: { name: { type: 'string' } } },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a' } }, 'root_mode');
+    });
+
+    it('leaves the value alone when the two branches compute the same default', async () => {
+      const cfgTitled = (title: string): RJSFSchema => ({
+        title,
+        type: 'object',
+        default: { name: 'x' },
+        properties: { name: { type: 'string' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          dependencies: {
+            mode: {
+              oneOf: [
+                { properties: { mode: { const: 'a' }, cfg: cfgTitled('A') } },
+                { properties: { mode: { const: 'b' }, cfg: cfgTitled('B') } },
+              ],
+            },
+          },
+        },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'x' } }, 'root_mode');
+    });
+
+    // A stub is in the retrieved schema only because the data holds the key, and the fill only writes an
+    // `additionalProperties` default before the form's initial defaults have been generated, so nothing would put a
+    // value dropped from under one back
+    it('keeps a value held under a stubbed additional property whose schema the swap changed', async () => {
+      const extraFor = (tag: string): RJSFSchema => ({
+        type: 'object',
+        default: { tag },
+        properties: { tag: { type: 'string' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          dependencies: {
+            mode: {
+              oneOf: [
+                { properties: { mode: { const: 'a' } }, additionalProperties: extraFor('a') },
+                { properties: { mode: { const: 'b' } }, additionalProperties: extraFor('b') },
+              ],
+            },
+          },
+        },
+        formData: { mode: 'a', extra: { tag: 'a' } },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', extra: { tag: 'a' } }, 'root_mode');
+    });
+
+    it('keeps a read-only object the branches declare identically', async () => {
+      const meta: RJSFSchema = {
+        type: 'object',
+        readOnly: true,
+        default: { createdBy: 'placeholder' },
+        properties: { createdBy: { type: 'string' } },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          dependencies: {
+            mode: {
+              oneOf: [
+                { properties: { mode: { const: 'a' }, cfg: cfgFor('a'), meta } },
+                { properties: { mode: { const: 'b' }, cfg: cfgFor('b'), meta } },
+              ],
+            },
+          },
+        },
+        formData: { mode: 'a', meta: { createdBy: 'server' } },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(
+        onChange,
+        { mode: 'b', cfg: { name: 'b' }, meta: { createdBy: 'server' } },
+        'root_mode',
+      );
+    });
+
+    // A boolean subschema is no object, so neither a symbol test nor `retrieveSchema()` can be asked about it
+    it('swaps alongside a property declared as a boolean subschema', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' }, anything: true },
+          dependencies: {
+            mode: {
+              oneOf: [
+                { properties: { mode: { const: 'a' }, cfg: cfgFor('a') } },
+                { properties: { mode: { const: 'b' }, cfg: cfgFor('b') } },
+              ],
+            },
+          },
+        },
+        formData: { mode: 'a', anything: 'kept' },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' }, anything: 'kept' }, 'root_mode');
+    });
+  });
 });

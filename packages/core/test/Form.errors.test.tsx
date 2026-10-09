@@ -1204,6 +1204,74 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
 
         expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', food: 'meat' } }, 'root_m_animal');
       });
+
+      // The root retrieved schema is the same object either side of this swap, since `retrieveSchema()` resolves only
+      // the conditionals declared on the schema it is given, so the swapped subschema is only reachable by walking in
+      it("should apply a nested dependency's new branch defaults over the old branch's (#5349)", async () => {
+        const dietFor = (food: string): RJSFSchema => ({
+          type: 'object',
+          default: { food },
+          properties: { food: { type: 'string' } },
+        });
+        const nestedDependentDefaultSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            keep: { type: 'string', default: 'untouched' },
+            m: {
+              type: 'object',
+              properties: { animal: { type: 'string', enum: ['Cat', 'Fish'], default: 'Fish' } },
+              dependencies: {
+                animal: {
+                  oneOf: [
+                    { properties: { animal: { const: 'Cat' }, diet: dietFor('meat') } },
+                    { properties: { animal: { const: 'Fish' }, diet: dietFor('worms') } },
+                  ],
+                },
+              },
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({ schema: nestedDependentDefaultSchema });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_m_animal')!, 'Cat');
+
+        expectToHaveBeenCalledWithFormData(
+          onChange,
+          { keep: 'untouched', m: { animal: 'Cat', diet: { food: 'meat' } } },
+          'root_m_animal',
+        );
+      });
+
+      it("should apply a new branch's defaults for a dependency nested behind a $ref (#5349)", async () => {
+        const dietFor = (food: string): RJSFSchema => ({
+          type: 'object',
+          default: { food },
+          properties: { food: { type: 'string' } },
+        });
+        const refDependentDefaultSchema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            Animal: {
+              type: 'object',
+              properties: { animal: { type: 'string', enum: ['Cat', 'Fish'], default: 'Fish' } },
+              dependencies: {
+                animal: {
+                  oneOf: [
+                    { properties: { animal: { const: 'Cat' }, diet: dietFor('meat') } },
+                    { properties: { animal: { const: 'Fish' }, diet: dietFor('worms') } },
+                  ],
+                },
+              },
+            },
+          },
+          properties: { m: { $ref: '#/definitions/Animal' } },
+        };
+        const { node, onChange } = createFormComponent({ schema: refDependentDefaultSchema });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_m_animal')!, 'Cat');
+
+        expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', diet: { food: 'meat' } } }, 'root_m_animal');
+      });
     });
 
     describe('customValidate errors, live validation', () => {

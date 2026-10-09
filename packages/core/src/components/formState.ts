@@ -46,6 +46,7 @@ import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
+import stalePathsForNewSchema from './stalePathsForNewSchema.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  *
@@ -494,6 +495,11 @@ interface DeriveDataOptions<T, S extends StrictRJSFSchema, F extends FormContext
    * instance has generated defaults before
    */
   isReset?: boolean;
+  /** The path of the field whose change started this pass. Only a change has one, and `stalePathsForNewSchema()` is
+   * its only reader: the value at that path is the user's rather than any branch's default, and a pass with no path
+   * has no change to have swapped a subschema
+   */
+  changedPath?: FieldPathList;
 }
 
 /** Settles the data for `props` and `inputFormData`: any missing required defaults are filled in, then, when asked,
@@ -512,7 +518,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   options: DeriveDataOptions<T, S, F>,
   props: FormProps<T, S, F>,
 ): DerivedData<T, S, F> {
-  const { shouldSanitize = false, isReset = false } = options;
+  const { shouldSanitize = false, isReset = false, changedPath } = options;
   const { uiSchema = {} } = props;
   const resolved = resolveSchemaUtils(props, current);
   const { schemaUtils, hasNestedConditionalSchema } = resolved;
@@ -534,6 +540,10 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   let wasSanitized = false;
   const preventInfiniteSanitize: string[] = [];
   let sanitize = shouldSanitize;
+  // Each value dropped as a swapped-away branch's default, so the pass can put one the fill never replaced back; see
+  // the loop below
+  const droppedStaleValues: [FieldPathList, unknown][] = [];
+  let staleDefaultsSearched = false;
   do {
     formData = replaceEqualDeep(
       shareBase,
@@ -551,10 +561,31 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     if (isSanitizing && !preventInfiniteSanitize.includes(formHash)) {
       // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
       // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
-      const sanitizedFormData = replaceEqualDeep(
+      let sanitizedFormData = replaceEqualDeep(
         formData,
         schemaUtils.sanitizeDataForNewSchema(retrievedSchema, current?.retrievedSchema, formData),
       );
+      // Sanitizing leaves a value the branch just swapped away declared as its `default` in place, so the newly
+      // selected branch's own `default` never reaches the key (#5349). Dropping each such key lets the fill at the
+      // top of the next pass write the new one, which is why this runs here rather than after the loop.
+      //
+      // Searched once per pass through here, on the first sanitizing iteration only: the search compares against
+      // `current.retrievedSchema` and `current.formData`, neither of which moves between iterations, so there is one
+      // swap to find. A later iteration could only find it again and drop the value the fill has just written —
+      // and since the data is committed below before the hashes are consulted, that iteration could be the one whose
+      // hash ends the loop, leaving the key with no value at all
+      if (!staleDefaultsSearched && areSchemaUtilsReused && changedPath !== undefined && current !== undefined) {
+        staleDefaultsSearched = true;
+        stalePathsForNewSchema(schemaUtils, retrievedSchema, current.retrievedSchema, formData, current.formData, {
+          changedPath,
+          initialDefaultsGenerated,
+          uiSchema,
+        }).forEach((stalePath) => {
+          droppedStaleValues.push([stalePath, getByPath(sanitizedFormData, stalePath)]);
+          sanitizedFormData = copyAlongPath(sanitizedFormData, stalePath);
+          unsetByPath(sanitizedFormData, stalePath);
+        });
+      }
       wasSanitized = sanitizedFormData !== formData;
       if (wasSanitized) {
         // Update both the formData AND defaultsFormData due to the sanitize so the loop works with the new data
@@ -570,6 +601,26 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       wasSanitized = false;
     }
   } while (wasSanitized);
+
+  // A value dropped above was dropped on the strength of the newly selected branch's defaults holding something for
+  // its key, which is what the fill normally writes there. A few things can still leave the key empty: a stale
+  // default can sit under a key whose very presence in the retrieved schema depended on the data holding it, dropping
+  // it can flip a branch that reads it, and a nested level's defaults are computed as a root, where the real fill
+  // knows whether its parent was required. Rather than enumerate those, put back whatever the fill did not replace:
+  // the worst this fix can then do is nothing at all. That holds only while the value goes back into the container it
+  // came out of, which is why the container has to still be there and still be an object — `setByPath()` creates
+  // whatever the path is missing, so a drop that pruned or retyped an ancestor, by flipping a branch that reads the
+  // key, would otherwise be answered by rebuilding a level the schema no longer describes or by overwriting what the
+  // newly selected branch wrote at that ancestor. `retrievedSchema` is deliberately not resolved again for the
+  // restored data: the loop above has already settled, and a key only reaches here when the fill declined to write
+  // it, which is the case the restore exists to make harmless rather than one worth another resolution pass.
+  droppedStaleValues.forEach(([stalePath, droppedValue]) => {
+    const parentPath = stalePath.slice(0, -1);
+    const parent = parentPath.length > 0 ? getByPath(formData, parentPath) : formData;
+    if (droppedValue !== undefined && isPlainObject(parent) && getByPath(formData, stalePath) === undefined) {
+      formData = setByPath(copyAlongPath(formData, stalePath), stalePath, droppedValue);
+    }
+  });
 
   // Always derived, never skipped on the grounds that the schema utilities were reused: the registry is built from
   // `idPrefix`, `widgets`, `templates`, `fields`, `formContext` and `uiSchema` too, none of which the utilities are
@@ -1029,7 +1080,7 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
             isWholeValueSelectAt<T, S, F>(schemaUtils, retrievedSchema, path, changedData)
         : true);
     // Only the data and its context are derived here; the errors are reconciled below
-    const derived = deriveFormData(current, inputForDefaults, { shouldSanitize }, props);
+    const derived = deriveFormData(current, inputForDefaults, { shouldSanitize, changedPath: path }, props);
     formData = derived.formData;
     context = derived.context;
 
