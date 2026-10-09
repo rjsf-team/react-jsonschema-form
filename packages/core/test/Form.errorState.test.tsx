@@ -951,6 +951,41 @@ describe('Error state consistency when deriving from new props', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
+  it('moves the errors of an additional property to the name it is renamed to, the fields own included', async () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', additionalProperties: { type: 'string', minLength: 3 } }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ first: 'a', second: 'b' }}
+      />,
+    );
+    const rename = async (from: string, to: string) => {
+      const keyInput = input(container, `root_${from}-key`);
+      await user.clear(keyInput);
+      await user.type(keyInput, to);
+      await user.tab();
+    };
+    await submitForm(container, user);
+    await user.type(input(container, 'root_second'), 'c');
+    expect(errorListMessages(container)).toEqual(['.first must NOT have fewer than 3 characters', '.second custom:bc']);
+
+    await rename('first', 'primary');
+    await rename('second', 'other');
+
+    expect(errorListMessages(container)).toEqual([
+      '.primary must NOT have fewer than 3 characters',
+      '.other custom:bc',
+    ]);
+    expect(fieldErrorsById(container)).toEqual({
+      root_primary: ['must NOT have fewer than 3 characters'],
+      root_other: ['custom:bc'],
+    });
+
+    await user.type(input(container, 'root_primary'), 'bc');
+    expect(fieldErrorsById(container)).toEqual({ root_primary: ['custom:abc'], root_other: ['custom:bc'] });
+  });
+
   it('lists a message once when a field raises as its own what the validator also reported', async () => {
     const addrSchema: RJSFSchema = {
       type: 'object',
