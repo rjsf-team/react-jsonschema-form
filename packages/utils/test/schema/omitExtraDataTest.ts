@@ -474,6 +474,21 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { test: { field1: '' } };
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ test: { field1: '' } });
       });
+
+      it('should keep an empty required object its additionalProperties describes', () => {
+        // The `required` names the key whatever keyword describes it, so an object the `properties` do not name is as
+        // required as one they do
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['test'],
+          additionalProperties: {
+            type: 'object',
+            properties: { field1: { type: 'string' } },
+          },
+        };
+        const formData = { test: { field1: '' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ test: { field1: '' } });
+      });
     });
 
     describe('nested optional objects', () => {
@@ -906,6 +921,19 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('drops a value whose allOf merges to false', () => {
+        // A `false` among the entries merges to `false`, which no value satisfies: the key goes, rather than keeping
+        // the value as it was written with none of the keys the other entries describe filtered out of it
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            forbidden: { allOf: [{ type: 'object', properties: { x: { type: 'string' } } }, false] },
+          },
+        };
+        const formData = { forbidden: { x: 'hi', extra: 'drop' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({});
+      });
+
       it('treats every key as optional when a property schema is boolean true (no required list)', () => {
         // boolean true is a JSON Schema shorthand for "allow anything". It carries no required list,
         // so setProperty treats all keys in the object value as optional.
@@ -1264,6 +1292,33 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         };
         const formData = { ab: 'gone', ac: 'kept' };
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ ac: 'kept' });
+      });
+
+      it('keeps a pattern-matched object whose required child is empty', () => {
+        // The names a pattern-matched key requires are in the merge of the patterns matching it, not on the `allOf`
+        // wrapping them, so an empty required child must not take the object it belongs to with it
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: {
+            '^a': { type: 'object', required: ['x'], properties: { x: { type: 'string' } } },
+          },
+        };
+        const formData = { ab: { x: '' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ ab: { x: '' } });
+      });
+
+      it('keeps an empty pattern-matched object the object itself requires', () => {
+        // Dropping a key the `required` names leaves data the form then reports as missing, for a key the user has
+        // a field for and has filled in as far as it asks them to
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['ab'],
+          patternProperties: {
+            '^a': { type: 'object', properties: { x: { type: 'string' } } },
+          },
+        };
+        const formData = { ab: { x: '' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ ab: { x: '' } });
       });
 
       it('skips keys already handled by properties when processing patternProperties', () => {

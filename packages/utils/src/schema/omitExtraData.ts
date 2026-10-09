@@ -105,7 +105,13 @@ export default function omitExtraData<
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = findSchemaDefinition<S>(sd.$ref, rootSchema);
+          sd = resolveRef(sd.$ref);
+        }
+        // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
+        // the names it requires live: read off the wrapper around them it requires nothing, and a required child
+        // holding an empty value would take the whole object down with it
+        if (sd.allOf) {
+          sd = mergeAllOfOnce(sd, sd.allOf);
         }
         const innerRequired = new Set(sd.required ?? []);
         // Drop this optional object when every key in v is both optional in the inner schema
@@ -145,7 +151,7 @@ export default function omitExtraData<
             // it with, so `getAdditionalPropertySchema()` answers for it here too: filtered by the first matching
             // pattern alone, such a key loses whatever only another of them describes, out from under a field that
             // edited it
-            setProperty(key, getAdditionalPropertySchema<S>(childSchema, key), value);
+            setProperty(key, getAdditionalPropertySchema<S>(childSchema, key), value, requiredSet.has(key));
           }
         }
       }
@@ -157,13 +163,13 @@ export default function omitExtraData<
       const addlSchema = additionalProperties as S | boolean;
       if (patternPropertiesRest !== undefined) {
         for (const key of patternPropertiesRest) {
-          setProperty(key, addlSchema, source[key]);
+          setProperty(key, addlSchema, source[key], requiredSet.has(key));
         }
       } else {
         const knownProperties = new Set(Object.keys(properties ?? {}));
         for (const [key, value] of Object.entries(source)) {
           if (!knownProperties.has(key)) {
-            setProperty(key, addlSchema, value);
+            setProperty(key, addlSchema, value, requiredSet.has(key));
           }
         }
       }
@@ -338,6 +344,27 @@ export default function omitExtraData<
    */
   const mergedAllOfSchemas = new WeakMap<object, S>();
 
+  /** Each `$ref` resolved once per call, so that the same reference is the same object everywhere it is read. A `$ref`
+   * with sibling keywords resolves to a wrapper `findSchemaDefinition()` builds fresh on every call, which the
+   * `allOf` merges are remembered under: resolved twice, such a schema is merged twice over for every node of the form
+   * data it describes
+   */
+  const resolvedRefs = new Map<string, S>();
+
+  /** Resolves a `$ref` against this call's `rootSchema`
+   *
+   * @param ref - The reference to resolve
+   * @returns - The schema it names
+   */
+  function resolveRef(ref: string): S {
+    let resolved = resolvedRefs.get(ref);
+    if (resolved === undefined) {
+      resolved = findSchemaDefinition<S>(ref, rootSchema);
+      resolvedRefs.set(ref, resolved);
+    }
+    return resolved;
+  }
+
   /** Resolves the references of one `allOf` entry
    *
    * @param entry - The `allOf` entry to resolve, which a boolean shorthand leaves alone
@@ -345,6 +372,26 @@ export default function omitExtraData<
    */
   function resolveAllOfEntry(entry: JSONSchema7Definition): S | boolean {
     return isObject(entry) ? resolveAllReferences<S>(entry as S, rootSchema, []) : entry;
+  }
+
+  /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.
+   *
+   * Each entry's references are resolved before merging, the way `resolveSchema()` runs every `allOf` entry through
+   * `retrieveSchemaInternal()` before the parent is merged. The shallow merge hoists an entry's `$ref` onto the merged
+   * schema rather than following it, so the referenced schema's properties would be taken for extra data, and a
+   * `customMergeAllOf` would be handed a `$ref` the form's own merge never sees.
+   *
+   * @param schemaDef - The schema carrying the `allOf`, which is what the merge is remembered under
+   * @param allOf - The `allOf` entries to merge into it
+   * @returns - The merged schema
+   */
+  function mergeAllOfOnce(schemaDef: S, allOf: NonNullable<S['allOf']>): S {
+    let merged = mergedAllOfSchemas.get(schemaDef);
+    if (merged === undefined) {
+      merged = mergeAllOf<S, F>(context, { ...schemaDef, allOf: allOf.map(resolveAllOfEntry) }).schema;
+      mergedAllOfSchemas.set(schemaDef, merged);
+    }
+    return merged;
   }
 
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
@@ -373,19 +420,17 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(findSchemaDefinition<S>(ref, rootSchema), source, target, useSourceAsFallback);
+      return omit(resolveRef(ref), source, target, useSourceAsFallback);
     }
     if (allOf) {
-      let merged = mergedAllOfSchemas.get(schemaDef);
-      if (!merged) {
-        // Resolve each entry's references before merging, the way `resolveSchema()` runs every `allOf` entry through
-        // `retrieveSchemaInternal()` before the parent is merged. The shallow merge hoists an entry's `$ref` onto the
-        // merged schema rather than following it, so the referenced schema's properties would be taken for extra data,
-        // and a `customMergeAllOf` would be handed a `$ref` the form's own merge never sees
-        merged = mergeAllOf<S, F>(context, { ...localSchema, allOf: allOf.map(resolveAllOfEntry) }).schema;
-        mergedAllOfSchemas.set(schemaDef, merged);
+      localSchema = mergeAllOfOnce(localSchema, allOf);
+      // An `allOf` holding a `false` merges to that `false`, the one boolean a merge yields — a `true` entry merges to
+      // `{}` — and no value satisfies it. The keyword handlers below read nothing off a boolean, so the value would
+      // otherwise reach the fallback that returns `source`, keeping even the keys the entries beside the `false`
+      // describe nothing about
+      if (!isSchemaObject<S>(localSchema)) {
+        return undefined;
       }
-      localSchema = merged;
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.

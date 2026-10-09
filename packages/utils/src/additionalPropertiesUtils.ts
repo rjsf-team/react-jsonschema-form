@@ -1,6 +1,14 @@
 import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
 import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
 
+/** The compiled form of every `patternProperties` pattern seen so far, so that testing a key against one costs no
+ * compile of its own. A schema names a small, fixed set of patterns, where the keys they are tested against are the
+ * form data's: every render of an object filters each of its keys by each of its patterns, as does every prune of its
+ * data, so a map of a few thousand keys compiled the same handful of patterns thousands of times over on every
+ * keystroke in it.
+ */
+const compiledPatterns = new Map<string, RegExp>();
+
 /** Compiles a `patternProperties` pattern the way a validator compiles it, with the `u` flag: Ajv's `unicodeRegExp` is
  * on by default and `@cfworker/json-schema` compiles every pattern under it, so without the flag a `\p{Lu}` is the
  * literal text `p{Lu}` and the keys the form describes, allows and seeds through a pattern are not the keys validation
@@ -15,11 +23,20 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * @returns - The compiled pattern
  */
 function patternRegExp(pattern: string): RegExp {
-  try {
-    return RegExp(pattern, 'u');
-  } catch {
-    return RegExp(pattern);
+  const cached = compiledPatterns.get(pattern);
+  if (cached !== undefined) {
+    return cached;
   }
+  let compiled: RegExp;
+  try {
+    compiled = RegExp(pattern, 'u');
+  } catch {
+    compiled = RegExp(pattern);
+  }
+  // Neither flag is one that gives a `RegExp` a `lastIndex` for `test()` to read, so the compiled pattern answers for
+  // one key the way it answers for the next
+  compiledPatterns.set(pattern, compiled);
+  return compiled;
 }
 
 /** Returns the subset of 'patternProperties' specifications that match the given 'key'
