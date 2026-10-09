@@ -874,8 +874,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         },
       };
       expect(
-        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { sibling: 'y', list: ['a', 'legacy', null] }),
-        // The sibling's removed value falls back to the only allowed enum value; the untouched list is kept whole
+        schemaUtils.sanitizeDataForNewSchema(
+          newSchema,
+          oldSchema,
+          { sibling: 'y', list: ['a', 'legacy', null] },
+          { sibling: 'y', list: ['a', 'legacy', null] },
+        ),
+        // The sibling's removed value falls back to the only allowed enum value; with the previous data
+        // passed, the way Form calls it, the untouched list is kept whole
       ).toEqual({ sibling: 'x', list: ['a', 'legacy', null] });
     });
     it('still filters items when a nested if/then narrows the items enum for the current data (#5250)', () => {
@@ -1218,7 +1224,154 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['qwerty', 'asdfg'])).toEqual({});
     });
+    it('always filters enum values when no previous data is passed, the way direct callers behave on v7', () => {
+      // The formDataForNewOption path: switching between oneOf options that share an enum items schema
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          one: { type: 'string', enum: ['a', 'b'] },
+          list: { type: 'array', items: { type: 'string', enum: ['a', 'b'] } },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          one: { type: 'string', enum: ['a', 'b'] },
+          list: { type: 'array', items: { type: 'string', enum: ['a', 'b'] } },
+        },
+      };
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { one: 'legacy', list: ['a', 'legacy'] }),
+      ).toEqual({ list: ['a'] });
+    });
     describe('with the previous data passed, the way Form calls it', () => {
+      it('keeps fields a nested conditional hides or retypes, since the previous data only decides the enum filter', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            obj: {
+              type: 'object',
+              properties: { pick: { type: 'string' } },
+              if: { properties: { pick: { const: 'y' } }, required: ['pick'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          },
+        };
+        testValidator.setReturnValues({ isValid: [true, false] });
+        // pick flipped from 'y' to 'x', so `extra` is no longer in the resolved schema; v7 keeps the value
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            schema,
+            schema,
+            { obj: { pick: 'x', extra: 'e' } },
+            { obj: { pick: 'y', extra: 'e' } },
+          ),
+        ).toEqual({ obj: { pick: 'x', extra: 'e' } });
+        const retypeSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            obj: {
+              type: 'object',
+              properties: { pick: { type: 'string' } },
+              if: { properties: { pick: { const: 'y' } }, required: ['pick'] },
+              then: { properties: { val: { type: 'number' } } },
+              else: { properties: { val: { type: 'string' } } },
+            },
+          },
+        };
+        testValidator.setReturnValues({ isValid: [true, false] });
+        // The flipped conditional retypes `val` from number to string; v7 keeps the value rather than clearing it
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            retypeSchema,
+            retypeSchema,
+            { obj: { pick: 'x', val: 5 } },
+            { obj: { pick: 'y', val: 5 } },
+          ),
+        ).toEqual({ obj: { pick: 'x', val: 5 } });
+      });
+      it('keeps element values across a reorder or removal when pairing by index', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            rows: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: { t: { type: 'string' } },
+                if: { properties: { t: { const: 'y' } }, required: ['t'] },
+                then: { properties: { v: { type: 'number' } } },
+                else: { properties: { v: { type: 'string' } } },
+              },
+            },
+          },
+        };
+        testValidator.setReturnValues({ isValid: [false, false, true, false, false, true] });
+        // Reordered: pairing by index compares against the other row's branch, but only the filter may go wrong
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            schema,
+            schema,
+            {
+              rows: [
+                { t: 'x', v: 's' },
+                { t: 'y', v: 5 },
+              ],
+            },
+            {
+              rows: [
+                { t: 'y', v: 5 },
+                { t: 'x', v: 's' },
+              ],
+            },
+          ),
+        ).toEqual({
+          rows: [
+            { t: 'x', v: 's' },
+            { t: 'y', v: 5 },
+          ],
+        });
+        testValidator.setReturnValues({ isValid: [false, false, true, false] });
+        // First row removed
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            schema,
+            schema,
+            { rows: [{ t: 'x', v: 's' }] },
+            {
+              rows: [
+                { t: 'y', v: 5 },
+                { t: 'x', v: 's' },
+              ],
+            },
+          ),
+        ).toEqual({ rows: [{ t: 'x', v: 's' }] });
+      });
+      it('treats a subtree missing from the previous data as a previous value of undefined, not as no previous data', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            obj: {
+              type: 'object',
+              properties: {
+                pick: { type: 'string', enum: ['x', 'y'] },
+                list: { type: 'array', minItems: 2, items: { type: 'string', enum: ['a', 'b'] } },
+              },
+              if: { properties: { pick: { const: 'y' } }, required: ['pick'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          },
+        };
+        testValidator.setReturnValues({ isValid: [false, false] });
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            schema,
+            schema,
+            { obj: { pick: 'x', list: [null, null] } },
+            { other: 'z' },
+          ),
+        ).toEqual({ obj: { pick: 'x', list: [null, null] } });
+      });
       it('keeps placeholders when an unrelated nested if/then made Form sanitize on every change (#5451)', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -1360,7 +1513,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           ),
         ).toEqual({ sibling: 'edited', one: 'legacy', list: ['legacy'] });
       });
-      it('still filters items when the flip between previous and current data narrows the enum (#5250)', () => {
+      it('keeps items the previous data was offered when a sibling flip narrows the items enum (#5250)', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1375,9 +1528,12 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
             },
           },
         };
-        // The old side resolves first (previous `sibling` 'y', branch not taken), then the new side ('x', taken)
-        testValidator.setReturnValues({ isValid: [false, true] });
-        // The user flips `sibling` to 'x', which applies the `then` branch narrowing the items enum
+        // The old side resolves against the current data on the way down (the previous data only feeds the
+        // enum filter decision), so the single `isValid` call resolves `sibling` 'x' and takes the branch
+        testValidator.setReturnValues({ isValid: [true] });
+        // The user flips `sibling` to 'x', which applies the `then` branch narrowing the items enum. Both
+        // sides arrive at the list with that narrowed items schema, so the comparison agrees and the value
+        // the schema offered under the previous data is kept; without previous data the filter always runs
         expect(
           schemaUtils.sanitizeDataForNewSchema(
             schema,
@@ -1385,9 +1541,9 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
             { obj: { sibling: 'x', list: ['a', 'b'] } },
             { obj: { sibling: 'y', list: ['a', 'b'] } },
           ),
-        ).toEqual({ obj: { sibling: 'x', list: ['a'] } });
+        ).toEqual({ obj: { sibling: 'x', list: ['a', 'b'] } });
       });
-      it('pairs elements with the previous array by index when resolving the old side', () => {
+      it('keeps a moved row value the narrowed enum rejects when pairing by index', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1405,14 +1561,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
             },
           },
         };
-        // Six `isValid` calls happen: the items schema against the previous and current arrays, then the old
-        // and new side of each element. Only the last one - the new side of the moved `t: 'y'` row - takes the
-        // `then` branch
-        testValidator.setReturnValues({ isValid: [false, false, false, false, false, true] });
-        // The user inserted a row at the front: the `t: 'y'` row moved from index 0 to index 1, so it no
-        // longer has a previous element at its index and its old side resolves without data. That resolves
-        // the plain branch rather than the `then` branch, which differs from the new side, so the filter
-        // runs and the value the narrowed enum rejects falls back to the only offered option
+        // Three `isValid` calls happen: the items schema against the current array, then the old side of
+        // each element (the new side shares each resolution). Only the last one - the moved `t: 'y'` row -
+        // takes the `then` branch
+        testValidator.setReturnValues({ isValid: [false, false, true] });
+        // The user inserted a row at the front: the `t: 'y'` row moved from index 0 to index 1, so it has no
+        // previous element at its index and its previous value is `undefined`. The old and new leaf schemas
+        // for `v` still resolve to the same narrowed enum, so the value is kept - index pairing can keep a
+        // value the current data no longer resolves to, the accepted price of not needing element identity
         expect(
           schemaUtils.sanitizeDataForNewSchema(
             schema,
@@ -1428,7 +1584,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         ).toEqual({
           rows: [
             { t: 'x', v: 'q' },
-            { t: 'y', v: 'q' },
+            { t: 'y', v: 'free' },
           ],
         });
       });

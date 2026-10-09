@@ -364,8 +364,8 @@ class SchemaUtils<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
-   * @param [oldData] - The previous form data, which the old schema is resolved against when given; `Form`
-   *      passes its previous `formData`
+   * @param [oldData] - The previous form data, used only to decide whether the enum filter runs; `Form`
+   *      passes its previous `formData`. When omitted, the filter always runs
    * @returns - The new form data, with all the fields uniquely associated with the old schema set
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
