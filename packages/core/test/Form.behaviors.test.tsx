@@ -3014,6 +3014,28 @@ describe('optionalDataControls', () => {
     expect(onSubmit).not.toHaveBeenCalled();
     expect(onError).toHaveBeenCalled();
   });
+  it('does not hide the option a root anyOf selects behind the optional data controls', () => {
+    const rootAnyOf: RJSFSchema = {
+      anyOf: [
+        { type: 'object', title: 'A', properties: { a: { type: 'string' } } },
+        { type: 'object', title: 'B', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const { node } = createFormComponent({ schema: rootAnyOf, uiSchema: objectOnUiSchema });
+
+    expect(node.querySelector(`#${optionalControlsId('root', 'Add')}`)).toEqual(null);
+    expect(node.querySelector('#root_a')).not.toEqual(null);
+  });
+  it('renders the optional data controls for a nested object described by the root schema itself', () => {
+    const recursive: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string' }, child: { $ref: '#' } },
+    };
+    const { node } = createFormComponent({ schema: recursive, uiSchema: objectOnUiSchema });
+
+    expect(node.querySelector(`#${optionalControlsId('root', 'Add')}`)).toEqual(null);
+    expect(node.querySelector(`#${optionalControlsId('root_child', 'Add')}`)).not.toEqual(null);
+  });
 });
 
 describe('nameGenerator', () => {

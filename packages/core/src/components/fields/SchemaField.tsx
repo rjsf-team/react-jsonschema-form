@@ -621,7 +621,13 @@ function SchemaFieldRender<
   // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within is
   // already labelled `false`, which leaves this the only field either label can come from
   if (rendersOptionSelector) {
-    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema);
+    const isOptionalRender = shouldRenderOptionalField<T, S, F>(
+      registry,
+      schema,
+      effectiveRequired,
+      uiSchema,
+      fieldPath,
+    );
     displayLabel = displayLabel && (!isOptionalRender || isFormDataAvailable<T>(formData));
   }
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,

@@ -210,7 +210,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   const { SchemaField: SchemaFieldComponent } = fields;
   const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, globalUiOptions);
-  const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
+  const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T>(formData);
 
   const { Widget } = resolveWidget<T, S, F>({ type: 'number' }, widget, widgets);

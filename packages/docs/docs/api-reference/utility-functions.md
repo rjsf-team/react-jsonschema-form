@@ -2144,14 +2144,15 @@ setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 
 Determines whether the field information from the combination of `schema` and `required` along with the
 `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
-should be rendered with the Optional Data Controls UI.
+should be rendered with the Optional Data Controls UI. The root field never is.
 
 #### Parameters
 
 - registry: Registry&lt;T, S, F> - The `registry` object
 - schema: S - The schema for the field
 - required - Flag indicating whether the field is required
-- [uiSchema]: UiSchema&lt;T, S, F> - The optional uiSchema for the field
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field, if any
+- fieldPath: FieldPath - The `FieldPath` of the field, which is `ROOT_FIELD_PATH` for the root field
 
 #### Returns
 

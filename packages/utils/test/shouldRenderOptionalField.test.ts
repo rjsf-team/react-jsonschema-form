@@ -1,5 +1,11 @@
 import type { GlobalUISchemaOptions, Registry, RJSFSchema, TemplatesType } from '../src/index.ts';
-import { createSchemaUtils, englishStringTranslator, shouldRenderOptionalField } from '../src/index.ts';
+import {
+  createSchemaUtils,
+  englishStringTranslator,
+  ROOT_FIELD_PATH,
+  shouldRenderOptionalField,
+  toFieldPath,
+} from '../src/index.ts';
 import {
   getOptionalDataControlsType,
   getSchemaTypesForXxxOf,
@@ -160,46 +166,77 @@ describe('isOptionalDataControlsType()', () => {
   });
 });
 
+const FIELD_PATH = toFieldPath('nested');
+
 describe('shouldRenderOptionalField()', () => {
-  test('is root schema returns false', () => {
-    expect(shouldRenderOptionalField(registry, TEST_ROOT_SCHEMA, false)).toBe(false);
+  test('the root field returns false, whatever its schema', () => {
+    const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+    expect(
+      shouldRenderOptionalField(
+        { ...registry, globalUiOptions },
+        { type: 'object' },
+        false,
+        undefined,
+        ROOT_FIELD_PATH,
+      ),
+    ).toBe(false);
+  });
+  test('a nested field whose schema is the root schema returns true', () => {
+    const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
+    expect(
+      shouldRenderOptionalField({ ...registry, globalUiOptions }, TEST_ROOT_SCHEMA, false, undefined, FIELD_PATH),
+    ).toBe(true);
   });
   test('required returns false', () => {
-    expect(shouldRenderOptionalField(registry, {}, true)).toBe(false);
+    expect(shouldRenderOptionalField(registry, {}, true, undefined, FIELD_PATH)).toBe(false);
   });
   test('schemaType undefined returns false', () => {
-    expect(shouldRenderOptionalField(registry, {}, false)).toBe(false);
+    expect(shouldRenderOptionalField(registry, {}, false, undefined, FIELD_PATH)).toBe(false);
   });
   test('schemaType array returns false', () => {
-    expect(shouldRenderOptionalField(registry, { type: ['boolean', 'array'] }, false)).toBe(false);
+    expect(shouldRenderOptionalField(registry, { type: ['boolean', 'array'] }, false, undefined, FIELD_PATH)).toBe(
+      false,
+    );
   });
   test('schemaType is not in enableOptionalDataFieldForType returns false', () => {
-    expect(shouldRenderOptionalField(registry, { type: 'array' }, false)).toBe(false);
+    expect(shouldRenderOptionalField(registry, { type: 'array' }, false, undefined, FIELD_PATH)).toBe(false);
   });
   test('schemaType is NOT in enableOptionalDataFieldForType returns false', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
-    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, { type: 'array' }, false)).toBe(false);
+    expect(
+      shouldRenderOptionalField({ ...registry, globalUiOptions }, { type: 'array' }, false, undefined, FIELD_PATH),
+    ).toBe(false);
   });
   test('schemaType IS in enableOptionalDataFieldForType returns true', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
-    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, { type: 'object' }, false)).toBe(true);
+    expect(
+      shouldRenderOptionalField({ ...registry, globalUiOptions }, { type: 'object' }, false, undefined, FIELD_PATH),
+    ).toBe(true);
   });
   test('schemaType for single-type oneOf IS in enableOptionalDataFieldForType returns true', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
-    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, ONE_OF_SCHEMA_OBJECT, false)).toBe(true);
+    expect(
+      shouldRenderOptionalField({ ...registry, globalUiOptions }, ONE_OF_SCHEMA_OBJECT, false, undefined, FIELD_PATH),
+    ).toBe(true);
   });
   test('schemaType for a single-type oneOf beside an empty anyOf IS in enableOptionalDataFieldForType returns true', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
     const schema: RJSFSchema = { ...ONE_OF_SCHEMA_OBJECT, anyOf: [] };
-    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, schema, false)).toBe(true);
+    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, schema, false, undefined, FIELD_PATH)).toBe(
+      true,
+    );
   });
   test('schemaType for single-type anyOf IS in enableOptionalDataFieldForType returns true', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['array'] };
-    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, ANY_OF_SCHEMA_ARRAY, false)).toBe(true);
+    expect(
+      shouldRenderOptionalField({ ...registry, globalUiOptions }, ANY_OF_SCHEMA_ARRAY, false, undefined, FIELD_PATH),
+    ).toBe(true);
   });
   test('schemaType for mixed-type oneOf IS in enableOptionalDataFieldForType returns false', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['array'] };
-    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, ONE_OF_SCHEMA_MIXED, false)).toBe(false);
+    expect(
+      shouldRenderOptionalField({ ...registry, globalUiOptions }, ONE_OF_SCHEMA_MIXED, false, undefined, FIELD_PATH),
+    ).toBe(false);
   });
   test('schemaType for an anyOf made nullable by a const null option returns false, like the type null spelling', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['object'] };
@@ -208,7 +245,11 @@ describe('shouldRenderOptionalField()', () => {
     // option list has to keep its selector to stay reachable once the `null` branch is chosen
     const constNull: RJSFSchema = { anyOf: [{ type: 'object', properties }, { const: null }] };
     const typeNull: RJSFSchema = { anyOf: [{ type: 'object', properties }, { type: 'null' }] };
-    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, constNull, false)).toBe(false);
-    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, typeNull, false)).toBe(false);
+    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, constNull, false, undefined, FIELD_PATH)).toBe(
+      false,
+    );
+    expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, typeNull, false, undefined, FIELD_PATH)).toBe(
+      false,
+    );
   });
 });

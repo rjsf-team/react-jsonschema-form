@@ -3916,6 +3916,25 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ]);
       });
     });
+    it('resolveAllReferences() returns the schema it was given when there is no reference to resolve', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' }, list: { type: 'array', items: { type: 'string' } } },
+        oneOf: [{ title: 'A' }, { title: 'B' }],
+      };
+      expect(resolveAllReferences(schema, schema, [], undefined, true)).toBe(schema);
+    });
+    it('resolveAllReferences() keeps the subschemas beside the one it resolves', () => {
+      const untouched: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+      const schema: RJSFSchema = {
+        definitions: { d: { type: 'string' } },
+        type: 'object',
+        properties: { a: untouched, b: { $ref: '#/definitions/d' } },
+      };
+      const result = resolveAllReferences(schema, schema, []);
+      expect(result.properties?.a).toBe(untouched);
+      expect(result.properties?.b).toEqual({ type: 'string', [RJSF_REF_KEY]: '#/definitions/d' });
+    });
     it('resolveAllReferences() resolves the references of a oneOf beside an empty anyOf', () => {
       const schema: RJSFSchema = {
         definitions: { name: { type: 'string' } },

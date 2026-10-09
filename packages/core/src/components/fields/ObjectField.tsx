@@ -482,7 +482,7 @@ export default function ObjectField<
 
   const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
   const description = uiOptions.description ?? schema.description;
-  const renderOptionalField = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
+  const renderOptionalField = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema, fieldPath);
   const hasFormData = isFormDataAvailable<T>(formData);
   let orderedProperties: string[] = [];
 
@@ -684,13 +684,9 @@ export default function ObjectField<
         const seed = seededProperties.current.get(oldKey);
         const wasSeeded = seededProperties.current.has(oldKey) && deepEquals(newFormData[oldKey], seed);
         if (wasSeeded) {
-          if (deepEquals(schemaForKey(oldKey), schemaForKey(actualNewKey))) {
-            seededProperties.current.set(actualNewKey, seed);
-          } else {
-            const newSeed = seedForKey(actualNewKey);
-            newFormData[oldKey] = newSeed;
-            seededProperties.current.set(actualNewKey, newSeed);
-          }
+          const newSeed = seedForKey(actualNewKey);
+          newFormData[oldKey] = newSeed;
+          seededProperties.current.set(actualNewKey, newSeed);
         }
         const keyValues = Object.keys(newFormData).map((key) => {
           // `Object.hasOwn` so a falsy rename target (e.g. `""`) isn't dropped.
@@ -707,7 +703,7 @@ export default function ObjectField<
         view.propose(renamedObj, () => onChange(renamedObj, fieldPath));
       }
     },
-    [onChange, fieldPath, getAvailableKey, schemaForKey, seedForKey, view, readData],
+    [onChange, fieldPath, getAvailableKey, seedForKey, view, readData],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE

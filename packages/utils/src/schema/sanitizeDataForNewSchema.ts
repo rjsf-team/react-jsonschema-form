@@ -130,11 +130,13 @@ export default function sanitizeDataForNewSchema<
       // Resolve refs, dependencies, if/then/else and allOf so a dependency nested inside this key
       // (not just at the root schema) is taken into account when sanitizing its data (#5250)
       const oldKeyedSchema = retrieveSchema<T, S, F>(context, oldRawKeyedSchema, rootSchema, formValue);
-      // The old and new raw schema for a key are usually identical (most keys aren't touched by whatever changed),
-      // so skip resolving (and re-running any oneOf/dependency validity checks) a second time in that common case.
-      const newKeyedSchema = deepEquals(oldRawKeyedSchema, newRawKeyedSchema)
-        ? oldKeyedSchema
-        : retrieveSchema<T, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
+      // The old and new raw schema for a key are usually the same object (most keys aren't touched by whatever
+      // changed, and a schema `Form` re-resolves keeps the subschemas that did not change), so skip resolving (and
+      // re-running any oneOf/dependency validity checks) a second time in that common case.
+      const newKeyedSchema =
+        oldRawKeyedSchema === newRawKeyedSchema
+          ? oldKeyedSchema
+          : retrieveSchema<T, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
       // Now get types and see if they are the same. A type that was guessed from the data of an `additionalProperties`
       // entry the schema puts no constraint on describes what that data was rather than what the schema requires, so
       // it is treated as no type at all: the data changing type is a change of data, not a change of schema. That only
@@ -224,9 +226,9 @@ export default function sanitizeDataForNewSchema<
       // Resolve refs, dependencies, if/then/else and allOf, not just a direct `$ref`, so the type check below
       // reflects an items schema whose object type is only reachable through one of those keywords (#5250)
       oldSchemaItems = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data as T);
-      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case.
-      // Neither changes per element, so compare them once rather than inside the per-element loop below
-      const sameItemsSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw);
+      // The old and new raw items schema are usually the same object, so skip resolving a second time in that common
+      // case
+      const sameItemsSchema = oldSchemaItemsRaw === newSchemaItemsRaw;
       newSchemaItems = sameItemsSchema
         ? oldSchemaItems
         : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data as T);
