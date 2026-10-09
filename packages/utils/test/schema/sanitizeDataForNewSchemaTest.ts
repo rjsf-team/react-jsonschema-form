@@ -1513,7 +1513,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           ),
         ).toEqual({ sibling: 'edited', one: 'legacy', list: ['legacy'] });
       });
-      it('keeps items the previous data was offered when a sibling flip narrows the items enum (#5250)', () => {
+      it('still filters items when the flip between previous and current data narrows the enum (#5250)', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1528,12 +1528,11 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
             },
           },
         };
-        // The old side resolves against the current data on the way down (the previous data only feeds the
-        // enum filter decision), so the single `isValid` call resolves `sibling` 'x' and takes the branch
-        testValidator.setReturnValues({ isValid: [true] });
-        // The user flips `sibling` to 'x', which applies the `then` branch narrowing the items enum. Both
-        // sides arrive at the list with that narrowed items schema, so the comparison agrees and the value
-        // the schema offered under the previous data is kept; without previous data the filter always runs
+        // The current-data resolutions take the `then` branch (sibling 'x'); the filter chain resolves the
+        // old side against the previous data (sibling 'y'), where no branch applies
+        testValidator.setReturnValues({ isValid: [true, false, false, true, false] });
+        // The user flips `sibling` to 'x', which applies the `then` branch narrowing the items enum. The old
+        // side resolved against the previous data still offers 'b', so the two disagree and the filter runs
         expect(
           schemaUtils.sanitizeDataForNewSchema(
             schema,
@@ -1541,9 +1540,9 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
             { obj: { sibling: 'x', list: ['a', 'b'] } },
             { obj: { sibling: 'y', list: ['a', 'b'] } },
           ),
-        ).toEqual({ obj: { sibling: 'x', list: ['a', 'b'] } });
+        ).toEqual({ obj: { sibling: 'x', list: ['a'] } });
       });
-      it('keeps a moved row value the narrowed enum rejects when pairing by index', () => {
+      it('keeps the values of a reorder where both rows have previous elements', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -1561,14 +1560,63 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
             },
           },
         };
-        // Three `isValid` calls happen: the items schema against the current array, then the old side of
-        // each element (the new side shares each resolution). Only the last one - the moved `t: 'y'` row -
-        // takes the `then` branch
-        testValidator.setReturnValues({ isValid: [false, false, true] });
+        // The items schema against the current array, then for each element the current-data old side and
+        // the filter chain against the previous element at the same index
+        testValidator.setReturnValues({ isValid: [false, false, true, true, false] });
+        // The user swapped the two rows: each element now pairs with the OTHER row's previous element. A
+        // wrong pair can only get the enum filter decision wrong - removal, the type check and the
+        // default/const swap all read the schema as the element itself resolves it - and here neither
+        // mis-paired comparison drops a value the schema offers
+        expect(
+          schemaUtils.sanitizeDataForNewSchema(
+            schema,
+            schema,
+            {
+              rows: [
+                { t: 'x', v: 'free' },
+                { t: 'y', v: 'q' },
+              ],
+            },
+            {
+              rows: [
+                { t: 'y', v: 'q' },
+                { t: 'x', v: 'free' },
+              ],
+            },
+          ),
+        ).toEqual({
+          rows: [
+            { t: 'x', v: 'free' },
+            { t: 'y', v: 'q' },
+          ],
+        });
+      });
+      it('clears a moved row value the narrowed enum rejects when it has no previous element', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            rows: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  t: { type: 'string', enum: ['x', 'y'] },
+                  v: { type: 'string' },
+                },
+                if: { properties: { t: { const: 'y' } }, required: ['t'] },
+                then: { properties: { v: { enum: ['q'] } } },
+              },
+            },
+          },
+        };
+        // Five `isValid` calls happen: the items schema against the current array, then for each element the
+        // current-data old side and the filter chain against the previous element (the new side shares the
+        // current-data resolution). Only the moved `t: 'y'` row takes the `then` branch, on the current side
+        testValidator.setReturnValues({ isValid: [false, false, false, true, false] });
         // The user inserted a row at the front: the `t: 'y'` row moved from index 0 to index 1, so it has no
-        // previous element at its index and its previous value is `undefined`. The old and new leaf schemas
-        // for `v` still resolve to the same narrowed enum, so the value is kept - index pairing can keep a
-        // value the current data no longer resolves to, the accepted price of not needing element identity
+        // previous element at its index and the filter chain resolves against `undefined` all the way down.
+        // That takes no `then` branch, so `v` is a plain string on the old side against the narrowed enum on
+        // the new side: the two differ and the value falls back to the only offered option
         expect(
           schemaUtils.sanitizeDataForNewSchema(
             schema,
@@ -1584,7 +1632,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         ).toEqual({
           rows: [
             { t: 'x', v: 'q' },
-            { t: 'y', v: 'free' },
+            { t: 'y', v: 'q' },
           ],
         });
       });

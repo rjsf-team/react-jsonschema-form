@@ -22,6 +22,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `markdown-to-jsx` from `^9.8.2` to `^9.10.3` ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
 - Fixed `Form` failing validation with `must be boolean` (or the matching type error) when the root `formData` is a falsy value such as `false`, `0` or `''`. Only `undefined` is now treated as missing before validating, fixing [#5404](https://github.com/rjsf-team/react-jsonschema-form/issues/5404)
+- Fixed `Form` clearing array and scalar values a sibling edit did not affect: sanitizing now resolves the previous schema against the current `formData` (matching v5) instead of the previous one, and only the enum filter decision still reads a chain resolved against the previous `formData` so a branch flip between them keeps filtering ([#5460](https://github.com/rjsf-team/react-jsonschema-form/pull/5460))
 
 ## @rjsf/shadcn
 

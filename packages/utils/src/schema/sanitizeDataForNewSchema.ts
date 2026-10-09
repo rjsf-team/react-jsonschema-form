@@ -1,4 +1,4 @@
-import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -121,6 +121,7 @@ export default function sanitizeDataForNewSchema<
     data,
     oldData === undefined ? NO_VALUE : oldData,
     false,
+    oldData === undefined ? undefined : oldSchema,
   );
 }
 
@@ -138,6 +139,10 @@ export default function sanitizeDataForNewSchema<
  * @param oldIsBorrowed - True when the old side is borrowed from the new schema because the old schema has
  *      no constraint for this position (a property the new schema introduces), so present data is filtered
  *      against the new schema even when the two sides resolve to the same thing
+ * @param [oldSchemaPrev] - The old schema as the previous data resolves it at this position, or undefined
+ *      when no previous data was passed. Only the enum filter decisions read it: resolving the old side
+ *      against the previous data at every level lets an ancestor conditional that flipped between the
+ *      previous and current data show up as a real difference where the filter runs
  * @returns - The sanitized form data
  */
 function sanitizeDataForNewSchemaInternal<
@@ -152,9 +157,17 @@ function sanitizeDataForNewSchemaInternal<
   data: any,
   oldData: any,
   oldIsBorrowed: boolean,
+  oldSchemaPrev?: S,
 ): T {
   // By default, we will clear the form data
   let newFormData;
+  // The filter chain: the old schema resolved against the previous data. A position missing from the
+  // previous data resolves it without data (a previous value of `undefined`), so a conditional an ancestor
+  // flip controls resolves the way the previous data saw it
+  const oldSchemaPrevResolved =
+    oldSchemaPrev === undefined
+      ? undefined
+      : retrieveSchema<T, S, F>(context, oldSchemaPrev, rootSchema, oldData === NO_VALUE ? undefined : oldData);
   const newProperties = newSchema?.[PROPERTIES_KEY];
   // If the new schema is of type object and that object contains a list of properties
   if (newProperties) {
@@ -220,6 +233,7 @@ function sanitizeDataForNewSchemaInternal<
             // data": only the caller omitting previous data altogether passes `NO_VALUE` down
             oldData === NO_VALUE ? NO_VALUE : oldData?.[key],
             borrowOld,
+            oldSchemaPrevResolved === undefined ? undefined : getPropertySchema<S>(oldSchemaPrevResolved, key),
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -252,20 +266,24 @@ function sanitizeDataForNewSchemaInternal<
           // when no previous data was passed. With previous data it only runs when the constraint could have
           // changed: the old schema resolved against the previous value differs from the new schema resolved
           // against the current one. When the two agree, a value the schema offered when it was entered is
-          // kept, the way the array path keeps it
+          // kept, the way the array path keeps it. The comparison reads the filter chain, which resolves the
+          // old side against the previous data at every level, so an ancestor conditional that flipped
+          // between the previous and current data shows up as a real difference here (#5250). It runs only
+          // when a replacement would actually happen, since it costs a resolve and a deep compare
           if (hasByPath(data, key)) {
-            let shouldReplace = true;
-            if (!oldIsBorrowed && oldData !== NO_VALUE) {
-              const previousValue = oldData?.[key];
-              const oldFilterSchema =
-                deepEquals(oldRawKeyedSchema, newRawKeyedSchema) && deepEquals(previousValue, formValue)
-                  ? newKeyedSchema
-                  : retrieveSchema<T, S, F>(context, oldRawKeyedSchema, rootSchema, previousValue);
-              shouldReplace = !deepEquals(oldFilterSchema, newKeyedSchema);
-            }
-            if (shouldReplace) {
-              const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
-              if (enumReplacement !== NO_VALUE) {
+            const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
+            if (enumReplacement !== NO_VALUE) {
+              let shouldReplace = true;
+              if (!oldIsBorrowed && oldSchemaPrevResolved !== undefined) {
+                const oldFilterSchema = retrieveSchema<T, S, F>(
+                  context,
+                  getPropertySchema<S>(oldSchemaPrevResolved, key),
+                  rootSchema,
+                  oldData?.[key],
+                );
+                shouldReplace = !deepEquals(oldFilterSchema, newKeyedSchema);
+              }
+              if (shouldReplace) {
                 removeOldSchemaData[key] = enumReplacement;
               }
             }
@@ -297,7 +315,9 @@ function sanitizeDataForNewSchemaInternal<
       const newSchemaItemsRaw = newSchemaItems as S;
       // Resolve refs, dependencies, if/then/else and allOf against the current array, not just a direct
       // `$ref`, so the type check below reflects an items schema whose object type is only reachable through
-      // one of those keywords (#5250). The previous data only feeds the enum filter decision below
+      // one of those keywords (#5250). The previous data only feeds the enum filter decision below, through
+      // the filter chain's own items schema
+      const oldSchemaItemsPrevRaw = oldSchemaPrevResolved?.[ITEMS_KEY] as S | undefined;
       oldSchemaItems = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data as T);
       // The old and new raw items schema are usually identical, so skip resolving a second time in that
       // common case. The raw comparison does not change per element, so it is computed once here rather
@@ -334,6 +354,7 @@ function sanitizeDataForNewSchemaInternal<
               // default/const swap all read the schema as this element resolves it
               oldData === NO_VALUE ? NO_VALUE : oldData?.[index],
               oldIsBorrowed,
+              oldSchemaItemsPrevRaw,
             );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
@@ -348,13 +369,21 @@ function sanitizeDataForNewSchemaInternal<
           // when the old items schema resolved against the previous array agrees with the new one resolved
           // against the current array: values entered while the schema offered them are kept rather than
           // silently dropped by an unrelated sanitize pass (#5451), while a conditional that flipped between
-          // the previous and current data shows up as a real difference and the filter still runs (#5250)
+          // the previous and current data shows up as a real difference and the filter still runs (#5250).
+          // The comparison runs only when some item would actually be dropped, since it can cost a resolve
           const newItemEnumValues = enumValuesForSchema(newSchemaItems as S);
           let shouldFilter = true;
-          if (!oldIsBorrowed && !isWholeValueSelect<S>(newSchemaItems as S) && oldData !== NO_VALUE) {
-            const oldItemsForFilter = deepEquals(oldData, data)
-              ? newSchemaItems
-              : retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, oldData as T);
+          if (
+            !oldIsBorrowed &&
+            !isWholeValueSelect<S>(newSchemaItems as S) &&
+            oldSchemaPrevResolved !== undefined &&
+            newItemEnumValues &&
+            data.some((item: any) => !newItemEnumValues.some((v: any) => deepEquals(v, item)))
+          ) {
+            const oldItemsForFilter =
+              sameRawItemsSchema && deepEquals(oldSchemaItemsPrevRaw, newSchemaItemsRaw) && deepEquals(oldData, data)
+                ? oldSchemaItems
+                : retrieveSchema<T, S, F>(context, oldSchemaItemsPrevRaw as S, rootSchema, oldData as T);
             shouldFilter = !deepEquals(oldItemsForFilter, newSchemaItems);
           }
           const filteredData =
