@@ -1,15 +1,22 @@
 import deepEquals from './deepEquals.ts';
 import isPlainObject from './isPlainObject.ts';
 import { getByPath } from './pathUtils.ts';
+import type { GenericObjectType } from './types.ts';
 
-/** Returns the paths of the changed descendants of `a` relative to `b`, relative to the node itself. An empty list
- * means the difference could not be narrowed any further, so the caller should report its own key instead.
+/** The keys of `object` that hold a value, since a key holding `undefined` reads as one that is missing */
+function keysHoldingValue(object: GenericObjectType): string[] {
+  return Object.keys(object).filter((key) => object[key] !== undefined);
+}
+
+/** Returns the paths of the changed descendants of `a` relative to `b`, relative to the node itself. `undefined` means
+ * the difference could not be narrowed any further, so the caller should report its own key instead. An empty list
+ * means the two differ only in keys holding `undefined`, which is no difference.
  *
  * @param a - The first value, representing the original data to compare
  * @param b - The second value, representing the updated data to compare
- * @returns - An array of dotted paths, relative to `a`
+ * @returns - An array of dotted paths, relative to `a`, or `undefined`
  */
-function getChangedDescendants(a: unknown, b: unknown): string[] {
+function getChangedDescendants(a: unknown, b: unknown): string[] | undefined {
   if (isPlainObject(a) && isPlainObject(b)) {
     return getChangedFields(a, b, true);
   }
@@ -20,17 +27,18 @@ function getChangedDescendants(a: unknown, b: unknown): string[] {
         return [];
       }
       const descendants = getChangedDescendants(value, b[index]);
-      return descendants.length ? descendants.map((path) => `${index}.${path}`) : [String(index)];
+      return descendants ? descendants.map((path) => `${index}.${path}`) : [String(index)];
     });
   }
-  return [];
+  return undefined;
 }
 
 /**
  * Compares two objects and returns the names of the fields that have changed.
  * This function iterates over each field of object `a`, using `deepEquals` to compare the field value
  * with the corresponding field value in object `b`. If the values are different, the field name will
- * be included in the returned array.
+ * be included in the returned array. A key that is missing reads as one holding `undefined`, whichever object lacks it
+ * and at any depth, so a key that only gained or lost an `undefined` value has not changed.
  *
  * @param a - The first object, representing the original data to compare.
  * @param b - The second object, representing the updated data to compare.
@@ -56,25 +64,27 @@ export default function getChangedFields(a: unknown, b: unknown, deep = false): 
   }
   // If only one of them is a plainObject all of its fields changed; if neither is, nothing did
   if (!isPlainObject(a)) {
-    return isPlainObject(b) ? Object.keys(b) : [];
+    return isPlainObject(b) ? keysHoldingValue(b) : [];
   }
   if (!isPlainObject(b)) {
-    return Object.keys(a);
+    return keysHoldingValue(a);
   }
   const aKeys = Object.keys(a);
   const aKeySet = new Set(aKeys);
-  const unequalFields = aKeys
-    .filter((key) => !deepEquals(a[key], getByPath(b, key)))
-    .flatMap((key) => {
-      if (!deep) {
-        return [key];
-      }
-      // A key holding a `.` or a `[` is descended into like any other. The path it produces cannot be told apart from
-      // a path through nested keys, but neither can the entry an `ErrorSchema` keeps for it, since `toErrorSchema()`
-      // spells such a name out as a path in the same way, so the two agree on where the field lives.
-      const descendants = getChangedDescendants(a[key], getByPath(b, key));
-      return descendants.length ? descendants.map((path) => `${key}.${path}`) : [key];
-    });
-  const diffFields = Object.keys(b).filter((key) => !aKeySet.has(key));
+  const unequalFields = aKeys.flatMap((key) => {
+    const other = getByPath(b, key);
+    if (deepEquals(a[key], other)) {
+      return [];
+    }
+    const descendants = getChangedDescendants(a[key], other);
+    if (!descendants || (!deep && descendants.length > 0)) {
+      return [key];
+    }
+    // A key holding a `.` or a `[` is descended into like any other. The path it produces cannot be told apart from
+    // a path through nested keys, but neither can the entry an `ErrorSchema` keeps for it, since `toErrorSchema()`
+    // spells such a name out as a path in the same way, so the two agree on where the field lives.
+    return deep ? descendants.map((path) => `${key}.${path}`) : [];
+  });
+  const diffFields = keysHoldingValue(b).filter((key) => !aKeySet.has(key));
   return [...unequalFields, ...diffFields];
 }

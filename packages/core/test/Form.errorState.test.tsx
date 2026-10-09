@@ -652,6 +652,7 @@ describe('Error state consistency when deriving from new props', () => {
     const leaf: RJSFSchema = { type: 'string', minLength: 8 };
     const list: RJSFSchema = { type: 'array', items: leaf };
     const pair: RJSFSchema = { type: 'object', minProperties: 2, properties: { name: leaf, other: leaf } };
+    const pairs: RJSFSchema = { type: 'object', properties: { first: pair, second: pair } };
 
     it.each([
       {
@@ -685,6 +686,32 @@ describe('Error state consistency when deriving from new props', () => {
         validated: ['must NOT have fewer than 2 properties', `.name ${tooShort}`],
         after: { name: 'short', other: undefined },
         remaining: ['must NOT have fewer than 2 properties', `.name ${tooShort}`],
+      },
+      {
+        name: 'a root object that only lost a key holding undefined keeps every error',
+        schema: pair,
+        before: { name: 'short', other: undefined },
+        validated: ['must NOT have fewer than 2 properties', `.name ${tooShort}`],
+        after: { name: 'short' },
+        remaining: ['must NOT have fewer than 2 properties', `.name ${tooShort}`],
+      },
+      {
+        name: 'an object under a property that only gained or lost a key holding undefined keeps every error',
+        schema: pairs,
+        before: { first: { name: 'short', other: undefined }, second: { name: 'short' } },
+        validated: [
+          '.first must NOT have fewer than 2 properties',
+          `.first.name ${tooShort}`,
+          '.second must NOT have fewer than 2 properties',
+          `.second.name ${tooShort}`,
+        ],
+        after: { first: { name: 'short' }, second: { name: 'short', other: undefined } },
+        remaining: [
+          '.first must NOT have fewer than 2 properties',
+          `.first.name ${tooShort}`,
+          '.second must NOT have fewer than 2 properties',
+          `.second.name ${tooShort}`,
+        ],
       },
       {
         name: "a root object whose changed key splits to no path keeps an unchanged field's error",

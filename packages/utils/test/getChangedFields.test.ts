@@ -163,6 +163,14 @@ describe('getChangedFields()', () => {
       ),
     ).toEqual(['f', 'g']);
   });
+  it('reads a key that is missing as one holding undefined, whichever object lacks it', () => {
+    expect(getChangedFields({ a: 1, b: undefined }, { a: 1 })).toEqual([]);
+    expect(getChangedFields({ a: 1 }, { a: 1, b: undefined })).toEqual([]);
+    expect(getChangedFields({ a: { one: 1, two: undefined } }, { a: { one: 1 } })).toEqual([]);
+    expect(getChangedFields({ a: 1, b: undefined }, { a: 2, c: undefined })).toEqual(['a']);
+    expect(getChangedFields(undefined, { a: 1, b: undefined })).toEqual(['a']);
+    expect(getChangedFields({ a: 1, b: undefined }, undefined)).toEqual(['a']);
+  });
   describe('deep', () => {
     it('returns the path of the field that changed inside an array item', () => {
       const a = { items: [{ qux: '', corge: '' }] };
@@ -210,6 +218,14 @@ describe('getChangedFields()', () => {
       const a = { 'has.dot': 1 };
       const b = { 'has.dot': 2 };
       expect(getChangedFields(a, b, true)).toEqual(['has.dot']);
+    });
+    it('reads a key that is missing as one holding undefined at any depth', () => {
+      expect(getChangedFields({ outer: { one: 1 } }, { outer: { one: 1, two: undefined } }, true)).toEqual([]);
+      expect(getChangedFields({ outer: { one: 1, two: undefined } }, { outer: { one: 1 } }, true)).toEqual([]);
+      expect(getChangedFields({ items: [{ one: 1, two: undefined }] }, { items: [{ one: 1 }] }, true)).toEqual([]);
+      expect(getChangedFields({ outer: { one: 1, two: undefined } }, { outer: { one: 2 } }, true)).toEqual([
+        'outer.one',
+      ]);
     });
     it('leaves the shallow result alone', () => {
       expect(getChangedFields(complexObject, { ...makeComplexObject(), a: 2 }, true)).toEqual(['a']);
