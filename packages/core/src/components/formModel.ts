@@ -22,6 +22,7 @@ import type { AnnouncedMove, PendingChange } from './formState.ts';
 import {
   applyBlur,
   applyChange,
+  applyChangeToErrors,
   applyReset,
   applySubmit,
   applyValidation,
@@ -392,17 +393,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       report((latest) => latest.onChange?.(toIChangeEvent(committed), id));
       return;
     }
-    // Validated errors describe the proposal, which the parent may yet refuse, so they wait for the parent's answer
-    // in `deriveState()`, and so do the validator's errors for items the proposal moved: the parent either renders
-    // the new order back, which clears the changed items' errors, or keeps its own, which the old indexes describe.
-    // Otherwise the errors describe the committed data plus the custom errors, which are the form's own
-    const owned = (result: FormState<T, S, F>, base: FormState<T, S, F>) =>
-      isLiveValidated(props) || newIndexOf ? { ...base, customErrors: result.customErrors } : result;
-    const reapply = (base: FormState<T, S, F>) => owned(applyChange(base, edit, props), base);
-    // An unanswered proposal carries the validator's errors as an earlier edit of the tick moved them, which are not
-    // the form's to commit, so what is committed is what this edit does to the committed state.
-    // Committed before the parent is told, so a throwing handler cannot lose the errors the form owns
-    commit(start, pending ? reapply(start) : owned(next, start), reapply);
+    // The form commits what the change does to the errors it owns, before the parent is told, so a throwing handler
+    // cannot lose them. Under live validation that is the fields' own errors alone: the validated ones describe the
+    // proposal, which the parent may yet refuse, so they wait for its answer in `deriveState()`. So do the validator's
+    // errors for items the proposal moved: the parent either renders the new order back, which clears the changed
+    // items' errors, or keeps its own, which the old indexes describe
+    const withOwnedErrors = (base: FormState<T, S, F>): FormState<T, S, F> => {
+      const errors = applyChangeToErrors(base, edit, props.extraErrors);
+      return isLiveValidated(props) || newIndexOf
+        ? { ...base, customErrors: errors.customErrors }
+        : { ...base, ...errors };
+    };
+    commit(start, withOwnedErrors(start), withOwnedErrors);
     propose(next);
     report((latest) => latest.onChange?.(toIChangeEvent(next), id));
   };
