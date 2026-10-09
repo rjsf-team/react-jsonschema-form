@@ -1033,6 +1033,36 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', diet: { food: 'meat' } } }, 'root_m_animal');
     });
 
+    // The drop itself flips the branch that would have declared the replacement: each `if` requires `cfg`, so with
+    // `cfg` dropped neither matches, no `then` applies and nothing declares a default for it. The fill writes
+    // nothing, and without the value going back the key would settle on neither branch's default nor the user's data
+    it('puts the old value back where dropping the key collapses the branch that declares it', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            cfg: { type: 'object', properties: { name: { type: 'string' } } },
+          },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgFor('a') } },
+            },
+            {
+              if: { properties: { mode: { const: 'b' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgFor('b') } },
+            },
+          ],
+        },
+        formData: { mode: 'a', cfg: { name: 'a' } },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a' } }, 'root_mode');
+    });
+
     // Every read of a key off the form data or the computed defaults has to be an own-property read. For a property
     // named like a member of `Object.prototype`, an inherited value otherwise answers the "the fill is certain to put
     // something back" gate, and the key is dropped on the strength of a default that does not exist

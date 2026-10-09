@@ -540,8 +540,8 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   let wasSanitized = false;
   const preventInfiniteSanitize: string[] = [];
   let sanitize = shouldSanitize;
-  // Each value dropped as a swapped-away branch's default, so the pass can put one the fill never replaced back; see
-  // the loop below
+  // Each value dropped as a swapped-away branch's default, with its path: the paths let a later sanitizing iteration
+  // keep the refill the fill has since written there, and the values let the pass put back one the fill never wrote
   const droppedStaleValues: [FieldPathList, unknown][] = [];
   let staleDefaultsSearched = false;
   do {
@@ -572,23 +572,18 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       // cleared would end the loop empty. That is the #5349 symptom for precisely the property this is meant to fix,
       // hence the exemption rather than a wider change to what sanitize compares against.
       //
-      // Reinstated whenever sanitize altered the refill at all, not only where it cleared the whole key: a retyped
-      // leaf *inside* the refill is cleared by the same reasoning, and leaving that behind settles the key on a value
-      // neither branch declares. Everything in the refill came from the newly selected branch's own fill, so there is
-      // nothing in it for sanitize to be right about.
-      if (droppedStaleValues.length > 0) {
-        const filledFormData = formData;
-        let keptRefill = false;
-        droppedStaleValues.forEach(([stalePath]) => {
-          const refilled = getByPath(filledFormData, stalePath);
-          const withRefill = putBackAt(sanitizedFormData, stalePath, refilled, (held) => !deepEquals(held, refilled));
-          keptRefill = keptRefill || withRefill !== sanitizedFormData;
-          sanitizedFormData = withRefill;
-        });
-        if (keptRefill) {
-          // Shared again, so an iteration whose only change was undone here compares equal and ends the loop
-          sanitizedFormData = replaceEqualDeep(filledFormData, sanitizedFormData);
-        }
+      // Reinstated whenever sanitize altered the refill at all: a retyped leaf *inside* the refill is cleared by the
+      // same reasoning as a retyped key, and leaving that behind settles the key on a value neither branch declares.
+      // Everything in the refill came from the newly selected branch's own fill, so there is nothing in it for
+      // sanitize to be right about.
+      let withRefills = sanitizedFormData;
+      for (const [stalePath] of droppedStaleValues) {
+        const refilled = getByPath(formData, stalePath);
+        withRefills = putBackAt(withRefills, stalePath, refilled, (held) => !deepEquals(held, refilled));
+      }
+      if (withRefills !== sanitizedFormData) {
+        // Shared again, so an iteration whose only change was undone here compares equal and ends the loop
+        sanitizedFormData = replaceEqualDeep(formData, withRefills);
       }
       // Sanitizing leaves a value the branch just swapped away declared as its `default` in place, so the newly
       // selected branch's own `default` never reaches the key (#5349). Dropping each such key lets the fill at the
@@ -627,22 +622,23 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     }
   } while (wasSanitized);
 
-  // A value dropped above was dropped on the strength of the newly selected branch's defaults holding something for
-  // its key, which is what the fill normally writes there. A few things can still leave the key empty: a stale
-  // default can sit under a key whose very presence in the retrieved schema depended on the data holding it, dropping
-  // it can flip a branch that reads it, and a nested level's defaults are computed as a root, where the real fill
-  // knows whether its parent was required. Rather than enumerate those, put back whatever the fill did not replace,
-  // so that the worst this fix can do is nothing at all. A path still empty here is one the fill declined to write,
-  // and nothing else: a dropped path is exempted from the sanitize of every later iteration, so an empty one cannot
-  // be a key sanitize cleared on purpose and about to be overwritten. `retrievedSchema` is deliberately not resolved
-  // again for the restored data: the loop above has already settled, and the case this exists to make harmless is not
-  // one worth another resolution pass.
+  // A value is dropped on the strength of the newly selected branch's defaults holding something for its key, which
+  // is what the fill normally writes there. It does not always get the chance. Dropping the key can flip the very
+  // branch that would have declared its replacement: with the conditionals in an `allOf` whose every `if` carries
+  // `required: ['mode', 'cfg']`, dropping `cfg` makes each `if` fail, so no `then` applies, nothing declares a
+  // default for `cfg`, and the fill writes nothing — leaving the key with neither branch's default nor the value the
+  // user had. A stale default can also sit under a key whose very presence in the retrieved schema depended on the
+  // data holding it, and a nested level's defaults are computed as a root, where the real fill knows whether its
+  // parent was required. Rather than enumerate those in the search, put back whatever the fill did not replace, so
+  // that the worst this fix can do is nothing at all.
   //
-  // This is insurance against the gates in the search not being exhaustive, bought for one `getByPath()` per dropped
-  // path, and it is expected not to fire.
-  droppedStaleValues.forEach(([stalePath, droppedValue]) => {
+  // A path still empty here is one the fill declined to write, and nothing else: a dropped path is exempted from the
+  // sanitize of every later iteration, so an empty one cannot be a key sanitize cleared on purpose and about to be
+  // overwritten. `retrievedSchema` is deliberately not resolved again for the restored data — the loop above has
+  // settled, and a key the schema no longer describes is what the plain-object test on the parent guards against.
+  for (const [stalePath, droppedValue] of droppedStaleValues) {
     formData = putBackAt(formData, stalePath, droppedValue, (held) => held === undefined);
-  });
+  }
 
   // Always derived, never skipped on the grounds that the schema utilities were reused: the registry is built from
   // `idPrefix`, `widgets`, `templates`, `fields`, `formContext` and `uiSchema` too, none of which the utilities are
@@ -932,18 +928,18 @@ function copyAlongPath<T>(data: T, path: FieldPathList): T {
   return root as T;
 }
 
-/** Returns `data` with `value` written back at `path`, or `data` unchanged where it must not be.
+/** Returns `data` with `value` written back at `path`, or `data` unchanged where it must not be or need not be.
  *
- * A value dropped by the stale-default search is put back twice over: once per later sanitizing iteration, to keep
- * the refill the fill has since written, and once after the loop, to undo a drop the fill never answered. Both have
- * the same two conditions. The value goes back only into the container it came out of, so that container has to still
- * be there and still be an object — `setByPath()` creates whatever the path is missing, so a sanitize that pruned or
- * retyped an ancestor would otherwise be answered by rebuilding a level the schema no longer describes. And there has
- * to be something to write, since a dropped path that was empty to begin with is not data to preserve.
+ * A dropped value is put back twice over: once per later sanitizing iteration, to keep the refill the fill has since
+ * written, and once after the loop, to undo a drop the fill never answered. Nothing is written where there is no
+ * value to write, where `data` already holds it, or where the container the path addresses is no longer an object.
+ * That last condition is what keeps the write honest: `setByPath()` creates whatever the path is missing, so a
+ * sanitize that pruned or retyped an ancestor would otherwise be answered by rebuilding a level the schema no longer
+ * describes.
  *
- * What differs is what counts as the value already being there, which is why the caller decides it: the exemption
- * reinstates its refill whenever sanitize altered it at all, while the restore only fills a gap and must never
- * overwrite what the fill chose to put there.
+ * What differs between the two is what counts as the value already being there, which is why the caller decides it:
+ * the exemption reinstates its refill wherever sanitize altered it at all, while the restore only fills a gap and
+ * must never overwrite what the fill chose to put there.
  *
  * @param data - The data to write into
  * @param path - The path to write at
@@ -952,9 +948,17 @@ function copyAlongPath<T>(data: T, path: FieldPathList): T {
  * @returns - The data with `value` at `path`, or `data` itself when nothing was written
  */
 function putBackAt<T>(data: T, path: FieldPathList, value: unknown, isMissing: (held: unknown) => boolean): T {
-  const parentPath = path.slice(0, -1);
-  const parent = parentPath.length > 0 ? getByPath(data, parentPath) : data;
-  if (value === undefined || !isPlainObject(parent) || !isMissing(getByPath(data, path))) {
+  if (value === undefined) {
+    return data;
+  }
+  const parent = path.length > 1 ? getByPath(data, path.slice(0, -1)) : data;
+  if (!isPlainObject(parent)) {
+    return data;
+  }
+  // Off the parent just walked rather than from the root, and by identity before the caller's test: an untouched
+  // value is the same reference, which is the common case and the one `deepEquals()` allocates a cycle cache to answer
+  const held = getByPath(parent, path[path.length - 1]);
+  if (held === value || !isMissing(held)) {
     return data;
   }
   return setByPath(copyAlongPath(data, path), path, value);
