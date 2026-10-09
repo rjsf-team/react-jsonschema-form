@@ -784,7 +784,7 @@ describe('Error state consistency when deriving from new props', () => {
     },
     { name: 'the only error on the path', street: { type: 'string' }, server: 'server', expected: [] },
   ] satisfies { name: string; street: RJSFSchema; server: string; expected: string[] }[])(
-    'leaves the errors to the validator and the parent when an optional object Remove is declined, with $name',
+    'takes none of the errors it displayed for its own when an optional object Remove is declined, with $name',
     async ({ street, server, expected }) => {
       const addrSchema: RJSFSchema = {
         type: 'object',
@@ -814,12 +814,81 @@ describe('Error state consistency when deriving from new props', () => {
       rerender(<Parent />);
       rerender(<Parent className='x' />);
 
+      // The Remove is a raise like any other: it took the validator's errors off its path until the form validates
+      // again, whatever the parent does with the change
+      expect(errorListMessages(container)).toEqual([]);
+
+      await submitForm(container, user);
+
       expect(errorListMessages(container)).toEqual(expected);
       expect(Object.values(fieldErrorsById(container)).flat()).toEqual(
         expected.map((stack) => stack.replace('.addr.street ', '')),
       );
     },
   );
+
+  it('clears the errors at and below an optional object it removes, the fields own included', async () => {
+    const addrSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 }, city: { type: 'string' } } },
+      },
+    };
+    const onSubmit = vi.fn();
+    const { container } = render(
+      <Form
+        schema={addrSchema}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ addr: { street: 'a', city: 'b' } }}
+        onSubmit={onSubmit}
+      />,
+    );
+    await submitForm(container, user);
+    await user.type(screen.getByLabelText('city'), 'c');
+    expect(errorListMessages(container)).toEqual([
+      '.addr.street must NOT have fewer than 3 characters',
+      '.addr.city custom:bc',
+    ]);
+
+    await user.click(screen.getByRole('button', { name: 'Remove data for optional field' }));
+
+    expect(errorListMessages(container)).toEqual([]);
+    await submitForm(container, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
+  it('clears the errors at and below an additional property that is removed, the fields own included', async () => {
+    const onSubmit = vi.fn();
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+            properties: { street: { type: 'string', minLength: 3 }, city: { type: 'string' } },
+          },
+        }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ addr: { street: 'a', city: 'b' } }}
+        onSubmit={onSubmit}
+      />,
+    );
+    await submitForm(container, user);
+    await user.type(input(container, 'root_addr_city'), 'c');
+    expect(errorListMessages(container)).toEqual([
+      '.addr.street must NOT have fewer than 3 characters',
+      '.addr.city custom:bc',
+    ]);
+
+    await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-object-property-remove')[0]);
+
+    expect(errorListMessages(container)).toEqual([]);
+    await submitForm(container, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
 
   it('lists a message once when a field raises as its own what the validator also reported', async () => {
     const addrSchema: RJSFSchema = {

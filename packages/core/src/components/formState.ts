@@ -527,8 +527,8 @@ function moveItemErrors<T>(
  *
  * A change that moved the items of an array moves the errors of both with them, and leaves the array's own where they
  * are. One that raises errors replaces the field's own at its path, an empty raise included, and takes the validator's
- * off that path until the form validates again: the raise is the field's say over its path. Any other change clears
- * the field's own `__errors` there.
+ * off that path until the form validates again: the raise is the field's say over its path. One that removes the key
+ * at its path counts as an empty raise. Any other change clears the field's own `__errors` there.
  *
  * Reads none of the data, so a parent-owned form can apply a change to the errors it owns without deriving the data
  * the change proposes.
@@ -540,14 +540,16 @@ function moveItemErrors<T>(
  */
 export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
-  { fieldPath, newErrorSchema, newIndexOf }: PendingChange<T>,
+  { fieldPath, newValue, newErrorSchema, newIndexOf }: PendingChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
 ): OwnedErrorState<T> {
   const { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema } = current;
   const path = fieldPathToList(fieldPath);
   let { customErrors } = current;
+  // A key that is removed leaves nothing at its path for an error to describe, which is what an empty raise says
+  const raised = newErrorSchema ?? (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE ? {} : undefined);
   const hasOwnErrors = getByPath<string[]>(customErrors, [...path, ERRORS_KEY], []).length > 0;
-  if (!newIndexOf && !newErrorSchema && !hasOwnErrors) {
+  if (!newIndexOf && !raised && !hasOwnErrors) {
     return { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema, customErrors };
   }
   // The validator's own result is the base `extraErrors` and the fields' own errors are merged onto again, as in
@@ -558,9 +560,9 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
     validation = moveItemErrors(validation, path, newIndexOf);
     customErrors = customErrors && moveItemErrorSchema(customErrors, path, newIndexOf);
   }
-  if (newErrorSchema) {
+  if (raised) {
     validation = withoutErrors(validation, (pathOfError) => isPathPrefix(path, pathOfError));
-    customErrors = replaceErrorSchemaNode(customErrors ?? {}, path, newErrorSchema);
+    customErrors = replaceErrorSchemaNode(customErrors ?? {}, path, raised);
   } else if (customErrors && hasOwnErrors && !newIndexOf) {
     customErrors = pruneErrorSchema(
       customErrors,

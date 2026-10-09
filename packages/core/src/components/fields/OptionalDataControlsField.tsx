@@ -52,7 +52,9 @@ export default function OptionalDataControlsField<
     label = translateString(labelEnum);
     if (hasFormData) {
       id = optionalControlsId(fieldId, 'Remove');
-      onRemoveClick = () => onChange(undefined, fieldPath);
+      // The errors at and below the removed value describe fields that are no longer there, so an empty raise takes
+      // them off: passing none would leave them standing, and the fields' own would keep the form from submitting
+      onRemoveClick = () => onChange(undefined, fieldPath, {});
     } else {
       id = optionalControlsId(fieldId, 'Add');
       onAddClick = () => {
