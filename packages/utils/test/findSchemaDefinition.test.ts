@@ -992,7 +992,7 @@ describe('structure-aware walk pins', () => {
     } as unknown as RJSFSchema;
     expect(() => findSchemaDefinition(FOO_ID, bundle)).toThrow(`Could not find a definition for ${FOO_ID}`);
   });
-  it('leaves a `$ref` inside an unknown-keyword container relative, so resolution no longer reaches it', () => {
+  it('leaves a `$ref` inside an unknown-keyword container relative, so resolution cannot reach it', () => {
     const bundle = {
       $schema: DRAFT_2020_12,
       $id: ROOT_ID,
@@ -1013,7 +1013,7 @@ describe('structure-aware walk pins', () => {
     expect(((components.Foo as GenericObjectType).properties as GenericObjectType).x).toStrictEqual({
       $ref: '#/components/Bar',
     });
-    // `retrieveSchema` resolves the outer pointer and then the un-rewritten inner `$ref` against the root,
+    // `retrieveSchema` resolves the outer pointer and then the relative inner `$ref` against the root,
     // where `/components/Bar` does not exist
     const testValidator = getTestValidator({});
     const utils = createSchemaUtils({ validator: testValidator }, rewritten);
