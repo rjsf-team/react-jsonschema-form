@@ -18,6 +18,7 @@ export default function ArrayFieldItemButtonsTemplate<
     hasMoveUp,
     hasRemove,
     id,
+    itemButtonProps,
     onCopyItem,
     onRemoveItem,
     onMoveDownItem,
@@ -32,6 +33,7 @@ export default function ArrayFieldItemButtonsTemplate<
     <>
       {(hasMoveUp || hasMoveDown) && (
         <MoveUpButton
+          {...itemButtonProps?.moveUp}
           id={buttonId(id, 'moveUp')}
           className='rjsf-array-item-move-up'
           disabled={disabled || readonly || !hasMoveUp}
@@ -42,6 +44,7 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
       {(hasMoveUp || hasMoveDown) && (
         <MoveDownButton
+          {...itemButtonProps?.moveDown}
           id={buttonId(id, 'moveDown')}
           className='rjsf-array-item-move-down'
           disabled={disabled || readonly || !hasMoveDown}
@@ -52,6 +55,7 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
       {hasCopy && (
         <CopyButton
+          {...itemButtonProps?.copy}
           id={buttonId(id, 'copy')}
           className='rjsf-array-item-copy'
           disabled={disabled || readonly}
@@ -62,6 +66,7 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
       {hasRemove && (
         <RemoveButton
+          {...itemButtonProps?.remove}
           id={buttonId(id, 'remove')}
           className='rjsf-array-item-remove'
           disabled={disabled || readonly}

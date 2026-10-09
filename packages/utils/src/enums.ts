@@ -36,6 +36,20 @@ export const TranslatableString = {
   MoveUpButton: 'Move up',
   /** Remove button title, used by IconButton */
   RemoveButton: 'Remove',
+  /** Copy button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by ArrayField */
+  CopyItemButton: 'Copy %1',
+  /** Move down button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
+   * ArrayField
+   */
+  MoveDownItemButton: 'Move %1 down',
+  /** Move up button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
+   * ArrayField
+   */
+  MoveUpItemButton: 'Move %1 up',
+  /** Remove button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
+   * ArrayField
+   */
+  RemoveItemButton: 'Remove %1',
   /** Now label, used by AltDateWidget */
   NowLabel: 'Now',
   /** Clear label, used by AltDateWidget */

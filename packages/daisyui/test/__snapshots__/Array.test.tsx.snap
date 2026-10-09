@@ -3531,6 +3531,417 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 </DocumentFragment>
 `;
 
+exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="flex-grow rjsf-field rjsf-field-array"
+    >
+      <div
+        class="field-template mb-3"
+      >
+        <div
+          class="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
+        >
+          <div
+            class="flex flex-col gap-4"
+          >
+            <div
+              class="rjsf-array-item-list"
+            >
+              <fieldset
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-t-lg mb-[-1px] z-10"
+              >
+                <div
+                  class="flex-grow rjsf-field rjsf-field-object"
+                >
+                  <div
+                    class="field-template mb-3"
+                  >
+                    <div
+                      class="form-control "
+                    >
+                      <div
+                        class="grid grid-cols-1 gap-4 mb-4"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div
+                            class="flex-grow rjsf-field rjsf-field-string"
+                          >
+                            <div
+                              class="field-template mb-3"
+                            >
+                              <label
+                                class="label"
+                                for="root_0_name"
+                                id="root_0_name__label"
+                              >
+                                <span
+                                  class="label-text font-medium"
+                                >
+                                  name
+                                </span>
+                              </label>
+                              <div
+                                class="form-control"
+                              >
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                    class="input input-bordered w-full"
+                                    id="root_0_name"
+                                    name="root_0_name"
+                                    placeholder=""
+                                    type="text"
+                                    value="report.pdf"
+                                  />
+                                </div>
+                              </div>
+                              <div
+                                class="rjsf-field-error-template text-red-600"
+                              >
+                                <ul
+                                  class="list-disc list-inside"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex justify-end mt-1"
+                >
+                  <div
+                    class="join"
+                  >
+                    <button
+                      aria-label="Move report.pdf up"
+                      class="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                      disabled=""
+                      id="root_0__moveUp"
+                      title="Move report.pdf up"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-arrow-up h-5 w-5"
+                        data-icon="arrow-up"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M214.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      aria-label="Move report.pdf down"
+                      class="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                      id="root_0__moveDown"
+                      title="Move report.pdf down"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-arrow-down h-5 w-5"
+                        data-icon="arrow-down"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      aria-label="Copy report.pdf"
+                      class="rjsf-array-item-copy join-item btn btn-sm px-2"
+                      id="root_0__copy"
+                      title="Copy report.pdf"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-copy h-5 w-5"
+                        data-icon="copy"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M192 0c-35.3 0-64 28.7-64 64l0 256c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-200.6c0-17.4-7.1-34.1-19.7-46.2L370.6 17.8C358.7 6.4 342.8 0 326.3 0L192 0zM64 128c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-16-64 0 0 16-192 0 0-256 16 0 0-64-16 0z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      aria-label="Remove report.pdf"
+                      class="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                      id="root_0__remove"
+                      title="Remove report.pdf"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset
+                class="fieldset bg-base-100 border border-base-300 p-4 flex rounded-b-lg  z-9"
+              >
+                <div
+                  class="flex-grow rjsf-field rjsf-field-object"
+                >
+                  <div
+                    class="field-template mb-3"
+                  >
+                    <div
+                      class="form-control "
+                    >
+                      <div
+                        class="grid grid-cols-1 gap-4 mb-4"
+                      >
+                        <div
+                          class=""
+                        >
+                          <div
+                            class="flex-grow rjsf-field rjsf-field-string"
+                          >
+                            <div
+                              class="field-template mb-3"
+                            >
+                              <label
+                                class="label"
+                                for="root_1_name"
+                                id="root_1_name__label"
+                              >
+                                <span
+                                  class="label-text font-medium"
+                                >
+                                  name
+                                </span>
+                              </label>
+                              <div
+                                class="form-control"
+                              >
+                                <div
+                                  style="position: relative;"
+                                >
+                                  <input
+                                    aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                    class="input input-bordered w-full"
+                                    id="root_1_name"
+                                    name="root_1_name"
+                                    placeholder=""
+                                    type="text"
+                                    value="invoice.pdf"
+                                  />
+                                </div>
+                              </div>
+                              <div
+                                class="rjsf-field-error-template text-red-600"
+                              >
+                                <ul
+                                  class="list-disc list-inside"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="rjsf-field-error-template text-red-600"
+                    >
+                      <ul
+                        class="list-disc list-inside"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="flex justify-end mt-1"
+                >
+                  <div
+                    class="join"
+                  >
+                    <button
+                      aria-label="Move invoice.pdf up"
+                      class="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                      id="root_1__moveUp"
+                      title="Move invoice.pdf up"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-arrow-up h-5 w-5"
+                        data-icon="arrow-up"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M214.6 9.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 109.3 160 480c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      aria-label="Move invoice.pdf down"
+                      class="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                      disabled=""
+                      id="root_1__moveDown"
+                      title="Move invoice.pdf down"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-arrow-down h-5 w-5"
+                        data-icon="arrow-down"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 384 512"
+                      >
+                        <path
+                          d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      aria-label="Copy invoice.pdf"
+                      class="rjsf-array-item-copy join-item btn btn-sm px-2"
+                      id="root_1__copy"
+                      title="Copy invoice.pdf"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-copy h-5 w-5"
+                        data-icon="copy"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M192 0c-35.3 0-64 28.7-64 64l0 256c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-200.6c0-17.4-7.1-34.1-19.7-46.2L370.6 17.8C358.7 6.4 342.8 0 326.3 0L192 0zM64 128c-35.3 0-64 28.7-64 64L0 448c0 35.3 28.7 64 64 64l192 0c35.3 0 64-28.7 64-64l0-16-64 0 0 16-192 0 0-256 16 0 0-64-16 0z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                    <button
+                      aria-label="Remove invoice.pdf"
+                      class="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                      id="root_1__remove"
+                      title="Remove invoice.pdf"
+                      type="button"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="svg-inline--fa fa-trash h-5 w-5"
+                        data-icon="trash"
+                        data-prefix="fas"
+                        role="img"
+                        viewBox="0 0 448 512"
+                      >
+                        <path
+                          d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+            <div
+              class="flex justify-end"
+            >
+              <div
+                class="row"
+              >
+                <p
+                  class="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+                >
+                  <button
+                    aria-label="Add"
+                    class="btn-add col-xs-12 btn-primary btn-primary-content"
+                    id="root__add"
+                    title="Add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="svg-inline--fa fa-plus h-5 w-5"
+                      data-icon="plus"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="rjsf-field-error-template text-red-600"
+        >
+          <ul
+            class="list-disc list-inside"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      <button
+        class="btn btn-primary btn-primary-content "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`with title and description > array 1`] = `
 <DocumentFragment>
   <form

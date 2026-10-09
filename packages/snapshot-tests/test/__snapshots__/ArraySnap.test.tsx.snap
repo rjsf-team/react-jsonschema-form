@@ -2002,6 +2002,228 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 </DocumentFragment>
 `;
 
+exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="form-group rjsf-field rjsf-field-array"
+    >
+      <fieldset
+        class="rjsf-field rjsf-field-array rjsf-field-array-of-object"
+        id="root"
+      >
+        <div
+          class="row array-item-list"
+        >
+          <div
+            class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
+          >
+            <div
+              class="col-xs-9 col-md-10 col-xl-11"
+            >
+              <div
+                class="form-group rjsf-field rjsf-field-object"
+              >
+                <fieldset
+                  id="root_0"
+                >
+                  <div
+                    class="form-group rjsf-field rjsf-field-string"
+                  >
+                    <label
+                      class="control-label"
+                      for="root_0_name"
+                    >
+                      name
+                    </label>
+                    <input
+                      aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                      class="form-control"
+                      id="root_0_name"
+                      label="name"
+                      name="root_0_name"
+                      placeholder=""
+                      type="text"
+                      value="report.pdf"
+                    />
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <div
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+            >
+              <div
+                class="btn-group"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
+              >
+                <button
+                  class="btn btn-default rjsf-array-item-move-up"
+                  disabled=""
+                  id="root_0__moveUp"
+                  title="Move report.pdf up"
+                  type="button"
+                >
+                  <i
+                    class="glyphicon glyphicon-arrow-up"
+                  />
+                </button>
+                <button
+                  class="btn btn-default rjsf-array-item-move-down"
+                  id="root_0__moveDown"
+                  title="Move report.pdf down"
+                  type="button"
+                >
+                  <i
+                    class="glyphicon glyphicon-arrow-down"
+                  />
+                </button>
+                <button
+                  class="btn btn-default rjsf-array-item-copy"
+                  id="root_0__copy"
+                  title="Copy report.pdf"
+                  type="button"
+                >
+                  <i
+                    class="glyphicon glyphicon-copy"
+                  />
+                </button>
+                <button
+                  class="btn btn-danger rjsf-array-item-remove"
+                  id="root_0__remove"
+                  title="Remove report.pdf"
+                  type="button"
+                >
+                  <i
+                    class="glyphicon glyphicon-remove"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rjsf-array-item"
+            style="display: flex; align-items: baseline;"
+          >
+            <div
+              class="col-xs-9 col-md-10 col-xl-11"
+            >
+              <div
+                class="form-group rjsf-field rjsf-field-object"
+              >
+                <fieldset
+                  id="root_1"
+                >
+                  <div
+                    class="form-group rjsf-field rjsf-field-string"
+                  >
+                    <label
+                      class="control-label"
+                      for="root_1_name"
+                    >
+                      name
+                    </label>
+                    <input
+                      aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                      class="form-control"
+                      id="root_1_name"
+                      label="name"
+                      name="root_1_name"
+                      placeholder=""
+                      type="text"
+                      value="invoice.pdf"
+                    />
+                  </div>
+                </fieldset>
+              </div>
+            </div>
+            <div
+              class="col-xs-3 col-md-2 col-xl-1 array-item-toolbox"
+            >
+              <div
+                class="btn-group"
+                style="display: flex; justify-content: flex-end; margin-top: 0px;"
+              >
+                <button
+                  class="btn btn-default rjsf-array-item-move-up"
+                  id="root_1__moveUp"
+                  title="Move invoice.pdf up"
+                  type="button"
+                >
+                  <i
+                    class="glyphicon glyphicon-arrow-up"
+                  />
+                </button>
+                <button
+                  class="btn btn-default rjsf-array-item-move-down"
+                  disabled=""
+                  id="root_1__moveDown"
+                  title="Move invoice.pdf down"
+                  type="button"
+                >
+                  <i
+                    class="glyphicon glyphicon-arrow-down"
+                  />
+                </button>
+                <button
+                  class="btn btn-default rjsf-array-item-copy"
+                  id="root_1__copy"
+                  title="Copy invoice.pdf"
+                  type="button"
+                >
+                  <i
+                    class="glyphicon glyphicon-copy"
+                  />
+                </button>
+                <button
+                  class="btn btn-danger rjsf-array-item-remove"
+                  id="root_1__remove"
+                  title="Remove invoice.pdf"
+                  type="button"
+                >
+                  <i
+                    class="glyphicon glyphicon-remove"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="row"
+        >
+          <p
+            class="col-xs-4 col-sm-2 col-lg-1 col-xs-offset-8 col-sm-offset-10 col-lg-offset-11 text-right rjsf-array-item-add"
+          >
+            <button
+              class="btn btn-info btn-add col-xs-12"
+              id="root__add"
+              title="Add"
+              type="button"
+            >
+              <i
+                class="glyphicon glyphicon-plus"
+              />
+            </button>
+          </p>
+        </div>
+      </fieldset>
+    </div>
+    <div>
+      <button
+        class="btn btn-info "
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`with title and description > array 1`] = `
 <DocumentFragment>
   <form

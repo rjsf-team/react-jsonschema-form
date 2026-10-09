@@ -139,6 +139,7 @@ export type CoreUiOptionsChecks =
         orderable?: boolean;
         removable?: boolean;
         copyable?: boolean;
+        itemLabel?: string;
         inline?: boolean;
         filePreview?: boolean;
         placeholder?: string;

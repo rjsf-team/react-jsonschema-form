@@ -8,13 +8,14 @@ import type {
   FieldPath,
   FieldProps,
   GenericObjectType,
+  IconButtonProps,
   RJSFSchema,
   TitleFieldProps,
   UiSchema,
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import { getVisibleErrors, noop } from '@rjsf/utils';
+import { englishStringTranslator, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -22,6 +23,7 @@ import { flushSync } from 'react-dom';
 
 import ArrayField from '../src/components/fields/ArrayField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
+import CoreArrayFieldItemButtonsTemplate from '../src/components/templates/ArrayFieldItemButtonsTemplate.tsx';
 import type { IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 import {
@@ -2285,6 +2287,189 @@ describe('ArrayField', () => {
       });
 
       expect(node.querySelectorAll('#custom-select')).toHaveLength(2);
+    });
+  });
+
+  describe('Item names in button titles (ui:options.itemLabel)', () => {
+    const schema: RJSFSchema = {
+      type: 'array',
+      title: 'Files',
+      items: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          size: { type: 'number' },
+          file: { type: 'object', properties: { name: { type: 'string' } } },
+        },
+      },
+    };
+    const files = [{ name: 'report.pdf' }, { name: 'invoice.pdf' }];
+    const BUTTONS = ['move-up', 'move-down', 'copy', 'remove'];
+
+    function titlesOf(node: Element, index: number) {
+      return BUTTONS.map((button) => node.querySelectorAll(`.rjsf-array-item-${button}`)[index].getAttribute('title'));
+    }
+
+    function removeTitles(node: Element) {
+      return [...node.querySelectorAll('.rjsf-array-item-remove')].map((button) => button.getAttribute('title'));
+    }
+
+    it('keeps the default titles when itemLabel is not set', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: files,
+        uiSchema: { 'ui:options': { copyable: true } },
+      });
+
+      expect(titlesOf(node, 0)).toEqual(['Move up', 'Move down', 'Copy', 'Remove']);
+      expect(titlesOf(node, 1)).toEqual(['Move up', 'Move down', 'Copy', 'Remove']);
+    });
+
+    it('names each item by the property itemLabel points at', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: files,
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+      });
+
+      expect(titlesOf(node, 0)).toEqual([
+        'Move report.pdf up',
+        'Move report.pdf down',
+        'Copy report.pdf',
+        'Remove report.pdf',
+      ]);
+      expect(titlesOf(node, 1)).toEqual([
+        'Move invoice.pdf up',
+        'Move invoice.pdf down',
+        'Copy invoice.pdf',
+        'Remove invoice.pdf',
+      ]);
+    });
+
+    it('reads a dotted path and a number', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [{ file: { name: 'scan.png' }, size: 12 }],
+        uiSchema: { 'ui:itemLabel': 'file.name' },
+      });
+      expect(removeTitles(node)).toEqual(['Remove scan.png']);
+
+      const { node: bySize } = createFormComponent({
+        schema,
+        initialFormData: [{ size: 12 }],
+        uiSchema: { 'ui:itemLabel': 'size' },
+      });
+      expect(removeTitles(bySize)).toEqual(['Remove 12']);
+    });
+
+    it('keeps the default titles for an item without a usable name', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [{ name: 'report.pdf' }, { name: '  ' }, {}, { file: { name: 'nested' } }],
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+      });
+
+      expect(titlesOf(node, 0)[3]).toEqual('Remove report.pdf');
+      expect(titlesOf(node, 1)).toEqual(['Move up', 'Move down', 'Copy', 'Remove']);
+      expect(titlesOf(node, 2)).toEqual(['Move up', 'Move down', 'Copy', 'Remove']);
+      // `file` is an object, not a name
+      const { node: byObject } = createFormComponent({
+        schema,
+        initialFormData: [{ file: { name: 'nested' } }],
+        uiSchema: { 'ui:options': { itemLabel: 'file' } },
+      });
+      expect(byObject.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Remove');
+    });
+
+    it('translates the titles through translateString', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: files,
+        uiSchema: { 'ui:options': { itemLabel: 'name' } },
+        translateString: (str, params) =>
+          str === TranslatableString.RemoveItemButton
+            ? `Supprimer ${params?.[0]}`
+            : englishStringTranslator(str, params),
+      });
+
+      expect(node.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Supprimer report.pdf');
+    });
+
+    it('passes custom button templates a title only when itemLabel names the item', () => {
+      const received: ArrayFieldItemButtonsTemplateProps['itemButtonProps'][] = [];
+      const titles: (string | undefined)[] = [];
+      const hasTitle: boolean[] = [];
+      function RemoveButton(props: IconButtonProps) {
+        hasTitle.push('title' in props);
+        titles.push(props.title);
+        return (
+          <button type='button' className='rjsf-array-item-remove' onClick={props.onClick}>
+            Remove
+          </button>
+        );
+      }
+      function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps) {
+        received.push(props.itemButtonProps);
+        return <CoreArrayFieldItemButtonsTemplate {...props} />;
+      }
+      const templates = { ArrayFieldItemButtonsTemplate, ButtonTemplates: { RemoveButton } };
+
+      createFormComponent({ schema, initialFormData: files, templates });
+      expect(hasTitle).toEqual([false, false]);
+      expect(received).toEqual([undefined, undefined]);
+
+      hasTitle.length = 0;
+      createFormComponent({ schema, initialFormData: files, templates, uiSchema: { 'ui:itemLabel': 'name' } });
+      expect(hasTitle).toEqual([true, true]);
+      expect(titles.slice(-2)).toEqual(['Remove report.pdf', 'Remove invoice.pdf']);
+      expect(received.at(-1)).toEqual({
+        copy: { title: 'Copy invoice.pdf' },
+        moveDown: { title: 'Move invoice.pdf down' },
+        moveUp: { title: 'Move invoice.pdf up' },
+        remove: { title: 'Remove invoice.pdf' },
+      });
+    });
+
+    it('keeps each name with its item when the items are reordered', async () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: files,
+        uiSchema: { 'ui:itemLabel': 'name' },
+      });
+
+      expect(removeTitles(node)).toEqual(['Remove report.pdf', 'Remove invoice.pdf']);
+
+      await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+      expect(removeTitles(node)).toEqual(['Remove invoice.pdf', 'Remove report.pdf']);
+      expect(node.querySelector('.rjsf-array-item-move-up')).toHaveAttribute('title', 'Move invoice.pdf up');
+    });
+
+    it('updates the titles as the name is edited', async () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [{ name: 'report' }],
+        uiSchema: { 'ui:itemLabel': 'name' },
+      });
+
+      await user.type(node.querySelector('#root_0_name')!, '.pdf');
+
+      expect(node.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Remove report.pdf');
+    });
+
+    it('names the additional items of a fixed-items array', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'array',
+          items: [{ type: 'string' }],
+          additionalItems: { type: 'object', properties: { name: { type: 'string' } } },
+        },
+        initialFormData: ['fixed', { name: 'extra.pdf' }],
+        uiSchema: { 'ui:itemLabel': 'name' },
+      });
+
+      expect(node.querySelectorAll('.rjsf-array-item-remove')).toHaveLength(1);
+      expect(node.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Remove extra.pdf');
     });
   });
 

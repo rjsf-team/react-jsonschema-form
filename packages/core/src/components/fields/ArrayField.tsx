@@ -14,6 +14,8 @@ import type {
 } from '@rjsf/utils';
 import {
   setByPath,
+  getByPath,
+  toPath,
   allowAdditionalItems,
   getItemUiSchemaForItem,
   getStaticItemsUiSchema,
@@ -381,6 +383,14 @@ function asItemErrorSchema(errorSchema: unknown): unknown {
   return errorSchema;
 }
 
+/** The name `ui:options.itemLabel` gives an item from the value it points at: a non-empty string, or a number */
+function itemNameFrom(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    return value.trim() ? value : undefined;
+  }
+  return typeof value === 'number' && Number.isFinite(value) ? String(value) : undefined;
+}
+
 /** Renders the individual array item using a `SchemaField` along with the additional properties that are needed to
  * render the whole of the `ArrayFieldItemTemplate`.
  */
@@ -469,7 +479,7 @@ function ArrayFieldItemInner<
   const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
-  const { orderable = true, removable = true, copyable = false } = uiOptions;
+  const { orderable = true, removable = true, copyable = false, itemLabel } = uiOptions;
   const has: Record<string, boolean> = {
     moveUp: orderable && canMoveUp,
     moveDown: orderable && canMoveDown,
@@ -478,6 +488,22 @@ function ArrayFieldItemInner<
     toolbar: false,
   };
   has.toolbar = Object.keys(has).some((key: keyof typeof has) => has[key]);
+
+  const itemName = itemLabel ? itemNameFrom(getByPath(itemData, toPath(itemLabel))) : undefined;
+  const { translateString } = registry;
+  // Keyed by the name rather than the index, so reordering items doesn't re-translate their titles
+  const itemButtonProps = useMemo(
+    () =>
+      itemName === undefined
+        ? undefined
+        : {
+            copy: { title: translateString(TranslatableString.CopyItemButton, [itemName]) },
+            moveDown: { title: translateString(TranslatableString.MoveDownItemButton, [itemName]) },
+            moveUp: { title: translateString(TranslatableString.MoveUpItemButton, [itemName]) },
+            remove: { title: translateString(TranslatableString.RemoveItemButton, [itemName]) },
+          },
+    [itemName, translateString],
+  );
 
   const onAddItem = useCallback(
     (event: MouseEvent) => {
@@ -552,6 +578,7 @@ function ArrayFieldItemInner<
       onRemoveItem,
       onMoveUpItem,
       onMoveDownItem,
+      itemButtonProps,
       registry,
       schema: itemSchema,
       uiSchema: itemUiSchema,

@@ -978,7 +978,19 @@ export type ArrayFieldItemButtonsTemplateProps<
   onRemoveItem: (event?: any) => void;
   /** A boolean value stating if the array item is read-only */
   readonly?: boolean;
+  /** Props to spread onto each of the item's buttons. Set when the array's `ui:options.itemLabel` names the item, to
+   * give the buttons titles such as `Remove report.pdf`; otherwise undefined, and the buttons keep their default titles
+   */
+  itemButtonProps?: ArrayFieldItemButtonProps;
 };
+
+/** Per-button props for an array item's buttons, keyed by button */
+export interface ArrayFieldItemButtonProps {
+  copy?: { title: string };
+  moveDown?: { title: string };
+  moveUp?: { title: string };
+  remove?: { title: string };
+}
 
 /** The properties used to render the ArrayFieldItemTemplate */
 export type ArrayFieldItemTemplateProps<
@@ -1417,6 +1429,11 @@ type UIOptionsBaseType<
      * discriminator
      */
     optionsSchemaSelector?: string;
+    /** On an array field, the property of each item's form data whose value names that item in the titles of its
+     * buttons, such as `Remove report.pdf`. A dotted path, such as `'file.name'`, reads a nested property. Items whose
+     * value there isn't a non-empty string or a number keep the default titles
+     */
+    itemLabel?: string;
     /** Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the
      * hierarchy
      */

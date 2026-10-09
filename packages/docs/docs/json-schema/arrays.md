@@ -192,6 +192,46 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### `itemLabel` option
+
+An item's buttons are titled `Move up`, `Move down`, `Copy` and `Remove` by default, and screen readers announce those titles as the buttons' names, so every item in the list has buttons with the same names. Set `itemLabel` to the property of each item that names it, and the item's buttons are titled after it instead, such as `Remove report.pdf`:
+
+```tsx
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'array',
+  title: 'Attachments',
+  items: {
+    type: 'object',
+    properties: {
+      fileName: { type: 'string' },
+    },
+  },
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': {
+    itemLabel: 'fileName',
+  },
+};
+
+render(
+  <Form
+    schema={schema}
+    uiSchema={uiSchema}
+    formData={[{ fileName: 'report.pdf' }, { fileName: 'invoice.pdf' }]}
+    validator={validator}
+  />,
+  document.getElementById('app'),
+);
+```
+
+A dotted path, such as `'file.name'`, reads a nested property. An item whose value there isn't a non-empty string or a number, such as one that was just added, keeps the default titles.
+
+The titles come from four translatable strings, `CopyItemButton`, `MoveDownItemButton`, `MoveUpItemButton` and `RemoveItemButton`, in which `%1` is the item's name. If you translate RJSF's strings with a custom [`translateString`](../api-reference/form-props.md#translatestring), translate these four as well, or the titles of named items stay in English.
+
 ## Multiple-choice list
 
 The default behavior for array fields is a list of text inputs with add/remove buttons. There are two alternative widgets for picking multiple elements from a list of choices. Typically, this applies when a schema has an `enum` list for the `items` property of an `array` field, and the `uniqueItems` property set to `true`.

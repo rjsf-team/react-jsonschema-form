@@ -3380,6 +3380,399 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 </DocumentFragment>
 `;
 
+exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
+<DocumentFragment>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-array"
+    >
+      <div
+        class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+      >
+        <div
+          class="fui-Flex ___197levj_141tvyj f22iagw f1vx9l62 fsbu5mz"
+        >
+          <div
+            class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
+          >
+            <div
+              class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
+            >
+              <div
+                class="rjsf-field rjsf-field-object"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <div
+                    class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+                  >
+                    <div
+                      class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+                      style="margin-bottom: 10px;"
+                    >
+                      <div
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                        >
+                          <label
+                            class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                            for="root_0_name"
+                          >
+                            name
+                          </label>
+                          <span
+                            class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                          >
+                            <input
+                              aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                              class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                              id="root_0_name"
+                              name="root_0_name"
+                              placeholder=""
+                              type="text"
+                              value="report.pdf"
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="fui-Flex ___1gzszts_10anl4a f22iagw"
+              style="margin-left: 8px; margin-top: 0px;"
+            >
+              <button
+                class="fui-Button r1f29ykk rjsf-array-item-move-up ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
+                disabled=""
+                id="root_0__moveUp"
+                title="Move report.pdf up"
+                type="button"
+              >
+                <span
+                  class="fui-Button__icon rywnvv2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                    data-fui-icon=""
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 20 20"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                class="fui-Button r1f29ykk rjsf-array-item-move-down ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
+                id="root_0__moveDown"
+                title="Move report.pdf down"
+                type="button"
+              >
+                <span
+                  class="fui-Button__icon rywnvv2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                    data-fui-icon=""
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 20 20"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
+                id="root_0__copy"
+                title="Copy report.pdf"
+                type="button"
+              >
+                <span
+                  class="fui-Button__icon rywnvv2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                    data-fui-icon=""
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 20 20"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7 7H5.5C4.67 7 4 7.67 4 8.5v6c0 .83.67 1.5 1.5 1.5h4c.65 0 1.2-.42 1.41-1h1.04a2.5 2.5 0 0 1-2.45 2h-4A2.5 2.5 0 0 1 3 14.5v-6A2.5 2.5 0 0 1 5.5 6H7zm7.5-4A2.5 2.5 0 0 1 17 5.5v6a2.5 2.5 0 0 1-2.5 2.5h-4A2.5 2.5 0 0 1 8 11.5v-6A2.5 2.5 0 0 1 10.5 3zm-4 1C9.67 4 9 4.67 9 5.5v6c0 .83.67 1.5 1.5 1.5h4c.83 0 1.5-.67 1.5-1.5v-6c0-.83-.67-1.5-1.5-1.5z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
+                id="root_0__remove"
+                title="Remove report.pdf"
+                type="button"
+              >
+                <span
+                  class="fui-Button__icon rywnvv2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                    data-fui-icon=""
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 20 20"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1o959zg_1w65b81 f22iagw f6jr5hl"
+          >
+            <div
+              class="fui-Flex ___9stze40_16wdn2w f22iagw fly5x3f f1l02sjl fzy362"
+            >
+              <div
+                class="rjsf-field rjsf-field-object"
+              >
+                <div
+                  class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                >
+                  <div
+                    class="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
+                  >
+                    <div
+                      class="fui-Flex ___13jx0ny_nlbnai0 f22iagw f1vx9l62 fly5x3f f1l02sjl"
+                      style="margin-bottom: 10px;"
+                    >
+                      <div
+                        class="___r7kt3y0_0000000 fqerorx rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          class="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
+                        >
+                          <label
+                            class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
+                            for="root_1_name"
+                          >
+                            name
+                          </label>
+                          <span
+                            class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                          >
+                            <input
+                              aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                              class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
+                              id="root_1_name"
+                              name="root_1_name"
+                              placeholder=""
+                              type="text"
+                              value="invoice.pdf"
+                            />
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="fui-Flex ___1gzszts_10anl4a f22iagw"
+              style="margin-left: 8px; margin-top: 0px;"
+            >
+              <button
+                class="fui-Button r1f29ykk rjsf-array-item-move-up ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
+                id="root_1__moveUp"
+                title="Move invoice.pdf up"
+                type="button"
+              >
+                <span
+                  class="fui-Button__icon rywnvv2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                    data-fui-icon=""
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 20 20"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M9 4.71 6.35 7.35a.5.5 0 1 1-.7-.7L9.1 3.18a.5.5 0 0 1 .74-.03h.01l3.5 3.5a.5.5 0 1 1-.71.7L10 4.71V16.5a.5.5 0 0 1-1 0z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                class="fui-Button r1f29ykk rjsf-array-item-move-down ___wlm8bp0_1ozxbqi f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1jct5ie f13txml0 f1ncddno f1z04ada f1axfvow f1uhomfy fy9mucy f1g9va8i fwgvudy fom6jww f14ptb23 f9dbb4x f3qs60o fwd1oij f5u9ap2 f1cyfu5x f127ot8j f19etb0b f4f984j f3d22hf fw441p0 fj8k9ua fifrq0d f196mwp7 f1l6uprw fnekfq fa9u7a5 f1m71e0y fw24f3 f1nznrny fq8nxuu ftoixeo f1ao3jkc fpmuzpx f168odog f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
+                disabled=""
+                id="root_1__moveDown"
+                title="Move invoice.pdf down"
+                type="button"
+              >
+                <span
+                  class="fui-Button__icon rywnvv2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                    data-fui-icon=""
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 20 20"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m10 15.29 2.65-2.64a.5.5 0 0 1 .7.7L9.9 16.82a.5.5 0 0 1-.74.03h-.01l-3.5-3.5a.5.5 0 1 1 .71-.7L9 15.29V3.5a.5.5 0 0 1 1 0z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                class="fui-Button r1f29ykk rjsf-array-item-copy ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
+                id="root_1__copy"
+                title="Copy invoice.pdf"
+                type="button"
+              >
+                <span
+                  class="fui-Button__icon rywnvv2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                    data-fui-icon=""
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 20 20"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7 7H5.5C4.67 7 4 7.67 4 8.5v6c0 .83.67 1.5 1.5 1.5h4c.65 0 1.2-.42 1.41-1h1.04a2.5 2.5 0 0 1-2.45 2h-4A2.5 2.5 0 0 1 3 14.5v-6A2.5 2.5 0 0 1 5.5 6H7zm7.5-4A2.5 2.5 0 0 1 17 5.5v6a2.5 2.5 0 0 1-2.5 2.5h-4A2.5 2.5 0 0 1 8 11.5v-6A2.5 2.5 0 0 1 10.5 3zm-4 1C9.67 4 9 4.67 9 5.5v6c0 .83.67 1.5 1.5 1.5h4c.83 0 1.5-.67 1.5-1.5v-6c0-.83-.67-1.5-1.5-1.5z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+              <button
+                class="fui-Button r1f29ykk rjsf-array-item-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+                color="secondary"
+                id="root_1__remove"
+                title="Remove invoice.pdf"
+                type="button"
+              >
+                <span
+                  class="fui-Button__icon rywnvv2"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                    data-fui-icon=""
+                    fill="currentColor"
+                    height="1em"
+                    viewBox="0 0 20 20"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M3 10c0-.28.22-.5.5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 3 10"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
+          >
+            <button
+              class="fui-Button r1f29ykk rjsf-array-item-add ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
+              id="root__add"
+              title="Add Item"
+              type="button"
+            >
+              <span
+                class="fui-Button__icon rywnvv2"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="fui-Icon ___9ctc0p0_1xvj9ao f1w7gpdv fez10in f1dd5bof"
+                  data-fui-icon=""
+                  fill="currentColor"
+                  height="1em"
+                  viewBox="0 0 20 20"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5"
+                    fill="currentColor"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="___fko12g0_0000000 f1wswflg"
+    >
+      <button
+        class="fui-Button r1f29ykk ___dhqv000_ql4wmo0 ffp7eso f1p3nwhy f11589ue f1q5o8ev f1pdflbu f1phragk f15wkkf3 f1s2uweq fr80ssc f1ukrpxl fecsdlb f1rq72xc f1ksv2xa fhvnf4x fb6swo4 f1klyf7k f232fm2 f1d6mv4x f1nz3ub2 fag2qd2 fmvhcg7 f1o3dhpw f14bpyus fqc85l4 f1h3a8gf fkiggi6 f8gmj8i f1ap8nzx f1igan7k fjag8bx f1v3eptx f1ysmecq faulsx f79t15f fbtzoaq f8qmx7k fd4bjan f17t0x8g f194v5ow f1qgg65p fk7jm04 fhgccpy f32wu9k fu5nqqq f13prjl2 f1czftr5 f1nl83rv fixhny3 feygou5"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`with title and description > array 1`] = `
 <DocumentFragment>
   <form

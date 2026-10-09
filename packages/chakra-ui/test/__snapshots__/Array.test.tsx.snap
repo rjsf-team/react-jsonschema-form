@@ -8970,6 +8970,879 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 </DocumentFragment>
 `;
 
+exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
+<DocumentFragment>
+  @layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  gap: 0.5rem;
+  padding-block: var(--chakra-spacing-1);
+}
+
+.emotion-4 {
+  width: 100%;
+}
+
+.emotion-7 {
+  display: grid;
+  gap: var(--chakra-spacing-4);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-10 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-12 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-13 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-13 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    gap: 0!important;
+    isolation: isolate;
+    position: relative;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+
+  .emotion-13 [data-group-item]:is(:focus-visible, [data-focus-visible]) {
+    z-index: 1;
+  }
+
+  .emotion-13>*[data-first] {
+    border-start-end-radius: 0!important;
+    border-end-end-radius: 0!important;
+    -webkit-margin-end: -1px;
+    margin-inline-end: -1px;
+  }
+
+  .emotion-13>*[data-between] {
+    border-radius: 0!important;
+    -webkit-margin-end: -1px;
+    margin-inline-end: -1px;
+  }
+
+  .emotion-13>*[data-last] {
+    border-start-start-radius: 0!important;
+    border-end-start-radius: 0!important;
+  }
+}
+
+.emotion-14 {
+  padding-inline: 0;
+  padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-14 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-14 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-14:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-14:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-14 :where(svg) {
+  font-size: 1.2em;
+}
+
+.emotion-33 {
+  justify-self: flex-end;
+}
+
+.emotion-34 {
+  margin-top: var(--chakra-spacing-2);
+}
+
+@layer recipes {
+  .emotion-35 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-35:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-35:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-35 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-35:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-35:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+.emotion-36 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-array"
+    >
+      <fieldset
+        aria-labelledby="fieldset::_r_45_::legend"
+        class="fieldset__root emotion-0"
+        data-part="root"
+        data-scope="fieldset"
+      >
+        <div
+          class="fieldset__content emotion-1"
+        >
+          <div>
+            <div
+              class="emotion-2"
+            >
+              <div>
+                <div
+                  class="chakra-stack emotion-3"
+                >
+                  <div
+                    class="emotion-4"
+                  >
+                    <div
+                      class="rjsf-field rjsf-field-object"
+                    >
+                      <fieldset
+                        aria-labelledby="fieldset::_r_46_::legend"
+                        class="fieldset__root emotion-0"
+                        data-part="root"
+                        data-scope="fieldset"
+                      >
+                        <div
+                          class="fieldset__content emotion-1"
+                        >
+                          <div
+                            class="emotion-7"
+                          >
+                            <div>
+                              <div
+                                class="rjsf-field rjsf-field-string"
+                              >
+                                <fieldset
+                                  aria-labelledby="fieldset::_r_47_::legend"
+                                  class="fieldset__root emotion-0"
+                                  data-part="root"
+                                  data-scope="fieldset"
+                                >
+                                  <div
+                                    class="fieldset__content emotion-1"
+                                  >
+                                    <div
+                                      class="chakra-field__root emotion-10"
+                                      data-part="root"
+                                      data-scope="field"
+                                      id="field::_r_48_"
+                                      role="group"
+                                    >
+                                      <label
+                                        class="chakra-field__label emotion-11"
+                                        data-part="label"
+                                        data-scope="field"
+                                        for="_r_48_"
+                                        id="field::_r_48_::label"
+                                      >
+                                        name
+                                      </label>
+                                      <input
+                                        aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                        class="chakra-input emotion-12"
+                                        data-part="input"
+                                        data-scope="field"
+                                        id="root_0_name"
+                                        name="root_0_name"
+                                        placeholder=""
+                                        type="text"
+                                        value="report.pdf"
+                                      />
+                                    </div>
+                                  </div>
+                                </fieldset>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      class="chakra-group emotion-13"
+                    >
+                      <button
+                        aria-label="Move report.pdf up"
+                        class="chakra-button rjsf-array-item-move-up emotion-14"
+                        disabled=""
+                        id="root_0__moveUp"
+                        title="Move report.pdf up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-arrow-up"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m5 12 7-7 7 7"
+                          />
+                          <path
+                            d="M12 19V5"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        aria-label="Move report.pdf down"
+                        class="chakra-button rjsf-array-item-move-down emotion-14"
+                        id="root_0__moveDown"
+                        title="Move report.pdf down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-arrow-down"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12 5v14"
+                          />
+                          <path
+                            d="m19 12-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        aria-label="Copy report.pdf"
+                        class="chakra-button rjsf-array-item-copy emotion-14"
+                        id="root_0__copy"
+                        title="Copy report.pdf"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-copy"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            height="14"
+                            rx="2"
+                            ry="2"
+                            width="14"
+                            x="8"
+                            y="8"
+                          />
+                          <path
+                            d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        aria-label="Remove report.pdf"
+                        class="chakra-button rjsf-array-item-remove emotion-14"
+                        id="root_0__remove"
+                        title="Remove report.pdf"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-delete"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"
+                          />
+                          <path
+                            d="m12 9 6 6"
+                          />
+                          <path
+                            d="m18 9-6 6"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="chakra-stack emotion-3"
+                >
+                  <div
+                    class="emotion-4"
+                  >
+                    <div
+                      class="rjsf-field rjsf-field-object"
+                    >
+                      <fieldset
+                        aria-labelledby="fieldset::_r_49_::legend"
+                        class="fieldset__root emotion-0"
+                        data-part="root"
+                        data-scope="fieldset"
+                      >
+                        <div
+                          class="fieldset__content emotion-1"
+                        >
+                          <div
+                            class="emotion-7"
+                          >
+                            <div>
+                              <div
+                                class="rjsf-field rjsf-field-string"
+                              >
+                                <fieldset
+                                  aria-labelledby="fieldset::_r_4a_::legend"
+                                  class="fieldset__root emotion-0"
+                                  data-part="root"
+                                  data-scope="fieldset"
+                                >
+                                  <div
+                                    class="fieldset__content emotion-1"
+                                  >
+                                    <div
+                                      class="chakra-field__root emotion-10"
+                                      data-part="root"
+                                      data-scope="field"
+                                      id="field::_r_4b_"
+                                      role="group"
+                                    >
+                                      <label
+                                        class="chakra-field__label emotion-11"
+                                        data-part="label"
+                                        data-scope="field"
+                                        for="_r_4b_"
+                                        id="field::_r_4b_::label"
+                                      >
+                                        name
+                                      </label>
+                                      <input
+                                        aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                        class="chakra-input emotion-12"
+                                        data-part="input"
+                                        data-scope="field"
+                                        id="root_1_name"
+                                        name="root_1_name"
+                                        placeholder=""
+                                        type="text"
+                                        value="invoice.pdf"
+                                      />
+                                    </div>
+                                  </div>
+                                </fieldset>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                    </div>
+                  </div>
+                  <div>
+                    <div
+                      class="chakra-group emotion-13"
+                    >
+                      <button
+                        aria-label="Move invoice.pdf up"
+                        class="chakra-button rjsf-array-item-move-up emotion-14"
+                        id="root_1__moveUp"
+                        title="Move invoice.pdf up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-arrow-up"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m5 12 7-7 7 7"
+                          />
+                          <path
+                            d="M12 19V5"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        aria-label="Move invoice.pdf down"
+                        class="chakra-button rjsf-array-item-move-down emotion-14"
+                        disabled=""
+                        id="root_1__moveDown"
+                        title="Move invoice.pdf down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-arrow-down"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M12 5v14"
+                          />
+                          <path
+                            d="m19 12-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        aria-label="Copy invoice.pdf"
+                        class="chakra-button rjsf-array-item-copy emotion-14"
+                        id="root_1__copy"
+                        title="Copy invoice.pdf"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-copy"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            height="14"
+                            rx="2"
+                            ry="2"
+                            width="14"
+                            x="8"
+                            y="8"
+                          />
+                          <path
+                            d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        aria-label="Remove invoice.pdf"
+                        class="chakra-button rjsf-array-item-remove emotion-14"
+                        id="root_1__remove"
+                        title="Remove invoice.pdf"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="lucide lucide-delete"
+                          fill="none"
+                          height="24"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"
+                          />
+                          <path
+                            d="m12 9 6 6"
+                          />
+                          <path
+                            d="m18 9-6 6"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="emotion-33"
+              >
+                <div
+                  class="emotion-34"
+                >
+                  <button
+                    class="chakra-button rjsf-array-item-add emotion-35"
+                    id="root__add"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lucide lucide-plus"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M5 12h14"
+                      />
+                      <path
+                        d="M12 5v14"
+                      />
+                    </svg>
+                    Add Item
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div
+      class="emotion-36"
+    >
+      <button
+        class="chakra-button emotion-35"
+        type="submit"
+      >
+        Submit
+      </button>
+    </div>
+  </form>
+  <span
+    hidden=""
+  />
+</DocumentFragment>
+`;
+
 exports[`with title and description > array 1`] = `
 <DocumentFragment>
   @layer recipes {
