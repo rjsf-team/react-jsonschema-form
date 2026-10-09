@@ -35,7 +35,6 @@ import {
 
 import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
-import type { ItemMove } from '../formState.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** An item of the `formData` paired with its stable React key */
@@ -873,12 +872,18 @@ export default function ArrayField<
     return current.map((item, index) => ({ key: rows[index]?.key ?? generateRowId(), item }));
   }, [view]);
 
-  /** Proposes the rows a handler built, recording them first so a second handler in the same event starts from them,
-   * and saying where the handler put each item, so the form moves the items' errors along
+  /** Proposes the rows a handler built from `rows`, recording them first so a second handler in the same event starts
+   * from them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off
+   * the rows themselves, so the errors go nowhere the items did not
    */
   const commitRows = useCallback(
-    (newKeyedFormData: KeyedFormDataType<T>[], newIndexOf: ItemMove) => {
-      view.propose(newKeyedFormData, () => onChange(updateKeyedFormData(newKeyedFormData), fieldPath), newIndexOf);
+    (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
+      const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
+      view.propose(
+        newKeyedFormData,
+        () => onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
+        (index) => newIndexes.get(rows[index]),
+      );
     },
     [view, onChange, updateKeyedFormData, fieldPath],
   );
@@ -907,7 +912,7 @@ export default function ArrayField<
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      commitRows(newKeyedFormData, (i) => (index === undefined || i < index ? i : i + 1));
+      commitRows(rows, newKeyedFormData);
     },
     [registry, schema, uiSchema, commitRows, readRows],
   );
@@ -939,7 +944,7 @@ export default function ArrayField<
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      commitRows(newKeyedFormData, (i) => (i <= index ? i : i + 1));
+      commitRows(rows, newKeyedFormData);
     },
     [commitRows, readRows],
   );
@@ -962,12 +967,7 @@ export default function ArrayField<
       }
 
       const newKeyedFormData = rows.filter((_, i) => i !== index);
-      commitRows(newKeyedFormData, (i) => {
-        if (i === index) {
-          return undefined;
-        }
-        return i < index ? i : i - 1;
-      });
+      commitRows(rows, newKeyedFormData);
     },
     [commitRows, readRows],
   );
@@ -997,12 +997,7 @@ export default function ArrayField<
         return newKeyedFormData;
       }
       const newKeyedFormData = reOrderArray();
-      commitRows(newKeyedFormData, (i) => {
-        if (i === index) {
-          return newIndex;
-        }
-        return i === newIndex ? index : i;
-      });
+      commitRows(rows, newKeyedFormData);
     },
     [commitRows, readRows],
   );

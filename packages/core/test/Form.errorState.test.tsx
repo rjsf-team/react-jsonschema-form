@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type {
+  ArrayFieldItemTemplateProps,
   ErrorListProps,
   ErrorSchema,
   ErrorTransformer,
@@ -583,6 +584,35 @@ describe('Error state consistency when deriving from new props', () => {
       expect(inputValues(container)).toEqual(['bbbb', 'c']);
       expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
       expect(errorListMessages(container)).toEqual(['.arr.1 must NOT have fewer than 3 characters']);
+    });
+
+    it('keeps the error on its item when a custom item template moves the last item down', async () => {
+      function AlwaysMovableItem({ children, buttonsProps }: ArrayFieldItemTemplateProps) {
+        return (
+          <div>
+            {children}
+            <button type='button' className='always-move-down' onClick={buttonsProps.onMoveDownItem}>
+              down
+            </button>
+          </div>
+        );
+      }
+      const { container } = render(
+        <Form
+          schema={arraySchema}
+          validator={validator}
+          templates={{ ArrayFieldItemTemplate: AlwaysMovableItem }}
+          initialFormData={{ arr: ['aaaa', 'bbbb', 'c'] }}
+        />,
+      );
+      await submitForm(container, user);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_2: ['must NOT have fewer than 3 characters'] });
+
+      await user.click(container.querySelectorAll<HTMLButtonElement>('.always-move-down')[2]);
+
+      expect(inputValues(container)).toEqual(['aaaa', 'bbbb', 'c']);
+      expect(fieldErrorsById(container)).toEqual({ root_arr_2: ['must NOT have fewer than 3 characters'] });
+      expect(errorListMessages(container)).toEqual(['.arr.2 must NOT have fewer than 3 characters']);
     });
 
     it('leaves the errors where they are when a custom field replaces the array without saying how it moved', async () => {
