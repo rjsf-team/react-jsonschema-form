@@ -635,6 +635,30 @@ describe('AJV8Validator', () => {
           expect(transformErrors).toHaveBeenCalledWith(expect.any(Array), uiSchema);
         });
       });
+      it('keeps the errors whose message transformErrors cleared when customValidate adds one', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+        };
+        // An error with no `message` is left out of the `errorSchema`, but it is still one of the `errors`
+        const transformErrors = (errors: RJSFValidationError[]) => errors.map((error) => ({ ...error, message: '' }));
+        const customValidate: CustomValidator<{ foo?: unknown; bar?: string }> = (_formData, errors) => {
+          errors.bar?.addError('custom');
+          return errors;
+        };
+        const { errors, errorSchema } = validator.validateFormData(
+          { foo: 42, bar: 'b' },
+          schema,
+          customValidate,
+          transformErrors,
+        );
+        expect(errors.map(({ property, message }) => ({ property, message }))).toEqual([
+          { property: '.foo', message: '' },
+          { property: '.bar', message: 'custom' },
+        ]);
+        expect(errorSchema.foo?.__errors ?? []).toEqual([]);
+        expect(errorSchema.bar?.__errors).toEqual(['custom']);
+      });
       describe('Custom validate function', () => {
         let errors: RJSFValidationError[];
         let errorSchema: ErrorSchema;

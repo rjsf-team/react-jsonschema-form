@@ -2391,12 +2391,13 @@ Converts a UTC date string into a local Date format
 
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `toErrorList()` on the `errors` in the `validationData`.
 If no `additionalErrorSchema` is passed, then `validationData` is returned.
+The existing `errors` are always kept, even when their `errorSchema` is empty, as it is when a `transformErrors` clears their `message`.
 
 #### Parameters
 
 - validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
 - [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The optional additional set of errors in an `ErrorSchema`
-- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates`
+- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates` and skip additional errors already in the existing `errors` list (same path and `message`, whatever way the `property` spells the path)
 
 #### Returns
 
