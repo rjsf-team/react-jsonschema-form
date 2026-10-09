@@ -109,6 +109,11 @@ export default function SelectWidget<
 
   const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 
+  // ArrayField resolves `label` as `uiTitle ?? schema.title ?? name`, which leaves "" for an untitled root field
+  // (or an explicit `ui:title: ""`) and would leave the multi-select combobox unnamed (#5458). Fall back to the
+  // schema title, then the id-derived name, then the raw id.
+  const comboboxLabel = label || schema.title || id.replace(/^root_?/, '') || id;
+
   return (
     <div className='p-0.5'>
       {!multiple ? (
@@ -132,9 +137,10 @@ export default function SelectWidget<
       ) : (
         <FancyMultiSelect
           id={id}
-          label={label}
+          label={comboboxLabel}
           autoFocus={autofocus}
           disabled={disabled || readonly}
+          required={required}
           multiple
           className={cnClassName}
           items={items}
@@ -147,6 +153,7 @@ export default function SelectWidget<
           }}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
+          ariaDescribedby={ariaDescribedByIds(id)}
         />
       )}
       <SelectedOptionDescription
