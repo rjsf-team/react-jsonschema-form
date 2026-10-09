@@ -1,4 +1,5 @@
 import { getChangedFields } from '../src/index.ts';
+import type { GenericObjectType } from '../src/index.ts';
 
 const makeComplexObject = () => ({
   a: 1,
@@ -226,6 +227,29 @@ describe('getChangedFields()', () => {
       expect(getChangedFields({ outer: { one: 1, two: undefined } }, { outer: { one: 2 } }, true)).toEqual([
         'outer.one',
       ]);
+    });
+    it('reads an empty slot of an array as an item holding undefined', () => {
+      const withEmptySlot = (second: unknown) => {
+        const items: unknown[] = [];
+        items[1] = second;
+        return items;
+      };
+      expect(getChangedFields({ items: withEmptySlot('x') }, { items: ['y', 'x'] }, true)).toEqual(['items.0']);
+      expect(getChangedFields({ items: ['y', 'x'] }, { items: withEmptySlot('x') }, true)).toEqual(['items.0']);
+      expect(getChangedFields({ items: withEmptySlot('x') }, { items: [undefined, 'x'] }, true)).toEqual([]);
+      expect(getChangedFields({ items: withEmptySlot({ a: 1 }) }, { items: ['y', { a: 2 }] }, true)).toEqual([
+        'items.0',
+        'items.1.a',
+      ]);
+    });
+    it('compares data that holds itself', () => {
+      const makeCircular = (leaf: number) => {
+        const data: GenericObjectType = { leaf };
+        data.self = data;
+        return { data };
+      };
+      expect(getChangedFields(makeCircular(1), makeCircular(1), true)).toEqual([]);
+      expect(getChangedFields(makeCircular(1), makeCircular(2))).toEqual(['data']);
     });
     it('leaves the shallow result alone', () => {
       expect(getChangedFields(complexObject, { ...makeComplexObject(), a: 2 }, true)).toEqual(['a']);

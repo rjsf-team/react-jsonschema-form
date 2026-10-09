@@ -737,6 +737,7 @@ Compares two objects and returns the names of the fields that have changed.
 This function iterates over each field of object `a`, using `_.isEqual` to compare the field value with the corresponding field value in object `b`.
 If the values are different, the field name will be included in the returned array.
 A key that is missing reads as one holding `undefined`, whichever object lacks it and at any depth, so a key that only gained or lost an `undefined` value has not changed.
+So does an empty slot of an array.
 
 When `deep` is true, a field holding a nested object or a same-length array is descended into and the dotted path of the deepest field that changed is returned instead of the name of the top-level field holding it.
 A key that contains a `.` or a `[` is descended into like any other: the path it produces cannot be told apart from a path through nested keys, and neither can the entry an `ErrorSchema` keeps for it, since [toErrorSchema()](#toerrorschema) spells such a name out as a path in the same way.
