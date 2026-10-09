@@ -702,6 +702,19 @@ describe('Error state consistency when deriving from new props', () => {
       expect(errorListMessages(container)).toEqual(remaining);
     });
 
+    it('keeps the error an invalid schema is reported with, which describes no field, when a field changes', async () => {
+      const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
+      const { container, node, rerender } = createFormComponent({ schema: invalid, formData: { name: 'a' } });
+
+      await submitForm(node, user);
+      const listed = errorListMessages(container);
+      expect(listed).toHaveLength(1);
+
+      rerender({ schema: invalid, formData: { name: 'b' } });
+
+      expect(errorListMessages(container)).toEqual(listed);
+    });
+
     it('keeps every error when the parent renders the same data again', async () => {
       const { container, node, rerender } = createFormComponent({ schema: leaf, formData: 'short' });
 

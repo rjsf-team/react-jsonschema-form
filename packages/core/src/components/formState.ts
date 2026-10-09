@@ -28,7 +28,6 @@ import {
   isObject,
   isWholeValueSelect,
   isPlainObject,
-  mergeObjects,
   replaceEqualDeep,
   schemaHasNestedConditional,
   toErrorList,
@@ -373,6 +372,52 @@ function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
 /** The path an `RJSFValidationError` addresses, the same way `toErrorSchema()` splits it */
 function errorPath(error: RJSFValidationError): string[] {
   return error.property ? toPath(error.property) : [];
+}
+
+/** `errorSchema` without the `__errors` of the nodes at the paths `isDropped` names, and without the nodes that leaves
+ * empty: an empty node is one a raise at an ancestor would read as errors still being there
+ *
+ * @param errorSchema - The `ErrorSchema` to drop errors from
+ * @param isDropped - Whether the errors of the node at a path are dropped
+ * @param path - The path of `errorSchema` itself
+ * @returns - The `ErrorSchema` that is left
+ */
+function pruneErrorSchema(
+  errorSchema: GenericObjectType,
+  isDropped: (path: FieldPathList) => boolean,
+  path: FieldPathList,
+): GenericObjectType {
+  const kept: GenericObjectType = {};
+  for (const [key, value] of Object.entries(errorSchema)) {
+    if (key === ERRORS_KEY) {
+      if (!isDropped(path)) {
+        kept[key] = value;
+      }
+    } else {
+      const child = isPlainObject(value) ? pruneErrorSchema(value, isDropped, [...path, key]) : value;
+      if (!isPlainObject(child) || Object.keys(child).length > 0) {
+        kept[key] = child;
+      }
+    }
+  }
+  return kept;
+}
+
+/** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by the one rule. An
+ * error with no `property`, such as the one an invalid schema is reported with, describes no field and stays listed
+ *
+ * @param validation - The errors, as a list and as an `ErrorSchema`
+ * @param isDropped - Whether the errors at a path are dropped
+ * @returns - The errors that are left
+ */
+function withoutErrors<T>(
+  validation: ValidationData<T>,
+  isDropped: (path: FieldPathList) => boolean,
+): ValidationData<T> {
+  return {
+    errors: validation.errors.filter((error) => error.property === undefined || !isDropped(errorPath(error))),
+    errorSchema: pruneErrorSchema(validation.errorSchema, isDropped, []),
+  };
 }
 
 /** Counts the messages of `errorSchema` into `counts`, keyed by the property each sits at, or by the message alone when
@@ -777,8 +822,10 @@ interface ErrorOptions<S> {
   getChangedPaths?: () => FieldPathList[];
 }
 
-/** The path of each field that differs between two values of the form's data. The empty path, the root's own, stands
- * for a difference that cannot be narrowed to the fields below the root: a primitive, an array, or a change of type
+/** The path of each field that differs between two values of the form's data, split with `toPath()` the way
+ * `toErrorSchema()` splits a validation error's property, so the two address the same entry. The empty path, the
+ * root's own, stands for a difference that cannot be narrowed to the fields below the root: a primitive, an array, or
+ * a change of type
  *
  * @param formData - The data now, sharing every unchanged subtree with `previous`
  * @param previous - The data before
@@ -814,50 +861,29 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   if (mustValidate) {
     return runLiveValidation(props, context, formData, current?.customErrors, validationSchema);
   }
-  const changed = getChangedPaths();
+  // oxlint-disable-next-line typescript/no-deprecated
+  const isErrorStateDropped = props.noValidate || isSchemaChanged;
+  const changed = isErrorStateDropped ? [] : getChangedPaths();
   // If the `props.noValidate` option is set, or the schema or the root value itself has changed, we reset the error
   // state: every error describes the value that was replaced. Otherwise the base has to be the validator's own result,
   // since `extraErrors` and `customErrors` are merged in below and `state.errors` already carries them, which would
   // merge each in a second time
-  const isErrorStateReset =
-    // oxlint-disable-next-line typescript/no-deprecated
-    props.noValidate || isSchemaChanged || changed.some((pathOfField) => pathOfField.length === 0);
-  const validation: ValidationData<T> = isErrorStateReset
+  const isErrorStateReset = isErrorStateDropped || changed.some((pathOfField) => pathOfField.length === 0);
+  let validation: ValidationData<T> = isErrorStateReset
     ? { errors: [], errorSchema: {} }
     : {
         errors: current?.schemaValidationErrors ?? [],
         errorSchema: current?.schemaValidationErrorSchema ?? {},
       };
-  let schemaValidationErrorSchema = validation.errorSchema;
-  let schemaValidationErrors = validation.errors;
   if (!isErrorStateReset && changed.length > 0) {
-    // `changed` carries the path of each field that changed, so clearing has to follow that path instead of dropping
-    // the whole branch it starts in. The path is split with `toPath()`, the same way `toErrorSchema()` splits a
-    // validation error property, so the two address the same entry. Intermediate objects are forced so the numeric
-    // segment of an array item stays an object key, which is how an `ErrorSchema` addresses array items.
-    const newErrorSchema = changed.reduce<GenericObjectType>((acc, pathOfField) => {
-      // Every container holding the field changed along with it, the root included, so an error of their own, such
-      // as the `uniqueItems` of the array the field sits in, is cleared too. Only their own errors go: the other
-      // fields they hold did not change and keep theirs.
-      for (let i = 0; i < pathOfField.length; i++) {
-        setByPath(acc, [...pathOfField.slice(0, i), ERRORS_KEY], undefined, true);
-      }
-      return setByPath(acc, pathOfField, undefined, true);
-    }, {});
-    schemaValidationErrorSchema = mergeObjects(
-      validation.errorSchema,
-      newErrorSchema,
-      'preventDuplicates',
-    ) as ErrorSchema<T>;
-    // The list is what the `ErrorList` and the `onChange` payload carry, so it drops the same errors: the changed
-    // field's own and those below it, and the own errors of every container holding it
-    schemaValidationErrors = validation.errors.filter((error) => {
-      const pathOfError = errorPath(error);
-      return !changed.some(
-        (pathOfField) => isPathPrefix(pathOfField, pathOfError) || isPathPrefix(pathOfError, pathOfField),
-      );
-    });
+    // A changed field's errors go, with those of everything below it. Every container holding the field changed along
+    // with it, the root included, so an error of their own, such as the `uniqueItems` of the array the field sits in,
+    // goes too. Only their own: the other fields they hold did not change and keep theirs
+    validation = withoutErrors(validation, (pathOfError) =>
+      changed.some((pathOfField) => isPathPrefix(pathOfField, pathOfError) || isPathPrefix(pathOfError, pathOfField)),
+    );
   }
+  const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = validation;
   const merged = mergeErrors(
     { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema },
     props.extraErrors,
