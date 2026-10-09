@@ -166,16 +166,34 @@ describe('FieldTemplate', () => {
       expect(screen.getAllByText('Agree')).toHaveLength(1);
     });
 
-    // Of the boolean aliases only `checkbox` is recognized, so a widget that renders its own label, registered under
-    // another alias's key, gets the template's label as well. A known limitation, pinned so it changes on purpose
-    test('renders a second label for the toggle registered under the key of another boolean alias', () => {
-      const { templateLabel } = renderForm({ agree: { 'ui:widget': 'radio' } }, agree, {
-        RadioWidget: DaisyToggleWidget,
-      });
+    // Of the boolean aliases only `checkbox` is recognized, so a field that names another alias whose key holds a
+    // widget rendering its own label gets the template's label and description as well, the description twice under
+    // one id. A known limitation, pinned so it changes on purpose
+    test('renders a second label and description for another boolean alias whose key holds the toggle', () => {
+      const { container, templateLabel } = renderForm(
+        { agree: { 'ui:widget': 'radio' } },
+        { ...agree, description: 'Whether you agree' },
+        { RadioWidget: DaisyToggleWidget },
+      );
 
       expect(templateLabel()).toHaveTextContent('Agree');
       expect(screen.getAllByText('Agree')).toHaveLength(2);
-      expect(screen.getByRole('checkbox')).toBeInTheDocument();
+      expect(screen.getAllByText('Whether you agree')).toHaveLength(2);
+      expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(2);
+      expect(screen.getByRole('checkbox')).toHaveClass('toggle');
+    });
+
+    test('leaves the label and description to the toggle when the field names the key that holds it', () => {
+      const { templateLabel } = renderForm(
+        { agree: { 'ui:widget': 'RadioWidget' } },
+        { ...agree, description: 'Whether you agree' },
+        { RadioWidget: DaisyToggleWidget },
+      );
+
+      expect(templateLabel()).toBeNull();
+      expect(screen.getAllByText('Agree')).toHaveLength(1);
+      expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
+      expect(screen.getByRole('checkbox')).toHaveClass('toggle');
     });
   });
 

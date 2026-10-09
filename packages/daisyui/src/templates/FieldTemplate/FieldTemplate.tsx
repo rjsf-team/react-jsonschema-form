@@ -24,9 +24,10 @@ const CHECKBOX_ALIAS: WidgetAliasFor<'boolean'> = 'checkbox';
  * properties, as `getWidget()` does, so a name inherited from `Object.prototype` such as `toString` is an alias like
  * any other. Of the aliases, only `checkbox` is recognized, by name, where `getWidgetType()` types it as `boolean`,
  * which includes a `type` list such as `['number', 'boolean']`, and it is read from the registry under the key
- * `getWidget()` maps it to. That is the one alias that reaches the checkbox in the default registry; a
- * consumer who registers the checkbox or the toggle under another boolean alias's key, such as `RadioWidget`, gets
- * the template's label as well as the widget's own. `getWidget()` itself is not called, since it reports a name it
+ * `getWidget()` maps it to. That is the one alias that reaches the checkbox in the default registry, so a field that
+ * names another boolean alias, such as `radio`, whose key holds the checkbox or the toggle gets the template's label
+ * and description as well as the widget's own. Naming that key itself, `RadioWidget`, resolves through the registry
+ * and gets only the widget's. `getWidget()` itself is not called, since it reports a name it
  * cannot resolve by throwing an error built from a `JSON.stringify()` of the whole schema, which a `ui:widget` that a
  * custom `ui:field` consumes itself would otherwise pay for on every render just to be told no.
  *
@@ -46,7 +47,7 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
   } else if (Object.hasOwn(registeredWidgets, widget)) {
     resolved = registeredWidgets[widget];
   } else if (widget === CHECKBOX_ALIAS && getWidgetType<S>(schema, widget) === 'boolean') {
-    resolved = registeredWidgets[DEFAULT_BOOLEAN_WIDGET];
+    return !!registeredWidgets[DEFAULT_BOOLEAN_WIDGET];
   }
   return (
     !!resolved && (resolved === registeredWidgets[DEFAULT_BOOLEAN_WIDGET] || resolved === registeredWidgets.toggle)
