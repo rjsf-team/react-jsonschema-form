@@ -1068,6 +1068,21 @@ describe('StringField', () => {
         expect(input).toHaveValue('');
         expect(input).toHaveAttribute('value', '');
       });
+
+      it.each([false, true, 0n])('should render an empty value for %s, which is not a date', (initialFormData) => {
+        const input = renderWithFormData(initialFormData);
+        expect(input).toHaveValue('');
+        expect(input).toHaveAttribute('value', '');
+      });
+
+      it.each([1e15, -1e14, -62300000000000])(
+        'should render an empty value for the epoch %s, whose local year is outside 0-9999',
+        (initialFormData) => {
+          const input = renderWithFormData(initialFormData);
+          expect(input).toHaveValue('');
+          expect(input).toHaveAttribute('value', '');
+        },
+      );
     });
 
     it('should render the widget with the expected id', () => {

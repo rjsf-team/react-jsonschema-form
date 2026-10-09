@@ -43,16 +43,15 @@ export default function getDateTimeLocalValue<S extends StrictRJSFSchema = RJSFS
     const date = new Date(value);
     if (!Number.isNaN(date.getTime())) {
       // An epoch or `Date` is an exact instant; only formats that require an offset keep the UTC ISO string
-      const iso = date.toISOString(),
-        year = date.getFullYear();
+      const iso = date.toISOString();
       if (requiresOffset) {
         localValue = iso;
       } else if (format === 'date' && iso.endsWith('T00:00:00.000Z')) {
         // A day stored as a `Date` or epoch is its UTC midnight, which names that day rather than the evening before it
         localValue = /^\d{4}-/.test(iso) ? iso.slice(0, 10) : undefined;
-      } else if (year >= 0 && year <= 9999) {
-        // Years outside 0-9999 have no four-digit local text that a picker can parse
-        localValue = utcToLocal(iso);
+      } else {
+        // `utcToLocal()` gives '' for a local year outside 0-9999, which has no text a picker can parse
+        localValue = utcToLocal(date) || undefined;
       }
     }
   }

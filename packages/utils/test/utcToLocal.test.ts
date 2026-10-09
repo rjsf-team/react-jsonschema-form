@@ -53,15 +53,41 @@ describe('utcToLocal() with epoch numbers, Dates and invalid input', () => {
   it('returns the same result for an epoch number and the Date holding it', () => {
     expect(utcToLocal(0)).toEqual(utcToLocal(new Date(0)));
   });
-  it('returns empty string when given undefined or null', () => {
-    expect(utcToLocal(undefined)).toEqual('');
-    expect(utcToLocal(null)).toEqual('');
+  it.each([
+    ['undefined', undefined],
+    ['null', null],
+    ['false', false],
+    ['true', true],
+    ['the bigint 0n', 0n],
+    ['an object', {}],
+    ['an array', [EPOCH]],
+  ])('returns empty string when given %s, which is not a string, a number or a Date', (_, value) => {
+    expect(utcToLocal(value)).toEqual('');
+  });
+  it('returns empty string when given an empty string', () => {
+    expect(utcToLocal('')).toEqual('');
   });
   it('returns empty string when given an invalid Date', () => {
     expect(utcToLocal(new Date(NaN))).toEqual('');
   });
-  it('returns empty string when given NaN', () => {
-    expect(utcToLocal(NaN)).toEqual('');
+  it.each([NaN, Infinity, 8.64e15 + 1])('returns empty string when given the out-of-range number %s', (value) => {
+    expect(utcToLocal(value)).toEqual('');
+  });
+  // `pad()` would otherwise give `33658-09-27T…`, `-1199-02-15T…` and `00-5-10-17T…`, which `datetime-local` drops
+  it.each([1e15, -1e14, -62300000000000])(
+    'returns empty string when given the valid epoch %s, whose local year is outside 0-9999',
+    (value) => {
+      expect(utcToLocal(value)).toEqual('');
+      expect(utcToLocal(new Date(value))).toEqual('');
+      expect(utcToLocal(new Date(value).toISOString())).toEqual('');
+    },
+  );
+  it('converts the first and last days of the years 0-9999', () => {
+    const first = new Date(0, 0, 1);
+    first.setFullYear(0);
+    expectInstant(utcToLocal(first), first.getTime());
+    const last = new Date(9999, 11, 31, 23, 59, 59, 999);
+    expectInstant(utcToLocal(last), last.getTime());
   });
   it('returns empty string when given text that is not a date', () => {
     expect(utcToLocal('not-a-date')).toEqual('');
