@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, Dispatch, PropsWithChildren, RefObject, SetStateAction } from 'react';
 import { useCallback } from 'react';
 import Drawer from '@mui/material/Drawer';
-import type { IChangeEvent } from '@rjsf/core';
+import type { FormRef, IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/core';
 import type { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, isObject } from '@rjsf/utils';
@@ -34,7 +34,7 @@ function HeaderButton({ title, onClick, children, ...buttonProps }: PropsWithChi
   );
 }
 
-function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: RefObject<Form | null> }) {
+function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: RefObject<FormRef | null> }) {
   const submitClick = useCallback(() => {
     playGroundFormRef.current?.submit();
   }, [playGroundFormRef]);
@@ -299,7 +299,7 @@ interface OptionsDrawerProps {
   validators: Record<string, ValidatorType>;
   validator: string;
   liveSettings: LiveSettings;
-  playGroundFormRef: RefObject<Form | null>;
+  playGroundFormRef: RefObject<FormRef | null>;
   setValidator: Dispatch<SetStateAction<string>>;
   setLiveSettings: Dispatch<SetStateAction<LiveSettings>>;
   setShareURL: Dispatch<SetStateAction<string | null>>;

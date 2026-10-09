@@ -35,6 +35,8 @@ import {
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
+import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+
 /**
  * Get the types the type selection component offers for a schema: the ones the schema allows, or every JSON Schema
  * type for a schema that allows no particular one.
@@ -364,6 +366,7 @@ function FallbackUiField<
   } = props;
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const readsFormData = useReadsFormData(FallbackField);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(
     () => getDefaultType<S>(schema, types, uiOptions.widget),
@@ -456,7 +459,12 @@ function FallbackUiField<
   );
 
   const { SchemaField } = fields;
-  const valueField = <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />;
+  // The value field renders this field's own data; the type selector, which renders the type, is not vouched for
+  const valueField = (
+    <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
+      <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />
+    </RawFormDataContext>
+  );
 
   // One type is not a choice to be made, so the value field renders alone: without a control that can only be left as
   // it is, and without the template that lays that control out above it, whose wrapper would otherwise put a theme's
