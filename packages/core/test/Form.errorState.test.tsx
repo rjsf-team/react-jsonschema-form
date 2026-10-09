@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { ErrorSchema, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { ErrorSchema, ErrorTransformer, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -713,6 +713,28 @@ describe('Error state consistency when deriving from new props', () => {
       rerender({ schema: invalid, formData: { name: 'b' } });
 
       expect(errorListMessages(container)).toEqual(listed);
+    });
+
+    it('clears a root error listed with a message and no property from the list as from the root field', async () => {
+      const transformErrors: ErrorTransformer = (errors) => [...errors, { message: 'form-level', stack: 'form-level' }];
+      const props = { schema: pair, transformErrors };
+      const { container, node, rerender } = createFormComponent({
+        ...props,
+        formData: { name: 'short', other: 'brief' },
+      });
+
+      await submitForm(node, user);
+      expect(errorListMessages(container)).toEqual([`.name ${tooShort}`, `.other ${tooShort}`, 'form-level']);
+      expect(fieldErrorsById(container)).toEqual({
+        root: ['form-level'],
+        root_name: [tooShort],
+        root_other: [tooShort],
+      });
+
+      rerender({ ...props, formData: { name: 'short', other: 'longenough' } });
+
+      expect(errorListMessages(container)).toEqual([`.name ${tooShort}`]);
+      expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
     });
 
     it('keeps every error when the parent renders the same data again', async () => {

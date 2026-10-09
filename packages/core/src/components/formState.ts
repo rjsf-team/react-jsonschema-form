@@ -404,7 +404,8 @@ function pruneErrorSchema(
 }
 
 /** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by the one rule. An
- * error with no `property`, such as the one an invalid schema is reported with, describes no field and stays listed
+ * error with neither a `property` nor a `message`, the one an invalid schema is reported with, describes no field and
+ * stays listed; with a `message` alone it is one `toErrorSchema()` files at the root, and goes as the root's own do
  *
  * @param validation - The errors, as a list and as an `ErrorSchema`
  * @param isDropped - Whether the errors at a path are dropped
@@ -415,7 +416,9 @@ function withoutErrors<T>(
   isDropped: (path: FieldPathList) => boolean,
 ): ValidationData<T> {
   return {
-    errors: validation.errors.filter((error) => error.property === undefined || !isDropped(errorPath(error))),
+    errors: validation.errors.filter(
+      (error) => (error.property === undefined && !error.message) || !isDropped(errorPath(error)),
+    ),
     errorSchema: pruneErrorSchema(validation.errorSchema, isDropped, []),
   };
 }
@@ -883,16 +886,10 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
       changed.some((pathOfField) => isPathPrefix(pathOfField, pathOfError) || isPathPrefix(pathOfError, pathOfField)),
     );
   }
-  const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = validation;
-  const merged = mergeErrors(
-    { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema },
-    props.extraErrors,
-    current?.customErrors,
-  );
   return {
-    ...merged,
-    schemaValidationErrors,
-    schemaValidationErrorSchema,
+    ...mergeErrors(validation, props.extraErrors, current?.customErrors),
+    schemaValidationErrors: validation.errors,
+    schemaValidationErrorSchema: validation.errorSchema,
   };
 }
 
@@ -1006,7 +1003,7 @@ function deriveControlledState<T, S extends StrictRJSFSchema, F extends FormCont
     // The committed data is the previous prop, shared, so unchanged subtrees are skipped by identity
     // The clearing stands in for the validation pass a live-validated form does not get, so it is for the other modes
     // only: when the pass is merely skipped, the committed errors already describe this data and stay as they are.
-    // Construction has no committed errors to clear, and walking against nothing would list every key of the data
+    // Construction has no committed errors to clear
     getChangedPaths:
       current === undefined || (edit && isLiveValidated(props))
         ? undefined
