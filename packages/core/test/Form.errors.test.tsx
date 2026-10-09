@@ -1244,6 +1244,42 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         );
       });
 
+      // One level deeper again. `outer` resolves to the same schema on both sides, since the conditional that swapped
+      // is declared on `m`, so only descending the changed path whether or not it resolved differently reaches it
+      it("should apply a new branch's defaults for a dependency two object levels down (#5349)", async () => {
+        const twiceNestedSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            outer: {
+              type: 'object',
+              properties: {
+                m: {
+                  type: 'object',
+                  properties: { animal: { type: 'string', enum: ['Cat', 'Fish'], default: 'Fish' } },
+                  dependencies: {
+                    animal: {
+                      oneOf: [
+                        { properties: { animal: { const: 'Cat' }, diet: dietFor('meat') } },
+                        { properties: { animal: { const: 'Fish' }, diet: dietFor('worms') } },
+                      ],
+                    },
+                  },
+                },
+              },
+            },
+          },
+        };
+        const { node, onChange } = createFormComponent({ schema: twiceNestedSchema });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_outer_m_animal')!, 'Cat');
+
+        expectToHaveBeenCalledWithFormData(
+          onChange,
+          { outer: { m: { animal: 'Cat', diet: { food: 'meat' } } } },
+          'root_outer_m_animal',
+        );
+      });
+
       it("should apply a new branch's defaults for a dependency nested behind a $ref (#5349)", async () => {
         const refDependentDefaultSchema: RJSFSchema = {
           type: 'object',

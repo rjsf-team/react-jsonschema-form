@@ -565,6 +565,38 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         formData,
         schemaUtils.sanitizeDataForNewSchema(retrievedSchema, current?.retrievedSchema, formData),
       );
+      // A path dropped on an earlier iteration has been refilled above with the newly selected branch's own default,
+      // and that refill is kept. Sanitize compares against `current.retrievedSchema` on every iteration, never
+      // against what the previous one settled, so where the swap changed the key's type it reads the refill as data
+      // the old branch could not hold and clears it — and the fill leaves an explicit `undefined` alone, so the key
+      // would end the loop empty. That is the #5349 symptom for precisely the object-or-array-typed property this is
+      // meant to fix, hence the exemption rather than a wider change to what sanitize compares against.
+      //
+      // The refill goes back only into the container it was written to, which is why that container has to still be
+      // there and still be an object, exactly as in the restore below: `setByPath()` creates whatever the path is
+      // missing, so a sanitize that pruned or retyped an ancestor would otherwise be answered by rebuilding a level
+      // the schema no longer describes
+      if (droppedStaleValues.length > 0) {
+        const filledFormData = formData;
+        let keptRefill = false;
+        droppedStaleValues.forEach(([stalePath]) => {
+          const refilled = getByPath(filledFormData, stalePath);
+          const parentPath = stalePath.slice(0, -1);
+          const parent = parentPath.length > 0 ? getByPath(sanitizedFormData, parentPath) : sanitizedFormData;
+          if (
+            refilled !== undefined &&
+            isPlainObject(parent) &&
+            getByPath(sanitizedFormData, stalePath) === undefined
+          ) {
+            sanitizedFormData = setByPath(copyAlongPath(sanitizedFormData, stalePath), stalePath, refilled);
+            keptRefill = true;
+          }
+        });
+        if (keptRefill) {
+          // Shared again, so an iteration whose only change was undone here compares equal and ends the loop
+          sanitizedFormData = replaceEqualDeep(filledFormData, sanitizedFormData);
+        }
+      }
       // Sanitizing leaves a value the branch just swapped away declared as its `default` in place, so the newly
       // selected branch's own `default` never reaches the key (#5349). Dropping each such key lets the fill at the
       // top of the next pass write the new one, which is why this runs here rather than after the loop.
@@ -611,9 +643,14 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // came out of, which is why the container has to still be there and still be an object — `setByPath()` creates
   // whatever the path is missing, so a drop that pruned or retyped an ancestor, by flipping a branch that reads the
   // key, would otherwise be answered by rebuilding a level the schema no longer describes or by overwriting what the
-  // newly selected branch wrote at that ancestor. `retrievedSchema` is deliberately not resolved again for the
-  // restored data: the loop above has already settled, and a key only reaches here when the fill declined to write
-  // it, which is the case the restore exists to make harmless rather than one worth another resolution pass.
+  // newly selected branch wrote at that ancestor. A path still empty here is one the fill declined to write, and
+  // nothing else: a dropped path is exempted from the sanitize of every later iteration, so an empty one cannot be a
+  // key sanitize cleared on purpose and about to be overwritten. `retrievedSchema` is deliberately not resolved again
+  // for the restored data: the loop above has already settled, and the case the restore exists to make harmless is
+  // not one worth another resolution pass.
+  //
+  // No input in the test suite reaches this, and none is known to: it is insurance against the gates in the search
+  // not being exhaustive, bought for one `getByPath()` per dropped path.
   droppedStaleValues.forEach(([stalePath, droppedValue]) => {
     const parentPath = stalePath.slice(0, -1);
     const parent = parentPath.length > 0 ? getByPath(formData, parentPath) : formData;
