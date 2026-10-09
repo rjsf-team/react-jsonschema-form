@@ -16,6 +16,8 @@ import type { FancySelectItem, FancySelectSection } from './fancy-select.tsx';
  * Props interface for the FancyMultiSelect component
  */
 interface FancyMultiSelectProps {
+  /** Accessible name for the search input, provided to cmdk's hidden label */
+  label?: string;
   /** Whether multiple items can be selected */
   multiple: boolean;
   /** Array of items to display in the dropdown */
@@ -53,6 +55,7 @@ const NO_ITEMS: FancySelectItem[] = [];
  */
 export function FancyMultiSelect({
   multiple,
+  label,
   items = NO_ITEMS,
   sections,
   selected,
@@ -173,6 +176,7 @@ export function FancyMultiSelect({
 
   return (
     <Command
+      label={label}
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
       autoFocus={autoFocus}
