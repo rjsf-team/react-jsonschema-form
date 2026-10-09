@@ -1,5 +1,12 @@
 import type { Validator as EngineValidator } from '@cfworker/json-schema';
-import type { CustomValidator, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
+import type {
+  CustomValidator,
+  ErrorTransformer,
+  FormValidation,
+  RJSFSchema,
+  RJSFValidationError,
+  UiSchema,
+} from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
@@ -279,5 +286,17 @@ describe('validateFormData() and the data handed to customValidate', () => {
     const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     validator.validateFormData({}, schema, customValidate);
     expect(customValidate.mock.calls[0][0]).toEqual({ merged: 'fromAllOf' });
+  });
+});
+
+describe('validateFormData() with a transformErrors that clears every message', () => {
+  it('lists the errors whether or not a customValidate is passed', () => {
+    const validator = customizeValidator();
+    const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string', minLength: 8 } } };
+    const transformErrors: ErrorTransformer = (errors) => errors.map((error) => ({ ...error, message: undefined }));
+    const customValidate: CustomValidator = (_formData, errors) => errors;
+    const { errors } = validator.validateFormData({ a: 'short' }, schema, undefined, transformErrors);
+    expect(errors).not.toEqual([]);
+    expect(validator.validateFormData({ a: 'short' }, schema, customValidate, transformErrors).errors).toEqual(errors);
   });
 });
