@@ -170,8 +170,7 @@ function createReporter<Props>(getLatestProps: () => Props) {
     },
     /** The setup of an insertion Effect, which, unlike a layout Effect, React leaves connected while an `<Activity>`
      * hides the form. Its cleanup is therefore the form unmounting, which releases what was held for a show that
-     * will not come. React before 19.2 skips that cleanup for a form it removes while hidden, so there such a form
-     * goes on holding its reports
+     * will not come.
      */
     mount: () => {
       unmounted = false;
@@ -209,8 +208,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let state = initial;
   let operations = 0;
   let snapshot = { state, operations };
-  // The record of the last committed render: while `snapshot` is a newer one, a render of the form is on its way
-  let committedSnapshot = snapshot;
   const listeners = new Set<() => void>();
   const notify = () => {
     snapshot = { state, operations };
@@ -555,13 +552,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       formElement = element;
     },
     epoch: () => epoch,
-    /** Has the form render for a field's record of a proposal, see `FormDataAccess.proposed()`, unless an operation
-     * or a proposal the form itself heard of has a render on its way already
+    /** Has the form render for a field's record of a proposal, see `FormDataAccess.proposing()`, unless sending the
+     * proposal had the form render already: one that reached the form, as an operation or as a proposal of its own,
+     * made a new `snapshot`
      */
-    proposed: () => {
-      if (snapshot === committedSnapshot) {
-        notify();
-      }
+    proposing: () => {
+      const before = snapshot;
+      return () => {
+        if (snapshot === before) {
+          notify();
+        }
+      };
     },
     readField: <D>(path: FieldPath) => readLatest<D>('formData', path),
     readErrors: <E>(path: FieldPath) => readLatest<E>('errorSchema', path),
@@ -573,13 +574,12 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       };
     },
     /** Called from an insertion Effect of every commit of the form, with what React rendered. React runs those before
-     * any layout Effect, and whether or not an `<Activity>` hides the form, so an Effect of the same commit that issues
-     * a command, and a handle retained from a hidden form, find the props and the state of this commit.
+     * the setup of any layout Effect, and whether or not an `<Activity>` hides the form, so an Effect of the same commit
+     * that issues a command, and a handle retained from a hidden form, find the props and the state of this commit.
      */
     committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedSnapshot: typeof snapshot) => {
       committedProps = nextProps;
       shown = derived;
-      committedSnapshot = renderedSnapshot;
       // An operation that committed after this render began is not in `derived`. A render for it is already scheduled;
       // until it runs, operations start from that commit derived under the new props
       state =

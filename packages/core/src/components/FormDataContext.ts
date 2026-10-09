@@ -10,10 +10,12 @@ interface FormDataAccess {
    * record of it
    */
   epoch(): number;
-  /** Has the form render, so that its commit ends the record of a proposal a field made, whatever became of the
-   * proposal: a custom parent can keep one to itself, and the form would otherwise never learn of it
+  /** Called before a field sends a proposal. The function it returns, called once the proposal was sent, has the form
+   * render, so that its commit ends the field's record of the proposal whatever became of it: a custom parent can keep
+   * one to itself, and the form would otherwise never learn of it. A proposal that reached the form had it render
+   * already, and is not rendered for twice.
    */
-  proposed(): void;
+  proposing(): () => void;
   /** The latest data at `path`, for a field that renders the form's own data there (see `RawFormDataContext`) */
   readField<D>(path: FieldPath): D;
   /** The latest errors at `path`, for the same fields */

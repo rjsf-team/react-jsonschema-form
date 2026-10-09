@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
   ArrayFieldItemButtonsTemplateProps,
@@ -16,7 +16,7 @@ import type {
 } from '@rjsf/utils';
 import { getVisibleErrors, noop } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { flushSync } from 'react-dom';
 
@@ -4189,6 +4189,93 @@ describe('ArrayField', () => {
       expect(reported).toHaveLength(1);
       // The second add starts from the rendered ['a'], not from the ['a', undefined] that went nowhere
       expect(getFormData()).toEqual(['a', undefined]);
+    });
+
+    it('should chain an add made as a commit cleans up with one made as it sets up, under a custom parent that refuses both', () => {
+      const proposals: unknown[] = [];
+      function RefusingField(props: FieldProps<string[]>) {
+        const { ArrayField: InnerArrayField } = props.registry.fields;
+        return <InnerArrayField {...props} onChange={(value) => proposals.push(value)} />;
+      }
+      let onAddClick: ArrayFieldTemplateProps['onAddClick'] | undefined;
+      function RetainingTemplate(props: ArrayFieldTemplateProps) {
+        useEffect(() => {
+          onAddClick = props.onAddClick;
+        }, [props.onAddClick]);
+        return <div className='array'>{props.items}</div>;
+      }
+      let isArmed = false;
+      // Adds a row from the cleanup and from the setup of the layout Effect of one commit. React runs the cleanup
+      // before it hands that commit to the form and the setup after, and no render comes between the two. The Effect
+      // has no dependencies, so every commit that renders the widget, which a change of its value does, runs both
+      function AddsAroundTheCommit() {
+        useLayoutEffect(() => {
+          if (isArmed) {
+            isArmed = false;
+            onAddClick?.();
+          }
+          return () => {
+            if (isArmed) {
+              onAddClick?.();
+            }
+          };
+        });
+        return null;
+      }
+      const ref = createFormRef();
+      createFormComponent({
+        schema: { type: 'object', properties: { list: schema, other: { type: 'string' } } },
+        initialFormData: { list: ['a'], other: 'b' },
+        uiSchema: { list: { 'ui:field': RefusingField }, other: { 'ui:widget': AddsAroundTheCommit } },
+        templates: { ArrayFieldTemplate: RetainingTemplate },
+        ref,
+      });
+
+      isArmed = true;
+      // A commit the form's own store asks for, so it is the latest render when the cleanup proposes
+      act(() => handleOf(ref).setFieldValue('other', 'c'));
+
+      expect(proposals).toEqual([
+        ['a', undefined],
+        ['a', undefined, undefined],
+      ]);
+    });
+
+    it("should add to the rows a custom parent just rendered when its template adds from that commit's layout Effect", async () => {
+      const proposals: unknown[] = [];
+      // Shows the array field a view of its own, which the button replaces
+      function ClearableField(props: FieldProps<string[]>) {
+        const [view, setView] = useState(['a', 'b']);
+        const { ArrayField: InnerArrayField } = props.registry.fields;
+        return (
+          <>
+            <button type='button' onClick={() => setView([])}>
+              Clear
+            </button>
+            <InnerArrayField {...props} formData={view} onChange={(value) => proposals.push(value)} />
+          </>
+        );
+      }
+      function AtLeastOneRowTemplate({ items, onAddClick }: ArrayFieldTemplateProps) {
+        const isEmpty = items.length === 0;
+        useLayoutEffect(() => {
+          if (isEmpty) {
+            onAddClick();
+          }
+        }, [isEmpty, onAddClick]);
+        return <div className='array'>{items}</div>;
+      }
+      createFormComponent({
+        schema,
+        initialFormData: ['a', 'b'],
+        uiSchema: { 'ui:field': ClearableField },
+        templates: { ArrayFieldTemplate: AtLeastOneRowTemplate },
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Clear' }));
+
+      // The row is added to the emptied view, not to the ['a', 'b'] of the render before it
+      expect(proposals).toEqual([[undefined]]);
     });
 
     it('should start a later event from the rendered rows when a controlled parent refused the earlier one', async () => {

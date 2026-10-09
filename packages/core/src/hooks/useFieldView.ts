@@ -1,12 +1,13 @@
-import { use, useLayoutEffect, useMemo, useRef } from 'react';
+import { use, useInsertionEffect, useMemo, useRef } from 'react';
 import type { FieldPath } from '@rjsf/utils';
 
 import { useReadsFormData } from '../components/fields/RawFormDataContext.ts';
 import FormDataContext from '../components/FormDataContext.ts';
 
 /** What a container field's event handlers read instead of render-time props. Each committed render installs the
- * field's view from a layout Effect, so an abandoned render never publishes one. Callers keep `value` the same while
- * the view is unchanged, so the Effect runs only when it changed.
+ * field's view from an insertion Effect, so an abandoned render never publishes one, and a layout Effect of the same
+ * commit that calls a handler, a child's included, reads the view that commit rendered. Callers keep `value` the same
+ * while the view is unchanged, so the Effect runs only when it changed.
  *
  * `self` is the field's own component, by which `RawFormDataContext` declares whether it was rendered with the form's
  * own data at `fieldPath`. Only then is `Form`'s latest edit at that path the field's data; a field a custom parent
@@ -20,7 +21,7 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
   // The view a handler proposed since the form last rendered, valid until the form drops its own record of a proposal
   // (see `FormDataAccess.epoch()`)
   const advanced = useRef<{ view: V; epoch: number } | undefined>(undefined);
-  useLayoutEffect(() => {
+  useInsertionEffect(() => {
     rendered.current = value;
   }, [value]);
   return useMemo(() => {
@@ -43,11 +44,12 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
       propose: (next: V, send: () => void) => {
         const record = access && { view: next, epoch: access.epoch() };
         advanced.current = record;
+        const proposed = access?.proposing();
         const settle = () => {
           if (access && advanced.current === record) {
             advanced.current = { view: next, epoch: access.epoch() };
           }
-          access?.proposed();
+          proposed?.();
         };
         try {
           send();

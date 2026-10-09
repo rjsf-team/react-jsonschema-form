@@ -5,10 +5,10 @@ import type { EventFormData } from './IChangeEvent.ts';
 /** Public methods exposed by a Form ref.
  * With initialFormData, commands read Form's latest stored value. With formData, reads, submission and validation use
  * the last parent value React rendered, and edits build on any proposal made earlier in the same tick. Use event
- * handlers for user actions, or passive Effects for synchronization after prop changes. A command issued from a layout
- * Effect or a callback ref of the commit that renders new props sees those props too; only the cleanup of a
- * descendant's layout Effect and a descendant's ref being detached run earlier, and still see the previous
- * configuration.
+ * handlers for user actions, or passive Effects for synchronization after prop changes. A command issued from the
+ * setup of a layout Effect or from a callback ref being attached, in the commit that renders new props, sees those
+ * props too. The cleanup of a layout Effect, a ref being detached or a `componentWillUnmount` in that commit may run
+ * earlier, depending on where it sits in the tree, and then sees the previous configuration.
  */
 export interface FormRef<T = unknown> {
   /** Reads the latest stored value in a self-owned form, or the last rendered parent value in a controlled form.

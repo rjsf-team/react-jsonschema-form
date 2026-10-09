@@ -44,22 +44,39 @@ describe('the reports a detached model holds', () => {
   });
 });
 
-describe('proposed()', () => {
-  it('has the form render only when no render is on its way already', () => {
-    const { model, props } = createMountedModel();
+describe('proposing()', () => {
+  it('has the form render only for a proposal that did not reach the model', () => {
+    const { model } = createMountedModel();
     const listener = vi.fn();
     model.subscribe(listener);
 
     // The edit reached the model, which notified for it
+    const reached = model.proposing();
     model.handle.setFieldValue('a', 'x');
-    model.proposed();
+    reached();
     expect(listener).toHaveBeenCalledTimes(1);
 
-    // Once that render has committed, a proposal the model never heard of, as one a custom parent kept to itself is,
-    // has nothing else to render the form for it
-    const rendered = model.getSnapshot();
-    model.committed(props, rendered.state, rendered);
-    model.proposed();
+    // A proposal the model never heard of, as one a custom parent kept to itself is, has nothing else to render the
+    // form for it
+    model.proposing()();
     expect(listener).toHaveBeenCalledTimes(2);
+  });
+
+  it('has the form render for a proposal made while React commits a render the store asked for', () => {
+    const { model, props } = createMountedModel();
+    const listener = vi.fn();
+    model.subscribe(listener);
+    model.handle.setFieldValue('a', 'x');
+    const rendered = model.getSnapshot();
+    const epoch = model.epoch();
+
+    // A field React cleans up in that commit proposes to a custom parent, which keeps the proposal to itself. The
+    // commit has yet to reach the model, and it is the only render on its way
+    model.proposing()();
+    model.committed(props, rendered.state, rendered);
+
+    expect(listener).toHaveBeenCalledTimes(2);
+    // The field's record of the proposal outlives the commit, until the render it asked for
+    expect(model.epoch()).toBe(epoch);
   });
 });
