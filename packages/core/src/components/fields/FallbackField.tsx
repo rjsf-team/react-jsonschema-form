@@ -361,8 +361,6 @@ function FallbackUiField<
     registry,
     fieldPath,
     onChange,
-    errorSchema,
-    rawErrors,
   } = props;
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -476,21 +474,12 @@ function FallbackUiField<
   }
 
   const typeSelectorFieldPath = toFieldPath('__internal_type_selector', fieldPath);
-  // The errors raised against the old value describe a type it no longer has, so an empty error schema replaces them:
-  // passing them on would re-assert them against the cast value, and passing none would leave them standing. With
-  // nothing to clear it stays `undefined`, since `Form` keeps an empty-but-truthy error schema as a custom error of
-  // its own that every later validation then has to merge, dropping message-less errors as it goes
-  const hasErrorsToClear = !!rawErrors?.length || Object.keys(errorSchema ?? {}).length > 0;
-
   const onTypeChange = (newType: T | undefined) => {
     if (newType != null) {
       setSelectedType(newType as JSONSchema7TypeName);
-      onChange(
-        castToNewType<T>(formData as T, newType as JSONSchema7TypeName),
-        fieldPath,
-        hasErrorsToClear ? {} : undefined,
-        id,
-      );
+      // The errors raised against the old value describe a type it no longer has, so an empty raise takes them off:
+      // passing none would leave them standing
+      onChange(castToNewType<T>(formData as T, newType as JSONSchema7TypeName), fieldPath, {}, id);
     }
   };
 

@@ -31,7 +31,6 @@ export default function OptionalDataControlsField<
     disabled = false,
     readonly = false,
     onChange,
-    errorSchema,
     fieldPath,
     id: fieldId,
     registry,
@@ -53,7 +52,7 @@ export default function OptionalDataControlsField<
     label = translateString(labelEnum);
     if (hasFormData) {
       id = optionalControlsId(fieldId, 'Remove');
-      onRemoveClick = () => onChange(undefined, fieldPath, errorSchema);
+      onRemoveClick = () => onChange(undefined, fieldPath);
     } else {
       id = optionalControlsId(fieldId, 'Add');
       onAddClick = () => {
@@ -74,7 +73,7 @@ export default function OptionalDataControlsField<
           // the empty container itself, of the type shouldRenderOptionalField() rendered the controls for
           newFormData = getOptionalDataControlsType<S>(schema) === 'array' ? [] : {};
         }
-        onChange(newFormData as T, fieldPath, errorSchema);
+        onChange(newFormData as T, fieldPath);
       };
     }
   }
