@@ -103,6 +103,7 @@ The default widgets you can override are:
 
 You can raise custom 'live validation' errors by overriding the `onChange` method to provide feedback while users are actively changing the form data.
 If you do set errors this way, you must also clear them this way by passing `undefined` to the `onChange()` for the `errorSchema` parameter.
+That clears the errors at the widget's or field's own path. A field that raised errors for paths below its own clears those too by passing `{}`.
 
 Pass only the errors your widget or field raises itself. The `errorSchema` prop a field receives also holds the validator's errors and the form's `extraErrors`, so passing it back would claim those as the field's own, and they would stay on display after the validator or the parent stopped reporting them.
 While a field raises errors, the validator's own errors at and below its path are off the display until the form validates again.
