@@ -58,6 +58,8 @@ See [Validation](../usage/validation.md) for more information.
 
 Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
 
+Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a `formData` you pass is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
+
 ## defaultFormStateBehavior
 
 Experimental features to specify different form state behavior.
@@ -480,7 +482,7 @@ Ownership is decided when the form mounts and does not change afterwards: a form
 
 Only `undefined` means "not passed". `null`, `false`, `0` and `''` are values, since each is valid JSON; this differs from `<input>`, where `value={null}` is uncontrolled. A form that mounts with `formData` stays yours if the prop later becomes `undefined`: it renders empty fields, generates no defaults and calls no `onChange`, and renders your next `formData` as usual. A field edit under a `null` or `undefined` root proposes the object or array the field lives in, with the defaults the edit creates.
 
-Update `formData` from `onChange` with a plain state update in the handler, as for a controlled `<input>`. Edits made in the same tick are applied one after another, each to the value you stored for the previous one, so a value you transform or decline stays that way. Updating from a Transition, `useDeferredValue`, a timeout or after an `await` is not supported: which value an edit made before your update lands is applied to is unspecified and may change. For expensive work downstream, keep this state synchronous and derive a deferred copy from it.
+Update `formData` from `onChange` with a plain state update in the handler, as for a controlled `<input>`. Edits made in the same tick build on each other's proposals, so later edits in that tick still carry one you transformed or declined; from the next render on, edits start from the value you stored. Updating from a Transition, `useDeferredValue`, a timeout or after an `await` is not supported: which value an edit made before your update lands is applied to is unspecified and may change. For expensive work downstream, keep this state synchronous and derive a deferred copy from it.
 
 The value includes its defaults: the form generates none for data it does not own, on mount or when the schema changes. Seed them yourself with `createSchemaUtils({ validator, customMergeAllOf, defaultFormStateBehavior }, schema).getDefaultFormState(schema, record)`, passing the same `customMergeAllOf` and `defaultFormStateBehavior` you pass to the form: computing defaults merges `allOf`s, so a context missing either setting seeds data the form itself would not produce.
 
@@ -579,21 +581,23 @@ You can also create a custom generator by implementing the `NameGeneratorFunctio
 
 ## liveOmit
 
-Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
-to `true` and the form's data is updated by the user.
+Use this prop with `omitExtraData={true}` to remove extra data while editing, rather than waiting for submission.
 
-If no value is provided, then live omit will not happen. If `onChange` is provided for the flag, then live omit
-will be performed after processing of all pending changes has completed. If `onBlur` is provided, then live omit
-will be performed when a field that was updated is blurred (as a performance optimization).
+Choose when to omit extra data:
+
+- Omit this prop to disable live omission.
+- Use `liveOmit="onChange"` to omit extra data after each edit.
+- Use `liveOmit="onBlur"` to omit extra data when an edited field loses focus.
 
 ## liveValidate
 
-Flag that describes when live validation will be performed. Live validation means that the form will perform
-validation and show any validation errors whenever the form data is updated, rather than just on submit.
+Use this prop to show validation errors while editing, rather than waiting for submission.
 
-If no value is provided, then live validation will not happen. If `onChange` is provided for the flag, then live
-validation will be performed after processing of all pending changes has completed. If `onBlur` is provided, then
-live validation will be performed when a field that was updated is blurred (as a performance optimization).
+Choose when to validate while editing:
+
+- Omit this prop to validate on submission only.
+- Use `liveValidate="onChange"` to validate after each edit.
+- Use `liveValidate="onBlur"` to validate when an edited field loses focus.
 
 ## method
 
@@ -627,6 +631,12 @@ Called with the same first argument as `onSubmit` for every edit: user input, `s
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
+
+`onChange` runs as the edit is processed. React may update the inputs afterward, so read `event.formData` rather than reading values from the DOM inside the callback.
+
+With `initialFormData`, each event includes earlier edits already stored by Form. With `formData`, each event proposes a complete value: the last value React rendered plus the edits proposed earlier in the same event. Your handler must pass the accepted value back to Form.
+
+A `setFieldValue()` call from inside `onChange` builds on the proposal being handled. See the [migration examples](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change).
 
 ## onError
 
@@ -713,6 +723,8 @@ Dictionary of registered templates in the form. See [Custom Templates](../advanc
 A function can be passed to this prop in order to make modifications to the default errors resulting from JSON Schema validation. See [Validation](../usage/validation.md) for more information.
 
 Pass a stable reference: a function recreated on every render of the parent counts as a changed prop, which re-derives the form's state and, with `liveValidate: 'onChange'`, re-validates the current data on every parent render. Wrap it in `useCallback` or define it outside the render function.
+
+Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a `formData` you pass is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
 
 ## translateString
 

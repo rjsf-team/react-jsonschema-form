@@ -1,5 +1,5 @@
-import type { MouseEvent } from 'react';
-import { memo, use, useCallback, useMemo, useRef, useState } from 'react';
+import type { MouseEvent, ReactNode } from 'react';
+import { memo, use, useCallback, useMemo, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
   ErrorSchema,
@@ -35,7 +35,9 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
+import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
 /** An item of the `formData` paired with its stable React key */
@@ -371,6 +373,14 @@ function ArrayAsFiles<
   );
 }
 
+/** An item's errors as `ItemSchemaField` takes them. It comes from a registry typed for the array, so it takes a single
+ * item's errors as `ErrorSchema<T[]>` too; the overload is the one trust point for that.
+ */
+function asItemErrorSchema<T>(errorSchema: ErrorSchema<T> | undefined): ErrorSchema<T[]> | undefined;
+function asItemErrorSchema(errorSchema: unknown): unknown {
+  return errorSchema;
+}
+
 /** Renders the individual array item using a `SchemaField` along with the additional properties that are needed to
  * render the whole of the `ArrayFieldItemTemplate`.
  */
@@ -454,6 +464,7 @@ function ArrayFieldItemInner<
   const fieldPath = toFieldPath(index, parentFieldPath);
   const fieldId = fieldPathToId(fieldPath, globalFormOptions);
   const ItemSchemaField = ArraySchemaField || SchemaField;
+  const readsFormData = useReadsFormData(ArrayFieldItem);
   const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
   const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
   const { description } = getUiOptions(itemUiSchema);
@@ -501,28 +512,29 @@ function ArrayFieldItemInner<
 
   const templateProps = {
     children: (
-      <ItemSchemaField
-        name={name}
-        title={title}
-        index={index}
-        schema={itemSchema}
-        uiSchema={itemUiSchema}
-        formData={itemData}
-        // ItemSchemaField comes from a registry typed for the array, so it takes a single item's errors as T[] too
-        errorSchema={itemErrorSchema as ErrorSchema<T[]> | undefined}
-        fieldPath={fieldPath}
-        id={fieldId}
-        required={isItemRequired<S>(itemSchema)}
-        onChange={onChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        registry={registry}
-        disabled={disabled}
-        readonly={readonly}
-        hideError={hideError}
-        autofocus={autofocus}
-        rawErrors={rawErrors}
-      />
+      <RawFormDataContext value={readsFormData ? ItemSchemaField : undefined}>
+        <ItemSchemaField
+          name={name}
+          title={title}
+          index={index}
+          schema={itemSchema}
+          uiSchema={itemUiSchema}
+          formData={itemData}
+          errorSchema={asItemErrorSchema(itemErrorSchema)}
+          fieldPath={fieldPath}
+          id={fieldId}
+          required={isItemRequired<S>(itemSchema)}
+          onChange={onChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          registry={registry}
+          disabled={disabled}
+          readonly={readonly}
+          hideError={hideError}
+          autofocus={autofocus}
+          rawErrors={rawErrors}
+        />
+      </RawFormDataContext>
     ),
     buttonsProps: {
       id: fieldId,
@@ -873,16 +885,43 @@ export default function ArrayField<
   const { schema, uiSchema, errorSchema, rawErrors, fieldPath, id: fieldId, registry, formData, onChange } = props;
   const { globalFormOptions, schemaUtils, translateString } = registry;
   const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
-  // Refs keep the latest values accessible inside stable useCallback closures without being in the dep array,
-  // so the four mutation handlers don't get new references on every keyedFormData / errorSchema change.
-  const keyedFormDataRef = useRef(keyedFormData);
-  keyedFormDataRef.current = keyedFormData;
-  const errorSchemaRef = useRef(errorSchema);
   const withheldErrors = use(WithheldErrorsContext);
   // `SchemaField` hands the array's own errors over as `rawErrors`, or withholds them beside a `oneOf`/`anyOf`
   // selector, so they go back in for the handlers to carry over
   const ownErrors = rawErrors ?? (withheldErrors?.fieldPath === fieldPath ? withheldErrors.errors : undefined);
-  errorSchemaRef.current = ownErrors ? { ...errorSchema, [ERRORS_KEY]: ownErrors } : errorSchema;
+  const fieldView = useMemo(
+    () => ({
+      keyedFormData,
+      errorSchema: ownErrors ? { ...errorSchema, [ERRORS_KEY]: ownErrors } : errorSchema,
+    }),
+    [keyedFormData, ownErrors, errorSchema],
+  );
+  const view = useFieldView(fieldPath, fieldView, ArrayField);
+  /** Every return renders through this, so a template or widget below never inherits what was said of this field */
+  const vouchForItems = (content: ReactNode) => (
+    <RawFormDataContext value={view.readsFormData ? ArrayFieldItem : undefined}>{content}</RawFormDataContext>
+  );
+
+  const readRows = useCallback(() => {
+    const { keyedFormData: rows } = view.read();
+    const current = view.readData<T[] | undefined>(keyedToPlainFormData(rows));
+    if (!Array.isArray(current)) {
+      return [];
+    }
+    return current.map((item, index) => ({ key: rows[index]?.key ?? generateRowId(), item }));
+  }, [view]);
+
+  const readErrors = useCallback(() => view.readErrors(view.read().errorSchema), [view]);
+
+  /** Proposes the rows a handler built, recording them first so a second handler in the same event starts from them */
+  const commitRows = useCallback(
+    (newKeyedFormData: KeyedFormDataType<T>[], newErrorSchema: ErrorSchema<T[]> | undefined) => {
+      view.propose({ keyedFormData: newKeyedFormData, errorSchema: newErrorSchema }, () =>
+        onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema),
+      );
+    },
+    [view, onChange, updateKeyedFormData, fieldPath],
+  );
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
    * either at the end of the list (when index is not specified) or inserted at the `index` when it is, adding it into
@@ -897,23 +936,22 @@ export default function ArrayField<
         event.preventDefault();
       }
 
-      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) =>
-        index === undefined || i < index ? i : i + 1,
-      );
+      const rows = readRows();
+      const newErrorSchema = remapItemErrors(readErrors(), (i) => (index === undefined || i < index ? i : i + 1));
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
-        item: getNewFormDataRow<T, S, F>(registry, schema, index ?? keyedFormDataRef.current.length, uiSchema),
+        item: getNewFormDataRow<T, S, F>(registry, schema, index ?? rows.length, uiSchema),
       };
-      const newKeyedFormData = [...keyedFormDataRef.current];
+      const newKeyedFormData = [...rows];
       if (index !== undefined) {
         newKeyedFormData.splice(index, 0, newKeyedFormDataRow);
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
+      commitRows(newKeyedFormData, newErrorSchema);
     },
-    [registry, schema, uiSchema, onChange, updateKeyedFormData, fieldPath],
+    [registry, schema, uiSchema, commitRows, readRows, readErrors],
   );
 
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
@@ -928,21 +966,26 @@ export default function ArrayField<
         event.preventDefault();
       }
 
-      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => (i <= index ? i : i + 1));
+      const rows = readRows();
+      if (index >= rows.length) {
+        return;
+      }
+
+      const newErrorSchema = remapItemErrors(readErrors(), (i) => (i <= index ? i : i + 1));
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
         key: generateRowId(),
-        item: structuredClone(keyedFormDataRef.current[index].item),
+        item: structuredClone(rows[index].item),
       };
-      const newKeyedFormData = [...keyedFormDataRef.current];
+      const newKeyedFormData = [...rows];
       if (index !== undefined) {
         newKeyedFormData.splice(index + 1, 0, newKeyedFormDataRow);
       } else {
         newKeyedFormData.push(newKeyedFormDataRow);
       }
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
+      commitRows(newKeyedFormData, newErrorSchema);
     },
-    [onChange, updateKeyedFormData, fieldPath],
+    [commitRows, readRows, readErrors],
   );
 
   /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the row of
@@ -957,16 +1000,21 @@ export default function ArrayField<
         event.preventDefault();
       }
       // refs #195: revalidate to ensure properly reindexing errors
-      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => {
+      const rows = readRows();
+      if (index >= rows.length) {
+        return;
+      }
+
+      const newErrorSchema = remapItemErrors(readErrors(), (i) => {
         if (i === index) {
           return undefined;
         }
         return i < index ? i : i - 1;
       });
-      const newKeyedFormData = keyedFormDataRef.current.filter((_, i) => i !== index);
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
+      const newKeyedFormData = rows.filter((_, i) => i !== index);
+      commitRows(newKeyedFormData, newErrorSchema);
     },
-    [onChange, updateKeyedFormData, fieldPath],
+    [commitRows, readRows, readErrors],
   );
 
   /** Callback handler for when the user clicks on one of the move item buttons on an existing array element. Moves the
@@ -982,7 +1030,12 @@ export default function ArrayField<
         event.preventDefault();
         event.currentTarget.blur();
       }
-      const newErrorSchema = remapItemErrors(errorSchemaRef.current, (i) => {
+      const rows = readRows();
+      if (index >= rows.length) {
+        return;
+      }
+
+      const newErrorSchema = remapItemErrors(readErrors(), (i) => {
         if (i === index) {
           return newIndex;
         }
@@ -990,15 +1043,15 @@ export default function ArrayField<
       });
 
       function reOrderArray() {
-        const newKeyedFormData = keyedFormDataRef.current.slice();
+        const newKeyedFormData = rows.slice();
         newKeyedFormData.splice(index, 1);
-        newKeyedFormData.splice(newIndex, 0, keyedFormDataRef.current[index]);
+        newKeyedFormData.splice(newIndex, 0, rows[index]);
         return newKeyedFormData;
       }
       const newKeyedFormData = reOrderArray();
-      onChange(updateKeyedFormData(newKeyedFormData), fieldPath, newErrorSchema);
+      commitRows(newKeyedFormData, newErrorSchema);
     },
-    [onChange, updateKeyedFormData, fieldPath],
+    [commitRows, readRows, readErrors],
   );
 
   /** Callback handler used to deal with changing the value of the data in the array at the `index`. Calls the
@@ -1035,14 +1088,14 @@ export default function ArrayField<
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { UnsupportedFieldTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
 
-    return (
+    return vouchForItems(
       <UnsupportedFieldTemplate
         schema={schema}
         uiSchema={uiSchema}
         id={fieldId}
         reason={translateString(TranslatableString.MissingItems)}
         registry={registry}
-      />
+      />,
     );
   }
   // An items schema with type as undefined triggers FallbackField later on
@@ -1067,16 +1120,16 @@ export default function ArrayField<
   };
   if (schemaUtils.isMultiSelect(arrayAsMultiProps.schema)) {
     // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
-    return <ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />;
+    return vouchForItems(<ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />);
   }
   if (isCustomWidget<T[], S, F>(uiSchema)) {
-    return <ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />;
+    return vouchForItems(<ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />);
   }
   if (isFixedItems(arrayAsMultiProps.schema)) {
-    return <FixedArray<T, S, F> {...arrayProps} />;
+    return vouchForItems(<FixedArray<T, S, F> {...arrayProps} />);
   }
   if (schemaUtils.isFilesArray(arrayAsMultiProps.schema, uiSchema)) {
-    return <ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />;
+    return vouchForItems(<ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />);
   }
-  return <NormalArray<T, S, F> {...arrayProps} />;
+  return vouchForItems(<NormalArray<T, S, F> {...arrayProps} />);
 }

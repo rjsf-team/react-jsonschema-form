@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplates, getUiOptions, RJSF_REF_CYCLE_KEY } from '@rjsf/utils';
 
+import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+
 /** The `CyclicSchemaField` component is used to render a field in the schema that is marked with RJSF_REF_CYCLE_KEY ===
  * true
  *
@@ -13,6 +15,7 @@ export default function CyclicSchemaField<
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const [expanded, setExpanded] = useState(false);
+  const readsFormData = useReadsFormData(CyclicSchemaField);
   const { name, registry, schema, uiSchema, id } = props;
   const { globalUiOptions } = registry;
 
@@ -32,5 +35,9 @@ export default function CyclicSchemaField<
   }
   const { fields } = registry;
   const { SchemaField } = fields;
-  return <SchemaField {...props} schema={{ ...schema, [RJSF_REF_CYCLE_KEY]: false }} />;
+  return (
+    <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
+      <SchemaField {...props} schema={{ ...schema, [RJSF_REF_CYCLE_KEY]: false }} />
+    </RawFormDataContext>
+  );
 }
