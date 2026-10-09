@@ -7,7 +7,13 @@ import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
 import Form from '../src/index.ts';
-import { errorListMessages, fieldErrorsById, setupConsoleErrorSuppression, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  errorListMessages,
+  fieldErrorsById,
+  setupConsoleErrorSuppression,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -629,5 +635,80 @@ describe('Error state consistency when deriving from new props', () => {
     await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
 
     expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
+  });
+
+  describe('when a parent replaces data the last validation reported on (#5034)', () => {
+    const tooShort = 'must NOT have fewer than 8 characters';
+    const leaf: RJSFSchema = { type: 'string', minLength: 8 };
+    const list: RJSFSchema = { type: 'array', items: leaf };
+    const pair: RJSFSchema = { type: 'object', minProperties: 2, properties: { name: leaf, other: leaf } };
+
+    it.each([
+      {
+        name: 'a root primitive has no error left',
+        schema: leaf,
+        before: 'short',
+        validated: [tooShort],
+        after: 'brief',
+        remaining: [],
+      },
+      {
+        name: 'a root array of another length has no error left',
+        schema: list,
+        before: ['short'],
+        validated: [`.0 ${tooShort}`],
+        after: ['short', 'brief'],
+        remaining: [],
+      },
+      {
+        name: 'a root array of the same length has no error left',
+        schema: list,
+        before: ['short', 'brief'],
+        validated: [`.0 ${tooShort}`, `.1 ${tooShort}`],
+        after: ['short', 'other'],
+        remaining: [],
+      },
+      {
+        name: 'a root value of another type has no error left',
+        schema: pair,
+        before: { name: 'short', other: 'brief' },
+        validated: [`.name ${tooShort}`, `.other ${tooShort}`],
+        after: 'short',
+        remaining: [],
+      },
+      {
+        name: "the root object loses its own error and keeps an unchanged field's",
+        schema: pair,
+        before: { name: 'short' },
+        validated: ['must NOT have fewer than 2 properties', `.name ${tooShort}`],
+        after: { name: 'short', other: 'longenough' },
+        remaining: [`.name ${tooShort}`],
+      },
+    ] satisfies {
+      name: string;
+      schema: RJSFSchema;
+      before: unknown;
+      validated: string[];
+      after: unknown;
+      remaining: string[];
+    }[])('$name', async ({ schema, before, validated, after, remaining }) => {
+      const { container, node, rerender } = createFormComponent({ schema, formData: before });
+
+      await submitForm(node, user);
+      expect(errorListMessages(container)).toEqual(validated);
+
+      rerender({ schema, formData: after });
+
+      expect(errorListMessages(container)).toEqual(remaining);
+    });
+
+    it('keeps every error when the parent renders the same data again', async () => {
+      const { container, node, rerender } = createFormComponent({ schema: leaf, formData: 'short' });
+
+      await submitForm(node, user);
+      rerender({ schema: leaf, formData: 'short' });
+
+      expect(errorListMessages(container)).toEqual([tooShort]);
+    });
   });
 });

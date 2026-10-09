@@ -771,10 +771,26 @@ interface ErrorOptions<S> {
   mustValidate: boolean;
   /** The schema to validate with in place of the root, when it still describes the data; see `runLiveValidation()` */
   validationSchema?: S;
-  /** Returns the path of each `formData` field that changed; called only when live validation does not run, which is
-   * when those paths are needed to clear the fields' errors
+  /** Returns the path of each `formData` field that changed, the root's being the empty path; called only when live
+   * validation does not run, which is when those paths are needed to clear the fields' errors
    */
-  getFormDataChangedFields?: () => string[];
+  getChangedPaths?: () => FieldPathList[];
+}
+
+/** The path of each field that differs between two values of the form's data. The empty path, the root's own, stands
+ * for a difference that cannot be narrowed to the fields below the root: a primitive, an array, or a change of type
+ *
+ * @param formData - The data now, sharing every unchanged subtree with `previous`
+ * @param previous - The data before
+ * @returns - The changed paths; none when the two are the same value
+ */
+function changedPaths(formData: unknown, previous: unknown): FieldPathList[] {
+  if (formData === previous) {
+    return [];
+  }
+  return isPlainObject(formData) && isPlainObject(previous)
+    ? getChangedFields(formData, previous, true).map((field) => toPath(field))
+    : [[]];
 }
 
 /** Reconciles the errors for a derivation, either by validating `formData` or by carrying the committed validation
@@ -794,15 +810,18 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   formData: T | undefined,
   options: ErrorOptions<S>,
 ): ErrorState<T> {
-  const { isSchemaChanged = false, mustValidate, validationSchema, getFormDataChangedFields = () => [] } = options;
+  const { isSchemaChanged = false, mustValidate, validationSchema, getChangedPaths = () => [] } = options;
   if (mustValidate) {
     return runLiveValidation(props, context, formData, current?.customErrors, validationSchema);
   }
-  // If the `props.noValidate` option is set or the schema has changed, we reset the error state. Otherwise the base
-  // has to be the validator's own result, since `extraErrors` and `customErrors` are merged in below and
-  // `state.errors` already carries them, which would merge each in a second time
-  // oxlint-disable-next-line typescript/no-deprecated
-  const isErrorStateReset = props.noValidate || isSchemaChanged;
+  const changed = getChangedPaths();
+  // If the `props.noValidate` option is set, or the schema or the root value itself has changed, we reset the error
+  // state: every error describes the value that was replaced. Otherwise the base has to be the validator's own result,
+  // since `extraErrors` and `customErrors` are merged in below and `state.errors` already carries them, which would
+  // merge each in a second time
+  const isErrorStateReset =
+    // oxlint-disable-next-line typescript/no-deprecated
+    props.noValidate || isSchemaChanged || changed.some((pathOfField) => pathOfField.length === 0);
   const validation: ValidationData<T> = isErrorStateReset
     ? { errors: [], errorSchema: {} }
     : {
@@ -811,19 +830,16 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
       };
   let schemaValidationErrorSchema = validation.errorSchema;
   let schemaValidationErrors = validation.errors;
-  const formDataChangedFields = getFormDataChangedFields();
-  if (formDataChangedFields.length > 0) {
-    // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
-    // instead of dropping the whole branch it starts in. The path is split with `toPath()`, the same way
-    // `toErrorSchema()` splits a validation error property, so the two address the same entry. Intermediate
-    // objects are forced so the numeric segment of an array item stays an object key, which is how an
-    // `ErrorSchema` addresses array items.
-    const changedPaths = formDataChangedFields.map((path) => toPath(path));
-    const newErrorSchema = changedPaths.reduce<GenericObjectType>((acc, pathOfField) => {
-      // Every container holding the field changed along with it, so an error of their own, such as the
-      // `uniqueItems` of the array the field sits in, is cleared too. Only their own errors go: the other
+  if (!isErrorStateReset && changed.length > 0) {
+    // `changed` carries the path of each field that changed, so clearing has to follow that path instead of dropping
+    // the whole branch it starts in. The path is split with `toPath()`, the same way `toErrorSchema()` splits a
+    // validation error property, so the two address the same entry. Intermediate objects are forced so the numeric
+    // segment of an array item stays an object key, which is how an `ErrorSchema` addresses array items.
+    const newErrorSchema = changed.reduce<GenericObjectType>((acc, pathOfField) => {
+      // Every container holding the field changed along with it, the root included, so an error of their own, such
+      // as the `uniqueItems` of the array the field sits in, is cleared too. Only their own errors go: the other
       // fields they hold did not change and keep theirs.
-      for (let i = 1; i < pathOfField.length; i++) {
+      for (let i = 0; i < pathOfField.length; i++) {
         setByPath(acc, [...pathOfField.slice(0, i), ERRORS_KEY], undefined, true);
       }
       return setByPath(acc, pathOfField, undefined, true);
@@ -837,11 +853,8 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
     // field's own and those below it, and the own errors of every container holding it
     schemaValidationErrors = validation.errors.filter((error) => {
       const pathOfError = errorPath(error);
-      return (
-        pathOfError.length === 0 ||
-        !changedPaths.some(
-          (pathOfField) => isPathPrefix(pathOfField, pathOfError) || isPathPrefix(pathOfError, pathOfField),
-        )
+      return !changed.some(
+        (pathOfField) => isPathPrefix(pathOfField, pathOfError) || isPathPrefix(pathOfError, pathOfField),
       );
     });
   }
@@ -968,10 +981,10 @@ function deriveControlledState<T, S extends StrictRJSFSchema, F extends FormCont
     // The clearing stands in for the validation pass a live-validated form does not get, so it is for the other modes
     // only: when the pass is merely skipped, the committed errors already describe this data and stay as they are.
     // Construction has no committed errors to clear, and walking against nothing would list every key of the data
-    getFormDataChangedFields:
+    getChangedPaths:
       current === undefined || (edit && isLiveValidated(props))
         ? undefined
-        : () => getChangedFields(formData, current.formData, true),
+        : () => changedPaths(formData, current.formData),
   });
   return {
     ...(current ?? { isControlled: true, initialDefaultsGenerated: true }),
