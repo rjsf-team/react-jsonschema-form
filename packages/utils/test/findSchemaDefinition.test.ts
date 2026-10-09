@@ -1034,10 +1034,8 @@ describe('structure-aware walk pins', () => {
     expect(a).toStrictEqual({ $ref: ABSOLUTE_TARGET });
     expect((resolved as unknown as Record<symbol, unknown>)[ADDITIONAL_PROPERTY_FLAG]).toBe(true);
   });
-  it('returns the found node when its own `$ref` is not a string', () => {
-    const rootSchema = { properties: { $ref: { type: 'string' } } } as unknown as RJSFSchema;
-    expect(findSchemaDefinition('#/properties', rootSchema)).toStrictEqual({
-      $ref: { type: 'string' },
-    });
+  it('returns the found node when its own `$ref` is an empty string', () => {
+    const rootSchema = { $defs: { a: { $ref: '', type: 'string', default: 'x' } } } as unknown as RJSFSchema;
+    expect(findSchemaDefinition('#/$defs/a', rootSchema)).toStrictEqual({ $ref: '', type: 'string', default: 'x' });
   });
 });

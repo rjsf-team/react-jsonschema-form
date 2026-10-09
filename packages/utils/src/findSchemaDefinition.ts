@@ -16,6 +16,7 @@ import {
   REF_KEY,
   SCHEMA_KEY,
   THEN_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
 import isObject from './isObject.ts';
 import { getByPath } from './pathUtils.ts';
@@ -110,30 +111,34 @@ const SUBSCHEMA_KEYWORDS = new Set([
   THEN_KEY,
   ELSE_KEY,
   'unevaluatedItems',
-  'unevaluatedProperties',
+  UNEVALUATED_PROPERTIES_KEY,
   'contentSchema',
 ]);
-const SUBSCHEMA_ARRAY_KEYWORDS = new Set(['prefixItems', ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY]);
+const SUBSCHEMA_ARRAY_KEYWORDS = new Set(['prefixItems', ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, ITEMS_KEY]);
 const SUBSCHEMA_MAP_KEYWORDS = new Set([
   PROPERTIES_KEY,
   PATTERN_PROPERTIES_KEY,
   '$defs',
   DEFINITIONS_KEY,
   'dependentSchemas',
+  DEPENDENCIES_KEY,
 ]);
 
 /** Classifies one of a schema's own entries by the shape of the subschema(s) its keyword's value holds: a
- * `map` of names to subschemas (whose names are data, so a `dependencies` map counts, though only its schema
- * values are walked), an `array` of subschemas (including a draft-7 tuple `items`), or a `single` subschema.
- * Every other keyword - the data keywords `const`, `default`, `enum` and `examples`, annotations like
- * `title`, and vendor or unknown keywords - holds instance data rather than schemas, so it has no shape.
- * Both walkers below classify through this one helper so their keyword handling cannot drift apart.
+ * `map` of names to subschemas (whose names are data, so a property named `default` or `enum` is never
+ * mistaken for the keyword), an `array` of subschemas, or a `single` subschema. The sets above are the
+ * complete list: a draft-7 tuple `items` sits in both the single and the array set, and the
+ * `Array.isArray`/`isObject` checks tell them apart, the same way a `dependencies` entry spelled as a
+ * string array drops out. Every other keyword - the data keywords `const`, `default`, `enum` and
+ * `examples`, annotations like `title`, and vendor or unknown keywords - holds instance data rather than
+ * schemas, so it has no shape. Both walkers below classify through this one helper so their keyword
+ * handling cannot drift apart.
  */
 function keywordShape(key: string, value: unknown): 'map' | 'array' | 'single' | undefined {
-  if ((SUBSCHEMA_MAP_KEYWORDS.has(key) || key === DEPENDENCIES_KEY) && isObject(value)) {
+  if (SUBSCHEMA_MAP_KEYWORDS.has(key) && isObject(value)) {
     return 'map';
   }
-  if ((SUBSCHEMA_ARRAY_KEYWORDS.has(key) || key === ITEMS_KEY) && Array.isArray(value)) {
+  if (SUBSCHEMA_ARRAY_KEYWORDS.has(key) && Array.isArray(value)) {
     return 'array';
   }
   if (SUBSCHEMA_KEYWORDS.has(key) && isObject(value)) {
@@ -318,8 +323,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
   const nextRef = current[REF_KEY];
-  // Only a string `$ref` chains on; a non-string value is instance data, as in the walker above.
-  if (typeof nextRef === 'string') {
+  if (nextRef) {
     // Check for circular references.
     if (recurseList.includes(nextRef)) {
       if (recurseList.length === 1) {
