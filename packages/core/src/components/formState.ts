@@ -352,13 +352,13 @@ function errorPath(error: RJSFValidationError): string[] {
   return error.property ? toPath(error.property) : [];
 }
 
-/** `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold nothing, an
- * empty `__errors` included, which a raise at an ancestor would read as errors still being there. `path` is that of
- * `errorSchema` itself
+/** `errorSchema` without the `__errors` of the nodes `isDropped` names, if any, and without the nodes that hold
+ * nothing, an empty `__errors` included, which a raise at an ancestor would read as errors still being there. `path`
+ * is that of `errorSchema` itself
  */
 function pruneErrorSchema(
   errorSchema: ErrorSchema,
-  isDropped: (path: FieldPathList) => boolean,
+  isDropped: (path: FieldPathList) => boolean = () => false,
   path: FieldPathList = [],
 ): ErrorSchema {
   const kept: ErrorSchema = {};
@@ -422,28 +422,14 @@ export function getAt(data: unknown, segments: FieldPathList): unknown {
   return segments.length === 0 ? data : getByPath(data, segments);
 }
 
-/** `errorSchema` with the node at `path` replaced by `node`, or removed when `node` holds nothing, along with every
- * node that leaves empty: an empty node is one a raise at an ancestor would read as errors still being there. The
- * `errorSchema` passed in is left as it is
- *
- * @param errorSchema - The `ErrorSchema` to replace the node of
- * @param path - The path of the node
- * @param node - What the node becomes
- * @returns - The `ErrorSchema` with the node replaced
- */
+/** A copy of `errorSchema` with the node at `path` replaced by `node`, pruned, so a `node` that holds nothing is gone */
 function replaceErrorSchemaNode<T>(
   errorSchema: ErrorSchema<T>,
   path: FieldPathList,
   node: ErrorSchema<T>,
 ): ErrorSchema<T> {
-  if (path.length === 0) {
-    return node;
-  }
-  if (Object.keys(node).length === 0) {
-    return pruneErrorSchema(errorSchema, (pathOfError) => isPathPrefix(path, pathOfError), []);
-  }
   // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-  return setByPath(copyAlongPath(errorSchema, path), path, node, true);
+  return pruneErrorSchema(path.length === 0 ? node : setByPath(copyAlongPath(errorSchema, path), path, node, true));
 }
 
 /** Counts the errors of `errorSchema` by where each sits and what it says, or by what it says alone when `pooled`:
