@@ -475,11 +475,12 @@ function FallbackUiField<
 
   const typeSelectorFieldPath = toFieldPath('__internal_type_selector', fieldPath);
   const onTypeChange = (newType: T | undefined) => {
-    if (newType != null) {
-      setSelectedType(newType as JSONSchema7TypeName);
+    const selected = types.find((aType) => aType === newType);
+    if (selected) {
+      setSelectedType(selected);
       // The errors raised against the old value describe a type it no longer has, so an empty raise takes them off:
       // passing none would leave them standing
-      onChange(castToNewType<T>(formData as T, newType as JSONSchema7TypeName), fieldPath, {}, id);
+      onChange(castToNewType(formData, selected), fieldPath, {}, id);
     }
   };
 
