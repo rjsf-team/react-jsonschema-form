@@ -791,6 +791,22 @@ describe('Error state consistency when deriving from new props', () => {
       expect(shown.mock.lastCall?.[0]).toEqual(validated);
     });
 
+    it('keeps the error an invalid schema is reported with listed when a transformErrors gave it a message', async () => {
+      const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
+      const transformErrors: ErrorTransformer = (errors) =>
+        errors.map((error) => ({ ...error, message: `translated: ${error.stack}` }));
+      const props = { schema: invalid, transformErrors };
+      const { container, node, rerender } = createFormComponent({ ...props, formData: { name: 'a' } });
+
+      await submitForm(node, user);
+      const listed = errorListMessages(container);
+      expect(listed).toHaveLength(1);
+
+      rerender({ ...props, formData: { name: 'b' } });
+
+      expect(errorListMessages(container)).toEqual(listed);
+    });
+
     it('keeps every error when the parent renders a root NaN again', async () => {
       const props = {
         schema: { type: 'number' } satisfies RJSFSchema,
