@@ -122,25 +122,45 @@ const SUBSCHEMA_MAP_KEYWORDS = new Set([
   'dependentSchemas',
 ]);
 
-/** Yields the direct subschemas of `schema`, following the keyword sets above: a draft-7 tuple `items`
- * counts as an array of schemas, and of a `dependencies` map only the schema values count, since an array
- * value is a list of required property names.
+/** Classifies one of a schema's own entries by the shape of the subschema(s) its keyword's value holds: a
+ * `map` of names to subschemas (whose names are data, so a `dependencies` map counts, though only its schema
+ * values are walked), an `array` of subschemas (including a draft-7 tuple `items`), or a `single` subschema.
+ * Every other keyword - the data keywords `const`, `default`, `enum` and `examples`, annotations like
+ * `title`, and vendor or unknown keywords - holds instance data rather than schemas, so it has no shape.
+ * Both walkers below classify through this one helper so their keyword handling cannot drift apart.
+ */
+function keywordShape(key: string, value: unknown): 'map' | 'array' | 'single' | undefined {
+  if ((SUBSCHEMA_MAP_KEYWORDS.has(key) || key === DEPENDENCIES_KEY) && isObject(value)) {
+    return 'map';
+  }
+  if ((SUBSCHEMA_ARRAY_KEYWORDS.has(key) || key === ITEMS_KEY) && Array.isArray(value)) {
+    return 'array';
+  }
+  if (SUBSCHEMA_KEYWORDS.has(key) && isObject(value)) {
+    return 'single';
+  }
+  return undefined;
+}
+
+/** Yields the direct subschemas of `schema`, following the keyword shapes above: of a `dependencies` map
+ * only the schema values count, since an array value is a list of required property names.
  */
 function* subschemas<S extends StrictRJSFSchema = RJSFSchema>(schema: S): Generator<S, void, undefined> {
   for (const [key, value] of Object.entries(schema)) {
-    if ((SUBSCHEMA_MAP_KEYWORDS.has(key) || key === DEPENDENCIES_KEY) && isObject(value)) {
-      for (const subSchema of Object.values(value)) {
+    const shape = keywordShape(key, value);
+    if (shape === 'map') {
+      for (const subSchema of Object.values(value as GenericObjectType)) {
         if (isObject(subSchema)) {
           yield subSchema as S;
         }
       }
-    } else if ((SUBSCHEMA_ARRAY_KEYWORDS.has(key) || key === ITEMS_KEY) && Array.isArray(value)) {
-      for (const subSchema of value) {
+    } else if (shape === 'array') {
+      for (const subSchema of value as unknown[]) {
         if (isObject(subSchema)) {
           yield subSchema as S;
         }
       }
-    } else if (SUBSCHEMA_KEYWORDS.has(key) && isObject(value)) {
+    } else if (shape === 'single') {
       yield value as S;
     }
   }
@@ -166,42 +186,59 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
   return undefined;
 }
 
-/** Applies `fn` to the direct subschemas of `schema` (following the keyword sets above), rebuilding only
- * the containers whose contents changed and returning `schema` itself when nothing did.
+/** Applies `fn` to the direct subschemas of `schema` (following the keyword shapes above), rebuilding only
+ * the containers whose contents changed. `extraChanges` carries updates to the schema's own data keys, folded
+ * into the same rebuild rather than a second copy. When neither a subschema nor an extra change differs,
+ * `schema` itself is returned, so identity means nothing changed. The rebuild spreads the original node and
+ * overwrites only the changed keys, so symbol keys (such as the rjsf flag Symbols) survive it.
  */
-function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(schema: S, fn: (subSchema: S) => S): S {
-  let changed = false;
-  const entries = Object.entries(schema).map(([key, value]): [string, unknown] => {
-    let next = value;
-    if ((SUBSCHEMA_MAP_KEYWORDS.has(key) || key === DEPENDENCIES_KEY) && isObject(value)) {
-      let mapChanged = false;
-      const mapped = Object.fromEntries(
-        Object.entries(value).map(([name, subSchema]) => {
-          const nextSubSchema = isObject(subSchema) ? fn(subSchema as S) : subSchema;
-          mapChanged = mapChanged || nextSubSchema !== subSchema;
-          return [name, nextSubSchema];
-        }),
-      );
-      if (mapChanged) {
-        next = mapped;
-      }
-    } else if ((SUBSCHEMA_ARRAY_KEYWORDS.has(key) || key === ITEMS_KEY) && Array.isArray(value)) {
-      let arrayChanged = false;
-      const mapped = value.map((subSchema: unknown) => {
-        const nextSubSchema = isObject(subSchema) ? fn(subSchema as S) : subSchema;
-        arrayChanged = arrayChanged || nextSubSchema !== subSchema;
-        return nextSubSchema;
-      });
-      if (arrayChanged) {
-        next = mapped;
-      }
-    } else if (SUBSCHEMA_KEYWORDS.has(key) && isObject(value)) {
-      next = fn(value as S);
+function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  fn: (subSchema: S) => S,
+  extraChanges?: GenericObjectType,
+): S {
+  const changed: GenericObjectType = {};
+  let anyChanged = false;
+  const apply = (key: string, next: unknown) => {
+    if (next !== (schema as unknown as GenericObjectType)[key]) {
+      changed[key] = next;
+      anyChanged = true;
     }
-    changed = changed || next !== value;
-    return [key, next];
-  });
-  return changed ? (Object.fromEntries(entries) as unknown as S) : schema;
+  };
+  for (const [key, value] of Object.entries(schema)) {
+    const shape = keywordShape(key, value);
+    if (shape === 'map') {
+      let mapped: GenericObjectType | undefined;
+      for (const [name, subSchema] of Object.entries(value as GenericObjectType)) {
+        const nextSubSchema = isObject(subSchema) ? fn(subSchema as S) : subSchema;
+        if (nextSubSchema !== subSchema) {
+          mapped = mapped ?? { ...(value as GenericObjectType) };
+          mapped[name] = nextSubSchema;
+        }
+      }
+      if (mapped !== undefined) {
+        apply(key, mapped);
+      }
+    } else if (shape === 'array') {
+      let mapped: unknown[] | undefined;
+      (value as unknown[]).forEach((subSchema, index) => {
+        const nextSubSchema = isObject(subSchema) ? fn(subSchema as S) : subSchema;
+        if (nextSubSchema !== subSchema) {
+          mapped = mapped ?? [...(value as unknown[])];
+          mapped[index] = nextSubSchema;
+        }
+      });
+      if (mapped !== undefined) {
+        apply(key, mapped);
+      }
+    } else if (shape === 'single') {
+      apply(key, fn(value as S));
+    }
+  }
+  for (const [key, next] of Object.entries(extraChanges ?? {})) {
+    apply(key, next);
+  }
+  return anyChanged ? { ...schema, ...changed } : schema;
 }
 
 /** Parses a JSONSchema and makes all references absolute with respect to
@@ -214,15 +251,11 @@ function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(schema: S, fn: (
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
   const schemaId = schema[ID_KEY];
   const currentURI = typeof schemaId === 'string' ? schemaId : baseURI;
-  let result = mapSubschemas(schema, (subSchema) => makeAllReferencesAbsolute(subSchema, currentURI));
-  const ref = result[REF_KEY];
-  if (typeof ref === 'string') {
-    const absolute = resolveUri(currentURI, ref);
-    if (absolute !== ref) {
-      result = { ...result, [REF_KEY]: absolute };
-    }
-  }
-  return result;
+  const ref = schema[REF_KEY];
+  // The mapped subschemas never touch the `$ref` data key, so its rewrite can be computed up front and
+  // folded into the same rebuild rather than spreading the node a second time.
+  const refChange = typeof ref === 'string' ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
+  return mapSubschemas(schema, (subSchema) => makeAllReferencesAbsolute(subSchema, currentURI), refChange);
 }
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
@@ -285,7 +318,8 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
   const nextRef = current[REF_KEY];
-  if (nextRef) {
+  // Only a string `$ref` chains on; a non-string value is instance data, as in the walker above.
+  if (typeof nextRef === 'string') {
     // Check for circular references.
     if (recurseList.includes(nextRef)) {
       if (recurseList.length === 1) {
