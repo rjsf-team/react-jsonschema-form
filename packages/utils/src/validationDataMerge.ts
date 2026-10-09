@@ -38,17 +38,14 @@ export default function validationDataMerge<T = unknown>(
   }
   const { errors: oldErrors = [], errorSchema: oldErrorSchema = {} } = validationData as Partial<ValidationData<T>>;
   let errors = toErrorList(additionalErrorSchema);
-  let errorSchema = additionalErrorSchema;
-  if (Object.keys(oldErrorSchema).length > 0 || oldErrors.length > 0) {
-    errorSchema = mergeObjects(
-      oldErrorSchema,
-      additionalErrorSchema,
-      preventDuplicates ? 'preventDuplicates' : true,
-    ) as ErrorSchema<T>;
-    if (preventDuplicates && errors.length > 0) {
-      const known = new Set(oldErrors.map(errorKey));
-      errors = errors.filter((error) => !known.has(errorKey(error)));
-    }
+  const errorSchema = mergeObjects(
+    oldErrorSchema,
+    additionalErrorSchema,
+    preventDuplicates ? 'preventDuplicates' : true,
+  ) as ErrorSchema<T>;
+  if (preventDuplicates && errors.length > 0 && oldErrors.length > 0) {
+    const known = new Set(oldErrors.map(errorKey));
+    errors = errors.filter((error) => !known.has(errorKey(error)));
   }
   return { errorSchema, errors: [...oldErrors, ...errors] };
 }
