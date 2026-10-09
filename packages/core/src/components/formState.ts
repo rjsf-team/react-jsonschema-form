@@ -414,6 +414,40 @@ function withoutErrors<T>(
   };
 }
 
+/** `getByPath()` reading an empty path as the root itself. The overload is the one trust point that the value at a
+ * field's path has the type that field renders.
+ */
+export function getAt<V>(data: unknown, segments: FieldPathList): V;
+export function getAt(data: unknown, segments: FieldPathList): unknown {
+  return segments.length === 0 ? data : getByPath(data, segments);
+}
+
+/** `errorSchema` with the node at `path` replaced by `node`, or removed when `node` holds nothing: an empty node is
+ * one a raise at an ancestor would read as errors still being there. The `errorSchema` passed in is left as it is
+ *
+ * @param errorSchema - The `ErrorSchema` to replace the node of
+ * @param path - The path of the node
+ * @param node - What the node becomes
+ * @returns - The `ErrorSchema` with the node replaced
+ */
+function replaceErrorSchemaNode<T>(
+  errorSchema: ErrorSchema<T>,
+  path: FieldPathList,
+  node: ErrorSchema<T>,
+): ErrorSchema<T> {
+  if (path.length === 0) {
+    return node;
+  }
+  const replaced = copyAlongPath(errorSchema, path);
+  if (Object.keys(node).length > 0) {
+    // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+    setByPath(replaced, path, node, true);
+  } else {
+    unsetByPath(replaced, path);
+  }
+  return replaced;
+}
+
 /** Counts `errors` by where each sits below `path` and what it says, or by what it says alone when `pooled`: after an
  * array-valued raise, such as an `ArrayField` reorder, remove or copy, an item's errors may sit at an index other than
  * the one they came from, so only the message still says which is which
@@ -421,7 +455,8 @@ function withoutErrors<T>(
  * @param errors - The errors to count, each at or below `path`
  * @param path - The path the keys are relative to
  * @param pooled - Whether to key by the message alone
- * @returns - The count of each key, and the key of an error
+ * @returns - A function that takes one of the counted errors that match the error it is given, whose path is
+ *          relative to `path`, and says whether there was one left to take
  */
 function countErrors(errors: RJSFValidationError[], path: FieldPathList, pooled: boolean) {
   const keyOf = (error: RJSFValidationError, offset = 0) =>
@@ -431,14 +466,12 @@ function countErrors(errors: RJSFValidationError[], path: FieldPathList, pooled:
     const key = keyOf(error, path.length);
     counts.set(key, (counts.get(key) ?? 0) + 1);
   }
-  /** Takes one of the errors counted under the key of `error`, a path relative to `path`, if there is one left */
-  const take = (error: RJSFValidationError) => {
+  return (error: RJSFValidationError) => {
     const key = keyOf(error);
     const count = counts.get(key) ?? 0;
     counts.set(key, count - 1);
     return count > 0;
   };
-  return take;
 }
 
 /** A field's raise at `path`, told apart by whose each error is. A field may hand back the `errorSchema` it displays,
@@ -1311,9 +1344,9 @@ function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormConte
  * data, which is then run through `deriveFormData()` for any missing defaults and, when the resolved schema changed,
  * sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered to remove any extra data not in
  * a form field. The change's `newErrorSchema`, if any, replaces the field's own errors at its path and takes the
- * validator's errors it does not raise off that path; then the data is validated if required. Reads nothing but its arguments and performs no
- * callbacks: committing the result and notifying are the caller's, which is what lets one pipeline serve a form that
- * owns its data and one whose parent does.
+ * validator's errors it does not raise off that path; then the data is validated if required. Reads nothing but its
+ * arguments and performs no callbacks: committing the result and notifying are the caller's, which is what lets one
+ * pipeline serve a form that owns its data and one whose parent does.
  *
  * @param current - The state the change applies to
  * @param change - The change to apply
@@ -1444,25 +1477,13 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
       newErrorSchema,
       path,
       schemaValidationErrors,
-      isRootPath ? extraErrors : getByPath(extraErrors, path),
+      getAt<ErrorSchema | undefined>(extraErrors, path),
       isArrayRaise,
     );
-    const oldValidationError = isRootPath ? schemaValidationErrorSchema : getByPath(schemaValidationErrorSchema, path);
+    const oldValidationError = getAt<ErrorSchema<T> | undefined>(schemaValidationErrorSchema, path);
     if (oldValidationError && Object.keys(oldValidationError).length > 0) {
       // The raise is the field's say over the validator's errors at this path: the ones it does not raise are gone
-      if (isRootPath) {
-        mergeBaseErrorSchema = reported;
-      } else {
-        // Applied to a clone of the validator's own result, so the committed state is not mutated
-        mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
-        if (Object.keys(reported).length > 0) {
-          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(mergeBaseErrorSchema, path, reported, true);
-        } else {
-          // Not an empty node, which an ancestor's raise would read as a validator error still being there
-          unsetByPath(mergeBaseErrorSchema, path);
-        }
-      }
+      mergeBaseErrorSchema = replaceErrorSchemaNode(schemaValidationErrorSchema, path, reported);
       mergeBaseErrors = replaceErrorsAt(schemaValidationErrors, path, reported);
       // Remapped item errors describe the reordered data, which only an uncontrolled form keeps: a controlled parent
       // either echoes it, which clears the changed items' errors, or snaps back to its own order, which the old
@@ -1478,20 +1499,10 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     // the data both rewrite, so the raise outlives either until the field raises again (#5347). It replaces the
     // field's earlier raise at this path, an empty one included. With neither there is nothing to keep: an empty
     // `ErrorSchema` of the form's own is one more thing every later validation has to merge
-    const ownBefore = isRootPath ? customErrors?.ErrorSchema : getByPath(customErrors?.ErrorSchema, path);
-    const hasOwn = Object.keys(own).length > 0;
-    if (hasOwn || (ownBefore && Object.keys(ownBefore).length > 0)) {
-      // The committed builder is left as it is; the edit lands on a copy, which the constructor clones. A root raise
-      // replaces everything, as a raise at any other path replaces its node
-      customErrors = new ErrorSchemaBuilder<T>(isRootPath ? own : customErrors?.ErrorSchema);
-      if (!isRootPath) {
-        if (hasOwn) {
-          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(customErrors.ErrorSchema, path, own, true);
-        } else {
-          unsetByPath(customErrors.ErrorSchema, path);
-        }
-      }
+    const ownBefore = getAt<ErrorSchema<T> | undefined>(customErrors?.ErrorSchema, path);
+    if (Object.keys(own).length > 0 || (ownBefore && Object.keys(ownBefore).length > 0)) {
+      // The committed builder is left as it is: the edit lands on a copy, which the constructor clones
+      customErrors = new ErrorSchemaBuilder<T>(replaceErrorSchemaNode(customErrors?.ErrorSchema ?? {}, path, own));
     }
   }
   let clearedCustomError = false;
