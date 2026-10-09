@@ -509,6 +509,19 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
     });
 
+    it('leaves an unevaluatedProperties of its own in place of the one it would write', () => {
+      const { node } = createFormComponent({
+        schema: { type: ['object', 'string'], unevaluatedProperties: false },
+        useFallbackUiForUnsupportedType: true,
+        formData: { a: 'hello' },
+      });
+
+      // The keyword says what the object takes as much as `additionalProperties` would, and the `true` written in for
+      // a schema that says nothing would take precedence over it, offering an add button for keys it forbids
+      expect(node.querySelector('.rjsf-object-property-expand button')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_a-key')).not.toBeInTheDocument();
+    });
+
     it('drops the option selector when a composed union is pinned to null', async () => {
       const { node } = createFormComponent({
         schema: {

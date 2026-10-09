@@ -114,6 +114,22 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 
 - boolean: True if additional items is allowed, otherwise false
 
+### allowsAdditionalProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns whether an object takes keys its own `properties` don't name, which is what makes asking [`getAdditionalPropertySchema()`](#getadditionalpropertyschemas-extends-strictrjsfschema--rjsfschema) about such a key worth it at all: `retrieveSchema()` stubs the extra keys the form data holds only for an object that takes them, `canExpand()` offers the add button only for one, and `ObjectField` adds a property only to one.
+
+A `patternProperties` naming a pattern says the object takes them, whatever an `additionalProperties: false` beside it says about the names no pattern matches, since the names a pattern matches are the object's to take all the same.
+Otherwise the keyword that describes those names answers, as long as it neither rejects them nor is missing: an object naming none of the three keywords takes any key as far as a validator is concerned, but the form has no schema to render one with and no name to add one under, so it offers none.
+An empty `patternProperties` names no pattern, so it matches no name and describes no key the object could take, the way an empty `properties` declares none.
+
+#### Parameters
+
+- schema: S - The object schema to check
+
+#### Returns
+
+- boolean: True when the object takes keys beyond the ones its `properties` name
+
 ### ariaDescribedByIds()
 
 Return a list of element ids that contain additional information about the field that can be used to as the aria description of the field.
@@ -637,6 +653,51 @@ This is the order a widget's UI library needs when it manages its own selection 
 
 - IndexedEnumOptionType&lt;S>[]: The options in `groupedOptions`, flattened to a single list
 
+### getAdditionalPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema an object says applies to a `key` its own `properties` don't name, so that everything that renders such a property, seeds it or decides whether it is allowed at all reads one answer rather than its own.
+A key one or more `patternProperties` patterns match is described by all of them together, returned as an `allOf` for the caller to resolve into the one schema that describes it; a `false` among them rejects the key whatever the others allow, since no value satisfies it.
+A key no pattern matches is `additionalProperties`' to describe, `false` and `true` included.
+
+An `unevaluatedProperties` answers for the key only where the object names no `additionalProperties` at all: the keys the `properties` and the `patternProperties` leave over are exactly the ones that go unevaluated, so that keyword is what then describes or rejects them.
+Any `additionalProperties`, `true` and a schema alike, evaluates those keys itself, which leaves `unevaluatedProperties` nothing to say about them.
+Either keyword spelled `undefined`, as a schema built by spreading tends to spell one, reads as absent the way a validator reads it, so neither hides what the other says.
+
+#### Parameters
+
+- schema: S - The object schema the `key` is a property of
+- key: string - The property name whose schema is desired
+
+#### Returns
+
+- S | boolean: `false` for a key the object forbids, `true` for one it allows without describing, and otherwise the subschema describing it, whose `$ref`s are left for the caller to resolve
+
+### getAdditionalPropertyType&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the type an additional property described by `subSchema` holds, or `undefined` for a schema that leaves the type to the value the property comes to hold.
+It is what `retrieveSchema()` stubs such a property with and what `ObjectField` seeds a new one from, so the value the add button writes is one the field it renders can show.
+
+The types come from [`getSchemaOwnTypes()`](#getschemaowntypes), so a schema that names its type says that one, a nullable `['integer', 'null']` resolves to the type a value of it can have, a typeless `enum` takes the type of its values — where `getSchemaType()` answers `string` for any of them, giving an `enum` of numbers a string it rejects — and a schema that only implies its type, `properties` implying `object`, says what every other reader of it renders it as.
+The non-`null` type comes first, as it does for a nullable type: a value of it is one the field can show, where `null` leaves the user nothing to enter.
+
+An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen, each option read by this same function so that an option's own typeless `enum` speaks for it too.
+Options that disagree, or that name no type between them, say nothing here: choosing one is what would settle it, and a type one of them names alone would render a field for that type beside the options.
+
+A schema that says nothing about the type itself is read through the subschemas merged into it — the `allOf` entries it is composed of and the `$ref` it is spelled as, given a `rootSchema` to look the definition up in — since composition is how a schema usually names the object or the enum it is.
+The options are no exception: one of them naming a type is the option's answer, where a merged subschema's is the whole schema's, so a subschema whose options say nothing is still read through the `allOf` and the `$ref` beside them.
+The first of those to name a type answers, the merge holding the value to every entry at once.
+They are looked up rather than the schema resolved: the type is all that is wanted here, where resolving every option of every additional property would cost each render the merges `MultiSchemaField` already pays for the one option on screen.
+A reference followed once on a walk is not followed again, since a recursive option refers back to itself without end, and one naming no definition says nothing, as the option holding it does until it is resolved.
+
+#### Parameters
+
+- subSchema: S - The schema describing the additional property, from `additionalProperties`, a matching pattern or `unevaluatedProperties`
+- [rootSchema]: S - The root schema a `$ref` names a definition of, when there is one to look it up in
+
+#### Returns
+
+- string | undefined: The type the `subSchema` says the property holds, or undefined when only its value can say
+
 ### getByPath&lt;R = unknown>() {#getbypath}
 
 Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.
@@ -897,6 +958,19 @@ A schema whose `type` is a single name lists nothing, since a name of its own is
 
 - JSONSchema7TypeName[]: The JSON Schema types the `schema` lists, empty when it lists none
 
+### getMatchingPatternProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the subset of a schema's `patternProperties` specifications whose patterns match the given `key`.
+
+#### Parameters
+
+- schema: S - The schema whose `patternProperties` are to be filtered
+- key: string - The key to match against the `patternProperties` specifications
+
+#### Returns
+
+- Required&lt;S['patternProperties']>: The subset of `patternProperties` specifications that match the given `key`
+
 ### getNumericInputTitle()
 
 Builds the `title` for the `<input>` described by `inputProps`.
@@ -1015,6 +1089,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 - schema.properties: Returns `object`
 - schema.additionalProperties: Returns `object`
 - schema.patternProperties: Returns `object`
+- schema.unevaluatedProperties: Returns `object`, since it describes the keys an object's other keywords leave over
 - type is an array: Returns its first type other than 'null' that JSON Schema defines, since 'null' is the one type that holds no value to edit and an unrecognized name has no field to render it; failing that its first type other than 'null', and 'null' for an array listing nothing else. No single field renders every type of an array allowing several, so use [getUnionTypes()](#getuniontypes) to get them all, or [getSchemaTypeForValue()](#getschematypeforvalue) for the one a given value has
 
 #### Parameters
@@ -1223,6 +1298,19 @@ the fields in `@rjsf/core`) goes through it, so they all agree on the one list t
 #### Returns
 
 - `'anyOf'` | `'oneOf'` | undefined: `anyOf` or `oneOf` when that keyword holds an array, otherwise `undefined`
+
+### getXxxOfOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the `anyOf`/`oneOf` options that are rendered for the `schema`, along with the keyword they are read from, as [`getXxxOfKey()`](#getxxxofkeys-extends-strictrjsfschema--rjsfschema) picks it.
+An empty list offers no option to render, pick defaults from or take a type from, so a schema carrying one is handled through its own type instead, the same as one carrying neither keyword — which is what reading the two keywords through this function, rather than as `anyOf ?? oneOf`, keeps every reader of the options agreeing about.
+
+#### Parameters
+
+- schema: S - The schema that may carry an `anyOf` or a `oneOf`
+
+#### Returns
+
+- `{ key: 'anyOf' | 'oneOf'; options: S[] } | undefined`: The keyword and its non-empty list of options, or `undefined` when there is no such list
 
 ### groupEnumOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1942,7 +2030,7 @@ it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, regist
 
 ### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or a `patternProperties` entry.
+Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or an `additionalProperties`, `unevaluatedProperties` or `patternProperties` entry.
 `retrieveSchema()` only resolves the `dependencies`/`if` declared directly on the schema it is given, so a root-level retrieved schema never reflects a conditional branch switch that happens deeper in the tree.
 `Form` uses this to detect when a comparison of root-level retrieved schemas can't be trusted to decide whether sanitization is needed.
 
@@ -2531,19 +2619,6 @@ The `path` accepts a [`SchemaFieldPath`](#types) (dotted string or `FieldPathLis
 #### Returns
 
 - T | S: The inner schema from the `schema` for the given `path` or the `defaultValue` if not found
-
-### getMatchingPatternProperties&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Returns the subset of a schema's `patternProperties` specifications whose patterns match the given `key`.
-
-#### Parameters
-
-- schema: S - The schema whose `patternProperties` are to be filtered
-- key: string - The key to match against the `patternProperties` specifications
-
-#### Returns
-
-- Required&lt;S['patternProperties']>: The subset of `patternProperties` specifications that match the given `key`
 
 ### getFirstMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

@@ -162,6 +162,20 @@ describe('schemaHasNestedConditional()', () => {
     };
     expect(schemaHasNestedConditional(schema, schema)).toBe(true);
   });
+  it('returns true for an if keyword nested inside unevaluatedProperties', () => {
+    // The form renders the keys this keyword describes as surely as the ones `additionalProperties` does, so a branch
+    // switch inside one of them is a switch `Form` has to sanitize for
+    const schema: RJSFSchema = {
+      type: 'object',
+      unevaluatedProperties: {
+        type: 'object',
+        properties: { k: { type: 'string' } },
+        if: { properties: { k: { const: 'a' } } },
+        then: { properties: { x: { type: 'string' } } },
+      },
+    };
+    expect(schemaHasNestedConditional(schema, schema)).toBe(true);
+  });
   it('returns true for a dependencies keyword nested inside allOf', () => {
     const schema: RJSFSchema = {
       type: 'object',
