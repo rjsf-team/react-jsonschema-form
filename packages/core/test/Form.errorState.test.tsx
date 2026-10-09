@@ -890,6 +890,37 @@ describe('Error state consistency when deriving from new props', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
+  it('clears the errors the fields of an anyOf option raised when the option is switched', async () => {
+    const onSubmit = vi.fn();
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            payment: {
+              anyOf: [
+                { title: 'Card', type: 'object', properties: { holder: { type: 'string' } } },
+                { title: 'Invoice', type: 'object', properties: { reference: { type: 'string' } } },
+              ],
+            },
+          },
+        }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ payment: { holder: 'b' } }}
+        onSubmit={onSubmit}
+      />,
+    );
+    await user.type(input(container, 'root_payment_holder'), 'c');
+    expect(errorListMessages(container)).toEqual(['.payment.holder custom:bc']);
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Invoice');
+
+    expect(errorListMessages(container)).toEqual([]);
+    await submitForm(container, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   it('lists a message once when a field raises as its own what the validator also reported', async () => {
     const addrSchema: RJSFSchema = {
       type: 'object',

@@ -187,7 +187,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
       setSelectedOption(intOption);
       optionSwitchProposal.current = { formData: newFormData };
-      onChange(newFormData, fieldPath, undefined, fieldId);
+      // An empty raise: the errors at and below this path describe the fields of the option that was left, and one of
+      // their own left standing would keep the form from submitting with no field to clear it
+      onChange(newFormData, fieldPath, {}, fieldId);
     },
     // setSelectedOption is stable (guaranteed by useState); optionSwitchProposal is a ref
     [
