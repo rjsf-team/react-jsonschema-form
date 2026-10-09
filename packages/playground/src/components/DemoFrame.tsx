@@ -5,7 +5,7 @@ import type { EmotionCache } from '@emotion/cache';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { MantineProvider } from '@mantine/core';
-import { CssBaseline } from '@mui/material';
+import { CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { Widgets } from '@rjsf/antd';
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
@@ -15,6 +15,7 @@ import type { FrameComponentProps } from 'react-frame-component';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 
 const DEMO_FRAME_JSS = 'demo-frame-jss';
+const previewTheme = createTheme();
 
 const { SelectWidget, DateWidget } = Widgets;
 
@@ -257,9 +258,11 @@ export default function DemoFrame(props: DemoFrameProps) {
   }
 
   return (
-    <Frame ref={instanceRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
-      <div id={DEMO_FRAME_JSS} />
-      {body}
-    </Frame>
+    <ThemeProvider theme={previewTheme}>
+      <Frame ref={instanceRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
+        <div id={DEMO_FRAME_JSS} />
+        {body}
+      </Frame>
+    </ThemeProvider>
   );
 }

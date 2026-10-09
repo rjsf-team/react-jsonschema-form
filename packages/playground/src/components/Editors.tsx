@@ -6,7 +6,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import MuiAccordionSummary from '@mui/material/AccordionSummary';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { Panel, Group, Separator } from 'react-resizable-panels';
@@ -40,6 +40,7 @@ interface EditorProps {
 }
 
 function Editor({ title, code, onChange }: EditorProps) {
+  const dark = useTheme().palette.mode === 'dark';
   const [valid, setValid] = useState(true);
 
   const onCodeChange = useCallback(
@@ -72,7 +73,7 @@ function Editor({ title, code, onChange }: EditorProps) {
         <MonacoEditor
           language='json'
           value={code}
-          theme='vs-light'
+          theme={dark ? 'vs-dark' : 'vs-light'}
           onChange={onCodeChange}
           height={400}
           options={monacoEditorOptions}
