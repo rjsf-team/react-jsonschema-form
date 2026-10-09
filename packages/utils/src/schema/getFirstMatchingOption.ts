@@ -1,12 +1,5 @@
-import {
-  ADDITIONAL_PROPERTIES_KEY,
-  ALL_OF_KEY,
-  ID_KEY,
-  JUNK_OPTION_ID,
-  PATTERN_PROPERTIES_KEY,
-  PROPERTIES_KEY,
-  REQUIRED_KEY,
-} from '../constants.ts';
+import { allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
+import { ALL_OF_KEY, ID_KEY, JUNK_OPTION_ID, PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import hashForSchema from '../hashForSchema.ts';
 import isObject from '../isObject.ts';
@@ -103,22 +96,6 @@ function scoringSchema<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
  */
 const MATCHES_NOTHING: StrictRJSFSchema = { not: {} };
 
-/** Whether the given option describes keys somewhere other than its `properties`, which is what an option describing a
- * map does. The patterns are counted rather than tested for, as the property names are: an empty `patternProperties`
- * describes no key, so an option carrying one has nothing for scoring to match on either. A missing
- * `additionalProperties` is read as `false` here, as it is wherever else RJSF asks this question, while an empty
- * schema there describes every key the `properties` does not name.
- *
- * @param option - The option to test
- * @returns - True when the option describes keys its `properties` does not name
- */
-function describesKeysOutsideProperties<S extends StrictRJSFSchema = RJSFSchema>(option: S): boolean {
-  return (
-    Object.keys(option[PATTERN_PROPERTIES_KEY] ?? {}).length > 0 ||
-    (ADDITIONAL_PROPERTIES_KEY in option && option.additionalProperties !== false)
-  );
-}
-
 /** Returns the `option` with the `anyOf` of its own property names that scoring an object option needs, or the option
  * itself, under a derived `$id`, when it declares no `properties` to build one from.
  *
@@ -149,7 +126,9 @@ function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S)
     // it matches every object, so a "none of these" option in front of the real ones takes the data away from them. It
     // is scored by a schema that matches nothing, which is what the unsatisfiable `anyOf` said and what a `false`
     // subschema says, while being a schema a validator accepts rather than one that fails the compile
-    return describesKeysOutsideProperties<S>(option) ? withVariantId<S>(option) : (MATCHES_NOTHING as S);
+    // Whether the option describes keys its `properties` does not name is the question `allowsAdditionalProperties()`
+    // answers for every object the form renders, an option included, so it answers it here too
+    return allowsAdditionalProperties<S>(option) ? withVariantId<S>(option) : (MATCHES_NOTHING as S);
   }
   const requiresAnyOf = { anyOf: propertyNames.map((key) => ({ required: [key] })) };
   const { [ID_KEY]: id, [REQUIRED_KEY]: _required, ...content } = option;

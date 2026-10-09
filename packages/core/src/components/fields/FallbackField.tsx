@@ -31,6 +31,7 @@ import {
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
   uiBooleanOption,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
@@ -183,10 +184,13 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   // An object the schema says nothing more about takes any key/value pair, which is what this UI is here to offer.
   // Options are what says more about it, even when the members they describe are their own rather than the schema's:
   // taking them for silence would stub the keys the data already holds as additional properties of the value field,
-  // rendering each of them a second time alongside the option's own, under a remove button for a described property
+  // rendering each of them a second time alongside the option's own, under a remove button for a described property.
+  // `unevaluatedProperties` says as much about them as `additionalProperties` does, and the `true` written in below
+  // would take precedence over it where `getAdditionalPropertySchema()` reads the two
   const describesMembers =
     PROPERTIES_KEY in valueSchema ||
     ADDITIONAL_PROPERTIES_KEY in valueSchema ||
+    UNEVALUATED_PROPERTIES_KEY in valueSchema ||
     PATTERN_PROPERTIES_KEY in valueSchema ||
     hasOptions;
   if (type === 'object' && !describesMembers) {
