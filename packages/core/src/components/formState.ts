@@ -394,16 +394,15 @@ function pruneErrorSchema(
 
 /** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by one rule. The
  * error an invalid schema is reported with names no field, so it stays in both: the validators list it without a
- * `property` and file what its `stack` says under the `$schema` key of the `ErrorSchema`, which is how it is known
- * once a `transformErrors` has given it a `message`
+ * `property` and file it under the `$schema` key of the `ErrorSchema`. A `transformErrors` may reword all the listed
+ * one says, so it is known by those two alone
  */
 function withoutErrors<T>(
   validation: ValidationData<T>,
   isDropped: (path: FieldPathList) => boolean,
 ): ValidationData<T> {
-  const ofInvalidSchema = getByPath<string[]>(validation.errorSchema, [SCHEMA_KEY, ERRORS_KEY], []);
-  const isOfInvalidSchema = (error: RJSFValidationError) =>
-    error.property === undefined && ofInvalidSchema.includes(error.stack);
+  const hasSchemaErrors = getByPath<string[]>(validation.errorSchema, [SCHEMA_KEY, ERRORS_KEY], []).length > 0;
+  const isOfInvalidSchema = (error: RJSFValidationError) => hasSchemaErrors && error.property === undefined;
   // Without that error in the list, `$schema` is the path of a field like any other
   const keepsSchemaEntry = validation.errors.some(isOfInvalidSchema);
   return {

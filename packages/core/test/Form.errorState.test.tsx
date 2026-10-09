@@ -791,21 +791,39 @@ describe('Error state consistency when deriving from new props', () => {
       expect(shown.mock.lastCall?.[0]).toEqual(validated);
     });
 
-    it('keeps the error an invalid schema is reported with listed when a transformErrors gave it a message', async () => {
-      const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
-      const transformErrors: ErrorTransformer = (errors) =>
-        errors.map((error) => ({ ...error, message: `translated: ${error.stack}` }));
-      const props = { schema: invalid, transformErrors };
-      const { container, node, rerender } = createFormComponent({ ...props, formData: { name: 'a' } });
+    it.each([
+      {
+        name: 'a message',
+        transformErrors: (errors) => errors.map((error) => ({ ...error, message: `translated: ${error.stack}` })),
+      },
+      {
+        name: 'a message and another stack',
+        transformErrors: (errors) =>
+          errors.map((error) => ({
+            ...error,
+            message: `translated: ${error.stack}`,
+            stack: `translated: ${error.stack}`,
+          })),
+      },
+    ] satisfies {
+      name: string;
+      transformErrors: ErrorTransformer;
+    }[])(
+      'keeps the error an invalid schema is reported with listed when a transformErrors gave it $name',
+      async ({ transformErrors }) => {
+        const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
+        const props = { schema: invalid, transformErrors };
+        const { container, node, rerender } = createFormComponent({ ...props, formData: { name: 'a' } });
 
-      await submitForm(node, user);
-      const listed = errorListMessages(container);
-      expect(listed).toHaveLength(1);
+        await submitForm(node, user);
+        const listed = errorListMessages(container);
+        expect(listed).toHaveLength(1);
 
-      rerender({ ...props, formData: { name: 'b' } });
+        rerender({ ...props, formData: { name: 'b' } });
 
-      expect(errorListMessages(container)).toEqual(listed);
-    });
+        expect(errorListMessages(container)).toEqual(listed);
+      },
+    );
 
     it('keeps every error when the parent renders a root NaN again', async () => {
       const props = {
