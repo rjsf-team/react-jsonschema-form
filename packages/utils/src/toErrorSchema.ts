@@ -1,5 +1,5 @@
 import ErrorSchemaBuilder from './ErrorSchemaBuilder.ts';
-import { toPath } from './pathUtils.ts';
+import { propertyToPath } from './pathUtils.ts';
 import type { ErrorSchema, RJSFValidationError } from './types.ts';
 
 /** Transforms a rjsf validation errors list:
@@ -27,7 +27,7 @@ export default function toErrorSchema<T = unknown>(errors: RJSFValidationError[]
     errors.forEach((error) => {
       const { property, message } = error;
       // When the property is missing or the root element ('.'), toPath produces an empty path
-      const path = property ? toPath(property) : [];
+      const path = propertyToPath(property);
       if (message) {
         builder.addErrors(message, path);
       }

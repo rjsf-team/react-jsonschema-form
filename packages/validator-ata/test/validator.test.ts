@@ -228,6 +228,32 @@ describe('ATAValidator', () => {
       expect(errorSchema.animal?.__errors).toEqual(["must have required property 'My animal'"]);
     });
 
+    it('keeps the errors whose message transformErrors cleared when customValidate adds one', () => {
+      const validator = customizeValidator();
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { foo: { type: 'string' }, bar: { type: 'string' } },
+      };
+      // An error with no `message` is left out of the `errorSchema`, but it is still one of the `errors`
+      const transformErrors = (errors: RJSFValidationError[]) => errors.map((error) => ({ ...error, message: '' }));
+      const customValidate: CustomValidator<{ foo?: unknown; bar?: string }> = (_formData, errors) => {
+        errors.bar?.addError('custom');
+        return errors;
+      };
+      const { errors, errorSchema } = validator.validateFormData(
+        { foo: 42, bar: 'b' },
+        schema,
+        customValidate,
+        transformErrors,
+      );
+      expect(errors.map(({ property, message }) => ({ property, message }))).toEqual([
+        { property: '.foo', message: '' },
+        { property: '.bar', message: 'custom' },
+      ]);
+      expect(errorSchema.foo?.__errors ?? []).toEqual([]);
+      expect(errorSchema.bar?.__errors).toEqual(['custom']);
+    });
+
     it('uses the property title when required is inside if-then-else', () => {
       const v = customizeValidator();
       const schema: RJSFSchema = {

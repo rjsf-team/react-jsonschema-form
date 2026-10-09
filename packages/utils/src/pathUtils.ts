@@ -28,6 +28,16 @@ export function toPath(path: string): string[] {
   return path.split(/[.[\]]+/).filter(Boolean);
 }
 
+/** Converts the `property` of a validation error into its list of path segments, the way `toErrorSchema()` keys the
+ * errors it builds. A missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path
+ *
+ * @param [property] - The `property` of an `RJSFValidationError`, such as `'.level1.level2[2].level3'`
+ * @returns - The list of path segments, such as `['level1', 'level2', '2', 'level3']`
+ */
+export function propertyToPath(property?: string): string[] {
+  return property ? toPath(property) : [];
+}
+
 /** Normalizes an `ObjectPath` into a list of path segments, wrapping a single key into a one-element list */
 function normalizePath(path: ObjectPath): FieldPathList {
   return Array.isArray(path) ? path : [path];

@@ -1,4 +1,15 @@
-import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from '../src/index.ts';
+import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from '../src/index.ts';
+
+describe('propertyToPath()', () => {
+  it('splits an error property like toPath()', () => {
+    expect(propertyToPath('.level1.level2[2].level3')).toEqual(['level1', 'level2', '2', 'level3']);
+  });
+  it('returns an empty path for a missing property, an empty one or the root', () => {
+    expect(propertyToPath()).toEqual([]);
+    expect(propertyToPath('')).toEqual([]);
+    expect(propertyToPath('.')).toEqual([]);
+  });
+});
 
 describe('toPath()', () => {
   it('splits dotted paths', () => {

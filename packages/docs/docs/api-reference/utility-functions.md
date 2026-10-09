@@ -1835,6 +1835,27 @@ Parses the `dateString` into a `DateObject`, including the time information when
 
 - Error when the date cannot be parsed from the string
 
+### propertyToPath()
+
+Converts the `property` of a validation error into its list of path segments, the way `toErrorSchema()` keys the errors it builds.
+It is [toPath()](#topath) for a `property` that may be missing: a missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path.
+
+#### Parameters
+
+- [property]: string | undefined - The `property` of an `RJSFValidationError`, such as `'.level1.level2[2].level3'`
+
+#### Returns
+
+- string[]: The list of path segments, such as `['level1', 'level2', '2', 'level3']`
+
+#### Example
+
+```typescript
+propertyToPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
+propertyToPath(undefined); // []
+propertyToPath('.'); // []
+```
+
 ### rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
@@ -2370,12 +2391,13 @@ Converts a UTC date string into a local Date format
 
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `toErrorList()` on the `errors` in the `validationData`.
 If no `additionalErrorSchema` is passed, then `validationData` is returned.
+The existing `errors` are always kept, even when their `errorSchema` is empty, as it is when a `transformErrors` clears their `message`.
 
 #### Parameters
 
 - validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
 - [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The optional additional set of errors in an `ErrorSchema`
-- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates`
+- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates` and skip additional errors already in the existing `errors` list (same path and `message`, whatever way the `property` spells the path)
 
 #### Returns
 

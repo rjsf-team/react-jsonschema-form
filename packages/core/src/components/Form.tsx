@@ -26,6 +26,7 @@ import type {
 } from '@rjsf/utils';
 import {
   getByPath,
+  propertyToPath,
   setByPath,
   toPath,
   unsetByPath,
@@ -519,7 +520,7 @@ function mergeErrors<T>(
 ): ValidationData<T> {
   let { errorSchema, errors } = schemaValidation;
   if (extraErrors) {
-    const merged = validationDataMerge(schemaValidation, extraErrors);
+    const merged = validationDataMerge(schemaValidation, extraErrors, true);
     errorSchema = merged.errorSchema;
     errors = merged.errors;
   }
@@ -589,10 +590,8 @@ function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextTy
     formContext ?? ({} as F),
   );
   if (Object.keys(uiRequiredErrorSchema).length === 0) {
-    // validationDataMerge() isn't a no-op for an empty-but-truthy additional errorSchema: when `schemaValidation`
-    // has message-less errors (e.g. from a `transformErrors` that clears `message`), its own `errorSchema` can have
-    // fewer keys than its `errors` list (`toErrorSchema()` only adds entries with a truthy message), so merging in
-    // `{}` would silently drop those entries from `errors` instead of returning `schemaValidation` unchanged.
+    // Nothing to merge in: return `schemaValidation` as it is, rather than going through validationDataMerge(), which
+    // rebuilds both its `errorSchema` and its `errors` list for an empty-but-truthy additional errorSchema.
     return schemaValidation;
   }
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
@@ -636,11 +635,6 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
  */
 function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
-}
-
-/** The path an `RJSFValidationError` addresses, the same way `toErrorSchema()` splits it */
-function errorPath(error: RJSFValidationError): string[] {
-  return error.property ? toPath(error.property) : [];
 }
 
 /** Counts the messages of `errorSchema` into `counts`, keyed by the property each sits at, or by the message alone when
@@ -696,7 +690,7 @@ function replaceErrorsAt<T>(errors: RJSFValidationError[], path: FieldPathList, 
   const kept: RJSFValidationError[] = [];
   let insertAt = -1;
   for (const error of errors) {
-    const pathOfError = errorPath(error);
+    const pathOfError = propertyToPath(error.property);
     if (!isPathPrefix(path, pathOfError)) {
       kept.push(error);
     } else {
@@ -704,7 +698,7 @@ function replaceErrorsAt<T>(errors: RJSFValidationError[], path: FieldPathList, 
         insertAt = kept.length;
       }
       const found = incoming.findIndex(
-        (entry) => entry.message === error.message && String(errorPath(entry)) === String(pathOfError),
+        (entry) => entry.message === error.message && String(propertyToPath(entry.property)) === String(pathOfError),
       );
       if (found !== -1) {
         incoming.splice(found, 1);
@@ -922,7 +916,7 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
     // The list is what the `ErrorList` and the `onChange` payload carry, so it drops the same errors: the changed
     // field's own and those below it, and the own errors of every container holding it
     schemaValidationErrors = validation.errors.filter((error) => {
-      const pathOfError = errorPath(error);
+      const pathOfError = propertyToPath(error.property);
       return (
         pathOfError.length === 0 ||
         !changedPaths.some(

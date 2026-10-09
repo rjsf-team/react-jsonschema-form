@@ -1,11 +1,25 @@
 import { createRef } from 'react';
-import type { ErrorListProps, ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
+import type {
+  ErrorListProps,
+  ErrorSchema,
+  FormValidation,
+  RJSFSchema,
+  RJSFValidationError,
+  WidgetProps,
+} from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import { AcceptingParent, describeRepeated, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  describeRepeated,
+  errorListMessages,
+  expectToHaveBeenCalledWithFormData,
+  fieldErrorsById,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -1300,6 +1314,64 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(onError).toHaveBeenCalled();
         expect(onError.mock.calls[0][0]).toHaveLength(1);
       });
+    });
+
+    describe('widget-raised error identical to a validator error', () => {
+      const message = 'must NOT have fewer than 3 characters';
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } },
+        },
+      };
+      const StreetWidget = ({ id, value, onChange }: WidgetProps) => (
+        <input
+          id={id}
+          value={value ?? ''}
+          onChange={(event) => {
+            const next = event.target.value;
+            onChange(next, { __errors: next.length < 3 ? [message] : [] });
+          }}
+        />
+      );
+
+      it('lists the message once in the top ErrorList after submit', async () => {
+        const { node } = createFormComponent({
+          schema,
+          uiSchema: { addr: { street: { 'ui:widget': StreetWidget } } },
+        });
+
+        await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
+        expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+        await submitForm(node, user);
+
+        expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
+        expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+      });
+    });
+
+    describe('extraErrors identical to a validator error', () => {
+      const message = 'must NOT have fewer than 3 characters';
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } },
+        },
+      };
+      const extraErrors: ErrorSchema = { addr: { street: { __errors: [message] } } };
+
+      it.each([undefined, true])(
+        'lists the message once in the top ErrorList and on the field after submit, with extraErrorsAreWarnings %s',
+        async (extraErrorsAreWarnings) => {
+          const { node } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings });
+
+          await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
+          await submitForm(node, user);
+
+          expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
+          expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+        },
+      );
     });
   });
 });
