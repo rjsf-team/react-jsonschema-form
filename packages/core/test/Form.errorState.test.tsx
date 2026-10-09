@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import type { ErrorSchema, ErrorTransformer, FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  ErrorSchema,
+  ErrorTransformer,
+  FieldProps,
+  RJSFSchema,
+  RJSFValidationError,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -735,6 +743,29 @@ describe('Error state consistency when deriving from new props', () => {
 
       expect(errorListMessages(container)).toEqual([`.name ${tooShort}`]);
       expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
+    });
+
+    it('keeps an error with no message listed when extraErrors arrive after the only error with one was cleared', async () => {
+      const both: RJSFSchema = { type: 'object', properties: { name: leaf, other: leaf } };
+      const props = {
+        schema: both,
+        // Leaves the `.name` error in the list and out of the `ErrorSchema`, which is built from the messages
+        transformErrors: (errors: RJSFValidationError[]) =>
+          errors.map((error) => (error.property === '.name' ? { ...error, message: undefined } : error)),
+      };
+      const { container, node, rerender } = createFormComponent({ ...props, formData: { name: 'a', other: 'b' } });
+
+      await submitForm(node, user);
+      rerender({ ...props, formData: { name: 'a', other: 'c' } });
+      expect(errorListMessages(container)).toEqual([`.name ${tooShort}`]);
+
+      rerender({
+        ...props,
+        formData: { name: 'a', other: 'c' },
+        extraErrors: { other: { __errors: ['from the server'] } },
+      });
+
+      expect(errorListMessages(container)).toEqual([`.name ${tooShort}`, '.other from the server']);
     });
 
     it('keeps every error when the parent renders the same data again', async () => {

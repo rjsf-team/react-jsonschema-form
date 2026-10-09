@@ -320,10 +320,6 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     formContext ?? ({} as F),
   );
   if (Object.keys(uiRequiredErrorSchema).length === 0) {
-    // validationDataMerge() isn't a no-op for an empty-but-truthy additional errorSchema: when `schemaValidation`
-    // has message-less errors (e.g. from a `transformErrors` that clears `message`), its own `errorSchema` can have
-    // fewer keys than its `errors` list (`toErrorSchema()` only adds entries with a truthy message), so merging in
-    // `{}` would silently drop those entries from `errors` instead of returning `schemaValidation` unchanged.
     return schemaValidation;
   }
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
@@ -383,11 +379,11 @@ function errorPath(error: RJSFValidationError): string[] {
  * @returns - The `ErrorSchema` that is left
  */
 function pruneErrorSchema(
-  errorSchema: GenericObjectType,
+  errorSchema: ErrorSchema,
   isDropped: (path: FieldPathList) => boolean,
   path: FieldPathList,
-): GenericObjectType {
-  const kept: GenericObjectType = {};
+): ErrorSchema {
+  const kept: ErrorSchema = {};
   for (const [key, value] of Object.entries(errorSchema)) {
     if (key === ERRORS_KEY) {
       if (!isDropped(path)) {
@@ -403,9 +399,10 @@ function pruneErrorSchema(
   return kept;
 }
 
-/** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by the one rule. An
- * error with neither a `property` nor a `message`, the one an invalid schema is reported with, describes no field and
- * stays listed; with a `message` alone it is one `toErrorSchema()` files at the root, and goes as the root's own do
+/** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by the one rule. A
+ * listed error is dropped with the `ErrorSchema` node `toErrorSchema()` files it at, the root's for one with no
+ * `property`. One with no `message` either is filed nowhere and names no field, so no path is its own and it stays
+ * listed: the error an invalid schema is reported with is one
  *
  * @param validation - The errors, as a list and as an `ErrorSchema`
  * @param isDropped - Whether the errors at a path are dropped
