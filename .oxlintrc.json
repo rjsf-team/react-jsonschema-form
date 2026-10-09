@@ -432,6 +432,7 @@
     "react/forward-ref-uses-ref": "error",
     "react/globals": "error",
     "react/hook-use-state": "error",
+    "react/hooks": "error",
     "react/iframe-missing-sandbox": "error",
     "react/immutability": "error",
     "react/incompatible-library": "error",
@@ -444,6 +445,7 @@
     "react/jsx-no-comment-textnodes": "error",
     "react/jsx-no-constructed-context-values": "error",
     "react/jsx-no-duplicate-props": "error",
+    "react/jsx-no-literals": ["error", { "allowedStrings": ["*", "&nbsp;", "▼", "&#x2022;"] }],
     "react/jsx-no-script-url": "error",
     "react/jsx-no-target-blank": "error",
     "react/jsx-no-undef": "error",
@@ -456,6 +458,7 @@
     "react/memo-dependencies": "error",
     "react/no-array-index-key": "error",
     "react/no-children-prop": "error",
+    "react/no-clone-element": "error",
     "react/no-danger": "error",
     "react/no-danger-with-children": "error",
     "react/no-deriving-state-in-effects": "error",
@@ -466,6 +469,7 @@
     "react/no-is-mounted": "error",
     "react/no-namespace": "error",
     "react/no-object-type-as-default-prop": "error",
+    "react/no-react-children": "error",
     "react/no-redundant-should-component-update": "error",
     "react/no-render-return-value": "error",
     "react/no-string-refs": ["error", { "noTemplateLiterals": true }],
@@ -476,20 +480,22 @@
     "react/no-unstable-nested-components": "error",
     "react/no-will-update-set-state": "error",
     "react/prefer-es6-class": ["error", "always"],
-    "react/prefer-function-component": "off",
+    "react/prefer-function-component": "error",
     "react/preserve-manual-memoization": "error",
     "react/purity": "error",
     "react/react-in-jsx-scope": "off",
     "react/refs": "error",
     "react/require-render-return": "error",
+    "react/rule-suppression": "error",
     "react/rules-of-hooks": "error",
     "react/self-closing-comp": ["error", { "component": true, "html": true }],
     "react/set-state-in-effect": "error",
     "react/set-state-in-render": "error",
     "react/state-in-constructor": ["error", "always"],
-    "react/static-components": "error", // Doesn't follow a destructure, and skips AnyOfField/LayoutMultiSchemaField (#5384)
+    "react/static-components": "error", // Doesn't follow a destructure (#5384)
     "react/style-prop-object": "error",
     "react/syntax": "error",
+    "react/todo": "error",
     "react/unsupported-syntax": "error",
     "react/use-memo": "error",
     "react/void-dom-elements-no-children": "error",
@@ -764,6 +770,10 @@
         "no-unused-vars": "off",
         "no-use-before-define": "off",
         "react/display-name": "off",
+        "react/jsx-no-literals": "off",
+        "react/no-clone-element": "off",
+        "react/no-react-children": "off",
+        "react/prefer-function-component": "off",
         "typescript/method-signature-style": "off",
         "typescript/no-confusing-void-expression": "off",
         "typescript/no-explicit-any": "off",
@@ -1198,7 +1208,16 @@
     {
       "files": ["packages/shadcn/src/components/ui/**", "packages/shadcn/src/lib/**"],
       "rules": {
-        "import/consistent-type-specifier-style": "off"
+        "import/consistent-type-specifier-style": "off",
+        // These primitives are handed no registry to translate through
+        "react/jsx-no-literals": "off"
+      }
+    },
+    {
+      // The playground's own text is a demo's, which nothing translates
+      "files": ["packages/playground/**"],
+      "rules": {
+        "react/jsx-no-literals": "off"
       }
     }
   ]

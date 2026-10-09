@@ -536,7 +536,7 @@ export default function FallbackField<
     return <FallbackUiField<T, S, F> {...props} />;
   }
 
-  const { reason = translateString(TranslatableString.UnknownFieldType, [String(schema.type)]) } = props;
+  const reason = props.reason ?? translateString(TranslatableString.UnknownFieldType, [String(schema.type)]);
   const { UnsupportedFieldTemplate } = getTemplates<T, S, F>(registry, getUiOptions<T, S, F>(uiSchema));
 
   return <UnsupportedFieldTemplate schema={schema} uiSchema={uiSchema} id={id} reason={reason} registry={registry} />;

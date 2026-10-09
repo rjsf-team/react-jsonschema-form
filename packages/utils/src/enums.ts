@@ -42,6 +42,10 @@ export const TranslatableString = {
   ClearLabel: 'Clear',
   /** Aria date label, used by DateWidget */
   AriaDateLabel: 'Select a date',
+  /** Done button label, used by the daisyUI date pickers */
+  DoneLabel: 'Done',
+  /** Time input label, used by the daisyUI DateTimeWidget */
+  TimeLabel: 'Time',
   /** File preview label, used by FileWidget */
   PreviewLabel: 'Preview',
   /** Decrement button aria label, used by UpDownWidget */

@@ -1,4 +1,4 @@
-import { createRef } from 'react';
+import { createRef, useEffect } from 'react';
 import type { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
@@ -711,6 +711,41 @@ describe('anyOf', () => {
     rerender({ schema, formData: { userId: 'foobarbaz' } });
 
     expect(node.querySelector('select')).toHaveValue('1');
+  });
+
+  it('should never commit the option the updated formData no longer fits', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { userId: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
+    };
+    const commits: { type: unknown; value: unknown }[] = [];
+    function CommitProbe({ schema: { type }, value }: WidgetProps) {
+      useEffect(() => {
+        commits.push({ type, value });
+      });
+      return null;
+    }
+
+    const { rerender } = createFormComponent({
+      schema,
+      formData: { userId: 5 },
+      widgets: { TextWidget: CommitProbe },
+    });
+    rerender({ schema, formData: { userId: 'foobarbaz' }, widgets: { TextWidget: CommitProbe } });
+
+    expect(commits).toContainEqual({ type: 'string', value: 'foobarbaz' });
+    expect(commits).not.toContainEqual({ type: 'number', value: 'foobarbaz' });
+  });
+
+  it('should render an anyOf whose formData is NaN', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { userId: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
+    };
+
+    const { node } = createFormComponent({ schema, formData: { userId: NaN } });
+
+    expect(node.querySelector('select')).toBeInTheDocument();
   });
 
   it('should not change the selected option when entering values', async () => {
