@@ -2445,15 +2445,15 @@ implementations.
 
 ### utcToLocal()
 
-Converts a UTC date string into a local Date format
+Converts a UTC date string, an epoch number or a `Date` into a local Date format
 
 #### Parameters
 
-- jsonDate: string - A UTC date string
+- jsonDate: string | number | Date | null | undefined - A UTC date string, an epoch number in milliseconds or a `Date`
 
 #### Returns
 
-- string: An empty string when `jsonDate` is falsey, otherwise a date string in local format
+- string: An empty string when `jsonDate` is `undefined`, `null` or an empty string, or when it isn't a valid date. Otherwise a date string in local format
 
 ### validationDataMerge&lt;T = unknown>()
 

@@ -1,12 +1,13 @@
 import pad from './pad.ts';
 
-/** Converts a UTC date string into a local Date format
+/** Converts a UTC date string, an epoch number or a `Date` into a local Date format
  *
- * @param jsonDate - A UTC date string
- * @returns - An empty string when `jsonDate` is falsey, otherwise a date string in local format
+ * @param jsonDate - A UTC date string, an epoch number in milliseconds or a `Date`
+ * @returns - An empty string when `jsonDate` is `undefined`, `null` or an empty string, or when it isn't a valid date.
+ *        Otherwise a date string in local format
  */
-export default function utcToLocal(jsonDate: string) {
-  if (!jsonDate) {
+export default function utcToLocal(jsonDate: string | number | Date | null | undefined) {
+  if (jsonDate === undefined || jsonDate === null || jsonDate === '') {
     return '';
   }
 
@@ -17,6 +18,9 @@ export default function utcToLocal(jsonDate: string) {
   // Note - date constructor passed local ISO-8601 does not correctly
   // change time to UTC in node pre-8
   const date = new Date(jsonDate);
+  if (Number.isNaN(date.getTime())) {
+    return '';
+  }
 
   const yyyy = pad(date.getFullYear(), 4);
   const MM = pad(date.getMonth() + 1, 2);
