@@ -28,7 +28,11 @@ jobs:
       # Lockfile hygiene is independent of the Node version, so check it once.
       - if: matrix.node-version == '24.x'
         run: pnpm dedupe --check
+      # Run the linting and formatting checks
       - run: pnpm run lint
+      # Formatting is independent of the Node version, so check it once.
+      - if: matrix.node-version == '24.x'
+        run: pnpm run cs-check
       # Workspace-wide and independent of the Node version, so run it once.
       - if: matrix.node-version == '24.x'
         run: pnpm run knip
