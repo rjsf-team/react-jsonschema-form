@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import Form from '../src/index.ts';
 import SelectWidget from '../src/SelectWidget/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
@@ -506,5 +508,66 @@ describe('SelectWidget', () => {
 
     expect(ungrouped).toEqual(['a', 'c', 'b']);
     expect(grouped).toEqual(ungrouped);
+  });
+});
+
+describe('multiple SelectWidget accessible name', () => {
+  const colorsSchema = {
+    type: 'object' as const,
+    properties: {
+      colors: {
+        type: 'array' as const,
+        title: 'Colors',
+        uniqueItems: true,
+        items: { type: 'string' as const, enum: ['red', 'blue'] },
+      },
+    },
+  };
+
+  test('uses the field title', () => {
+    render(<Form schema={colorsSchema} validator={validator} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Colors');
+  });
+
+  test('uses an overridden ui:title', () => {
+    render(
+      <Form schema={colorsSchema} uiSchema={{ colors: { 'ui:title': 'Favorite colors' } }} validator={validator} />,
+    );
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Favorite colors');
+  });
+
+  test('falls back to the id-derived name when the field is untitled', () => {
+    const schema = {
+      type: 'object' as const,
+      properties: {
+        colors: {
+          type: 'array' as const,
+          uniqueItems: true,
+          items: { type: 'string' as const, enum: ['red', 'blue'] },
+        },
+      },
+    };
+    render(<Form schema={schema} validator={validator} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('colors');
+  });
+
+  test('passes required and the field description to the combobox input', () => {
+    const schema = {
+      type: 'object' as const,
+      required: ['colors'],
+      properties: {
+        colors: {
+          type: 'array' as const,
+          title: 'Colors',
+          description: 'Pick your colors',
+          uniqueItems: true,
+          items: { type: 'string' as const, enum: ['red', 'blue'] },
+        },
+      },
+    };
+    render(<Form schema={schema} validator={validator} />);
+    const combobox = screen.getByRole('combobox');
+    expect(combobox).toHaveAttribute('aria-required', 'true');
+    expect(combobox).toHaveAttribute('aria-describedby', expect.stringContaining('root_colors__description'));
   });
 });

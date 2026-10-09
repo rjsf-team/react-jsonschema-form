@@ -34,6 +34,8 @@ interface FancyMultiSelectProps {
   ariaDescribedby?: string;
   /** Aria placeholder text */
   ariaPlaceholder?: string;
+  /** Whether a selection is required, exposed as `aria-required` on the combobox input */
+  required?: boolean;
   /** Additional className for styling */
   className?: string;
   /** Whether the select is disabled */
@@ -64,6 +66,7 @@ export function FancyMultiSelect({
   disabled = false,
   ariaDescribedby,
   ariaPlaceholder,
+  required = false,
   onFocus,
   onBlur,
   className,
@@ -183,8 +186,6 @@ export function FancyMultiSelect({
       aria-disabled={disabled}
       onBlur={onBlur}
       onFocus={handleFocus}
-      aria-describedby={ariaDescribedby}
-      aria-placeholder={ariaPlaceholder}
     >
       <div
         className={cn(
@@ -216,6 +217,9 @@ export function FancyMultiSelect({
               </button>
             </Badge>
           ))}
+          {/* cmdk always renders this input with its own generated `id` and points its own `aria-controls` and
+              `aria-labelledby` at internal elements, so those attributes are not set here: anything passed is
+              overwritten. The field label association is tracked in #5478. */}
           <CommandPrimitive.Input
             ref={inputRef}
             value={inputValue}
@@ -225,9 +229,9 @@ export function FancyMultiSelect({
             placeholder='Select ...'
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
             disabled={disabled}
-            aria-controls={`command-item-input-${id}`}
-            aria-labelledby={`command-item-input-${id}`}
-            id={`command-item-input-${id}`}
+            aria-describedby={ariaDescribedby}
+            aria-placeholder={ariaPlaceholder}
+            aria-required={required || undefined}
           />
         </div>
       </div>
