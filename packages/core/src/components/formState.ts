@@ -543,12 +543,22 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // Each value dropped as a swapped-away branch's default, with its path: the paths let a later sanitizing iteration
   // keep the refill the fill has since written there, and the values let the pass put back one the fill never wrote
   const droppedStaleValues: [FieldPathList, unknown][] = [];
-  let staleDefaultsSearched = false;
+  // The dropped paths, joined, so a repeat search can skip one it has already reported
+  const droppedPaths = new Set<string>();
   do {
     formData = replaceEqualDeep(
       shareBase,
       schemaUtils.getDefaultFormState(rootSchema, defaultsFormData, false, initialDefaultsGenerated, uiSchema) as T,
     );
+    // A dropped path the fill above declined to write goes back before anything else in this iteration reads its
+    // absence. The drop has to be visible to that fill — deleting the key is what lets it write the newly selected
+    // branch's default — but nothing past it may see the key-absent state: the schema is resolved for this data
+    // next, and a key missing from it selects branches the real data never selects, which prunes a sibling the
+    // resolved-with-the-key schema declares and commits a `retrievedSchema` that omits the key, so live validation
+    // stops seeing it too
+    for (const [stalePath, droppedValue] of droppedStaleValues) {
+      formData = putBackAt(formData, stalePath, droppedValue, (held) => held === undefined);
+    }
     retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
     const mayNeedSanitizing = hasNestedConditionalSchema || retrievedSchema !== current?.retrievedSchema;
     if (mayNeedSanitizing && typeof sanitize === 'function') {
@@ -558,13 +568,19 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     const isSanitizing = mayNeedSanitizing && sanitize === true;
     // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
     const formHash = isSanitizing ? hashObject({ formData }) : '';
-    if (isSanitizing && !preventInfiniteSanitize.includes(formHash)) {
+    if (isSanitizing) {
+      // Sanitizing itself is skipped for data already processed, but the stale-default search below is not: the
+      // iteration that makes a second swap visible is often one whose data the fill left untouched, so its hash is
+      // already here and the sanitize it would repeat is the only part worth skipping
+      const isFormDataSanitized = preventInfiniteSanitize.includes(formHash);
       // Sanitize the form data if shouldSanitize is true, we haven't already processed this same formData AND
       // either the retrieved schema changed or the schema has a nested conditional that the check above can't see
-      let sanitizedFormData = replaceEqualDeep(
-        formData,
-        schemaUtils.sanitizeDataForNewSchema(retrievedSchema, current?.retrievedSchema, formData),
-      );
+      let sanitizedFormData = isFormDataSanitized
+        ? formData
+        : replaceEqualDeep(
+            formData,
+            schemaUtils.sanitizeDataForNewSchema(retrievedSchema, current?.retrievedSchema, formData),
+          );
       // A path dropped on an earlier iteration has been refilled above with the newly selected branch's own default,
       // and that refill is kept whole. Sanitize compares against `current.retrievedSchema` on every iteration, never
       // against what the previous one settled, so wherever the swap changed a type it reads the refill as data the
@@ -589,19 +605,41 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       // selected branch's own `default` never reaches the key (#5349). Dropping each such key lets the fill at the
       // top of the next pass write the new one, which is why this runs here rather than after the loop.
       //
-      // Searched once per pass through here, on the first sanitizing iteration only: the search compares against
-      // `current.retrievedSchema` and `current.formData`, neither of which moves between iterations, so there is one
-      // swap to find. A later iteration could only find it again and drop the value the fill has just written —
-      // and since the data is committed below before the hashes are consulted, that iteration could be the one whose
-      // hash ends the loop, leaving the key with no value at all
-      if (!staleDefaultsSearched && areSchemaUtilsReused && changedPath !== undefined && current !== undefined) {
-        staleDefaultsSearched = true;
-        stalePathsForNewSchema(schemaUtils, retrievedSchema, current.retrievedSchema, formData, current.formData, {
+      // Searched on every sanitizing iteration, not just the first. The old side it compares against does not move
+      // between them, but the new side does: replacing one key's default can select a different branch for another
+      // key on the next iteration, after a once-only search has already run, which left the #5349 symptom in place
+      // one hop from the field the user changed. What a repeat search must not do is report a path already dropped
+      // and drop the value the fill has since written there — and since the data is committed below before the
+      // hashes are consulted, that iteration could be the one whose hash ends the loop, leaving the key with no
+      // value at all. `droppedPaths` is what rules that out, so the paths are both the skip list and the record
+      if (areSchemaUtilsReused && changedPath !== undefined && current !== undefined) {
+        const committedFormData = current.formData;
+        stalePathsForNewSchema(schemaUtils, retrievedSchema, current.retrievedSchema, formData, committedFormData, {
           changedPath,
           initialDefaultsGenerated,
           uiSchema,
         }).forEach((stalePath) => {
-          droppedStaleValues.push([stalePath, getByPath(sanitizedFormData, stalePath)]);
+          const pathKey = stalePath.join('\u0000');
+          if (droppedPaths.has(pathKey)) {
+            return;
+          }
+          // Sanitize compares a key's two declared defaults itself wherever the key holds a scalar — the branch whose
+          // absence for a container is this whole fix's reason to exist — so a scalar it has already moved off what
+          // the data arrived holding is its to own. Dropping it again would cost two defaults computations and a
+          // refill to write the value that is there, and would record the new default rather than what the data
+          // arrived holding as the value to put back. A container it merely edited, by clearing a retyped leaf
+          // inside it, is not the same thing and is still this search's to report
+          const sanitizedValue = getByPath(sanitizedFormData, stalePath);
+          if (
+            sanitizedValue !== undefined &&
+            !isObject(sanitizedValue) &&
+            !Array.isArray(sanitizedValue) &&
+            !deepEquals(sanitizedValue, getByPath(committedFormData, stalePath))
+          ) {
+            return;
+          }
+          droppedPaths.add(pathKey);
+          droppedStaleValues.push([stalePath, sanitizedValue]);
           sanitizedFormData = copyAlongPath(sanitizedFormData, stalePath);
           unsetByPath(sanitizedFormData, stalePath);
         });
@@ -616,7 +654,9 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         wasSanitized = !preventInfiniteSanitize.includes(sanitizedFormHash);
         preventInfiniteSanitize.push(sanitizedFormHash);
       }
-      preventInfiniteSanitize.push(formHash);
+      if (!isFormDataSanitized) {
+        preventInfiniteSanitize.push(formHash);
+      }
     } else {
       wasSanitized = false;
     }

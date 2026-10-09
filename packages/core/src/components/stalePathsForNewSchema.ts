@@ -259,11 +259,16 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * of its own — the swap test above already paid for that key's pair — and widens the search to no key the change is
  * not inside, since a swap can only be decided by a conditional on a level the change is within.
  *
- * Values are matched whole, per key of each level: editing one leaf of a nested object leaves the whole subtree in
- * place, so its other leaves keep the old branch's defaults. Array elements are not walked at all, for two separate
- * reasons: an `items` `default` is only replaced where the array itself is the swapped key, since replacing each
- * element matching the old one would break `uniqueItems` and reassign a deliberate pick; and a conditional on an
- * object *inside* an element is not reached either, so a swap decided there is left alone.
+ * Values are matched whole, per key of the level that declares the default, which is what decides how much of a value
+ * a branch speaks for. A `default` on the object itself declares that object's own keys, so an untouched leaf is
+ * replaced while an edited sibling is kept; a `default` one level up declares the whole object, which an edit to any
+ * leaf stops matching, so all of it stays. Array elements are not walked at all, for two separate reasons: an `items`
+ * `default` is only replaced where the array itself is the swapped key, since replacing each element matching the old
+ * one would break `uniqueItems` and reassign a deliberate pick; and a conditional on an object *inside* an element is
+ * not reached either, so a swap decided there is left alone.
+ *
+ * None of this is reached at all for a change whose own value is an object or an array, since the caller only
+ * sanitizes such a change when it is a whole-value select, and the search runs where sanitizing does.
  *
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve schemas and compute defaults with
  * @param newSchema - The schema resolved for the data as it stands

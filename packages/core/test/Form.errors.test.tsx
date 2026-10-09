@@ -1244,6 +1244,41 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         );
       });
 
+      // Live validation runs against the `retrievedSchema` the derivation commits. A dropped key makes the schema
+      // resolve without it — here the dependency keyed on its presence declares nothing — so a schema committed from
+      // that resolution describes no constraint for the key, and the value put back is validated against nothing
+      it('validates a restored key against a schema that still declares it (#5349)', async () => {
+        const cfgMin = (name: string, minLength?: number): RJSFSchema => ({
+          type: 'object',
+          default: { name },
+          properties: { name: { type: 'string', ...(minLength !== undefined && { minLength }) } },
+        });
+        const withCfg = (name: string, minLength?: number): RJSFSchema => ({
+          dependencies: { cfg: { properties: { cfg: cfgMin(name, minLength) } } },
+        });
+        const { node, onChange } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+            if: { properties: { mode: { const: 'a' } } },
+            then: withCfg('a'),
+            else: withCfg('b', 5),
+          },
+          formData: { mode: 'a', cfg: { name: 'a' } },
+          liveValidate: 'onChange',
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_mode')!, 'b');
+
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({
+            formData: { mode: 'b', cfg: { name: 'a' } },
+            errors: [expect.objectContaining({ message: 'must NOT have fewer than 5 characters' })],
+          }),
+          'root_mode',
+        );
+      });
+
       // One level deeper again. `outer` resolves to the same schema on both sides, since the conditional that swapped
       // is declared on `m`, so only descending the changed path whether or not it resolved differently reaches it
       it("should apply a new branch's defaults for a dependency two object levels down (#5349)", async () => {

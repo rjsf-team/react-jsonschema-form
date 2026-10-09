@@ -1063,6 +1063,109 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a' } }, 'root_mode');
     });
 
+    // The dropped key's own declaration lives in a dependency keyed on its presence, so the fill that runs while it is
+    // gone resolves a schema that declares neither it nor `extra`. Putting the value back before anything else in the
+    // iteration reads its absence is what keeps that fill's view from reaching the data the user supplied
+    it("keeps a sibling the dropped key's own dependency declares", async () => {
+      const withCfg = (name: string): RJSFSchema => ({
+        dependencies: { cfg: { properties: { cfg: cfgFor(name), extra: { type: 'string' } } } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          if: { properties: { mode: { const: 'a' } } },
+          then: withCfg('a'),
+          else: withCfg('b'),
+        },
+        formData: { mode: 'a', cfg: { name: 'a' }, extra: 'user text' },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', extra: 'user text', cfg: { name: 'a' } }, 'root_mode');
+    });
+
+    // `opts` has not swapped when the change is first seen, because the schema is still resolved for the `kind` the
+    // data arrived holding. Replacing `kind` is what selects the other `opts` branch, one iteration later, so a
+    // search that ran only once would leave the symptom in place one hop from the field the user changed
+    it('applies a default that replacing another key brings into reach', async () => {
+      const optsFor = (o: string): RJSFSchema => ({
+        type: 'object',
+        default: { o },
+        properties: { o: { type: 'string' } },
+      });
+      const kindFor = (k: string): RJSFSchema => ({ type: 'string', enum: ['k1', 'k2'], default: k });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } } },
+              then: { properties: { kind: kindFor('k1') } },
+              else: { properties: { kind: kindFor('k2') } },
+            },
+            {
+              if: { properties: { kind: { const: 'k1' } } },
+              then: { properties: { opts: optsFor('k1') } },
+              else: { properties: { opts: optsFor('k2') } },
+            },
+          ],
+        },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', kind: 'k2', opts: { o: 'k2' } }, 'root_mode');
+    });
+
+    // Where a branch declares the default is what decides how much of the value it speaks for. On the object itself
+    // it declares that object's keys, so an untouched one is replaced while its edited sibling is kept; one level up
+    // it declares the whole object, which the edit no longer matches, so all of it stays
+    describe('a nested default is matched at the level that declares it', () => {
+      const cfgWithNote = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: { name: { type: 'string' }, note: { type: 'string' } },
+      });
+
+      /** Pasted rather than typed: every keystroke drives a derivation, and only the settled value is under test */
+      const writeNote = async (node: Element) => {
+        await user.click(node.querySelector<HTMLInputElement>('#root_cfg_note')!);
+        await user.paste('hi');
+      };
+
+      it('replaces an untouched leaf beside an edited one when the object declares the default', async () => {
+        const { node, onChange } = createFormComponent({ schema: modeSwapOn('cfg', cfgWithNote) });
+
+        await writeNote(node);
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b', note: 'hi' } }, 'root_mode');
+      });
+
+      it('keeps the whole value when the branch declares the default above the object', async () => {
+        const { node, onChange } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+              cfg: { type: 'object', properties: { name: { type: 'string' }, note: { type: 'string' } } },
+            },
+            if: { properties: { mode: { const: 'a' } } },
+            then: { default: { cfg: { name: 'a' } } },
+            else: { default: { cfg: { name: 'b' } } },
+          },
+        });
+
+        await writeNote(node);
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a', note: 'hi' } }, 'root_mode');
+      });
+    });
+
     // Every read of a key off the form data or the computed defaults has to be an own-property read. For a property
     // named like a member of `Object.prototype`, an inherited value otherwise answers the "the fill is certain to put
     // something back" gate, and the key is dropped on the strength of a default that does not exist
