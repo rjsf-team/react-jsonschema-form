@@ -125,14 +125,10 @@ const SUBSCHEMA_MAP_KEYWORDS = new Set([
 ]);
 
 /** Classifies one of a schema's own entries by the shape of the subschema(s) its keyword's value holds: a
- * `map` of names to subschemas (whose names are data, so a property named `default` or `enum` is never
- * mistaken for the keyword), an `array` of subschemas, or a `single` subschema. The sets above are the
- * complete list: a draft-7 tuple `items` sits in both the single and the array set, and the
- * `Array.isArray`/`isObject` checks tell them apart, the same way a `dependencies` entry spelled as a
- * string array drops out. Every other keyword - the data keywords `const`, `default`, `enum` and
- * `examples`, annotations like `title`, and vendor or unknown keywords - holds instance data rather than
- * schemas, so it has no shape. Both walkers below classify through this one helper so their keyword
- * handling cannot drift apart.
+ * `map`, an `array`, or a `single` subschema. A draft-7 tuple `items` sits in both the single set and the
+ * array set, and the `Array.isArray`/`isObject` checks tell them apart, the same way a `dependencies`
+ * entry spelled as a string array drops out. Both walkers below classify through this one helper so their
+ * keyword handling cannot drift apart.
  */
 function keywordShape(key: string, value: unknown): 'map' | 'array' | 'single' | undefined {
   if (SUBSCHEMA_MAP_KEYWORDS.has(key) && isObject(value)) {
@@ -192,8 +188,8 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
 }
 
 /** Applies `fn` to the direct subschemas of `schema` (following the keyword shapes above), rebuilding only
- * the containers whose contents changed. `extraChanges` carries updates to the schema's own data keys, folded
- * into the same rebuild rather than a second copy. When neither a subschema nor an extra change differs,
+ * the containers whose contents changed. `extraChanges` carries updates to the schema's own data keys,
+ * included in the same rebuild. When neither a subschema nor an extra change differs,
  * `schema` itself is returned, so identity means nothing changed. The rebuild spreads the original node and
  * overwrites only the changed keys, so symbol keys (such as the rjsf flag Symbols) survive it.
  */
@@ -257,8 +253,8 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
   const schemaId = schema[ID_KEY];
   const currentURI = typeof schemaId === 'string' ? schemaId : baseURI;
   const ref = schema[REF_KEY];
-  // The mapped subschemas never touch the `$ref` data key, so its rewrite can be computed up front and
-  // folded into the same rebuild rather than spreading the node a second time.
+  // The mapped subschemas never touch the `$ref` data key, so its rewrite is computed up front and
+  // passed to the rebuild as `extraChanges`.
   const refChange = typeof ref === 'string' ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
   return mapSubschemas(schema, (subSchema) => makeAllReferencesAbsolute(subSchema, currentURI), refChange);
 }
