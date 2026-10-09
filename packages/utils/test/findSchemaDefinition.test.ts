@@ -1,5 +1,9 @@
 import { ADDITIONAL_PROPERTY_FLAG } from '../src/constants.ts';
-import { findSchemaDefinitionRecursive, makeAllReferencesAbsolute } from '../src/findSchemaDefinition.ts';
+import {
+  findSchemaDefinitionRecursive,
+  getSchemaBaseUri,
+  makeAllReferencesAbsolute,
+} from '../src/findSchemaDefinition.ts';
 import type { GenericObjectType, RJSFSchema } from '../src/index.ts';
 import { createSchemaUtils, findSchemaDefinition, ID_KEY } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
@@ -188,6 +192,35 @@ describe('findSchemaDefinition()', () => {
       'Could not find a definition for #/properties/num',
     );
   });
+  it.each(['https://example.com/child.json', 'child.json'])('resolves the absolute URI of a nested $id %s', ($id) => {
+    const child: RJSFSchema = { $id, type: 'string' };
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      $defs: { child },
+    };
+    expect(findSchemaDefinition('https://example.com/child.json', root)).toBe(child);
+  });
+  it.each(['https://example.com/root.json#/$defs/y', 'root.json#/$defs/y'])(
+    'resolves a reference back to the parent from a relative nested $id: %s',
+    ($ref) => {
+      const y: RJSFSchema = { type: 'integer' };
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: {
+          child: { $id: 'child.json', type: 'object', properties: { value: { $ref } } },
+          y,
+        },
+      };
+      const rewritten = makeAllReferencesAbsolute(root, root.$id!);
+      expect((rewritten.$defs!.child as RJSFSchema).properties!.value).toStrictEqual({
+        $ref: 'https://example.com/root.json#/$defs/y',
+      });
+      expect((rewritten.$defs!.child as RJSFSchema).$id).toBe('child.json');
+      expect(findSchemaDefinition('#/$defs/child/properties/value', rewritten)).toBe(y);
+    },
+  );
   it('correctly resolves absolute bundled refs when JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinition('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(internalSchema);
   });
@@ -343,13 +376,41 @@ describe('findSchemaDefinition()', () => {
       internalSchema.properties!.num,
     );
   });
+  it.each(['https://example.com/root.json', 'relative/root.json'])(
+    'resolves multiple relative resource scopes under %s without changing IDs',
+    ($id) => {
+      const leaf: RJSFSchema = { $id: '../leaf.json', type: 'integer' };
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id,
+        $defs: {
+          parent: {
+            $id: 'nested/parent.json',
+            $defs: { leaf },
+            properties: { value: { $ref: '../leaf.json' } },
+          },
+        },
+      };
+      const prefix = $id.slice(0, $id.lastIndexOf('/') + 1);
+      expect(findSchemaDefinition(`${prefix}leaf.json`, root, '')).toBe(leaf);
+      expect(getSchemaBaseUri(leaf, root)).toBe(`${prefix}leaf.json`);
+      const absolute = makeAllReferencesAbsolute(root, $id);
+      expect((absolute.$defs!.parent as RJSFSchema).properties!.value).toEqual({ $ref: `${prefix}leaf.json` });
+      expect((absolute.$defs!.parent as RJSFSchema).$id).toBe('nested/parent.json');
+      expect(getSchemaBaseUri({ type: 'null' }, root)).toBeUndefined();
+    },
+  );
+  it('does not infer bundled resource scopes for draft 7', () => {
+    const root: RJSFSchema = { $id: 'root.json', definitions: { child: { $id: 'child.json' } } };
+    expect(getSchemaBaseUri(root.definitions!.child as RJSFSchema, root)).toBeUndefined();
+  });
   it('resolves relative refs against a relative root `$id`', () => {
     const relativeSchema: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       $id: 'relative/schema.json',
       $defs: {
-        embedded: { $id: 'relative/embedded.json', properties: { a: { type: 'string' } } },
-        other: { $id: 'other.json', type: 'number' },
+        embedded: { $id: 'embedded.json', properties: { a: { type: 'string' } } },
+        other: { $id: '../other.json', type: 'number' },
       },
     };
     expect(findSchemaDefinition('embedded.json', relativeSchema)).toBe(relativeSchema.$defs!.embedded);

@@ -612,6 +612,84 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         },
       });
     });
+    it.each(['https://example.com/child.json', 'child.json'])('resolves the absolute URI of a nested $id %s', ($id) => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: { child: { $id, type: 'integer' } },
+      };
+      const $ref = 'https://example.com/child.json';
+      expect(retrieveSchema({ validator: testValidator }, { $ref }, root)).toStrictEqual({
+        $id,
+        type: 'integer',
+        [RJSF_REF_KEY]: $ref,
+      });
+    });
+    it.each(['https://example.com/root.json#/$defs/y', 'root.json#/$defs/y'])(
+      'resolves a reference back to the parent from a relative nested $id: %s',
+      ($ref) => {
+        const child: RJSFSchema = {
+          $id: 'child.json',
+          type: 'object',
+          properties: { value: { $ref } },
+        };
+        const root: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: { child, y: { type: 'integer' } },
+        };
+        const resolved = retrieveSchema({ validator: testValidator }, { $ref: '#/$defs/child' }, root);
+        expect(resolved).toStrictEqual({
+          ...child,
+          properties: { value: { type: 'integer', [RJSF_REF_KEY]: $ref } },
+          [RJSF_REF_KEY]: '#/$defs/child',
+        });
+      },
+    );
+    it('preserves a local $id overriding the referenced resource scope', () => {
+      const $ref = 'value.json';
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: {
+          child: { $id: 'child.json', type: 'object', properties: { value: { $ref } } },
+          value: { $id: 'https://other.example/value.json', type: 'integer' },
+        },
+      };
+      expect(
+        retrieveSchema(
+          { validator: testValidator },
+          { $ref: '#/$defs/child', $id: 'https://other.example/local.json' },
+          root,
+        ),
+      ).toStrictEqual({
+        $id: 'https://other.example/local.json',
+        type: 'object',
+        properties: { value: { $id: 'https://other.example/value.json', type: 'integer', [RJSF_REF_KEY]: $ref } },
+        [RJSF_REF_KEY]: '#/$defs/child',
+      });
+    });
+    it('resolves references using the lexical parent of a deeply nested resource', () => {
+      const $ref = '../root.json#/$defs/y';
+      const child: RJSFSchema = {
+        $id: 'child.json',
+        type: 'object',
+        properties: { value: { $ref } },
+      };
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: {
+          parent: { $id: 'nested/parent.json', $defs: { child } },
+          y: { type: 'integer' },
+        },
+      };
+      expect(retrieveSchema({ validator: testValidator }, { $ref: '#/$defs/parent/$defs/child' }, root)).toStrictEqual({
+        ...child,
+        properties: { value: { type: 'integer', [RJSF_REF_KEY]: $ref } },
+        [RJSF_REF_KEY]: '#/$defs/parent/$defs/child',
+      });
+    });
     it('should `resolve` a bundled draft 2020-12 JSON Schema', () => {
       const definitions: RJSFSchema = {
         'https://jsonschema.dev/schemas/mixins/integer': {
