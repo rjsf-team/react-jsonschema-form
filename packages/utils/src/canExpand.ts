@@ -1,3 +1,4 @@
+import { allowsAdditionalProperties } from './additionalPropertiesUtils.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getUiOptions from './getUiOptions.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
@@ -18,7 +19,7 @@ export default function canExpand<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(schema: RJSFSchema, uiSchema: UiSchema<T, S, F> = {}, formData?: T) {
-  if (!(schema.additionalProperties || schema.patternProperties)) {
+  if (!allowsAdditionalProperties(schema)) {
     return false;
   }
   const { expandable = true } = getUiOptions<T, S, F>(uiSchema);
