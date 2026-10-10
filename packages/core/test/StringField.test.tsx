@@ -1028,6 +1028,70 @@ describe('StringField', () => {
       expectToHaveBeenCalledWithFormData(onSubmit, datetime, true);
     });
 
+    describe.each([
+      ['format=date-time', { schema: { type: 'string', format: 'date-time' } }],
+      ['ui:widget=date-time', { schema: { type: 'string' }, uiSchema: { 'ui:widget': 'date-time' } }],
+    ] as const)('with %s', (_, formProps) => {
+      const EPOCH = Date.UTC(2020, 4, 3, 14, 30);
+      const renderWithFormData = (initialFormData: unknown) =>
+        createFormComponent({ ...formProps, initialFormData }).node.querySelector<HTMLInputElement>(
+          '[type=datetime-local]',
+        )!;
+      // `utcToLocal()`'s own tests cover the conversion; the widget must hand it the value and show the result. jsdom
+      // normalizes `input.value` (it drops zero seconds), so the `value` attribute carries the exact string
+      const expectShown = (input: HTMLInputElement, formData: unknown) => {
+        const local = utcToLocal(formData);
+        expect(local).not.toEqual('');
+        expect(input).toHaveAttribute('value', local);
+        expect(input.value).not.toEqual('');
+      };
+      const expectEmpty = (input: HTMLInputElement) => {
+        expect(input).toHaveValue('');
+        expect(input).toHaveAttribute('value', '');
+      };
+
+      it('should show an epoch number', () => {
+        expectShown(renderWithFormData(EPOCH), EPOCH);
+      });
+
+      it('should show an epoch of 0 instead of an empty field', () => {
+        expectShown(renderWithFormData(0), 0);
+      });
+
+      it('should show a Date holding epoch 0', () => {
+        const date = new Date(0);
+        expectShown(renderWithFormData(date), date);
+      });
+
+      it('should show an object whose valueOf() gives an epoch, as moment, dayjs and Luxon objects do', () => {
+        const momentLike = { valueOf: () => EPOCH };
+        expectShown(renderWithFormData(momentLike), momentLike);
+      });
+
+      it('should show the epoch 1e15, whose local year has five digits', () => {
+        expectShown(renderWithFormData(1e15), 1e15);
+      });
+
+      it('should render an empty value for an invalid Date', () => {
+        expectEmpty(renderWithFormData(new Date(NaN)));
+      });
+
+      it('should render an empty value for text that is not a date', () => {
+        expectEmpty(renderWithFormData('not-a-date'));
+      });
+
+      it.each([false, true, 0n])('should render an empty value for %s, which is not a date', (initialFormData) => {
+        expectEmpty(renderWithFormData(initialFormData));
+      });
+
+      it.each([-1e14, -62300000000000, new Date(2000, 6, 1).setFullYear(0)])(
+        'should render an empty value for the epoch %s, whose local year is before 1',
+        (initialFormData) => {
+          expectEmpty(renderWithFormData(initialFormData));
+        },
+      );
+    });
+
     it('should render the widget with the expected id', () => {
       const { node } = createFormComponent({
         schema: {
