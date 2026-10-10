@@ -169,6 +169,25 @@ describe('mergeDefaultsWithFormData()', () => {
     });
   });
 
+  it('should not merge a scalar default into object formData as index keys', () => {
+    expect(mergeDefaultsWithFormData<any>('x', { b: 2 })).toEqual({ b: 2 });
+  });
+
+  it('should not merge an array default into object formData as index keys', () => {
+    expect(mergeDefaultsWithFormData<any>([1, 2], { b: 2 })).toEqual({ b: 2 });
+  });
+
+  it('should not merge a nested array default into nested object formData as index keys', () => {
+    expect(mergeDefaultsWithFormData<any>({ a: [1, 2] }, { a: { x: 1 } })).toEqual({ a: { x: 1 } });
+  });
+
+  it.each([
+    ['string', 'x'],
+    ['array', [1, 2]],
+  ])('should return a %s default over object formData when overrideFormDataWithDefaults is true', (_, defaults) => {
+    expect(mergeDefaultsWithFormData<any>(defaults, { b: 2 }, true, false, true)).toEqual(defaults);
+  });
+
   describe('test with overrideFormDataWithDefaults set to true', () => {
     it('should return data in formData when no defaults', () => {
       expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, true)).toEqual([2]);

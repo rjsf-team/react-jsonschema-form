@@ -60,10 +60,13 @@ export default function mergeDefaultsWithFormData<T = unknown>(
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
-    // oxlint-disable-next-line prefer-object-spread -- spread loses T type, Object.assign preserves it
-    const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
+    // A non-object default cannot be merged key by key, so the override hands it back as the scalar path below does
+    if (overrideFormDataWithDefaults && defaults !== undefined && !isObject(defaults)) {
+      return defaults;
+    }
     const formDataObj: GenericObjectType = formData;
     const defaultsObj: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
+    const acc = { ...defaultsObj } as { [key in keyof T]: any }; // Prevent mutation of source object.
     return Object.keys(formDataObj).reduce((accumulator, key) => {
       const keyValue = formDataObj[key];
       const keyExistsInDefaults = defaultsObj !== undefined && key in defaultsObj;
@@ -97,7 +100,7 @@ export default function mergeDefaultsWithFormData<T = unknown>(
         // Or if the key value doesn't exist in formData
         overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData),
       );
-      return acc;
+      return accumulator;
     }, acc);
   }
 
