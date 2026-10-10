@@ -1,5 +1,5 @@
 import { createRef, useEffect } from 'react';
-import type { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
@@ -599,6 +599,23 @@ describe('anyOf', () => {
     });
 
     expect(node.querySelectorAll('#custom-anyof-field')).toHaveLength(1);
+  });
+
+  it('hands AnyOfField the same options across re-renders that leave the schema and data alone', () => {
+    const seenOptions = new Set<unknown>();
+    const RecordingField = (props: FieldProps) => {
+      seenOptions.add(props.options);
+      return null;
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { union: { anyOf: [{ type: 'string' }, { type: 'number' }] } },
+    };
+    const { rerender } = createFormComponent({ schema, fields: { AnyOfField: RecordingField } });
+
+    rerender({ schema, fields: { AnyOfField: RecordingField }, extraErrors: { union: { __errors: ['changed'] } } });
+
+    expect(seenOptions.size).toBe(1);
   });
 
   it('should support custom widget', async () => {
