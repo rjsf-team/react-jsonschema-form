@@ -79,14 +79,10 @@ export default function ObjectFieldTemplate<
         : 12;
 
     if (typeof colSpan === 'object' && colSpan !== null) {
-      if (typeof widget === 'string') {
-        return colSpan[widget];
-      }
-      if (typeof field === 'string') {
-        return colSpan[field];
-      }
-      if (typeof type === 'string') {
-        return colSpan[type];
+      for (const key of [widget, field, type]) {
+        if (typeof key === 'string' && Object.hasOwn(colSpan, key) && colSpan[key] != null) {
+          return colSpan[key];
+        }
       }
     }
     if (typeof colSpan === 'number') {
