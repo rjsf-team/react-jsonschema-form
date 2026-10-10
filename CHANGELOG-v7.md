@@ -547,7 +547,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed a schema whose `$id` is the empty string being keyed under that `$id`: two such schemas shared one compiled function, and every `$ref` into a root carrying one failed to compile. Both are keyed as a schema with no `$id` is ([#5338](https://github.com/rjsf-team/react-jsonschema-form/issues/5338))
 - The `errors` a validation returns keep an error whose `message` a `transformErrors` cleared whenever a `customValidate` is passed, as they do without one, since `validationDataMerge()` no longer drops the existing errors when their `errorSchema` is empty. A form whose `transformErrors` clears every `message` therefore reports those errors through `onError` instead of submitting when it also has a `customValidate`, as it already did without one ([#5034](https://github.com/rjsf-team/react-jsonschema-form/issues/5034))
 - `CompiledValidateFunction` takes `unknown` data instead of `any`. Its call signature is the `Bivariant` type of `@rjsf/utils`, so a hand-written validator that declares a narrower `data` parameter still satisfies `ValidatorFunctions`, and it is still an interface ([#5488](https://github.com/rjsf-team/react-jsonschema-form/pull/5488))
-- A precompiled validator checks a schema against the one it was compiled from once per schema object rather than on every validation, which matters for a form passed an equal copy of the compiled schema
+- A precompiled validator checks a schema against the one it was compiled from once per schema object rather than on every validation, which matters for a form passed an equal copy of the compiled schema and for live validation, which validates against the form's resolved schema
 
 ## @rjsf/validator-ata
 
@@ -559,7 +559,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `isValid()` and `rawValidation()` key a schema whose `$id` is the empty string by its hash, so two such schemas no longer evict each other from the cache they share, and a root carrying one is registered where `withIdRefPrefix()` rewrites local `$ref`s to resolve ([#5338](https://github.com/rjsf-team/react-jsonschema-form/issues/5338))
 - The `errors` a validation returns keep an error whose `message` a `transformErrors` cleared whenever a `customValidate` is passed, as they do without one, since `validationDataMerge()` no longer drops the existing errors when their `errorSchema` is empty. A form whose `transformErrors` clears every `message` therefore reports those errors through `onError` instead of submitting when it also has a `customValidate`, as it already did without one ([#5034](https://github.com/rjsf-team/react-jsonschema-form/issues/5034))
 - `CompiledValidateFunction`'s call signature is the `Bivariant` type of `@rjsf/utils`, as `@rjsf/validator-ajv8`'s is, so a hand-written validator that declares a narrower `data` parameter satisfies `ValidatorFunctions` ([#5488](https://github.com/rjsf-team/react-jsonschema-form/pull/5488))
-- A precompiled validator checks a schema against the one it was compiled from once per schema object rather than on every validation, which matters for a form passed an equal copy of the compiled schema
+- A precompiled validator checks a schema against the one it was compiled from once per schema object rather than on every validation, which matters for a form passed an equal copy of the compiled schema and for live validation, which validates against the form's resolved schema
 
 ## @rjsf/validator-cfworker
 
