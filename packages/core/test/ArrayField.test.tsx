@@ -2396,23 +2396,23 @@ describe('ArrayField', () => {
       expect(removeTitles(objects)).toEqual(['Remove', 'Remove']);
     });
 
-    it('adds the position to a name that more than one item has', () => {
+    it('numbers the items that share a name among themselves', () => {
       const { node } = createFormComponent({
         schema,
         initialFormData: [{ name: 'report.pdf' }, { name: 'invoice.pdf' }, { name: 'report.pdf' }],
         uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
       });
 
-      expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove invoice.pdf', 'Remove report.pdf (3)']);
+      expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove invoice.pdf', 'Remove report.pdf (2)']);
       expect(titlesOf(node, 2)).toEqual([
-        'Move report.pdf (3) up',
-        'Move report.pdf (3) down',
-        'Copy report.pdf (3)',
-        'Remove report.pdf (3)',
+        'Move report.pdf (2) up',
+        'Move report.pdf (2) down',
+        'Copy report.pdf (2)',
+        'Remove report.pdf (2)',
       ]);
     });
 
-    it('tells a copied item apart from the original, and renumbers when items move', async () => {
+    it('tells a copied item apart from the original', async () => {
       const { node } = createFormComponent({
         schema,
         initialFormData: files,
@@ -2423,7 +2423,57 @@ describe('ArrayField', () => {
       expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove report.pdf (2)', 'Remove invoice.pdf']);
 
       await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[1]);
-      expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove invoice.pdf', 'Remove report.pdf (3)']);
+      expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove invoice.pdf', 'Remove report.pdf (2)']);
+    });
+
+    it('keeps the numbers of items with a shared name when an item with another name is edited', async () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [{ name: 'r' }, { name: 'i' }, { name: 'r' }, { name: 'x' }],
+        uiSchema: { 'ui:itemLabel': 'name' },
+      });
+      expect(removeTitles(node)).toEqual(['Remove r (1)', 'Remove i', 'Remove r (2)', 'Remove x']);
+
+      await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[2]);
+      expect(removeTitles(node)).toEqual(['Remove r (1)', 'Remove i', 'Remove x', 'Remove r (2)']);
+
+      await user.click(node.querySelectorAll('.rjsf-array-item-remove')[1]);
+      expect(removeTitles(node)).toEqual(['Remove r (1)', 'Remove x', 'Remove r (2)']);
+
+      // With one `r` left, it needs no number
+      await user.click(node.querySelectorAll('.rjsf-array-item-remove')[0]);
+      expect(removeTitles(node)).toEqual(['Remove x', 'Remove r']);
+    });
+
+    it('never numbers a name into one that another item already has', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [{ name: 'a (2)' }, { name: 'a' }, { name: 'a' }],
+        uiSchema: { 'ui:itemLabel': 'name' },
+      });
+      expect(removeTitles(node)).toEqual(['Remove a (2)', 'Remove a (1)', 'Remove a (3)']);
+
+      // Nor into one that an earlier numbered name took
+      const { node: nested } = createFormComponent({
+        schema,
+        initialFormData: [{ name: 'x' }, { name: 'x (1)' }, { name: 'x' }, { name: 'x (1)' }],
+        uiSchema: { 'ui:itemLabel': 'name' },
+      });
+      const titles = removeTitles(nested);
+      expect(titles).toEqual(['Remove x (2)', 'Remove x (1) (1)', 'Remove x (3)', 'Remove x (1) (2)']);
+      expect(new Set(titles).size).toBe(titles.length);
+    });
+
+    it('still renders when a custom translateString leaves the number out', () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [files[0], files[0]],
+        uiSchema: { 'ui:itemLabel': 'name' },
+        translateString: (str, params) =>
+          str === TranslatableString.ItemNameWithNumber ? `${params?.[0]}` : englishStringTranslator(str, params),
+      });
+
+      expect(removeTitles(node)).toEqual(['Remove report.pdf', 'Remove report.pdf']);
     });
 
     it('tells apart added items that take the same default name', async () => {
@@ -2491,7 +2541,7 @@ describe('ArrayField', () => {
         initialFormData: [files[0], files[0]],
         uiSchema: { 'ui:options': { itemLabel: 'name' } },
         translateString: (str, params) =>
-          str === TranslatableString.ItemNameWithPosition
+          str === TranslatableString.ItemNameWithNumber
             ? `${params?.[0]} n°${params?.[1]}`
             : englishStringTranslator(str, params),
       });
@@ -2557,6 +2607,74 @@ describe('ArrayField', () => {
       await user.type(node.querySelector('#root_0_name')!, '.pdf');
 
       expect(node.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Remove report.pdf');
+    });
+
+    it('builds titles only for the buttons each item can show', () => {
+      const received: ArrayFieldItemButtonsTemplateProps['itemButtonProps'][] = [];
+      function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps) {
+        received.push(props.itemButtonProps);
+        return <CoreArrayFieldItemButtonsTemplate {...props} />;
+      }
+      const named = { type: 'object', properties: { name: { type: 'string' } } } as const;
+
+      // A single item can't move, so it gets no move titles
+      createFormComponent({
+        schema,
+        initialFormData: [files[0]],
+        uiSchema: { 'ui:itemLabel': 'name' },
+        templates: { ArrayFieldItemButtonsTemplate },
+      });
+      expect(received.at(-1)).toEqual({ remove: { title: 'Remove report.pdf' } });
+
+      // At maxItems no item can be copied
+      received.length = 0;
+      createFormComponent({
+        schema: { ...schema, maxItems: 2 },
+        initialFormData: files,
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+        templates: { ArrayFieldItemButtonsTemplate },
+      });
+      expect(received.at(-1)).not.toHaveProperty('copy');
+      expect(received.at(-1)).toHaveProperty('remove');
+
+      // A fixed item can show only Copy, and the one additional item can't move
+      received.length = 0;
+      createFormComponent({
+        schema: { type: 'array', items: [named], additionalItems: named },
+        initialFormData: files,
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+        templates: { ArrayFieldItemButtonsTemplate },
+      });
+      expect(received.slice(-2)).toEqual([
+        { copy: { title: 'Copy report.pdf' } },
+        { copy: { title: 'Copy invoice.pdf' }, remove: { title: 'Remove invoice.pdf' } },
+      ]);
+    });
+
+    it('only counts the items of a fixed-items array that can show buttons when numbering shared names', () => {
+      const named = { type: 'object', properties: { name: { type: 'string' } } } as const;
+      const fixedSchema: RJSFSchema = { type: 'array', items: [named], additionalItems: named };
+      const shared = [{ name: 'x' }, { name: 'x' }];
+
+      // The fixed item shows no buttons, so its name doesn't count
+      const { node } = createFormComponent({
+        schema: fixedSchema,
+        initialFormData: shared,
+        uiSchema: { 'ui:itemLabel': 'name' },
+      });
+      expect(removeTitles(node)).toEqual(['Remove x']);
+      expect(node.querySelector('.rjsf-array-item-move-down')).toBeNull();
+
+      // With copyable it shows Copy, so it counts
+      const { node: copyable } = createFormComponent({
+        schema: fixedSchema,
+        initialFormData: shared,
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+      });
+      expect(
+        [...copyable.querySelectorAll('.rjsf-array-item-copy')].map((button) => button.getAttribute('title')),
+      ).toEqual(['Copy x (1)', 'Copy x (2)']);
+      expect(removeTitles(copyable)).toEqual(['Remove x (2)']);
     });
 
     it('names the additional items of a fixed-items array', () => {

@@ -4,6 +4,7 @@ import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import type { MockInstance } from 'vitest';
 
 import Templates from '../src/templates/index.ts';
 import CheckboxesWidget from '../src/widgets/CheckboxesWidget.tsx';
@@ -54,8 +55,15 @@ function renderWidget(props: Partial<WidgetProps> = {}) {
 }
 
 describe('CheckboxesWidget with the itemLabel array option', () => {
+  let consoleError: MockInstance<typeof console.error>;
+  beforeEach(() => {
+    consoleError = vi.spyOn(console, 'error');
+  });
+  afterEach(() => {
+    consoleError.mockRestore();
+  });
+
   it('does not pass itemLabel on to the Mantine checkbox group', () => {
-    const consoleError = vi.spyOn(console, 'error');
     const { container } = render(
       <Form
         schema={schema}
@@ -66,7 +74,6 @@ describe('CheckboxesWidget with the itemLabel array option', () => {
 
     expect(container.querySelector('[itemlabel], [itemLabel]')).toBeNull();
     expect(consoleError.mock.calls.flat().join(' ')).not.toContain('itemLabel');
-    consoleError.mockRestore();
   });
 });
 

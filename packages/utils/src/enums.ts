@@ -51,9 +51,9 @@ export const TranslatableString = {
    */
   RemoveItemButton: 'Remove %1',
   /** The name of an array item named through `ui:options.itemLabel` when another item has the same name, where %1 is
-   * the name and %2 the item's position; used by ArrayField
+   * the name and %2 a number that tells the items with that name apart; used by ArrayField
    */
-  ItemNameWithPosition: '%1 (%2)',
+  ItemNameWithNumber: '%1 (%2)',
   /** Now label, used by AltDateWidget */
   NowLabel: 'Now',
   /** Clear label, used by AltDateWidget */

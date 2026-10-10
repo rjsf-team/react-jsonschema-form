@@ -393,32 +393,52 @@ function itemNameFrom(value: unknown): string | undefined {
 }
 
 /** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
- * item itself for `'.'`. A name that more than one item has gets each item's position added, since buttons that read
- * the same can't be told apart, which is what naming them is for.
+ * item itself for `'.'`. Only the items from `firstNamedIndex` on are named, the ones that can show buttons.
+ *
+ * Buttons that read the same can't be told apart, which is what naming them is for, so items that share a name are
+ * numbered among themselves, `a (1)` and `a (2)`, rather than by their position, so that editing an item with another
+ * name doesn't renumber them. A numbered name that is already in use, as another item's own name or an earlier numbered
+ * one, moves on to the next free number.
  */
 function useItemNames<T>(
   items: readonly T[],
   itemLabel: string | undefined,
   translateString: Registry['translateString'],
+  firstNamedIndex = 0,
 ): (string | undefined)[] | undefined {
   return useMemo(() => {
     if (!itemLabel) {
       return undefined;
     }
     const path = toPath(itemLabel);
-    const names = items.map((item) => itemNameFrom(path.length === 0 ? item : getByPath(item, path)));
+    const names = items.map((item, index) =>
+      index < firstNamedIndex ? undefined : itemNameFrom(path.length === 0 ? item : getByPath(item, path)),
+    );
     const counts = new Map<string, number>();
     for (const name of names) {
       if (name !== undefined) {
         counts.set(name, (counts.get(name) ?? 0) + 1);
       }
     }
-    return names.map((name, index) =>
-      name !== undefined && (counts.get(name) ?? 0) > 1
-        ? translateString(TranslatableString.ItemNameWithPosition, [name, String(index + 1)])
-        : name,
-    );
-  }, [items, itemLabel, translateString]);
+    const taken = new Set(counts.keys());
+    const nextNumbers = new Map<string, number>();
+    return names.map((name) => {
+      if (name === undefined || counts.get(name) === 1) {
+        return name;
+      }
+      let number = nextNumbers.get(name) ?? 1;
+      let numbered = translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
+      // At most `taken.size` numbers can be in use, so this always finds a free one, unless a custom `translateString`
+      // leaves the number out, which the bound stops from looping forever
+      for (let attempts = 0; taken.has(numbered) && attempts < taken.size; attempts++) {
+        number += 1;
+        numbered = translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
+      }
+      nextNumbers.set(name, number + 1);
+      taken.add(numbered);
+      return numbered;
+    });
+  }, [items, itemLabel, translateString, firstNamedIndex]);
 }
 
 /** Renders the individual array item using a `SchemaField` along with the additional properties that are needed to
@@ -522,21 +542,23 @@ function ArrayFieldItemInner<
   has.toolbar = Object.keys(has).some((key: keyof typeof has) => has[key]);
 
   const { translateString } = registry;
-  // Keyed on the name and the ui:options rather than the index or `has`, so moving, adding or removing other items
-  // doesn't re-translate an item's titles
+  // Titles only for the buttons this item can show. Both move buttons show, one of them disabled, whenever the item can
+  // move either way, so their titles depend on whether it can move at all rather than on `has.moveUp` and
+  // `has.moveDown`, which change as other items are added, removed or moved
+  const movable = orderable && (canMoveUp || canMoveDown);
   const itemButtonProps = useMemo(
     () =>
       itemName === undefined
         ? undefined
         : {
-            ...(copyable && { copy: { title: translateString(TranslatableString.CopyItemButton, [itemName]) } }),
-            ...(orderable && {
+            ...(has.copy && { copy: { title: translateString(TranslatableString.CopyItemButton, [itemName]) } }),
+            ...(movable && {
               moveDown: { title: translateString(TranslatableString.MoveDownItemButton, [itemName]) },
               moveUp: { title: translateString(TranslatableString.MoveUpItemButton, [itemName]) },
             }),
-            ...(removable && { remove: { title: translateString(TranslatableString.RemoveItemButton, [itemName]) } }),
+            ...(has.remove && { remove: { title: translateString(TranslatableString.RemoveItemButton, [itemName]) } }),
           },
-    [itemName, copyable, orderable, removable, translateString],
+    [itemName, has.copy, movable, has.remove, translateString],
   );
 
   const onAddItem = useCallback(
@@ -802,8 +824,6 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const fieldTitle = schema.title || title || name;
   const { fields, formContext, globalUiOptions } = registry;
   const uiOptions = useMemo(() => getUiOptions<T[], S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
-  const plainItems = useMemo(() => keyedToPlainFormData<T>(keyedFormData), [keyedFormData]);
-  const itemNames = useItemNames(plainItems, uiOptions.itemLabel, registry.translateString);
   const { OptionalDataControlsField } = fields;
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formData);
@@ -823,6 +843,13 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     canAddItem<T, S, F>(registry, schema, items, uiSchema) &&
     hasAdditionalItems &&
     (!renderOptionalField || hasFormData);
+  // The fixed items show no buttons but Copy, so they're named only when they can show that
+  const itemNames = useItemNames(
+    Array.isArray(formData) ? formData : NO_ITEMS,
+    uiOptions.itemLabel,
+    registry.translateString,
+    uiOptions.copyable && canAdd ? 0 : schemaItems.length,
+  );
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
     className: `rjsf-field rjsf-field-array rjsf-field-array-fixed-items${extraClass}`,
