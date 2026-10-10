@@ -521,8 +521,9 @@ function SchemaFieldRender<
 
   const ownUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
   // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time.
-  // Memoized with the options above so what is derived from them below, down to the options memo, is derived from
-  // values that keep their identity rather than from objects rebuilt each render
+  // Nothing compares either object by identity; both are memoized because the React Compiler
+  // (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on derive from an
+  // object rebuilt each render, which it takes for one that may still be mutated
   const uiOptions = useMemo<UIOptionsType<T, S, F>>(
     () => ({ ...globalUiOptions, ...ownUiOptions }),
     [globalUiOptions, ownUiOptions],

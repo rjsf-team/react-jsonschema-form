@@ -603,8 +603,10 @@ describe('anyOf', () => {
 
   it('hands AnyOfField the same options across re-renders that leave the schema and data alone', () => {
     const seenOptions = new Set<unknown>();
+    const seenErrors: unknown[] = [];
     const RecordingField = (props: FieldProps) => {
       seenOptions.add(props.options);
+      seenErrors.push(props.errorSchema?.__errors);
       return null;
     };
     const schema: RJSFSchema = {
@@ -615,6 +617,8 @@ describe('anyOf', () => {
 
     rerender({ schema, fields: { AnyOfField: RecordingField }, extraErrors: { union: { __errors: ['changed'] } } });
 
+    // The new errors show the re-render reached the field, so one options identity isn't a single render's
+    expect(seenErrors).toContainEqual(['changed']);
     expect(seenOptions.size).toBe(1);
   });
 
