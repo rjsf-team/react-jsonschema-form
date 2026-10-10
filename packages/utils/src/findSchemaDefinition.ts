@@ -19,29 +19,7 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
 import isObject from './isObject.ts';
-import { getByPath } from './pathUtils.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
-
-/** Resolves an RFC 6901 JSON pointer against `obj`: the empty pointer is `obj` itself, every other pointer is a
- * `/`-led list of reference tokens with `~1` and `~0` unescaped in that order. Through `getByPath()` only own
- * properties resolve, so `/__proto__` finds nothing rather than `Object.prototype`, unless it is a genuine own data
- * key. A pointer without the leading `/` is not a JSON pointer, so it finds nothing too.
- */
-function getByPointer<R>(obj: R, pointer: string): R | undefined {
-  if (pointer === '') {
-    return obj;
-  }
-  if (!pointer.startsWith('/')) {
-    return undefined;
-  }
-  return getByPath<R>(
-    obj,
-    pointer
-      .slice(1)
-      .split('/')
-      .map((token) => token.replaceAll('~1', '/').replaceAll('~0', '~')),
-  );
-}
 
 /** RFC 3986 §5.1.4 lets an implementation assume a default base URI when a schema has none; `createSchemaUtils()`
  * passes `'#'` for a root without `$id`, and nested `$id`s are relative URI-references (2020-12 §8.2.1). The `URL`
@@ -63,7 +41,7 @@ const ENCODED_UNRESERVED = /%(?:2[de]|5f|7e|3\d|4[1-9a-f]|5[0-9a]|6[1-9a-f]|7[0-
  * base or the ref was a network-path reference, which keeps its `//host` and loses only the scheme; the synthetic host
  * means both were paths, which stay rooted when either started with `/` and relative otherwise
  */
-function resolveUri(base: string, ref: string): string {
+export function resolveUri(base: string, ref: string): string {
   try {
     const resolved = new URL(ref, new URL(base, SYNTHETIC_BASE));
     if (resolved.protocol !== SYNTHETIC_PROTOCOL) {
@@ -167,24 +145,47 @@ function* subschemas<S extends StrictRJSFSchema = RJSFSchema>(schema: S): Genera
   }
 }
 
+/** A schema node paired with its lexical base URI: the scope its own `$id` (when present) establishes for the
+ * references inside it
+ */
+interface FoundSchema<S extends StrictRJSFSchema = RJSFSchema> {
+  schema: S;
+  baseURI: string | undefined;
+}
+
+/** The scope a schema node gives its own subtree: its `$id` resolved against the parent scope, or the parent
+ * scope unchanged when it has no `$id`
+ */
+function childScope<S extends StrictRJSFSchema = RJSFSchema>(node: S, parentURI: string): string {
+  const id = node[ID_KEY];
+  return typeof id === 'string' ? resolveUri(parentURI, id) : parentURI;
+}
+
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
- * a JSON Schema bundle
+ * a JSON Schema bundle, returning the match together with the scope it establishes
  *
  * @param schema - The schema wherein `ref` should be searched
- * @param ref - The `$id` of the reference to search for
- * @returns - The schema matching the reference, or `undefined` if no match is found
+ * @param ref - The resolved `$id` of the reference to search for
+ * @param baseURI - The scope `schema` itself sits in
+ * @param asWrittenRef - Optional fallback: also match a node whose `$id` as written equals this string, so
+ *      callers holding an un-resolved nested base URI (the pre-resolution behavior) keep working
+ * @returns - The matching schema and its scope, or `undefined` if no match is found
  */
 function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   ref: string,
   baseURI = '',
-): S | undefined {
-  const currentURI = typeof schema[ID_KEY] === 'string' ? resolveUri(baseURI, schema[ID_KEY]) : baseURI;
-  if (typeof schema[ID_KEY] === 'string' && uriEqual(currentURI, ref)) {
-    return schema;
+  asWrittenRef?: string,
+): FoundSchema<S> | undefined {
+  const currentURI = childScope(schema, baseURI);
+  if (
+    typeof schema[ID_KEY] === 'string' &&
+    (uriEqual(currentURI, ref) || (asWrittenRef !== undefined && schema[ID_KEY] === asWrittenRef))
+  ) {
+    return { schema, baseURI: currentURI };
   }
   for (const subSchema of subschemas(schema)) {
-    const result = findEmbeddedSchemaRecursive<S>(subSchema, ref, currentURI);
+    const result = findEmbeddedSchemaRecursive<S>(subSchema, ref, currentURI, asWrittenRef);
     if (result !== undefined) {
       return result;
     }
@@ -192,34 +193,34 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(
   return undefined;
 }
 
-/** Returns the lexical base URI of a schema node in the bundle without rewriting its `$id`.
- *
- * @param schema - The node whose scope is needed
- * @param rootSchema - The bundle containing the node
- * @returns The resolved base URI, or `undefined` when the node is not in the bundle
+/** Resolves an RFC 6901 JSON pointer against `node` while tracking the lexical scope: every `$id` on the path
+ * re-bases the result, so a pointer that lands on a sub-resource reports that resource's scope, not the outer
+ * one. `baseURI` is the scope `node` itself establishes (its own `$id` already applied).
  */
-export function getSchemaBaseUri<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  rootSchema: S,
-): string | undefined {
-  if (rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2020_12) {
+function getByPointerWithScope<S extends StrictRJSFSchema = RJSFSchema>(
+  node: S,
+  pointer: string,
+  baseURI: string | undefined,
+): FoundSchema<S> | undefined {
+  if (pointer === '') {
+    return { schema: node, baseURI };
+  }
+  if (!pointer.startsWith('/')) {
     return undefined;
   }
-  const visit = (node: S, parentURI: string): string | undefined => {
-    const id = node[ID_KEY];
-    const currentURI = typeof id === 'string' ? resolveUri(parentURI, id) : parentURI;
-    if (node === schema) {
-      return currentURI;
+  let current: unknown = node;
+  let currentScope = baseURI;
+  for (const rawToken of pointer.slice(1).split('/')) {
+    const token = rawToken.replaceAll('~1', '/').replaceAll('~0', '~');
+    if ((!isObject(current) && !Array.isArray(current)) || !Object.hasOwn(current, token)) {
+      return undefined;
     }
-    for (const child of subschemas(node)) {
-      const found = visit(child, currentURI);
-      if (found !== undefined) {
-        return found;
-      }
+    current = (current as GenericObjectType)[token];
+    if (isObject(current) && typeof current[ID_KEY] === 'string') {
+      currentScope = resolveUri(currentScope ?? '', current[ID_KEY]);
     }
-    return undefined;
-  };
-  return visit(rootSchema, '');
+  }
+  return { schema: current as S, baseURI: currentScope };
 }
 
 /** Applies `fn` to the direct subschemas of `schema` (following the keyword shapes above), rebuilding only
@@ -288,14 +289,7 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
   const visit = (node: S, currentURI: string): S => {
     const ref = node[REF_KEY];
     const refChange = typeof ref === 'string' ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
-    return mapSubschemas(
-      node,
-      (subSchema) => {
-        const id = subSchema[ID_KEY];
-        return visit(subSchema, typeof id === 'string' ? resolveUri(currentURI, id) : currentURI);
-      },
-      refChange,
-    );
+    return mapSubschemas(node, (subSchema) => visit(subSchema, childScope(subSchema, currentURI)), refChange);
   };
   return visit(schema, typeof schema[ID_KEY] === 'string' ? schema[ID_KEY] : baseURI);
 }
@@ -325,41 +319,44 @@ export function splitKeyElementFromObject(key: string, object: GenericObjectType
  * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
  * @throws - Error indicating that no schema for that reference could be resolved
  */
-export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFSchema>(
+export function findSchemaDefinitionWithBaseURI<S extends StrictRJSFSchema = RJSFSchema>(
   $ref?: string,
   rootSchema: S = {} as S,
   recurseList: string[] = [],
   baseURI: string | undefined = rootSchema[ID_KEY],
-): S {
+): FoundSchema<S> {
   const ref = $ref || '';
-  let current: S | undefined = undefined;
-  let currentBaseURI = baseURI;
+  let found: FoundSchema<S> | undefined = undefined;
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.
     const decodedRef = decodeURIComponent(ref.substring(1));
-    if (currentBaseURI === undefined || (ID_KEY in rootSchema && rootSchema[ID_KEY] === currentBaseURI)) {
-      current = getByPointer(rootSchema, decodedRef);
+    if (baseURI === undefined || (ID_KEY in rootSchema && rootSchema[ID_KEY] === baseURI)) {
+      const rootScope =
+        ID_KEY in rootSchema && typeof rootSchema[ID_KEY] === 'string'
+          ? resolveUri(baseURI ?? '', rootSchema[ID_KEY])
+          : baseURI;
+      found = getByPointerWithScope<S>(rootSchema, decodedRef, rootScope);
     } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      current = findEmbeddedSchemaRecursive<S>(rootSchema, currentBaseURI.replace(/\/$/, ''));
-      if (current !== undefined) {
-        current = getByPointer(current, decodedRef);
+      const resource = findEmbeddedSchemaRecursive<S>(rootSchema, baseURI.replace(/\/$/, ''), '', baseURI);
+      if (resource !== undefined) {
+        found = getByPointerWithScope<S>(resource.schema, decodedRef, resource.baseURI);
       }
     }
   } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-    const resolvedRef = currentBaseURI ? resolveUri(currentBaseURI, ref) : ref;
+    const resolvedRef = baseURI ? resolveUri(baseURI, ref) : ref;
     const [refId, ...refAnchor] = resolvedRef.replace(/#\/?$/, '').split('#');
-    current = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
-    if (current !== undefined) {
-      currentBaseURI = refId;
-      if (refAnchor.length > 0) {
-        current = getByPointer(current, decodeURIComponent(refAnchor.join('#')));
-      }
+    const resource = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
+    if (resource !== undefined) {
+      found =
+        refAnchor.length > 0
+          ? getByPointerWithScope<S>(resource.schema, decodeURIComponent(refAnchor.join('#')), resource.baseURI)
+          : resource;
     }
   }
-  if (current === undefined) {
+  if (found === undefined) {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
-  const nextRef = current[REF_KEY];
+  const nextRef = found.schema[REF_KEY];
   if (nextRef) {
     // Check for circular references.
     if (recurseList.includes(nextRef)) {
@@ -370,20 +367,32 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
       const circularPath = [...restRefs, ref, firstRef].join(' -> ');
       throw new Error(`Definition for ${firstRef} contains a circular reference through ${circularPath}`);
     }
-    const [remaining] = splitKeyElementFromObject(REF_KEY, current);
-    const subSchema = findSchemaDefinitionRecursive<S>(nextRef, rootSchema, [...recurseList, ref], currentBaseURI);
+    const [remaining] = splitKeyElementFromObject(REF_KEY, found.schema);
+    // Bundles rewritten by `makeAllReferencesAbsolute()` carry refs already resolved against the root base
+    // rather than the found node's lexical scope, so when the lexical lookup finds nothing, retry against the
+    // caller's base (the pre-resolution behavior).
+    let sub: FoundSchema<S>;
+    try {
+      sub = findSchemaDefinitionWithBaseURI<S>(nextRef, rootSchema, [...recurseList, ref], found.baseURI);
+    } catch (e) {
+      if (e instanceof Error && e.message.startsWith('Could not find a definition') && found.baseURI !== baseURI) {
+        sub = findSchemaDefinitionWithBaseURI<S>(nextRef, rootSchema, [...recurseList, ref], baseURI);
+      } else {
+        throw e;
+      }
+    }
     if (Object.keys(remaining).length > 0) {
       if (
         rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2019_09 ||
         rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12
       ) {
-        return { [ALL_OF_KEY]: [remaining, subSchema] } as S;
+        return { schema: { [ALL_OF_KEY]: [remaining, sub.schema] } as S, baseURI: sub.baseURI };
       }
-      return { ...remaining, ...subSchema };
+      return { schema: { ...remaining, ...sub.schema }, baseURI: sub.baseURI };
     }
-    return subSchema;
+    return sub;
   }
-  return current;
+  return found;
 }
 
 /** Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the
@@ -404,4 +413,24 @@ export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSc
 ): S {
   const recurseList: string[] = [];
   return findSchemaDefinitionRecursive($ref, rootSchema, recurseList, baseURI);
+}
+
+/** Given the name of a `$ref` from within a schema, using the `rootSchema`, recursively look up and return the
+ * sub-schema using the path provided by that reference. Same lookup as `findSchemaDefinitionWithBaseURI()`,
+ * without the resolved base URI.
+ *
+ * @param $ref - The ref string for which the schema definition is desired
+ * @param [rootSchema={}] - The root schema in which to search for the definition
+ * @param recurseList - List of $refs already resolved to prevent recursion
+ * @param [baseURI=rootSchema['$id']] - The base URI to be used for resolving relative references
+ * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
+ * @throws - Error indicating that no schema for that reference could be resolved
+ */
+export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFSchema>(
+  $ref?: string,
+  rootSchema: S = {} as S,
+  recurseList: string[] = [],
+  baseURI: string | undefined = rootSchema[ID_KEY],
+): S {
+  return findSchemaDefinitionWithBaseURI($ref, rootSchema, recurseList, baseURI).schema;
 }

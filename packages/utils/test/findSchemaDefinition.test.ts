@@ -1,9 +1,5 @@
 import { ADDITIONAL_PROPERTY_FLAG } from '../src/constants.ts';
-import {
-  findSchemaDefinitionRecursive,
-  getSchemaBaseUri,
-  makeAllReferencesAbsolute,
-} from '../src/findSchemaDefinition.ts';
+import { findSchemaDefinitionRecursive, makeAllReferencesAbsolute } from '../src/findSchemaDefinition.ts';
 import type { GenericObjectType, RJSFSchema } from '../src/index.ts';
 import { createSchemaUtils, findSchemaDefinition, ID_KEY } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
@@ -393,17 +389,11 @@ describe('findSchemaDefinition()', () => {
       };
       const prefix = $id.slice(0, $id.lastIndexOf('/') + 1);
       expect(findSchemaDefinition(`${prefix}leaf.json`, root, '')).toBe(leaf);
-      expect(getSchemaBaseUri(leaf, root)).toBe(`${prefix}leaf.json`);
       const absolute = makeAllReferencesAbsolute(root, $id);
       expect((absolute.$defs!.parent as RJSFSchema).properties!.value).toEqual({ $ref: `${prefix}leaf.json` });
       expect((absolute.$defs!.parent as RJSFSchema).$id).toBe('nested/parent.json');
-      expect(getSchemaBaseUri({ type: 'null' }, root)).toBeUndefined();
     },
   );
-  it('does not infer bundled resource scopes for draft 7', () => {
-    const root: RJSFSchema = { $id: 'root.json', definitions: { child: { $id: 'child.json' } } };
-    expect(getSchemaBaseUri(root.definitions!.child as RJSFSchema, root)).toBeUndefined();
-  });
   it('resolves relative refs against a relative root `$id`', () => {
     const relativeSchema: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
