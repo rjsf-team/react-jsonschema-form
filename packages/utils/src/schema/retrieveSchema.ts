@@ -559,6 +559,19 @@ export function resolveReference<
   return [schema];
 }
 
+/** How many times one `resolveAllReferences()` walk has replaced part of a schema with what it refers to. A level of
+ * the walk hands back the schema it was given unless the count rose beneath it, which is what lets `resolveReference()`
+ * tell by reference that a pass changed nothing. Flagging a cycle is not counted: the flag describes a `$ref` the walk
+ * left in place, so a subtree that gained nothing else is returned as it came, without it.
+ */
+class ReferenceTally {
+  resolved = 0;
+
+  count() {
+    this.resolved += 1;
+  }
+}
+
 /** Resolves all references within the schema itself as well as any of its properties and array items.
  *
  * @param schema - The schema for which resolving all references is desired
@@ -578,6 +591,8 @@ export function resolveReference<
  * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this walk belongs to; re-walks
  *   (pass > 0) put materialized refs back on the path so they stay at their fixpoint depth. Callers should omit
  *   this.
+ * @param [tally] - The `ReferenceTally` of the walk this call is a level of, which every level below it shares.
+ *   Callers should omit this.
  * @returns - given schema will all references resolved or the original schema if no internal `$refs` were resolved
  */
 export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
@@ -589,44 +604,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   markCycleOnDetection = false,
   expandedRefs?: string[],
   passCount = 0,
-): S {
-  return resolveReferencesWithin<S>(
-    schema,
-    rootSchema,
-    recurseList,
-    baseURI,
-    resolveAnyOfOrOneOfRefs,
-    markCycleOnDetection,
-    expandedRefs,
-    passCount,
-    new ReferenceTally(),
-  );
-}
-
-/** How many times one `resolveAllReferences()` walk has replaced part of a schema with what it refers to. A walk
- * hands back the schema it was given unless the count rose beneath it, which is what lets `resolveReference()` tell
- * by reference that a pass changed nothing. Flagging a cycle is not counted: the flag describes a `$ref` the walk left
- * in place, so a subtree that gained nothing else is returned as it came, without it.
- */
-class ReferenceTally {
-  resolved = 0;
-
-  count() {
-    this.resolved += 1;
-  }
-}
-
-/** The walk behind `resolveAllReferences()`, which takes the same arguments along with the `tally` of the walk. */
-function resolveReferencesWithin<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  rootSchema: S,
-  recurseList: string[],
-  baseURI: string | undefined,
-  resolveAnyOfOrOneOfRefs: boolean | undefined,
-  markCycleOnDetection: boolean,
-  expandedRefs: string[] | undefined,
-  passCount: number,
-  tally: ReferenceTally,
+  tally = new ReferenceTally(),
 ): S {
   if (!isObject(schema)) {
     return schema;
@@ -689,7 +667,7 @@ function resolveReferencesWithin<S extends StrictRJSFSchema = RJSFSchema>(
       // in an object property always causes an infinite render loop and must be caught; in anyOf/oneOf mode a $ref
       // already expanded by an earlier option is collapsed on purpose (see the optionsPath handling below), so it
       // must not be marked.
-      updatedProps[key] = resolveReferencesWithin(
+      updatedProps[key] = resolveAllReferences(
         value as S,
         rootSchema,
         pathList,
@@ -712,7 +690,7 @@ function resolveReferencesWithin<S extends StrictRJSFSchema = RJSFSchema>(
     resolvedSchema = {
       ...resolvedSchema,
       // Array items are only rendered when data exists, so a $ref cycle here does NOT cause an infinite render.
-      items: resolveReferencesWithin(
+      items: resolveAllReferences(
         resolvedSchema.items as S,
         rootSchema,
         pathList,
@@ -740,7 +718,7 @@ function resolveReferencesWithin<S extends StrictRJSFSchema = RJSFSchema>(
         ...resolvedSchema,
         [key]: (resolvedSchema[key] as S[]).map((s: S) => {
           const expandedBefore = expandedRefs?.length ?? 0;
-          const option = resolveReferencesWithin(
+          const option = resolveAllReferences(
             s,
             rootSchema,
             optionsPath,

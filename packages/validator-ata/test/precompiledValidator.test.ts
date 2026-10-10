@@ -48,6 +48,8 @@ describe('ATAPrecompiledValidator', () => {
       it('using an equal copy of the rootSchema returns true each time it is asked', () => {
         const copy = structuredClone(rootSchema);
         expect(validator.ensureSameRootSchema(copy)).toBe(true);
+        // Accepted by object, so a copy is not compared again once it has been: a change to it goes unseen
+        copy.title = 'changed after it was accepted';
         expect(validator.ensureSameRootSchema(copy)).toBe(true);
       });
       it('using resolved rootSchema returns true each time it is asked', () => {
