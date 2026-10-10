@@ -75,9 +75,13 @@ describe('getDateTimeLocalValue()', () => {
     expect(getDateTimeLocalValue(schema, new Date(epoch)).localValue).toEqual('2020-05-03');
   });
 
-  it.each([Date.UTC(10000, 0, 1), Date.UTC(-3, 0, 1)])(
-    'should normalize the UTC midnight %s outside the years 0-9999 to undefined for format=date',
-    (value) => {
+  it.each([
+    ['10000', Date.UTC(10000, 0, 1)],
+    ['-3', Date.UTC(-3, 0, 1)],
+    ['0', new Date(Date.UTC(2000, 0, 1)).setUTCFullYear(0)],
+  ])(
+    'should normalize a UTC midnight in the year %s, outside the years 1-9999, to undefined for format=date',
+    (_, value) => {
       expect(getDateTimeLocalValue({ type: 'string', format: 'date' }, value).localValue).toBeUndefined();
     },
   );
@@ -87,12 +91,14 @@ describe('getDateTimeLocalValue()', () => {
     expect(getDateTimeLocalValue({ type: 'string' }, epoch).localValue).toEqual('2020-05-02T17:00:00.000');
   });
 
-  it.each([8.64e15, Date.UTC(-3, 0, 1)])(
-    'should normalize the epoch %s with a local year outside 0-9999 to undefined',
-    (value) => {
-      expect(getDateTimeLocalValue({ type: 'string' }, value).localValue).toBeUndefined();
-    },
-  );
+  it.each([
+    ['275760', 8.64e15],
+    ['33658', 1e15],
+    ['-3', Date.UTC(-3, 0, 1)],
+    ['0', new Date(2000, 6, 1).setFullYear(0)],
+  ])('should normalize an epoch in the local year %s, outside the years 1-9999, to undefined', (_, value) => {
+    expect(getDateTimeLocalValue({ type: 'string' }, value).localValue).toBeUndefined();
+  });
 
   it.each([
     ['date-time', true],
