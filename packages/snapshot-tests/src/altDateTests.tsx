@@ -12,12 +12,12 @@ const schema: RJSFSchema = {
   type: 'object',
   properties: {
     when: { type: 'string', title: 'When', format: 'date', description: 'The day it starts' },
-    at: { type: 'string', title: 'At', format: 'date-time' },
+    at: { type: 'string', title: 'At', format: 'date-time', description: 'The moment it ends' },
   },
 };
 const uiSchema: UiSchema = {
   when: { 'ui:widget': 'alt-date', 'ui:help': 'Any day will do', 'ui:options': { yearsRange: [2020, 2024] } },
-  at: { 'ui:widget': 'alt-datetime', 'ui:options': { yearsRange: [2020, 2024] } },
+  at: { 'ui:widget': 'alt-datetime', 'ui:help': 'Any time will do', 'ui:options': { yearsRange: [2020, 2024] } },
 };
 
 /** The control each theme names is a `combobox`, except where it is a `button` opening a listbox. The name is matched
@@ -71,18 +71,27 @@ export function altDateTests(Form: ComponentType<FormProps>) {
       ['heure', 'minute', 'seconde'].forEach((part) => expect(getPart(`${part} de At`)).toBeInstanceOf(HTMLElement));
     });
 
-    test("describes each part by the field's description, help and errors", () => {
-      const extraErrors = { when: { __errors: ['Too early'] } } as ErrorSchema;
-      render(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />);
-      DATE_PARTS.forEach((part) => {
-        const description = getPart(`When, ${part}`).getAttribute('aria-describedby') ?? '';
-        const text = description
-          .split(' ')
-          .map((id) => document.getElementById(id)?.textContent ?? '')
-          .join(' ');
-        expect(text).toContain('The day it starts');
-        expect(text).toContain('Any day will do');
-        expect(text).toContain('Too early');
+    describe("describes each part by its field's description, help and errors", () => {
+      const extraErrors = { when: { __errors: ['Too early'] }, at: { __errors: ['Too late'] } } as ErrorSchema;
+      const fields: [string, string[], string[]][] = [
+        ['When', DATE_PARTS, ['The day it starts', 'Any day will do', 'Too early']],
+        ['At', [...DATE_PARTS, ...TIME_PARTS], ['The moment it ends', 'Any time will do', 'Too late']],
+      ];
+      const cases = fields.flatMap(([label, parts, texts]) =>
+        parts.flatMap((part) => texts.map((text) => [`${label}, ${part}`, text])),
+      );
+
+      // The announced description is asserted, rather than the text of the elements `aria-describedby` lists, which
+      // one hidden from a screen reader would still supply
+      test.each(cases)('%s is described by "%s"', (name, text) => {
+        render(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />);
+        expect(getPart(name)).toHaveAccessibleDescription(expect.stringContaining(text));
+      });
+
+      test('a part is described by no id that names no element, which another field could come to claim', () => {
+        render(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />);
+        const ids = (getPart('When, year').getAttribute('aria-describedby') ?? '').split(' ');
+        expect(ids.filter((id) => !document.getElementById(id))).toEqual([]);
       });
     });
   });

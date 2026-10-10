@@ -64,6 +64,7 @@ export default function SelectWidget<
     id,
     options,
     required,
+    name,
     disabled,
     readonly,
     value,
@@ -132,7 +133,8 @@ export default function SelectWidget<
           required={required}
           placeholder={placeholderText}
           ariaLabel={ariaLabel}
-          named={!!ariaLabel || (!hideLabel && !!label)}
+          // The template's label shows the property name for a field with no title, and `*` when required
+          named={!!ariaLabel || (!hideLabel && (!!label || !!name || !!required))}
           className={cnClassName}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}

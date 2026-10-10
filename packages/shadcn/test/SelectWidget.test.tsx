@@ -648,3 +648,34 @@ describe('SelectWidget named and described by its caller', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick any.');
   });
 });
+
+describe('SelectWidget whose button the field label names', () => {
+  const enumOptions = [
+    { label: 'Red', value: 'red' },
+    { label: 'Blue', value: 'blue' },
+  ];
+
+  function renderLabelled(props: Parameters<typeof makeWidgetMockProps>[0], labelText: string) {
+    render(
+      <>
+        <label htmlFor='root_color'>{labelText}</label>
+        <SelectWidget
+          {...makeWidgetMockProps({ id: 'root_color', value: 'red', options: { enumOptions }, ...props })}
+        />
+      </>,
+    );
+    return screen.getByRole('button', { expanded: false });
+  }
+
+  test('describes the button by its value when the label shows the property name of an untitled field', () => {
+    const button = renderLabelled({ label: '', name: 'color' }, 'color');
+
+    expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
+  });
+
+  test('describes the button by its value when the label shows only the required mark', () => {
+    const button = renderLabelled({ label: '', name: '', required: true }, '*');
+
+    expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
+  });
+});

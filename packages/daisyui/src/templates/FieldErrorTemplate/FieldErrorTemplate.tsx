@@ -15,13 +15,16 @@ export default function FieldErrorTemplate<
   F extends FormContextType = FormContextType,
 >(props: FieldErrorProps<T, S, F>) {
   const { errors, id } = props;
+  const messages = errors?.filter(Boolean) ?? [];
   return (
     <div className='rjsf-field-error-template text-red-600'>
       {/* The id every widget's `aria-describedby` points at, as in `@rjsf/core`, so the errors are announced. Left off
           an empty list, which would otherwise add a stray space to every description */}
-      <ul id={errors?.length ? errorId(id) : undefined} className='list-disc list-inside'>
-        {/* oxlint-disable-next-line react/no-array-index-key */}
-        {errors?.map((error, index) => <li key={index}>{error}</li>) ?? []}
+      <ul id={messages.length ? errorId(id) : undefined} className='list-disc list-inside'>
+        {messages.map((error, index) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <li key={index}>{error}</li>
+        ))}
       </ul>
     </div>
   );

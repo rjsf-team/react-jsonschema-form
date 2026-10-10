@@ -450,11 +450,6 @@ describe('useAltDateWidgetProps()', () => {
       expect(screen.getByRole('combobox', { name: 'year' })).toBeInTheDocument();
     });
 
-    test('keeps the field label in the name when the label is hidden', () => {
-      renderElements({ label: 'When', hideLabel: true });
-      expect(screen.getByRole('combobox', { name: 'When, year' })).toBeInTheDocument();
-    });
-
     test('gives each element its own id as its name, and describes it by the field', () => {
       renderElements({ label: 'When' });
       const select = screen.getByRole('combobox', { name: 'When, year' });

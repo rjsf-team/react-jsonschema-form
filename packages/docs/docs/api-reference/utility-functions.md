@@ -2552,13 +2552,14 @@ The existing `errors` are always kept, also when their `errorSchema` is empty, a
 
 Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses.
 A select rendered inside another widget, such as each select of an `AltDateWidget`, has no label of its own and an id that no help or error element is rendered for, so only its caller can name it and link it to its field.
-The ids the caller passed are followed by `descriptionId(props.id)`, the one element the select renders itself, for the description of the option it has selected, so that description is still announced.
+When any of its options has a description, the ids the caller passed are followed by `descriptionId(props.id)`, the one element the select renders itself, for the description of the option it has selected, so that description is still announced.
+A select with no described option, such as a date part, is described by the ids the caller passed alone: it renders no such element, and its id may be another field's description id.
 Without ids from the caller, the result is `ariaDescribedByIds(props.id)`.
 Every theme's `SelectWidget` gives the result to its control, and a replacement `SelectWidget` should do the same; no other widget is required to.
 
 #### Parameters
 
-- props: WidgetAriaPropsInput - The widget's props, of which only `id`, `aria-label` and `aria-describedby` are read
+- props: WidgetAriaPropsInput - The widget's props, of which only `id`, `aria-label`, `aria-describedby` and `options` are read
 
 #### Returns
 
@@ -2569,7 +2570,7 @@ Every theme's `SelectWidget` gives the result to its control, and a replacement 
 ```typescript
 widgetAriaProps({ id: 'root' }); // { 'aria-label': undefined, 'aria-describedby': 'root__error root__description root__help' }
 widgetAriaProps({ id: 'root_when_year', 'aria-label': 'When, year', 'aria-describedby': 'root_when__error' });
-// { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error root_when_year__description' }
+// { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error' }
 ```
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
