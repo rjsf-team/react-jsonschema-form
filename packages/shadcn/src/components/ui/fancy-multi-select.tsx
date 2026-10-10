@@ -32,6 +32,8 @@ interface FancyMultiSelectProps {
   autoFocus?: boolean;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
+  /** Visible placeholder text for the search input */
+  placeholder?: string;
   /** Aria placeholder text */
   ariaPlaceholder?: string;
   /** Whether a selection is required, exposed as `aria-required` on the combobox input */
@@ -66,7 +68,8 @@ export function FancyMultiSelect({
   disabled = false,
   ariaDescribedby,
   ariaPlaceholder,
-  required = false,
+  placeholder,
+  required,
   onFocus,
   onBlur,
   className,
@@ -217,16 +220,14 @@ export function FancyMultiSelect({
               </button>
             </Badge>
           ))}
-          {/* cmdk always renders this input with its own generated `id` and points its own `aria-controls` and
-              `aria-labelledby` at internal elements, so those attributes are not set here: anything passed is
-              overwritten. The field label association is tracked in #5478. */}
+          {/* cmdk overwrites this input's id, aria-controls and aria-labelledby, so passing them has no effect. */}
           <CommandPrimitive.Input
             ref={inputRef}
             value={inputValue}
             onValueChange={setInputValue}
             onBlur={() => setOpen(false)}
             onFocus={() => !disabled && setOpen(true)}
-            placeholder='Select ...'
+            placeholder={placeholder}
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
             disabled={disabled}
             aria-describedby={ariaDescribedby}

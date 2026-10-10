@@ -110,11 +110,6 @@ export default function SelectWidget<
 
   const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 
-  // `label` resolves as `uiTitle ?? schema.title ?? name`, which is "" for an untitled root field (or an explicit
-  // `ui:title: ""`) and would leave the multi-select combobox unnamed (#5458). Fall back to a fixed translated
-  // string rather than the internal field id, which cmdk would announce.
-  const comboboxLabel = label || registry.translateString(TranslatableString.SelectPlaceholder);
-
   return (
     <div className='p-0.5'>
       {!multiple ? (
@@ -138,7 +133,12 @@ export default function SelectWidget<
       ) : (
         <FancyMultiSelect
           id={id}
-          label={comboboxLabel}
+          // `label` resolves as `uiTitle ?? schema.title ?? name`, which is "" for an untitled root field (or an
+          // explicit `ui:title: ""`) and would leave the multi-select combobox unnamed (#5458). Fall back to the
+          // author's `ui:placeholder` and then a translated string rather than the internal field id, which cmdk
+          // would announce.
+          label={label || placeholder || registry.translateString(TranslatableString.SelectPlaceholder)}
+          placeholder={placeholder || registry.translateString(TranslatableString.SelectPlaceholder)}
           autoFocus={autofocus}
           disabled={disabled || readonly}
           required={required}
