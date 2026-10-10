@@ -1062,6 +1062,30 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 - S: The sub-schema for `property`, or an empty schema when it is not declared
 
+### getRenderedOptionSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField` and `getUiRequiredErrorSchema()` read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
+Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
+It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
+The two are merged with `mergeSchemas()`, so an option's `items` adds to the parent's rather than replacing them.
+A bound both declare (`minItems`, `maxItems`, `minLength`, `maxLength`, `minProperties`, `maxProperties`, `minimum`, `maximum`, `exclusiveMinimum` or `exclusiveMaximum`) keeps the stricter of the two, since a value has to meet both.
+It does so within each subschema keyword the two were merged in, such as `items` or a property, but not within a `not` or an `if`, where a value is tested against the schema rather than having to meet it, nor within a keyword holding a value rather than a schema, such as a `const`, or one JSON Schema does not define.
+`uniqueItems` holds when either asks for it.
+An option's `true` subschema, such as `items: true`, adds nothing to meet, so it leaves the parent's subschema in place rather than replacing it, except within `not` or `if`, where `true` constrains the value.
+A parent's `false` subschema, which nothing meets, likewise stays in place of the option's.
+Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf` or a `const` or `default` object, is the option's.
+An option naming no `type` takes the parent's, every type of a type list included, and an object parent that names none, such as one with only `properties`, passes on `object`.
+
+#### Parameters
+
+- parent: S - The schema holding the `anyOf`/`oneOf`, with its `$ref`s and `allOf` resolved
+- option: S - The option, with its own `$ref` resolved
+
+#### Returns
+
+- S: The option as it is rendered, or `option` itself when the parent has nothing to pass on
+
 ### getSchemaOwnTypes()
 
 Gets the JSON Schema types a `schema` says its value has, or `undefined` for one that says nothing about it.

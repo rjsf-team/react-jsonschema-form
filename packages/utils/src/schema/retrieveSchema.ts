@@ -792,13 +792,13 @@ const SUBSCHEMA_KEYWORDS: string[] = [
  * copying them would give every sibling property the same identifier — and an `$id` naming a registered field would
  * route them all to it.
  */
-const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor', '$schema', '$vocabulary'];
+export const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor', '$schema', '$vocabulary'];
 
 /** The keywords that hold other subschemas for a `$ref` to name rather than describe a value. The stub drops the
  * `$ref` that would reach them, so copying them into every property would hand each one an unreachable copy that
  * `hashForSchema()` and `deepEquals()` then walk on every render.
  */
-const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
+export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
 
 /** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
  * consulted together, and once per property key, so they are consulted as one.

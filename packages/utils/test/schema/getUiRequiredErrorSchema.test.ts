@@ -519,6 +519,20 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.thing.aField');
   });
 
+  it('walks an object whose selected anyOf option is the boolean schema true', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { type: 'object', properties: { aField: { type: 'string' } }, anyOf: [true, { required: ['aField'] }] },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.aField');
+  });
+
   it('enforces a ui:required field declared inside uiSchema.oneOf[i] for the branch matching formData', () => {
     // MultiSchemaField renders `uiSchema.oneOf[selectedOption]` in place of the parent uiSchema for that branch's own
     // fields (see AnyOfField's `optionsUiSchema`/`optionUiSchema`) rather than merging it with a per-key entry on the

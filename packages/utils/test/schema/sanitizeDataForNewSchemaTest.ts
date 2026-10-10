@@ -769,6 +769,64 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         { animal: 'Fish', food: 'worms' },
       ]);
     });
+    it('keeps the items of an array whose type list also allows null, as it does for a plain array', () => {
+      const oldSchema: RJSFSchema = { type: ['array', 'null'], items: { type: 'string' }, minItems: 1 };
+      const newSchema: RJSFSchema = { type: ['null', 'array'], items: { type: 'string' }, maxItems: 3 };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x', 'y'])).toEqual(['x', 'y']);
+    });
+    it('returns undefined for array data when the type list of either schema resolves to a type other than array', () => {
+      const oldSchema: RJSFSchema = { type: ['string', 'array'], items: { type: 'string' } };
+      const newSchema: RJSFSchema = { type: ['array', 'null'], items: { type: 'string' } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x'])).toBeUndefined();
+    });
+    it('keeps the value of a property both schemas give the same type list in separate schemas', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          name: { type: ['string', 'null'], title: 'Old' },
+          tags: { type: ['array', 'null'], items: { type: 'string', enum: ['a', 'b'] } },
+        },
+      };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          name: { type: ['string', 'null'], title: 'New' },
+          tags: { type: ['array', 'null'], items: { type: 'string', enum: ['a'] }, maxItems: 1 },
+        },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { name: 'x', tags: ['b', 'a', 'a'] })).toEqual({
+        name: 'x',
+        tags: ['a'],
+      });
+    });
+    it('keeps the value of a property whose type lists name the same types in another order', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { name: { type: ['string', 'null'] } } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { name: { type: ['null', 'string', 'null'] } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { name: 'x' })).toEqual({ name: 'x' });
+    });
+    it('clears the value of a property whose type list names a type the other does not', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { name: { type: ['string', 'null'] } } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { name: { type: ['number', 'null'] } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { name: 'x' })).toEqual({ name: undefined });
+    });
+    it('clears the value of a property whose type list allows more types than the other names', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { name: { type: ['string', 'null'] } } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { name: { type: ['string'] } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { name: 'x' })).toEqual({ name: undefined });
+    });
+    it('keeps the value of a typeless property whose const is an array, which declares no array to sanitize', () => {
+      const oldSchema: RJSFSchema = { type: 'object', properties: { pair: { const: [1, 2] }, b: { type: 'string' } } };
+      const newSchema: RJSFSchema = { type: 'object', properties: { pair: { const: [1, 2] }, c: { type: 'string' } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { pair: [1, 2], b: 'x' })).toEqual({
+        pair: [1, 2],
+        b: undefined,
+      });
+    });
+    it('keeps the items of an array whose two items schemas give the same type list in separate schemas', () => {
+      const oldSchema: RJSFSchema = { type: 'array', items: { type: ['string', 'null'], title: 'Old' } };
+      const newSchema: RJSFSchema = { type: 'array', items: { type: ['string', 'null'], title: 'New' } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x', null])).toEqual(['x', null]);
+    });
     it('returns data when two arrays have same boolean items', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',
