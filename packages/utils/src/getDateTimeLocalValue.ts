@@ -10,7 +10,7 @@ export interface DateTimeLocalValueResult {
   /** `value` with any timezone offset stripped when `isIsoDateTime`, otherwise unchanged. A finite epoch number or a
    * valid `Date` is converted to its UTC ISO string for `date-time`/`datetime`, to the UTC day it names for `date` when
    * it is a UTC midnight, and to local wall-clock time otherwise (`undefined` when that falls outside the years
-   * 0-9999). `undefined` for any other `value` */
+   * 1-9999). `undefined` for any other `value` */
   localValue: string | undefined;
 }
 
@@ -22,8 +22,8 @@ export interface DateTimeLocalValueResult {
  *
  * A finite epoch number or a valid `Date` is an exact instant. It is converted to its UTC ISO string when
  * `schema.format` requires an offset (`date-time`/`datetime`), to the day it names when `schema.format` is `date` and
- * the instant is a UTC midnight, and to local wall-clock time for any other format. A local year outside 0-9999 has no
- * text a picker can parse, so it gives `undefined`.
+ * the instant is a UTC midnight, and to local wall-clock time for any other format. A year outside 1-9999 has no
+ * four-digit text a picker can parse, so it gives `undefined`.
  *
  * @param schema - The schema for the date-time field
  * @param value - The current value of the field
@@ -48,9 +48,11 @@ export default function getDateTimeLocalValue<S extends StrictRJSFSchema = RJSFS
         localValue = iso;
       } else if (format === 'date' && iso.endsWith('T00:00:00.000Z')) {
         // A day stored as a `Date` or epoch is its UTC midnight, which names that day rather than the evening before it
-        localValue = /^\d{4}-/.test(iso) ? iso.slice(0, 10) : undefined;
-      } else {
-        // `utcToLocal()` gives '' for a local year outside 0-9999, which has no text a picker can parse
+        const year = date.getUTCFullYear();
+        localValue = year >= 1 && year <= 9999 ? iso.slice(0, 10) : undefined;
+      } else if (date.getFullYear() <= 9999) {
+        // The pickers parse four-digit years, so a longer local year gives `undefined`, as does the '' that
+        // `utcToLocal()` gives for a year before 1
         localValue = utcToLocal(date) || undefined;
       }
     }

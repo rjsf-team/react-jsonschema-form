@@ -1037,50 +1037,57 @@ describe('StringField', () => {
         createFormComponent({ ...formProps, initialFormData }).node.querySelector<HTMLInputElement>(
           '[type=datetime-local]',
         )!;
-      // The local string names the same instant when read back as local time, whatever the time zone of the test run
-      const expectInstant = (input: HTMLInputElement, epoch: number) => {
-        const attributeValue = input.getAttribute('value')!;
-        expect(attributeValue).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}$/);
-        expect(new Date(attributeValue).getTime()).toEqual(epoch);
+      // `utcToLocal()`'s own tests cover the conversion; the widget must hand it the value and show the result. jsdom
+      // normalizes `input.value` (it drops zero seconds), so the `value` attribute carries the exact string
+      const expectShown = (input: HTMLInputElement, formData: unknown) => {
+        const local = utcToLocal(formData);
+        expect(local).not.toEqual('');
+        expect(input).toHaveAttribute('value', local);
         expect(input.value).not.toEqual('');
+      };
+      const expectEmpty = (input: HTMLInputElement) => {
+        expect(input).toHaveValue('');
+        expect(input).toHaveAttribute('value', '');
       };
 
       it('should show an epoch number', () => {
-        expectInstant(renderWithFormData(EPOCH), EPOCH);
+        expectShown(renderWithFormData(EPOCH), EPOCH);
       });
 
       it('should show an epoch of 0 instead of an empty field', () => {
-        expectInstant(renderWithFormData(0), 0);
+        expectShown(renderWithFormData(0), 0);
       });
 
       it('should show a Date holding epoch 0', () => {
-        expectInstant(renderWithFormData(new Date(0)), 0);
+        const date = new Date(0);
+        expectShown(renderWithFormData(date), date);
+      });
+
+      it('should show an object whose valueOf() gives an epoch, as moment, dayjs and Luxon objects do', () => {
+        const momentLike = { valueOf: () => EPOCH };
+        expectShown(renderWithFormData(momentLike), momentLike);
+      });
+
+      it('should show the epoch 1e15, whose local year has five digits', () => {
+        expectShown(renderWithFormData(1e15), 1e15);
       });
 
       it('should render an empty value for an invalid Date', () => {
-        const input = renderWithFormData(new Date(NaN));
-        expect(input).toHaveValue('');
-        expect(input).toHaveAttribute('value', '');
+        expectEmpty(renderWithFormData(new Date(NaN)));
       });
 
       it('should render an empty value for text that is not a date', () => {
-        const input = renderWithFormData('not-a-date');
-        expect(input).toHaveValue('');
-        expect(input).toHaveAttribute('value', '');
+        expectEmpty(renderWithFormData('not-a-date'));
       });
 
       it.each([false, true, 0n])('should render an empty value for %s, which is not a date', (initialFormData) => {
-        const input = renderWithFormData(initialFormData);
-        expect(input).toHaveValue('');
-        expect(input).toHaveAttribute('value', '');
+        expectEmpty(renderWithFormData(initialFormData));
       });
 
-      it.each([1e15, -1e14, -62300000000000])(
-        'should render an empty value for the epoch %s, whose local year is outside 0-9999',
+      it.each([-1e14, -62300000000000, new Date(2000, 6, 1).setFullYear(0)])(
+        'should render an empty value for the epoch %s, whose local year is before 1',
         (initialFormData) => {
-          const input = renderWithFormData(initialFormData);
-          expect(input).toHaveValue('');
-          expect(input).toHaveAttribute('value', '');
+          expectEmpty(renderWithFormData(initialFormData));
         },
       );
     });
