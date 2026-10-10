@@ -7,8 +7,8 @@ import FormDataContext from '../components/FormDataContext.ts';
  * properties only the option that was left declares are gone with the switch, so the form drops the errors it holds
  * under them: one of their own left standing would keep the form from submitting with no field to clear it. The
  * errors under every other key stay, since a property the new option declares too, or one `schema` declares beside
- * its options, is still rendered. The switch is sent as a key move even when nothing is gone, so the field's own raise
- * at its path is kept the way an array's is through a reorder, whatever the options declare.
+ * its options, is still rendered. The errors raised at the field's own path go too, whatever the options declare: the
+ * switch renders another field there, which would show a raise it never made and could not submit past.
  */
 export default function useSendOptionSwitch(fieldPath: FieldPath) {
   const access = use(FormDataContext);
@@ -22,7 +22,7 @@ export default function useSendOptionSwitch(fieldPath: FieldPath) {
       const gone = new Set(
         Object.keys(oldOption?.properties ?? {}).filter((key) => !Object.hasOwn(stillRendered, key)),
       );
-      access.sendMove({ fieldPath, newKeyOf: (key) => (gone.has(key) ? undefined : key) }, send);
+      access.sendMove({ fieldPath, newKeyOf: (key) => (gone.has(key) ? undefined : key), dropsOwnErrors: true }, send);
     },
     [access, fieldPath],
   );

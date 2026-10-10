@@ -126,6 +126,8 @@ export interface PendingChange<T> {
    * key go with it
    */
   newKeyOf?: KeyMove;
+  /** For a change that moved keys, whether the errors raised at `fieldPath` itself go too; see `AnnouncedMove` */
+  dropsOwnErrors?: boolean;
 }
 
 /** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
@@ -135,6 +137,11 @@ export type KeyMove = (key: string) => string | undefined;
 export interface AnnouncedMove {
   fieldPath: FieldPath;
   newKeyOf: KeyMove;
+  /** Whether the errors raised at `fieldPath` itself go with the move. A reorder or rename leaves the array or object
+   * that raised them in place, so they stay; an option switch renders another field at the path, so a raise of the
+   * option's widget would be shown by one that never made it
+   */
+  dropsOwnErrors?: boolean;
 }
 
 /** The `KeyMove` of an array whose items went where `newIndexOf` says, `undefined` for one that was removed. A key that
@@ -525,9 +532,11 @@ function moveErrorKeys<T>(validation: ValidationData<T>, path: FieldPathList, ne
  * raise outlives either until the field raises again (#5347).
  *
  * A change that moved the keys of an array or object, an item to another index or a property to another name, moves
- * the errors of both with them, drops those under a key that is gone, and leaves the container's own where they are. One that raises errors replaces the field's own at its path, an empty raise included, and takes the validator's
- * off that path until the form validates again: the raise is the field's say over its path. One that removes the key
- * at its path counts as an empty raise. Any other change clears the field's own `__errors` there.
+ * the errors of both with them, drops those under a key that is gone, and leaves the container's own where they are
+ * unless it says they go too, as an option switch does. One that raises errors replaces the field's own at its path,
+ * an empty raise included, and takes the validator's off that path until the form validates again: the raise is the
+ * field's say over its path. One that removes the key at its path counts as an empty raise. Any other change clears
+ * the field's own `__errors` there.
  *
  * Reads none of the data, so a parent-owned form can apply a change to the errors it owns without deriving the data
  * the change proposes.
@@ -539,7 +548,7 @@ function moveErrorKeys<T>(validation: ValidationData<T>, path: FieldPathList, ne
  */
 export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
-  { fieldPath, newValue, newErrorSchema, newKeyOf }: PendingChange<T>,
+  { fieldPath, newValue, newErrorSchema, newKeyOf, dropsOwnErrors }: PendingChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
 ): OwnedErrorState<T> {
   const { schemaValidationErrors, schemaValidationErrorSchema } = current;
@@ -562,7 +571,7 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
   if (raised) {
     validation = withoutErrors(validation, (pathOfError) => isPathPrefix(path, pathOfError));
     customErrors = replaceErrorSchemaNode(customErrors ?? {}, path, raised);
-  } else if (customErrors && hasOwnErrors && !newKeyOf) {
+  } else if (customErrors && hasOwnErrors && (!newKeyOf || dropsOwnErrors)) {
     customErrors = pruneErrorSchema(
       customErrors,
       (pathOfError) => pathOfError.length === path.length && isPathPrefix(path, pathOfError),

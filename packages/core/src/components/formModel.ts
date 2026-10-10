@@ -382,11 +382,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const props: OperationProps<T, S, F> = committedProps;
     const start = state;
     // Taken by the change it was announced for, so a second change at the path moves nothing again
-    const newKeyOf = announced?.fieldPath === fieldPath ? announced.newKeyOf : undefined;
-    if (newKeyOf) {
+    const move = announced?.fieldPath === fieldPath ? announced : undefined;
+    if (move) {
       announced = undefined;
     }
-    const edit: PendingChange<T> = { newValue, fieldPath, newErrorSchema, newKeyOf };
+    const edit: PendingChange<T> = {
+      newValue,
+      fieldPath,
+      newErrorSchema,
+      newKeyOf: move?.newKeyOf,
+      dropsOwnErrors: move?.dropsOwnErrors,
+    };
     const next = applyChange(pending ?? start, edit, props);
     if (!start.isControlled) {
       // A reentrant operation may have committed while this one was being calculated, so report what was committed
@@ -403,9 +409,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // `next` was built on `start` when no proposal is pending, so it already carries what the change did to them
       const errors =
         base === start && !pending ? ownedErrorsOf(next) : applyChangeToErrors(base, edit, props.extraErrors);
-      return isLiveValidated(props) || newKeyOf
-        ? { ...base, customErrors: errors.customErrors }
-        : { ...base, ...errors };
+      return isLiveValidated(props) || move ? { ...base, customErrors: errors.customErrors } : { ...base, ...errors };
     };
     commit(start, withOwnedErrors(start), withOwnedErrors);
     propose(next);

@@ -995,6 +995,38 @@ describe('Error state consistency when deriving from new props', () => {
     });
   });
 
+  it('clears the raise at the path of a oneOf whose option is switched, which the new option never made', async () => {
+    const onSubmit = vi.fn();
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            value: {
+              oneOf: [
+                { title: 'Text', type: 'string' },
+                { title: 'Number', type: 'number' },
+              ],
+            },
+          },
+        }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ value: 'a' }}
+        onSubmit={onSubmit}
+      />,
+    );
+    await user.type(input(container, 'root_value'), 'b');
+    expect(errorListMessages(container)).toEqual(['.value custom:ab']);
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Number');
+
+    expect(errorListMessages(container)).toEqual([]);
+    expect(fieldErrorsById(container)).toEqual({});
+    await submitForm(container, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
+  });
+
   it('moves the errors of an additional property to the name it is renamed to, the fields own included', async () => {
     const { container } = render(
       <Form
