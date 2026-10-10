@@ -23,6 +23,7 @@ import {
   applyBlur,
   applyChange,
   applyChangeToErrors,
+  ownErrorsAfterChange,
   ownedErrorsOf,
   applyReset,
   applySubmit,
@@ -407,9 +408,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // fields' errors, or keeps its own, which the old keys describe
     const withOwnedErrors = (base: FormState<T, S, F>): FormState<T, S, F> => {
       // `next` was built on `start` when no proposal is pending, so it already carries what the change did to them
-      const errors =
-        base === start && !pending ? ownedErrorsOf(next) : applyChangeToErrors(base, edit, props.extraErrors);
-      return isLiveValidated(props) || move ? { ...base, customErrors: errors.customErrors } : { ...base, ...errors };
+      const isNext = base === start && !pending;
+      if (isLiveValidated(props) || move) {
+        return { ...base, customErrors: isNext ? next.customErrors : ownErrorsAfterChange(base, edit) };
+      }
+      return { ...base, ...(isNext ? ownedErrorsOf(next) : applyChangeToErrors(base, edit, props.extraErrors)) };
     };
     commit(start, withOwnedErrors(start), withOwnedErrors);
     propose(next);
