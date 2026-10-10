@@ -190,10 +190,9 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         }),
       );
 
-      it('should render the null value and not call onChange', () => {
-        // Null is the parent's value, not a request for the default; the parent seeds defaults itself
+      it('should take the null as no data and render the default without calling onChange', () => {
         expect(onChangeProp).not.toHaveBeenCalled();
-        expect(ref.current!.getFormData()).toBeNull();
+        expect(ref.current!.getFormData()).toBe('foobar');
       });
     });
 
@@ -249,9 +248,9 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         }),
       );
 
-      it('should render the null value and not call onChange', () => {
+      it('should take the null as no data and render the new default without calling onChange', () => {
         expect(onChangeProp).not.toHaveBeenCalled();
-        expect(ref.current!.getFormData()).toBeNull();
+        expect(ref.current!.getFormData()).toBe('the new default');
       });
     });
 

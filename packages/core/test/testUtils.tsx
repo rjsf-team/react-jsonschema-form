@@ -127,10 +127,10 @@ export interface FormComponentResult {
   getFormData: () => unknown;
 }
 
-/** What a controlled parent has done so far: the value it currently renders and every proposal the form sent it.
- * A `vi.fn()` `onChange` is not a controlled parent: it records the proposal but never hands it back as the next
- * `formData` prop, so a test built on one exercises the form's own state and nothing about controlled composition.
- * These parents do hand values back, each with a different policy, so a test can state which policy it relies on.
+/** What a parent passing `formData` has done so far: the value it currently renders and every edit the form reported.
+ * A `vi.fn()` `onChange` records the edit but never hands it back as the next `formData` prop, so a test built on one
+ * exercises the form's own data and nothing about composition with a parent. These parents do hand values back, each
+ * with a different policy, so a test can state which policy it relies on.
  */
 export interface ControlledParentLog<T> {
   value: T | undefined;
@@ -166,8 +166,10 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: Controll
   );
 }
 
-/** Keeps rendering its initial value whatever the form proposes, the shape of a parent whose validation refused */
-export function RejectingParent<T>({ initialValue, log, ...formProps }: ControlledParentProps<T>) {
+/** Keeps passing its initial value whatever the form reports, the shape of a parent that only listens: the form owns
+ * the edits and shows them, and the value the parent passes is one the form has seen
+ */
+export function ListeningParent<T>({ initialValue, log, ...formProps }: ControlledParentProps<T>) {
   Object.assign(log ?? {}, { value: initialValue });
   return (
     <Form<T>

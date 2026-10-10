@@ -1,4 +1,4 @@
-import { Activity, Suspense, startTransition, use, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { Suspense, startTransition, use, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type {
   ArrayFieldItemButtonsTemplateProps,
@@ -295,92 +295,54 @@ it.each([false, true])(
   },
 );
 
-it.each([false, true])(
-  'same-tick validation sees owned custom errors without installing a controlled proposal (controlled: %s)',
-  async (controlled) => {
-    const ref = createFormRef();
-    const results: boolean[] = [];
-    function RaiseAndValidate({ fieldPath, onChange }: FieldProps) {
-      return (
-        <button
-          type='button'
-          onClick={() => {
-            onChange('proposal', fieldPath, { __errors: ['blocked'] });
-            results.push(handleOf(ref).validateForm());
-          }}
-        >
-          Raise and validate
-        </button>
-      );
-    }
-    const props = {
-      ref,
-      schema,
-      uiSchema: { name: { 'ui:field': RaiseAndValidate } },
-      onError: vi.fn(),
-      onChange: vi.fn(),
-    };
-    if (controlled) {
-      render(<Form {...props} validator={validator} formData={{ name: 'committed' }} />);
-    } else {
-      createFormComponent({ ...props, initialFormData: { name: 'committed' } });
-    }
-    await user.click(screen.getByRole('button', { name: 'Raise and validate' }));
-    expect(results).toEqual([false]);
-    expect(handleOf(ref).getFormData()).toEqual({ name: controlled ? 'committed' : 'proposal' });
-    expect(props.onError).toHaveBeenLastCalledWith(
-      expect.arrayContaining([expect.objectContaining({ message: 'blocked' })]),
-    );
-  },
-);
-
-it('an unmounted form ignores a late field change and a retained handle', async () => {
-  const { RetainingWidget, change } = createRetainingWidget();
+it('same-tick validation sees the custom errors a field raises with its edit', async () => {
   const ref = createFormRef();
-  const { onChange, unmount } = createFormComponent({
+  const results: boolean[] = [];
+  function RaiseAndValidate({ fieldPath, onChange }: FieldProps) {
+    return (
+      <button
+        type='button'
+        onClick={() => {
+          onChange('edited', fieldPath, { __errors: ['blocked'] });
+          results.push(handleOf(ref).validateForm());
+        }}
+      >
+        Raise and validate
+      </button>
+    );
+  }
+  const onError = vi.fn();
+  createFormComponent({
     ref,
     schema,
-    initialFormData: { name: 'a' },
-    uiSchema: { name: { 'ui:widget': RetainingWidget } },
+    uiSchema: { name: { 'ui:field': RaiseAndValidate } },
+    onError,
+    initialFormData: { name: 'committed' },
   });
+
+  await user.click(screen.getByRole('button', { name: 'Raise and validate' }));
+
+  expect(results).toEqual([false]);
+  expect(handleOf(ref).getFormData()).toEqual({ name: 'edited' });
+  expect(onError).toHaveBeenLastCalledWith(expect.arrayContaining([expect.objectContaining({ message: 'blocked' })]));
+});
+
+it('a handle retained past the unmount still applies and reports operations', () => {
+  const ref = createFormRef();
+  const { onChange, unmount } = createFormComponent({ ref, schema, initialFormData: { name: 'a' } });
   const handle = handleOf(ref);
   unmount();
   onChange.mockClear();
 
-  // A debounced widget or an autosave timer firing after a route change
-  act(() => {
-    change('root_name', 'late');
-    handle.setFieldValue('name', 'later');
-    handle.reset();
-  });
+  // A debounced widget or an autosave timer firing after a route change: the form is gone, its model is not
+  handle.setFieldValue('name', 'later');
 
-  expect(onChange).not.toHaveBeenCalled();
-});
-
-it('an unmounted form validates for a retained handle without reporting errors', () => {
-  const ref = createFormRef();
-  const onError = vi.fn();
-  const { unmount } = createFormComponent({
-    ref,
-    schema: { type: 'object', properties: { name: { type: 'string', minLength: 3 } } },
-    initialFormData: { name: 'a' },
-    onError,
-  });
-  const handle = handleOf(ref);
-  unmount();
-
-  let valid: boolean | undefined;
-  act(() => {
-    valid = handle.validateForm();
-  });
-
-  // The answer is still the caller's; the form's own callbacks are not called once it has gone
-  expect(valid).toBe(false);
-  expect(onError).not.toHaveBeenCalled();
+  expect(handle.getFormData()).toEqual({ name: 'later' });
+  expectToHaveBeenCalledWithFormData(onChange, { name: 'later' }, 'root_name');
 });
 
 it.each(['layout', 'passive'] as const)(
-  'an unmounting form ignores a change a widget makes from its %s Effect cleanup',
+  'a change a widget makes from its %s Effect cleanup as the form unmounts is applied and reported',
   (kind) => {
     const useCleanupEffect = kind === 'layout' ? useLayoutEffect : useEffect;
     function FlushOnUnmountWidget({ onChange, value }: WidgetProps) {
@@ -396,41 +358,12 @@ it.each(['layout', 'passive'] as const)(
 
     unmount();
 
-    expect(onChange).not.toHaveBeenCalled();
+    expect(onChange).toHaveBeenCalledTimes(1);
+    expectToHaveBeenCalledWithFormData(onChange, { name: 'flushed' }, 'root_name');
   },
 );
 
-it('a form hidden by Activity validates for a retained handle without reporting errors when shown', () => {
-  const ref = createFormRef<{ name?: string }>();
-  const onError = vi.fn();
-  const { hide, show } = renderInActivity(
-    (name: string) => (
-      <Form
-        ref={ref}
-        schema={{ type: 'object', properties: { name: { type: 'string', minLength: 3 } } }}
-        validator={validator}
-        formData={{ name }}
-        onChange={noop}
-        onError={onError}
-      />
-    ),
-    'a',
-  );
-  const handle = handleOf(ref);
-  hide('a');
-
-  let valid: boolean | undefined;
-  act(() => {
-    valid = handle.validateForm();
-  });
-  show('abcd');
-
-  // The answer went to the caller; errors held for later would describe 'a', which is no longer the form's data
-  expect(valid).toBe(false);
-  expect(onError).not.toHaveBeenCalled();
-});
-
-it('a form hidden by Activity applies a retained handle and a late field change, and reports them when shown', () => {
+it('a form hidden by Activity applies a retained handle and a late field change, and reports them at once', () => {
   const { RetainingWidget, change } = createRetainingWidget();
   const ref = createFormRef<{ name?: string }>();
   const onChange = vi.fn();
@@ -453,69 +386,14 @@ it('a form hidden by Activity applies a retained handle and a late field change,
   });
 
   expect(handle.getFormData()).toEqual({ name: 'late' });
-  expect(onChange).not.toHaveBeenCalled();
-
-  show();
-
   expect(onChange.mock.calls.map(([event]: IChangeEvent[]) => event.formData)).toEqual([
     { name: 'later' },
     { name: 'late' },
   ]);
+
+  show();
+
   expect(screen.getByText('late')).toBeInTheDocument();
-
-  onChange.mockClear();
-  hide();
-  act(() => handle.reset());
-
-  expect(handle.getFormData()).toEqual({ name: 'a' });
-  expect(onChange).not.toHaveBeenCalled();
-
-  show();
-
-  expect(onChange.mock.calls.map(([event]: IChangeEvent[]) => event.formData)).toEqual([{ name: 'a' }]);
-});
-
-it('a form hidden by Activity reports a held change to the handler its parent passes when it is shown', () => {
-  const ref = createFormRef<{ name?: string }>();
-  const whenHidden = vi.fn();
-  const whenShown = vi.fn();
-  const { hide, show } = renderInActivity(
-    (onChange: typeof whenHidden) => (
-      <Form ref={ref} schema={schema} validator={validator} initialFormData={{ name: 'a' }} onChange={onChange} />
-    ),
-    whenHidden,
-  );
-  const handle = handleOf(ref);
-  hide(whenHidden);
-
-  act(() => handle.setFieldValue('name', 'later'));
-  show(whenShown);
-
-  // A handler from an earlier render may close over state its parent has since replaced
-  expect(whenHidden).not.toHaveBeenCalled();
-  expect(whenShown).toHaveBeenCalledTimes(1);
-});
-
-it('a form hidden by Activity has its handle back on the ref when it reports what it held', () => {
-  const ref = createFormRef<{ name?: string }>();
-  const onRef: (FormRef<{ name?: string }> | null)[] = [];
-  const { hide, show } = renderInActivity(() => (
-    <Form
-      ref={ref}
-      schema={schema}
-      validator={validator}
-      initialFormData={{ name: 'a' }}
-      onChange={() => onRef.push(ref.current)}
-    />
-  ));
-  const handle = handleOf(ref);
-  hide();
-
-  act(() => handle.setFieldValue('name', 'later'));
-  show();
-
-  // A handler that validates or reads through the ref would otherwise find it empty
-  expect(onRef).toEqual([handle]);
 });
 
 it('a form hidden by Activity shows an edit made while it was hidden, with no render of its own to show it', () => {
@@ -570,33 +448,10 @@ it('a form hidden by Activity takes the data its parent passes while it is hidde
   expectToHaveBeenCalledWithFormData(onChange, { name: 'edited', other: 'y' }, 'root_name');
 });
 
-it('a form first rendered hidden by Activity holds a submit until it is shown', () => {
-  const onSubmit = vi.fn();
-  const inActivity = (mode: 'visible' | 'hidden') => (
-    <Activity mode={mode}>
-      <Form schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={onSubmit} />
-    </Activity>
-  );
-  const { container, rerender } = render(inActivity('hidden'));
-  const form = container.querySelector('form');
-  if (!form) {
-    throw new Error('The form did not render');
-  }
-
-  // No user can reach a hidden form, but a script or a button elsewhere with a `form` attribute can submit it
-  act(() => form.requestSubmit());
-
-  expect(onSubmit).not.toHaveBeenCalled();
-
-  rerender(inActivity('visible'));
-
-  expect(onSubmit).toHaveBeenCalledTimes(1);
-});
-
-it('a submit on a form hidden by Activity waits until it is shown, after the change it reports', () => {
+it('a submit on a form hidden by Activity submits at once, after the change it reports', () => {
   const ref = createFormRef<{ name?: string }>();
   const calls: string[] = [];
-  const { hide, show } = renderInActivity(() => (
+  const { hide } = renderInActivity(() => (
     <Form
       ref={ref}
       schema={schema}
@@ -614,63 +469,9 @@ it('a submit on a form hidden by Activity waits until it is shown, after the cha
     handle.submit();
   });
 
-  expect(calls).toEqual([]);
-
-  show();
-
   expect(calls).toEqual(['change', 'submit {"name":"later"}']);
 });
 
-it('a submit on a form hidden by Activity waits until it is shown, with no change before it', () => {
-  const ref = createFormRef<{ name?: string }>();
-  const onSubmit = vi.fn();
-  const { hide, show } = renderInActivity(() => (
-    <Form ref={ref} schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={onSubmit} />
-  ));
-  const handle = handleOf(ref);
-  hide();
-
-  act(() => handle.submit());
-
-  expect(onSubmit).not.toHaveBeenCalled();
-
-  show();
-
-  expect(onSubmit).toHaveBeenCalledTimes(1);
-});
-
-it.each([
-  { outcome: 'submits', name: 'abc', held: 'onSubmit' },
-  { outcome: 'reports its errors', name: 'a', held: 'onError' },
-] as const)('a submit event on a form hidden by Activity $outcome when the form is shown', ({ name, held }) => {
-  const callbacks = { onSubmit: vi.fn(), onError: vi.fn() };
-  const { container, hide, show } = renderInActivity(() => (
-    <Form
-      schema={{ type: 'object', properties: { name: { type: 'string', minLength: 3 } } }}
-      validator={validator}
-      initialFormData={{ name }}
-      {...callbacks}
-      noHtml5Validate
-    />
-  ));
-  const form = container.querySelector('form');
-  if (!form) {
-    throw new Error('The form did not render');
-  }
-  hide();
-
-  // No user can reach a hidden form, but a script or a button elsewhere with a `form` attribute can submit it
-  act(() => form.requestSubmit());
-
-  expect(callbacks[held]).not.toHaveBeenCalled();
-
-  show();
-
-  expect(callbacks[held]).toHaveBeenCalledTimes(1);
-});
-
-// Ported from #5043: a parent that validates from a passive Effect after changing `schema` or `formData` must see the
-// errors for the new props, not the previous ones
 describe('validateForm() from a passive Effect after a prop change (#5034)', () => {
   const schemaA: RJSFSchema = { type: 'string', minLength: 10, maxLength: 15 };
   const schemaB: RJSFSchema = { type: 'string', minLength: 20 };

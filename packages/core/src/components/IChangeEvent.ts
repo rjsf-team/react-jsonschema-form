@@ -20,9 +20,9 @@ export type EventFormData<T> = T extends object ? T : T | undefined;
  * because it is the public contract while `FormState` is an implementation detail: the state's layout is free to change
  * as long as `toIChangeEvent()` in `Form.tsx`, the only place an event is built, still produces this shape.
  *
- * Every member is `readonly`. The event's `formData` shares its unchanged subtrees with the value the change was
- * applied to, which for a parent-owned form is the parent's own object, so writing into the event writes into that
- * data. Copy what you need out of the event instead.
+ * Every member is `readonly`. The event's `formData` is the form's own data, which shares its unchanged subtrees with
+ * the value the change was applied to, the `formData` you passed included, so writing into the event writes into the
+ * form's data and yours. Copy what you need out of the event instead.
  */
 export interface IChangeEvent<
   T = unknown,

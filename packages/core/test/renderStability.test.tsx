@@ -19,7 +19,7 @@ import {
   AcceptingParent,
   createFormComponent,
   createParentLog,
-  RejectingParent,
+  ListeningParent,
   TransformingParent,
   createFormRef,
 } from './testUtils.tsx';
@@ -381,10 +381,10 @@ describe('render stability across sibling fields', () => {
   describe('under single ownership', () => {
     const templates = { FieldTemplate: CountingFieldTemplate };
 
-    it('a rejected controlled proposal re-renders nothing outside the proposing branch and shows no rejected value', async () => {
+    it('an edit a parent does not store back re-renders nothing outside its own branch', async () => {
       const log = createParentLog<FormValue>();
       const { container } = render(
-        <RejectingParent<FormValue> schema={schema} initialValue={initialFormData()} log={log} templates={templates} />,
+        <ListeningParent<FormValue> schema={schema} initialValue={initialFormData()} log={log} templates={templates} />,
       );
       const secondBefore = renderCount('root_second');
       const innerBefore = renderCount('root_nested_inner');
@@ -392,8 +392,8 @@ describe('render stability across sibling fields', () => {
 
       await user.type(container.querySelector('#root_first')!, 'abc');
 
-      expect(log.proposals.map((proposal) => proposal?.first)).toEqual(['a', 'b', 'c']);
-      expect(container.querySelector('#root_first')).toHaveValue('');
+      expect(log.proposals.map((proposal) => proposal?.first)).toEqual(['a', 'ab', 'abc']);
+      expect(container.querySelector('#root_first')).toHaveValue('abc');
       expect(renderCount('root_second')).toBe(secondBefore);
       expect(renderCount('root_nested_inner')).toBe(innerBefore);
     });

@@ -9,7 +9,7 @@ import Form from '../src/index.ts';
 import type { ControlledParentProps } from './testUtils.tsx';
 import {
   AcceptingParent,
-  RejectingParent,
+  ListeningParent,
   TransformingParent,
   aMicrotaskApart,
   createFormRef,
@@ -53,15 +53,15 @@ describe('controlled parent harnesses', () => {
     expect(log.proposals.at(-1)).toEqual({ name: 'abc' });
   });
 
-  it('a rejecting parent records proposals while its value stays put', async () => {
+  it('a listening parent records the edits while the form keeps showing them', async () => {
     const log = createParentLog<Data>();
-    const { container } = render(<RejectingParent<Data> schema={schema} initialValue={{ name: 'a' }} log={log} />);
+    const { container } = render(<ListeningParent<Data> schema={schema} initialValue={{ name: 'a' }} log={log} />);
 
     await user.type(input(container, 'root_name'), 'b');
 
     expect(log.proposals).toEqual([{ name: 'ab' }]);
-    // A controlled form renders the parent's value (RFC, section 3.2): the refused edit is never shown
-    expect(input(container, 'root_name')).toHaveValue('a');
+    // The form owns the edit: a parent that stores nothing back changes nothing
+    expect(input(container, 'root_name')).toHaveValue('ab');
   });
 
   it('a transforming parent commits the transformed proposal and the form renders it', async () => {
@@ -303,13 +303,14 @@ describe('a blur in the same event as a controlled edit, under onBlur validation
     expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
   });
 
-  it('drops the errors found for an edit the parent refuses', async () => {
-    const { container } = render(<RejectingParent<Named> {...propsFor()} />);
+  it('shows the errors found for the edit whatever the parent stores', async () => {
+    const { container } = render(<ListeningParent<Named> {...propsFor()} />);
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The inputs still show 'abcd', which is valid, so no error describes data that is not on screen
-    expect(fieldErrorsById(container)).toEqual({});
+    // The form shows 'ab', the data it holds, and the errors the blur found for it
+    expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
+    expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
   });
 
   it.each<[string, Partial<ControlledParentProps<Named>>]>([
@@ -325,7 +326,7 @@ describe('a blur in the same event as a controlled edit, under onBlur validation
     expect(fieldErrorsById(container)).toEqual({});
   });
 
-  it('validates the value a transforming parent renders', async () => {
+  it('validates the value at the blur, not the one a transforming parent stores after it', async () => {
     const { container } = render(
       <TransformingParent<Named>
         {...propsFor({ sent: 'ab ' })}
@@ -335,8 +336,9 @@ describe('a blur in the same event as a controlled edit, under onBlur validation
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The proposal 'ab ' is long enough; the 'ab' the parent rendered is not
-    expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
+    // The edit 'ab ' is long enough; the 'ab' the parent stored replaces it and is validated at the next blur
+    expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
+    expect(fieldErrorsById(container)).toEqual({});
   });
 
   it('lets a reset later in the same event clear the errors', async () => {
@@ -418,7 +420,7 @@ describe('an edit after another operation on an unanswered proposal, in the same
     return { ref, container };
   }
 
-  it('does not bring back a custom error a reset cleared', async () => {
+  it('a reset puts the data the parent passed back and clears a custom error raised before it', async () => {
     const { ref, container } = mount(fieldsSchema, (onChange) => {
       onChange('x', { __errors: ['custom'] });
       handleOf(ref).reset();
@@ -427,7 +429,8 @@ describe('an edit after another operation on an unanswered proposal, in the same
 
     await user.click(screen.getByRole('button', { name: 'Act from a' }));
 
-    expect(handleOf(ref).getFormData()).toEqual({ name: 'x', other: 'z' });
+    // The reset went back to the `formData` the parent had rendered, which the edit after it builds on
+    expect(handleOf(ref).getFormData()).toEqual({ name: 'a', other: 'z' });
     expect(fieldErrorsById(container)).toEqual({});
   });
 

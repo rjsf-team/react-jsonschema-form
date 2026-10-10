@@ -328,7 +328,7 @@ importers:
   packages/core:
     dependencies:
       react:
-        specifier: '>=19.2'
+        specifier: '>=19'
         version: 19.3.0
     devDependencies:
       '@rjsf/utils':

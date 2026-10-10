@@ -3,19 +3,18 @@ import type { FieldPath } from '@rjsf/utils';
 
 import type { AnnouncedMove } from './formState.ts';
 
-/** Private event access for container fields. A field rendered with the form's own data reads the form's latest edit,
- * which in a parent-owned form is a proposal made since the form last rendered; a field handed a view of that data
- * keeps to its view.
+/** Private event access for container fields. A field rendered with the form's own data reads the form's latest data,
+ * edits made since the form last rendered included; a field handed a view of that data keeps to its view.
  */
 interface FormDataAccess {
-  /** Changes whenever such a proposal is dropped, at the commit of the form that answers it, and with it a field's
-   * record of it
+  /** Changes at every commit of the form, and with it ends a field's record of a view it sent since the form last
+   * rendered (see `useFieldView()`)
    */
   epoch(): number;
-  /** Called before a field sends a proposal. The function it returns, called once the proposal was sent, has the form
-   * render, so that its commit ends the field's record of the proposal whatever became of it: a custom parent can keep
-   * one to itself, and the form would otherwise never learn of it. A proposal that reached the form had it render
-   * already, and is not rendered for twice.
+  /** Called before a field sends a view. The function it returns, called once the view was sent, has the form render,
+   * so that its commit ends the field's record of the view whatever became of it: a custom parent can keep the change
+   * to itself, and the form would otherwise never learn of it. A change that reached the form had it render already,
+   * and is not rendered for twice.
    */
   proposing(): () => void;
   /** Calls `send`, which sends a change that moves the keys of the array or object at `move.fieldPath`: an item to

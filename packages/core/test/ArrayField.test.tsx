@@ -28,7 +28,7 @@ import type { IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 import {
   AcceptingParent,
-  RejectingParent,
+  ListeningParent,
   aMicrotaskApart,
   createFormComponent,
   createFormRef,
@@ -4960,10 +4960,10 @@ describe('ArrayField', () => {
       expect(proposals).toEqual([[undefined]]);
     });
 
-    it('should start a later event from the rendered rows when a controlled parent refused the earlier one', async () => {
+    it('should start a later event from the rows an earlier removal left when the parent stores nothing back', async () => {
       const log = createParentLog<string[]>();
       const { container } = render(
-        <RejectingParent<string[]>
+        <ListeningParent<string[]>
           schema={{ type: 'array', items: { type: 'string', minLength: 2 } }}
           initialValue={['aa', 'bb', 'c']}
           log={log}
@@ -4975,17 +4975,14 @@ describe('ArrayField', () => {
       await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
       await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
 
-      // The refused removal is gone once React renders, so the second one starts again from ['aa', 'bb', 'c'], and
-      // moves the error on 'c' from the rendered errors, not from the refused proposal's
-      expect(log.proposals).toEqual([
-        ['bb', 'c'],
-        ['bb', 'c'],
-      ]);
+      // The form owns the first removal, so the second one starts from the rows it left, and the error on 'c' moves
+      // up with the item each time
+      expect(log.proposals).toEqual([['bb', 'c'], ['c']]);
       const error = { __errors: ['must NOT have fewer than 2 characters'] };
-      expect(log.events.map((event) => event.errorSchema)).toEqual([{ 1: error }, { 1: error }]);
+      expect(log.events.map((event) => event.errorSchema)).toEqual([{ 1: error }, { 0: error }]);
     });
 
-    it('should key the rows of an accepted edit from the rendered rows after a refused one', async () => {
+    it('should key the rows of a stored edit from the rendered rows after one the parent did not store', async () => {
       let refuse = true;
       function RefuseOnceParent() {
         const [data, setData] = useState(['a', 'b', 'c']);
@@ -5009,11 +5006,11 @@ describe('ArrayField', () => {
 
       await user.click(container.querySelectorAll('.rjsf-array-item-remove')[0]);
       const afterRefusal = rowKeys(container);
-      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[2]);
+      await user.click(container.querySelectorAll('.rjsf-array-item-remove')[1]);
 
-      // The refused removal's keys are dropped with its proposal, so the accepted one removes from the rendered rows
-      expect(afterRefusal).toHaveLength(3);
-      expect(rowKeys(container)).toEqual(afterRefusal.slice(0, 2));
+      // The form owns the removal the parent did not store, so the one it stores removes from the rows that left
+      expect(afterRefusal).toHaveLength(2);
+      expect(rowKeys(container)).toEqual(afterRefusal.slice(0, 1));
     });
 
     it.each([
