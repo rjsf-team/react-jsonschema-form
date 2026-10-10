@@ -516,12 +516,17 @@ function splitRaise<T>(
  * @returns - The errors with the raise applied
  */
 function replaceErrorsAt<T>(errors: RJSFValidationError[], path: FieldPathList, raised: ErrorSchema<T>) {
-  // The error an invalid schema is reported with sits under `$schema` in the `ErrorSchema` and has no `property` in
-  // the list, as in `withoutErrors()`. Handed back by a root raise, it stays as the validator listed it rather than
-  // being replaced by a copy filed under `.$schema`, which nothing would know it by
-  const keepsSchemaError = path.length === 0 && getByPath<string[]>(raised, [SCHEMA_KEY, ERRORS_KEY], []).length > 0;
+  // The error an invalid schema is reported with, handed back by a root raise, stays as the validator listed it rather
+  // than being replaced by a copy filed under `.$schema`, which nothing would know it by; see `invalidSchemaMessages()`
+  const invalidSchema = path.length === 0 ? invalidSchemaMessages({ errors, errorSchema: raised }) : [];
+  const keepsSchemaError = invalidSchema.length > 0;
   const incoming = toErrorList(raised, path.map(String)).filter(
-    (entry) => !(keepsSchemaError && String(errorPath(entry)) === SCHEMA_KEY),
+    (entry) =>
+      !(
+        String(errorPath(entry)) === SCHEMA_KEY &&
+        entry.message !== undefined &&
+        invalidSchema.includes(entry.message)
+      ),
   );
   const kept: RJSFValidationError[] = [];
   let insertAt = -1;

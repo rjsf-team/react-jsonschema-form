@@ -692,6 +692,23 @@ describe('Error state consistency when deriving from new props', () => {
     expect(errorListMessages(container)).toEqual([]);
   });
 
+  it('keeps the error of a property named $schema listed when a root field hands it back', async () => {
+    const named: RJSFSchema = { type: 'object', properties: { $schema: { type: 'string', minLength: 8 } } };
+    const { container } = render(
+      <Form schema={named} uiSchema={raisingUiSchema} validator={validator} initialFormData={{ $schema: 'short' }} />,
+    );
+
+    await submitForm(container, user);
+    const listed = errorListMessages(container);
+    expect(listed).toEqual(['.$schema must NOT have fewer than 8 characters']);
+
+    // Filed under `$schema` like the error of an invalid schema, but listed with its `property` like any field's
+    await raise((field) => field.onChange(field.formData, field.fieldPath, field.errorSchema));
+
+    expect(errorListMessages(container)).toEqual(listed);
+    expect(fieldErrorsById(container)).toEqual({ root_$schema: ['must NOT have fewer than 8 characters'] });
+  });
+
   it('keeps the validator error when a raise hands back only errors supplied elsewhere', async () => {
     const addrSchema: RJSFSchema = {
       type: 'object',
