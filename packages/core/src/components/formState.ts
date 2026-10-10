@@ -469,19 +469,22 @@ export function getAt(data: unknown, segments: FieldPathList): unknown {
   return segments.length === 0 ? data : getByPath(data, segments);
 }
 
-/** A copy of `errorSchema` with the node at `path` replaced by `node`. A `node` that holds nothing is gone, with the
- * ancestors that leaves empty, which a raise at one of them would read as errors still being there
+/** A copy of `errorSchema` with the node at `path` replaced by a copy of `node` without what holds nothing. A `node`
+ * that holds nothing is gone, with the ancestors that leaves empty, which a raise at one of them would read as errors
+ * still being there. The copy is what keeps the form from holding an object the field may go on to change, such as
+ * the `ErrorSchema` of a builder it keeps, and from walking an empty `__errors` on every later merge
  */
 function replaceErrorSchemaNode<T>(
   errorSchema: ErrorSchema<T>,
   path: FieldPathList,
   node: ErrorSchema<T>,
 ): ErrorSchema<T> {
+  const kept = pruneErrorSchema(node, () => false);
   if (path.length === 0) {
-    return node;
+    return kept;
   }
   // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-  const replaced = setByPath(copyAlongPath(errorSchema, path), path, node, true);
+  const replaced = setByPath(copyAlongPath(errorSchema, path), path, kept, true);
   // Every container along `path` is a copy or newly made, so unsetting in place touches nothing the state holds
   for (let depth = path.length; depth > 0; depth--) {
     const ancestor = path.slice(0, depth);

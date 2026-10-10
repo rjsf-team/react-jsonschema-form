@@ -11,7 +11,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { optionalControlsId, toFieldPath } from '@rjsf/utils';
+import { ErrorSchemaBuilder, optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -263,6 +263,8 @@ describe('Error state consistency when deriving from new props', () => {
       await raise((field) => field.onChange('short', nameStreetPath, cleared));
       expect(fieldErrorsById(container)).toEqual({});
       expect(errorListMessages(container)).toEqual([]);
+      // Nothing of the empty raise is kept, not even an empty `__errors` at its path
+      expect(rootField().errorSchema).toEqual({});
 
       await user.click(screen.getByRole('button', { name: 'restyle' }));
 
@@ -1091,6 +1093,21 @@ describe('Error state consistency when deriving from new props', () => {
 
     await user.type(input(container, 'root_primary'), 'bc');
     expect(fieldErrorsById(container)).toEqual({ root_primary: ['custom:abc'], root_other: ['custom:bc'] });
+  });
+
+  it('keeps a raise as it was made when the field goes on to change the builder it raised from', async () => {
+    const builder = new ErrorSchemaBuilder().addErrors('bad', ['name']);
+    const props = { schema, uiSchema: raisingUiSchema, validator, initialFormData: shortName };
+    const { container, rerender } = render(<Form {...props} />);
+    await raise((field) => field.onChange(field.formData, field.fieldPath, builder.ErrorSchema));
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['bad'] });
+
+    builder.clearErrors(['name']);
+    rerender(<Form {...props} className='restyled' />);
+
+    // Read off the props rather than the DOM: a raise the form held by reference would change in place, which React,
+    // handed the same object, would not render
+    expect(rootField().errorSchema).toEqual({ name: { __errors: ['bad'] } });
   });
 
   it('lists a message once when a field raises as its own what the validator also reported', async () => {
