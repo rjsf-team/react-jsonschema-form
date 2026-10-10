@@ -736,7 +736,8 @@ export interface FieldProps<
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
   /** The field change event handler; called with the updated field value, the `FieldPath` of the value
-   * (the root of the form is `''`), an optional ErrorSchema and the optional id of the field being changed
+   * (the root of the form is `''`), an optional ErrorSchema holding the errors this field itself raises at that path,
+   * never the `errorSchema` prop handed back, and the optional id of the field being changed
    */
   onChange: Bivariant<[newValue: T | undefined, fieldPath: FieldPath, es?: ErrorSchema<T>, id?: string]>;
   /** The input blur event handler; call it with the field id and value */
@@ -1212,7 +1213,9 @@ export interface WidgetProps<
   };
   /** The input blur event handler; call it with the widget id and value */
   onBlur: (id: string, value: any) => void;
-  /** The value change event handler; call it with the new value every time it changes */
+  /** The value change event handler; call it with the new value every time it changes, and optionally with an
+   * ErrorSchema holding the errors the widget itself raises for that value
+   */
   onChange: Bivariant<[value: any, es?: ErrorSchema<T>, id?: string]>;
   /** The input focus event handler; call it with the widget id and value */
   onFocus: (id: string, value: any) => void;

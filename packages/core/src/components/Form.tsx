@@ -12,7 +12,6 @@ import {
 import type {
   CustomValidator,
   ErrorSchema,
-  ErrorSchemaBuilder,
   ErrorTransformer,
   FormContextType,
   StrictRJSFSchema,
@@ -257,8 +256,8 @@ export interface FormState<
    * `extraErrors`
    */
   schemaValidationErrorSchema: ErrorSchema<T>;
-  /** A container used to handle custom errors provided via `onChange` */
-  customErrors?: ErrorSchemaBuilder<T>;
+  /** The errors fields raised as their own through `onChange`, kept apart from the validator's */
+  customErrors?: ErrorSchema<T>;
   /** The result of `schemaUtils.retrieveSchema(schema, formData)` for the state's data, kept so the edit path and
    * live validation do not resolve it again
    */

@@ -18,10 +18,13 @@ import {
 
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { PendingChange } from './formState.ts';
+import type { AnnouncedMove, PendingChange } from './formState.ts';
 import {
   applyBlur,
   applyChange,
+  applyChangeToErrors,
+  ownErrorsAfterChange,
+  ownedErrorsOf,
   applyReset,
   applySubmit,
   applyValidation,
@@ -216,6 +219,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // proposal it made is dropped with it.
   let pending: FormState<T, S, F> | undefined;
   let epoch = 0;
+  // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
+  let announced: AnnouncedMove | undefined;
   const propose = (next: FormState<T, S, F>) => {
     // `commit()` freezes self-owned data; a proposal never reaches it
     if (isDevelopment) {
@@ -377,7 +382,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   ) => {
     const props: OperationProps<T, S, F> = committedProps;
     const start = state;
-    const edit: PendingChange<T> = { newValue, fieldPath, newErrorSchema };
+    // Taken by the change it was announced for, so a second change at the path moves nothing again
+    const move = announced?.fieldPath === fieldPath ? announced : undefined;
+    if (move) {
+      announced = undefined;
+    }
+    const edit: PendingChange<T> = {
+      newValue,
+      fieldPath,
+      newErrorSchema,
+      newKeyOf: move?.newKeyOf,
+      dropsOwnErrors: move?.dropsOwnErrors,
+    };
     const next = applyChange(pending ?? start, edit, props);
     if (!start.isControlled) {
       // A reentrant operation may have committed while this one was being calculated, so report what was committed
@@ -385,13 +401,20 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       report((latest) => latest.onChange?.(toIChangeEvent(committed), id));
       return;
     }
-    // Validated errors describe the proposal, which the parent may yet refuse, so they wait for the parent's answer
-    // in `deriveState()`; without live validation they describe the committed data plus the custom errors, which
-    // are the form's own
-    const owned = (result: FormState<T, S, F>, base: FormState<T, S, F>) =>
-      isLiveValidated(props) ? { ...base, customErrors: result.customErrors } : result;
-    // Committed before the parent is told, so a throwing handler cannot lose the errors the form owns
-    commit(start, owned(next, start), (base) => owned(applyChange(base, edit, props), base));
+    // The form commits what the change does to the errors it owns, before the parent is told, so a throwing handler
+    // cannot lose them. Under live validation that is the fields' own errors alone: the validated ones describe the
+    // proposal, which the parent may yet refuse, so they wait for its answer in `deriveState()`. So do the validator's
+    // errors under keys the proposal moved: the parent either renders the moved data back, which clears the changed
+    // fields' errors, or keeps its own, which the old keys describe
+    const withOwnedErrors = (base: FormState<T, S, F>): FormState<T, S, F> => {
+      // `next` was built on `start` when no proposal is pending, so it already carries what the change did to them
+      const isNext = base === start && !pending;
+      if (isLiveValidated(props) || move) {
+        return { ...base, customErrors: isNext ? next.customErrors : ownErrorsAfterChange(base, edit) };
+      }
+      return { ...base, ...(isNext ? ownedErrorsOf(next) : applyChangeToErrors(base, edit, props.extraErrors)) };
+    };
+    commit(start, withOwnedErrors(start), withOwnedErrors);
     propose(next);
     report((latest) => latest.onChange?.(toIChangeEvent(next), id));
   };
@@ -536,9 +559,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     focusOnError,
   };
 
-  /** The latest value at `path`: a self-owned edit or a pending proposal, else the rendered data */
-  const readLatest = <V>(key: 'formData' | 'errorSchema', path: FieldPath) =>
-    getAt<V>((pending ?? state)[key], fieldPathToList(path));
   return {
     setFormElement: (element: HTMLElement | null) => {
       formElement = element;
@@ -556,8 +576,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         }
       };
     },
-    readField: <D>(path: FieldPath) => readLatest<D>('formData', path),
-    readErrors: <E>(path: FieldPath) => readLatest<E>('errorSchema', path),
+    sendMove: (move: AnnouncedMove, send: () => void) => {
+      announced = move;
+      try {
+        send();
+      } finally {
+        if (announced === move) {
+          announced = undefined;
+        }
+      }
+    },
+    /** The latest value at `path`: a self-owned edit or a pending proposal, else the rendered data */
+    readField: <D>(path: FieldPath) => getAt<D>((pending ?? state).formData, fieldPathToList(path)),
     getSnapshot: () => snapshot,
     subscribe: (listener: () => void) => {
       listeners.add(listener);

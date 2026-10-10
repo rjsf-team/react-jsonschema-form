@@ -21,6 +21,7 @@ import {
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
+import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
@@ -79,6 +80,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
    * that make deepEquals see a false formData change.
    */
   const optionSwitchProposal = useRef<{ formData: T | undefined } | undefined>(undefined);
+  const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const prevFormDataRef = useRef<T | undefined>(formData);
   const prevFieldIdRef = useRef(id);
 
@@ -187,7 +189,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
       setSelectedOption(intOption);
       optionSwitchProposal.current = { formData: newFormData };
-      onChange(newFormData, fieldPath, undefined, fieldId);
+      sendOptionSwitch(schema, oldOption, formData, () => onChange(newFormData, fieldPath, undefined, fieldId));
     },
     // setSelectedOption is stable (guaranteed by useState); optionSwitchProposal is a ref
     [
@@ -201,6 +203,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       fieldPath,
       onChange,
       fieldId,
+      sendOptionSwitch,
       optionsUiSchema,
       optionUiSchema,
       uiSchema,
