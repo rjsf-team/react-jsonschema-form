@@ -43,7 +43,8 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
        * `newKeyOf` says where the proposal put what the field's array or object held under each key, for the form to
        * move the errors along. The keys are those of the `formData` the field was given, which a custom parent passing
        * the form's data on leaves as they are; one that reorders or filters the items it shows moves the errors by its
-       * own indexes.
+       * own indexes. The form moves them for the change `send` makes before it returns: one a wrapper passes on later,
+       * from a debounce or after an `await`, reaches the form as a change it knows no move of.
        */
       propose: (next: V, send: () => void, newKeyOf?: KeyMove) => {
         const record = access && { view: next, epoch: access.epoch() };
