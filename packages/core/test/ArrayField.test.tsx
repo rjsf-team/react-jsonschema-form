@@ -2362,6 +2362,17 @@ describe('ArrayField', () => {
       expect(removeTitles(bySize)).toEqual(['Remove 12']);
     });
 
+    it('names items by their own value only for "." and not for other paths of just separators', () => {
+      for (const itemLabel of ['..', '[]', '.[', ']']) {
+        const { node } = createFormComponent({
+          schema: { type: 'array', items: { type: 'string' } },
+          initialFormData: ['react', 'jsonschema'],
+          uiSchema: { 'ui:itemLabel': itemLabel },
+        });
+        expect(removeTitles(node)).toEqual(['Remove', 'Remove']);
+      }
+    });
+
     it('trims the whitespace around a name', () => {
       const { node } = createFormComponent({
         schema,
@@ -2424,6 +2435,23 @@ describe('ArrayField', () => {
 
       await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[1]);
       expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove invoice.pdf', 'Remove report.pdf (2)']);
+    });
+
+    it('gives a copy the next number, and keeps each number with its item when it moves', async () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [files[0], files[0]],
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+      });
+      expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove report.pdf (2)']);
+
+      // The copy goes in after the first item, and takes the next number rather than renumbering the item after it
+      await user.click(node.querySelectorAll('.rjsf-array-item-copy')[0]);
+      expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove report.pdf (3)', 'Remove report.pdf (2)']);
+
+      await user.click(node.querySelectorAll('.rjsf-array-item-move-up')[2]);
+      expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove report.pdf (2)', 'Remove report.pdf (3)']);
+      expect(node.querySelectorAll('.rjsf-array-item-move-up')[1]).toHaveAttribute('title', 'Move report.pdf (2) up');
     });
 
     it('keeps the numbers of items with a shared name when an item with another name is edited', async () => {
@@ -2713,7 +2741,7 @@ describe('ArrayField', () => {
       });
       const numberings = translateString.mock.calls.filter(([str]) => str === TranslatableString.ItemNameWithNumber);
 
-      // Two attempts per shared item, where searching up to the bound took one per name in use for each
+      // Two attempts per shared item
       expect(numberings.length).toBeLessThanOrEqual(2 * shared);
     });
 
