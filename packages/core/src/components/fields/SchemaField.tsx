@@ -323,7 +323,22 @@ function getFieldComponent<
     componentName = 'FallbackField';
   }
   if (schemaId && Object.hasOwn(fields, schemaId)) {
-    componentName = schemaId;
+    // `fields` can hold anything a caller passes in, so the value registered under the `$id` is checked the same way
+    // `resolveUiField()` checks a `ui:field`: handing React something that isn't a component throws "Element type is
+    // invalid" and takes the whole form down with it
+    if (isComponentType<FieldProps<T, S, F>>(fields[schemaId])) {
+      componentName = schemaId;
+    } else if (!namedField) {
+      // A `ui:field` that resolved renders in place of the `$id`'s value either way, so it alone is warned about then
+      logOnce(
+        `the field registered under $id '${schemaId}' ${describeUnresolvedComponent(
+          fields[schemaId],
+          fields[schemaId],
+          'registered field',
+          'MyField',
+        )}, so it is ignored and the field for the schema's type is rendered.`,
+      );
+    }
   }
 
   /** The one component every answer below is derived from, so that none of them can describe another: the field a

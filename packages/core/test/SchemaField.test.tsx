@@ -627,6 +627,45 @@ describe('SchemaField', () => {
     });
   });
 
+  describe('a field registered under a schema $id that is not a component', () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+    const ForwardedIdField = forwardRef<HTMLDivElement>((_props, ref) => <div id='custom-id' ref={ref} />);
+
+    function MyIdField() {
+      return <div id='custom-id' />;
+    }
+
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { thing: { $id: '#/thing', type: 'string' } },
+    };
+
+    it('warns that a React element is ignored, and renders the field for the schema type', () => {
+      const { node } = createFormComponent({
+        schema,
+        fields: { '#/thing': (<MyIdField />) as unknown as Field },
+      });
+
+      expect(node.querySelector('#custom-id')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root_thing')).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        `the field registered under $id '#/thing' is a React element rather than a component (pass MyField, not ` +
+          "<MyField />), so it is ignored and the field for the schema's type is rendered.",
+      );
+    });
+
+    it.each([
+      ['memo()', memo(MyIdField)],
+      ['forwardRef()', ForwardedIdField],
+    ])('renders a %s component registered under the $id in place of the field for the schema type', (_, component) => {
+      const { node } = createFormComponent({ schema, fields: { '#/thing': component as Field } });
+
+      expect(node.querySelector('#custom-id')).toBeInTheDocument();
+      expect(node.querySelector('input#root_thing')).not.toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
+    });
+  });
+
   describe('label support', () => {
     const schema: RJSFSchema = {
       type: 'object',
