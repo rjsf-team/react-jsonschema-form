@@ -557,6 +557,10 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
       (pathOfError) => pathOfError.length === path.length && isPathPrefix(path, pathOfError),
     );
   }
+  // An empty raise leaves none, rather than a `{}` every later merge would walk
+  if (customErrors && Object.keys(customErrors).length === 0) {
+    customErrors = undefined;
+  }
   return {
     ...mergeErrors(validation, extraErrors, customErrors),
     schemaValidationErrors: validation.errors,

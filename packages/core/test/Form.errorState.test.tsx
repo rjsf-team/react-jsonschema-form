@@ -478,7 +478,7 @@ describe('Error state consistency when deriving from new props', () => {
     const { container } = render(<RestylingParent />);
 
     await raise((field) => field.onChange(shortName, field.fieldPath, { other: { __errors: ['x'] } }));
-    await user.click(container.querySelector('button')!);
+    await user.click(screen.getByRole('button', { name: 'restyle' }));
 
     expect(fieldErrorsById(container)).toEqual({ root_other: ['x'] });
     expect(errorListMessages(container)).toEqual(['.other x']);
