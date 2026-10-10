@@ -1063,6 +1063,84 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a' } }, 'root_mode');
     });
 
+    // Every object the fill produces carries its keys in the order the schema declares them, whatever order they
+    // arrived in, so the one key a restore puts back by hand is the one that could be reported somewhere else
+    it('puts a value back under the key order the fill produces', async () => {
+      const cfgOf = (x: number): RJSFSchema => ({
+        type: 'object',
+        default: { x },
+        properties: { x: { type: 'number' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            cfg: { type: 'object', properties: { x: { type: 'number' } } },
+            tail: { type: 'string' },
+          },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgOf(1) } },
+            },
+            {
+              if: { properties: { mode: { const: 'b' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgOf(2) } },
+            },
+          ],
+        },
+        formData: { mode: 'a', cfg: { x: 1 }, tail: 't' },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { x: 1 }, tail: 't' }, 'root_mode');
+      // Where the restored key sits among its siblings, rather than the whole order: `omitExtraData` rebuilds the
+      // object from the retrieved schema, whose `properties` an `allOf` merge orders differently from the raw schema
+      // the fill reads, so the variants do not all emit the same absolute order
+      const keys = Object.keys(onChange.mock.lastCall![0].formData as object);
+      expect(keys.indexOf('cfg')).toBeLessThan(keys.indexOf('tail'));
+    });
+
+    // Only the restored key is positioned, never its siblings. Data that arrives out of schema order keeps that order
+    // while the fill has nothing to change — `replaceEqualDeep()` hands back the value it was given when the fill's
+    // result is deeply equal to it — so putting a key back must not take the chance to reorder everything around it
+    it('leaves the siblings of a restored key in the order the fill gave them', async () => {
+      const cfgOf = (x: number): RJSFSchema => ({
+        type: 'object',
+        default: { x },
+        properties: { x: { type: 'number' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            cfg: { type: 'object', properties: { x: { type: 'number' } } },
+            tail: { type: 'string' },
+          },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgOf(1) } },
+            },
+            {
+              if: { properties: { mode: { const: 'b' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgOf(2) } },
+            },
+          ],
+        },
+        formData: { tail: 't', cfg: { x: 1 }, mode: 'a' },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { x: 1 }, tail: 't' }, 'root_mode');
+      const keys = Object.keys(onChange.mock.lastCall![0].formData as object);
+      expect(keys.indexOf('mode')).toBeLessThan(keys.indexOf('tail'));
+    });
+
     // The dropped key's own declaration lives in a dependency keyed on its presence, so the fill that runs while it is
     // gone resolves a schema that declares neither it nor `extra`. Putting the value back before anything else in the
     // iteration reads its absence is what keeps that fill's view from reaching the data the user supplied
@@ -1118,6 +1196,89 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       await selectMode(node, 'b');
 
       expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', kind: 'k2', opts: { o: 'k2' } }, 'root_mode');
+    });
+
+    // The fill that writes a replacement runs with the key deleted, so a conditional on the key's own schema is
+    // resolved against no value at all: an `if` on it is vacuously true for an absent key, which selects a `then` the
+    // real value never selects and leaves the `else`'s required `tank` unwritten. A further iteration, starting from
+    // the replacement, is what settles it — without one the change commits data its own schema rejects, and an
+    // unrelated keystroke later fixes it up
+    it("resolves a replacement's own conditionals against the value written for it", async () => {
+      const petFor = (branch: string): RJSFSchema => ({
+        type: 'object',
+        default: { animal: 'Fish' },
+        properties: { animal: { type: 'string', enum: ['Cat', 'Fish'] } },
+        if: { properties: { animal: { const: 'Cat' } } },
+        then: { properties: { diet: { type: 'string', default: `${branch} meat` } } },
+        else: { properties: { tank: { type: 'string', default: `${branch} tank` } }, required: ['tank'] },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          if: { properties: { mode: { const: 'a' } } },
+          then: { properties: { pet: petFor('a') } },
+          else: { properties: { pet: petFor('b') } },
+        },
+        liveValidate: 'onChange',
+      });
+
+      await selectMode(node, 'b');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: expect.objectContaining({ pet: expect.objectContaining({ animal: 'Fish', tank: 'b tank' }) }),
+          errors: [],
+        }),
+        'root_mode',
+      );
+    });
+
+    // The second hop retypes the key the first hop replaced: the `kind` written for the newly selected branch selects
+    // a `cfg` that the refill written while `kind` was gone no longer fits. The refill is judged by the schema the
+    // previous iteration settled rather than by the one the data arrived under, so it is dropped again and the fill
+    // answers the schema that rejected it, instead of the key settling on an object under a string schema
+    it('replaces a refill that a later iteration retypes', async () => {
+      const kindFor = (v: string): RJSFSchema => ({
+        type: 'object',
+        default: { v },
+        properties: { v: { type: 'string' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            kind: { type: 'object', properties: { v: { type: 'string' } } },
+          },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } }, required: ['mode'] },
+              then: { properties: { kind: kindFor('k1') } },
+              else: { properties: { kind: kindFor('k2') } },
+            },
+            {
+              if: { properties: { kind: { properties: { v: { const: 'k2' } }, required: ['v'] } }, required: ['kind'] },
+              then: { properties: { cfg: { type: 'string', default: 'final' } } },
+              else: {
+                properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } },
+                allOf: [
+                  {
+                    if: { properties: { mode: { const: 'a' } }, required: ['mode'] },
+                    then: { properties: { cfg: cfgFor('a') } },
+                    else: { properties: { cfg: cfgFor('mid') } },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        formData: { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', kind: { v: 'k2' }, cfg: 'final' }, 'root_mode');
     });
 
     // Where a branch declares the default is what decides how much of the value it speaks for. On the object itself

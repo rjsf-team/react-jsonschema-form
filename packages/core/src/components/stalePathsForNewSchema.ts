@@ -1,4 +1,5 @@
 import type {
+  FieldPath,
   FieldPathList,
   FormContextType,
   RJSFSchema,
@@ -10,6 +11,7 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
   DEFAULT_KEY,
+  fieldPathFromList,
   getByPath,
   getXxxOfOptions,
   isPlainObject,
@@ -32,30 +34,33 @@ interface StaleSearchOptions<T, S extends StrictRJSFSchema, F extends FormContex
   initialDefaultsGenerated: boolean;
   /** The form's uiSchema, indexed into per level so each key's `ui:initialValue`/`ui:emptyValue` applies */
   uiSchema?: UiSchema<T, S, F>;
+  /** The paths the caller has already dropped on an earlier iteration of its loop, which are neither reported again
+   * nor descended into
+   */
+  droppedPaths: ReadonlySet<FieldPath>;
 }
 
-/** A key of the level being walked whose subschema was swapped for another one */
+/** The two sides' own `properties`, read and checked by the walk before it hands them on, so nothing below it has to
+ * assert they are there
+ */
+interface LevelProperties {
+  newProperties: Record<string, unknown>;
+  oldProperties: Record<string, unknown>;
+}
+
+/** A key of the level being walked that the walk has resolved both sides of: one whose subschema was swapped, or the
+ * key the change is inside, which is descended into whether or not it swapped
+ */
 interface SwappedKey<S extends StrictRJSFSchema> {
   key: string;
   /** The schema the key resolves to now */
   newSchema: S;
   /** The schema it resolved to for the data as it arrived */
   oldSchema: S;
-  /** Worth a defaults computation to decide about: not the field the user just changed, carried a value over, and
-   * declared by both branches. The reasoning behind each clause is on the exported function
+  /** Worth a defaults computation to decide about: swapped, not the field the user just changed, carried a value
+   * over, and declared by both branches. The reasoning behind each clause is on the exported function
    */
   isReplaceable: boolean;
-}
-
-/** What one walked level's keys amount to */
-interface LevelKeys<S extends StrictRJSFSchema> {
-  /** One entry per key whose subschema was swapped */
-  swapped: SwappedKey<S>[];
-  /** The changed key's two resolved schemas, when it was not swapped and so is not among `swapped`. The walk descends
-   * into that key either way — its own level is where a conditional nested deeper is declared, and nothing else
-   * reaches it — so the pair is resolved here, where the raw schemas and both values are already in hand
-   */
-  changedKeyPair?: [S, S];
 }
 
 /** Determines whether any `oneOf`/`anyOf` option of `level` describes the level's properties, which is what makes the
@@ -94,14 +99,18 @@ function optionsDeclareProperties<T, S extends StrictRJSFSchema, F extends FormC
  * the whole level, which is the cost that makes this affordable on a path that runs per change.
  *
  * @param schema - The level schema to narrow
+ * @param properties - The level's own `properties`, which the walk has already read and checked
  * @param keys - The names of the properties to keep
  * @returns - The schema, describing only `keys`
  */
-function onlyProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S, keys: string[]): S {
-  const properties = schema[PROPERTIES_KEY];
+function onlyProperties<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  properties: Record<string, unknown>,
+  keys: string[],
+): S {
   return {
     ...schema,
-    [PROPERTIES_KEY]: Object.fromEntries(keys.map((key) => [key, properties![key]])),
+    [PROPERTIES_KEY]: Object.fromEntries(keys.map((key) => [key, properties[key]])),
   };
 }
 
@@ -119,23 +128,24 @@ function onlyProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S, keys
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve each side with
  * @param newLevel - The level schema resolved for the data as it stands
  * @param oldLevel - The level schema resolved for the data as it arrived
+ * @param levels - The two levels' own `properties`, which the walk has already read and checked
  * @param newValue - The level's value as it stands
  * @param oldValue - The level's value as it arrived
  * @param changedKey - The key of this level the user's change is at or within, if any
- * @returns - The swapped keys, and the changed key's resolved schema when it was resolved here without being swapped
+ * @returns - One entry per key the walk has to act on: every swapped key, and the changed key, which the walk
+ *          descends into whether or not it swapped
  */
 function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schemaUtils: SchemaUtilsType<T, S, F>,
   newLevel: S,
   oldLevel: S,
+  levels: LevelProperties,
   newValue: Record<string, unknown>,
   oldValue: Record<string, unknown>,
   changedKey: string | undefined,
-): LevelKeys<S> {
+): SwappedKey<S>[] {
   const swapped: SwappedKey<S>[] = [];
-  let changedKeyPair: [S, S] | undefined;
-  const newProperties = newLevel[PROPERTIES_KEY]!;
-  const oldProperties = oldLevel[PROPERTIES_KEY]!;
+  const { newProperties, oldProperties } = levels;
   const newLevelDefault = newLevel[DEFAULT_KEY];
   const oldLevelDefault = oldLevel[DEFAULT_KEY];
   // One identity test for the whole level, so the per-key reads below are reached only where the two sides can
@@ -167,6 +177,12 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
     if (isUnchanged && !isChangedKey) {
       return;
     }
+    // The changed key is carried past the tests below for the walk to descend into it, and never to be replaced, so a
+    // value that is not an object on both sides leaves it nothing to be carried for. Ending it here is what keeps a
+    // keystroke in a leaf of a form with a nested conditional off the two resolutions below
+    if (isChangedKey && (!isPlainObject(newKeyValue) || !isPlainObject(oldKeyValue))) {
+      return;
+    }
     // A boolean subschema declares no `default`, so it has nothing that can go stale, and being no object it can
     // answer neither the symbol test below nor `retrieveSchema()`
     if (!isPlainObject(newRaw) || !isPlainObject(oldRaw)) {
@@ -185,10 +201,8 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const resolvedNew = schemaUtils.retrieveSchema(newRaw, newKeyValue as T);
     const resolvedOld = isUnchanged ? resolvedNew : schemaUtils.retrieveSchema(oldRaw, oldKeyValue as T);
     const newSchema = replaceEqualDeep(resolvedOld, resolvedNew);
-    if (isStub || (newSchema === resolvedOld && !levelDefaultSwapped)) {
-      if (isChangedKey) {
-        changedKeyPair = [newSchema, resolvedOld];
-      }
+    const isSwapped = !isStub && (newSchema !== resolvedOld || levelDefaultSwapped);
+    if (!isSwapped && !isChangedKey) {
       return;
     }
     swapped.push({
@@ -196,6 +210,7 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
       newSchema,
       oldSchema: resolvedOld,
       isReplaceable:
+        isSwapped &&
         !isChangedKey &&
         newKeyValue !== undefined &&
         oldKeyValue !== undefined &&
@@ -203,7 +218,7 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
         declaresValueFor<S>(oldLevel, key, resolvedOld),
     });
   });
-  return { swapped, changedKeyPair };
+  return swapped;
 }
 
 /** Reports the paths whose value is a default the subschema that has just been swapped away put there, so that
@@ -252,12 +267,13 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * disagree about which keys appear at all, so comparing against the wrong one would read a key as stale that the fill
  * never wrote.
  *
- * The walk descends into every swapped key, and additionally into the key the change is inside whether or not that
- * key resolved differently. That second descent is what reaches a conditional more than one level down:
- * `retrieveSchema()` resolves only the conditionals declared on the schema it is handed, so an ancestor of the level
- * that swapped resolves identically on both sides and would otherwise end the walk above it. It costs no resolution
- * of its own — the swap test above already paid for that key's pair — and widens the search to no key the change is
- * not inside, since a swap can only be decided by a conditional on a level the change is within.
+ * The walk descends into every swapped key, and into the key the change is inside whether or not that key resolved
+ * differently — it is carried in the same list for that, and only while both sides hold a plain object, a value that
+ * is not one having no level to walk. Descending into a key that did not swap is what reaches a conditional more than
+ * one level down: `retrieveSchema()` resolves only the conditionals declared on the schema it is handed, so an
+ * ancestor of the level that swapped resolves identically on both sides and would otherwise end the walk above it. It
+ * widens the search to no key the change is not inside, since a swap can only be decided by a conditional on a level
+ * the change is within.
  *
  * Values are matched whole, per key of the level that declares the default, which is what decides how much of a value
  * a branch speaks for. A `default` on the object itself declares that object's own keys, so an untouched leaf is
@@ -292,7 +308,7 @@ export default function stalePathsForNewSchema<
   oldFormData: T | undefined,
   options: StaleSearchOptions<T, S, F>,
 ): FieldPathList[] {
-  const { changedPath, initialDefaultsGenerated, uiSchema } = options;
+  const { changedPath, droppedPaths, initialDefaultsGenerated, uiSchema } = options;
   const uiSchemaDefinitions = uiSchema?.[UI_DEFINITIONS_KEY];
   const stalePaths: FieldPathList[] = [];
 
@@ -311,22 +327,30 @@ export default function stalePathsForNewSchema<
     levelPath: FieldPathList,
     changedKey: string | undefined,
   ) => {
+    const newProperties = newLevel[PROPERTIES_KEY];
+    const oldProperties = oldLevel[PROPERTIES_KEY];
     if (
-      !isPlainObject(newLevel[PROPERTIES_KEY]) ||
-      !isPlainObject(oldLevel[PROPERTIES_KEY]) ||
+      !isPlainObject(newProperties) ||
+      !isPlainObject(oldProperties) ||
       !isPlainObject(newValue) ||
       !isPlainObject(oldValue)
     ) {
       return;
     }
-    const { swapped, changedKeyPair } = swappedKeys<T, S, F>(
+    const levels = { newProperties, oldProperties };
+    // A key already dropped is left out before anything is computed for it. It stays swapped relative to the data as
+    // it arrived, and on the old side it still holds that branch's default, so every later iteration would report it
+    // again for the caller to discard — paying both narrowed defaults computations each time. The caller cannot drop
+    // it twice anyway: the value there is the replacement the fill has since written
+    const swapped = swappedKeys<T, S, F>(
       schemaUtils,
       newLevel,
       oldLevel,
+      levels,
       newValue,
       oldValue,
       changedKey,
-    );
+    ).filter((entry) => !droppedPaths.has(fieldPathFromList([...levelPath, entry.key])));
     const replaceableKeys = swapped.flatMap((entry) => (entry.isReplaceable ? [entry.key] : []));
     let staleKeys: Set<string> | undefined;
     // A level whose options describe its properties is `formDataForNewOption()`'s to switch, and the option
@@ -345,7 +369,7 @@ export default function stalePathsForNewSchema<
       const levelUiSchema = levelPath.length ? getByPath<UiSchema<T, S, F> | undefined>(uiSchema, levelPath) : uiSchema;
       const computeFor = (level: S, keys: string[]) => {
         const defaults = schemaUtils.getDefaultFormState(
-          onlyProperties<S>(level, keys),
+          onlyProperties<S>(level, level === newLevel ? newProperties : oldProperties, keys),
           undefined,
           false,
           initialDefaultsGenerated,
@@ -394,10 +418,6 @@ export default function stalePathsForNewSchema<
       }
       descend(key, newKeySchema, oldKeySchema);
     });
-
-    if (changedKey !== undefined && changedKeyPair !== undefined) {
-      descend(changedKey, changedKeyPair[0], changedKeyPair[1]);
-    }
   };
 
   // `toString()`, so a numeric path segment and its string form address the one key
