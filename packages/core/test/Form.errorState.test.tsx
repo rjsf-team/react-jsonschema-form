@@ -1110,6 +1110,34 @@ describe('Error state consistency when deriving from new props', () => {
     expect(rootField().errorSchema).toEqual({ name: { __errors: ['bad'] } });
   });
 
+  it('keeps the errors of a declared property an additional property is renamed onto', async () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { email: { type: 'string' } },
+          required: ['email'],
+          additionalProperties: { type: 'string', minLength: 3 },
+        }}
+        validator={validator}
+        initialFormData={{ extra: 'a' }}
+        noHtml5Validate
+      />,
+    );
+    await submitForm(container, user);
+    const required = "must have required property 'email'";
+    const tooShort = 'must NOT have fewer than 3 characters';
+    expect(errorListMessages(container)).toEqual([required, `.extra ${tooShort}`]);
+
+    const keyInput = input(container, 'root_extra-key');
+    await user.clear(keyInput);
+    await user.type(keyInput, 'email');
+    await user.tab();
+
+    expect(fieldErrorsById(container)).toEqual({ root_email: [required, tooShort] });
+    expect(errorListMessages(container)).toEqual([required, `.email ${tooShort}`]);
+  });
+
   it('lists a message once when a field raises as its own what the validator also reported', async () => {
     const addrSchema: RJSFSchema = {
       type: 'object',

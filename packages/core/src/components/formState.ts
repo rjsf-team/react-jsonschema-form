@@ -28,6 +28,7 @@ import {
   isObject,
   isWholeValueSelect,
   isPlainObject,
+  mergeObjects,
   replaceEqualDeep,
   schemaHasNestedConditional,
   toErrorList,
@@ -504,7 +505,8 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
   for (const [key, node] of Object.entries(getAt<ErrorSchema | undefined>(errorSchema, path) ?? {})) {
     const newKey = key === ERRORS_KEY ? key : newKeyOf(key);
     if (newKey !== undefined) {
-      moved[newKey] = node;
+      // A rename onto a key that holds errors, such as a declared property the data lacks, keeps both
+      moved[newKey] = Object.hasOwn(moved, newKey) ? mergeObjects(moved[newKey], node, true) : node;
     }
   }
   return replaceErrorSchemaNode(errorSchema, path, moved);
