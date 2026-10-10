@@ -61,7 +61,18 @@ type ErrorState<T> = Pick<
 >;
 
 /** The errors a parent-owned form owns: those on display, the validator's, and the fields' own they are built from */
-type OwnedErrorState<T> = ErrorState<T> & Pick<FormState<T>, 'customErrors'>;
+export type OwnedErrorState<T> = ErrorState<T> & Pick<FormState<T>, 'customErrors'>;
+
+/** The error members of `state` that a parent-owned form owns */
+export function ownedErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
+  errors,
+  errorSchema,
+  schemaValidationErrors,
+  schemaValidationErrorSchema,
+  customErrors,
+}: FormState<T, S, F>): OwnedErrorState<T> {
+  return { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema, customErrors };
+}
 
 /** The form data as an event hands it back. The overload is the one trust point for `EventFormData`'s promise that an
  * object or array root is never `undefined`.
@@ -531,14 +542,14 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
   { fieldPath, newValue, newErrorSchema, newKeyOf }: PendingChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
 ): OwnedErrorState<T> {
-  const { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema } = current;
+  const { schemaValidationErrors, schemaValidationErrorSchema } = current;
   const path = fieldPathToList(fieldPath);
   let { customErrors } = current;
   // A key that is removed leaves nothing at its path for an error to describe, which is what an empty raise says
   const raised = newErrorSchema ?? (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE ? {} : undefined);
   const hasOwnErrors = getByPath<string[]>(customErrors, [...path, ERRORS_KEY], []).length > 0;
   if (!newKeyOf && !raised && !hasOwnErrors) {
-    return { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema, customErrors };
+    return ownedErrorsOf(current);
   }
   // The validator's own result is the base `extraErrors` and the fields' own errors are merged onto again, as in
   // `reconcileErrors()`: `errors` and `errorSchema` already carry them, so merging onto those would add each a second

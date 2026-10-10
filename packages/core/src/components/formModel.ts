@@ -23,6 +23,7 @@ import {
   applyBlur,
   applyChange,
   applyChangeToErrors,
+  ownedErrorsOf,
   applyReset,
   applySubmit,
   applyValidation,
@@ -399,7 +400,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // errors under keys the proposal moved: the parent either renders the moved data back, which clears the changed
     // fields' errors, or keeps its own, which the old keys describe
     const withOwnedErrors = (base: FormState<T, S, F>): FormState<T, S, F> => {
-      const errors = applyChangeToErrors(base, edit, props.extraErrors);
+      // `next` was built on `start` when no proposal is pending, so it already carries what the change did to them
+      const errors =
+        base === start && !pending ? ownedErrorsOf(next) : applyChangeToErrors(base, edit, props.extraErrors);
       return isLiveValidated(props) || newKeyOf
         ? { ...base, customErrors: errors.customErrors }
         : { ...base, ...errors };
