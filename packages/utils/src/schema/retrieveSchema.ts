@@ -24,7 +24,11 @@ import {
   THEN_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import findSchemaDefinition, { getSchemaBaseUri, splitKeyElementFromObject } from '../findSchemaDefinition.ts';
+import findSchemaDefinition, {
+  findSchemaDefinitionWithBaseURI,
+  resolveUri,
+  splitKeyElementFromObject,
+} from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -612,14 +616,17 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       return markCycleOnDetection ? { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } : resolvedSchema;
     }
     pathList = [...pathList, $ref!];
-    // Retrieve the referenced schema definition.
-    const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
+    // Retrieve the referenced schema definition. The lookup reports the scope it resolved the target in, so
+    // the base below never has to be re-derived from object identity or an as-written `$id`.
+    const { schema: refSchema, baseURI: refBaseURI } = findSchemaDefinitionWithBaseURI<S>(
+      $ref,
+      rootSchema,
+      [],
+      currentBaseURI,
+    );
     resolvedSchema = { ...refSchema, ...localSchema, [RJSF_REF_KEY]: $ref };
-    if (ID_KEY in resolvedSchema) {
-      currentBaseURI =
-        ID_KEY in localSchema
-          ? localSchema[ID_KEY]
-          : (getSchemaBaseUri(refSchema, rootSchema) ?? resolvedSchema[ID_KEY]);
+    if (ID_KEY in resolvedSchema && typeof resolvedSchema[ID_KEY] === 'string') {
+      currentBaseURI = resolveUri(refBaseURI ?? currentBaseURI ?? '', resolvedSchema[ID_KEY]);
     }
     expandedRefs?.push($ref!);
   } else if (passCount > 0) {
