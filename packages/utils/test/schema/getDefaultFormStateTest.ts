@@ -5653,6 +5653,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
     describe('defaults with allOf', () => {
       let schema: RJSFSchema;
+      const animalInfoSchema: RJSFSchema = {
+        properties: {
+          animal: {
+            type: 'string',
+            default: 'Cat',
+            enum: ['Cat', 'Fish'],
+          },
+        },
+        allOf: [
+          {
+            if: {
+              properties: {
+                animal: {
+                  const: 'Cat',
+                },
+              },
+            },
+            then: {
+              properties: {
+                food: {
+                  type: 'string',
+                  default: 'meat',
+                  enum: ['meat', 'grass', 'fish'],
+                },
+              },
+              required: ['food'],
+            },
+          },
+        ],
+      };
+      const animalInfoArraySchema: RJSFSchema = { type: 'array', items: animalInfoSchema };
 
       it('should populate root defaults for allOf', () => {
         schema = {
@@ -5691,36 +5722,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             title: 'Example',
             type: 'object',
             properties: {
-              animalInfo: {
-                properties: {
-                  animal: {
-                    type: 'string',
-                    default: 'Cat',
-                    enum: ['Cat', 'Fish'],
-                  },
-                },
-                allOf: [
-                  {
-                    if: {
-                      properties: {
-                        animal: {
-                          const: 'Cat',
-                        },
-                      },
-                    },
-                    then: {
-                      properties: {
-                        food: {
-                          type: 'string',
-                          default: 'meat',
-                          enum: ['meat', 'grass', 'fish'],
-                        },
-                      },
-                      required: ['food'],
-                    },
-                  },
-                ],
-              },
+              animalInfo: animalInfoSchema,
             },
           };
 
@@ -5814,6 +5816,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           });
         });
+
+        it('should populate the conditional defaults of an allOf in array items', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              animalInfoArraySchema,
+              [{ animal: 'Cat' }],
+              animalInfoArraySchema,
+              undefined,
+              { allOf: 'populateDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat', food: 'meat' }]);
+        });
       });
 
       describe('default form state behaviour: allOf = "skipDefaults"', () => {
@@ -5824,6 +5839,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               experimental_defaultFormStateBehavior: { allOf: 'skipDefaults' },
             }),
           ).toEqual({ animalInfo: { animal: 'Cat' } });
+        });
+
+        it('should not populate the conditional defaults of an allOf in array items', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              animalInfoArraySchema,
+              [{ animal: 'Cat' }],
+              animalInfoArraySchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat' }]);
+        });
+
+        it("should populate the conditional defaults of the root schema's own allOf, which skipDefaults does not skip", () => {
+          expect(
+            getDefaultFormState(testValidator, animalInfoSchema, { animal: 'Cat' }, animalInfoSchema, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ animal: 'Cat', food: 'meat' });
         });
       });
     });
