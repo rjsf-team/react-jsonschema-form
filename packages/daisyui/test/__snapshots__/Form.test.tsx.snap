@@ -3649,17 +3649,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                       <div
                         class="field-template mb-3"
                       >
-                        <label
-                          class="label"
-                          for="root_region"
-                          id="root_region__label"
-                        >
-                          <span
-                            class="label-text font-medium"
-                          >
-                            Europe
-                          </span>
-                        </label>
                         <div
                           class="form-control w-full"
                         >

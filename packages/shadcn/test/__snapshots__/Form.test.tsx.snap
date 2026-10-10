@@ -3622,12 +3622,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                       <div
                         class="flex flex-col gap-2"
                       >
-                        <label
-                          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          for="root_region"
-                        >
-                          Europe
-                        </label>
                         <div
                           class="p-0.5"
                         >

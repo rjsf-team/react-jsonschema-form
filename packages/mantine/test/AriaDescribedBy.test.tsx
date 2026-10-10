@@ -717,4 +717,32 @@ describe('aria-describedby', () => {
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('Own error');
   });
+
+  test('describes a selected option once, under the id its selector is described by', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { region: { oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] } },
+          $defs: {
+            europe: {
+              title: 'Europe',
+              description: 'A country in Europe',
+              oneOf: [
+                { const: 'FR', title: 'France' },
+                { const: 'DE', title: 'Germany' },
+              ],
+            },
+          },
+        }}
+        formData={{ region: 'DE' }}
+        validator={validator}
+      />,
+    );
+
+    expect(shownWithText('A country in Europe')).toHaveLength(1);
+    expect(container.querySelector(`#${descriptionId('root_region__oneof_select')}`)).toHaveTextContent(
+      'A country in Europe',
+    );
+  });
 });

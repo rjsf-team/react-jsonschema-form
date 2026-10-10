@@ -2359,15 +2359,197 @@ describe('oneOf', () => {
     const uiSchema = {
       'ui:field': () => <div className='custom-field'>Custom field</div>,
     };
-    it('should be rendered twice', () => {
+    it('should be rendered once, beside the option selector', () => {
       const { node } = createFormComponent({ schema, uiSchema });
-      const fields = node.querySelectorAll('.custom-field');
-      expect(fields).toHaveLength(2);
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
+    });
+    it('should render the selected option with its own field rather than the custom one', () => {
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('input#root')).toHaveAttribute('inputmode', 'decimal');
     });
     it('should render <select>', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(1);
+    });
+  });
+
+  describe('the selected option rendered for the same id as its field', () => {
+    const europe: RJSFSchema = {
+      title: 'Europe',
+      oneOf: [
+        { const: 'FR', title: 'France' },
+        { const: 'DE', title: 'Germany' },
+      ],
+    };
+    const regionSchema = (europeSchema: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        region: { oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] },
+      },
+      $defs: { europe: europeSchema },
+    });
+    const schema = regionSchema(europe);
+    const formData = { region: 'DE' };
+    const CustomField = () => <div className='custom-field'>Custom field</div>;
+
+    it('labels the control once, with the field label', () => {
+      const { node } = createFormComponent({ schema, formData });
+
+      expect(node.querySelectorAll('label[for="root_region"]')).toHaveLength(1);
+      expect(screen.getByLabelText('region')).toBe(node.querySelector('select#root_region'));
+      expect(screen.queryByLabelText('Europe')).toBeNull();
+    });
+
+    it('labels the control through the option when the field names FallbackField as its ui:field', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { x: { oneOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] } },
+        },
+        uiSchema: { x: { 'ui:field': 'FallbackField' } },
+        formData: { x: 'a' },
+      });
+
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+      expect(screen.getByLabelText('Text')).toBe(node.querySelector('input#root_x'));
+    });
+
+    it('renders the field help once', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { region: { 'ui:help': 'pick a region' } },
+      });
+
+      expect(node.querySelectorAll('#root_region__help')).toHaveLength(1);
+      expect(screen.getAllByText('pick a region')).toHaveLength(1);
+    });
+
+    it('renders a ui:globalOptions help once for an option with a uiSchema of its own', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { 'ui:globalOptions': { help: 'global help' }, region: { oneOf: [{}, {}] } },
+      });
+
+      expect(node.querySelectorAll('#root_region__help')).toHaveLength(1);
+    });
+
+    it('renders the help an option declares for itself', () => {
+      createFormComponent({
+        schema,
+        formData,
+        uiSchema: { region: { oneOf: [{}, { 'ui:help': 'option help' }] } },
+      });
+
+      expect(screen.getByText('option help')).toBeInTheDocument();
+    });
+
+    it('describes the option once, under the id the selector is described by', () => {
+      const { node } = createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        formData,
+      });
+
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelector('#root_region__oneof_select__description')).toHaveTextContent('A country in Europe');
+      expect(node.querySelector('select#root_region__oneof_select')).toHaveAttribute(
+        'aria-describedby',
+        expect.stringContaining('root_region__oneof_select__description'),
+      );
+    });
+
+    it('describes the option with the ui:description it declares for itself', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { region: { oneOf: [{}, { 'ui:description': 'Pick a European country' }] } },
+      });
+
+      expect(node.querySelector('#root_region__oneof_select__description')).toHaveTextContent(
+        'Pick a European country',
+      );
+    });
+
+    it('renders the field ui:description once', () => {
+      createFormComponent({ schema, formData, uiSchema: { region: { 'ui:description': 'Where you live' } } });
+
+      expect(screen.getAllByText('Where you live')).toHaveLength(1);
+    });
+
+    it('keeps the title and description of an object option', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          oneOf: [
+            { title: 'Option A', description: 'The first option', properties: { a: { type: 'string' } } },
+            { title: 'Option B', properties: { b: { type: 'number' } } },
+          ],
+        },
+      });
+
+      expect(node.querySelector('#root__title')).toHaveTextContent('Option A');
+      expect(node.querySelector('#root__description')).toHaveTextContent('The first option');
+    });
+
+    it('renders an object field ui:field once, and the option with its own field', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          oneOf: [{ properties: { a: { type: 'string' } } }, { properties: { b: { type: 'number' } } }],
+        },
+        uiSchema: { 'ui:field': CustomField },
+      });
+
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
+      expect(node.querySelector('input#root_a')).toBeInTheDocument();
+    });
+
+    it('labels a control once when the fallback UI renders the options of a field allowing several types', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              type: ['string', 'number'],
+              oneOf: [{ title: 'Text', description: 'Some text', minLength: 1 }, { title: 'Num' }],
+            },
+          },
+        },
+        uiSchema: { x: { oneOf: [{}, {}] } },
+        formData: { x: 'a' },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+      expect(screen.getByLabelText('X')).toBe(node.querySelector('input#root_x'));
+      expect(screen.getAllByText('Some text')).toHaveLength(1);
+      expect(node.querySelector('#root_x__oneof_select__description')).toHaveTextContent('Some text');
+    });
+
+    it('renders a ui:field an option declares for itself', () => {
+      const { node } = createFormComponent({
+        schema: { oneOf: [{ type: 'number' }, { type: 'string' }] },
+        uiSchema: { oneOf: [{ 'ui:field': CustomField }, {}] },
+      });
+
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
+      expect(node.querySelector('input#root')).toBeNull();
+    });
+
+    it.each([
+      ['inherits the uiSchema of its field', {}],
+      ['has a uiSchema of its own', { oneOf: [{}, {}] }],
+    ])('renders a ui:globalOptions field once when the option %s', (_, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: { oneOf: [{ type: 'number' }, { type: 'string' }] },
+        uiSchema: { ...uiSchema, 'ui:globalOptions': { field: CustomField } },
+      });
+
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
+      expect(node.querySelector('input#root')).toBeInTheDocument();
     });
   });
 

@@ -2836,12 +2836,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         class="rjsf-field rjsf-field-string"
                       >
                         <div>
-                          <label
-                            class="form-label"
-                            for="root_region"
-                          >
-                            Europe
-                          </label>
                           <select
                             aria-describedby="root_region__error root_region__description root_region__help"
                             class="form-select"

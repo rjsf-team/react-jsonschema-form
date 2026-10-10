@@ -1,4 +1,4 @@
-import { useCallback, useMemo, memo } from 'react';
+import { use, useCallback, useMemo, memo } from 'react';
 import type {
   ErrorSchema,
   Field,
@@ -56,6 +56,7 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import LabelledIdContext from './LabelledIdContext.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
@@ -437,6 +438,7 @@ function SchemaFieldRender<
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
   const readsFormData = useReadsFormData(SchemaField);
+  const labelledId = use(LabelledIdContext);
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
@@ -604,7 +606,9 @@ function SchemaFieldRender<
     );
   }
 
-  let displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  // Only the template's label is turned off for a control a field around this one already labels: the field component
+  // decides its widget's label for itself, which is the only one a theme drawing labels in its widgets puts on it
+  let displayLabel = labelledId !== fieldId && schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   let XxxOfField: Field<T, S, F> | undefined;
   let XxxOfOptions: S[] | undefined;
@@ -659,10 +663,16 @@ function SchemaFieldRender<
       rawErrors={XxxOfField ? undefined : __errors}
     />
   );
+  // What renders for this same id below — the selected `anyOf`/`oneOf` option, or the value field the fallback UI
+  // renders its options within — is told whether this template labelled it, rather than re-deriving `displayLabel`
+  // from a `uiSchema` it is not handed
+  const labelledIdBelow = displayLabel || labelledId === fieldId ? fieldId : undefined;
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
   const field = (
     <WithheldErrorsContext value={XxxOfField ? withheldErrors : undefined}>
-      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+      <LabelledIdContext value={labelledIdBelow}>
+        <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+      </LabelledIdContext>
     </WithheldErrorsContext>
   );
 
@@ -757,26 +767,28 @@ function SchemaFieldRender<
         <>
           {field}
           {XxxOfField && (
-            <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-              <XxxOfField
-                name={name}
-                disabled={disabled}
-                readonly={readonly}
-                hideError={hideError}
-                errorSchema={errorSchema}
-                formData={formData}
-                fieldPath={fieldPath}
-                id={fieldId}
-                onBlur={props.onBlur}
-                onChange={props.onChange}
-                onFocus={props.onFocus}
-                options={XxxOfOptions}
-                registry={registry}
-                required={effectiveRequired}
-                schema={schema}
-                uiSchema={XxxOfUiSchema}
-              />
-            </RawFormDataContext>
+            <LabelledIdContext value={labelledIdBelow}>
+              <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
+                <XxxOfField
+                  name={name}
+                  disabled={disabled}
+                  readonly={readonly}
+                  hideError={hideError}
+                  errorSchema={errorSchema}
+                  formData={formData}
+                  fieldPath={fieldPath}
+                  id={fieldId}
+                  onBlur={props.onBlur}
+                  onChange={props.onChange}
+                  onFocus={props.onFocus}
+                  options={XxxOfOptions}
+                  registry={registry}
+                  required={effectiveRequired}
+                  schema={schema}
+                  uiSchema={XxxOfUiSchema}
+                />
+              </RawFormDataContext>
+            </LabelledIdContext>
           )}
         </>
       </FieldTemplate>
