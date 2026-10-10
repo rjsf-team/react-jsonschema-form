@@ -221,7 +221,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         expect(ids).toHaveLength(2);
       });
 
-      // Both owners keep both: a parent-owned form builds the second proposal on the first
+      // The second edit builds on the first
       expect(formData).toEqual({ foo: 'bar2', baz: 'blah2' });
       // One id per updated component; the defaults the seed was given are not reported
       expect(ids).toEqual(['root_foo', 'root_baz']);
@@ -449,7 +449,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
     it('should allow switching to null option in oneOf', async () => {
       // This test verifies that switching to a null option in oneOf works correctly.
       // Without the fix, the form would revert back to the previous option.
-      // NOTE: This bug only manifests in controlled forms where parent updates formData prop.
+      // NOTE: This bug only manifested when a parent replaced the formData prop.
       const schema: RJSFSchema = {
         type: 'object',
         title: 'Configuration',
@@ -497,7 +497,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       // Switch to "No Configuration" (null option, index 2)
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '2');
 
-      // Simulate controlled form behavior by re-rendering with new formData
+      // Re-render with new formData
       rerender({
         ref: createRef(),
         schema,
@@ -557,8 +557,8 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('x');
       });
       it('keeping the errors the option it switched to earned', async () => {
-        // The option sits under a required property so the switch leaves data to validate under either owner: at the
-        // root it leaves `undefined`, which a parent-owned form does not validate, so there would be no errors to keep
+        // The option sits under a required property so the switch leaves data to validate: at the root it leaves
+        // `undefined`, and there would be no errors to keep
         const invalidDefaultSchema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -648,7 +648,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('A');
     });
-    it('should clear the errors of an uncontrolled form when noValidate is turned on', () => {
+    it('should clear the errors when noValidate is turned on', () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };
       const ref = createFormRef();
       const { node, rerender } = createFormComponent({ schema, ref });
@@ -975,9 +975,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
   });
 });
 
-// A parent-owned form generates no default, on mount or on any later prop change: the parent owns the value and the
-// value includes its defaults, so re-deriving the data is the self-owned form's alone and runs under that owner only
-describe('Form: the prop changes a self-owned form re-derives its data for', () => {
+describe('Form: the prop changes the form re-derives its data for', () => {
   it('should apply a schema change that adds a property with a default after a change', async () => {
     const schema: RJSFSchema = {
       type: 'object',

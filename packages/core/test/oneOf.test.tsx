@@ -3593,7 +3593,7 @@ describe('oneOf', () => {
       const fromType = createFormComponent({ schema: typeSchema });
 
       expect(fromConst.node.innerHTML).toEqual(fromType.node.innerHTML);
-      // The constant is a seed default, so it is in the data on mount; a self-owned form reports edits only, so no
+      // The constant is a seed default, so it is in the data on mount; the form reports edits only, so no
       // `onChange` fires for it
       expect(fromConst.getFormData()).toEqual({ note: null });
       expect(fromConst.onChange).not.toHaveBeenCalled();

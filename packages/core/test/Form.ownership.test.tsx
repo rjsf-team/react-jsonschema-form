@@ -9,7 +9,7 @@ import { userEvent } from '@testing-library/user-event';
 import { collectDeferredThrows } from '../../../testing/deferredThrows.ts';
 import type { FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
-import type { ControlledParentLog } from './testUtils.tsx';
+import type { ParentLog } from './testUtils.tsx';
 import {
   AcceptingParent,
   createFormComponent,
@@ -84,7 +84,7 @@ describe('form data ownership', () => {
       await user.click(input(container, 'root_a'));
       await user.paste('b');
 
-      expect(log.proposals).toEqual([{ a: 'ab' }]);
+      expect(log.reported).toEqual([{ a: 'ab' }]);
       expect(input(container, 'root_a')).toHaveValue('ab');
     });
 
@@ -105,20 +105,20 @@ describe('form data ownership', () => {
 
       await user.type(input(container, 'root_a'), 'abc');
 
-      expect(log.proposals.map((proposal) => proposal?.a)).toEqual(['a', 'ab', 'abc']);
+      expect(log.reported.map((edit) => edit?.a)).toEqual(['a', 'ab', 'abc']);
       expect(input(container, 'root_a')).toHaveValue('abc');
     });
 
     it('a parent that transforms what it stores has its value rendered, with no echo callback', async () => {
       const log = createParentLog<Data>();
-      const upper = (proposal: Data | undefined) => proposal && { ...proposal, a: proposal.a?.toUpperCase() };
+      const upper = (edit: Data | undefined) => edit && { ...edit, a: edit.a?.toUpperCase() };
       const { container } = render(
         <TransformingParent<Data> schema={schema} initialValue={{ a: '' }} log={log} transform={upper} />,
       );
 
       await user.type(input(container, 'root_a'), 'ab');
 
-      expect(log.proposals).toEqual([{ a: 'a' }, { a: 'Ab' }]);
+      expect(log.reported).toEqual([{ a: 'a' }, { a: 'Ab' }]);
       expect(input(container, 'root_a')).toHaveValue('AB');
     });
   });
@@ -580,18 +580,18 @@ describe('form data ownership', () => {
   describe('composition in one tick under a parent that stores edits', () => {
     /** Two path changes in one `act`, through the form's own change path, with exactly `setData(event.formData)` */
     const acceptAll = () => true;
-    const keepProposal = (proposal: Data) => proposal;
+    const keepEdit = (edit: Data) => edit;
 
     function PolicyParent({
       ref,
       accept = acceptAll,
-      transform = keepProposal,
+      transform = keepEdit,
       log,
     }: {
       ref: React.RefObject<FormRef<Data> | null>;
-      accept?: (proposal: Data) => boolean;
-      transform?: (proposal: Data) => Data;
-      log: ControlledParentLog<Data>;
+      accept?: (edit: Data) => boolean;
+      transform?: (edit: Data) => Data;
+      log: ParentLog<Data>;
     }) {
       const [data, setData] = useState<Data>({ a: '', b: '' });
       Object.assign(log, { value: data });
@@ -602,10 +602,10 @@ describe('form data ownership', () => {
           validator={validator}
           formData={data}
           onChange={(event) => {
-            const proposal = event.formData;
-            log.proposals.push(proposal);
-            if (accept(proposal)) {
-              setData(transform(proposal));
+            const edit = event.formData;
+            log.reported.push(edit);
+            if (accept(edit)) {
+              setData(transform(edit));
             }
           }}
         />
@@ -623,7 +623,7 @@ describe('form data ownership', () => {
       });
 
       // The second change builds on the first, which React has not rendered yet
-      expect(log.proposals).toEqual([
+      expect(log.reported).toEqual([
         { a: 'first', b: '' },
         { a: 'first', b: 'second' },
       ]);
@@ -636,14 +636,14 @@ describe('form data ownership', () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
       const { container } = render(
-        <PolicyParent ref={ref} log={log} transform={(proposal) => ({ ...proposal, a: proposal.a?.toUpperCase() })} />,
+        <PolicyParent ref={ref} log={log} transform={(edit) => ({ ...edit, a: edit.a?.toUpperCase() })} />,
       );
 
       await act(async () => {
         handleOf(ref).setFieldValue([], { ...handleOf(ref).getFormData(), a: 'first', b: 'second' });
       });
 
-      expect(log.proposals).toEqual([{ a: 'first', b: 'second' }]);
+      expect(log.reported).toEqual([{ a: 'first', b: 'second' }]);
       expect(log.value).toEqual({ a: 'FIRST', b: 'second' });
       expect(input(container, 'root_a')).toHaveValue('FIRST');
       expect(input(container, 'root_b')).toHaveValue('second');
@@ -652,9 +652,7 @@ describe('form data ownership', () => {
     it("a second change in one tick builds on the first as made, not as the parent's transform", async () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
-      render(
-        <PolicyParent ref={ref} log={log} transform={(proposal) => ({ ...proposal, a: proposal.a?.toUpperCase() })} />,
-      );
+      render(<PolicyParent ref={ref} log={log} transform={(edit) => ({ ...edit, a: edit.a?.toUpperCase() })} />);
 
       await act(async () => {
         handleOf(ref).setFieldValue('a', 'first');
@@ -662,14 +660,14 @@ describe('form data ownership', () => {
       });
 
       // The transform reaches the form only when React renders the parent's value
-      expect(log.proposals[1]).toEqual({ a: 'first', b: 'second' });
+      expect(log.reported[1]).toEqual({ a: 'first', b: 'second' });
       expect(log.value).toEqual({ a: 'FIRST', b: 'second' });
     });
 
     it('an edit the parent does not store stays the form’s data, in the same tick and in later ones', async () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
-      const { container } = render(<PolicyParent ref={ref} log={log} accept={(proposal) => proposal.a !== 'first'} />);
+      const { container } = render(<PolicyParent ref={ref} log={log} accept={(edit) => edit.a !== 'first'} />);
 
       await act(async () => {
         handleOf(ref).setFieldValue('a', 'first');
@@ -679,7 +677,7 @@ describe('form data ownership', () => {
       });
 
       // The form owns the edit; a parent that wants it undone sets the field back
-      expect(log.proposals).toEqual([
+      expect(log.reported).toEqual([
         { a: 'first', b: '' },
         { a: 'first', b: 'second' },
       ]);
@@ -734,7 +732,7 @@ describe('form data ownership', () => {
         handle.setFieldValue('a', 'first');
       });
 
-      expect(log.proposals).toEqual([{ a: 'first', b: '' }]);
+      expect(log.reported).toEqual([{ a: 'first', b: '' }]);
       expect(handle.getFormData()).toEqual({ a: 'first', b: '' });
     });
 
@@ -819,10 +817,10 @@ describe('form data ownership', () => {
             validator={validator}
             formData={data}
             onChange={(event) => {
-              const proposal = event.formData;
-              reported.push(proposal);
-              setData(proposal);
-              if (proposal.a === 'first' && proposal.b === '') {
+              const edit = event.formData;
+              reported.push(edit);
+              setData(edit);
+              if (edit.a === 'first' && edit.b === '') {
                 ref.current!.setFieldValue('b', 'derived');
               }
             }}
@@ -855,9 +853,9 @@ describe('form data ownership', () => {
             validator={validator}
             formData={data}
             onChange={(event) => {
-              const proposal = event.formData;
-              reported.push(proposal);
-              setData(proposal.a === 'first' ? { ...proposal, b: 'derived' } : proposal);
+              const edit = event.formData;
+              reported.push(edit);
+              setData(edit.a === 'first' ? { ...edit, b: 'derived' } : edit);
             }}
           />
         );
@@ -970,7 +968,7 @@ describe('form data ownership', () => {
 
       await user.selectOptions(select, '1');
 
-      expect(log.proposals).toHaveLength(1);
+      expect(log.reported).toHaveLength(1);
       expect(select).toHaveValue('1');
       expect(input(container, 'root_status_reason')).toHaveValue('');
     });
@@ -1004,11 +1002,11 @@ describe('form data ownership', () => {
       const { container } = render(<ListeningParent schema={arraySchema} initialValue={['one', 'two']} log={log} />);
 
       await user.click(container.querySelector('.rjsf-array-item-add button')!);
-      expect(log.proposals).toEqual([['one', 'two', undefined]]);
+      expect(log.reported).toEqual([['one', 'two', undefined]]);
       expect(container.querySelectorAll('input[type=text]')).toHaveLength(3);
 
       await user.click(container.querySelector('.rjsf-array-item-remove')!);
-      expect(log.proposals.at(-1)).toEqual(['two', undefined]);
+      expect(log.reported.at(-1)).toEqual(['two', undefined]);
       expect([...container.querySelectorAll<HTMLInputElement>('input[type=text]')].map((el) => el.value)).toEqual([
         'two',
         '',
@@ -1027,7 +1025,7 @@ describe('form data ownership', () => {
       await user.type(keyInput, 'renamed');
       await user.tab();
 
-      expect(log.proposals.at(-1)).toEqual({ renamed: 'one', second: 'two' });
+      expect(log.reported.at(-1)).toEqual({ renamed: 'one', second: 'two' });
       expect(container.querySelector('#root_renamed')).toHaveValue('one');
       expect(container.querySelector('#root_second')).toHaveValue('two');
       expect(container.querySelector('#root_first')).toBeNull();
@@ -1190,7 +1188,7 @@ describe('form data ownership', () => {
 
       await user.click(screen.getByRole('button', { name: 'commit' }));
 
-      expect(log.proposals).toEqual([{ foo: 'abcdef' }]);
+      expect(log.reported).toEqual([{ foo: 'abcdef' }]);
       expect(log.value).toEqual({ foo: 'abcdef' });
       expect(fieldErrorsById(container)).toEqual({});
     });
@@ -1213,7 +1211,7 @@ describe('form data ownership', () => {
       await user.tab();
 
       expect(input(container, 'root_b')).toHaveValue('fromBlur');
-      expect(log.proposals.at(-1)).toEqual({ a: 'x', b: 'fromBlur' });
+      expect(log.reported.at(-1)).toEqual({ a: 'x', b: 'fromBlur' });
     });
 
     it('a blur in the same handler as an edit validates the changed data', async () => {

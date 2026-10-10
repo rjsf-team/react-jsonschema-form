@@ -30,7 +30,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       },
     };
 
-    /** A parent that owns the value and accepts every proposal, and can also replace schema and value from outside */
+    /** A parent that stores every edit, and can also replace schema and value from outside */
     function ReplacingParent({ steps }: { steps: { schema: RJSFSchema; formData: object }[] }) {
       const [step, setStep] = useState(0);
       const [formData, setFormData] = useState<object>(steps[0].formData);
@@ -497,7 +497,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       await submitForm(node, user);
       expect(onError).not.toHaveBeenCalled();
     });
-    it('should show dependency defaults for uncontrolled components', async () => {
+    it('should show dependency defaults for a form seeded with initialFormData', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {

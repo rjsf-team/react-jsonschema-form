@@ -162,7 +162,7 @@ describe('Live validation onBlur', () => {
     expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ errorSchema: {} }), 'root');
   });
 
-  it('does not occur while typing when a controlled parent recreates an identity prop on every render', async () => {
+  it('does not occur while typing when a parent that stores edits recreates an identity prop on every render', async () => {
     function InlineCallbackParent() {
       const [value, setValue] = useState<string | null>(null);
       return (
@@ -994,9 +994,9 @@ describe('Async errors', () => {
     expect(errorListMessages(node)).toEqual([]);
   });
 
-  it('should display extraErrors on first async set with array field and controlled formData', async () => {
+  it('should display extraErrors on first async set with array field and a parent passing formData', async () => {
     // Reproduces https://github.com/rjsf-team/react-jsonschema-form/issues/4982
-    // When formData is controlled externally and the schema has an array field,
+    // When a parent passes formData and the schema has an array field,
     // setting extraErrors after submit should show errors on the first attempt.
     // The bug was in mergeErrors() where the customErrors merge (created by array
     // field interactions) overwrote the extraErrors merge by using the original
@@ -1247,7 +1247,7 @@ describe('customValidate', () => {
   });
 });
 
-describe('a self-owned form whose customMergeAllOf changes', () => {
+describe('a form whose customMergeAllOf changes', () => {
   it('validates a blur against the schema the new customMergeAllOf resolves', async () => {
     const allOfSchema: RJSFSchema = {
       type: 'object',
@@ -2733,7 +2733,7 @@ describe('initialFormData feature to prevent form reset', () => {
     input = container.querySelector('input')!;
     expect(input).toHaveAttribute('value', 'new value');
   });
-  it('show that Form does not reset with initialFormData when it is uncontrolled', async () => {
+  it('show that Form does not reset with initialFormData', async () => {
     const { container } = render(<FormWrapper initialFormData={data} />);
     let input = container.querySelector<HTMLInputElement>('input')!;
     expect(input).toHaveAttribute('value', data.name);
@@ -3064,7 +3064,7 @@ describe('clearing a field with a schema default does not re-apply the default (
 // NOTE: Some v6 tests labeled `a parent dropping data the form reported as absent` have been deleted
 //       This comment left as a marker for them so that a future merge commit will cause a conflict
 
-describe('dependency defaults in controlled forms', () => {
+describe('dependency defaults with a parent passing formData', () => {
   const triggersSchema: RJSFSchema = {
     type: 'array',
     default: [],

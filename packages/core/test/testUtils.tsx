@@ -131,24 +131,24 @@ export interface FormComponentResult {
  * exercises the form's own data and nothing about composition with a parent. These parents do hand values back, each
  * with a different policy, so a test can state which policy it relies on.
  */
-export interface ControlledParentLog<T> {
+export interface ParentLog<T> {
   value: T | undefined;
-  proposals: (T | undefined)[];
-  /** Every event the form sent, for the errors a proposal carried */
+  reported: (T | undefined)[];
+  /** Every event the form sent, for the errors an edit carried */
   events: IChangeEvent<T>[];
 }
 
-export function createParentLog<T>(): ControlledParentLog<T> {
-  return { value: undefined, proposals: [], events: [] };
+export function createParentLog<T>(): ParentLog<T> {
+  return { value: undefined, reported: [], events: [] };
 }
 
-export type ControlledParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
+export type ParentProps<T> = Omit<FormProps<T>, 'validator' | 'formData' | 'onChange'> & {
   initialValue?: T;
-  log?: ControlledParentLog<T>;
+  log?: ParentLog<T>;
 };
 
-/** Stores every proposal as its next value, exactly `setData(event.formData)`, the ordinary React controlled pattern */
-export function AcceptingParent<T>({ initialValue, log, ...formProps }: ControlledParentProps<T>) {
+/** Stores every edit as its next value, exactly `setData(event.formData)`, the ordinary React pattern */
+export function AcceptingParent<T>({ initialValue, log, ...formProps }: ParentProps<T>) {
   const [value, setValue] = useState(initialValue);
   Object.assign(log ?? {}, { value });
   return (
@@ -157,7 +157,7 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: Controll
       validator={validator}
       formData={value}
       onChange={(event) => {
-        log?.proposals.push(event.formData);
+        log?.reported.push(event.formData);
         log?.events.push(event);
         setValue(event.formData);
       }}
@@ -168,7 +168,7 @@ export function AcceptingParent<T>({ initialValue, log, ...formProps }: Controll
 /** Keeps passing its initial value whatever the form reports, the shape of a parent that only listens: the form owns
  * the edits and shows them, and the value the parent passes is one the form has seen
  */
-export function ListeningParent<T>({ initialValue, log, ...formProps }: ControlledParentProps<T>) {
+export function ListeningParent<T>({ initialValue, log, ...formProps }: ParentProps<T>) {
   Object.assign(log ?? {}, { value: initialValue });
   return (
     <Form<T>
@@ -176,20 +176,20 @@ export function ListeningParent<T>({ initialValue, log, ...formProps }: Controll
       validator={validator}
       formData={initialValue}
       onChange={(event) => {
-        log?.proposals.push(event.formData);
+        log?.reported.push(event.formData);
         log?.events.push(event);
       }}
     />
   );
 }
 
-/** Stores a transformed version of each proposal, the shape of a parent that normalizes what it is handed */
+/** Stores a transformed version of each edit, the shape of a parent that normalizes what it is handed */
 export function TransformingParent<T>({
   initialValue,
   log,
   transform,
   ...formProps
-}: ControlledParentProps<T> & { transform: (proposal: T | undefined) => T | undefined }) {
+}: ParentProps<T> & { transform: (edit: T | undefined) => T | undefined }) {
   const [value, setValue] = useState(initialValue);
   Object.assign(log ?? {}, { value });
   return (
@@ -198,7 +198,7 @@ export function TransformingParent<T>({
       validator={validator}
       formData={value}
       onChange={(event) => {
-        log?.proposals.push(event.formData);
+        log?.reported.push(event.formData);
         log?.events.push(event);
         setValue(transform(event.formData));
       }}

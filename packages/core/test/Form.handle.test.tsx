@@ -21,13 +21,13 @@ const user = userEvent.setup();
 
 describe('FormRef', () => {
   describe('getFormData()', () => {
-    it('returns the seed of an uncontrolled form', () => {
+    it('returns the seed', () => {
       const { handle } = mountWithHandle({ schema, initialFormData: { name: 'seed' } });
 
       expect(handle.getFormData()).toEqual({ name: 'seed' });
     });
 
-    it('reflects an edit committed by an uncontrolled form', async () => {
+    it('reflects an edit', async () => {
       const { node, handle } = mountWithHandle({ schema, initialFormData: { name: 'seed' } });
 
       const input = node.querySelector('input')!;
@@ -37,7 +37,7 @@ describe('FormRef', () => {
       expect(handle.getFormData()).toEqual({ name: 'edited' });
     });
 
-    it('returns the rendered value of a controlled form', () => {
+    it('returns the formData passed', () => {
       const { handle } = mountWithHandle({ schema, formData: { name: 'parent' }, onChange: () => {} });
 
       expect(handle.getFormData()).toEqual({ name: 'parent' });

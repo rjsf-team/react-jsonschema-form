@@ -16,7 +16,7 @@ const user = userEvent.setup();
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 3 } } };
 
 describe('render cost of one update', () => {
-  it('commits once for a keystroke in a controlled, live-validated form', async () => {
+  it('commits once for a keystroke in a live-validated form under a parent that stores each edit', async () => {
     const onRender = vi.fn();
     const { container } = render(
       <Profiler id='form' onRender={onRender}>
@@ -30,7 +30,7 @@ describe('render cost of one update', () => {
     expect(onRender).toHaveBeenCalledTimes(1);
   });
 
-  it('commits once for an unrelated prop change on a self-owned form', () => {
+  it('commits once for an unrelated prop change on a form seeded with initialFormData', () => {
     const onRender = vi.fn();
     const element = (idPrefix: string) => (
       <Profiler id='form' onRender={onRender}>

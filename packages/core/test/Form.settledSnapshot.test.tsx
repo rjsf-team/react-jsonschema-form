@@ -210,7 +210,7 @@ describe('settled snapshot sanitization', () => {
           validator={validator}
           formData={value}
           onChange={(event) => {
-            log.proposals.push(event.formData);
+            log.reported.push(event.formData);
             log.events.push(event);
             setValue(event.formData);
             setSchema(widenedSchema);
@@ -439,7 +439,7 @@ describe('settled snapshot sanitization', () => {
           validator={validator}
           formData={value}
           onChange={(event) => {
-            log.proposals.push(event.formData);
+            log.reported.push(event.formData);
             log.events.push(event);
             setValue(event.formData);
           }}
@@ -639,7 +639,7 @@ describe('settled snapshot sanitization', () => {
           validator={validator}
           formData={value}
           onChange={(event) => {
-            log?.proposals.push(event.formData);
+            log?.reported.push(event.formData);
             log?.events.push(event);
             setValue(event.formData);
           }}

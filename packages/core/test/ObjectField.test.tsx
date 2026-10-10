@@ -1214,9 +1214,7 @@ describe('ObjectField', () => {
           }}
           initialValue={{}}
           log={log}
-          transform={(proposal) =>
-            proposal && 'newKey' in proposal ? { ...proposal, newKey: 'the parent wrote this' } : proposal
-          }
+          transform={(edit) => (edit && 'newKey' in edit ? { ...edit, newKey: 'the parent wrote this' } : edit)}
         />,
       );
 
@@ -1241,7 +1239,7 @@ describe('ObjectField', () => {
           schema={{ type: 'object', patternProperties: { '^[0-9]+$': { type: 'number' } } }}
           initialValue={{}}
           log={log}
-          transform={(proposal) => (proposal && 'abc' in proposal ? { newKey: 'New Value' } : proposal)}
+          transform={(edit) => (edit && 'abc' in edit ? { newKey: 'New Value' } : edit)}
         />,
       );
 
@@ -1275,7 +1273,7 @@ describe('ObjectField', () => {
           }}
           initialValue={{}}
           log={log}
-          transform={(proposal) => (proposal?.newKey !== undefined ? { ...proposal, newKey: 'New Value' } : proposal)}
+          transform={(edit) => (edit?.newKey !== undefined ? { ...edit, newKey: 'New Value' } : edit)}
         />,
       );
 

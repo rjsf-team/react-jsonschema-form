@@ -63,7 +63,7 @@ type ErrorState<T> = Pick<
 >;
 
 /** The errors a change leaves: those on display, the validator's, and the fields' own they are built from */
-type OwnedErrorState<T> = ErrorState<T> & Pick<FormState<T>, 'customErrors'>;
+type ChangedErrorState<T> = ErrorState<T> & Pick<FormState<T>, 'customErrors'>;
 
 /** The error members of `state` that a change works on */
 function ownedErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
@@ -72,7 +72,7 @@ function ownedErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>
   schemaValidationErrors,
   schemaValidationErrorSchema,
   customErrors,
-}: FormState<T, S, F>): OwnedErrorState<T> {
+}: FormState<T, S, F>): ChangedErrorState<T> {
   return { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema, customErrors };
 }
 
@@ -652,7 +652,7 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
   change: FieldChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
   changed: DataChange = UNCHANGED,
-): OwnedErrorState<T> {
+): ChangedErrorState<T> {
   const { fieldPath, newKeyOf } = change;
   const customErrors = ownErrorsAfterChange(current, change);
   const raised = raiseOf(change);

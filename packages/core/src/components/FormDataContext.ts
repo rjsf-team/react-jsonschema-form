@@ -3,20 +3,10 @@ import type { FieldPath } from '@rjsf/utils';
 
 import type { AnnouncedMove } from './formState.ts';
 
-/** Private event access for container fields. A field rendered with the form's own data reads the form's latest data,
- * edits made since the form last rendered included; a field handed a view of that data keeps to its view.
+/** Private event access for container fields, which read the form's current data at their path, edits made since the
+ * form last rendered included, instead of the data they rendered
  */
 interface FormDataAccess {
-  /** Changes at every commit of the form, and with it ends a field's record of a view it sent since the form last
-   * rendered (see `useFieldView()`)
-   */
-  epoch(): number;
-  /** Called before a field sends a view. The function it returns, called once the view was sent, has the form render,
-   * so that its commit ends the field's record of the view whatever became of it: a custom parent can keep the change
-   * to itself, and the form would otherwise never learn of it. A change that reached the form had it render already,
-   * and is not rendered for twice.
-   */
-  proposing(): () => void;
   /** Calls `send`, which sends a change that moves the keys of the array or object at `move.fieldPath`: an item to
    * another index, a property to another name, or either out of the data. The form moves the errors it holds under
    * those keys along when the change for that path reaches it before `send` returns, the way `startTransition()` marks
@@ -24,7 +14,7 @@ interface FormDataAccess {
    * where a key went.
    */
   sendMove(move: AnnouncedMove, send: () => void): void;
-  /** The latest data at `path`, for a field that renders the form's own data there (see `RawFormDataContext`) */
+  /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
 }
 export default createContext<FormDataAccess | undefined>(undefined);

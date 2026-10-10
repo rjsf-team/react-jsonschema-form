@@ -1,5 +1,5 @@
-import type { FocusEvent, ReactNode } from 'react';
-import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import type { FocusEvent } from 'react';
+import { memo, use, useCallback, useInsertionEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
@@ -45,10 +45,9 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import useFieldView from '../../hooks/useFieldView.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
+import FormDataContext from '../FormDataContext.ts';
 import RichDescription from '../RichDescription.tsx';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -262,7 +261,6 @@ function ObjectFieldPropertyFn<
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
   const { SchemaField } = fields;
-  const readsFormData = useReadsFormData(ObjectFieldProperty);
   const innerFieldPath = toFieldPath(propertyName, fieldPath);
   const innerFieldId = fieldPathToId(innerFieldPath, globalFormOptions);
 
@@ -322,30 +320,28 @@ function ObjectFieldPropertyFn<
   }, [propertyName, handleRemoveProperty]);
 
   return (
-    <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
-      <SchemaField
-        name={propertyName}
-        required={required}
-        schema={schema}
-        uiSchema={uiSchema}
-        errorSchema={errorSchema}
-        fieldPath={innerFieldPath}
-        id={innerFieldId}
-        formData={formData}
-        wasPropertyKeyModified={wasPropertyKeyModified}
-        onKeyRename={onKeyRename}
-        onKeyRenameBlur={onKeyRenameBlur}
-        onRemoveProperty={onRemoveProperty}
-        propertyNamesEnum={propertyNamesEnum}
-        onChange={onPropertyChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        registry={registry}
-        disabled={disabled}
-        readonly={readonly}
-        hideError={hideError}
-      />
-    </RawFormDataContext>
+    <SchemaField
+      name={propertyName}
+      required={required}
+      schema={schema}
+      uiSchema={uiSchema}
+      errorSchema={errorSchema}
+      fieldPath={innerFieldPath}
+      id={innerFieldId}
+      formData={formData}
+      wasPropertyKeyModified={wasPropertyKeyModified}
+      onKeyRename={onKeyRename}
+      onKeyRenameBlur={onKeyRenameBlur}
+      onRemoveProperty={onRemoveProperty}
+      propertyNamesEnum={propertyNamesEnum}
+      onChange={onPropertyChange}
+      onBlur={onBlur}
+      onFocus={onFocus}
+      registry={registry}
+      disabled={disabled}
+      readonly={readonly}
+      hideError={hideError}
+    />
   );
 }
 
@@ -383,12 +379,21 @@ export default function ObjectField<
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
-  const view = useFieldView(fieldPath, formData, ObjectField);
-  /** Every return renders through this, so a template below never inherits what was said of this field */
-  const vouchForProperties = (content: ReactNode) => (
-    <RawFormDataContext value={view.readsFormData ? ObjectFieldProperty : undefined}>{content}</RawFormDataContext>
+  const access = use(FormDataContext);
+  // Read by the handlers below through a ref rather than closed over, as the schema is below: a handler that changed
+  // with the data would re-render every property on every edit. Installed from an insertion Effect, so a layout Effect
+  // of the same commit that calls a handler reads the data that commit rendered
+  const renderedFormData = useRef(formData);
+  useInsertionEffect(() => {
+    renderedFormData.current = formData;
+  }, [formData]);
+  /** The form's current data at this path, edits made since the form last rendered included; outside a `Form`, the
+   * rendered data
+   */
+  const readData = useCallback(
+    () => (access ? access.readField<typeof formData>(fieldPath) : renderedFormData.current),
+    [access, fieldPath],
   );
-  const readData = useCallback(() => view.readData(view.read()), [view]);
 
   const schema: S = useMemo(
     () => schemaUtils.retrieveSchema(rawSchema, formData, true),
@@ -652,8 +657,8 @@ export default function ObjectField<
         : previous,
     );
     setAdditionalPropertyOrder((order) => [...order, newKey]);
-    view.propose(newFormData, () => onChange(newFormData, fieldPath));
-  }, [readData, view, onChange, fieldPath, getAvailableKey, schema, resolvedSchema, seedForKey]);
+    onChange(newFormData, fieldPath);
+  }, [readData, onChange, fieldPath, getAvailableKey, schema, resolvedSchema, seedForKey]);
 
   /** Returns a callback function that deals with the rename of a key for an additional property for a schema. That
    * callback will attempt to rename the key and move the existing data to that key, calling `onChange` when it does.
@@ -699,15 +704,16 @@ export default function ObjectField<
           currentKey: actualNewKey,
         }));
         setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
-        // The errors the form holds under the old name describe the property, so they go to its new name with it
-        view.propose(
-          renamedObj,
-          () => onChange(renamedObj, fieldPath),
-          (key) => (key === oldKey ? actualNewKey : key),
-        );
+        const send = () => onChange(renamedObj, fieldPath);
+        if (access) {
+          // The errors the form holds under the old name describe the property, so they go to its new name with it
+          access.sendMove({ fieldPath, newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, send);
+        } else {
+          send();
+        }
       }
     },
-    [onChange, fieldPath, getAvailableKey, seedForKey, view, readData],
+    [access, onChange, fieldPath, getAvailableKey, seedForKey, readData],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
@@ -753,7 +759,7 @@ export default function ObjectField<
         uiOptions.order,
       );
     } catch (err) {
-      return vouchForProperties(
+      return (
         <div>
           <p className='rjsf-config-error' style={{ color: 'red' }}>
             <RichDescription
@@ -766,7 +772,7 @@ export default function ObjectField<
             />
           </p>
           <pre>{JSON.stringify(schema)}</pre>
-        </div>,
+        </div>
       );
     }
   }
@@ -836,5 +842,5 @@ export default function ObjectField<
     optionalDataControl,
     className: renderOptionalField ? 'rjsf-optional-object-field' : undefined,
   };
-  return vouchForProperties(<Template {...templateProps} onAddProperty={onAddProperty} />);
+  return <Template {...templateProps} onAddProperty={onAddProperty} />;
 }

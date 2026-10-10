@@ -1053,7 +1053,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
       rerender({ ...props, formData: { aKey: { nested: 'value' } } });
 
-      // Data replaced by a controlled parent never went through the selector, so the `string` selection gives way
+      // Data a parent replaced never went through the selector, so the `string` selection gives way
       // rather than leaving a text input to render the object as `[object Object]`
       expect(selected()).toHaveTextContent('object');
       expect(node.querySelector<HTMLInputElement>('#root_aKey_nested')).toHaveAttribute('value', 'value');

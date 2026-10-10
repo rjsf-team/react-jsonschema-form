@@ -1,7 +1,6 @@
 import { Suspense, startTransition, use, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type {
-  ArrayFieldItemButtonsTemplateProps,
   ArrayFieldItemTemplateProps,
   ArrayFieldTemplateProps,
   FieldPathList,
@@ -16,7 +15,6 @@ import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { renderToString } from 'react-dom/server';
 
-import ArrayField from '../src/components/fields/ArrayField.tsx';
 import type { FormRef, IChangeEvent } from '../src/index.ts';
 import Form, { ArrayFieldItemTemplate as DefaultItemTemplate } from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
@@ -74,78 +72,12 @@ it('an abandoned concurrent render does not publish parent data or callbacks to 
   expect(pendingCallback).not.toHaveBeenCalled();
 });
 
-it('an array wrapper edits its displayed sorted view rather than the raw model order', async () => {
-  function SortedArray(props: FieldProps<string[]>) {
-    return <ArrayField {...props} formData={[...(props.formData ?? [])].sort()} />;
-  }
-  function RemoveButton({ index, onRemoveItem }: ArrayFieldItemButtonsTemplateProps) {
-    return (
-      <button type='button' onClick={onRemoveItem}>
-        Remove {index}
-      </button>
-    );
-  }
-  const { onChange, getFormData } = createFormComponent({
-    schema: { type: 'array', items: { type: 'string' } },
-    initialFormData: ['b', 'a', 'c'],
-    fields: { ArrayField: SortedArray },
-    templates: { ArrayFieldItemButtonsTemplate: RemoveButton },
-  });
-  await user.click(screen.getByRole('button', { name: 'Remove 0' }));
-  expectToHaveBeenCalledWithFormData(onChange, ['b', 'c'], 'root');
-  expect(getFormData()).toEqual(['b', 'c']);
-});
-
-it('an array wrapper whose view is sometimes the data itself chains edits on the view it rendered', async () => {
-  function ReversedArray(props: FieldProps<string[]>) {
-    const { formData = [], fieldPath, onChange } = props;
-    // Reversing fewer than two items changes nothing, so the wrapper hands over the data itself
-    const view = formData.length < 2 ? formData : formData.toReversed();
-    return (
-      <ArrayField
-        {...props}
-        formData={view}
-        onChange={(value, path, errors, id) =>
-          onChange(path === fieldPath && Array.isArray(value) ? value.toReversed() : value, path, errors, id)
-        }
-      />
-    );
-  }
-  function AddTwice({ items, onAddClick }: ArrayFieldTemplateProps) {
-    return (
-      <div>
-        {items}
-        <button
-          type='button'
-          onClick={(event) => {
-            onAddClick(event);
-            onAddClick(event);
-          }}
-        >
-          Add twice
-        </button>
-      </div>
-    );
-  }
-  const { getFormData } = createFormComponent({
-    schema: { type: 'array', items: { type: 'string', default: 'new' } },
-    initialFormData: ['a'],
-    fields: { ArrayField: ReversedArray },
-    templates: { ArrayFieldTemplate: AddTwice },
-  });
-
-  await user.click(screen.getByRole('button', { name: 'Add twice' }));
-
-  // The second add builds on the view the first proposed, ['a', 'new'], not on the data the wrapper wrote back
-  expect(getFormData()).toEqual(['new', 'new', 'a']);
-});
-
 it('renders seeded data on the server without a browser or effect publishing a snapshot', () => {
   const markup = renderToString(<Form schema={schema} validator={validator} initialFormData={{ name: 'server' }} />);
   expect(markup).toContain('value="server"');
 });
 
-it('new controlled props are available to the Effects of the commit that renders them', () => {
+it('new props are available to the Effects of the commit that renders them', () => {
   const ref = createFormRef<{ name: string }>();
   const phases: [string, unknown, unknown][] = [];
   function ObservingWidget({ value }: WidgetProps) {
@@ -167,7 +99,7 @@ it('new controlled props are available to the Effects of the commit that renders
   ]);
 });
 
-it('several additional-property adds in one event use current self-owned data', async () => {
+it('several additional-property adds in one event use the current data of the form', async () => {
   function AddTwice({ properties, onAddProperty }: ObjectFieldTemplateProps) {
     return (
       <div>
@@ -260,8 +192,8 @@ describe('an item set through the handle and an add in one event, on an array a 
 });
 
 it.each([false, true])(
-  'an edit renders zero unaffected rows or widgets in a 200-item form (controlled: %s)',
-  async (controlled) => {
+  'an edit renders zero unaffected rows or widgets in a 200-item form (under a parent storing edits: %s)',
+  async (underParent) => {
     const rows = new Map<number, number>();
     const widgets = new Map<string, number>();
     function CountingItem(props: ArrayFieldItemTemplateProps) {
@@ -279,7 +211,7 @@ it.each([false, true])(
       templates: { ArrayFieldItemTemplate: CountingItem },
     };
     const initial = Array.from({ length: 200 }, (_, index) => String(index));
-    const { container } = controlled
+    const { container } = underParent
       ? render(<AcceptingParent<string[]> {...props} initialValue={initial} />)
       : createFormComponent({ ...props, initialFormData: initial });
     const previousRows = new Map(rows);

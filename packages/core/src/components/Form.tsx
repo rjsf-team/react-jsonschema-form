@@ -21,7 +21,6 @@ import type {
 } from '@rjsf/utils';
 import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
 
-import RawFormDataContext from './fields/RawFormDataContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
@@ -313,22 +312,20 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   // The model is created once and kept in the render cache, so it lives exactly as long as the mounted form
   const [cache, setCache] = useState(() => {
     const state = initialState(props);
-    const created = createFormModel(props, state);
-    return { model: created, snapshot: created.getSnapshot(), props, state };
+    return { model: createFormModel(props, state), published: state, props, state };
   });
   const { model } = cache;
   const { setFormElement } = model;
-  // Renders the form after each operation that changed its state, and after a view a field sent that changed nothing,
-  // so the commit ends the field's record of it. The server snapshot is the store's own: the render that reads it is
-  // the one that created the model, so nothing has been committed to it yet
-  const snapshot = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
+  // Renders the form after each operation that changed its state. The server snapshot is the store's own: the render
+  // that reads it is the one that created the model, so nothing has been committed to it yet
+  const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
   // With no operation since the cached derivation, that derivation is the latest state, committed to the model or not
-  const base = snapshot === cache.snapshot ? cache.state : snapshot.state;
+  const base = published === cache.published ? cache.state : published;
   // `deriveState()` is pure, so the re-render that `setCache` triggers reuses its result instead of deriving the same
   // state again
   const state = props === cache.props && base === cache.state ? cache.state : deriveState(props, base);
   if (state !== cache.state) {
-    setCache({ model, snapshot, props, state });
+    setCache({ model, published, props, state });
   }
   // Hands every commit to the model in the phase in which React switches its own event handlers to the new props:
   // before the setup of any layout Effect, a callback ref being attached or a passive Effect can issue a command. What
@@ -336,7 +333,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   // detached and a `componentWillUnmount`, in the form's subtree, in an earlier sibling's, and in anything removed
   // from under an ancestor.
   useInsertionEffect(() => {
-    model.committed(props, state, snapshot);
+    model.committed(props, state, published);
   });
   useImperativeHandle(ref, () => model.handle, [model]);
 
@@ -417,23 +414,21 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         ref={setFormElement}
       >
         {showErrorList === 'top' && renderErrors()}
-        <RawFormDataContext value={SchemaFieldComponent}>
-          <SchemaFieldComponent
-            name=''
-            schema={schema}
-            uiSchema={uiSchema}
-            errorSchema={errorSchema}
-            fieldPath={ROOT_FIELD_PATH}
-            id={registry.globalFormOptions.idPrefix}
-            formData={formData}
-            onChange={model.handleChange}
-            onBlur={model.handleBlur}
-            onFocus={model.handleFocus}
-            registry={registry}
-            disabled={disabled}
-            readonly={readonly}
-          />
-        </RawFormDataContext>
+        <SchemaFieldComponent
+          name=''
+          schema={schema}
+          uiSchema={uiSchema}
+          errorSchema={errorSchema}
+          fieldPath={ROOT_FIELD_PATH}
+          id={registry.globalFormOptions.idPrefix}
+          formData={formData}
+          onChange={model.handleChange}
+          onBlur={model.handleBlur}
+          onFocus={model.handleFocus}
+          registry={registry}
+          disabled={disabled}
+          readonly={readonly}
+        />
 
         {children || submitButton}
         {showErrorList === 'bottom' && renderErrors()}

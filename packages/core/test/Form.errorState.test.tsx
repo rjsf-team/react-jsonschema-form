@@ -112,7 +112,7 @@ describe('Error state consistency when deriving from new props', () => {
     );
   }
 
-  /** A controlled parent that echoes `onChange` back into `formData`, the ordinary controlled setup */
+  /** A parent that stores `onChange` back into `formData`, the ordinary setup */
   function EchoingParent({ liveValidate, widgets }: Pick<FormProps, 'liveValidate' | 'widgets'>) {
     const [value, setValue] = useState<{ name?: string; other?: string }>(shortName);
     return (
@@ -216,7 +216,7 @@ describe('Error state consistency when deriving from new props', () => {
     expect(errorListMessages(container)).toEqual(['.name custom:shorty']);
   });
 
-  /** A controlled parent that holds the data still and restyles the form, so a click is a non-data prop change */
+  /** A parent that passes the same data and restyles the form, so a click is a non-data prop change */
   function RestylingParent(formProps: Pick<FormProps, 'extraErrors' | 'liveValidate' | 'onChange'>) {
     const [className, setClassName] = useState<string | undefined>(undefined);
     return (
@@ -634,7 +634,7 @@ describe('Error state consistency when deriving from new props', () => {
       expect(fieldErrorsById(container)).toEqual({});
     });
 
-    it('keeps the error on the moved item in an uncontrolled form across later prop changes', async () => {
+    it('keeps the error on the moved item in a form seeded with initialFormData across later prop changes', async () => {
       const { container, rerender } = render(<Parent initialFormData={arrayData} />);
 
       await submitAndMoveFirstItemDown(container);
@@ -760,7 +760,7 @@ describe('Error state consistency when deriving from new props', () => {
   });
 
   // Add, copy, move and remove all go through `moveItemErrors()`, so a move covers them
-  describe('after an ArrayField remaps its items in an uncontrolled form', () => {
+  describe('after an ArrayField remaps its items in a form seeded with initialFormData', () => {
     const items: RJSFSchema = { type: 'array', minItems: 4, items: { type: 'string', minLength: 3 } };
     it.each<[string, RJSFSchema, unknown, string]>([
       ['a root array', items, ['aaa', 'bbbb', 'cccc'], 'root'],
@@ -1237,7 +1237,7 @@ describe('Error state consistency when deriving from new props', () => {
   });
 
   it('lists a server error once when a field raises a custom error with live validation off', async () => {
-    // Uncontrolled, so nothing re-derives state from props afterwards and the merge below is the last word
+    // Seeded with initialFormData, so no prop replaces the data afterwards and the merge below is the last word
     const { container } = render(
       <Form
         schema={schema}

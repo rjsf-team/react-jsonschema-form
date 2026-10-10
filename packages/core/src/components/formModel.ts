@@ -58,19 +58,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // The props of the last committed render
   let committedProps = initialProps;
   // The form's one current state: what the last commit derived from the props, or what an operation has made of it
-  // since. React subscribes to `snapshot`, a record of the state that is made anew whenever an operation changes it. A
-  // commit hands over the state its render derived (a new registry, live validation of replaced data) without a new
-  // record: that state is already on screen, and a new record would make `useSyncExternalStore` render and commit a
-  // second time.
+  // since. React subscribes to `published`, the state as of the last operation. A commit hands over the state its
+  // render derived (a new registry, live validation of replaced data) without publishing it: that state is already on
+  // screen, and a new snapshot would make `useSyncExternalStore` render and commit a second time.
   let state = initial;
-  let snapshot = { state };
+  let published = initial;
   const listeners = new Set<() => void>();
   const notify = () => {
-    snapshot = { state };
+    published = state;
     listeners.forEach((listener) => listener());
   };
-  // Counts the commits of the form, see `FormDataAccess.epoch()`
-  let epoch = 0;
   // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
   let announced: AnnouncedMove | undefined;
 
@@ -294,18 +291,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         formElement = element;
       }
     },
-    epoch: () => epoch,
-    /** Has the form render for a field's record of a view it sent, see `FormDataAccess.proposing()`, unless sending
-     * it had the form render already: a change that reached the form made a new `snapshot`
-     */
-    proposing: () => {
-      const before = snapshot;
-      return () => {
-        if (snapshot === before) {
-          notify();
-        }
-      };
-    },
     sendMove: (move: AnnouncedMove, send: () => void) => {
       announced = move;
       try {
@@ -318,7 +303,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     },
     /** The latest value at `path`: an edit made since the form last rendered included */
     readField: <D>(path: FieldPath) => getAt<D>(state.formData, fieldPathToList(path)),
-    getSnapshot: () => snapshot,
+    getSnapshot: () => published,
     subscribe: (listener: () => void) => {
       listeners.add(listener);
       return () => {
@@ -329,18 +314,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * the setup of any layout Effect, so an Effect of the same commit that issues a command finds the props and the
      * state of this commit.
      */
-    committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedSnapshot: typeof snapshot) => {
+    committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedPublished: FormState<T, S, F>) => {
       committedProps = nextProps;
-      if (snapshot === renderedSnapshot) {
-        state = derived;
-        // The commit ends a field's record of a view it sent, see `FormDataAccess.epoch()`. An operation that
-        // committed after this render began is not in `derived`, and a record made then waits for the render the
-        // operation scheduled
-        epoch += 1;
-      } else {
-        // Until that render runs, operations start from the operation's commit derived under the new props
-        state = replaceEqualDeep(derived, deriveState(nextProps, state));
-      }
+      // An operation that committed after this render began is not in `derived`. A render for it is already
+      // scheduled; until it runs, operations start from its commit derived under the new props
+      state = published === renderedPublished ? derived : replaceEqualDeep(derived, deriveState(nextProps, state));
     },
     handle,
     handleSubmit,

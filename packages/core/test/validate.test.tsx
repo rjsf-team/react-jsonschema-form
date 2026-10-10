@@ -187,7 +187,7 @@ describe('Validation', () => {
         );
       });
 
-      it('re-validates a controlled form when the customValidate prop changes', () => {
+      it('re-validates when the customValidate prop changes', () => {
         const schema: RJSFSchema = { type: 'string' };
         function rejectEverything(_: FormProps['formData'], errors: FormValidation) {
           errors.addError('Invalid');

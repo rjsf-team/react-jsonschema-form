@@ -31,7 +31,6 @@ import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
-import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** The option an `AnyOfField` has selected, with what it last rendered, to tell a change of data from a re-render */
 interface OptionSelection<T> {
@@ -140,7 +139,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     uiSchema,
   } = props;
   const { schemaUtils } = registry;
-  const readsFormData = useReadsFormData(AnyOfField);
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
 
   const [selection, setSelection] = useState<OptionSelection<T>>(() => ({
@@ -359,25 +357,19 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   const optionsSchemaField =
     (optionSchema && optionSchema.type !== 'null' && (
-      <RawFormDataContext value={readsFormData ? SchemaFieldComponent : undefined}>
-        <SchemaFieldComponent {...props} schema={optionSchema} uiSchema={optionFieldUiSchema} />
-      </RawFormDataContext>
+      <SchemaFieldComponent {...props} schema={optionSchema} uiSchema={optionFieldUiSchema} />
     )) ||
     null;
 
-  // The option's field is handed this field's own data, and is vouched for directly; the template and the selector are
-  // not
   return (
-    <RawFormDataContext value={undefined}>
-      <MultiSchemaFieldTemplate
-        id={id}
-        schema={schema}
-        registry={registry}
-        uiSchema={uiSchema}
-        selector={selector}
-        optionSchemaField={optionsSchemaField}
-      />
-    </RawFormDataContext>
+    <MultiSchemaFieldTemplate
+      id={id}
+      schema={schema}
+      registry={registry}
+      uiSchema={uiSchema}
+      selector={selector}
+      optionSchemaField={optionsSchemaField}
+    />
   );
 }
 

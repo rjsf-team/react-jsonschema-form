@@ -555,3 +555,5 @@ function MyObjectField(props: FieldProps) {
   return <ObjectField {...props} onChange={onChangeHandler} />;
 }
 ```
+
+Pass the `formData` through unchanged. `ArrayField` and `ObjectField` add, remove, rename and reorder by reading the form's current value at their `fieldPath`, not the `formData` they were rendered with, so that several edits in one event build on each other. A wrapper that hands them a transformed view of the data, such as a sorted copy, makes those operations act on positions the form does not hold.
