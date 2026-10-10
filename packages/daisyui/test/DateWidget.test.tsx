@@ -603,4 +603,14 @@ describe('DateWidget', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit.mock.calls[0][0].formData.when).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
+
+  test('translates the Done button', async () => {
+    const { container } = render(
+      <Form schema={schema} validator={validator} translateString={(key) => `translated ${key}`} />,
+    );
+
+    await openPicker(container);
+
+    expect(screen.getByRole('button', { name: 'translated Done' })).toBeInTheDocument();
+  });
 });

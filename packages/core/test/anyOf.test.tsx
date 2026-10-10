@@ -1,5 +1,5 @@
-import { createRef } from 'react';
-import type { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { createRef, useEffect } from 'react';
+import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 
@@ -601,6 +601,27 @@ describe('anyOf', () => {
     expect(node.querySelectorAll('#custom-anyof-field')).toHaveLength(1);
   });
 
+  it('hands AnyOfField the same options across re-renders that leave the schema and data alone', () => {
+    const seenOptions = new Set<unknown>();
+    const seenErrors: unknown[] = [];
+    const RecordingField = (props: FieldProps) => {
+      seenOptions.add(props.options);
+      seenErrors.push(props.errorSchema?.__errors);
+      return null;
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { union: { anyOf: [{ type: 'string' }, { type: 'number' }] } },
+    };
+    const { rerender } = createFormComponent({ schema, fields: { AnyOfField: RecordingField } });
+
+    rerender({ schema, fields: { AnyOfField: RecordingField }, extraErrors: { union: { __errors: ['changed'] } } });
+
+    // The new errors show the re-render reached the field, so one options identity isn't a single render's
+    expect(seenErrors).toContainEqual(['changed']);
+    expect(seenOptions.size).toBe(1);
+  });
+
   it('should support custom widget', async () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -711,6 +732,41 @@ describe('anyOf', () => {
     rerender({ schema, formData: { userId: 'foobarbaz' } });
 
     expect(node.querySelector('select')).toHaveValue('1');
+  });
+
+  it('should never commit the option the updated formData no longer fits', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { userId: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
+    };
+    const commits: { type: unknown; value: unknown }[] = [];
+    function CommitProbe({ schema: { type }, value }: WidgetProps) {
+      useEffect(() => {
+        commits.push({ type, value });
+      });
+      return null;
+    }
+
+    const { rerender } = createFormComponent({
+      schema,
+      formData: { userId: 5 },
+      widgets: { TextWidget: CommitProbe },
+    });
+    rerender({ schema, formData: { userId: 'foobarbaz' }, widgets: { TextWidget: CommitProbe } });
+
+    expect(commits).toContainEqual({ type: 'string', value: 'foobarbaz' });
+    expect(commits).not.toContainEqual({ type: 'number', value: 'foobarbaz' });
+  });
+
+  it('should render an anyOf whose formData is NaN', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { userId: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
+    };
+
+    const { node } = createFormComponent({ schema, formData: { userId: NaN } });
+
+    expect(node.querySelector('select')).toBeInTheDocument();
   });
 
   it('should not change the selected option when entering values', async () => {

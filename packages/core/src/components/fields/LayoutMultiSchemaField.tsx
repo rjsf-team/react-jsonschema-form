@@ -17,7 +17,6 @@ import {
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getOptionUiSchema,
-  hashObject,
   fieldPathToName,
   ONE_OF_KEY,
   optionsList,
@@ -141,19 +140,9 @@ export default function LayoutMultiSchemaField<
   } = props;
   const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const discriminator = getDiscriminatorFieldFromSchema(schema);
-  const schemaHash = hashObject(schema);
-  const optionsHash = hashObject(options);
-  const uiSchemaHash = uiSchema ? hashObject(uiSchema) : '';
-  const formDataHash = formData ? hashObject(formData) : '';
-
-  // Derived rather than held in state: `computeEnumOptions()` retrieves every option's schema, so recomputing it is
-  // only worth doing when one of the hashes below moves, and holding it in state would render the previous options
-  // for a pass before an effect could re-sync them
   const enumOptions = useMemo(
     () => computeEnumOptions(schema, options, schemaUtils, uiSchema, formData),
-    // We are using hashes in place of the dependencies
-    // oxlint-disable-next-line react-hooks/exhaustive-deps
-    [schemaHash, optionsHash, schemaUtils, uiSchemaHash, formDataHash],
+    [schema, options, schemaUtils, uiSchema, formData],
   );
   const {
     widget = discriminator ? 'radio' : 'select',
