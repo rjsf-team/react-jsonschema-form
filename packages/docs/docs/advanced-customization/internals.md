@@ -87,7 +87,7 @@ The handle exposes `getFormData()`, `submit()`, `reset()`, `setFieldValue()`, `v
 
 ## Read form data programmatically
 
-Call `getFormData()` to read the current value without storing every `onChange` event yourself. For example, a self-owned form can save a draft from a button:
+Call `getFormData()` to read the current value without storing every `onChange` event yourself. For example, a form can save a draft from a button:
 
 ```tsx
 import { useRef } from 'react';
@@ -115,12 +115,9 @@ function DraftEditor() {
 }
 ```
 
-What you read depends on who owns the value:
+`getFormData()` returns the form's current value: the data your props last handed it, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
 
-- With `initialFormData`, Form stores edits immediately. `getFormData()` sees them even before React updates the inputs.
-- With `formData`, your component owns the value. `getFormData()` returns the last value you passed back and React rendered, rather than an edit you have not accepted.
-
-Inside `onChange`, use `event.formData` to read the edit being proposed. Treat data from both the event and the handle as read-only.
+Inside `onChange`, use `event.formData` to read the edit being reported. Treat data from both the event and the handle as read-only.
 
 ## Submit form programmatically
 
@@ -152,9 +149,7 @@ function Editor() {
 }
 ```
 
-In a self-owned form, a write followed by `submit()` submits the new value. If the inputs have not updated yet, the submit waits for React to render them, so native HTML constraint validation checks the value being submitted; `onSubmit` or `onError` is then called once React commits that render, rather than before `submit()` returns.
-
-In a controlled form, let your component pass back the accepted value and let it render before submitting. Calling `setData(nextData)` and `submit()` in the same handler can submit the previous value. `validateForm()` also checks the current value; use `validateFormWithFormData(nextData)` to check a proposed value immediately without accepting or submitting it.
+`submit()` submits the form's current value through the form element, as a submit button does: the browser's constraint validation checks the inputs as they are rendered, then schema validation checks the value, and `onSubmit` or `onError` is called before `submit()` returns. A write followed by `submit()` in the same handler submits the new value, but the browser still sees the inputs as rendered before the write; see [the migration guide](../migration-guides/v7.x%20upgrade%20guide.md#submit-in-the-same-handler-as-an-edit). `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
 
 ## Change form data programmatically
 
@@ -169,9 +164,7 @@ formRef.current?.setFieldValue(['address', 'city'], 'Paris');
 formRef.current?.setFieldValue('', { address: { city: 'Paris', country: 'France' } });
 ```
 
-A self-owned form stores the edit immediately. A controlled form proposes it through `onChange`; your handler decides what value to pass back through `formData`.
-
-In a controlled form, several calls in one event build on each other: each proposal includes the edits proposed before it, until React renders the value your handler passed back. A handler that refuses a proposal still sees the refused edit in later proposals of the same event, and one that transforms proposals has to transform every one, since a later proposal builds on the earlier edit as proposed. You can also update parent state directly; that does not call Form's `onChange`.
+The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. You can also replace the whole value by passing a new `formData`; that does not call `onChange`.
 
 ## Command timing
 
@@ -189,8 +182,8 @@ A command issued from the setup of a layout Effect, a callback ref being attache
 
 Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render.
 
-Under `liveValidate: 'onBlur'`, a blur in the same event as a controlled edit builds on that edit's proposal, so its `onChange` carries the errors for the edited value. The errors the form shows come from validating whatever value your component then renders: the edit, a value you transformed it into, or the previous one if you refused it.
+Under `liveValidate: 'onBlur'`, a blur in the same event as an edit validates the edit, and its `onChange` carries the errors found. A value your component stores in its place is validated at the next blur or submit.
 
-Inside `<Activity mode="hidden">`, `setFieldValue()`, `reset()` and a field's change still update the form, but the `onChange`, `onBlur` or `onFocus` they cause is called when the form is shown again, in the order they happened. A `submit()` waits for the form to be shown too, as do the `onSubmit` or `onError` of a submit event the hidden form receives, and `validateForm()` returns its answer without calling `onError`. An `onSubmit` held this way is handed its event after React has dispatched it, so `event.currentTarget` is `null` by then; `event.target` is still the form. An unmounted form never calls them, and drops what it was holding.
+Inside `<Activity mode="hidden">`, the form works as it does when shown: `setFieldValue()`, `reset()`, a field's change and `submit()` are applied and reported at once, and the inputs show the result when the form is shown again.
 
 Form stores edits synchronously through `useSyncExternalStore`. Wrapping a handle call in `startTransition()` does not make it non-blocking. See the [migration guide](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change) for examples of timing-dependent code to update.

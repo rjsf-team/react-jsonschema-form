@@ -140,7 +140,7 @@ You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`,
 
 ### Controlled component
 
-By default, `<Form />` is an [uncontrolled component](https://reactjs.org/docs/uncontrolled-components.html). To make it a controlled component, use the
+`<Form />` owns its data: pass `initialFormData` to seed it, or `formData` to replace its value whenever you pass a new one. To keep a copy of the value in your own state, as with a [controlled component](https://react.dev/reference/react-dom/components/input#controlling-an-input-with-a-state-variable), use the
 `onChange` and `formData` props as in the below example:
 
 ```tsx
