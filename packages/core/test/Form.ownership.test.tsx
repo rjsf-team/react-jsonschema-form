@@ -14,7 +14,6 @@ import {
   AcceptingParent,
   createFormComponent,
   createParentLog,
-  describeOwnerships,
   fieldErrorsById,
   handleOf,
   input,
@@ -1237,7 +1236,7 @@ describe('form data ownership', () => {
   });
 });
 
-describeOwnerships('operations in one tick', (createFormComponent) => {
+describe('operations in one tick', () => {
   it('a same-tick submit reads the current data', () => {
     const ref = createFormRef();
     const { onSubmit, getFormData } = createFormComponent({ ref, schema, initialFormData: { a: 'old' } });

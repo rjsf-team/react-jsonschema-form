@@ -2094,7 +2094,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
     describe('when props.formData does not equal the default values', () => {
       it('should render the defaults added to the value without calling props.onChange', () => {
-        // A direct `formData` prop, not the suite's creator, whose accepting parent seeds the defaults itself
+        // A plain `formData` prop, without the extra-data props the suite's creator adds
         const formData = {
           foo: 123,
         };

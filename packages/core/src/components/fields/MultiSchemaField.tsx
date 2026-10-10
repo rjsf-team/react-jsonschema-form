@@ -25,7 +25,6 @@ import {
   shouldRenderOptionalField,
   TranslatableString,
   UI_OPTIONS_KEY,
-  withVariantId,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
@@ -39,11 +38,10 @@ interface OptionSelection<T> {
   selectedOption: number;
   formData: T | undefined;
   id: string;
-  /** The data the user's last option switch proposed, so re-matching the option to the data does not override the
-   * explicit choice. It is needed even when the switch is accepted, since getDefaultFormState populates undefined
-   * properties that make deepEquals see a false formData change.
+  /** Set by the user's own option switch: the data that follows it, the defaults it adds included, is no reason to
+   * re-match the option the user just chose
    */
-  proposal: { formData: T | undefined } | undefined;
+  isSwitched: boolean;
 }
 
 /** Re-matches the selected option of an `AnyOfField` to data that changed under the same field
@@ -66,25 +64,9 @@ function optionForData<
   schema: S,
   registry: Registry<T, S, F>,
 ): number {
-  const { selectedOption, proposal } = selection;
+  const { selectedOption } = selection;
   const { schemaUtils } = registry;
-  const isFormDataChanged = !deepEquals(formData, selection.formData);
-  if (proposal) {
-    // A switch that proposed the data the form already held has nothing a parent could decline
-    if (isFormDataChanged || deepEquals(formData, proposal.formData)) {
-      return selectedOption;
-    }
-    // The option switch was proposed but the data did not follow it, which is what a parent declining the proposal
-    // looks like (RFC, section 5): the chosen option stays while the data still fits it, so a form whose data
-    // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
-    // describes it
-    const chosen = selectedOption >= 0 ? options[selectedOption] : undefined;
-    // The retrieved option is not the schema its own `$id` names, and a validator caches what it compiles under
-    // that `$id`, so it is validated under one derived from its content, as the option scoring does
-    if (chosen && schemaUtils.getValidator().isValid(withVariantId<S>(chosen), formData, registry.rootSchema)) {
-      return selectedOption;
-    }
-  } else if (!isFormDataChanged) {
+  if (deepEquals(formData, selection.formData)) {
     return selectedOption;
   }
   return schemaUtils.getClosestMatchingOption(
@@ -170,24 +152,23 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ),
     formData,
     id,
-    proposal: undefined,
+    isSwitched: false,
   }));
   const { selectedOption } = selection;
 
   // Adjusted while rendering rather than in an effect, so the option that no longer describes the data is never
-  // committed. A pending proposal is settled by the first render after it, against the data rendered before it, whether
-  // or not the data followed it and whether or not the id changed in that render too. A render that changed the id with
-  // no proposal pending only records what it rendered.
+  // committed. The first render after the user's own switch keeps the option it chose, whatever data came with it, and
+  // a render that changed the id only records what it rendered.
   // `Object.is`, since `NaN !== NaN` would have data a widget parsed to `NaN` set this state on every pass
-  if (!Object.is(selection.formData, formData) || selection.id !== id || selection.proposal) {
+  if (!Object.is(selection.formData, formData) || selection.id !== id || selection.isSwitched) {
     setSelection({
       selectedOption:
-        selection.id === id || selection.proposal
+        selection.id === id && !selection.isSwitched
           ? optionForData<T, S, F>(selection, formData, options, schema, registry)
           : selectedOption,
       formData,
       id,
-      proposal: undefined,
+      isSwitched: false,
     });
   }
 
@@ -258,7 +239,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         uiSchemaDefinitions,
       });
 
-      setSelection((current) => ({ ...current, selectedOption: intOption, proposal: { formData: newFormData } }));
+      setSelection((current) => ({ ...current, selectedOption: intOption, isSwitched: true }));
       sendOptionSwitch(
         schema,
         {

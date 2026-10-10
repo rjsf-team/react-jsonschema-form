@@ -1,4 +1,5 @@
-import type { EventFormData, FormState, IChangeEvent } from '../src/index.ts';
+import type { FormState } from '../src/components/Form.tsx';
+import type { EventFormData, IChangeEvent } from '../src/index.ts';
 
 type EventKey = Exclude<keyof IChangeEvent, 'status'>;
 type Mutable<O> = { -readonly [K in keyof O]: O[K] };

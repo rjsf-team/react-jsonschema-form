@@ -218,7 +218,9 @@ export interface FormProps<
   ref?: Ref<FormRef<T>>;
 }
 
-/** The data that is contained within the state for the `Form` */
+/** The state of the `Form`: what its store holds between renders and what each render derives from the props.
+ * Internal to `@rjsf/core`; `IChangeEvent` is the public shape of what reaches a consumer.
+ */
 export interface FormState<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -239,10 +241,6 @@ export interface FormState<
    * it, as does one that stores no edits at all
    */
   formDataProp?: T;
-  /** Whether there is data to live-validate when a prop changes: the props handed the form data when it last took
-   * some, rather than leaving it to the schema's defaults
-   */
-  edit: boolean;
   /** The current list of errors for the form, includes `extraErrors` */
   errors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form, includes `extraErrors` */

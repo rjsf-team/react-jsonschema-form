@@ -415,12 +415,12 @@ export default function ObjectField<
    * holds that seed under that name, which is the one question the effect below puts to every record.
    */
   const seededProperties = useRef(new Map<string, unknown>());
-  // Every write to a property this object holds is a proposal: the parent may decline it, write a value of its own
-  // over it, or accept it, and which of those happened is only known once the form data has come back. A record whose
-  // name the data no longer holds that seed under is no longer the property's history, whatever became of it -- a
-  // value the user entered, one a parent wrote, or a name a declined rename never took -- so it is dropped here rather
-  // than where the proposal was made. The record a rename leaves behind under the old name is what a declined rename
-  // falls back on, and it goes the moment the rename is the data's
+  // A child's write does not pass through this field, and a parent may write a value of its own over what the add
+  // button seeded, so the data is where a property's history is read. A record whose name the data no longer holds
+  // that seed under is no longer the property's history, whatever became of it -- a value the user entered, one a
+  // parent wrote, or a name the property left -- so it is dropped here rather than where the write was made. The
+  // record a rename leaves behind under the old name goes the moment the data no longer holds it, and stays while a
+  // parent puts the old name back
   useLayoutEffect(() => {
     const properties = isObject(formData) ? (formData as GenericObjectType) : {};
     for (const [key, seed] of seededProperties.current) {
@@ -676,10 +676,10 @@ export default function ObjectField<
         // numeric pattern describes is a value that pattern's field cannot show. Which properties those are is what
         // `seededProperties` has recorded since they were added, rather than a value that merely equals what the seed
         // would be now -- any `0`, `false` or defaulted entry equals that, the data the form mounted with included, and
-        // every one of those is the user's to keep. The record goes under the new name without leaving the old one,
-        // since this rename is a proposal too: a parent that declines it leaves the property under the name it already
-        // had, where the record it kept lets the next rename re-seed it. The reconciliation above drops whichever of
-        // the two the data turns out not to hold, so renaming a property on twice re-seeds it twice
+        // every one of those is the user's to keep. The record goes under the new name without leaving the old one: a
+        // parent that puts the old name back leaves the property where it was, with the record that lets the next
+        // rename re-seed it. The reconciliation above drops whichever of the two the data turns out not to hold, so
+        // renaming a property on twice re-seeds it twice
         const seed = seededProperties.current.get(oldKey);
         const wasSeeded = seededProperties.current.has(oldKey) && deepEquals(newFormData[oldKey], seed);
         if (wasSeeded) {
@@ -739,15 +739,14 @@ export default function ObjectField<
   if (!renderOptionalField || hasFormData) {
     try {
       const definedPropertySet = new Set(definedPropertyOrder);
-      // A set, since an add or rename the parent declined leaves its key in the order, and proposing that key again
-      // appends it a second time
+      // A set, since an add a custom parent kept to itself leaves its key in the order, and the next add picks that
+      // key again
       const orderedSet = new Set(additionalPropertyOrder);
       const currentAdditionalProperties = [...orderedSet].filter(
         (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),
       );
-      // A property in the data but not in the order was not added or renamed here: the parent supplied it, or it kept
-      // the name a rename proposed away because the parent declined the rename. Either way it renders, after the ones
-      // whose order is known
+      // A property in the data but not in the order was not added or renamed here: the parent supplied it, or put the
+      // name a rename took away back. Either way it renders, after the ones whose order is known
       const unorderedAdditionalProperties = schemaAdditionalProperties.filter((property) => !orderedSet.has(property));
       orderedProperties = orderProperties(
         [...definedPropertyOrder, ...currentAdditionalProperties, ...unorderedAdditionalProperties],

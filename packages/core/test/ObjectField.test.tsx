@@ -1201,10 +1201,9 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { s_x: 0, newKey: undefined }, 'root');
     });
 
-    it('should keep a value a controlled parent wrote over the seed when the key is renamed', async () => {
-      // The add button's seed is a proposal, so the value the property holds is the parent's answer to it rather than
-      // the seed itself: a parent that rewrites or declines what the button proposed leaves a value of its own under
-      // that name, which is no more the form's to replace on a rename than one the user typed
+    it('should keep a value a parent wrote over the seed when the key is renamed', async () => {
+      // A parent may write a value of its own over what the add button seeded, and that value is no more the form's
+      // to replace on a rename than one the user typed
       const log = createParentLog<GenericObjectType>();
       const { container } = render(
         <TransformingParent<GenericObjectType>
@@ -1232,10 +1231,10 @@ describe('ObjectField', () => {
       expect(log.value).toEqual({ num1: 'the parent wrote this' });
     });
 
-    it('should re-seed an untouched new property after a rename the parent declined', async () => {
-      // The record a rename writes under the new name is a proposal like the add itself, so the one under the old name
-      // stays until the data says which of them it holds. Moving it would leave the property, still holding the seed
-      // under the name it never left, with no history to re-seed from
+    it('should re-seed an untouched new property after a rename the parent put back', async () => {
+      // The record under the old name stays until the data says which of the two names the property holds: a parent
+      // that puts the old name back leaves the property, still holding the seed, where it was, and moving the record
+      // would leave it with no history to re-seed from
       const log = createParentLog<GenericObjectType>();
       const { container } = render(
         <TransformingParent<GenericObjectType>
@@ -1263,9 +1262,9 @@ describe('ObjectField', () => {
       expect(log.value).toEqual({ '12': 0 });
     });
 
-    it('should re-seed an untouched new property after a change the parent declined', async () => {
-      // A change is a proposal too, and one the parent turns down leaves the property holding the seed the add button
-      // wrote: nothing has written to it, so the rename re-seeds it as it would one the user never touched
+    it('should re-seed an untouched new property after a change the parent wrote the seed back over', async () => {
+      // A parent that writes the seed back over a change leaves the property holding what the add button wrote:
+      // nothing else has written to it, so the rename re-seeds it as it would one the user never touched
       const log = createParentLog<GenericObjectType>();
       const { container } = render(
         <TransformingParent<GenericObjectType>

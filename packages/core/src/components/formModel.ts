@@ -36,24 +36,16 @@ import {
   validateFormData,
 } from './formState.ts';
 
-/** How an operation calls the consumer's callback: directly for a handle method, whose caller catches the throw, or
- * through `callWithDeferredThrow()` for a field, which can report from an Effect inside React's commit phase, where a
- * throw from the consumer's callback would unmount the form. Either way the callback is handed the props of the last
- * committed render.
+/** How a report reaches the consumer's callback: a handle method calls it directly, so a throw reaches the method's
+ * caller, while a field, which may report from an Effect inside React's commit phase, where a throw from the
+ * consumer's callback would unmount the form, has it made through `callWithDeferredThrow()`
  */
-type Report<Props> = (callback: (latest: Props) => void) => void;
-
-/** The props an operation computes with, read once as it starts. The consumer's callbacks are not among them, so an
- * operation cannot report through the props it started with: a report is handed the props to call, see `Report`.
- */
-type OperationProps<T, S extends StrictRJSFSchema, F extends FormContextType> = Omit<
-  FormProps<T, S, F>,
-  'onChange' | 'onBlur' | 'onFocus' | 'onSubmit' | 'onError' | 'focusOnFirstError'
->;
+type Deliver = (report: () => void) => void;
+const deliverToCaller: Deliver = (report) => report();
 
 /** The model holds the form's state between renders and performs every operation on it. An operation starts from the
- * current state and reads the props once, as it starts, so that everything it computes belongs to one moment. The
- * consumer's callbacks are not its to read: a report is handed the props to call, see `Report`.
+ * current state and reads the props once, as it starts, so that everything it computes and reports belongs to one
+ * moment.
  *
  * Internal to `@rjsf/core`: `package.json` excludes `./lib/components/formModel.js` from the `./lib/*.js` exports
  * wildcard so it can't be deep-imported, since a reachable subpath would have to keep working until the next major.
@@ -82,12 +74,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
   let announced: AnnouncedMove | undefined;
 
-  /** Calls back directly, so a throw reaches the caller of the handle method that reports */
-  const reportToCaller: Report<FormProps<T, S, F>> = (callback) => callback(committedProps);
-  /** For a field, which may be reporting from inside React's commit phase, see `Report` */
-  const reportFromField: Report<FormProps<T, S, F>> = (callback) =>
-    callWithDeferredThrow(() => callback(committedProps));
-
   /** Stores the result of an operation, shared against the current state so an unchanged member keeps the reference
    * the fields hold, and publishes it when it changed. Returns what was stored.
    */
@@ -106,7 +92,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   /** `formData` without the fields the schema does not describe, when `omitExtraData` asks for it: what a submit and
    * `validateForm()` act on
    */
-  const withExtraDataOmitted = (props: OperationProps<T, S, F>, formData: T | undefined) =>
+  const withExtraDataOmitted = (props: FormProps<T, S, F>, formData: T | undefined) =>
     props.omitExtraData === true ? state.schemaUtils.omitExtraData(state.schema, formData) : formData;
 
   /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
@@ -142,56 +128,49 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    *
    * @param props - The props the operation started with
    * @param formData - The form data to validate
-   * @param report - How the errors are reported; the caller knows whether anything else tells the consumer
    * @returns - True if the form is valid, false otherwise.
    */
-  const runValidation = (
-    props: OperationProps<T, S, F>,
-    formData: T | undefined,
-    report: Report<FormProps<T, S, F>>,
-  ): boolean => {
+  const runValidation = (props: FormProps<T, S, F>, formData: T | undefined): boolean => {
     const { hasError, next } = applyValidation(state, props, formData);
     const { errors } = next;
     commit(next);
     if (!hasError) {
       return true;
     }
-    report((latest) => {
-      const { focusOnFirstError, onError } = latest;
-      if (focusOnFirstError) {
-        if (typeof focusOnFirstError === 'function') {
-          focusOnFirstError(errors[0]);
-        } else {
-          focusOnError(errors[0]);
-        }
-      }
-      if (onError) {
-        onError(errors);
+    const { focusOnFirstError, onError } = props;
+    if (focusOnFirstError) {
+      if (typeof focusOnFirstError === 'function') {
+        focusOnFirstError(errors[0]);
       } else {
-        // oxlint-disable-next-line no-console
-        console.error('Form validation failed', errors);
+        focusOnError(errors[0]);
       }
-    });
+    }
+    if (onError) {
+      onError(errors);
+    } else {
+      // oxlint-disable-next-line no-console
+      console.error('Form validation failed', errors);
+    }
     return false;
   };
 
   /** Applies a change to the field at `fieldPath` with `applyChange()`, commits the result and reports it through
-   * `onChange`, which is called before this returns, through `report`.
+   * `onChange`, which is called before this returns, the way `deliver` says.
    *
    * @param newValue - The new value at `fieldPath`
    * @param fieldPath - The `FieldPath` of the change at which to set the formData
    * @param [newErrorSchema] - The new `ErrorSchema` based on the field change
    * @param [id] - The id of the field that caused the change
-   * @param [report] - How `onChange` is called
+   * @param [deliver] - How `onChange` is called
    */
   const change = (
     newValue: T | undefined,
     fieldPath: FieldPath,
     newErrorSchema?: ErrorSchema<T>,
     id?: string,
-    report = reportToCaller,
+    deliver: Deliver = deliverToCaller,
   ) => {
-    const props: OperationProps<T, S, F> = committedProps;
+    const props = committedProps;
     // Taken by the change it was announced for, so a second change at the path moves nothing again
     const move = announced?.fieldPath === fieldPath ? announced : undefined;
     if (move) {
@@ -211,7 +190,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         props,
       ),
     );
-    report((latest) => latest.onChange?.(toIChangeEvent(committed), id));
+    deliver(() => props.onChange?.(toIChangeEvent(committed), id));
   };
 
   /** What a blurred field does to the form, after the `Form`'s `onBlur`: any live validation and live omit that the
@@ -220,7 +199,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * @param id - The unique `id` of the field that was blurred
    */
   const blur = (id: string) => {
-    const props: OperationProps<T, S, F> = committedProps;
+    const props = committedProps;
     const { omitExtraData, liveOmit } = props;
     if (!((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
@@ -229,7 +208,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const committed = commit(applyBlur(start, props));
     // Only the `IChangeEvent` members count; the validator's own results are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
-      reportFromField((latest) => latest.onChange?.(toIChangeEvent(committed), id));
+      callWithDeferredThrow(() => props.onChange?.(toIChangeEvent(committed), id));
     }
   };
 
@@ -239,16 +218,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (event.target !== event.currentTarget) {
       return;
     }
-    const props: OperationProps<T, S, F> = committedProps;
+    const props = committedProps;
     // oxlint-disable-next-line typescript/no-deprecated
     const { noValidate } = props;
     const formData = withExtraDataOmitted(props, state.formData);
-    if (!noValidate && !runValidation(props, formData, reportToCaller)) {
+    if (!noValidate && !runValidation(props, formData)) {
       return;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
     const committed = commit(applySubmit(state, props, formData));
-    reportToCaller((latest) => latest.onSubmit?.(toIChangeEvent(committed, 'submitted'), event));
+    props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
   };
 
   const handle: FormRef<T> = {
@@ -267,8 +246,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * clears every error and tells `onChange`. `extraErrors` are the props' and stay.
      */
     reset: () => {
-      const committed = commit(applyReset(state, committedProps));
-      reportToCaller((latest) => latest.onChange?.(toIChangeEvent(committed)));
+      const props = committedProps;
+      const committed = commit(applyReset(state, props));
+      props.onChange?.(toIChangeEvent(committed));
     },
 
     /** Sets the value of the field at `fieldPath`, see `FormRef.setFieldValue()`. The dotted form splits on `.`
@@ -292,11 +272,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     },
 
     validateForm: () => {
-      const props: OperationProps<T, S, F> = committedProps;
-      return runValidation(props, withExtraDataOmitted(props, state.formData), reportToCaller);
+      const props = committedProps;
+      return runValidation(props, withExtraDataOmitted(props, state.formData));
     },
 
-    validateFormWithFormData: (formData?: T) => runValidation(committedProps, formData, reportToCaller),
+    validateFormWithFormData: (formData?: T) => runValidation(committedProps, formData),
 
     validate: (formData: T | undefined) => validateFormData(committedProps, state, formData),
 
@@ -365,12 +345,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     handle,
     handleSubmit,
     handleChange: (value: T | undefined, path: FieldPath, errors?: ErrorSchema<T>, id?: string) =>
-      change(value, path, errors, id, reportFromField),
+      change(value, path, errors, id, callWithDeferredThrow),
     handleBlur: (id: string, data: unknown) => {
+      const props = committedProps;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
-      reportFromField((latest) => latest.onBlur?.(id, data));
+      callWithDeferredThrow(() => props.onBlur?.(id, data));
       blur(id);
     },
-    handleFocus: (id: string, data: unknown) => reportFromField((latest) => latest.onFocus?.(id, data)),
+    handleFocus: (id: string, data: unknown) => {
+      const props = committedProps;
+      callWithDeferredThrow(() => props.onFocus?.(id, data));
+    },
   };
 }

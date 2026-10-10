@@ -1,7 +1,6 @@
 import type { ComponentType, ReactNode, RefObject } from 'react';
 import { Activity, createRef, useEffect, useState } from 'react';
 import type { GenericObjectType, ValidatorType, WidgetProps } from '@rjsf/utils';
-import { createSchemaUtils } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
@@ -243,68 +242,12 @@ export function createFormComponent(props: NoValFormProps, v: ValidatorType = va
   return createComponent(Form, { validator: v, ...props });
 }
 
-/** `createFormComponent()` with the data owned by an accepting parent instead of the form: the seed (`formData` or
- * `initialFormData`) is filled with the schema's defaults the way the docs tell a controlled parent to, and every
- * proposal is stored and passed back, exactly `setData(event.formData)`. A `formData` passed to `rerender()` replaces
- * the parent's value. Running a suite through both creators is what checks that the two owners behave alike wherever
- * ownership should make no difference.
- */
-function createAcceptingFormComponent(props: NoValFormProps, v: ValidatorType = validator): FormComponentResult {
-  return createComponent(AcceptingSeededParent, { validator: v, ...props });
-}
-
-function AcceptingSeededParent({ formData, initialFormData, onChange, ...props }: FormProps) {
-  const [value, setValue] = useState<unknown>(() => {
-    const { schema, uiSchema, defaultFormStateBehavior, customMergeAllOf } = props;
-    const schemaUtils = createSchemaUtils(
-      { validator: props.validator, defaultFormStateBehavior, customMergeAllOf },
-      schema,
-    );
-    const seeded = schemaUtils.getDefaultFormState(
-      schema,
-      formData !== undefined ? formData : initialFormData,
-      false,
-      false,
-      uiSchema,
-    );
-    // A seed without defaults resolves to `undefined`, which would make the form own its data
-    return seeded === undefined ? null : seeded;
-  });
-  const [replaced, setReplaced] = useState(formData);
-  if (formData !== replaced) {
-    setReplaced(formData);
-    setValue(formData);
-  }
-  return (
-    <Form
-      {...props}
-      formData={value}
-      onChange={(event, id) => {
-        setValue(event.formData);
-        onChange?.(event, id);
-      }}
-    />
-  );
-}
-
 interface FormExtraProps {
   omitExtraData: FormProps['omitExtraData'];
   liveOmit?: FormProps['liveOmit'];
 }
 
-/** Runs a group of tests once with the form owning its data and once with an accepting parent owning it, for the
- * behavior ownership must not change: validation, errors, submit and the events that report them
- */
-export function describeOwnerships(
-  title: string,
-  fn: (creatorFn: typeof createFormComponent, isControlled: boolean) => void,
-) {
-  describe(`${title} (self-owned)`, () => fn(createFormComponent, false));
-  describe(`${title} (parent-owned)`, () => fn(createAcceptingFormComponent, true));
-}
-
-/* Run a group of tests with each combination of omitExtraData and liveOmit as form props, under both owners.
- */
+/** Runs a group of tests with each combination of `omitExtraData` and `liveOmit` as form props */
 export function describeRepeated(title: string, fn: (creatorFn: typeof createFormComponent) => void) {
   const formExtraPropsList: FormExtraProps[] = [
     { omitExtraData: false },
@@ -312,9 +255,9 @@ export function describeRepeated(title: string, fn: (creatorFn: typeof createFor
     { omitExtraData: true, liveOmit: 'onChange' },
     { omitExtraData: true, liveOmit: 'onBlur' },
   ];
-  describeOwnerships(title, (create) => {
+  describe(title, () => {
     for (const formExtraProps of formExtraPropsList) {
-      const createFormComponentFn = (props: NoValFormProps) => create({ ...props, ...formExtraProps });
+      const createFormComponentFn = (props: NoValFormProps) => createFormComponent({ ...props, ...formExtraProps });
       describe(JSON.stringify(formExtraProps), () => fn(createFormComponentFn));
     }
   });
