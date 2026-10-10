@@ -610,6 +610,12 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       properties: { name: { type: 'string' } },
     });
 
+    const kindFor = (v: string): RJSFSchema => ({
+      type: 'object',
+      default: { v },
+      properties: { v: { type: 'string' } },
+    });
+
     /** The shape every case below varies: a `mode` select that swaps between two `dependencies` branches, with
      * only the branch payload differing. `mode`'s own `const` is merged in, so a branch states just what it adds
      */
@@ -1234,51 +1240,115 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       );
     });
 
-    // The second hop retypes the key the first hop replaced: the `kind` written for the newly selected branch selects
-    // a `cfg` that the refill written while `kind` was gone no longer fits. The refill is judged by the schema the
-    // previous iteration settled rather than by the one the data arrived under, so it is dropped again and the fill
-    // answers the schema that rejected it, instead of the key settling on an object under a string schema
-    it('replaces a refill that a later iteration retypes', async () => {
-      const kindFor = (v: string): RJSFSchema => ({
-        type: 'object',
-        default: { v },
-        properties: { v: { type: 'string' } },
-      });
-      const { node, onChange } = createFormComponent({
-        schema: {
-          type: 'object',
-          properties: {
-            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
-            kind: { type: 'object', properties: { v: { type: 'string' } } },
-          },
-          allOf: [
-            {
-              if: { properties: { mode: { const: 'a' } }, required: ['mode'] },
-              then: { properties: { kind: kindFor('k1') } },
-              else: { properties: { kind: kindFor('k2') } },
-            },
-            {
-              if: { properties: { kind: { properties: { v: { const: 'k2' } }, required: ['v'] } }, required: ['kind'] },
-              then: { properties: { cfg: { type: 'string', default: 'final' } } },
-              else: {
-                properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } },
-                allOf: [
-                  {
-                    if: { properties: { mode: { const: 'a' } }, required: ['mode'] },
-                    then: { properties: { cfg: cfgFor('a') } },
-                    else: { properties: { cfg: cfgFor('mid') } },
-                  },
-                ],
-              },
-            },
-          ],
+    /** Two hops: `mode` swaps `kind`, and the `kind` written for the newly selected branch retypes `cfg`, whose own
+     * refill was written while `kind` was gone. `finalCfg` is what the second hop retypes `cfg` to
+     */
+    const retypingCascade = (finalCfg: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+        kind: { type: 'object', properties: { v: { type: 'string' } } },
+      },
+      allOf: [
+        {
+          if: { properties: { mode: { const: 'a' } }, required: ['mode'] },
+          then: { properties: { kind: kindFor('k1') } },
+          else: { properties: { kind: kindFor('k2') } },
         },
-        formData: { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } },
+        {
+          if: { properties: { kind: { properties: { v: { const: 'k2' } }, required: ['v'] } }, required: ['kind'] },
+          then: { properties: { cfg: finalCfg } },
+          else: {
+            properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } },
+            allOf: [
+              {
+                if: { properties: { mode: { const: 'a' } }, required: ['mode'] },
+                then: { properties: { cfg: cfgFor('a') } },
+                else: { properties: { cfg: cfgFor('mid') } },
+              },
+            ],
+          },
+        },
+      ],
+    });
+
+    const retypingCascadeData = { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } };
+
+    // The second hop retypes the key the first hop replaced: the `kind` written for the newly selected branch selects
+    // a `cfg` that the refill written while `kind` was gone no longer fits. Each refill is judged at its own key, by
+    // the schema that describes it once the data has settled against the one it was written under, so this one is
+    // dropped again and the fill answers the schema that rejected it, instead of the key settling on an object under
+    // a string schema
+    it('replaces a refill that a later iteration retypes', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: retypingCascade({ type: 'string', default: 'final' }),
+        formData: retypingCascadeData,
       });
 
       await selectMode(node, 'b');
 
       expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', kind: { v: 'k2' }, cfg: 'final' }, 'root_mode');
+    });
+
+    // The same two hops, with nothing declared for `cfg` under the schema the second hop retypes it to, so no fill
+    // answers the key. What the drop recorded is no answer either: it is the value the swap moved away from, two
+    // schema movements out of date, and putting it back would settle the key on an object a string schema rejects
+    it('leaves a key empty when the schema that rejected its refill declares nothing', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: retypingCascade({ type: 'string' }),
+        formData: retypingCascadeData,
+        liveValidate: 'onChange',
+      });
+
+      await selectMode(node, 'b');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { mode: 'b', kind: { v: 'k2' } }, errors: [] }),
+        'root_mode',
+      );
+    });
+
+    // `retrieveSchema()` resolves the conditionals of the schema it is handed, so a swap decided inside a property
+    // leaves the root schema the same object from one iteration to the next. A refill is judged at its own key for
+    // that reason: judged by the root pair, a replacement one level down would be judged by two schemas that cannot
+    // have moved, and the key would settle on whatever the second hop retyped it away from
+    it('judges a replacement at its own level when the swap is decided inside a property', async () => {
+      // `mode` swaps `kind` and declares `cfg`'s value through the branch's own `default`, while `kind.v` decides
+      // `cfg`'s type — so no state of this form declares `cfg` twice, and each one is valid on its own terms
+      const wrapped: RJSFSchema = {
+        type: 'object',
+        properties: {
+          mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+          kind: { type: 'object', properties: { v: { type: 'string' } } },
+        },
+        dependencies: {
+          mode: {
+            oneOf: [
+              { properties: { mode: { const: 'a' }, kind: kindFor('k1') }, default: { cfg: { name: 'a' } } },
+              { properties: { mode: { const: 'b' }, kind: kindFor('k2') }, default: { cfg: { name: 'mid' } } },
+            ],
+          },
+        },
+        allOf: [
+          {
+            if: { properties: { kind: { properties: { v: { const: 'k2' } }, required: ['v'] } }, required: ['kind'] },
+            then: { properties: { cfg: { type: 'string', default: 'final' } } },
+            else: { properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } } },
+          },
+        ],
+      };
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { wrap: wrapped } },
+        formData: { wrap: { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } } },
+        liveValidate: 'onChange',
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_wrap_mode')!, 'b');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { wrap: { mode: 'b', kind: { v: 'k2' } } }, errors: [] }),
+        'root_wrap_mode',
+      );
     });
 
     // Where a branch declares the default is what decides how much of the value it speaks for. On the object itself

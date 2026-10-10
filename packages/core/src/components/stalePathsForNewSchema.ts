@@ -35,9 +35,10 @@ interface StaleSearchOptions<T, S extends StrictRJSFSchema, F extends FormContex
   /** The form's uiSchema, indexed into per level so each key's `ui:initialValue`/`ui:emptyValue` applies */
   uiSchema?: UiSchema<T, S, F>;
   /** The paths the caller has already dropped on an earlier iteration of its loop, which are neither reported again
-   * nor descended into
+   * nor descended into. Read only through `has()`, so the caller hands in the record it already keys by path rather
+   * than building a set of those keys per iteration
    */
-  droppedPaths: ReadonlySet<FieldPath>;
+  droppedPaths: ReadonlyMap<FieldPath, unknown>;
 }
 
 /** The two sides' own `properties`, read and checked by the walk before it hands them on, so nothing below it has to
@@ -132,6 +133,7 @@ function onlyProperties<S extends StrictRJSFSchema = RJSFSchema>(
  * @param newValue - The level's value as it stands
  * @param oldValue - The level's value as it arrived
  * @param changedKey - The key of this level the user's change is at or within, if any
+ * @param isDropped - Whether a key of this level is one the caller has already dropped
  * @returns - One entry per key the walk has to act on: every swapped key, and the changed key, which the walk
  *          descends into whether or not it swapped
  */
@@ -143,6 +145,7 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
   newValue: Record<string, unknown>,
   oldValue: Record<string, unknown>,
   changedKey: string | undefined,
+  isDropped: (key: string) => boolean,
 ): SwappedKey<S>[] {
   const swapped: SwappedKey<S>[] = [];
   const { newProperties, oldProperties } = levels;
@@ -156,6 +159,13 @@ function swappedKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // A key the old level never declared held no default of its own to go stale. `Object.hasOwn()`, since a plain
     // read would answer for `toString` and the other names every object inherits
     if (!Object.hasOwn(oldProperties, key)) {
+      return;
+    }
+    // A key the caller has already dropped is ended before anything is resolved for it. It stays swapped relative to
+    // the data as it arrived, and on the old side it still holds that branch's default, so every later iteration
+    // would resolve both its sides, compute both narrowed defaults and report it again for the caller to discard. The
+    // caller cannot drop it twice anyway: the value there is the replacement the fill has since written
+    if (isDropped(key)) {
       return;
     }
     const newRaw = newProperties[key] as S;
@@ -338,10 +348,6 @@ export default function stalePathsForNewSchema<
       return;
     }
     const levels = { newProperties, oldProperties };
-    // A key already dropped is left out before anything is computed for it. It stays swapped relative to the data as
-    // it arrived, and on the old side it still holds that branch's default, so every later iteration would report it
-    // again for the caller to discard — paying both narrowed defaults computations each time. The caller cannot drop
-    // it twice anyway: the value there is the replacement the fill has since written
     const swapped = swappedKeys<T, S, F>(
       schemaUtils,
       newLevel,
@@ -350,7 +356,9 @@ export default function stalePathsForNewSchema<
       newValue,
       oldValue,
       changedKey,
-    ).filter((entry) => !droppedPaths.has(fieldPathFromList([...levelPath, entry.key])));
+      // Folded per key, where the path it needs is known: a level with nothing dropped under it never builds one
+      (key) => droppedPaths.size > 0 && droppedPaths.has(fieldPathFromList([...levelPath, key])),
+    );
     const replaceableKeys = swapped.flatMap((entry) => (entry.isReplaceable ? [entry.key] : []));
     let staleKeys: Set<string> | undefined;
     // A level whose options describe its properties is `formDataForNewOption()`'s to switch, and the option
