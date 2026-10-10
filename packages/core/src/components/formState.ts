@@ -358,7 +358,7 @@ function errorPath(error: RJSFValidationError): string[] {
  */
 function pruneErrorSchema(
   errorSchema: ErrorSchema,
-  isDropped: (path: FieldPathList) => boolean = () => false,
+  isDropped: (path: FieldPathList) => boolean,
   path: FieldPathList = [],
 ): ErrorSchema {
   const kept: ErrorSchema = {};
@@ -423,14 +423,28 @@ export function getAt(data: unknown, segments: FieldPathList): unknown {
   return segments.length === 0 ? data : getByPath(data, segments);
 }
 
-/** A copy of `errorSchema` with the node at `path` replaced by `node`, pruned, so a `node` that holds nothing is gone */
+/** A copy of `errorSchema` with the node at `path` replaced by `node`. A `node` that holds nothing is gone, with the
+ * ancestors that leaves empty, which a raise at one of them would read as errors still being there
+ */
 function replaceErrorSchemaNode<T>(
   errorSchema: ErrorSchema<T>,
   path: FieldPathList,
   node: ErrorSchema<T>,
 ): ErrorSchema<T> {
+  if (path.length === 0) {
+    return node;
+  }
   // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-  return pruneErrorSchema(path.length === 0 ? node : setByPath(copyAlongPath(errorSchema, path), path, node, true));
+  const replaced = setByPath(copyAlongPath(errorSchema, path), path, node, true);
+  // Every container along `path` is a copy or newly made, so unsetting in place touches nothing the state holds
+  for (let depth = path.length; depth > 0; depth--) {
+    const ancestor = path.slice(0, depth);
+    if (Object.keys(getByPath<object>(replaced, ancestor, {})).length > 0) {
+      break;
+    }
+    unsetByPath(replaced, ancestor);
+  }
+  return replaced;
 }
 
 /** Counts the errors of `errorSchema` by where each sits and what it says, or by what it says alone when `pooled`:
@@ -502,12 +516,18 @@ function splitRaise<T>(
  * @returns - The errors with the raise applied
  */
 function replaceErrorsAt<T>(errors: RJSFValidationError[], path: FieldPathList, raised: ErrorSchema<T>) {
-  const incoming = toErrorList(raised, path.map(String));
+  // The error an invalid schema is reported with sits under `$schema` in the `ErrorSchema` and has no `property` in
+  // the list, as in `withoutErrors()`. Handed back by a root raise, it stays as the validator listed it rather than
+  // being replaced by a copy filed under `.$schema`, which nothing would know it by
+  const keepsSchemaError = path.length === 0 && getByPath<string[]>(raised, [SCHEMA_KEY, ERRORS_KEY], []).length > 0;
+  const incoming = toErrorList(raised, path.map(String)).filter(
+    (entry) => !(keepsSchemaError && String(errorPath(entry)) === SCHEMA_KEY),
+  );
   const kept: RJSFValidationError[] = [];
   let insertAt = -1;
   for (const error of errors) {
     const pathOfError = errorPath(error);
-    if (!isPathPrefix(path, pathOfError)) {
+    if ((keepsSchemaError && error.property === undefined) || !isPathPrefix(path, pathOfError)) {
       kept.push(error);
     } else {
       if (insertAt === -1) {

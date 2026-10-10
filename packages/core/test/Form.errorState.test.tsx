@@ -258,6 +258,9 @@ describe('Error state consistency when deriving from new props', () => {
       });
 
       await raise((field) => field.onChange('short', nameStreetPath, cleared));
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+
       await user.click(screen.getByRole('button', { name: 'restyle' }));
 
       expect(fieldErrorsById(container)).toEqual({});
@@ -676,11 +679,14 @@ describe('Error state consistency when deriving from new props', () => {
     const { container, rerender } = render(<Parent current={invalid} />);
 
     await submitForm(container, user);
-    expect(errorListMessages(container)).toHaveLength(1);
+    const listed = errorListMessages(container);
+    expect(listed).toHaveLength(1);
 
     // The list carries the error with no `property`, the `ErrorSchema` under `$schema`: taken for the field's own, it
     // would outlive the schema it describes
     await raise((field) => field.onChange(field.formData, field.fieldPath, field.errorSchema));
+    // Listed as the validator reported it, not as a copy filed under `.$schema`
+    expect(errorListMessages(container)).toEqual(listed);
     rerender(<Parent current={schema} />);
 
     expect(errorListMessages(container)).toEqual([]);
