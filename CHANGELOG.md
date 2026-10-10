@@ -39,7 +39,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Upgraded dependencies with minor or patch version bumps across all packages, including `nx`/`@nx/js`, `vite`, `@vitejs/plugin-react`, `@tailwindcss/cli`, `knip` and `lint-staged`, plus the playground's `monaco-editor` from `^0.55.1` to `^0.57.0`. Added `pnpm` overrides that pin `@types/react` and `@types/react-dom` to React 18 so libraries with an optional `@types/react` peer don't typecheck against React 19's types, plus one that holds `jsdom` at `~30.0.1` because 30.1 needs the global `Iterator` that Node 20 lacks. Renamed the vitest configs to `.mts` so Vite's `native` config loader can load them as ESM ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
-- Documented in `form-props.md` that `experimental_defaultFormStateBehavior.allOf: 'skipDefaults'` does not skip the root schema's own `allOf`, so the conditional defaults of a root-level `allOf` are populated with either value while the same `allOf` in an object property or an array's `items` needs `populateDefaults`, and added tests for the array case, fixing [#3869](https://github.com/rjsf-team/react-jsonschema-form/issues/3869)
+- Documented in `form-props.md` and on `Experimental_DefaultFormStateBehavior.allOf` that `skipDefaults` does not skip the `allOf` of the schema that defaults are computed from (the root schema, or a subschema when the user adds an array item or optional data or switches a `oneOf`/`anyOf` option), while the same `allOf` in an object property or an array's `items` needs `populateDefaults`, and added tests for the root and array cases, related to [#3869](https://github.com/rjsf-team/react-jsonschema-form/issues/3869)
 
 # 6.11.0
 

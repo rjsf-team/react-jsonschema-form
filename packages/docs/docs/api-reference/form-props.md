@@ -205,9 +205,11 @@ Optional enumerated flag controlling how empty defaults are populated when `allO
 | `skipDefaults`     | Skip parsing defaults from `allOf` schemas                                                   |
 | `populateDefaults` | Generate default values for properties in the `allOf` schema including `if-then-else` syntax |
 
-`skipDefaults` only skips the `allOf` schemas nested inside the schema that defaults are computed for, not that schema's own `allOf`.
-The form computes its defaults from the root schema whenever the data changes, so the `if-then-else` branches of a root-level `allOf` provide their defaults with either value.
-The same `allOf` in an object property or in an array's `items` needs `populateDefaults` to do so.
+`skipDefaults` only skips the `allOf` schemas nested inside the schema that defaults are computed from, not that schema's own `allOf`.
+When the form computes defaults from the root schema, a root-level `allOf` provides its defaults with either value.
+The branch of an `if-then-else` is picked from the form data, not from the computed defaults, so a `then` default is left out when only a default satisfies the `if`.
+The same `allOf` in an object property or in an array's `items` usually needs `populateDefaults` to provide its defaults.
+Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value.
 
 ```tsx
 import { Form } from '@rjsf/core';

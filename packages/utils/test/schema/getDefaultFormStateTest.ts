@@ -5653,17 +5653,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
     describe('defaults with allOf', () => {
       let schema: RJSFSchema;
-      const conditionalItemSchema: RJSFSchema = {
-        type: 'object',
-        properties: { foo: { type: 'boolean' } },
+      const animalInfoSchema: RJSFSchema = {
+        properties: {
+          animal: {
+            type: 'string',
+            default: 'Cat',
+            enum: ['Cat', 'Fish'],
+          },
+        },
         allOf: [
           {
-            if: { properties: { foo: { const: true } }, required: ['foo'] },
-            then: { properties: { bar: { type: 'boolean', default: true } }, required: ['bar'] },
+            if: {
+              properties: {
+                animal: {
+                  const: 'Cat',
+                },
+              },
+            },
+            then: {
+              properties: {
+                food: {
+                  type: 'string',
+                  default: 'meat',
+                  enum: ['meat', 'grass', 'fish'],
+                },
+              },
+              required: ['food'],
+            },
           },
         ],
       };
-      const conditionalArraySchema: RJSFSchema = { type: 'array', items: conditionalItemSchema };
+      const animalInfoArraySchema: RJSFSchema = { type: 'array', items: animalInfoSchema };
 
       it('should populate root defaults for allOf', () => {
         schema = {
@@ -5702,36 +5722,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             title: 'Example',
             type: 'object',
             properties: {
-              animalInfo: {
-                properties: {
-                  animal: {
-                    type: 'string',
-                    default: 'Cat',
-                    enum: ['Cat', 'Fish'],
-                  },
-                },
-                allOf: [
-                  {
-                    if: {
-                      properties: {
-                        animal: {
-                          const: 'Cat',
-                        },
-                      },
-                    },
-                    then: {
-                      properties: {
-                        food: {
-                          type: 'string',
-                          default: 'meat',
-                          enum: ['meat', 'grass', 'fish'],
-                        },
-                      },
-                      required: ['food'],
-                    },
-                  },
-                ],
-              },
+              animalInfo: animalInfoSchema,
             },
           };
 
@@ -5828,10 +5819,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         it('should populate the conditional defaults of an allOf in array items', () => {
           expect(
-            getDefaultFormState(testValidator, conditionalArraySchema, [{ foo: true }], undefined, undefined, {
-              allOf: 'populateDefaults',
-            }),
-          ).toEqual([{ foo: true, bar: true }]);
+            getDefaultFormState(
+              testValidator,
+              animalInfoArraySchema,
+              [{ animal: 'Cat' }],
+              animalInfoArraySchema,
+              undefined,
+              { allOf: 'populateDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat', food: 'meat' }]);
         });
       });
 
@@ -5845,17 +5841,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animalInfo: { animal: 'Cat' } });
         });
 
-        it('should populate the conditional defaults of a root allOf but not of the same allOf in array items', () => {
+        it('should not populate the conditional defaults of an allOf in array items', () => {
           expect(
-            getDefaultFormState(testValidator, conditionalItemSchema, { foo: true }, undefined, undefined, {
+            getDefaultFormState(
+              testValidator,
+              animalInfoArraySchema,
+              [{ animal: 'Cat' }],
+              animalInfoArraySchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat' }]);
+        });
+
+        it("should populate the conditional defaults of the root schema's own allOf, which skipDefaults does not skip", () => {
+          expect(
+            getDefaultFormState(testValidator, animalInfoSchema, { animal: 'Cat' }, animalInfoSchema, undefined, {
               allOf: 'skipDefaults',
             }),
-          ).toEqual({ foo: true, bar: true });
-          expect(
-            getDefaultFormState(testValidator, conditionalArraySchema, [{ foo: true }], undefined, undefined, {
-              allOf: 'skipDefaults',
-            }),
-          ).toEqual([{ foo: true }]);
+          ).toEqual({ animal: 'Cat', food: 'meat' });
         });
       });
     });
