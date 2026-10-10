@@ -2718,6 +2718,47 @@ describe('ArrayField', () => {
       expect(removeTitles(node)).toEqual(['Remove x (2)', 'Remove']);
     });
 
+    it("doesn't count a tuple's fixed items when Copy can never show", () => {
+      const named = { type: 'object', properties: { name: { type: 'string' } } } as const;
+      const shared = [{ name: 'x' }, { name: 'x' }];
+      const cases: { schema: RJSFSchema; options: UiSchema['ui:options'] }[] = [
+        // Adding is turned off
+        { schema: { type: 'array', items: [named], additionalItems: named }, options: { addable: false } },
+        // maxItems leaves no room past the fixed item
+        { schema: { type: 'array', items: [named], additionalItems: named, maxItems: 1 }, options: {} },
+        // Without additionalItems nothing can be added
+        { schema: { type: 'array', items: [named] }, options: {} },
+      ];
+      for (const { schema: tupleSchema, options } of cases) {
+        const { node } = createFormComponent({
+          schema: tupleSchema,
+          initialFormData: shared,
+          uiSchema: { 'ui:options': { ...options, copyable: true, itemLabel: 'name' } },
+        });
+        expect(node.querySelector('.rjsf-array-item-copy')).toBeNull();
+        expect(removeTitles(node)).toEqual(['Remove x']);
+      }
+    });
+
+    it('names no item when Copy is the only button option and it can never show', () => {
+      const translateString = vi.fn(englishStringTranslator);
+      for (const { maxItems, addable } of [{ maxItems: 1 }, { addable: false }]) {
+        createFormComponent({
+          schema: { ...schema, maxItems },
+          // Two items sharing a name, so naming them would also number them
+          initialFormData: [files[0], files[0]],
+          uiSchema: {
+            'ui:options': { itemLabel: 'name', copyable: true, orderable: false, removable: false, addable },
+          },
+          translateString,
+        });
+      }
+      const translated = new Set(translateString.mock.calls.map(([str]) => str));
+
+      expect(translated).not.toContain(TranslatableString.CopyItemButton);
+      expect(translated).not.toContain(TranslatableString.ItemNameWithNumber);
+    });
+
     it('builds titles only for the buttons each item can show', () => {
       const received: ArrayFieldItemButtonsTemplateProps['itemButtonProps'][] = [];
       function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps) {

@@ -439,25 +439,40 @@ function numberSharedNames(
   });
 }
 
+/** Whether Copy can ever show on an array's items, from options that don't change as items are added or removed. It
+ * shows only while an item can be added, so never when `addable` is false or when `maxItems` leaves no room past the
+ * `itemsBeforeCopy` items that have to exist for there to be one to copy.
+ */
+function canEverCopy<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiOptions: UIOptionsType<T[], S, F>,
+  maxItems: number | undefined,
+  itemsBeforeCopy: number,
+) {
+  const { copyable = false, addable } = uiOptions;
+  return copyable && addable !== false && (maxItems === undefined || maxItems > itemsBeforeCopy);
+}
+
 /** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
  * item itself for `'.'`. Items are named when their options give them buttons, not when a button shows right now, as a
- * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them. The
- * first `fixedItemCount` items, a tuple's fixed items, can only show Copy, so they're named only when `copyable`.
+ * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them.
+ * `canCopy` says whether Copy can ever show, and the first `fixedItemCount` items, a tuple's fixed items, can only show
+ * Copy, so they're named only when it can.
  */
 function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
   items: readonly T[],
   uiOptions: UIOptionsType<T[], S, F>,
   translateString: Registry['translateString'],
+  canCopy: boolean,
   fixedItemCount = 0,
 ): (string | undefined)[] | undefined {
-  const { itemLabel, orderable = true, removable = true, copyable = false } = uiOptions;
-  const hasButtons = orderable || removable || copyable;
+  const { itemLabel, orderable = true, removable = true } = uiOptions;
+  const hasButtons = orderable || removable || canCopy;
   // A uiSchema from JSON isn't type-checked, so a value other than a path leaves the items unnamed rather than throwing
   const path = useMemo(
     () => (typeof itemLabel === 'string' && itemLabel !== '' && hasButtons ? toPath(itemLabel) : undefined),
     [itemLabel, hasButtons],
   );
-  const firstNamedIndex = copyable ? 0 : fixedItemCount;
+  const firstNamedIndex = canCopy ? 0 : fixedItemCount;
   // Serialized, so that the numbering below reruns only when a name changes, not on every edit to another field
   const namesKey = useMemo(
     () =>
@@ -760,7 +775,12 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const schemaItems: S = useMemo(() => (isObject(schema.items) ? (schema.items as S) : ({} as S)), [schema.items]);
   const itemsSchema: S = useMemo(() => schemaUtils.retrieveSchema(schemaItems), [schemaUtils, schemaItems]);
   const formData = useMemo(() => keyedToPlainFormData<T>(keyedFormData), [keyedFormData]);
-  const itemNames = useItemNames(formData, uiOptions, registry.translateString);
+  const itemNames = useItemNames(
+    formData,
+    uiOptions,
+    registry.translateString,
+    canEverCopy(uiOptions, schema.maxItems, 1),
+  );
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formDataFromProps);
   const canAdd = useMemo(
@@ -894,6 +914,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     Array.isArray(formData) ? formData : NO_ITEMS,
     uiOptions,
     registry.translateString,
+    hasAdditionalItems && canEverCopy(uiOptions, schema.maxItems, Math.max(schemaItems.length, 1)),
     schemaItems.length,
   );
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
