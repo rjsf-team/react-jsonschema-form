@@ -21,6 +21,7 @@ import {
   createFormComponent,
   errorListMessages,
   fieldErrorsById,
+  input,
   setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils.tsx';
@@ -109,7 +110,7 @@ describe('Error state consistency when deriving from new props', () => {
   }
 
   /** A controlled parent that echoes `onChange` back into `formData`, the ordinary controlled setup */
-  function EchoingParent({ liveValidate }: Pick<FormProps, 'liveValidate'>) {
+  function EchoingParent({ liveValidate, widgets }: Pick<FormProps, 'liveValidate' | 'widgets'>) {
     const [value, setValue] = useState<{ name?: string; other?: string }>(shortName);
     return (
       <>
@@ -120,6 +121,7 @@ describe('Error state consistency when deriving from new props', () => {
           schema={schema}
           validator={validator}
           liveValidate={liveValidate}
+          widgets={widgets}
           formData={value}
           onChange={(event) => setValue(event.formData)}
         />
@@ -199,8 +201,8 @@ describe('Error state consistency when deriving from new props', () => {
     expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
 
     await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
-    // The raise replaced the validator error at its path, so the `ErrorList` says the same as the field does, and a
-    // re-derivation rebuilds both from a base that carries the raise
+    // The raise is the field's say over its path, the validator's error there included, so the `ErrorList` says the
+    // same as the field does, and a re-derivation merges the raise onto the validator's result again
     rerender(<RestylingParent className='x' />);
 
     expect(fieldErrorsById(container)).toEqual({ root_name: ['custom:shorty'] });
@@ -228,6 +230,93 @@ describe('Error state consistency when deriving from new props', () => {
   }
   const nameStreetPath = toFieldPath('name');
 
+  it("keeps a field's raise over a validator error when the parent echoes the edit (#5347)", async () => {
+    const { container } = render(<EchoingParent widgets={errorRaisingWidgets} />);
+
+    await submitForm(container, user);
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
+
+    await user.type(input(container, 'root_name'), 'x');
+
+    expect(input(container, 'root_name')).toHaveValue('shortx');
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['custom:shortx'] });
+    expect(errorListMessages(container)).toEqual(['.name custom:shortx']);
+  });
+
+  it.each([
+    { name: 'an empty error list', cleared: { __errors: [] } },
+    { name: 'an empty errorSchema', cleared: {} },
+  ] satisfies { name: string; cleared: ErrorSchema }[])(
+    "clears a field's earlier raise along with the validator error when the field raises $name (#5348)",
+    async ({ cleared }) => {
+      const { container } = render(<RestylingParent />);
+
+      await raise((field) => field.onChange('short', nameStreetPath, { __errors: ['name own'] }));
+      await submitForm(container, user);
+      expect(fieldErrorsById(container)).toEqual({
+        root_name: ['must NOT have fewer than 8 characters', 'name own'],
+      });
+
+      await raise((field) => field.onChange('short', nameStreetPath, cleared));
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+
+      await user.click(screen.getByRole('button', { name: 'restyle' }));
+
+      expect(fieldErrorsById(container)).toEqual({});
+      expect(errorListMessages(container)).toEqual([]);
+    },
+  );
+
+  it("lists a field's raise over a validator error beside that error once the form validates again", async () => {
+    const { container } = render(
+      <Form schema={schema} validator={validator} widgets={errorRaisingWidgets} initialFormData={shortName} />,
+    );
+
+    await submitForm(container, user);
+    await user.type(input(container, 'root_name'), 'y');
+    expect(errorListMessages(container)).toEqual(['.name custom:shorty']);
+
+    await submitForm(container, user);
+
+    expect(fieldErrorsById(container)).toEqual({
+      root_name: ['must NOT have fewer than 8 characters', 'custom:shorty'],
+    });
+    expect(errorListMessages(container)).toEqual([
+      '.name must NOT have fewer than 8 characters',
+      '.name custom:shorty',
+    ]);
+  });
+
+  it.each([
+    { name: 'at a path with nothing to clear', earlier: undefined },
+    { name: "that cleared the field's only raise", earlier: { __errors: ['other own'] } },
+  ] satisfies { name: string; earlier: ErrorSchema | undefined }[])(
+    'reports an error with no message after an empty raise $name',
+    async ({ earlier }) => {
+      const onError = vi.fn();
+      const { container } = render(
+        <Form
+          schema={schema}
+          uiSchema={raisingUiSchema}
+          validator={validator}
+          // Leaves the error in the list and out of the `ErrorSchema`, which is built from the messages
+          transformErrors={(errors) => errors.map((error) => ({ ...error, message: undefined }))}
+          initialFormData={shortName}
+          onError={onError}
+        />,
+      );
+
+      if (earlier) {
+        await raise((field) => field.onChange(undefined, toFieldPath('other'), earlier));
+      }
+      await raise((field) => field.onChange(undefined, toFieldPath('other'), {}));
+      await submitForm(container, user);
+
+      expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ property: '.name', name: 'minLength' })]);
+    },
+  );
+
   it('keeps a root-path raise across a later prop change', async () => {
     const { container } = render(<RestylingParent />);
 
@@ -242,6 +331,19 @@ describe('Error state consistency when deriving from new props', () => {
 
     expect(fieldErrorsById(container)).toEqual({ root: ['root level problem'] });
     expect(errorListMessages(container)).toEqual(['. root level problem']);
+  });
+
+  it('keeps the errors a raise put below its path until the field raises again', async () => {
+    const { container } = render(<RestylingParent />);
+
+    await raise((field) => field.onChange(shortName, field.fieldPath, { name: { __errors: ['own'] } }));
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['own'] });
+
+    await raise((field) => field.onChange(shortName, field.fieldPath));
+    expect(fieldErrorsById(container)).toEqual({ root_name: ['own'] });
+
+    await raise((field) => field.onChange(shortName, field.fieldPath, {}));
+    expect(fieldErrorsById(container)).toEqual({});
   });
 
   it('lists a supplied error once when a root raise hands back the displayed errorSchema', async () => {
@@ -562,7 +664,52 @@ describe('Error state consistency when deriving from new props', () => {
     expect(fieldErrorsById(container)).toEqual({});
   });
 
-  it('keeps the validator error when a raise hands back only errors supplied elsewhere', async () => {
+  it('leaves the error an invalid schema is reported with to the validator when a root field hands it back', async () => {
+    const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
+    function Parent({ current }: { current: RJSFSchema }) {
+      return (
+        <Form
+          schema={current}
+          uiSchema={raisingUiSchema}
+          validator={validator}
+          initialFormData={{ name: 'longenoughvalue' }}
+        />
+      );
+    }
+    const { container, rerender } = render(<Parent current={invalid} />);
+
+    await submitForm(container, user);
+    const listed = errorListMessages(container);
+    expect(listed).toHaveLength(1);
+
+    // The list carries the error with no `property`, the `ErrorSchema` under `$schema`: taken for the field's own, it
+    // would outlive the schema it describes
+    await raise((field) => field.onChange(field.formData, field.fieldPath, field.errorSchema));
+    // Listed as the validator reported it, not as a copy filed under `.$schema`
+    expect(errorListMessages(container)).toEqual(listed);
+    rerender(<Parent current={schema} />);
+
+    expect(errorListMessages(container)).toEqual([]);
+  });
+
+  it('keeps the error of a property named $schema listed when a root field hands it back', async () => {
+    const named: RJSFSchema = { type: 'object', properties: { $schema: { type: 'string', minLength: 8 } } };
+    const { container } = render(
+      <Form schema={named} uiSchema={raisingUiSchema} validator={validator} initialFormData={{ $schema: 'short' }} />,
+    );
+
+    await submitForm(container, user);
+    const listed = errorListMessages(container);
+    expect(listed).toEqual(['.$schema must NOT have fewer than 8 characters']);
+
+    // Filed under `$schema` like the error of an invalid schema, but listed with its `property` like any field's
+    await raise((field) => field.onChange(field.formData, field.fieldPath, field.errorSchema));
+
+    expect(errorListMessages(container)).toEqual(listed);
+    expect(fieldErrorsById(container)).toEqual({ root_$schema: ['must NOT have fewer than 8 characters'] });
+  });
+
+  it("files a handed-back validator message as the validator's and clears it with an empty raise", async () => {
     const addrSchema: RJSFSchema = {
       type: 'object',
       properties: { addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } } },
@@ -585,15 +732,15 @@ describe('Error state consistency when deriving from new props', () => {
     await raise((field) => field.onChange('a', streetPath, street));
 
     expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
-    // Listed twice, the raise's copy and the validator's own: what the form does today, not a guarantee
-    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`, `.addr.street ${minLengthError}`]);
+    // The copy handed back is the validator's, and it replaces the field's earlier raise of the same message
+    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`]);
 
     // An empty raise at `street` must unset its node rather than leave `{ addr: { street: {} } }`, which the empty
-    // raise at `addr` would read as the validator's error still being there
+    // raise at `addr` would read as the validator's error still being there, and the `addr` that leaves empty with it
     await raise((field) => field.onChange('a', streetPath, {}));
-    // The validator's own copy is gone; the raise's is cleared by the empty raise at `addr` below
-    expect(fieldErrorsById(container)).toEqual({ root_addr_street: [minLengthError] });
-    expect(errorListMessages(container)).toEqual([`.addr.street ${minLengthError}`]);
+    expect(rootField().errorSchema).toEqual({});
+    expect(fieldErrorsById(container)).toEqual({});
+    expect(errorListMessages(container)).toEqual([]);
     await raise((field) => field.onChange({ street: 'a' }, toFieldPath('addr'), {}));
 
     expect(fieldErrorsById(container)).toEqual({});
