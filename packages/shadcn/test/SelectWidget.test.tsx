@@ -551,6 +551,27 @@ describe('multiple SelectWidget accessible name', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
   });
 
+  test('prefers ui:placeholder for the name and the visible placeholder of an untitled root field', () => {
+    const schema = {
+      type: 'array' as const,
+      uniqueItems: true,
+      items: { type: 'string' as const, enum: ['red', 'blue'] },
+    };
+    render(<Form schema={schema} uiSchema={{ 'ui:placeholder': 'Pick colors' }} validator={validator} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pick colors');
+    expect(screen.getByPlaceholderText('Pick colors')).toBeInTheDocument();
+  });
+
+  test('fills the visible placeholder with the translated fallback when no ui:placeholder is given', () => {
+    const schema = {
+      type: 'array' as const,
+      uniqueItems: true,
+      items: { type: 'string' as const, enum: ['red', 'blue'] },
+    };
+    render(<Form schema={schema} validator={validator} />);
+    expect(screen.getByPlaceholderText('Select ...')).toBeInTheDocument();
+  });
+
   test('passes required and the field description to the combobox input', () => {
     const schema = {
       type: 'object' as const,
