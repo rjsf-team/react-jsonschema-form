@@ -602,4 +602,815 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expectToHaveBeenCalledWithFormData(onSubmit, { foo: "I'm the only one" }, true);
     });
   });
+
+  describe('a dependency or if/then/else swap replaces the old branch defaults (#5349)', () => {
+    const cfgFor = (name: string): RJSFSchema => ({
+      type: 'object',
+      default: { name },
+      properties: { name: { type: 'string' } },
+    });
+
+    const kindFor = (v: string): RJSFSchema => ({
+      type: 'object',
+      default: { v },
+      properties: { v: { type: 'string' } },
+    });
+
+    /** The shape every case below varies: a `mode` select that swaps between two `dependencies` branches, with
+     * only the branch payload differing. `mode`'s own `const` is merged in, so a branch states just what it adds
+     */
+    const modeSwap = (branchA: RJSFSchema, branchB: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+      dependencies: {
+        mode: {
+          oneOf: [
+            { ...branchA, properties: { mode: { const: 'a' }, ...branchA.properties } },
+            { ...branchB, properties: { mode: { const: 'b' }, ...branchB.properties } },
+          ],
+        },
+      },
+    });
+
+    /** The two branches both declaring `key`, built from one factory — what most of the cases below need */
+    const modeSwapOn = (key: string, schemaFor: (mode: string) => RJSFSchema): RJSFSchema =>
+      modeSwap({ properties: { [key]: schemaFor('a') } }, { properties: { [key]: schemaFor('b') } });
+
+    const dependencySchema = modeSwapOn('cfg', cfgFor);
+
+    /** The same two branches as `dependencySchema`, expressed as the other conditional keyword */
+    const conditionalSchema: RJSFSchema = {
+      type: 'object',
+      properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+      if: { properties: { mode: { const: 'a' } } },
+      then: { properties: { cfg: cfgFor('a') } },
+      else: { properties: { cfg: cfgFor('b') } },
+    };
+
+    const selectMode = (node: Element, mode: string) =>
+      user.selectOptions(node.querySelector<HTMLSelectElement>('#root_mode')!, mode);
+
+    it("applies the newly selected branch's object default", async () => {
+      const { node, onChange } = createFormComponent({ schema: dependencySchema });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' } }, 'root_mode');
+    });
+
+    it("applies the newly selected branch's object default for if/then/else", async () => {
+      const { node, onChange } = createFormComponent({ schema: conditionalSchema });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' } }, 'root_mode');
+    });
+
+    it('restores the first branch default on switching back', async () => {
+      const { node, onChange } = createFormComponent({ schema: dependencySchema });
+
+      await selectMode(node, 'b');
+      await selectMode(node, 'a');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'a', cfg: { name: 'a' } }, 'root_mode');
+    });
+
+    it("merges the new branch's default with the leaf defaults it declares", async () => {
+      const cfgWithRatio = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: { name: { type: 'string' }, ratio: { type: 'number', default: 0 } },
+      });
+      const { node, onChange } = createFormComponent({ schema: modeSwapOn('cfg', cfgWithRatio) });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b', ratio: 0 } }, 'root_mode');
+    });
+
+    it("applies the newly selected branch's array default", async () => {
+      const numsFor = (mode: string): RJSFSchema => ({
+        type: 'array',
+        items: { type: 'number' },
+        default: [mode === 'a' ? 1 : 2],
+      });
+      const { node, onChange } = createFormComponent({ schema: modeSwapOn('nums', numsFor) });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', nums: [2] }, 'root_mode');
+    });
+
+    it('keeps a value the user edited away from the old branch default', async () => {
+      const { node, onChange } = createFormComponent({ schema: dependencySchema });
+
+      await user.clear(node.querySelector<HTMLInputElement>('#root_cfg_name')!);
+      await user.type(node.querySelector<HTMLInputElement>('#root_cfg_name')!, 'mine');
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'mine' } }, 'root_mode');
+    });
+
+    it('keeps the old value when the new branch declares no default for the key', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: modeSwap(
+          { properties: { cfg: cfgFor('a') } },
+          { properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } } },
+        ),
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a' } }, 'root_mode');
+    });
+
+    it('leaves the value alone when the two branches compute the same default', async () => {
+      const cfgTitled = (title: string): RJSFSchema => ({
+        title,
+        type: 'object',
+        default: { name: 'x' },
+        properties: { name: { type: 'string' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: modeSwapOn('cfg', (mode) => cfgTitled(mode.toUpperCase())),
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'x' } }, 'root_mode');
+    });
+
+    // A stub is in the retrieved schema only because the data holds the key, and the fill only writes an
+    // `additionalProperties` default before the form's initial defaults have been generated, so nothing would put a
+    // value dropped from under one back
+    it('keeps a value held under a stubbed additional property whose schema the swap changed', async () => {
+      const extraFor = (tag: string): RJSFSchema => ({
+        type: 'object',
+        default: { tag },
+        properties: { tag: { type: 'string' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: modeSwap({ additionalProperties: extraFor('a') }, { additionalProperties: extraFor('b') }),
+        formData: { mode: 'a', extra: { tag: 'a' } },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', extra: { tag: 'a' } }, 'root_mode');
+    });
+
+    // What spares `meta` is the free identity gate: both branches declare the very same subschema and its value did
+    // not change, so it is never resolved, and no default is computed for it. A read-only object holding a
+    // server-supplied value is the shape that has the most to lose if that ever stops holding
+    it('never looks at a property both branches declare identically', async () => {
+      const meta: RJSFSchema = {
+        type: 'object',
+        readOnly: true,
+        default: { createdBy: 'placeholder' },
+        properties: { createdBy: { type: 'string' } },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: modeSwap({ properties: { cfg: cfgFor('a'), meta } }, { properties: { cfg: cfgFor('b'), meta } }),
+        formData: { mode: 'a', meta: { createdBy: 'server' } },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(
+        onChange,
+        { mode: 'b', cfg: { name: 'b' }, meta: { createdBy: 'server' } },
+        'root_mode',
+      );
+    });
+
+    // A boolean subschema is no object, so neither a symbol test nor `retrieveSchema()` can be asked about it. The
+    // free identity test ends a key the two branches declare identically, so reaching that test needs a pair that
+    // declares the key differently: `anything` for the old side, and `unvalued` for the new one, which is the side
+    // the symbol test is applied to. `unvalued` is left out of the data so that neither the sanitize nor
+    // `omitExtraData` has a value of its own to act on, leaving the swap as the only thing under test
+    it('swaps alongside a property one branch declares as a boolean subschema', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: modeSwap(
+          { properties: { cfg: cfgFor('a'), anything: true, unvalued: { type: 'string' } } },
+          { properties: { cfg: cfgFor('b'), anything: { type: 'string' }, unvalued: true } },
+        ),
+        formData: { mode: 'a', anything: 'kept' },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' }, anything: 'kept' }, 'root_mode');
+    });
+
+    // What `getDefaultFormState()` computes says more than a branch declares. Each of these four shapes has the new
+    // branch computing something for the key while declaring nothing for it, so honoring the computed value alone
+    // would replace a value the user never touched with an empty container or with a subset of itself
+    describe('keeps a value the new branch only computes a default for', () => {
+      it('leaves a required object with no default of its own alone', async () => {
+        const { node, onChange } = createFormComponent({
+          schema: modeSwap(
+            { properties: { cfg: cfgFor('a') } },
+            { required: ['cfg'], properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } } },
+          ),
+        });
+
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a' } }, 'root_mode');
+      });
+
+      it('leaves a required array with no default of its own alone', async () => {
+        const { node, onChange } = createFormComponent({
+          schema: modeSwap(
+            { properties: { nums: { type: 'array', items: { type: 'number' }, default: [1, 2] } } },
+            { required: ['nums'], properties: { nums: { type: 'array', items: { type: 'number' } } } },
+          ),
+        });
+
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', nums: [1, 2] }, 'root_mode');
+      });
+
+      it("leaves a value alone where only the new branch's leaf defaults differ", async () => {
+        const cfgWithLeaves = (host?: string, port?: number): RJSFSchema => ({
+          type: 'object',
+          properties: {
+            port: { type: 'number', ...(port !== undefined && { default: port }) },
+            host: { type: 'string', ...(host !== undefined && { default: host }) },
+          },
+        });
+        const { node, onChange } = createFormComponent({
+          schema: modeSwap(
+            { properties: { cfg: cfgWithLeaves(undefined, 80) } },
+            { properties: { cfg: cfgWithLeaves('h') } },
+          ),
+        });
+
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { port: 80, host: 'h' } }, 'root_mode');
+      });
+
+      it('leaves an array the new branch only refills to its minItems alone', async () => {
+        const tagsWithMin = (minItems: number): RJSFSchema => ({
+          type: 'array',
+          items: { type: 'string', default: 'x' },
+          minItems,
+        });
+        const { node, onChange } = createFormComponent({
+          schema: modeSwap({ properties: { tags: tagsWithMin(2) } }, { properties: { tags: tagsWithMin(1) } }),
+        });
+
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', tags: ['x', 'x'] }, 'root_mode');
+      });
+    });
+
+    // The same asymmetry read from the other side: what the old branch computed for a key says no more about what it
+    // declared than what the new branch computes. A required boolean's `false` and a required array's `[]` are the
+    // fill's work rather than a default the branch asked for, so a value sitting at one of them is nobody's default
+    // to replace
+    describe('keeps a value only the old branch computed a default for', () => {
+      it('leaves a required boolean the old branch declared no default for alone', async () => {
+        const { node, onChange } = createFormComponent({
+          schema: modeSwap(
+            { required: ['agree'], properties: { agree: { type: 'boolean' } } },
+            { required: ['agree'], properties: { agree: { type: 'boolean', default: true } } },
+          ),
+        });
+
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', agree: false }, 'root_mode');
+      });
+
+      it('leaves a required array the old branch declared no default for alone', async () => {
+        const { node, onChange } = createFormComponent({
+          schema: modeSwap(
+            { required: ['nums'], properties: { nums: { type: 'array', items: { type: 'number' } } } },
+            { required: ['nums'], properties: { nums: { type: 'array', items: { type: 'number' }, default: [7] } } },
+          ),
+        });
+
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', nums: [] }, 'root_mode');
+      });
+    });
+
+    // The swap changes the key's type, so the sanitize of every later iteration reads the refill as data the branch
+    // being swapped away could not hold. Without the refill being exempted from those passes the key ends up empty,
+    // which is the very symptom #5349 reports for an object- or array-typed property
+    it("applies the new branch's default where the swap also changes the key's type", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: modeSwap(
+          { properties: { cfg: cfgFor('a') } },
+          { properties: { cfg: { type: 'array', items: { type: 'string' }, default: ['x'] } } },
+        ),
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: ['x'] }, 'root_mode');
+    });
+
+    // Here the type change is a leaf *inside* the refill rather than the key itself, so sanitize leaves the key in
+    // place and clears only that leaf. The refill is reinstated whole, which is what keeps the key from settling on
+    // a value neither branch declares — and, where the retyped leaf is the only one, on an empty object
+    it("applies the new branch's default where the swap retypes a leaf inside it", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: modeSwap(
+          {
+            properties: {
+              cfg: {
+                type: 'object',
+                default: { name: 'a', tags: 'one' },
+                properties: { name: { type: 'string' }, tags: { type: 'string' } },
+              },
+            },
+          },
+          {
+            properties: {
+              cfg: {
+                type: 'object',
+                default: { name: 'b', tags: ['x'] },
+                properties: { name: { type: 'string' }, tags: { type: 'array', items: { type: 'string' } } },
+              },
+            },
+          },
+        ),
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b', tags: ['x'] } }, 'root_mode');
+    });
+
+    it("applies the new branch's default where the swap retypes its only leaf", async () => {
+      const { node, onChange } = createFormComponent({
+        schema: modeSwap(
+          { properties: { cfg: { type: 'object', default: { v: 'x' }, properties: { v: { type: 'string' } } } } },
+          { properties: { cfg: { type: 'object', default: { v: 5 }, properties: { v: { type: 'number' } } } } },
+        ),
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { v: 5 } }, 'root_mode');
+    });
+
+    // A branch declares a value for a key through its own `default` object as well as through the key's schema, and
+    // that object sits outside `properties`. These two branches declare `cfg` as the very same subschema and differ
+    // only there, so the free identity gate is the only thing between the swap and being missed
+    it('applies a default the new branch declares through its own default object', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            cfg: { type: 'object', properties: { name: { type: 'string' } } },
+          },
+          if: { properties: { mode: { const: 'a' } } },
+          then: { default: { cfg: { name: 'a' } } },
+          else: { default: { cfg: { name: 'b' } } },
+        },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' } }, 'root_mode');
+    });
+
+    // `anyOf: [{ required }, …]` is the "at least one of" idiom, and it selects none of the level's properties, so
+    // the level is still the conditional's to swap rather than an option switch's
+    it('applies the new branch default on a level whose anyOf selects no properties', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' }, other: { type: 'string' } },
+          if: { properties: { mode: { const: 'a' } } },
+          then: { properties: { cfg: cfgFor('a') } },
+          else: { properties: { cfg: cfgFor('b') } },
+          anyOf: [{ required: ['mode'] }, { required: ['other'] }],
+        },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' } }, 'root_mode');
+    });
+
+    // The level's own defaults are its options' to decide, so none are computed for it, but a conditional declared on
+    // one of its properties has nothing to do with those options and the walk is all that reaches it
+    it('applies a nested branch default under a level whose oneOf declares properties', async () => {
+      const dietFor = (food: string): RJSFSchema => ({
+        type: 'object',
+        default: { food },
+        properties: { food: { type: 'string' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            m: {
+              type: 'object',
+              properties: { animal: { type: 'string', enum: ['Cat', 'Fish'], default: 'Fish' } },
+              dependencies: {
+                animal: {
+                  oneOf: [
+                    { properties: { animal: { const: 'Cat' }, diet: dietFor('meat') } },
+                    { properties: { animal: { const: 'Fish' }, diet: dietFor('worms') } },
+                  ],
+                },
+              },
+            },
+          },
+          oneOf: [
+            { title: 'A', properties: { x: { type: 'string' } } },
+            { title: 'B', properties: { y: { type: 'string' } } },
+          ],
+        },
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_m_animal')!, 'Cat');
+
+      expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', diet: { food: 'meat' } } }, 'root_m_animal');
+    });
+
+    // The drop itself flips the branch that would have declared the replacement: each `if` requires `cfg`, so with
+    // `cfg` dropped neither matches, no `then` applies and nothing declares a default for it. The fill writes
+    // nothing, and without the value going back the key would settle on neither branch's default nor the user's data
+    it('puts the old value back where dropping the key collapses the branch that declares it', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            cfg: { type: 'object', properties: { name: { type: 'string' } } },
+          },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgFor('a') } },
+            },
+            {
+              if: { properties: { mode: { const: 'b' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgFor('b') } },
+            },
+          ],
+        },
+        formData: { mode: 'a', cfg: { name: 'a' } },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a' } }, 'root_mode');
+    });
+
+    // Every object the fill produces carries its keys in the order the schema declares them, whatever order they
+    // arrived in, so the one key a restore puts back by hand is the one that could be reported somewhere else
+    it('puts a value back under the key order the fill produces', async () => {
+      const cfgOf = (x: number): RJSFSchema => ({
+        type: 'object',
+        default: { x },
+        properties: { x: { type: 'number' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            cfg: { type: 'object', properties: { x: { type: 'number' } } },
+            tail: { type: 'string' },
+          },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgOf(1) } },
+            },
+            {
+              if: { properties: { mode: { const: 'b' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgOf(2) } },
+            },
+          ],
+        },
+        formData: { mode: 'a', cfg: { x: 1 }, tail: 't' },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { x: 1 }, tail: 't' }, 'root_mode');
+      // Where the restored key sits among its siblings, rather than the whole order: `omitExtraData` rebuilds the
+      // object from the retrieved schema, whose `properties` an `allOf` merge orders differently from the raw schema
+      // the fill reads, so the variants do not all emit the same absolute order
+      const keys = Object.keys(onChange.mock.lastCall![0].formData as object);
+      expect(keys.indexOf('cfg')).toBeLessThan(keys.indexOf('tail'));
+    });
+
+    // Only the restored key is positioned, never its siblings. Data that arrives out of schema order keeps that order
+    // while the fill has nothing to change — `replaceEqualDeep()` hands back the value it was given when the fill's
+    // result is deeply equal to it — so putting a key back must not take the chance to reorder everything around it
+    it('leaves the siblings of a restored key in the order the fill gave them', async () => {
+      const cfgOf = (x: number): RJSFSchema => ({
+        type: 'object',
+        default: { x },
+        properties: { x: { type: 'number' } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+            cfg: { type: 'object', properties: { x: { type: 'number' } } },
+            tail: { type: 'string' },
+          },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgOf(1) } },
+            },
+            {
+              if: { properties: { mode: { const: 'b' } }, required: ['mode', 'cfg'] },
+              then: { properties: { cfg: cfgOf(2) } },
+            },
+          ],
+        },
+        formData: { tail: 't', cfg: { x: 1 }, mode: 'a' },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { x: 1 }, tail: 't' }, 'root_mode');
+      const keys = Object.keys(onChange.mock.lastCall![0].formData as object);
+      expect(keys.indexOf('mode')).toBeLessThan(keys.indexOf('tail'));
+    });
+
+    // The dropped key's own declaration lives in a dependency keyed on its presence, so the fill that runs while it is
+    // gone resolves a schema that declares neither it nor `extra`. Putting the value back before anything else in the
+    // iteration reads its absence is what keeps that fill's view from reaching the data the user supplied
+    it("keeps a sibling the dropped key's own dependency declares", async () => {
+      const withCfg = (name: string): RJSFSchema => ({
+        dependencies: { cfg: { properties: { cfg: cfgFor(name), extra: { type: 'string' } } } },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          if: { properties: { mode: { const: 'a' } } },
+          then: withCfg('a'),
+          else: withCfg('b'),
+        },
+        formData: { mode: 'a', cfg: { name: 'a' }, extra: 'user text' },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', extra: 'user text', cfg: { name: 'a' } }, 'root_mode');
+    });
+
+    // `opts` has not swapped when the change is first seen, because the schema is still resolved for the `kind` the
+    // data arrived holding. Replacing `kind` is what selects the other `opts` branch, one iteration later, so a
+    // search that ran only once would leave the symptom in place one hop from the field the user changed
+    it('applies a default that replacing another key brings into reach', async () => {
+      const optsFor = (o: string): RJSFSchema => ({
+        type: 'object',
+        default: { o },
+        properties: { o: { type: 'string' } },
+      });
+      const kindFor = (k: string): RJSFSchema => ({ type: 'string', enum: ['k1', 'k2'], default: k });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } } },
+              then: { properties: { kind: kindFor('k1') } },
+              else: { properties: { kind: kindFor('k2') } },
+            },
+            {
+              if: { properties: { kind: { const: 'k1' } } },
+              then: { properties: { opts: optsFor('k1') } },
+              else: { properties: { opts: optsFor('k2') } },
+            },
+          ],
+        },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', kind: 'k2', opts: { o: 'k2' } }, 'root_mode');
+    });
+
+    // The fill that writes a replacement runs with the key deleted, so a conditional on the key's own schema is
+    // resolved against no value at all: an `if` on it is vacuously true for an absent key, which selects a `then` the
+    // real value never selects and leaves the `else`'s required `tank` unwritten. A further iteration, starting from
+    // the replacement, is what settles it — without one the change commits data its own schema rejects, and an
+    // unrelated keystroke later fixes it up
+    it("resolves a replacement's own conditionals against the value written for it", async () => {
+      const petFor = (branch: string): RJSFSchema => ({
+        type: 'object',
+        default: { animal: 'Fish' },
+        properties: { animal: { type: 'string', enum: ['Cat', 'Fish'] } },
+        if: { properties: { animal: { const: 'Cat' } } },
+        then: { properties: { diet: { type: 'string', default: `${branch} meat` } } },
+        else: { properties: { tank: { type: 'string', default: `${branch} tank` } }, required: ['tank'] },
+      });
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          if: { properties: { mode: { const: 'a' } } },
+          then: { properties: { pet: petFor('a') } },
+          else: { properties: { pet: petFor('b') } },
+        },
+        liveValidate: 'onChange',
+      });
+
+      await selectMode(node, 'b');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          formData: expect.objectContaining({ pet: expect.objectContaining({ animal: 'Fish', tank: 'b tank' }) }),
+          errors: [],
+        }),
+        'root_mode',
+      );
+    });
+
+    /** Two hops: `mode` swaps `kind`, and the `kind` written for the newly selected branch retypes `cfg`, whose own
+     * refill was written while `kind` was gone. `finalCfg` is what the second hop retypes `cfg` to
+     */
+    const retypingCascade = (finalCfg: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+        kind: { type: 'object', properties: { v: { type: 'string' } } },
+      },
+      allOf: [
+        {
+          if: { properties: { mode: { const: 'a' } }, required: ['mode'] },
+          then: { properties: { kind: kindFor('k1') } },
+          else: { properties: { kind: kindFor('k2') } },
+        },
+        {
+          if: { properties: { kind: { properties: { v: { const: 'k2' } }, required: ['v'] } }, required: ['kind'] },
+          then: { properties: { cfg: finalCfg } },
+          else: {
+            properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } },
+            allOf: [
+              {
+                if: { properties: { mode: { const: 'a' } }, required: ['mode'] },
+                then: { properties: { cfg: cfgFor('a') } },
+                else: { properties: { cfg: cfgFor('mid') } },
+              },
+            ],
+          },
+        },
+      ],
+    });
+
+    const retypingCascadeData = { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } };
+
+    // The second hop retypes the key the first hop replaced: the `kind` written for the newly selected branch selects
+    // a `cfg` that the refill written while `kind` was gone no longer fits. Each refill is judged at its own key, by
+    // the schema that describes it once the data has settled against the one it was written under, so this one is
+    // dropped again and the fill answers the schema that rejected it, instead of the key settling on an object under
+    // a string schema
+    it('replaces a refill that a later iteration retypes', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: retypingCascade({ type: 'string', default: 'final' }),
+        formData: retypingCascadeData,
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', kind: { v: 'k2' }, cfg: 'final' }, 'root_mode');
+    });
+
+    // The same two hops, with nothing declared for `cfg` under the schema the second hop retypes it to, so no fill
+    // answers the key. What the drop recorded is no answer either: it is the value the swap moved away from, two
+    // schema movements out of date, and putting it back would settle the key on an object a string schema rejects
+    it('leaves a key empty when the schema that rejected its refill declares nothing', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: retypingCascade({ type: 'string' }),
+        formData: retypingCascadeData,
+        liveValidate: 'onChange',
+      });
+
+      await selectMode(node, 'b');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { mode: 'b', kind: { v: 'k2' } }, errors: [] }),
+        'root_mode',
+      );
+    });
+
+    // `retrieveSchema()` resolves the conditionals of the schema it is handed, so a swap decided inside a property
+    // leaves the root schema the same object from one iteration to the next. A refill is judged at its own key for
+    // that reason: judged by the root pair, a replacement one level down would be judged by two schemas that cannot
+    // have moved, and the key would settle on whatever the second hop retyped it away from
+    it('judges a replacement at its own level when the swap is decided inside a property', async () => {
+      // `mode` swaps `kind` and declares `cfg`'s value through the branch's own `default`, while `kind.v` decides
+      // `cfg`'s type — so no state of this form declares `cfg` twice, and each one is valid on its own terms
+      const wrapped: RJSFSchema = {
+        type: 'object',
+        properties: {
+          mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+          kind: { type: 'object', properties: { v: { type: 'string' } } },
+        },
+        dependencies: {
+          mode: {
+            oneOf: [
+              { properties: { mode: { const: 'a' }, kind: kindFor('k1') }, default: { cfg: { name: 'a' } } },
+              { properties: { mode: { const: 'b' }, kind: kindFor('k2') }, default: { cfg: { name: 'mid' } } },
+            ],
+          },
+        },
+        allOf: [
+          {
+            if: { properties: { kind: { properties: { v: { const: 'k2' } }, required: ['v'] } }, required: ['kind'] },
+            then: { properties: { cfg: { type: 'string', default: 'final' } } },
+            else: { properties: { cfg: { type: 'object', properties: { name: { type: 'string' } } } } },
+          },
+        ],
+      };
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { wrap: wrapped } },
+        formData: { wrap: { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } } },
+        liveValidate: 'onChange',
+      });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_wrap_mode')!, 'b');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { wrap: { mode: 'b', kind: { v: 'k2' } } }, errors: [] }),
+        'root_wrap_mode',
+      );
+    });
+
+    // Where a branch declares the default is what decides how much of the value it speaks for. On the object itself
+    // it declares that object's keys, so an untouched one is replaced while its edited sibling is kept; one level up
+    // it declares the whole object, which the edit no longer matches, so all of it stays
+    describe('a nested default is matched at the level that declares it', () => {
+      const cfgWithNote = (name: string): RJSFSchema => ({
+        type: 'object',
+        default: { name },
+        properties: { name: { type: 'string' }, note: { type: 'string' } },
+      });
+
+      /** Pasted rather than typed: every keystroke drives a derivation, and only the settled value is under test */
+      const writeNote = async (node: Element) => {
+        await user.click(node.querySelector<HTMLInputElement>('#root_cfg_note')!);
+        await user.paste('hi');
+      };
+
+      it('replaces an untouched leaf beside an edited one when the object declares the default', async () => {
+        const { node, onChange } = createFormComponent({ schema: modeSwapOn('cfg', cfgWithNote) });
+
+        await writeNote(node);
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b', note: 'hi' } }, 'root_mode');
+      });
+
+      it('keeps the whole value when the branch declares the default above the object', async () => {
+        const { node, onChange } = createFormComponent({
+          schema: {
+            type: 'object',
+            properties: {
+              mode: { type: 'string', enum: ['a', 'b'], default: 'a' },
+              cfg: { type: 'object', properties: { name: { type: 'string' }, note: { type: 'string' } } },
+            },
+            if: { properties: { mode: { const: 'a' } } },
+            then: { default: { cfg: { name: 'a' } } },
+            else: { default: { cfg: { name: 'b' } } },
+          },
+        });
+
+        await writeNote(node);
+        await selectMode(node, 'b');
+
+        expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'a', note: 'hi' } }, 'root_mode');
+      });
+    });
+
+    // Every read of a key off the form data or the computed defaults has to be an own-property read. For a property
+    // named like a member of `Object.prototype`, an inherited value otherwise answers the "the fill is certain to put
+    // something back" gate, and the key is dropped on the strength of a default that does not exist
+    it('reads a property named like an inherited Object member as its own', async () => {
+      // Annotated, since a property named `constructor` in an object literal otherwise collides with the signature
+      // every object inherits under that name and TypeScript stops reading the value as a schema
+      const noDefaultCfg: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+      const { node, onChange } = createFormComponent({
+        schema: modeSwap({ properties: { constructor: cfgFor('a') } }, { properties: { constructor: noDefaultCfg } }),
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', constructor: { name: 'a' } }, 'root_mode');
+    });
+  });
 });
