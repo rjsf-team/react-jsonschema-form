@@ -294,6 +294,19 @@ Implements a deep equals that treats all functions as equivalent and tracks circ
 
 - boolean: True if the `a` and `b` are deeply equal, false otherwise
 
+### deepEqualsUndefinedAsMissing()
+
+`deepEquals()` for which a key that is missing reads as one holding `undefined`, whichever object lacks it and at any depth, so `{ a: 1, b: undefined }` equals `{ a: 1 }`.
+
+#### Parameters
+
+- a: any - The first element to compare
+- b: any - The second element to compare
+
+#### Returns
+
+- boolean: True if the `a` and `b` are deeply equal, false otherwise
+
 ### descriptionId()
 
 Return a consistent `id` for the field description element.

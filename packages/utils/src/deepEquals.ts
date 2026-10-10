@@ -1,8 +1,6 @@
 import { createCustomEqual } from 'fast-equals';
 import type { ComparatorConfig } from 'fast-equals';
 
-import { getByPath } from './pathUtils.ts';
-
 const comparators: Partial<ComparatorConfig<undefined>> = {
   areFunctionsEqual(_a, b) {
     return typeof b === 'function';
@@ -34,10 +32,18 @@ export const deepEqualsUndefinedAsMissing = createCustomEqual({
   createCustomConfig: () => ({
     ...comparators,
     areObjectsEqual(a: object, b: object, state) {
-      return (
-        Object.entries(a).every(([key, value]) => state.equals(value, getByPath(b, key), key, key, a, b, state)) &&
-        Object.entries(b).every(([key, value]) => value === undefined || Object.hasOwn(a, key))
-      );
+      for (const key of Object.keys(a)) {
+        const other: unknown = Object.hasOwn(b, key) ? Reflect.get(b, key) : undefined;
+        if (!state.equals(Reflect.get(a, key), other, key, key, a, b, state)) {
+          return false;
+        }
+      }
+      for (const key of Object.keys(b)) {
+        if (Reflect.get(b, key) !== undefined && !Object.hasOwn(a, key)) {
+          return false;
+        }
+      }
+      return true;
     },
   }),
 });

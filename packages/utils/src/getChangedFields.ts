@@ -21,14 +21,15 @@ function getChangedDescendants(a: unknown, b: unknown): string[] {
   }
   // Arrays of a different length shift their items around, so nothing below them can be matched up by index.
   if (Array.isArray(a) && Array.isArray(b) && a.length === b.length) {
+    const changed: string[] = [];
     // By index, since an empty slot reads as `undefined` and iterating the array itself would skip it
-    return [...a.keys()].flatMap((index) => {
-      if (deepEqualsUndefinedAsMissing(a[index], b[index])) {
-        return [];
+    for (let index = 0; index < a.length; index++) {
+      if (!deepEqualsUndefinedAsMissing(a[index], b[index])) {
+        const descendants = getChangedDescendants(a[index], b[index]);
+        changed.push(...(descendants.length ? descendants.map((path) => `${index}.${path}`) : [String(index)]));
       }
-      const descendants = getChangedDescendants(a[index], b[index]);
-      return descendants.length ? descendants.map((path) => `${index}.${path}`) : [String(index)];
-    });
+    }
+    return changed;
   }
   return [];
 }

@@ -19,6 +19,7 @@ import {
   unsetByPath,
   createSchemaUtils,
   deepEquals,
+  deepEqualsUndefinedAsMissing,
   ErrorSchemaBuilder,
   getChangedFields,
   getDiscriminatorFieldFromSchema,
@@ -148,23 +149,6 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
   return { schemaUtils, hasNestedConditionalSchema: schemaHasNestedConditional(rootSchema, rootSchema) };
 }
 
-/** `value` without its `undefined` entries, at any depth, so settings that spell a key out as `undefined` compare equal
- * to settings leaving it out, which `deepEquals()` alone does not see
- *
- * @param value - The settings to compare
- * @returns - `value` with every `undefined` entry of a plain object dropped
- */
-function withoutUndefinedEntries(value: unknown): unknown {
-  if (!isPlainObject(value)) {
-    return value;
-  }
-  return Object.fromEntries(
-    Object.entries(value)
-      .filter(([, entry]) => entry !== undefined)
-      .map(([key, entry]) => [key, withoutUndefinedEntries(entry)]),
-  );
-}
-
 const UI_EMPTY_VALUE_KEY = 'ui:emptyValue';
 
 /** The `ui:emptyValue`s of `uiSchema`, each where it sits: the one part of a uiSchema the defaults of a re-derive are
@@ -219,10 +203,10 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
   const { schemaUtils, hasNestedConditionalSchema } = resolved;
   const rootSchema = schemaUtils.getRootSchema();
   // Shared before `replaceEqualDeep()` sees it, which compares a function by identity: an `arrayMinItems`
-  // `computeSkipPopulate` written inline would then make every render look like a change of the settings
+  // `computeSkipPopulate` written inline would then make every render look like a change of the settings. Settings
+  // that spell a key out as `undefined` are the settings that leave it out
   const defaultsBehavior =
-    prev &&
-    deepEquals(withoutUndefinedEntries(prev.defaultsBehavior), withoutUndefinedEntries(defaultFormStateBehavior))
+    prev && deepEqualsUndefinedAsMissing(prev.defaultsBehavior, defaultFormStateBehavior)
       ? prev.defaultsBehavior
       : defaultFormStateBehavior;
   return replaceEqualDeep(prev, {
@@ -833,11 +817,15 @@ function dataChange(formData: unknown, previous: unknown): DataChange {
   if (Object.is(formData, previous)) {
     return UNCHANGED;
   }
+  // The wrapper below would name the same paths for an object root, after a deep comparison of the whole root that
+  // comparing its fields one by one makes a second time; the data of a parent-owned form is compared on every render
+  // that hands it new data, so an object root is spared that
   if (isPlainObject(formData) && isPlainObject(previous)) {
     return { isRootReplaced: false, paths: getChangedFields(formData, previous, true).map((field) => toPath(field)) };
   }
   // Any other root is compared as the one property of a wrapper, so a root array is narrowed to its items the way an
-  // array under a property is, and a difference that can't be narrowed comes back as the wrapper's own key
+  // array under a property is, and a difference that can't be narrowed comes back as the wrapper's own key:
+  // `getChangedFields()` names the fields of an object, so it has no name for a replaced root
   const root = 'root';
   const fields = getChangedFields({ [root]: formData }, { [root]: previous }, true);
   return {
