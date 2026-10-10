@@ -2654,6 +2654,22 @@ describe('ArrayField', () => {
       expect(removeTitles(node)).toEqual(['Supprimer', 'Supprimer', 'Supprimer']);
       expect(received.slice(-3)).toEqual([undefined, undefined, undefined]);
 
+      // A translator that returns '' for the strings it lacks, rather than undefined
+      const buttonTitleStrings: TranslatableString[] = [
+        TranslatableString.CopyItemButton,
+        TranslatableString.MoveDownItemButton,
+        TranslatableString.MoveUpItemButton,
+        TranslatableString.RemoveItemButton,
+      ];
+      const { node: emptyStrings } = createFormComponent({
+        schema,
+        initialFormData: files,
+        uiSchema: { 'ui:itemLabel': 'name' },
+        translateString: (str, params) =>
+          buttonTitleStrings.includes(str) ? '' : (messages[str] ?? englishStringTranslator(str, params)),
+      });
+      expect(removeTitles(emptyStrings)).toEqual(['Supprimer', 'Supprimer']);
+
       // Only the numbering string missing: the shared names go unnumbered rather than empty
       const { node: unnumbered } = createFormComponent({
         schema,
@@ -2757,6 +2773,26 @@ describe('ArrayField', () => {
 
       expect(translated).not.toContain(TranslatableString.CopyItemButton);
       expect(translated).not.toContain(TranslatableString.ItemNameWithNumber);
+    });
+
+    it('re-translates only the Copy titles when the array reaches maxItems', async () => {
+      const translateString = vi.fn(englishStringTranslator);
+      const { node } = createFormComponent({
+        schema: { ...schema, maxItems: 3 },
+        initialFormData: files,
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+        translateString,
+      });
+      translateString.mockClear();
+
+      await user.click(node.querySelector('#root__add')!);
+
+      const translated = translateString.mock.calls.map(([str]) => str);
+      expect(node.querySelector('.rjsf-array-item-copy')).toBeNull();
+      expect(translated).not.toContain(TranslatableString.RemoveItemButton);
+      expect(translated).not.toContain(TranslatableString.MoveUpItemButton);
+      expect(translated).not.toContain(TranslatableString.MoveDownItemButton);
+      expect(removeTitles(node)).toEqual(['Remove report.pdf', 'Remove invoice.pdf', 'Remove']);
     });
 
     it('builds titles only for the buttons each item can show', () => {

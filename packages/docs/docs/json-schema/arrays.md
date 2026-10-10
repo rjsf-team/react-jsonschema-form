@@ -228,7 +228,7 @@ render(
 );
 ```
 
-A dotted path, such as `'file.name'`, reads a nested property, and `'.'` names each item by its own value, for an array of strings or numbers. An item whose value there isn't a non-empty string or a number keeps the default titles, such as one added to an array whose items have no default for that property.
+A dotted path, such as `'file.name'`, reads a nested property, and `'.'` names each item by its own value, for an array of strings or numbers. Since `.`, `[` and `]` always separate the parts of the path, a property whose own key contains one of them can't name the items. An item whose value there isn't a non-empty string or a number keeps the default titles, such as one added to an array whose items have no default for that property.
 
 When more than one item has the same name, as when an item is copied, those items are numbered among themselves, such as `Remove report.pdf (1)` and `Remove report.pdf (2)`, so their buttons can still be told apart. The numbers count only the items with that name, so adding, removing or moving an item with another name doesn't change them, and if a numbered name is already another item's name, the next free number is used. Items are named when their options give them buttons, so none are when `orderable` and `removable` are `false` and Copy can't show. Copy shows only while an item can be added, so it never does when `copyable` isn't set, when `addable` is `false`, or when `maxItems` leaves no room for another item. In an array with fixed `items`, the fixed items can't be moved or removed, so they're named only when they can show Copy, which also needs `additionalItems`.
 
