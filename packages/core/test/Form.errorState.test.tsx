@@ -867,6 +867,31 @@ describe('Error state consistency when deriving from new props', () => {
       expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
     });
 
+    it('clears the errors of a property named $schema, and a root error listed without a property, like any other', async () => {
+      const named: RJSFSchema = {
+        type: 'object',
+        properties: { $schema: { type: 'string', minLength: 50 }, name: { type: 'string', minLength: 8 } },
+      };
+      const transformErrors: ErrorTransformer = (errors) => [...errors, { message: 'form-level', stack: 'form-level' }];
+      const props = { schema: named, transformErrors };
+      const { container, node, rerender } = createFormComponent({
+        ...props,
+        formData: { $schema: 'short', name: 'short' },
+      });
+
+      await submitForm(node, user);
+      expect(errorListMessages(container)).toEqual([
+        '.$schema must NOT have fewer than 50 characters',
+        `.name ${tooShort}`,
+        'form-level',
+      ]);
+
+      rerender({ ...props, formData: { $schema: 'x'.repeat(50), name: 'longenough' } });
+
+      expect(errorListMessages(container)).toEqual([]);
+      expect(fieldErrorsById(container)).toEqual({});
+    });
+
     it('leaves no node of a container whose errors a parent cleared for a raise there to read as the validator still reporting', async () => {
       const nested: RJSFSchema = {
         type: 'object',

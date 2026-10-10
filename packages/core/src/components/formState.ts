@@ -377,25 +377,40 @@ function pruneErrorSchema(
   return kept;
 }
 
+/** The messages of the error an invalid schema is reported with, if any. It names no field: the validators list it
+ * without a `property` and file it under the `$schema` key of the `ErrorSchema`, where the errors of a property named
+ * `$schema` are filed too, so it is what sits there that no listed error of that property says. A `transformErrors`
+ * may reword all the listed one says, so it is known by those two alone: without a listed error that names no field,
+ * `$schema` is the path of a field like any other
+ */
+function invalidSchemaMessages<T>({ errors, errorSchema }: ValidationData<T>): string[] {
+  if (!errors.some((error) => error.property === undefined)) {
+    return [];
+  }
+  const ofProperty = new Set(
+    errors.filter((error) => String(errorPath(error)) === SCHEMA_KEY).map((error) => error.message),
+  );
+  return getByPath<string[]>(errorSchema, [SCHEMA_KEY, ERRORS_KEY], []).filter((message) => !ofProperty.has(message));
+}
+
 /** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by one rule. The
- * error an invalid schema is reported with names no field, so it stays in both: the validators list it without a
- * `property` and file it under the `$schema` key of the `ErrorSchema`. A `transformErrors` may reword all the listed
- * one says, so it is known by those two alone
+ * error an invalid schema is reported with names no field, so it stays in both; see `invalidSchemaMessages()`
  */
 function withoutErrors<T>(
   validation: ValidationData<T>,
   isDropped: (path: FieldPathList) => boolean,
 ): ValidationData<T> {
-  const hasSchemaErrors = getByPath<string[]>(validation.errorSchema, [SCHEMA_KEY, ERRORS_KEY], []).length > 0;
-  const isOfInvalidSchema = (error: RJSFValidationError) => hasSchemaErrors && error.property === undefined;
-  // Without that error in the list, `$schema` is the path of a field like any other
-  const keepsSchemaEntry = validation.errors.some(isOfInvalidSchema);
+  const invalidSchema = invalidSchemaMessages(validation);
+  const hasInvalidSchema = invalidSchema.length > 0;
+  const errorSchema = pruneErrorSchema(validation.errorSchema, isDropped);
   return {
-    errors: validation.errors.filter((error) => isOfInvalidSchema(error) || !isDropped(errorPath(error))),
-    errorSchema: pruneErrorSchema(
-      validation.errorSchema,
-      (path) => !(keepsSchemaEntry && path.length === 1 && path[0] === SCHEMA_KEY) && isDropped(path),
+    errors: validation.errors.filter(
+      (error) => (hasInvalidSchema && error.property === undefined) || !isDropped(errorPath(error)),
     ),
+    errorSchema:
+      hasInvalidSchema && isDropped([SCHEMA_KEY])
+        ? { ...errorSchema, [SCHEMA_KEY]: { [ERRORS_KEY]: invalidSchema } }
+        : errorSchema,
   };
 }
 
