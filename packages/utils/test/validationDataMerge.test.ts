@@ -24,7 +24,7 @@ describe('validationDataMerge()', () => {
     expect(validationDataMerge(validationData, errorSchema)).toEqual(expected);
   });
   it('Keeps the existing errors when their errorSchema is empty', () => {
-    const validationData: ValidationData<any> = {
+    const validationData: ValidationData<unknown> = {
       errorSchema: {},
       errors: [{ stack: 'an error with no message', name: 'foo', schemaPath: '.foo' }],
     };

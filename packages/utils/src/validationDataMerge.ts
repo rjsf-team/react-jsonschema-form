@@ -4,9 +4,9 @@ import type { ErrorSchema, ValidationData } from './types.ts';
 
 /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the
  * two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
- * `toErrorList()` on the `errors` in the `validationData`. If no `additionalErrorSchema` is passed, then
- * `validationData` is returned. The existing `errors` are always kept, also when their `errorSchema` is empty, as it is
- * when a `transformErrors` clears every `message`.
+ * `toErrorList()` on the `errors` in the `validationData`. If no `additionalErrorSchema` is passed, or an empty one,
+ * then `validationData` is returned. The existing `errors` are always kept, also when their `errorSchema` is empty, as
+ * it is when a `transformErrors` clears every `message`.
  *
  * @param validationData - The current `ValidationData` into which to merge the additional errors
  * @param [additionalErrorSchema] - The optional additional set of errors in an `ErrorSchema`
@@ -18,7 +18,7 @@ export default function validationDataMerge<T = unknown>(
   additionalErrorSchema?: ErrorSchema<T>,
   preventDuplicates = false,
 ): ValidationData<T> {
-  if (!additionalErrorSchema) {
+  if (!additionalErrorSchema || Object.keys(additionalErrorSchema).length === 0) {
     return validationData;
   }
   const { errors: oldErrors, errorSchema: oldErrorSchema } = validationData;
