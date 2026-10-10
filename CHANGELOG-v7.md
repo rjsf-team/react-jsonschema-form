@@ -472,6 +472,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Exported `DEFAULT_BOOLEAN_WIDGET`, the registry key the `checkbox` alias of a `boolean` resolves to, so a theme can read that widget from its registry without copying the key ([#5456](https://github.com/rjsf-team/react-jsonschema-form/pull/5456))
 - **BREAKING CHANGE:** `shouldRenderOptionalField()` takes the field's `fieldPath` as a required fifth argument, and its fourth, `uiSchema`, is no longer optional. It returns `false` for the root field, `ROOT_FIELD_PATH`
 - `retrieveSchema()` is up to twice as fast on a schema with no `$ref`
+- **BREAKING CHANGE:** Removed `isRootSchema()`. It decided whether a schema was the root by deep-comparing it with the root schema, which costs two whole-schema comparisons per call and mistakes a nested field that a recursive `$ref: '#'` describes for the root. Compare the field's `fieldPath` with `ROOT_FIELD_PATH` instead
 
 ## @rjsf/validator-ajv8
 
