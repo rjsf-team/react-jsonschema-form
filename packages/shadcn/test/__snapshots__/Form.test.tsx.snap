@@ -11918,7 +11918,9 @@ exports[`single fields > select field multiple choice 1`] = `
               for="radix-_r_5_"
               id="radix-_r_4_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-            />
+            >
+              Select ...
+            </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
             >
@@ -11928,6 +11930,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_3_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_4_"
                   autocomplete="off"
@@ -11990,7 +11993,9 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
               for="radix-_r_k_"
               id="radix-_r_j_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-            />
+            >
+              Select ...
+            </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
             >
@@ -12000,6 +12005,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_i_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_j_"
                   autocomplete="off"
@@ -12223,7 +12229,9 @@ exports[`single fields > select field multiple choice formData 1`] = `
               for="radix-_r_10_"
               id="radix-_r_v_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-            />
+            >
+              Select ...
+            </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
             >
@@ -12295,6 +12303,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_u_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_v_"
                   autocomplete="off"
@@ -12357,7 +12366,9 @@ exports[`single fields > select field multiple choice with labels 1`] = `
               for="radix-_r_8_"
               id="radix-_r_7_"
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
-            />
+            >
+              Select ...
+            </label>
             <div
               class="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
             >
@@ -12367,6 +12378,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_6_"
+                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_7_"
                   autocomplete="off"

@@ -19,6 +19,7 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  TranslatableString,
   useSelectFocusHandlers,
 } from '@rjsf/utils';
 
@@ -77,6 +78,7 @@ export default function SelectWidget<
   className,
   registry,
   uiSchema,
+  label,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -108,6 +110,11 @@ export default function SelectWidget<
 
   const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 
+  // `label` resolves as `uiTitle ?? schema.title ?? name`, which is "" for an untitled root field (or an explicit
+  // `ui:title: ""`) and would leave the multi-select combobox unnamed (#5458). Fall back to a fixed translated
+  // string rather than the internal field id, which cmdk would announce.
+  const comboboxLabel = label || registry.translateString(TranslatableString.SelectPlaceholder);
+
   return (
     <div className='p-0.5'>
       {!multiple ? (
@@ -131,8 +138,10 @@ export default function SelectWidget<
       ) : (
         <FancyMultiSelect
           id={id}
+          label={comboboxLabel}
           autoFocus={autofocus}
           disabled={disabled || readonly}
+          required={required}
           multiple
           className={cnClassName}
           items={items}
@@ -145,6 +154,7 @@ export default function SelectWidget<
           }}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
+          ariaDescribedby={ariaDescribedByIds(id)}
         />
       )}
       <SelectedOptionDescription
