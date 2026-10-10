@@ -1,6 +1,7 @@
 import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
+import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import isObject from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
@@ -31,6 +32,22 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
   const values = (options as S[]).flatMap((option) => (CONST_KEY in option ? [option[CONST_KEY]] : option.enum!));
 
   return values.length > 0 ? values : undefined;
+}
+
+/** Whether two schemas' `type`s name the same types. A list is compared by what it names rather than by identity or
+ * order, since the two schemas declaring it are usually separate objects and `['null', 'string']` allows what
+ * `['string', 'null']` does
+ */
+function isSameType(oldType: unknown, newType: unknown): boolean {
+  if (oldType === newType) {
+    return true;
+  }
+  if (!Array.isArray(oldType) || !Array.isArray(newType)) {
+    return false;
+  }
+  const newTypes = new Set<unknown>(newType);
+  const oldTypes = new Set<unknown>(oldType);
+  return oldTypes.size === newTypes.size && oldType.every((type) => newTypes.has(type));
 }
 
 function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: any) {
@@ -144,26 +161,30 @@ export default function sanitizeDataForNewSchema<
       const oldSchemaTypeForKey = isUnconstrainedOnBothSides ? undefined : oldKeyedSchema.type;
       const newSchemaTypeForKey = newKeyedSchema.type;
       // Check if the old option has the same key with the same type
-      if (!oldSchemaTypeForKey || oldSchemaTypeForKey === newSchemaTypeForKey) {
+      if (!oldSchemaTypeForKey || isSameType(oldSchemaTypeForKey, newSchemaTypeForKey)) {
         if (key in removeOldSchemaData) {
           // SIDE-EFFECT: remove the undefined value for a key that has the same type between the old and new schemas
           delete removeOldSchemaData[key];
         }
         // If it is an object, we'll recurse and store the resulting sanitized data for the key. A select over object or
         // array constants holds one of them as a whole, so it's checked against its options like any other select
+        // An array is read through `getSchemaType()`, as the array branch below reads it, so one whose type list also
+        // allows `null` is sanitized as a plain array is. Only a declared type counts: `getSchemaType()` guesses `array`
+        // from a typeless `const` array, which has no `items` to sanitize its value against and would be cleared
+        const isArrayValue =
+          newSchemaTypeForKey !== undefined && getSchemaType<S>(newKeyedSchema) === 'array' && Array.isArray(formValue);
         const isContainer =
-          (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) &&
-          !isWholeValueSelect<S>(newKeyedSchema);
+          (newSchemaTypeForKey === 'object' || isArrayValue) && !isWholeValueSelect<S>(newKeyedSchema);
         if (isContainer) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations
           const itemData = sanitizeDataForNewSchema<T, S, F>(
             context,
             rootSchema,
             newKeyedSchema,
-            isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
+            isNewProperty && isArrayValue ? newKeyedSchema : oldKeyedSchema,
             formValue,
           );
-          if (itemData !== undefined || newSchemaTypeForKey === 'array') {
+          if (itemData !== undefined || isArrayValue) {
             // only put undefined values for the array type and not the object type
             nestedData[key] = itemData;
           }
@@ -206,7 +227,15 @@ export default function sanitizeDataForNewSchema<
       ...nestedData,
     };
     // First apply removing the old schema data, then apply the nested data, then apply the old data keys to keep
-  } else if (oldSchema?.type === 'array' && newSchema?.type === 'array' && Array.isArray(data)) {
+  } else if (
+    // Read through `getSchemaType()`, as the field rendering each schema is picked, so an array whose type list also
+    // allows `null` keeps its items as a plain array does
+    oldSchema &&
+    newSchema &&
+    getSchemaType<S>(oldSchema) === 'array' &&
+    getSchemaType<S>(newSchema) === 'array' &&
+    Array.isArray(data)
+  ) {
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;
     // If any of the array types `items` are arrays (remember arrays are objects) then we'll just drop the data
@@ -234,7 +263,7 @@ export default function sanitizeDataForNewSchema<
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
       // Check if the old option has the same key with the same type
-      if (!oldSchemaType || oldSchemaType === newSchemaType) {
+      if (!oldSchemaType || isSameType(oldSchemaType, newSchemaType)) {
         const maxItems = newSchema.maxItems ?? -1;
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it

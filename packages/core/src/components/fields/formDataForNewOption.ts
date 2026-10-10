@@ -6,7 +6,7 @@ import type {
   UiSchema,
   UiSchemaDefinitions,
 } from '@rjsf/utils';
-import { deepEquals, getPropertySchema, isPlainObject, mergeSchemas } from '@rjsf/utils';
+import { deepEquals, getPropertySchema, getRenderedOptionSchema, isPlainObject, mergeSchemas } from '@rjsf/utils';
 
 import { declaresOwnValue, declaresValueFor } from '../declaresValue.ts';
 
@@ -15,10 +15,12 @@ import { declaresOwnValue, declaresValueFor } from '../declaresValue.ts';
  * have to be computed from this rather than from the option alone, or the same data behaves differently depending
  * on whether `required` was written on the option or on the schema holding the `oneOf`/`anyOf`.
  *
- * The parent's `type` is deliberately left out, so this is narrower than the schema `MultiSchemaField` renders.
- * That field also propagates the parent's `type` so an option omitting one still picks the right widget, but a type
- * the option never stated tells `getDefaultFormState()` to build a value the option does not describe — a cleared
- * array comes back as `[null, null]` rather than staying cleared.
+ * The parent's other keywords are deliberately left out, so this is narrower than the schema `MultiSchemaField`
+ * renders with `getRenderedOptionSchema()`. That schema also carries the parent's `type`, and for a parent that is not
+ * an object every other keyword describing the value, so an option omitting them still picks the right widget, but a
+ * type the option never stated tells `getDefaultFormState()` to build a value the option does not describe — a
+ * cleared array comes back as `[null, null]` rather than staying cleared. The data is sanitized against the rendered
+ * schema instead, see `renderedOption()`.
  *
  * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
  * @param [option] - The option to merge the parent's `required` into
@@ -29,6 +31,18 @@ function withParentRequired<S extends StrictRJSFSchema = RJSFSchema>(parentSchem
     return option;
   }
   return mergeSchemas({ required: parentSchema.required }, option) as S;
+}
+
+/** Returns `option` as `MultiSchemaField` renders it, which is what the data being carried across a switch was entered
+ * against. Sanitizing against the bare option instead would discard every value the option only holds through what it
+ * inherits: an array whose options only limit its length would lose its items, since neither bare option is an array.
+ *
+ * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`
+ * @param [option] - The option to render
+ * @returns - The option as it is rendered, or `option` as it is when there is no parent or no option
+ */
+function renderedOption<S extends StrictRJSFSchema = RJSFSchema>(parentSchema?: S, option?: S): S | undefined {
+  return option && parentSchema ? getRenderedOptionSchema<S>(parentSchema, option) : option;
 }
 
 /** Determines whether `option` declares a value of its own for `key`, resolving the property's schema first.
@@ -99,7 +113,8 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * @param [newOption] - The option being switched to, or undefined when the selection is being cleared
  * @param [oldOption] - The option being switched away from, if one was selected
  * @param [parentSchema] - The schema holding the `oneOf`/`anyOf`, whose `required` is merged into each option
- *        before its defaults are computed
+ *        before its defaults are computed, and which each option inherits from as it is rendered before the data is
+ *        sanitized against it
  * @param [uiSchemas] - Each option's own uiSchema, so its `ui:initialValue`/`ui:emptyValue` apply to the defaults
  *        computed for it, and the registry's `ui:definitions`, which an option's uiSchema never carries itself
  * @returns - The form data for `newOption`, or undefined when it holds nothing, as when the selection is cleared
@@ -117,7 +132,11 @@ export default function formDataForNewOption<
   uiSchemas: OptionUiSchemas<T, S, F> = {},
 ): T | undefined {
   const { newOptionUiSchema, oldOptionUiSchema, uiSchemaDefinitions } = uiSchemas;
-  let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
+  let newFormData: T | undefined = schemaUtils.sanitizeDataForNewSchema(
+    renderedOption<S>(parentSchema, newOption),
+    renderedOption<S>(parentSchema, oldOption),
+    formData,
+  );
   const newOptionForDefaults = withParentRequired<S>(parentSchema, newOption);
   if (newOptionForDefaults) {
     const oldOptionForDefaults = withParentRequired<S>(parentSchema, oldOption);

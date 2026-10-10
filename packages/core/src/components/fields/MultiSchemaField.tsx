@@ -5,13 +5,13 @@ import {
   deepEquals,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
+  getRenderedOptionSchema,
   getTemplates,
   getUiOptions,
   getXxxOfKey,
   hashObject,
   isFormDataAvailable,
   logOnce,
-  mergeSchemas,
   ONE_OF_KEY,
   resolveWidget,
   selectOptionUiSchema,
@@ -220,30 +220,11 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   const option = selectedOption >= 0 ? retrievedOptions[selectedOption] || null : null;
-  let optionSchema: S | undefined | null;
-
-  if (option) {
-    const { required: schemaRequired, type: schemaType } = schema;
-    const parentProps: Partial<S> = {};
-    if (schemaRequired) {
-      parentProps.required = schemaRequired as S['required'];
-    }
-    // Propagate the parent schema type to options that don't define their own.
-    // This is necessary when the parent constrains the type (e.g. { type: 'string',
-    // oneOf: [{ pattern: '...' }, { pattern: '...' }] }) but the option sub-schemas
-    // omit the type — without it, getSchemaType returns undefined and the option
-    // renders as FallbackField instead of the correct widget (e.g. StringField).
-    // A parent allowing several types propagates all of them, since the option is one branch of the choice made here
-    // rather than a narrowing of what the parent accepts: a field reading `schema.type` — `getInputProps()`, which
-    // withholds the numeric `pattern` from a union precisely because the other types do not have to match it, or a
-    // caller's own option field — would otherwise be told the value is of a type the parent never pinned it to. The
-    // fallback UI does pin it, but it pins it on the schema it hands down, so the union never reaches here with it on
-    if (schemaType !== undefined && !('type' in option)) {
-      parentProps.type = schemaType as S['type'];
-    }
-    // Merge in all the non-oneOf/anyOf properties and also skip the special ADDITIONAL_PROPERTY_FLAG property
-    optionSchema = Object.keys(parentProps).length > 0 ? (mergeSchemas(parentProps, option) as S) : option;
-  }
+  // A parent allowing several types passes all of them on: when the fallback UI is on, it pins one type on the schema
+  // it hands down, so such a union only reaches here with the fallback UI off
+  // Not memoized: `SchemaField` maps its `options` afresh on every render, so `option` is a new object each time and a
+  // memo keyed on it would never hit
+  const optionSchema = option ? getRenderedOptionSchema<S>(schema, option) : null;
 
   const translateEnum: TranslatableString = title
     ? TranslatableString.TitleOptionPrefix
