@@ -67,13 +67,13 @@ export default class AJV8PrecompiledValidator<
    */
   private readonly schemaContext: SchemaContext<S, F>;
 
-  /** The schemas `ensureSameRootSchema()` has compared with the root schema and found equal to it. A form validates
-   * with the same schema object until its schema changes, so the comparison is made once per object rather than on
-   * every validation
+  /** The schemas `ensureSameRootSchema()` has accepted, whether equal to the root schema as compiled or to its
+   * resolution. A form validates with the same schema object until its schema changes, so the comparison is made once
+   * per object rather than on every validation
    *
    * @private
    */
-  private readonly schemasEqualToRoot = new WeakSet<object>();
+  private readonly acceptedSchemas = new WeakSet<object>();
 
   /** Constructs an `AJV8PrecompiledValidator` instance using the `validateFns` and `rootSchema`
    *
@@ -117,22 +117,23 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate if any
    */
   ensureSameRootSchema(schema: S, formData?: unknown) {
-    if (this.schemasEqualToRoot.has(schema)) {
+    if (this.acceptedSchemas.has(schema)) {
       return true;
     }
-    if (deepEquals(schema, this.rootSchema)) {
-      this.schemasEqualToRoot.add(schema);
-      return true;
+    if (!deepEquals(schema, this.rootSchema)) {
+      // Resolved with this validator and the merge its schemas were compiled with: only its own precompiled functions
+      // can answer for the `oneOf`/`anyOf` options and conditions of its root schema, and only that merge builds the
+      // sub-schemas the precompiled map holds. The form data is passed since it can affect the resolution. Live
+      // validation hands `Form`'s resolved schema in, the same object until the resolution changes, so it is
+      // remembered too
+      const resolvedRootSchema = retrieveSchema(this.schemaContext, this.rootSchema, this.rootSchema, formData);
+      if (!deepEquals(schema, resolvedRootSchema)) {
+        throw new Error(
+          'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+        );
+      }
     }
-    // Resolved with this validator and the merge its schemas were compiled with: only its own precompiled functions
-    // can answer for the `oneOf`/`anyOf` options and conditions of its root schema, and only that merge builds the
-    // sub-schemas the precompiled map holds. The form data is passed since it can affect the resolution
-    const resolvedRootSchema = retrieveSchema(this.schemaContext, this.rootSchema, this.rootSchema, formData);
-    if (!deepEquals(schema, resolvedRootSchema)) {
-      throw new Error(
-        'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
-      );
-    }
+    this.acceptedSchemas.add(schema);
     return true;
   }
 

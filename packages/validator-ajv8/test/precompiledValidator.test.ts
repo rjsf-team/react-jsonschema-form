@@ -56,8 +56,9 @@ describe('AJV8PrecompiledValidator', () => {
         expect(validator.ensureSameRootSchema(copy)).toBe(true);
         expect(validator.ensureSameRootSchema(copy)).toBe(true);
       });
-      it('using resolved rootSchema returns true', () => {
+      it('using resolved rootSchema returns true each time it is asked', () => {
         const resolvedRootSchema = retrieveSchema({ validator }, rootSchema, rootSchema);
+        expect(validator.ensureSameRootSchema(resolvedRootSchema)).toBe(true);
         expect(validator.ensureSameRootSchema(resolvedRootSchema)).toBe(true);
       });
       it('using a different schema throws', () => {

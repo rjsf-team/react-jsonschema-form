@@ -485,7 +485,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `CompiledValidateFunction` drops its redundant `this: Ajv | any` parameter and keeps `(data: any): boolean`, preserving support for hand-written validators with a specific data type ([#5379](https://github.com/rjsf-team/react-jsonschema-form/pull/5379))
 - `compileSchemaValidators()` and `compileSchemaValidatorsCode()` take the new `CompileValidatorOptionsType` (`CustomValidatorOptionsType & SchemaParserOptions<S>`), adding the `customMergeAllOf` the schema is parsed with, so a form using a custom merge no longer throws for a sub-schema that merge produced. Pass it to `createPrecompiledValidator()` too ([#5338](https://github.com/rjsf-team/react-jsonschema-form/issues/5338))
 - Fixed a schema whose `$id` is the empty string being keyed under that `$id`: two such schemas shared one compiled function, and every `$ref` into a root carrying one failed to compile. Both are keyed as a schema with no `$id` is ([#5338](https://github.com/rjsf-team/react-jsonschema-form/issues/5338))
-- A precompiled validator checks a schema against the one it was compiled from once per schema object rather than on every validation, which matters for a form passed an equal copy of the compiled schema
+- A precompiled validator checks a schema against the one it was compiled from once per schema object rather than on every validation, which matters for a form passed an equal copy of the compiled schema and for live validation, which validates against the form's resolved schema
 
 ## @rjsf/validator-ata
 
@@ -495,7 +495,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE** `createPrecompiledValidator()` takes its `localizer`, `suppressDuplicateFiltering` and `customMergeAllOf` in one options object after the `rootSchema`, rather than as three trailing positional parameters, so a call supplying only the merge no longer has to pass two `undefined`s. ([#4385](https://github.com/rjsf-team/react-jsonschema-form/issues/4385))
 - `compileSchemaValidators()` and `compileSchemaValidatorsCode()` take the new `CompileValidatorOptionsType` (`CustomValidatorOptionsType & SchemaParserOptions<S>`), adding the `customMergeAllOf` the schema is parsed with, so a form using a custom merge no longer throws for a sub-schema that merge produced. Pass it to `createPrecompiledValidator()` too ([#5338](https://github.com/rjsf-team/react-jsonschema-form/issues/5338))
 - `isValid()` and `rawValidation()` key a schema whose `$id` is the empty string by its hash, so two such schemas no longer evict each other from the cache they share, and a root carrying one is registered where `withIdRefPrefix()` rewrites local `$ref`s to resolve ([#5338](https://github.com/rjsf-team/react-jsonschema-form/issues/5338))
-- A precompiled validator checks a schema against the one it was compiled from once per schema object rather than on every validation, which matters for a form passed an equal copy of the compiled schema
+- A precompiled validator checks a schema against the one it was compiled from once per schema object rather than on every validation, which matters for a form passed an equal copy of the compiled schema and for live validation, which validates against the form's resolved schema
 
 ## @rjsf/validator-cfworker
 
