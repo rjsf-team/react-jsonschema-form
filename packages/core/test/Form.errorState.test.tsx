@@ -709,7 +709,7 @@ describe('Error state consistency when deriving from new props', () => {
     expect(fieldErrorsById(container)).toEqual({ root_$schema: ['must NOT have fewer than 8 characters'] });
   });
 
-  it('keeps the validator error when a raise hands back only errors supplied elsewhere', async () => {
+  it("files a handed-back validator message as the validator's and clears it with an empty raise", async () => {
     const addrSchema: RJSFSchema = {
       type: 'object',
       properties: { addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } } },
