@@ -189,7 +189,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
       setSelectedOption(intOption);
       optionSwitchProposal.current = { formData: newFormData };
-      sendOptionSwitch(schema, oldOption, newOption, () => onChange(newFormData, fieldPath, undefined, fieldId));
+      sendOptionSwitch(schema, oldOption, formData, () => onChange(newFormData, fieldPath, undefined, fieldId));
     },
     // setSelectedOption is stable (guaranteed by useState); optionSwitchProposal is a ref
     [

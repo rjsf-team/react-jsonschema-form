@@ -951,7 +951,7 @@ describe('Error state consistency when deriving from new props', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
-  it('keeps the errors of the fields an anyOf still renders when the option is switched', async () => {
+  it("keeps the errors of the fields declared beside an anyOf's options when the option is switched, and drops the rest", async () => {
     const { container } = render(
       <Form
         schema={{
@@ -983,16 +983,47 @@ describe('Error state consistency when deriving from new props', () => {
 
     await user.selectOptions(screen.getByRole('combobox'), 'Invoice');
 
-    expect(errorListMessages(container)).toEqual([
-      '.code must NOT have fewer than 3 characters',
-      '.name custom:ax',
-      '.note custom:dz',
-    ]);
+    // `note` is declared by both options, but the field rendered for it is the new option's
+    expect(errorListMessages(container)).toEqual(['.code must NOT have fewer than 3 characters', '.name custom:ax']);
     expect(fieldErrorsById(container)).toEqual({
       root_code: ['must NOT have fewer than 3 characters'],
       root_name: ['custom:ax'],
-      root_note: ['custom:dz'],
     });
+  });
+
+  it('clears the errors raised below a property both options of an anyOf declare when the option is switched', async () => {
+    const onSubmit = vi.fn();
+    const addrWith = (key: string): RJSFSchema => ({
+      type: 'object',
+      properties: { addr: { type: 'object', properties: { [key]: { type: 'string' } } } },
+    });
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            payment: {
+              anyOf: [
+                { title: 'Post', ...addrWith('zip') },
+                { title: 'Visit', ...addrWith('city') },
+              ],
+            },
+          },
+        }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ payment: { addr: { zip: '1' } } }}
+        onSubmit={onSubmit}
+      />,
+    );
+    await user.type(input(container, 'root_payment_addr_zip'), '2');
+    expect(errorListMessages(container)).toEqual(['.payment.addr.zip custom:12']);
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Visit');
+
+    expect(errorListMessages(container)).toEqual([]);
+    await submitForm(container, user);
+    expect(onSubmit).toHaveBeenCalledTimes(1);
   });
 
   it('clears the raise at the path of a oneOf whose option is switched, which the new option never made', async () => {
