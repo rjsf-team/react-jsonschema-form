@@ -352,8 +352,9 @@ function errorPath(error: RJSFValidationError): string[] {
   return error.property ? toPath(error.property) : [];
 }
 
-/** `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that leaves empty, which
- * a raise at an ancestor would read as errors still being there. `path` is that of `errorSchema` itself
+/** `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold nothing, an
+ * empty `__errors` included, which a raise at an ancestor would read as errors still being there. `path` is that of
+ * `errorSchema` itself
  */
 function pruneErrorSchema(
   errorSchema: ErrorSchema,
@@ -363,7 +364,7 @@ function pruneErrorSchema(
   const kept: ErrorSchema = {};
   for (const [key, value] of Object.entries(errorSchema)) {
     if (key === ERRORS_KEY) {
-      if (!isDropped(path)) {
+      if (Array.isArray(value) && value.length > 0 && !isDropped(path)) {
         kept[key] = value;
       }
     } else {

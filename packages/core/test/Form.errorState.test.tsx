@@ -867,6 +867,49 @@ describe('Error state consistency when deriving from new props', () => {
       expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
     });
 
+    it('leaves no node of a container whose errors a parent cleared for a raise there to read as the validator still reporting', async () => {
+      const nested: RJSFSchema = {
+        type: 'object',
+        properties: { foo: { type: 'object', properties: { bar: leaf, baz: { type: 'string' } } } },
+      };
+      // A `customValidate` has the validators file an empty `__errors` at every node of the data
+      const customValidate = (_: unknown, errors: FormValidation) => errors;
+      function ClearingParent() {
+        const [value, setValue] = useState<unknown>({ foo: { bar: 'short', baz: 'b' } });
+        return (
+          <>
+            <button type='button' onClick={() => setValue({ foo: { bar: 'longenough', baz: 'b' } })}>
+              replace
+            </button>
+            <Form
+              schema={nested}
+              uiSchema={raisingUiSchema}
+              validator={validator}
+              customValidate={customValidate}
+              formData={value}
+              onChange={(event) => setValue(event.formData)}
+            />
+          </>
+        );
+      }
+      const { container } = render(<ClearingParent />);
+
+      await submitForm(container.querySelector('form')!, user);
+      expect(fieldErrorsById(container)).toEqual({ root_foo_bar: [tooShort] });
+      await user.click(screen.getByRole('button', { name: 'replace' }));
+      expect(fieldErrorsById(container)).toEqual({});
+      await raise((field) =>
+        field.onChange({ bar: 'longenough', baz: 'b' }, toFieldPath('foo'), { __errors: ['own'] }),
+      );
+      expect(fieldErrorsById(container)).toEqual({ root_foo: ['own'] });
+
+      // The echo of an edit below `foo` clears the validator's errors at `foo`, so a raise kept there as the
+      // validator's would go with them
+      await user.type(container.querySelector<HTMLInputElement>('#root_foo_baz')!, 'x');
+
+      expect(fieldErrorsById(container)).toEqual({ root_foo: ['own'] });
+    });
+
     it('keeps an error with no message listed when extraErrors arrive after the only error with one was cleared', async () => {
       const both: RJSFSchema = { type: 'object', properties: { name: leaf, other: leaf } };
       const props = {
