@@ -494,5 +494,29 @@ export function arrayTests(Form: ComponentType<FormProps>) {
         expect(asFragment()).toMatchSnapshot();
       });
     });
+    // Kept last, so the ids it takes from React's useId counter don't shift those in the snapshots before it
+    describe('item names', () => {
+      test('array icons named by itemLabel', async () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: { name: { type: 'string' } },
+          },
+        };
+        const uiSchema: UiSchema = {
+          'ui:options': { copyable: true, itemLabel: 'name' },
+        };
+        const { asFragment } = render(
+          <Form
+            schema={schema}
+            uiSchema={uiSchema}
+            validator={validator}
+            formData={[{ name: 'report.pdf' }, { name: 'invoice.pdf' }]}
+          />,
+        );
+        expect(asFragment()).toMatchSnapshot();
+      });
+    });
   });
 }
