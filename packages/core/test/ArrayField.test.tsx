@@ -2609,6 +2609,115 @@ describe('ArrayField', () => {
       expect(node.querySelector('.rjsf-array-item-remove')).toHaveAttribute('title', 'Remove report.pdf');
     });
 
+    it('ignores an itemLabel that is not a non-empty string, rather than crashing the form', () => {
+      for (const itemLabel of [['file', 'name'], 1, true, '']) {
+        const { node } = createFormComponent({
+          schema,
+          initialFormData: files,
+          // A uiSchema from JSON isn't type-checked
+          uiSchema: { 'ui:options': { itemLabel: itemLabel as unknown as string } },
+        });
+        expect(removeTitles(node)).toEqual(['Remove', 'Remove']);
+      }
+    });
+
+    it('names no item when no button can show, and translates nothing for them', () => {
+      const translateString = vi.fn(englishStringTranslator);
+      createFormComponent({
+        schema,
+        initialFormData: [files[0], files[0]],
+        uiSchema: { 'ui:options': { itemLabel: 'name', orderable: false, removable: false } },
+        translateString,
+      });
+      const translated = new Set(translateString.mock.calls.map(([str]) => str));
+
+      expect(translated).not.toContain(TranslatableString.ItemNameWithNumber);
+      expect(translated).not.toContain(TranslatableString.RemoveItemButton);
+    });
+
+    it('keeps the default title when a translation of the new strings comes back empty', () => {
+      const received: ArrayFieldItemButtonsTemplateProps['itemButtonProps'][] = [];
+      function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps) {
+        received.push(props.itemButtonProps);
+        return <CoreArrayFieldItemButtonsTemplate {...props} />;
+      }
+      // A plain lookup that has the existing strings but not the new ones, breaking the `string` return type
+      const messages: Partial<Record<string, string>> = { [TranslatableString.RemoveButton]: 'Supprimer' };
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [files[0], files[0], files[1]],
+        uiSchema: { 'ui:itemLabel': 'name' },
+        templates: { ArrayFieldItemButtonsTemplate },
+        translateString: (str) => messages[str] as string,
+      });
+
+      expect(removeTitles(node)).toEqual(['Supprimer', 'Supprimer', 'Supprimer']);
+      expect(received.slice(-3)).toEqual([undefined, undefined, undefined]);
+
+      // Only the numbering string missing: the shared names go unnumbered rather than empty
+      const { node: unnumbered } = createFormComponent({
+        schema,
+        initialFormData: [files[0], files[0]],
+        uiSchema: { 'ui:itemLabel': 'name' },
+        translateString: (str, params) =>
+          str === TranslatableString.ItemNameWithNumber ? '' : englishStringTranslator(str, params),
+      });
+      expect(removeTitles(unnumbered)).toEqual(['Remove report.pdf', 'Remove report.pdf']);
+    });
+
+    it('does not renumber or re-translate names when another field of an item is edited', async () => {
+      const translateString = vi.fn(englishStringTranslator);
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: [files[0], files[0]],
+        uiSchema: { 'ui:itemLabel': 'name' },
+        translateString,
+      });
+      translateString.mockClear();
+
+      await user.type(node.querySelector('#root_1_size')!, '12');
+
+      const translated = translateString.mock.calls.map(([str]) => str);
+      expect(translated).not.toContain(TranslatableString.ItemNameWithNumber);
+      expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove report.pdf (2)']);
+    });
+
+    it('stops looking for a free number as soon as the format turns out to leave the number out', () => {
+      const translateString = vi.fn((str: TranslatableString, params?: string[]) =>
+        str === TranslatableString.ItemNameWithNumber ? `${params?.[0]}` : englishStringTranslator(str, params),
+      );
+      // The bound grows with the names in use, so other, distinct names make a search up to it long
+      const shared = 30;
+      const distinct = Array.from({ length: 30 }, (_, index) => ({ name: `file-${index}.pdf` }));
+      createFormComponent({
+        schema,
+        initialFormData: [...Array.from({ length: shared }, () => files[0]), ...distinct],
+        uiSchema: { 'ui:itemLabel': 'name' },
+        translateString,
+      });
+      const numberings = translateString.mock.calls.filter(([str]) => str === TranslatableString.ItemNameWithNumber);
+
+      // Two attempts per shared item, where searching up to the bound took one per name in use for each
+      expect(numberings.length).toBeLessThanOrEqual(2 * shared);
+    });
+
+    it('keeps the numbers of a tuple array when it reaches maxItems', async () => {
+      const named = { type: 'object', properties: { name: { type: 'string' } } } as const;
+      const { node } = createFormComponent({
+        schema: { type: 'array', items: [named], additionalItems: named, maxItems: 3 },
+        initialFormData: [{ name: 'x' }, { name: 'x' }],
+        uiSchema: { 'ui:options': { copyable: true, itemLabel: 'name' } },
+      });
+      expect(node.querySelector('#root_0__copy')).toHaveAttribute('title', 'Copy x (1)');
+      expect(removeTitles(node)).toEqual(['Remove x (2)']);
+
+      await user.click(node.querySelector('#root__add')!);
+
+      // At maxItems the fixed item's Copy button is gone, but it keeps its name, so the other item's number stays
+      expect(node.querySelector('#root_0__copy')).toBeNull();
+      expect(removeTitles(node)).toEqual(['Remove x (2)', 'Remove']);
+    });
+
     it('builds titles only for the buttons each item can show', () => {
       const received: ArrayFieldItemButtonsTemplateProps['itemButtonProps'][] = [];
       function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps) {

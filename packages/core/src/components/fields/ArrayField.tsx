@@ -1,6 +1,7 @@
 import type { MouseEvent, ReactNode } from 'react';
 import { memo, use, useCallback, useMemo, useState } from 'react';
 import type {
+  ArrayFieldItemButtonProps,
   ArrayFieldTemplateProps,
   ErrorSchema,
   FieldPath,
@@ -392,53 +393,89 @@ function itemNameFrom(value: unknown): string | undefined {
   return typeof value === 'number' && Number.isFinite(value) ? String(value) : undefined;
 }
 
-/** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
- * item itself for `'.'`. Only the items from `firstNamedIndex` on are named, the ones that can show buttons.
- *
- * Buttons that read the same can't be told apart, which is what naming them is for, so items that share a name are
- * numbered among themselves, `a (1)` and `a (2)`, rather than by their position, so that editing an item with another
- * name doesn't renumber them. A numbered name that is already in use, as another item's own name or an earlier numbered
- * one, moves on to the next free number.
+/** Numbers the names that more than one item has among the items that share them, `a (1)` and `a (2)`, rather than by
+ * position, so that editing an item with another name doesn't renumber them. A numbered name already in use, as another
+ * item's own name or an earlier numbered one, moves on to the next free number.
  */
-function useItemNames<T>(
-  items: readonly T[],
-  itemLabel: string | undefined,
+function numberSharedNames(
+  names: readonly (string | null)[],
   translateString: Registry['translateString'],
-  firstNamedIndex = 0,
-): (string | undefined)[] | undefined {
-  return useMemo(() => {
-    if (!itemLabel) {
+): (string | undefined)[] {
+  const counts = new Map<string, number>();
+  for (const name of names) {
+    if (name !== null) {
+      counts.set(name, (counts.get(name) ?? 0) + 1);
+    }
+  }
+  const taken = new Set(counts.keys());
+  const nextNumbers = new Map<string, number>();
+  return names.map((name) => {
+    if (name === null) {
       return undefined;
     }
-    const path = toPath(itemLabel);
-    const names = items.map((item, index) =>
-      index < firstNamedIndex ? undefined : itemNameFrom(path.length === 0 ? item : getByPath(item, path)),
-    );
-    const counts = new Map<string, number>();
-    for (const name of names) {
-      if (name !== undefined) {
-        counts.set(name, (counts.get(name) ?? 0) + 1);
-      }
+    if (counts.get(name) === 1) {
+      return name;
     }
-    const taken = new Set(counts.keys());
-    const nextNumbers = new Map<string, number>();
-    return names.map((name) => {
-      if (name === undefined || counts.get(name) === 1) {
-        return name;
+    const numberedAs = (number: number) =>
+      translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
+    let number = nextNumbers.get(name) ?? 1;
+    let numbered = numberedAs(number);
+    // With a working format at most `taken.size` numbers are in use, so a free one is found within the bound. A format
+    // that leaves the number out translates the next number the same, and searching further can't help
+    for (let attempts = 0; taken.has(numbered) && attempts < taken.size; attempts++) {
+      const next = numberedAs(number + 1);
+      if (next === numbered) {
+        break;
       }
-      let number = nextNumbers.get(name) ?? 1;
-      let numbered = translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
-      // At most `taken.size` numbers can be in use, so this always finds a free one, unless a custom `translateString`
-      // leaves the number out, which the bound stops from looping forever
-      for (let attempts = 0; taken.has(numbered) && attempts < taken.size; attempts++) {
-        number += 1;
-        numbered = translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
-      }
-      nextNumbers.set(name, number + 1);
-      taken.add(numbered);
-      return numbered;
-    });
-  }, [items, itemLabel, translateString, firstNamedIndex]);
+      number += 1;
+      numbered = next;
+    }
+    nextNumbers.set(name, number + 1);
+    if (!numbered) {
+      return name;
+    }
+    taken.add(numbered);
+    return numbered;
+  });
+}
+
+/** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
+ * item itself for `'.'`. Items are named when their options give them buttons, not when a button shows right now, as a
+ * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them. The
+ * first `fixedItemCount` items, a tuple's fixed items, can only show Copy, so they're named only when `copyable`.
+ */
+function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  items: readonly T[],
+  uiOptions: UIOptionsType<T[], S, F>,
+  translateString: Registry['translateString'],
+  fixedItemCount = 0,
+): (string | undefined)[] | undefined {
+  const { itemLabel, orderable = true, removable = true, copyable = false } = uiOptions;
+  const hasButtons = orderable || removable || copyable;
+  // A uiSchema from JSON isn't type-checked, so a value other than a path leaves the items unnamed rather than throwing
+  const path = useMemo(
+    () => (typeof itemLabel === 'string' && itemLabel !== '' && hasButtons ? toPath(itemLabel) : undefined),
+    [itemLabel, hasButtons],
+  );
+  const firstNamedIndex = copyable ? 0 : fixedItemCount;
+  // Serialized, so that the numbering below reruns only when a name changes, not on every edit to another field
+  const namesKey = useMemo(
+    () =>
+      path &&
+      JSON.stringify(
+        items.map((item, index) =>
+          index < firstNamedIndex ? null : (itemNameFrom(path.length === 0 ? item : getByPath(item, path)) ?? null),
+        ),
+      ),
+    [items, path, firstNamedIndex],
+  );
+  return useMemo(
+    () =>
+      namesKey === undefined
+        ? undefined
+        : numberSharedNames(JSON.parse(namesKey) as (string | null)[], translateString),
+    [namesKey, translateString],
+  );
 }
 
 /** Renders the individual array item using a `SchemaField` along with the additional properties that are needed to
@@ -546,20 +583,30 @@ function ArrayFieldItemInner<
   // move either way, so their titles depend on whether it can move at all rather than on `has.moveUp` and
   // `has.moveDown`, which change as other items are added, removed or moved
   const movable = orderable && (canMoveUp || canMoveDown);
-  const itemButtonProps = useMemo(
-    () =>
-      itemName === undefined
-        ? undefined
-        : {
-            ...(has.copy && { copy: { title: translateString(TranslatableString.CopyItemButton, [itemName]) } }),
-            ...(movable && {
-              moveDown: { title: translateString(TranslatableString.MoveDownItemButton, [itemName]) },
-              moveUp: { title: translateString(TranslatableString.MoveUpItemButton, [itemName]) },
-            }),
-            ...(has.remove && { remove: { title: translateString(TranslatableString.RemoveItemButton, [itemName]) } }),
-          },
-    [itemName, has.copy, movable, has.remove, translateString],
-  );
+  const itemButtonProps = useMemo(() => {
+    if (itemName === undefined) {
+      return undefined;
+    }
+    const buttonProps: ArrayFieldItemButtonProps = {};
+    // An empty title, from a translator without these strings, would replace the button's default title
+    const setTitle = (button: keyof ArrayFieldItemButtonProps, key: TranslatableString) => {
+      const buttonTitle = translateString(key, [itemName]);
+      if (buttonTitle) {
+        buttonProps[button] = { title: buttonTitle };
+      }
+    };
+    if (has.copy) {
+      setTitle('copy', TranslatableString.CopyItemButton);
+    }
+    if (movable) {
+      setTitle('moveDown', TranslatableString.MoveDownItemButton);
+      setTitle('moveUp', TranslatableString.MoveUpItemButton);
+    }
+    if (has.remove) {
+      setTitle('remove', TranslatableString.RemoveItemButton);
+    }
+    return Object.keys(buttonProps).length > 0 ? buttonProps : undefined;
+  }, [itemName, has.copy, movable, has.remove, translateString]);
 
   const onAddItem = useCallback(
     (event: MouseEvent) => {
@@ -713,7 +760,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const schemaItems: S = useMemo(() => (isObject(schema.items) ? (schema.items as S) : ({} as S)), [schema.items]);
   const itemsSchema: S = useMemo(() => schemaUtils.retrieveSchema(schemaItems), [schemaUtils, schemaItems]);
   const formData = useMemo(() => keyedToPlainFormData<T>(keyedFormData), [keyedFormData]);
-  const itemNames = useItemNames(formData, uiOptions.itemLabel, registry.translateString);
+  const itemNames = useItemNames(formData, uiOptions, registry.translateString);
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formDataFromProps);
   const canAdd = useMemo(
@@ -843,12 +890,11 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     canAddItem<T, S, F>(registry, schema, items, uiSchema) &&
     hasAdditionalItems &&
     (!renderOptionalField || hasFormData);
-  // The fixed items show no buttons but Copy, so they're named only when they can show that
   const itemNames = useItemNames(
     Array.isArray(formData) ? formData : NO_ITEMS,
-    uiOptions.itemLabel,
+    uiOptions,
     registry.translateString,
-    uiOptions.copyable && canAdd ? 0 : schemaItems.length,
+    schemaItems.length,
   );
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,

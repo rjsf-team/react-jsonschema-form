@@ -978,8 +978,9 @@ export type ArrayFieldItemButtonsTemplateProps<
   onRemoveItem: (event?: any) => void;
   /** A boolean value stating if the array item is read-only */
   readonly?: boolean;
-  /** Props to spread onto each of the item's buttons. Set when the array's `ui:options.itemLabel` names the item, to
-   * give the buttons titles such as `Remove report.pdf`; otherwise undefined, and the buttons keep their default titles
+  /** Props to spread onto each of the item's buttons, holding a key only for the buttons the item can show. Set when
+   * the array's `ui:options.itemLabel` names the item, to give the buttons titles such as `Remove report.pdf`;
+   * otherwise undefined, and the buttons keep their default titles
    */
   itemButtonProps?: ArrayFieldItemButtonProps;
 };
@@ -1432,8 +1433,9 @@ type UIOptionsBaseType<
     /** On an array field, the property of each item's form data whose value names that item in the titles of its
      * buttons, such as `Remove report.pdf`. A dotted path, such as `'file.name'`, reads a nested property, and `'.'`
      * names each item by its own value, for an array of strings or numbers. Items whose value there isn't a non-empty
-     * string or a number keep the default titles, and a name more than one item has gets each item's position added,
-     * such as `Remove report.pdf (2)`
+     * string or a number keep the default titles. Items that share a name are numbered among themselves, such as
+     * `Remove report.pdf (1)` and `Remove report.pdf (2)`, and a number that would repeat a name already in use is
+     * skipped. A value that isn't a non-empty string is ignored
      */
     itemLabel?: string;
     /** Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the
