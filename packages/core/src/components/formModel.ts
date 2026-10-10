@@ -66,6 +66,8 @@ const IS_OWNED_BY_FORM = {
   formData: false,
   formDataSchema: false,
   settledFormData: false,
+  settledRetrievedSchema: false,
+  proposedFormData: true,
   edit: false,
   errors: true,
   errorSchema: true,

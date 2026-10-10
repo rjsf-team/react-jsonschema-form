@@ -2817,7 +2817,7 @@ Due to the nature of schemas, this sanitization happens recursively for nested o
 Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
-When the previous form data is passed as `oldData` (`Form` passes its previous `formData`), it feeds only the enum filter decision: the filter is skipped at a position whose old and new schemas, each resolved against its own data, agree, so values the schema offered when they were entered are kept.
+When the previous form data is passed as `oldData` (`Form` passes the data as it last settled under the current root schema), it feeds only the enum filter decision: the filter is skipped at a position whose old and new schemas, each resolved against its own data, agree, so values the schema offered when they were entered are kept.
 Without `oldData` the filter always runs, matching v6.
 `$ref`s on both sides resolve against the one `rootSchema`, so a change to a `$ref` target between the old and new root schemas is invisible to the comparison: pass `oldData` only when the root schema is unchanged, which is how `Form` calls it.
 
@@ -2829,6 +2829,7 @@ Without `oldData` the filter always runs, matching v6.
 - [oldSchema]: S | undefined - The old schema from which the data originated
 - [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
 - [oldData]: any - The previous form data, used only to decide whether the enum filter runs; when omitted, the filter always runs. Pass it only when the root schema is unchanged, since `$ref`s on both sides resolve against the one `rootSchema`
+- [resolvedOldSchema]: S | undefined - `oldSchema` already resolved for `oldData` at the root: the root frame's filter chain uses it directly instead of resolving `oldSchema` again
 
 #### Returns
 

@@ -2018,16 +2018,14 @@ export interface SchemaUtilsType<
    * @param [oldData] - The previous form data. The old schema itself resolves against the current `data`;
    *      a separate chain resolved against `oldData` feeds only the enum filter decision, so a branch flip
    *      between the previous and current data still filters a value the current data no longer resolves to.
-   *      `Form` passes its previous `formData`. `$ref`s on both sides resolve against the one root schema,
-   *      so pass `oldData` only when the root schema is unchanged, which is how `Form` calls it
+   *      `Form` passes the data as it last settled under the current root schema. `$ref`s on both sides
+   *      resolve against the one root schema, so pass `oldData` only when the root schema is unchanged,
+   *      which is how `Form` calls it
+   * @param [resolvedOldSchema] - `oldSchema` already resolved for `oldData` at the root: the root frame's
+   *      filter chain uses it directly instead of resolving `oldSchema` again. `Form` passes the schema its
+   *      settled snapshot was resolved under
    * @returns - The new form data, with all of the fields uniquely associated with the old schema set
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
-  sanitizeDataForNewSchema(
-    newSchema?: S,
-    oldSchema?: S,
-    data?: any,
-    oldData?: any,
-    oldSchemaResolvedForOldData?: boolean,
-  ): T;
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any, oldData?: any, resolvedOldSchema?: S): T;
 }

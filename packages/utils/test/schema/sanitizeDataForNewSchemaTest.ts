@@ -1299,14 +1299,14 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         };
         const data = { opts: 'c' };
         const oldData = { opts: 'c' };
-        // The Form caller passes its resolved schemas for both sides; the flag only skips resolving the old
-        // side a second time against the same data it was resolved from. The out-of-enum value is kept in
+        // The Form caller passes its resolved schemas for both sides; the parameter only skips resolving the
+        // old side a second time against the same data it was resolved from. The out-of-enum value is kept in
         // both cases, since the old and new positions agree
         const newSchema = schemaUtils.retrieveSchema(schema, data);
         const oldSchema = schemaUtils.retrieveSchema(schema, oldData);
         const expected = schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data, oldData);
         expect(expected).toEqual(data);
-        expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data, oldData, true)).toEqual(expected);
+        expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, data, oldData, oldSchema)).toEqual(expected);
       });
       it('keeps element values across a reorder or removal when pairing by index', () => {
         const schema: RJSFSchema = {
