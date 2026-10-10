@@ -130,7 +130,7 @@ const SUBSCHEMA_MAP_KEYWORDS = new Set([
  * entry spelled as a string array drops out. Both walkers below classify through this one helper so their
  * keyword handling cannot drift apart.
  */
-function keywordShape(key: string, value: unknown): 'map' | 'array' | 'single' | undefined {
+export function keywordShape(key: string, value: unknown): 'map' | 'array' | 'single' | undefined {
   if (SUBSCHEMA_MAP_KEYWORDS.has(key) && isObject(value)) {
     return 'map';
   }

@@ -3707,6 +3707,112 @@ describe('oneOf', () => {
     });
   });
 
+  describe("a non-object field's selected option inherits its parent's keywords (#5359)", () => {
+    const wrap = (opt: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { opt } });
+
+    it("should render an array's items from the parent when its anyOf options only limit the length", async () => {
+      const schema = wrap({ type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { maxItems: 3 }] });
+      const { node, onChange } = createFormComponent({ schema });
+
+      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      await user.type(node.querySelector<HTMLInputElement>('input#root_opt_0')!, 'x');
+      await user.click(node.querySelector<HTMLButtonElement>('#root_opt__add')!);
+
+      expect(node.querySelector('input#root_opt_1')).toBeInTheDocument();
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { opt: ['x', undefined] } }),
+        'root_opt',
+      );
+    });
+
+    it.each<[string, RJSFSchema['type']]>([
+      ['an array', 'array'],
+      ['a nullable array', ['array', 'null']],
+    ])("should keep %s's items across a switch between options that only limit its length", async (_, type) => {
+      const schema = wrap({ type, items: { type: 'string' }, anyOf: [{ minItems: 1 }, { maxItems: 3 }] });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { opt: ['x', 'y'] } });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Option 2');
+
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { opt: ['x', 'y'] } }),
+        'root_opt__anyof_select',
+      );
+      expect(node.querySelector<HTMLInputElement>('input#root_opt_1')).toHaveValue('y');
+    });
+
+    it("should keep rendering the parent's items when the selected option's items is true", () => {
+      const schema = wrap({ type: 'array', items: { type: 'string' }, anyOf: [{ items: true }, { maxItems: 3 }] });
+      const { node } = createFormComponent({ schema, initialFormData: { opt: ['x'] } });
+
+      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(node.querySelector<HTMLInputElement>('input#root_opt_0')).toHaveValue('x');
+    });
+
+    it("should stop adding items at the parent's maxItems when the option allows more", async () => {
+      const schema = wrap({ type: 'array', items: { type: 'string' }, maxItems: 3, anyOf: [{ maxItems: 5 }] });
+      const { node } = createFormComponent({ schema, initialFormData: { opt: ['a', 'b'] } });
+
+      await user.click(node.querySelector<HTMLButtonElement>('#root_opt__add')!);
+
+      expect(node.querySelector('input#root_opt_2')).toBeInTheDocument();
+      expect(node.querySelector('#root_opt__add')).not.toBeInTheDocument();
+    });
+
+    it("should render a multi-select from the parent's uniqueItems and enum items", async () => {
+      const schema = wrap({
+        type: 'array',
+        items: { type: 'string', enum: ['a', 'b'] },
+        uniqueItems: true,
+        oneOf: [{ minItems: 1 }, { maxItems: 1 }],
+      });
+      const { node, onChange } = createFormComponent({ schema });
+
+      expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('select[multiple]#root_opt')!, 'b');
+
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { opt: ['b'] } }), 'root_opt');
+    });
+
+    it("should render a string option with the parent's format", () => {
+      const schema = wrap({ type: 'string', format: 'date', oneOf: [{ minLength: 1 }, { maxLength: 20 }] });
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root_opt')).toHaveAttribute('type', 'date');
+    });
+
+    it('should let an option override the keyword it shares with the parent', () => {
+      const schema = wrap({ type: 'string', format: 'date', oneOf: [{ format: 'email' }, { maxLength: 20 }] });
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector('input#root_opt')).toHaveAttribute('type', 'email');
+    });
+
+    it("should leave the parent's title and description to the parent's own field", () => {
+      const schema = wrap({
+        type: 'string',
+        title: 'Parent title',
+        description: 'Parent description',
+        oneOf: [{ minLength: 1 }, { maxLength: 20 }],
+      });
+      const { node } = createFormComponent({ schema });
+
+      expect(screen.getAllByText('Parent title')).toHaveLength(1);
+      expect(screen.getAllByText('Parent description')).toHaveLength(1);
+      expect(node.querySelector('input#root_opt')).toBeInTheDocument();
+    });
+
+    it("should render a typeless object parent's typeless option as the object a typed parent's renders", () => {
+      const properties: RJSFSchema['properties'] = { a: { type: 'string' }, b: { type: 'string' } };
+      const oneOf: RJSFSchema[] = [{ required: ['a'] }, { required: ['b'] }];
+      const typeless = createFormComponent({ schema: wrap({ properties, oneOf }) });
+      const typed = createFormComponent({ schema: wrap({ type: 'object', properties, oneOf }) });
+
+      expect(typeless.node.querySelector('.unsupported-field')).not.toBeInTheDocument();
+      expect(typeless.node.innerHTML).toEqual(typed.node.innerHTML);
+    });
+  });
+
   it('$ref objects pointing to objects with oneOf lists do not change (#3833)', async () => {
     const schema: RJSFSchema = {
       title: 'oneOf Example',
