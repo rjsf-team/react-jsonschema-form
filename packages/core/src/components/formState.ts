@@ -280,12 +280,14 @@ function mergeErrors<T>(
   }
   if (customErrors) {
     const listed = errors;
-    errorSchema = validationDataMerge({ errors, errorSchema }, customErrors, true).errorSchema;
+    const merged = validationDataMerge({ errors, errorSchema }, customErrors, true);
+    errorSchema = merged.errorSchema;
     // The merge shows a message the field already carries once, so the list names it once too. Compared by path, since
     // a validator may spell the `property` of the root or of a property of the root without the leading `.`
     const keyOf = (error: RJSFValidationError) => JSON.stringify([error.message, ...errorPath(error)]);
     const listedKeys = new Set(listed.map(keyOf));
-    errors = [...listed, ...toErrorList(customErrors).filter((raised) => !listedKeys.has(keyOf(raised)))];
+    // The merge lists the raised errors after `listed`
+    errors = [...listed, ...merged.errors.slice(listed.length).filter((raised) => !listedKeys.has(keyOf(raised)))];
   }
   return { errors, errorSchema };
 }
