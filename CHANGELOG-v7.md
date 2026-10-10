@@ -532,6 +532,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `getExampleSuggestions()` returns the same array for the same schema object, so a `BaseInputTemplate` hands `SchemaExamples` the suggestions it handed it last time. Every caller shares that array, so it is frozen and typed `readonly string[]`, as is the `suggestions` prop of `SchemaExamples`; copy it to sort or add to it. The suggestions are read once per schema object, so `examples` or a `default` edited in place afterwards is not seen ([#5508](https://github.com/rjsf-team/react-jsonschema-form/pull/5508))
 - **BREAKING CHANGE:** `shouldRenderOptionalField()` takes the field's `fieldPath` as a required fifth argument, and its fourth, `uiSchema`, is no longer optional. It returns `false` for the root field, `ROOT_FIELD_PATH`
 - `retrieveSchema()` is up to twice as fast on a schema with no `$ref`
+- **BREAKING CHANGE:** Removed `isRootSchema()`. It decided whether a schema was the root by deep-comparing it with the root schema, which costs two whole-schema comparisons per call and mistakes a nested field that a recursive `$ref: '#'` describes for the root. Compare the field's `fieldPath` with `ROOT_FIELD_PATH` instead
 
 ## @rjsf/validator-ajv8
 
