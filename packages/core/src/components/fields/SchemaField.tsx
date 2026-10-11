@@ -520,43 +520,52 @@ function SchemaFieldRender<
     () => ({ ...globalUiOptions, ...ownUiOptions }),
     [globalUiOptions, ownUiOptions],
   );
-  const { namedField, ignoredOwnField, ignoredGlobalField } = resolveUiField<T, S, F>(
-    ownUiOptions,
-    globalUiOptions?.field,
-    fields,
-  );
-  const { FieldComponent, rendersOptionsItself, rendersOptionSelector, optionsReplaceNamedField } = getFieldComponent<
-    T,
-    S,
-    F
-  >(schema, uiOptions, ownUiOptions.widget, namedField, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
+  // A `$ref` cycle returns below without rendering a field of its own, so neither the field nor the options are
+  // resolved for it. They are resolved up here, ahead of that return, because the options memo depends on them
+  const uiField = isRefCycle ? undefined : resolveUiField<T, S, F>(ownUiOptions, globalUiOptions?.field, fields);
+  const fieldToRender =
+    uiField &&
+    getFieldComponent<T, S, F>(
+      schema,
+      uiOptions,
+      ownUiOptions.widget,
+      uiField.namedField,
+      registry,
+      xxxOfKey,
+      isSelectSchema,
+      hasConstantOptions,
+    );
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
-  // type in effect — and only the inner one would follow the type the user chose.
+  // type in effect — and only the inner one would follow the type the user chose
+  const retrievesOptions =
+    fieldToRender !== undefined && fieldToRender.rendersOptionSelector && !fieldToRender.rendersOptionsItself;
   // `xxxOfKey` is what `rendersOptionSelector` was decided from, so it is set whenever that is, which the narrowing
   // here restates for the lookup below. This is the one place the options are retrieved: `MultiSchemaField` renders
   // what it is handed. Memoized so a re-render that changed neither the schema nor the data hands it the same array,
-  // which its callbacks key on. A `$ref` cycle returns below without rendering them, so its options are left
-  // unretrieved like its schema
+  // which its callbacks key on
   const xxxOfOptions = useMemo(
     () =>
-      rendersOptionSelector && xxxOfKey !== undefined && !rendersOptionsItself && !isRefCycle
+      retrievesOptions && xxxOfKey !== undefined
         ? schema[xxxOfKey]?.map((xxxOfSchema) =>
             schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
           )
         : undefined,
-    [rendersOptionSelector, rendersOptionsItself, xxxOfKey, isRefCycle, schema, schemaUtils, formData],
+    [retrievesOptions, xxxOfKey, schema, schemaUtils, formData],
   );
 
-  // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
-  // The check must come after all hook calls to satisfy React's rules of hooks.
-  if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
+  // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag,
+  // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
+  // rules of hooks.
+  if (!uiField || !fieldToRender) {
     return (
       <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
         <CyclicSchemaField {...props} />
       </RawFormDataContext>
     );
   }
+  const { ignoredOwnField, ignoredGlobalField } = uiField;
+  const { FieldComponent, rendersOptionSelector, optionsReplaceNamedField } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
