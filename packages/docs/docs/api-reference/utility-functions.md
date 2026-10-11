@@ -1441,20 +1441,6 @@ object constants, or one whose `type` is `null`, renders with. A schema whose `t
 
 - An error if there is no `Widget` component that can be returned
 
-### getWidgetKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Gets the registry key [getWidget()](#getwidget) looks `widget` up by for `schema`, without throwing where it would: a name registered in `registeredWidgets` is its own key, and an alias such as `textarea` is the key it stands for on the schema's type.
-
-#### Parameters
-
-- schema: S - The schema for the field
-- widget: string - The alias or registered name of the widget
-- [registeredWidgets={}]: Readonly&lt;Record&lt;string, unknown>> - A registry of widget name to `Widget` implementation
-
-#### Returns
-
-- string | undefined: The registry key, or `undefined` when `widget` is neither registered nor an alias for `schema`
-
 ### getWidgetType&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 2Gets the type whose field renders a widget for a schema, matching the widget's alias or the registered name an alias maps to, such as `textarea` or `TextareaWidget`. That is the type the schema resolves to when it has the widget, otherwise, when that type is a `string`, `number`, `integer` or `boolean`, the first other one of those its `type` list names that does: a `textarea` on a `['null', 'number', 'string']` is the `string` one, and a `checkbox` on a `['number', 'boolean']` the `boolean` one. No `null`, `object` or `array` type is looked to, since the field of the type the list resolves to would be left rendering the widget: a `radio` of the `null` type would replace the list an `ArrayField` multi-select edits with one value. A list resolving to `object` or `array` takes only its own widgets, since form data of that type, which the list is written to hold, would otherwise be handed to a scalar widget. A select over a `type` list takes only the widgets of the field [getSelectFieldType()](#getselectfieldtype) renders it through, and only `select`, `radio` and `hidden` when that is a `string` over a list naming an `object` or `array`, so a `checkbox` on an `enum` of `['a', true]` has no type. `getWidget()` looks a widget alias up by the type it returns, and [getFieldTypeForWidget()](#getfieldtypeforwidget) builds on it for the field `SchemaField` renders.
@@ -1798,18 +1784,6 @@ Returns true when a form value is considered empty: `null`, `undefined`, or `''`
 #### Returns
 
 - boolean: True if the value is considered empty, false otherwise
-
-### isStandardWidgetKey()
-
-Determines whether `key` is one `@rjsf/core` registers a widget under, which a theme's `ThemePresentation.standardWidgets` declaration applies to.
-
-#### Parameters
-
-- key: string - A widget registry key
-
-#### Returns
-
-- boolean: True when `@rjsf/core` registers a widget under `key`
 
 ### isWholeValueSelect&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2254,7 +2228,7 @@ Each part is placed `template` or `self` by its declared owner, `above` when a f
 
 #### Parameters
 
-- inputs: FieldPresentationInputs - The `id`, the `declaration`, the `label` from [getFieldLabel()](#getfieldlabel), and the optional `showLabel`, `description`, `help`, `errors`, `hideError`, `hasExamples`, `hasSelectedOptionDescription`, `hasControl`, `required`, `requiredAttribute` and `inherited` plan of the field above
+- inputs: FieldPresentationInputs - The `id`, the `declaration`, the `label` from [getFieldLabel()](#getfieldlabel), and the optional `showLabel`, `description`, `help`, `errors`, `hideError`, `controlDescribedBy` (the ids of the elements the control renders to describe itself, such as its `examplesId()` list, which come last), `hasControl`, `required`, `requiredAttribute` and `inherited` plan of the field above
 
 #### Returns
 

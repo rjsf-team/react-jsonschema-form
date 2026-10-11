@@ -1,15 +1,6 @@
 import type { ReactElement } from 'react';
 
-import {
-  descriptionId,
-  errorId,
-  examplesId,
-  fieldLabelId,
-  helpId,
-  optionDescriptionId,
-  optionHelpId,
-  selectedOptionDescriptionId,
-} from './idGenerators.ts';
+import { descriptionId, errorId, fieldLabelId, helpId, optionDescriptionId, optionHelpId } from './idGenerators.ts';
 import type {
   ControlAttributes,
   FieldPresentation,
@@ -36,10 +27,10 @@ export interface FieldPresentationInputs {
   errors?: readonly string[];
   /** Whether `ui:hideError` is in effect for the field */
   hideError?: boolean;
-  /** Whether the control lists `examples` under `examplesId()` */
-  hasExamples?: boolean;
-  /** Whether the control renders its selected option's description under `selectedOptionDescriptionId()` */
-  hasSelectedOptionDescription?: boolean;
+  /** The ids of the elements the control renders to describe itself, such as its `selectedOptionDescriptionId()` or
+   * its `examplesId()` list, which describe it after the field's own parts
+   */
+  controlDescribedBy?: readonly string[];
   /** Whether a control is on screen for the label to name: false for an opted-out optional field or a hidden one, and
    * for a container, whose label is its own heading. Defaults to true
    */
@@ -55,6 +46,8 @@ export interface FieldPresentationInputs {
    */
   inherited?: FieldPresentation;
 }
+
+const NONE: readonly string[] = Object.freeze([]);
 
 /** Whether a part with this placement renders an element here */
 function rendersHere(by: PartPlacement) {
@@ -107,18 +100,18 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     showLabel = true,
     description = '',
     help,
-    errors = [],
+    errors = NONE,
     hideError = false,
-    hasExamples = false,
-    hasSelectedOptionDescription = false,
+    controlDescribedBy = NONE,
     hasControl = true,
     required = false,
     requiredAttribute = required,
     inherited,
   } = inputs;
 
+  const labelId = fieldLabelId(id);
   let labelBy: PartPlacement = declaration.label;
-  if (declaration.label === 'template' && inherited && ['template', 'above'].includes(inherited.label.by)) {
+  if (declaration.label === 'template' && (inherited?.label.by === 'template' || inherited?.label.by === 'above')) {
     labelBy = 'above';
   } else if (!labelText || !showLabel || (declaration.label === 'template' && !hasControl)) {
     labelBy = 'none';
@@ -133,36 +126,32 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   );
   const helpPlacement = placeText(help, declaration.help, helpId(id), optionHelpId(id), inherited?.help);
 
-  let errorsPlan: FieldPresentation['errors'];
-  if (inherited) {
-    const { messages } = inherited.errors;
-    errorsPlan = { messages, by: messages.length > 0 ? 'above' : 'none', id: inherited.errors.id };
-  } else {
-    const messages = hideError ? [] : errors;
-    errorsPlan = { messages, by: messages.length > 0 ? declaration.errors : 'none', id: errorId(id) };
-  }
+  const { messages, id: errorsId } = inherited?.errors ?? { messages: hideError ? NONE : errors, id: errorId(id) };
+  const errorsBy = inherited ? 'above' : declaration.errors;
+  const errorsPlan: FieldPresentation['errors'] = {
+    messages,
+    by: messages.length > 0 ? errorsBy : 'none',
+    id: errorsId,
+  };
 
   const describedBy = [
-    ...new Set([
-      ...(rendersHere(errorsPlan.by) ? [errorsPlan.id] : []),
-      ...(inherited?.describedBy ?? []),
-      ...(rendersHere(descriptionPlacement.by) ? [descriptionPlacement.id] : []),
-      ...(rendersHere(helpPlacement.by) ? [helpPlacement.id] : []),
-      ...(hasSelectedOptionDescription ? [selectedOptionDescriptionId(id)] : []),
-      ...(hasExamples ? [examplesId(id)] : []),
-    ]),
-  ];
+    rendersHere(errorsPlan.by) ? errorsId : '',
+    ...(inherited?.describedBy ?? NONE),
+    rendersHere(descriptionPlacement.by) ? descriptionPlacement.id : '',
+    rendersHere(helpPlacement.by) ? helpPlacement.id : '',
+    ...controlDescribedBy,
+  ].filter((describer, index, describers) => describer && describers.indexOf(describer) === index);
 
   let control: FieldPresentation['control'];
   if (hasControl) {
     const attributes: ControlAttributes = {};
     if ((labelBy === 'template' || labelBy === 'above') && declaration.labelledBy === 'aria-labelledby') {
-      attributes['aria-labelledby'] = fieldLabelId(id);
+      attributes['aria-labelledby'] = labelId;
     }
     if (describedBy.length > 0) {
       attributes['aria-describedby'] = describedBy.join(' ');
     }
-    if (errorsPlan.messages.length > 0) {
+    if (messages.length > 0) {
       attributes['aria-invalid'] = true;
     }
     if (requiredAttribute) {
@@ -172,7 +161,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   }
 
   return {
-    label: { text: labelText, by: labelBy, id: fieldLabelId(id) },
+    label: { text: labelText, by: labelBy, id: labelId },
     description: { text: description, ...descriptionPlacement },
     help: { text: help, ...helpPlacement },
     errors: errorsPlan,
