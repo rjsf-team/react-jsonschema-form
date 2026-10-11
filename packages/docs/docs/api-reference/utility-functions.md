@@ -2501,7 +2501,7 @@ The existing `errors` are always kept, also when their `errorSchema` is empty, a
 
 - validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
 - [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The optional additional set of errors in an `ErrorSchema`
-- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates` and leave out of the appended errors those it leaves out of the merged `ErrorSchema`: the messages the existing `errorSchema` already holds under the same keys
+- [preventDuplicates=false]: boolean - Optional flag, if true, leaves out of both the merged `ErrorSchema` and the appended errors the messages the existing `errorSchema` already holds under the same keys
 
 #### Returns
 
