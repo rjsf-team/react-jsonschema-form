@@ -16,7 +16,7 @@ function AltDateWidget<
   const chakraProps = getChakra({ uiSchema: props.uiSchema });
 
   return (
-    <FieldsetRoot {...(chakraProps as any)}>
+    <FieldsetRoot {...chakraProps}>
       <Box display='flex' flexWrap='wrap' alignItems='center'>
         {elements.map((elemProps: DateElementProp, i) => {
           const elemId = dateElementId(id, elemProps.type);

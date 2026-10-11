@@ -36,7 +36,7 @@ export default function CheckboxesWidget<
   const hasError = hasVisibleErrors(props);
 
   return (
-    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={hasError} {...(chakraProps as any)}>
+    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={hasError} {...chakraProps}>
       {!hideLabel && label && <FieldsetLegend>{labelValue(label)}</FieldsetLegend>}
       <CheckboxGroup
         onValueChange={(option) =>

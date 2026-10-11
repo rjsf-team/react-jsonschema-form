@@ -1,6 +1,6 @@
 import { REF_KEY, ROOT_SCHEMA_PREFIX } from './constants.ts';
 import isObject from './isObject.ts';
-import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Takes a `node` object and transforms any contained `$ref` node variables with a prefix, recursively calling
  * `withIdRefPrefix` for any other elements.
@@ -8,7 +8,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * @param node - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
  */
 function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S): S {
-  const realObj: Record<string, any> = node;
+  const realObj: GenericObjectType = node;
   for (const key in realObj) {
     /* v8 ignore next -- spread in caller guarantees only own properties reach this loop */
     if (Object.hasOwn(realObj, key)) {
@@ -29,7 +29,7 @@ function withIdRefPrefixObject<S extends StrictRJSFSchema = RJSFSchema>(node: S)
  * @param node - The list of object nodes to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
  */
 function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[]): S[] {
-  return node.map((item) => withIdRefPrefix<S>(item) as S);
+  return node.map((item) => withIdRefPrefix<S>(item));
 }
 
 /** Recursively prefixes all `$ref`s in a schema with the value of the `ROOT_SCHEMA_PREFIX` constant.
@@ -38,6 +38,9 @@ function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[]
  * @param schemaNode - The object node to which a ROOT_SCHEMA_PREFIX is added when a REF_KEY is part of it
  * @returns - A copy of the `schemaNode` with updated `$ref`s
  */
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[]): S[];
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S): S;
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[keyof S]): S[keyof S];
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
 ): S | S[] | S[keyof S] {

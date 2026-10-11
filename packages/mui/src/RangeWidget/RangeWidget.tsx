@@ -30,7 +30,7 @@ export default function RangeWidget<
     props;
   const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
-  const handleChange = (_: any, newValue?: number | number[]) => {
+  const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) => {
     onChange(newValue ?? options.emptyValue);
   };
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);

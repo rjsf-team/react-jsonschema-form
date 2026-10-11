@@ -830,7 +830,7 @@ const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...UNSTUB
  * @returns - The copy to build the stub from
  */
 function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): S {
-  const schema = { ...subSchema } as GenericObjectType;
+  const schema: GenericObjectType = { ...subSchema };
   UNSTUBBABLE_KEYWORDS.forEach((keyword) => delete schema[keyword]);
   return schema as S;
 }
@@ -854,7 +854,7 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  */
 function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: unknown, subSchema: S = {} as S): S {
   const type = guessType(formData);
-  const schema = { ...subSchema } as GenericObjectType;
+  const schema: GenericObjectType = { ...subSchema };
   let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
     if (CONSTRAINING_KEYWORDS.has(key)) {
@@ -1458,7 +1458,7 @@ export function retrieveSchemaInternal<
         // A boolean subschema carries no symbols; `getOwnPropertySymbols` coerces it and returns an empty list
         for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
           if (!(sym in allOfSymbols)) {
-            allOfSymbols[sym] = (allOfItem as any)[sym];
+            allOfSymbols[sym] = Object.getOwnPropertyDescriptor(allOfItem, sym)?.value;
           }
         }
       });
@@ -1470,9 +1470,7 @@ export function retrieveSchemaInternal<
       }
       resolvedSchema = mergedSchema;
       // Re-apply collected Symbol properties that the merge dropped.
-      for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
-        (resolvedSchema as any)[sym] = allOfSymbols[sym];
-      }
+      Object.assign(resolvedSchema, allOfSymbols);
     }
     let withMergedProperties = [resolvedSchema];
     const { properties } = resolvedSchema;
@@ -1839,7 +1837,7 @@ function partiallyApplied<
   return subsets
     .filter((subset) => subset.length < schemaKeys.length)
     .flatMap((subset) => {
-      const partial = { ...dependencies } as Record<string, unknown>;
+      const partial: Record<string, unknown> = { ...dependencies };
       for (const key of schemaKeys) {
         if (!subset.includes(key)) {
           delete partial[key];

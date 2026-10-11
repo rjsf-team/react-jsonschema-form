@@ -1,4 +1,4 @@
-import type { Field as ChakraField } from '@chakra-ui/react';
+import type { Field as ChakraField, JsxStyleProps } from '@chakra-ui/react';
 import { defaultSystem } from '@chakra-ui/react';
 import shouldForwardProp from '@emotion/is-prop-valid';
 import type { UiSchema } from '@rjsf/utils';
@@ -14,7 +14,7 @@ export type ChakraUiSchema = UiSchema & {
 
 type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: ChakraField.RootProps };
 
-export function getChakra(uiSchema: ChakraUiSchema = {}): ChakraField.RootProps {
+export function getChakra(uiSchema: ChakraUiSchema = {}): JsxStyleProps {
   const chakraProps = uiSchema['ui:options']?.chakra ?? {};
 
   /**
