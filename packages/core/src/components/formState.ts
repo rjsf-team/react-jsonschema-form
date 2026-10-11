@@ -6,7 +6,6 @@ import type {
   GenericObjectType,
   StrictRJSFSchema,
   RJSFSchema,
-  RJSFValidationError,
   SchemaContext,
   SchemaUtilsType,
   UiSchema,
@@ -283,23 +282,10 @@ function mergeErrors<T>(
   extraErrors?: ErrorSchema<T>,
   customErrors?: ErrorSchema<T>,
 ): ValidationData<T> {
-  let { errorSchema, errors } = schemaValidation;
-  if (extraErrors) {
-    const merged = validationDataMerge(schemaValidation, extraErrors, true);
-    errorSchema = merged.errorSchema;
-    errors = merged.errors;
-  }
-  if (customErrors) {
-    const listed = errors;
-    const merged = validationDataMerge({ errors, errorSchema }, customErrors, true);
-    errorSchema = merged.errorSchema;
-    // The merge shows a message the field already carries once, so the list names it once too. Compared by path, since
-    // a validator may spell the `property` of the root or of a property of the root without the leading `.`
-    const keyOf = (error: RJSFValidationError) => JSON.stringify([error.message, ...propertyToPath(error.property)]);
-    const listedKeys = new Set(listed.map(keyOf));
-    // The merge lists the raised errors after `listed`
-    errors = [...listed, ...merged.errors.slice(listed.length).filter((raised) => !listedKeys.has(keyOf(raised)))];
-  }
+  // With `preventDuplicates`, a message a field already carries is shown on it once and listed once, the raised errors
+  // after the validator's and `extraErrors`
+  const withExtra = validationDataMerge(schemaValidation, extraErrors, true);
+  const { errors, errorSchema } = validationDataMerge(withExtra, customErrors, true);
   return { errors, errorSchema };
 }
 

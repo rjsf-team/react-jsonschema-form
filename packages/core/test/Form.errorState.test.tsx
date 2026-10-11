@@ -814,7 +814,7 @@ describe('Error state consistency when deriving from new props', () => {
       street: { type: 'string', minLength: 3 },
       server: 'must NOT have fewer than 3 characters',
       expected: ['.addr.street must NOT have fewer than 3 characters'],
-      // A server message the validator reports at the same path is listed once, not twice
+      // A server message the validator reports at the same path is listed once
       listed: ['.addr.street must NOT have fewer than 3 characters'],
     },
     {

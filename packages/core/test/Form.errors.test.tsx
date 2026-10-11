@@ -1496,17 +1496,28 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
       const extraErrors: ErrorSchema = { addr: { street: { __errors: [message] } } };
 
       it.each([undefined, true])(
-        'lists the message once in the top ErrorList and on the field after submit, with extraErrorsAreWarnings %s',
+        'lists the message once in the top ErrorList, on the field and to onError after submit, with extraErrorsAreWarnings %s',
         async (extraErrorsAreWarnings) => {
-          const { node } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings });
+          const { node, onError } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings });
 
           await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
           await submitForm(node, user);
 
           expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
           expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+          expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ property: '.addr.street', message })]);
         },
       );
+
+      it('passes the message once to onChange under live validation', async () => {
+        const { node, onChange } = createFormComponent({ schema, extraErrors, liveValidate: 'onChange' });
+
+        await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
+
+        expect(onChange.mock.lastCall![0].errors).toEqual([
+          expect.objectContaining({ property: '.addr.street', message }),
+        ]);
+      });
     });
   });
 });
