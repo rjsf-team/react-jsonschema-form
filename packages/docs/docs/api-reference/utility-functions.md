@@ -1134,16 +1134,18 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 ### getRenderedOptionSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField` and `getUiRequiredErrorSchema()` read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
 Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
 It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
-The two are merged with `mergeSchemas()`, so an option's `items` adds to the parent's rather than replacing them.
+The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
 A bound both declare (`minItems`, `maxItems`, `minLength`, `maxLength`, `minProperties`, `maxProperties`, `minimum`, `maximum`, `exclusiveMinimum` or `exclusiveMaximum`) keeps the stricter of the two, since a value has to meet both.
-It does so within each subschema keyword the two were merged in, such as `items` or a property, but not within a `not` or an `if`, where a value is tested against the schema rather than having to meet it, nor within a keyword holding a value rather than a schema, such as a `const`, or one JSON Schema does not define.
-`uniqueItems` holds when either asks for it.
-An option's `true` subschema, such as `items: true`, adds nothing to meet, so it leaves the parent's subschema in place rather than replacing it, except within `not` or `if`, where `true` constrains the value.
+It does so within each subschema keyword both declare, such as `items` or a property, and position by position within a tuple, but not within a keyword holding a value rather than a schema, such as a `const`, or one JSON Schema does not define.
+`uniqueItems` holds when either asks for it, two `enum` lists allow only the values both list, and two `required` lists ask for every name either does.
+An option's `true` subschema, such as `items: true`, adds nothing to meet, so it leaves the parent's subschema in place, a tuple included, rather than replacing it.
 A parent's `false` subschema, which nothing meets, likewise stays in place of the option's.
+An option's `items` schema beside the parent's tuple applies to each of its positions and to the items past it, as the parent's beside the option's tuple does.
+A `not`, or a conditional (`if`, `then` and `else` together), that the option declares replaces the parent's as a whole: `not: true` rejects every value, and one schema's `if` with the other's `then` is a condition neither declared.
 Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf` or a `const` or `default` object, is the option's.
 An option naming no `type` takes the parent's, every type of a type list included, and an object parent that names none, such as one with only `properties`, passes on `object`.
 

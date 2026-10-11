@@ -18,6 +18,7 @@ import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
+import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -262,6 +263,18 @@ interface ComputeDefaultsProps<
   shouldMergeDefaultsIntoFormData?: boolean;
 }
 
+/** Returns the option of a field that is not an object as `getRenderedOptionSchema()` renders it, carrying the
+ * `default` of the parent it was rendered from. The rendered option leaves the parent's `default` on the parent, but
+ * the option's defaults are seeded from it, so the two are merged as `mergeSchemas()` merges them for an object.
+ *
+ * @param parent - The schema holding the options, without them
+ * @param renderedOption - The selected option as it is rendered
+ * @returns - The rendered option with the parent's `default` merged into its own
+ */
+function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectType): GenericObjectType {
+  return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
+}
+
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
  * each level of the schema, recursively, to fill out every level of defaults provided by the schema.
  *
@@ -428,7 +441,15 @@ export function computeDefaults<
         defaults = toConstant<S>(options[optionIndex]) as T;
       }
     } else {
-      schemaToCompute = mergeSchemas(remaining, options[optionIndex]) as S;
+      const option = options[optionIndex];
+      // An object's defaults are those of its own properties as well as the option's, so the option is merged with the
+      // whole object. Any other field renders only the option, so its defaults are those of the option as rendered,
+      // with a boolean option read as the empty schema `SchemaField` retrieves it as
+      schemaToCompute = (
+        getSchemaType<S>(remaining as S) === 'object'
+          ? mergeSchemas(remaining, option)
+          : withDefaultOf(remaining, getRenderedOptionSchema<S>(remaining as S, isObject(option) ? option : ({} as S)))
+      ) as S;
       branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, optionIndex);
     }
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {

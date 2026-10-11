@@ -124,6 +124,13 @@ const SUBSCHEMA_MAP_KEYWORDS = new Set([
   DEPENDENCIES_KEY,
 ]);
 
+/** Whether `key` is a keyword holding subschemas in one of the shapes above, read from the keyword alone, so that a
+ * boolean subschema, which no shape is told apart by, is still read as one
+ */
+export function isSubschemaKeyword(key: string): boolean {
+  return SUBSCHEMA_KEYWORDS.has(key) || SUBSCHEMA_ARRAY_KEYWORDS.has(key) || SUBSCHEMA_MAP_KEYWORDS.has(key);
+}
+
 /** Classifies one of a schema's own entries by the shape of the subschema(s) its keyword's value holds: a
  * `map`, an `array`, or a `single` subschema. A draft-7 tuple `items` sits in both the single set and the
  * array set, and the `Array.isArray`/`isObject` checks tell them apart, the same way a `dependencies`

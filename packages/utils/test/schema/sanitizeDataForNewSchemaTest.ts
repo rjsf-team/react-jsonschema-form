@@ -827,6 +827,82 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       const newSchema: RJSFSchema = { type: 'array', items: { type: ['string', 'null'], title: 'New' } };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x', null])).toEqual(['x', null]);
     });
+    it('keeps a nullable tuple property that both schemas describe alike in separate schemas', () => {
+      const coords = (): RJSFSchema => ({ type: ['array', 'null'], items: [{ type: 'number' }, { type: 'number' }] });
+      const oldSchema: RJSFSchema = { type: 'object', properties: { flag: { type: 'boolean' }, coords: coords() } };
+      const newSchema: RJSFSchema = {
+        type: 'object',
+        properties: { flag: { type: 'boolean' }, coords: coords(), extra: { type: 'string' } },
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, { flag: true, coords: [1, 2] })).toEqual({
+        flag: true,
+        coords: [1, 2],
+      });
+    });
+    it('keeps a tuple that both schemas describe alike, up to the new maxItems', () => {
+      const tuple: RJSFSchema = {
+        items: [{ type: 'string' }, { type: 'number' }],
+        additionalItems: { type: 'string' },
+      };
+      const oldSchema: RJSFSchema = { type: 'array', ...tuple, minItems: 2 };
+      const newSchema: RJSFSchema = { type: 'array', ...tuple, maxItems: 2 };
+      expect(schemaUtils.sanitizeDataForNewSchema(oldSchema, newSchema, ['x', 1, 'more'])).toEqual(['x', 1, 'more']);
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x', 1, 'more'])).toEqual(['x', 1]);
+    });
+    it('keeps the items of arrays that declare only the same prefixItems, or no items at all', () => {
+      const prefixItems = [{ type: 'string' }];
+      const oldSchema = { type: 'array', prefixItems, minItems: 1 } as RJSFSchema;
+      const newSchema = { type: 'array', prefixItems, maxItems: 3 } as RJSFSchema;
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x'])).toEqual(['x']);
+      expect(schemaUtils.sanitizeDataForNewSchema({ type: 'array' }, { type: 'array' }, ['x', 1])).toEqual(['x', 1]);
+    });
+    it('returns undefined for a tuple whose additionalItems the two schemas describe differently', () => {
+      const items: RJSFSchema['items'] = [{ type: 'string' }];
+      const oldSchema: RJSFSchema = { type: 'array', items, additionalItems: { type: 'string' } };
+      const newSchema: RJSFSchema = { type: 'array', items, additionalItems: { type: 'number' } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x', 'y'])).toBeUndefined();
+    });
+    it('sanitizes a nullable object property per property, as a plain object property is', () => {
+      const addr = (withZip: boolean): RJSFSchema => ({
+        type: 'object',
+        properties: {
+          addr: {
+            type: ['object', 'null'],
+            properties: { street: { type: 'string' }, ...(withZip ? { zip: { type: 'string' } } : {}) },
+          },
+        },
+      });
+      expect(
+        schemaUtils.sanitizeDataForNewSchema(addr(false), addr(true), { addr: { street: 'x', zip: '1' } }),
+      ).toEqual({ addr: { street: 'x', zip: undefined } });
+      expect(schemaUtils.sanitizeDataForNewSchema(addr(false), addr(true), { addr: null })).toEqual({ addr: null });
+    });
+    it('keeps a value of another type that a type list naming object allows', () => {
+      const schema = (title: string): RJSFSchema => ({
+        type: 'object',
+        properties: { value: { type: ['object', 'string'], title, properties: { a: { type: 'string' } } } },
+      });
+      expect(schemaUtils.sanitizeDataForNewSchema(schema('New'), schema('Old'), { value: 'x' })).toEqual({
+        value: 'x',
+      });
+    });
+    it('returns undefined for an array the new schema has a const for that it does not equal', () => {
+      const oldSchema: RJSFSchema = { type: 'array', items: { type: 'string' }, minItems: 1 };
+      const newSchema: RJSFSchema = { type: 'array', items: { type: 'string' }, const: ['a', 'b'] };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x'])).toBeUndefined();
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['a', 'b'])).toEqual(['a', 'b']);
+    });
+    it('keeps an array whose const is an ajv $data reference rather than a value', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          other: { type: 'array', items: { type: 'string' } },
+          copy: { type: 'array', items: { type: 'string' }, const: { $data: '1/other' } as unknown as string[] },
+        },
+      };
+      const data = { other: ['a'], copy: ['a'] };
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, schema, data)).toEqual(data);
+    });
     it('returns data when two arrays have same boolean items', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',

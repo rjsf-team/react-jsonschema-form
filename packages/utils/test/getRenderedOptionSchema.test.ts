@@ -112,6 +112,103 @@ describe('getRenderedOptionSchema()', () => {
       };
       expect(getRenderedOptionSchema(parent, option)).toEqual(parent);
     });
+    test("keeps the parent's false subschema where the option's is true", () => {
+      const parent: RJSFSchema = { type: 'array', items: false, additionalItems: false };
+      expect(getRenderedOptionSchema(parent, { items: true, additionalItems: true })).toEqual(parent);
+      expect(getRenderedOptionSchema(parent, { items: [{ type: 'string' }] })).toEqual(parent);
+    });
+    test("keeps the parent's tuple where the option's items is true", () => {
+      const parent: RJSFSchema = { type: 'array', items: [{ type: 'string' }, { type: 'number' }] };
+      expect(getRenderedOptionSchema(parent, { items: true })).toEqual(parent);
+    });
+    test("meets each position of the parent's tuple, and the items past it, with the option's items schema", () => {
+      const parent: RJSFSchema = { type: 'array', items: [{ type: 'string', maxLength: 5 }, true] };
+      expect(getRenderedOptionSchema(parent, { items: { maxLength: 9, minLength: 1 } })).toEqual({
+        type: 'array',
+        items: [
+          { type: 'string', maxLength: 5, minLength: 1 },
+          { maxLength: 9, minLength: 1 },
+        ],
+        additionalItems: { maxLength: 9, minLength: 1 },
+      });
+      const closed: RJSFSchema = { type: 'array', items: [{ type: 'string' }], additionalItems: false };
+      expect(getRenderedOptionSchema(closed, { items: { minLength: 1 } })).toEqual({
+        type: 'array',
+        items: [{ type: 'string', minLength: 1 }],
+        additionalItems: false,
+      });
+    });
+    test("meets each position of the option's tuple, and the items past it, with the parent's items schema", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', maxLength: 5 } };
+      expect(getRenderedOptionSchema(parent, { items: [{ minLength: 1 }], additionalItems: { maxLength: 9 } })).toEqual(
+        {
+          type: 'array',
+          items: [{ type: 'string', maxLength: 5, minLength: 1 }],
+          additionalItems: { type: 'string', maxLength: 5 },
+        },
+      );
+      expect(getRenderedOptionSchema(parent, { items: [{ minLength: 1 }] })).toEqual({
+        type: 'array',
+        items: [{ type: 'string', maxLength: 5, minLength: 1 }],
+        additionalItems: { type: 'string', maxLength: 5 },
+      });
+    });
+    test('meets two tuples position by position, keeping the positions only one of them describes', () => {
+      const parent = { type: 'array', prefixItems: [{ type: 'string', maxLength: 5 }, { type: 'number' }] };
+      const option = { prefixItems: [{ maxLength: 9 }] };
+      expect(getRenderedOptionSchema(parent as RJSFSchema, option as RJSFSchema)).toEqual({
+        type: 'array',
+        prefixItems: [{ type: 'string', maxLength: 5 }, { type: 'number' }],
+      });
+      expect(getRenderedOptionSchema(option as RJSFSchema, parent as RJSFSchema)).toEqual({
+        type: 'array',
+        prefixItems: [{ maxLength: 5, type: 'string' }, { type: 'number' }],
+      });
+    });
+    test('takes a list of schemas to combine, such as an allOf, as the option has it rather than by position', () => {
+      const parent: RJSFSchema = { type: 'array', items: { allOf: [{ maxLength: 5 }] } };
+      expect(getRenderedOptionSchema(parent, { items: { allOf: [{ minLength: 1 }] } })).toEqual({
+        type: 'array',
+        items: { allOf: [{ minLength: 1 }] },
+      });
+    });
+    test("meets an option's property only with a property the parent declares itself", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
+      expect(getRenderedOptionSchema(parent, { items: { properties: { constructor: true } } })).toEqual({
+        type: 'array',
+        items: { type: 'object', properties: { a: { type: 'string' }, constructor: true } },
+      });
+    });
+    test('allows only the enum values both list', () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] } };
+      expect(getRenderedOptionSchema(parent, { items: { enum: ['b', 'c'] } })).toEqual({
+        type: 'array',
+        items: { type: 'string', enum: ['b'] },
+      });
+    });
+    test('asks for every name either required list asks for, whatever type the two name', () => {
+      expect(getRenderedOptionSchema({ required: ['a'] }, { required: ['b', 'a'] })).toEqual({ required: ['a', 'b'] });
+    });
+    test('takes a not both declare as the option has it, rather than merging the two into one neither declared', () => {
+      expect(getRenderedOptionSchema({ type: 'string', not: { maxLength: 3 } }, { not: { minLength: 5 } })).toEqual({
+        type: 'string',
+        not: { minLength: 5 },
+      });
+    });
+    test("replaces the parent's conditional with the one the option declares, keyword by keyword as a whole", () => {
+      const parent: RJSFSchema = {
+        type: 'string',
+        if: { minLength: 1 },
+        then: { maxLength: 5 },
+        else: { maxLength: 9 },
+      };
+      expect(getRenderedOptionSchema(parent, { if: { minLength: 2 }, then: { pattern: '^a' } })).toEqual({
+        type: 'string',
+        if: { minLength: 2 },
+        then: { pattern: '^a' },
+      });
+      expect(getRenderedOptionSchema(parent, { minLength: 1 })).toEqual({ ...parent, minLength: 1 });
+    });
     test('takes a const or default object both declare as the option has it, rather than merging the two values', () => {
       const parent: RJSFSchema = { type: 'array', items: { type: 'object', default: { a: 1 }, const: { a: 1 } } };
       const option: RJSFSchema = { items: { default: { b: 2 }, const: { b: 2 } } };
@@ -124,8 +221,12 @@ describe('getRenderedOptionSchema()', () => {
       const parent: RJSFSchema = { type: 'string', not: { maxLength: 3 }, if: { minLength: 1 } };
       expect(getRenderedOptionSchema(parent, { not: true, if: true })).toEqual({ type: 'string', not: true, if: true });
     });
-    test('keeps uniqueItems when the parent asks for it and the option does not', () => {
+    test('keeps uniqueItems when either asks for it', () => {
       expect(getRenderedOptionSchema({ type: 'array', uniqueItems: true }, { uniqueItems: false })).toEqual({
+        type: 'array',
+        uniqueItems: true,
+      });
+      expect(getRenderedOptionSchema({ type: 'array', uniqueItems: false }, { uniqueItems: true })).toEqual({
         type: 'array',
         uniqueItems: true,
       });
@@ -160,11 +261,14 @@ describe('getRenderedOptionSchema()', () => {
         items: { type: 'object', properties: { uniqueItems: true, a: { type: 'string', maxLength: 5 } } },
       };
       const option: RJSFSchema = {
-        items: { properties: { uniqueItems: { type: 'string' }, a: { maxLength: 9 } } },
+        items: { properties: { uniqueItems: { type: 'string' }, a: { maxLength: 9 }, b: { type: 'number' } } },
       };
       expect(getRenderedOptionSchema(parent, option)).toEqual({
         type: 'array',
-        items: { type: 'object', properties: { uniqueItems: { type: 'string' }, a: { type: 'string', maxLength: 5 } } },
+        items: {
+          type: 'object',
+          properties: { uniqueItems: { type: 'string' }, a: { type: 'string', maxLength: 5 }, b: { type: 'number' } },
+        },
       });
     });
     test('passes on every type a parent allowing several types names', () => {

@@ -189,7 +189,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     !isFormDataAvailable(formData) &&
     !branchRequired &&
     isOptionalDataControlsType<T, S, F>(
-      option ? getRenderedOptionSchema<S>(resolvedSchema, option) : retrieved,
+      option ? () => getRenderedOptionSchema<S>(resolvedSchema, option) : retrieved,
       branchUiSchema,
       globalUiOptions,
     ) &&

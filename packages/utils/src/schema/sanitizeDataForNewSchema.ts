@@ -4,12 +4,16 @@ import getPropertySchema from '../getPropertySchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import isObject from '../isObject.ts';
+import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
+
+/** The keywords that describe an array's items by position, or that leave them undescribed when none is declared */
+const TUPLE_KEYWORDS = ['items', 'prefixItems', 'additionalItems'] as const;
 
 function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
   // An empty `enum` lists no value to check against, which is how the `anyOf`/`oneOf` below and `isConstantSelect()`
@@ -317,13 +321,15 @@ function sanitizeDataForNewSchemaInternal<
         }
         // If it is an object, we'll recurse and store the resulting sanitized data for the key. A select over object or
         // array constants holds one of them as a whole, so it's checked against its options like any other select
-        // An array is read through `getSchemaType()`, as the array branch below reads it, so one whose type list also
-        // allows `null` is sanitized as a plain array is. Only a declared type counts: `getSchemaType()` guesses `array`
-        // from a typeless `const` array, which has no `items` to sanitize its value against and would be cleared
-        const isArrayValue =
-          newSchemaTypeForKey !== undefined && getSchemaType<S>(newKeyedSchema) === 'array' && Array.isArray(formValue);
-        const isContainer =
-          (newSchemaTypeForKey === 'object' || isArrayValue) && !isWholeValueSelect<S>(newKeyedSchema);
+        // A container is read through `getSchemaType()`, as the array branch below reads it, so one whose type list also
+        // allows `null` is sanitized as a plain array or object is, when it holds one: a `null` it allows stays as it
+        // is. Only a declared type counts: `getSchemaType()` guesses `array` from a typeless `const` array, which has no
+        // `items` to sanitize its value against and would be cleared
+        const containerType = newSchemaTypeForKey === undefined ? undefined : getSchemaType<S>(newKeyedSchema);
+        const isArrayValue = containerType === 'array' && Array.isArray(formValue);
+        const isObjectValue =
+          newSchemaTypeForKey === 'object' || (containerType === 'object' && isPlainObject(formValue));
+        const isContainer = (isObjectValue || isArrayValue) && !isWholeValueSelect<S>(newKeyedSchema);
         if (isContainer) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. A position the
           // old schema does not cover borrows the new schema as its old side (an array property the new schema
@@ -441,12 +447,16 @@ function sanitizeDataForNewSchemaInternal<
     newSchema &&
     getSchemaType<S>(oldSchema) === 'array' &&
     getSchemaType<S>(newSchema) === 'array' &&
-    Array.isArray(data)
+    Array.isArray(data) &&
+    // An array the new schema's `const` rejects is cleared, so that the `const` can take its place, as the defaults
+    // computed for the new schema do. Only an array `const` is compared: an ajv `$data` reference is an object, and
+    // reading it as the value would clear the array on every sanitize pass
+    (!Array.isArray(newSchema.const) || deepEquals(newSchema.const, data))
   ) {
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;
-    // If any of the array types `items` are arrays (remember arrays are objects) then we'll just drop the data
-    // Eventually, we may want to deal with when either of the `items` are arrays since those tuple validations
+    // Items described by a single schema are sanitized against it below. A tuple is kept only when both schemas
+    // describe it alike, since its items are not sanitized position by position
     if (
       typeof oldSchemaItems === 'object' &&
       typeof newSchemaItems === 'object' &&
@@ -558,8 +568,16 @@ function sanitizeDataForNewSchemaInternal<
     ) {
       // If they are both booleans and have the same value just return the data as is otherwise fall-thru to undefined
       newFormData = data;
+    } else if (
+      TUPLE_KEYWORDS.every((key) =>
+        deepEquals((oldSchema as GenericObjectType)[key], (newSchema as GenericObjectType)[key]),
+      )
+    ) {
+      // A tuple, or an array declaring no `items`, that both schemas describe alike holds what it held, up to the new
+      // schema's `maxItems` as items described by a single schema are
+      const { maxItems } = newSchema;
+      newFormData = maxItems !== undefined && data.length > maxItems ? data.slice(0, maxItems) : data;
     }
-    // Also probably want to deal with `prefixItems` as tuples with the latest 2020 draft
   }
   return newFormData as T;
 }

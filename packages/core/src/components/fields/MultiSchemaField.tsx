@@ -14,6 +14,7 @@ import {
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
+  getSchemaType,
   getTemplates,
   getUiOptions,
   getXxxOfKey,
@@ -217,7 +218,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       });
 
       setSelection((current) => ({ ...current, selectedOption: intOption, proposal: { formData: newFormData } }));
-      sendOptionSwitch(schema, oldOption, newOption, formData, () =>
+      sendOptionSwitch(schema, oldOption, newOption, formData, newFormData, () =>
         onChange(newFormData, fieldPath, undefined, fieldId),
       );
     },
@@ -254,9 +255,19 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const option = selectedOption >= 0 ? options[selectedOption] || null : null;
   // A parent allowing several types passes all of them on: when the fallback UI is on, it pins one type on the schema
   // it hands down, so such a union only reaches here with the fallback UI off
-  // Not memoized: `SchemaField` maps its `options` afresh on every render, so `option` is a new object each time and a
-  // memo keyed on it would never hit
-  const optionSchema = option ? getRenderedOptionSchema<S>(schema, option) : null;
+  const renderedOption = option ? getRenderedOptionSchema<S>(schema, option) : null;
+  // A field its own template leaves unlabelled, such as an array or a checkbox, has its title and description rendered
+  // nowhere but the option's field, so they go to that field unless the uiSchema turns the label off. An option's own
+  // title or description is the one it renders. An object's own `ObjectField` renders them beside the option
+  const description = uiOptions.description ?? schema.description;
+  const optionSchema =
+    renderedOption && !displayLabel && uiOptions.label !== false && getSchemaType<S>(schema) !== 'object'
+      ? ({
+          ...(title !== undefined && { title }),
+          ...(description !== undefined && { description }),
+          ...renderedOption,
+        } as S)
+      : renderedOption;
 
   const translateEnum: TranslatableString = title
     ? TranslatableString.TitleOptionPrefix

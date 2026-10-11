@@ -6477,6 +6477,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           testValidator?.reset();
         }
       });
+      it("computes an array's defaults from its selected option as it is rendered, meeting the parent's bounds and items", () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: { type: 'object', properties: { a: { type: 'string', default: 'dflt' } } },
+          anyOf: [{ items: true, minItems: 1 }, { maxItems: 3 }],
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual([{ a: 'dflt' }, { a: 'dflt' }]);
+      });
+      it("seeds a field's selected option with the field's default, whether the option is a schema or true", () => {
+        const schema: RJSFSchema = { type: 'string', default: 'x', anyOf: [true, { minLength: 1 }] };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual('x');
+        expect(getDefaultFormState({ validator: testValidator }, { schema: { ...schema, anyOf: [{}] } })).toEqual('x');
+      });
       it('should not populate defaults for empty anyOf', () => {
         const schema: RJSFSchema = {
           type: 'object',

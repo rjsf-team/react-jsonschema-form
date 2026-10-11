@@ -46,13 +46,14 @@ export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSch
  * Data Controls UI on for. A field whose `anyOf`/`oneOf` options name several types is never one of them, while a
  * `type` list counts as the type `getSchemaType()` resolves it to.
  *
- * @param schema - The schema for the field
+ * @param schema - The schema for the field, or a function building it, called only once the uiSchema turns the Optional
+ *        Data Controls UI on for some type, which by default it does for none
  * @param [uiSchema] - The uiSchema for the field
  * @param [globalUiOptions] - The global UI options, from the `registry`
  * @returns - True if the Optional Data Controls UI is enabled for the type of the field, otherwise false
  */
 export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schema: S,
+  schema: S | (() => S),
   uiSchema?: UiSchema<T, S, F>,
   globalUiOptions?: GlobalUISchemaOptions,
 ): boolean {
@@ -60,7 +61,7 @@ export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F exte
   if (enableOptionalDataFieldForType.length === 0) {
     return false;
   }
-  const schemaType = getOptionalDataControlsType<S>(schema);
+  const schemaType = getOptionalDataControlsType<S>(typeof schema === 'function' ? schema() : schema);
   return typeof schemaType === 'string' && enableOptionalDataFieldForType.some((val) => val === schemaType);
 }
 

@@ -237,7 +237,9 @@ export default function LayoutMultiSchemaField<
       setByPath(newFormData, selectorField, opt);
     }
     // Pass the component name in the path
-    sendOptionSwitch(schema, oldOption, newOption, formData, () => onChange(newFormData, fieldPath, undefined, id));
+    sendOptionSwitch(schema, oldOption, newOption, formData, newFormData, () =>
+      onChange(newFormData, fieldPath, undefined, id),
+    );
   };
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
