@@ -1,6 +1,7 @@
 import { createRef, useEffect } from 'react';
 import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
+import { waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
@@ -767,6 +768,56 @@ describe('anyOf', () => {
     const { node } = createFormComponent({ schema, formData: { userId: NaN } });
 
     expect(node.querySelector('select')).toBeInTheDocument();
+  });
+
+  it('keeps the option a selector chose from a timeout, which the form renders before the choice is applied', async () => {
+    /** A selector that reports its choice later, as one behind a confirm dialog or a debounce does */
+    function DeferredSelect({ id, value, options, onChange }: WidgetProps) {
+      return (
+        <select
+          id={id}
+          value={String(value ?? '')}
+          onChange={({ target }) => {
+            const chosen = target.value;
+            setTimeout(() => onChange(chosen), 0);
+          }}
+        >
+          {options.enumOptions?.map((option) => (
+            <option key={String(option.value)} value={String(option.value)}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      );
+    }
+    // Two options the data `{}` fits alike, so only the choice itself says which one is selected
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        shape: {
+          anyOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+            { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node } = createFormComponent({
+      schema,
+      initialFormData: { shape: {} },
+      widgets: { SelectWidget: DeferredSelect },
+    });
+    const select = node.querySelector<HTMLSelectElement>('#root_shape__anyof_select')!;
+
+    await user.selectOptions(select, '1');
+    await waitFor(() => expect(select.value).toBe('1'));
+
+    // Settled: the choice stays once the deferred report and the form's render of it have both landed
+    await new Promise((resolve) => {
+      setTimeout(resolve, 20);
+    });
+    expect(select.value).toBe('1');
+    expect(node.querySelector('#root_shape_b')).toBeInTheDocument();
   });
 
   it('should not change the selected option when entering values', async () => {
