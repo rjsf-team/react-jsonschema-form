@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -570,6 +571,19 @@ describe('multiple SelectWidget accessible name', () => {
     };
     render(<Form schema={schema} validator={validator} />);
     expect(screen.getByPlaceholderText('Select ...')).toBeInTheDocument();
+  });
+
+  test('a custom translateString drives both the name and the visible placeholder', () => {
+    const schema = {
+      type: 'array' as const,
+      uniqueItems: true,
+      items: { type: 'string' as const, enum: ['red', 'blue'] },
+    };
+    const translateString = (stringToTranslate: TranslatableString) =>
+      stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
+    render(<Form schema={schema} validator={validator} translateString={translateString} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Choisir ...');
+    expect(screen.getByPlaceholderText('Choisir ...')).toBeInTheDocument();
   });
 
   test('passes required and the field description to the combobox input', () => {

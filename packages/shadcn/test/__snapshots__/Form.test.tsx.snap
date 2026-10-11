@@ -1646,7 +1646,9 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
-                        />
+                        >
+                          Select ...
+                        </span>
                         <svg
                           aria-hidden="true"
                           class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -3189,7 +3191,9 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
-                        />
+                        >
+                          Select ...
+                        </span>
                         <svg
                           aria-hidden="true"
                           class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -11849,7 +11853,9 @@ exports[`single fields > select field 1`] = `
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
-              />
+              >
+                Select ...
+              </span>
               <svg
                 aria-hidden="true"
                 class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -12452,7 +12458,9 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
-              />
+              >
+                Select ...
+              </span>
               <svg
                 aria-hidden="true"
                 class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -12843,7 +12851,9 @@ exports[`single fields > select field single choice optgroups 1`] = `
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
-              />
+              >
+                Select ...
+              </span>
               <svg
                 aria-hidden="true"
                 class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -12923,7 +12933,9 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             >
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
-              />
+              >
+                Select ...
+              </span>
               <svg
                 aria-hidden="true"
                 class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -13122,7 +13134,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
               <span
                 class="flex-1 line-clamp-1 text-muted-foreground"
               >
-                Select...
+                Select ...
               </span>
               <svg
                 aria-hidden="true"

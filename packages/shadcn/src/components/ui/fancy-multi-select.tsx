@@ -35,7 +35,6 @@ interface FancyMultiSelectProps {
   /** Visible placeholder text for the search input */
   placeholder?: string;
   /** Aria placeholder text */
-  ariaPlaceholder?: string;
   /** Whether a selection is required, exposed as `aria-required` on the combobox input */
   required?: boolean;
   /** Additional className for styling */
@@ -67,7 +66,6 @@ export function FancyMultiSelect({
   autoFocus = false,
   disabled = false,
   ariaDescribedby,
-  ariaPlaceholder,
   placeholder,
   required,
   onFocus,
@@ -231,7 +229,6 @@ export function FancyMultiSelect({
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
             disabled={disabled}
             aria-describedby={ariaDescribedby}
-            aria-placeholder={ariaPlaceholder}
             aria-required={required || undefined}
           />
         </div>
