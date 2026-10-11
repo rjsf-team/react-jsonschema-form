@@ -20,7 +20,7 @@ export default function UpDownWidget<
   const handleBlur = ({ target }: FocusEvent<HTMLElement>) => onBlur(id, inputValue(target));
   const handleFocus = ({ target }: FocusEvent<HTMLElement>) => onFocus(id, inputValue(target));
 
-  const chakraProps = getChakra({ uiSchema: props.uiSchema });
+  const chakraProps = getChakra(props.uiSchema);
 
   return (
     <Field

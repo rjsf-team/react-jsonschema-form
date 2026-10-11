@@ -1,7 +1,8 @@
-import type { Field as ChakraField, JsxStyleProps } from '@chakra-ui/react';
+import type { JsxStyleProps } from '@chakra-ui/react';
 import { defaultSystem } from '@chakra-ui/react';
 import shouldForwardProp from '@emotion/is-prop-valid';
 import type { UiSchema } from '@rjsf/utils';
+import { isObject } from '@rjsf/utils';
 
 /** A `UiSchema` whose `ui:options` are known to carry the theme's `chakra` prop bag.
  *
@@ -12,10 +13,16 @@ export type ChakraUiSchema = UiSchema & {
   'ui:options'?: ChakraUiOptions;
 };
 
-type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: ChakraField.RootProps };
+type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: JsxStyleProps };
 
-export function getChakra(uiSchema: ChakraUiSchema = {}): JsxStyleProps {
-  const chakraProps = uiSchema['ui:options']?.chakra ?? {};
+/** Reads the style props a `uiSchema` carries under `ui:options.chakra`.
+ *
+ * NOTE: takes only the member it reads rather than a `ChakraUiSchema`, which a widget's `UiSchema<T, S, F>` does not
+ * fit, and whose index signature would accept a wrapper such as `{ uiSchema }` and read nothing from it.
+ */
+export function getChakra(uiSchema: { 'ui:options'?: Record<string, unknown> } = {}): JsxStyleProps {
+  const { chakra } = uiSchema['ui:options'] ?? {};
+  const chakraProps = isObject(chakra) ? chakra : {};
 
   /**
    * Leveraging `shouldForwardProp` to remove props

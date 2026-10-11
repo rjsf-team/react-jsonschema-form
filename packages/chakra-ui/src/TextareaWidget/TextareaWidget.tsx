@@ -34,7 +34,7 @@ export default function TextareaWidget<
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target?.value);
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(uiSchema);
 
   return (
     <Field

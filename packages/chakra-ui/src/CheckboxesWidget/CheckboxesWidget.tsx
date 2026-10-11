@@ -32,7 +32,7 @@ export default function CheckboxesWidget<
   const row = options ? options.inline : false;
   const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(uiSchema);
   const hasError = hasVisibleErrors(props);
 
   return (

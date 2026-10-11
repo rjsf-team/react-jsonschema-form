@@ -84,3 +84,24 @@ describe('CheckboxesWidget focus and blur', () => {
     },
   );
 });
+
+describe('CheckboxesWidget ui:options.chakra', () => {
+  it('applies the style props to its fieldset', () => {
+    const schema: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ 'ui:widget': 'checkboxes', 'ui:options': { chakra: { mb: 8 } } }}
+        validator={validator}
+      />,
+    );
+
+    // jsdom computes no style from Chakra's layered rules, so this reads the rule Emotion wrote for the widget's own
+    // fieldset, the one inside the `FieldTemplate`'s
+    const emotionClass = container.querySelector('fieldset fieldset')?.className.split(' ').at(-1);
+    const css = Array.from(document.querySelectorAll('style'), (style) => style.textContent).join('');
+
+    expect(emotionClass).toMatch(/^css-/);
+    expect(css).toMatch(new RegExp(`\\.${emotionClass}\\{[^}]*margin-bottom:var\\(--chakra-spacing-8\\)`));
+  });
+});

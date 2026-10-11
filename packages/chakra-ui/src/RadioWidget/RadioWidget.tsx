@@ -49,7 +49,7 @@ export default function RadioWidget<
   const row = options ? options.inline : false;
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null);
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(uiSchema);
 
   return (
     <Field

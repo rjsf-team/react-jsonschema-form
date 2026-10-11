@@ -92,7 +92,7 @@ export default function SelectWidget<
   );
 
   const containerRef = useRef(null);
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(uiSchema);
 
   function renderItem(option: IndexedEnumOptionType<S>) {
     const item = toItem(option);

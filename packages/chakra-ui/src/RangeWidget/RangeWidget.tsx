@@ -30,7 +30,7 @@ export default function RangeWidget<
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(uiSchema);
 
   return (
     <Field mb={1} label={labelValue(label, hideLabel || !label)} {...chakraProps}>
