@@ -4,8 +4,8 @@ const STANDARD = ['CheckboxWidget', 'RadioWidget', 'TextWidget'];
 
 describe('mergeThemePresentation()', () => {
   it('returns empty declarations when there is nothing to merge', () => {
-    expect(mergeThemePresentation(STANDARD)).toEqual({ widgets: {}, fields: {} });
-    expect(mergeThemePresentation(STANDARD, undefined, {})).toEqual({ widgets: {}, fields: {} });
+    expect(mergeThemePresentation(STANDARD)).toStrictEqual({ widgets: {}, fields: {} });
+    expect(mergeThemePresentation(STANDARD, undefined, {})).toStrictEqual({ widgets: {}, fields: {} });
   });
 
   it('merges each declaration part by part, later layers winning', () => {
@@ -20,7 +20,7 @@ describe('mergeThemePresentation()', () => {
       widgets: { CheckboxWidget: { errors: 'self', description: 'template' } },
       fields: { ObjectField: { errors: 'self' } },
     } as const;
-    expect(mergeThemePresentation(STANDARD, core, undefined, theme)).toEqual({
+    expect(mergeThemePresentation(STANDARD, core, undefined, theme)).toStrictEqual({
       widgets: {
         CheckboxWidget: { label: 'self', description: 'template', errors: 'self' },
         RadioWidget: { labelledBy: 'aria-labelledby' },
@@ -34,7 +34,7 @@ describe('mergeThemePresentation()', () => {
       standardWidgets: { label: 'self', errors: 'self' },
       widgets: { CheckboxWidget: { errors: 'template' }, MyWidget: { help: 'self' } },
     } as const;
-    expect(mergeThemePresentation(STANDARD, theme).widgets).toEqual({
+    expect(mergeThemePresentation(STANDARD, theme).widgets).toStrictEqual({
       CheckboxWidget: { label: 'self', errors: 'template' },
       RadioWidget: { label: 'self', errors: 'self' },
       TextWidget: { label: 'self', errors: 'self' },
@@ -50,7 +50,7 @@ describe('mergeThemePresentation()', () => {
       },
     } as const;
     const props = { standardWidgets: { description: 'template' } } as const;
-    expect(mergeThemePresentation(STANDARD, core, props).widgets).toEqual({
+    expect(mergeThemePresentation(STANDARD, core, props).widgets).toStrictEqual({
       CheckboxWidget: { label: 'self', description: 'template' },
       RadioWidget: { description: 'template', labelledBy: 'aria-labelledby' },
       TextWidget: { description: 'template' },
@@ -63,6 +63,6 @@ describe('mergeThemePresentation()', () => {
       { widgets: { TextWidget: { label: 'self' } } },
       { standardWidgets: { label: undefined } },
     );
-    expect(merged.widgets.TextWidget).toEqual({ label: 'self' });
+    expect(merged.widgets.TextWidget).toStrictEqual({ label: 'self' });
   });
 });

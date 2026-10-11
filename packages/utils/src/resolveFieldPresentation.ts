@@ -54,26 +54,31 @@ function rendersHere(by: PartPlacement) {
   return by === 'template' || by === 'self';
 }
 
-/** Places a description or help: above when a field above rendering this id shows it, whether as the same text or as
- * the only text, so a level with none of its own carries the one above on to the levels beneath it; nowhere when it
- * has no text; and otherwise by its owner, under `ownId` unless a field above already shows its own under that id
+/** Places a description or help: above when a field above rendering this id shows it, whether as the same text or,
+ * for the nearest of them that shows text, as the only text, so a level with none of its own carries the one above on
+ * to the levels beneath it; nowhere when it has no text; and otherwise by its owner, under `ownId` unless a field
+ * above already shows text under that id, in which case it takes the option id numbered by how many of them show text
+ * of their own
+ *
+ * @param above - The part in the plans of the fields above rendering this id, nearest first
  */
 function placeText<Text>(
   text: Text | undefined,
   owner: ResolvedPresentationDeclaration['description'],
   ownId: string,
-  optionId: string,
-  inherited: (PartPresentation & { text?: Text }) | undefined,
+  optionId: (depth: number) => string,
+  above: readonly (PartPresentation & { text?: Text })[],
 ): PartPresentation & { text?: Text } {
   if (!text) {
-    return inherited && inherited.by !== 'none'
-      ? { by: 'above', id: inherited.id, text: inherited.text }
-      : { by: 'none', id: ownId };
+    const nearest = above.find((part) => part.by !== 'none');
+    return nearest ? { by: 'above', id: nearest.id, text: nearest.text } : { by: 'none', id: ownId };
   }
-  if (inherited?.text === text) {
-    return { by: inherited.by === 'none' ? 'none' : 'above', id: inherited.id };
+  const shown = above.find((part) => part.text === text);
+  if (shown) {
+    return { by: shown.by === 'none' ? 'none' : 'above', id: shown.id };
   }
-  return { by: owner, id: inherited && inherited.by !== 'none' ? optionId : ownId };
+  const shownAbove = above.filter((part) => rendersHere(part.by)).length;
+  return { by: owner, id: shownAbove > 0 ? optionId(shownAbove) : ownId };
 }
 
 /** Builds a field's plan of what draws its label, description, help and errors, and the attributes its control
@@ -83,9 +88,10 @@ function placeText<Text>(
  * - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name,
  *   and is `above` when the template of a field above rendering the same id already draws it; a label the widget
  *   draws stays, so a widget that names its own control keeps naming it.
- * - The description and help show where they have text, the description only where `showLabel` allows it. Text a field
- *   above already shows is `above`, as is a part with no text under a field above that shows one; text of its own takes
- *   `optionDescriptionId()` or `optionHelpId()` when that field shows its own text under the usual id.
+ * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
+ *   field above already shows is `above`, as is a part with no text under a field above that shows one; text of its own
+ *   takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the usual id, numbered by how
+ *   many fields above show text of their own, so each level's own text has an id of its own.
  * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
  * - The control is described by the parts that render, here or above, and is `aria-invalid` whenever errors show.
  *
@@ -109,9 +115,14 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     inherited,
   } = inputs;
 
+  const plansAbove: FieldPresentation[] = [];
+  for (let plan = inherited; plan; plan = plan.inherited) {
+    plansAbove.push(plan);
+  }
+
   const labelId = fieldLabelId(id);
   let labelBy: PartPlacement = declaration.label;
-  if (declaration.label === 'template' && (inherited?.label.by === 'template' || inherited?.label.by === 'above')) {
+  if (declaration.label === 'template' && plansAbove.some((plan) => plan.label.by === 'template')) {
     labelBy = 'above';
   } else if (!labelText || !showLabel || (declaration.label === 'template' && !hasControl)) {
     labelBy = 'none';
@@ -121,10 +132,16 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     showLabel ? description : '',
     declaration.description,
     descriptionId(id),
-    optionDescriptionId(id),
-    inherited?.description,
+    (depth) => optionDescriptionId(id, depth),
+    plansAbove.map((plan) => plan.description),
   );
-  const helpPlacement = placeText(help, declaration.help, helpId(id), optionHelpId(id), inherited?.help);
+  const helpPlacement = placeText(
+    help,
+    declaration.help,
+    helpId(id),
+    (depth) => optionHelpId(id, depth),
+    plansAbove.map((plan) => plan.help),
+  );
 
   const { messages, id: errorsId } = inherited?.errors ?? { messages: hideError ? NONE : errors, id: errorId(id) };
   const errorsBy = inherited ? 'above' : declaration.errors;
@@ -167,5 +184,6 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     errors: errorsPlan,
     describedBy,
     control,
+    inherited,
   };
 }

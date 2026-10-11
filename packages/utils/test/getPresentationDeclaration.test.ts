@@ -1,4 +1,12 @@
-import type { Field, MergedThemePresentation, PresentationSource, RJSFSchema, Widget } from '../src/index.ts';
+import type {
+  Field,
+  MergedThemePresentation,
+  PartOwner,
+  PresentationSource,
+  RJSFSchema,
+  ThemePresentation,
+  Widget,
+} from '../src/index.ts';
 import { getPresentationDeclaration, WIDGET_FIELD_PRESENTATION } from '../src/index.ts';
 
 const TEMPLATE = {
@@ -121,6 +129,14 @@ describe('getPresentationDeclaration()', () => {
     expect(getPresentationDeclaration(source, { ...subject, widget: TextWidget })).toEqual(TEMPLATE);
   });
 
+  it("types a widget's declarations without the widget owner, which has no widget beneath it", () => {
+    type WidgetOwner = Exclude<PartOwner, 'widget'> | undefined;
+    expectTypeOf<NonNullable<Widget['presentation']>['label']>().toEqualTypeOf<WidgetOwner>();
+    expectTypeOf<NonNullable<ThemePresentation['standardWidgets']>['errors']>().toEqualTypeOf<WidgetOwner>();
+    expectTypeOf<NonNullable<ThemePresentation['widgets']>[string]['help']>().toEqualTypeOf<WidgetOwner>();
+    expectTypeOf<NonNullable<Field['presentation']>['label']>().toEqualTypeOf<PartOwner | undefined>();
+  });
+
   // A duplicate label is recoverable; a control left unnamed because its widget was guessed to name it is not
   it('leaves every part to the template for a widget that is neither registered nor an alias', () => {
     expect(
@@ -128,6 +144,20 @@ describe('getPresentationDeclaration()', () => {
         { ...source, presentation: { ...presentation, widgets: { Unregistered: { label: 'self' } } } },
         { schema: { type: 'string' }, field: StringField, fieldKey: 'StringField', widget: 'Unregistered' },
       ),
+    ).toEqual(TEMPLATE);
+  });
+
+  // Neither is a widget `getWidget()` accepts; its error names the schema, so the throw is left to it
+  it('leaves every part to the template for a null widget, or one registered as nothing', () => {
+    const { 'ui:widget': nullWidget, widgets } = JSON.parse('{ "ui:widget": null, "widgets": { "TextWidget": null } }');
+    const subject = { schema: { type: 'string' }, field: StringField, fieldKey: 'StringField' } as const;
+    expect(getPresentationDeclaration(source, { ...subject, widget: nullWidget })).toEqual(TEMPLATE);
+    const declared = { ...presentation, widgets: { TextWidget: { label: 'self', errors: 'self' } } } as const;
+    expect(getPresentationDeclaration({ widgets, presentation: declared }, { ...subject, widget: 'text' })).toEqual(
+      TEMPLATE,
+    );
+    expect(
+      getPresentationDeclaration({ widgets, presentation: declared }, { ...subject, widget: 'TextWidget' }),
     ).toEqual(TEMPLATE);
   });
 

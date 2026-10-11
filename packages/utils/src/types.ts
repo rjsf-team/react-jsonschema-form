@@ -782,28 +782,30 @@ export type PartOwner = 'template' | 'self' | 'widget';
 export type PresentationPart = 'label' | 'description' | 'errors' | 'help';
 
 /** Which parts of a field a field or widget component draws itself. A part it leaves out is drawn by the template */
-export interface PresentationDeclaration {
+export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
   /** Who draws the label naming the field's control */
-  label?: PartOwner;
+  label?: Owner;
   /** Who draws the field's description */
-  description?: PartOwner;
+  description?: Owner;
   /** Who draws the field's errors. A component drawing them itself promises one element carrying `errorId(id)`
    * whenever there are messages to show, and none when there are not
    */
-  errors?: PartOwner;
+  errors?: Owner;
   /** Who draws the field's `ui:help` */
-  help?: PartOwner;
+  help?: Owner;
   /** How a label the template draws reaches the control: its `for`, or the control pointing `aria-labelledby` at the
    * label's `fieldLabelId(id)`, which a group of controls needs since `for` names a single element
    */
   labelledBy?: 'for' | 'aria-labelledby';
 }
 
+/** A widget's `PresentationDeclaration`, which has no widget beneath it to leave a part to */
+export type WidgetPresentationDeclaration = PresentationDeclaration<Exclude<PartOwner, 'widget'>>;
+
 /** A `PresentationDeclaration` with every part settled on the template or the component, as
  * `getPresentationDeclaration()` returns it
  */
-export type ResolvedPresentationDeclaration = Record<PresentationPart, Exclude<PartOwner, 'widget'>> &
-  Required<Pick<PresentationDeclaration, 'labelledBy'>>;
+export type ResolvedPresentationDeclaration = Required<WidgetPresentationDeclaration>;
 
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
  * under, so a component replacing another under the same key draws what that key declares
@@ -813,9 +815,9 @@ export interface ThemePresentation {
    * layer, for every widget key `@rjsf/core` registers, beneath this layer's own entry for that key. So it overrides
    * the parts it declares in the layers beneath it, even under a key one of them declares
    */
-  standardWidgets?: PresentationDeclaration;
+  standardWidgets?: WidgetPresentationDeclaration;
   /** Declarations for widgets, by the key they are registered under */
-  widgets?: Readonly<Record<string, PresentationDeclaration>>;
+  widgets?: Readonly<Record<string, WidgetPresentationDeclaration>>;
   /** Declarations for fields, by the key they are registered under */
   fields?: Readonly<Record<string, PresentationDeclaration>>;
 }
@@ -869,6 +871,8 @@ export interface FieldPresentation {
     /** Whether the label shows a required marker, which a checkbox can show without its control being `required` */
     requiredMarker: boolean;
   };
+  /** The plan of the field above that renders this same id, which this one was built under */
+  inherited?: FieldPresentation;
 }
 
 /** The definition of a React-based Field component */
@@ -1376,7 +1380,7 @@ export type Widget<
   F extends FormContextType = FormContextType,
 > = SlotComponent<WidgetProps<T, S, F>> & {
   /** The parts of the field the widget draws itself, which outranks a theme's declaration for its key */
-  presentation?: PresentationDeclaration;
+  presentation?: WidgetPresentationDeclaration;
 };
 
 /** The properties that are passed to the BaseInputTemplate */
