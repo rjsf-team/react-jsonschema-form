@@ -10,6 +10,7 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
+  RJSF_REF_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
@@ -647,23 +648,30 @@ export function getObjectDefaults<
         // `additionalProperties`/`patternProperties` (flagged here, same as ObjectField's own rendering) shares
         // `uiSchema.additionalProperties` with every other such property, rather than a dynamically-named entry.
         const addedByAdditionalProperty = Boolean((propertySchema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
+        // `retrieveSchema()` above expands a `$ref` it reaches through the `if`/`then` or `allOf`, so the property
+        // carries its source ref in place of the `$ref` the recursion check below stops at: one already on the path
+        // is the recursion itself, which the defaults would otherwise follow one level further on every call
+        const sourceRef: unknown = isObject(propertySchema) ? Reflect.get(propertySchema, RJSF_REF_KEY) : undefined;
+        const isRecursion = typeof sourceRef === 'string' && _recurseList.includes(sourceRef);
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
-        const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
-          rootSchema,
-          _recurseList,
-          includeUndefinedValues: includeUndefinedValues === true,
-          parentDefaults: getByPath<T>(defaults, key),
-          rawFormData: getByPath<T>(formData, key),
-          required: retrievedSchema.required?.includes(key),
-          shouldMergeDefaultsIntoFormData,
-          initialDefaultsGenerated,
-          uiSchema: getByPath<UiSchema<T, S, F> | undefined>(
-            uiSchema,
-            addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key,
-          ),
-          uiSchemaDefinitions,
-        });
+        const computedDefault = isRecursion
+          ? undefined
+          : computeDefaults<T, S, F>(context, propertySchema, {
+              rootSchema,
+              _recurseList: typeof sourceRef === 'string' ? [..._recurseList, sourceRef] : _recurseList,
+              includeUndefinedValues: includeUndefinedValues === true,
+              parentDefaults: getByPath<T>(defaults, key),
+              rawFormData: getByPath<T>(formData, key),
+              required: retrievedSchema.required?.includes(key),
+              shouldMergeDefaultsIntoFormData,
+              initialDefaultsGenerated,
+              uiSchema: getByPath<UiSchema<T, S, F> | undefined>(
+                uiSchema,
+                addedByAdditionalProperty ? ADDITIONAL_PROPERTIES_KEY : key,
+              ),
+              uiSchemaDefinitions,
+            });
 
         maybeAddDefaultToObject<T>(
           acc,
