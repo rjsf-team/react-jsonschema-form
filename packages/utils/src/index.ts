@@ -50,6 +50,8 @@ import getDeprecatedHandling from './getDeprecatedHandling.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getExampleSuggestions from './getExampleSuggestions.ts';
 import getFieldClassNames from './getFieldClassNames.ts';
+import type { FieldLabelSources } from './getFieldLabel.ts';
+import getFieldLabel from './getFieldLabel.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
@@ -57,6 +59,8 @@ import getNumericInputTitle from './getNumericInputTitle.ts';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
+import type { PresentationSource, PresentationSubject } from './getPresentationDeclaration.ts';
+import getPresentationDeclaration from './getPresentationDeclaration.ts';
 import getPropertySchema from './getPropertySchema.ts';
 import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from './getRenderedOptionSchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
@@ -76,7 +80,9 @@ import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget, {
   DEFAULT_BOOLEAN_WIDGET,
   getFieldTypeForWidget,
+  getWidgetKey,
   getWidgetType,
+  isStandardWidgetKey,
   resolveWidget,
 } from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
@@ -97,7 +103,10 @@ import {
   fieldLabelId,
   helpId,
   optionalControlsId,
+  optionDescriptionId,
+  optionHelpId,
   optionId,
+  selectedOptionDescriptionId,
   titleId,
   triggerValueId,
 } from './idGenerators.ts';
@@ -122,6 +131,7 @@ import lookupFromFormContext from './lookupFromFormContext.ts';
 import mergeDefaultsWithFormData from './mergeDefaultsWithFormData.ts';
 import mergeObjects from './mergeObjects.ts';
 import mergeSchemas from './mergeSchemas.ts';
+import mergeThemePresentation from './mergeThemePresentation.ts';
 import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators.ts';
 import noop from './noop.ts';
 import offsetTimeToLocalTime from './offsetTimeToLocalTime.ts';
@@ -137,6 +147,8 @@ import rangeSpec from './rangeSpec.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
+import type { FieldPresentationInputs } from './resolveFieldPresentation.ts';
+import resolveFieldPresentation from './resolveFieldPresentation.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
 import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
@@ -178,9 +190,13 @@ export type {
   DateElementProp,
   DateElementProps,
   DateTimeLocalValueResult,
+  FieldLabelSources,
+  FieldPresentationInputs,
   FileInfoType,
   LogOnceLevel,
   ObjectPath,
+  PresentationSource,
+  PresentationSubject,
   SelectedOptionDescriptionProps,
   UseAltDateWidgetResult,
   UseFileWidgetPropsResult,
@@ -242,6 +258,7 @@ export {
   getDiscriminatorFieldFromSchema,
   getExampleSuggestions,
   getFieldClassNames,
+  getFieldLabel,
   getFieldTypeForWidget,
   getFreePropertyNames,
   getInputProps,
@@ -251,6 +268,7 @@ export {
   getOptionalDataControlsType,
   getOptionMatchingSimpleDiscriminator,
   getOptionUiSchema,
+  getPresentationDeclaration,
   getPropertySchema,
   getOptionValueFormat,
   getRenderedOptionSchema,
@@ -269,6 +287,7 @@ export {
   getUnionTypes,
   getVisibleErrors,
   getWidget,
+  getWidgetKey,
   getWidgetType,
   getXxxOfKey,
   getXxxOfOptions,
@@ -292,6 +311,7 @@ export {
   isObject,
   isPlainObject,
   isSchemaObject,
+  isStandardWidgetKey,
   isWholeValueSelect,
   labelValue,
   localTimeToOffsetTime,
@@ -302,10 +322,13 @@ export {
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,
+  mergeThemePresentation,
   noop,
   offsetTimeToLocalTime,
   omitConsumedStyling,
   optionalControlsId,
+  optionDescriptionId,
+  optionHelpId,
   optionId,
   optionsList,
   orderProperties,
@@ -318,6 +341,7 @@ export {
   replaceStringParameters,
   resetLogOnce,
   resolveDefaultWidget,
+  resolveFieldPresentation,
   resolveUiSchema,
   resolveWidget,
   schemaHasNestedConditional,
@@ -325,6 +349,7 @@ export {
   schemaRequiresTrueValue,
   setByPath,
   SelectedOptionDescription,
+  selectedOptionDescriptionId,
   selectOptionUiSchema,
   shouldRenderOptionalField,
   sortedJSONStringify,
