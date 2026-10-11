@@ -13,6 +13,7 @@ In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and 
 `GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
+`WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)).
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
 
 These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
@@ -1175,15 +1176,17 @@ Widgets should call this helper once and pass the result to `enumOptionsDomValue
 Gets which parts of a field (its label, description, errors and help) its template draws and which the components rendering it draw themselves, from the form's merged [`ThemePresentation`](#types) and the `presentation` the components carry.
 It reads the components `SchemaField` already resolved rather than predicting one, and never throws where [getWidget()](#getwidget) would.
 
-A field component's declaration layers its own `presentation` over the theme's `fields` entry for its key, and that over the default for how it was chosen: a field named by a `ui:field` or a `$id` draws its label and description, and one chosen for the schema's type that renders a single widget leaves every part to that widget.
+A field component's declaration layers its own `presentation` over the merged `fields` entry for its key, and that over the default, which draws its own label and description and leaves its errors and help to the template. So a component gets the same answer however `SchemaField` chose it, by the schema's type, a `ui:field` or a `$id`.
+A field that renders its value with a single widget declares `WIDGET_FIELD_PRESENTATION` to leave its parts to that widget.
 A widget's declaration layers its own `presentation` over the merged `widgets` entry for its key, which is where [mergeThemePresentation()](#mergethemepresentation) put any `standardWidgets` that reach it.
 An alias is looked up by the key it stands for, and a widget given as a component by its own declaration alone.
-A part a field leaves to its widget with no widget given, and a part nothing declares, are drawn by the template, as is every part of a widget that is neither registered nor an alias.
+A part a field leaves to its widget, with no widget given, falls back to the default, so a field such as `ArrayField` that renders a single widget only for a multi-select draws its own heading otherwise.
+A part nothing declares is drawn by the template, as is every part a field leaves to a widget that is neither registered nor an alias.
 
 #### Parameters
 
 - source: PresentationSource&lt;T, S, F> - The registry's `widgets` and the `presentation` [mergeThemePresentation()](#mergethemepresentation) merged
-- subject: PresentationSubject&lt;T, S, F> - The field's `schema`, its `field` component, the `fieldKey` that component is registered under, whether `isNamedField`, and the `widget` it renders its value with, if it renders a single one
+- subject: PresentationSubject&lt;T, S, F> - The field's `schema`, its `field` component, the `fieldKey` that component is registered under, if a key named it, and the `widget` it renders its value with, if it renders a single one
 
 #### Returns
 
