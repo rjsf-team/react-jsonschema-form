@@ -502,8 +502,8 @@ export function computeDefaults<
       refsOnPath(schema, _recurseList),
     );
     // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
-    // expanded joins the path the same way, for a `$ref` back to it further down to stop at
-    updatedRecurseList = refsOnPath(schemaToCompute, _recurseList);
+    // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at
+    updatedRecurseList = refsOnPath(schemaToCompute, refsOnPath(schema, _recurseList));
   }
 
   if (schemaToCompute) {

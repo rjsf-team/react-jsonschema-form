@@ -1475,6 +1475,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               ),
             ).toEqual({ name: 'n', child: { name: 'n', child: { name: 'deep', child: { name: 'deep' } } } });
           });
+
+          test('stops at a $ref back to the definition whose allOf merged another $ref in', () => {
+            const schema: RJSFSchema = {
+              definitions: {
+                outer: {
+                  allOf: [{ $ref: '#/definitions/inner' }, { properties: { extra: { type: 'string', default: 'e' } } }],
+                },
+                inner: {
+                  type: 'object',
+                  properties: { name: { type: 'string', default: 'n' }, back: { $ref: '#/definitions/outer' } },
+                },
+              },
+              type: 'object',
+              properties: { a: { $ref: '#/definitions/outer' } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+                { schema, rootSchema: schema },
+              ),
+            ).toEqual({ a: { name: 'n', extra: 'e' } });
+          });
         });
 
         describe('a recursive allof schema', () => {
