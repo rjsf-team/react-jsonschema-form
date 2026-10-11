@@ -74,6 +74,19 @@ describe('CheckboxesWidget', () => {
     expect(screen.getByRole('checkbox', { name: 'Two' })).toBeDisabled();
   });
 
+  test('marks the label of a disabled option as not clickable', () => {
+    render(
+      <CheckboxesWidget
+        {...makeWidgetMockProps({ value: [], options: { enumOptions: stringOptions, enumDisabled: ['two'] } })}
+      />,
+    );
+
+    expect(screen.getByText('One').closest('label')).toHaveClass('cursor-pointer');
+    expect(screen.getByText('Two').closest('label')).toHaveClass('cursor-not-allowed');
+    expect(screen.getByText('Two').closest('label')).not.toHaveClass('cursor-pointer');
+    expect(screen.getByText('Two')).toHaveClass('opacity-50');
+  });
+
   // HTML5 constraint validation weighs each box on its own, so a `required` option demands *that* box — every box, for
   // a widget that puts the attribute on all of them. A radio group is the one place the attribute means "one of these",
   // because the browser reads same-named radios as a group; checkboxes share a name without sharing the requirement

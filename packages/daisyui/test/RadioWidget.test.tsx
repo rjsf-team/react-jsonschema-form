@@ -62,4 +62,20 @@ describe('RadioWidget', () => {
     expect(screen.getByRole('radio', { name: 'One' })).toBeEnabled();
     expect(screen.getByRole('radio', { name: 'Two' })).toBeDisabled();
   });
+
+  test('marks the label of a disabled option as not clickable', () => {
+    render(
+      <RadioWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          options: { enumOptions: stringOptions, enumDisabled: ['two'] },
+        })}
+      />,
+    );
+
+    expect(screen.getByText('One').closest('label')).toHaveClass('cursor-pointer');
+    expect(screen.getByText('Two').closest('label')).toHaveClass('cursor-not-allowed');
+    expect(screen.getByText('Two').closest('label')).not.toHaveClass('cursor-pointer');
+    expect(screen.getByText('Two')).toHaveClass('opacity-50');
+  });
 });

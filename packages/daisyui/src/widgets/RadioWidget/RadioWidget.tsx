@@ -83,26 +83,32 @@ export default function RadioWidget<
     <div className='form-control'>
       {/* Display the options in a vertical flex layout for better spacing */}
       <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'radiogroup' })}>
-        {enumOptions?.map((option, index) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <label key={index} className='flex items-center cursor-pointer gap-2'>
-            <input
-              type='radio'
-              id={optionId(id, index)}
-              className='radio'
-              name={htmlName || id}
-              value={domValues[index]}
-              checked={enumOptionsIsSelected<S>(option.value, value, false)}
-              required={required}
-              disabled={disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled)}
-              data-index={index}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-            <span className='label-text'>{option.label}</span>
-          </label>
-        ))}
+        {enumOptions?.map((option, index) => {
+          const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
+          return (
+            <label
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
+              className={`flex items-center ${optionDisabled ? 'cursor-not-allowed' : 'cursor-pointer'} gap-2`}
+            >
+              <input
+                type='radio'
+                id={optionId(id, index)}
+                className='radio'
+                name={htmlName || id}
+                value={domValues[index]}
+                checked={enumOptionsIsSelected<S>(option.value, value, false)}
+                required={required}
+                disabled={optionDisabled}
+                data-index={index}
+                onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+              />
+              <span className={optionDisabled ? 'label-text opacity-50' : 'label-text'}>{option.label}</span>
+            </label>
+          );
+        })}
       </div>
     </div>
   );
