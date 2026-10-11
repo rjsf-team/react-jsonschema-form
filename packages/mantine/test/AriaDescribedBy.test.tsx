@@ -718,7 +718,7 @@ describe('aria-describedby', () => {
     expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('Own error');
   });
 
-  test('describes a selected option once, under the id its selector is described by', () => {
+  test('describes a selected option once, under the id its control is described by', () => {
     const { container } = render(
       <WrappedForm
         schema={{
@@ -741,8 +741,62 @@ describe('aria-describedby', () => {
     );
 
     expect(shownWithText('A country in Europe')).toHaveLength(1);
-    expect(container.querySelector(`#${descriptionId('root_region__oneof_select')}`)).toHaveTextContent(
-      'A country in Europe',
+    expect(container.querySelector(`#${descriptionId('root_region')}`)).toHaveTextContent('A country in Europe');
+  });
+
+  test('gives the field description and a selected option description an id each', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                { title: 'Text', type: 'string', description: 'Opt desc' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { 'ui:description': 'Where you live' } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
     );
+
+    expect(shownWithText('Where you live')).toHaveLength(1);
+    expect(shownWithText('Opt desc')).toHaveLength(1);
+    const ids = Array.from(container.querySelectorAll('[id$="__description"]'), (element) => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  test('describes a selector by the field description it renders, and by no other', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        region: {
+          oneOf: [
+            { title: 'None', type: 'null' },
+            { title: 'Text', type: 'string' },
+          ],
+        },
+      },
+    };
+    const selectorDescribedBy = (uiSchema: UiSchema) => {
+      const { container, unmount } = render(
+        <WrappedForm schema={schema} uiSchema={uiSchema} formData={{ region: 'a' }} validator={validator} />,
+      );
+      const describedBy = container.querySelector('#root_region__oneof_select')!.getAttribute('aria-describedby');
+      unmount();
+      return describedBy?.split(' ');
+    };
+
+    expect(selectorDescribedBy({ region: { 'ui:description': 'Where you live' } })).toContain(
+      descriptionId('root_region'),
+    );
+    expect(selectorDescribedBy({})).not.toContain(descriptionId('root_region'));
+    expect(
+      selectorDescribedBy({ region: { 'ui:description': 'Where you live', 'ui:options': { label: false } } }),
+    ).not.toContain(descriptionId('root_region'));
   });
 });

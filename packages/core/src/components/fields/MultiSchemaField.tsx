@@ -18,36 +18,14 @@ import {
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
-  UI_OPTIONS_KEY,
   withVariantId,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
-import LabelledIdContext from './LabelledIdContext.ts';
+import LabelledFieldContext, { LabelledFieldProvider } from './LabelledFieldContext.tsx';
 import optionUiSchemaForRender from './optionUiSchemaForRender.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
-
-const DESCRIPTION_UI_KEY = 'ui:description';
-
-/** `schema` without its `description`, for a field whose description is rendered by the field around it */
-function withoutDescription<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
-  const { description: _description, ...rest } = schema;
-  return rest as S;
-}
-
-/** `uiSchema` with its `ui:description` shadowed wherever it was written, for the reason `withoutDescription()` drops
- * the schema's
- */
-function withoutUiDescription<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->(uiSchema: UiSchema<T, S, F> | undefined): UiSchema<T, S, F> {
-  const noUiSchema: UiSchema<T, S, F> = {};
-  const { [DESCRIPTION_UI_KEY]: _description, ...rest } = uiSchema ?? noUiSchema;
-  return { ...rest, [UI_OPTIONS_KEY]: { ...rest[UI_OPTIONS_KEY], description: undefined } };
-}
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
@@ -80,7 +58,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   } = props;
   const { schemaUtils } = registry;
   const readsFormData = useReadsFormData(AnyOfField);
-  const labelledId = use(LabelledIdContext);
+  const labelledField = use(LabelledFieldContext);
 
   // Hash formData by value so the memo only invalidates when data actually changes, not on every
   // new object reference. hashObject(undefined) throws, so null is used as the fallback.
@@ -185,11 +163,12 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
   const isOptionUiSchemaInherited = optionUiSchema === uiSchema;
-  // Kept apart from `optionUiSchema`, which `formDataForNewOption()` still reads the option's `ui:initialValue` and
+  const isLabelledAbove = labelledField?.id === id;
+  // Kept apart from `optionUiSchema`, which `formDataForNewOption()` reads the option's `ui:initialValue` and
   // `ui:emptyValue` from
   const renderedOptionUiSchema = useMemo(
-    () => optionUiSchemaForRender<T, S, F>(optionUiSchema, isOptionUiSchemaInherited, globalUiOptions),
-    [optionUiSchema, isOptionUiSchemaInherited, globalUiOptions],
+    () => optionUiSchemaForRender<T, S, F>(optionUiSchema, isOptionUiSchemaInherited, isLabelledAbove, globalUiOptions),
+    [optionUiSchema, isOptionUiSchemaInherited, isLabelledAbove, globalUiOptions],
   );
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
@@ -242,7 +221,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
 
   const { SchemaField: SchemaFieldComponent } = fields;
-  const { MultiSchemaFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, globalUiOptions);
+  const { MultiSchemaFieldTemplate } = getTemplates<T, S, F>(registry, globalUiOptions);
   const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T>(formData);
 
@@ -316,45 +295,21 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       />
     ) : undefined;
 
-  // The option's field turns off its template's label for a control the template around this field labels, which
-  // `SchemaField` names in `LabelledIdContext`, and most themes' templates render the description only alongside that
-  // label, so the option's own description is rendered here instead. It describes the option the selector chose, so it is rendered under the selector's id, which that
-  // selector's `aria-describedby` names, rather than under this field's, which describes the parent. An inherited
-  // `ui:description` is the parent's, which this field's own template has already rendered
-  const optionDescription =
-    labelledId === id &&
-    optionSchema &&
-    schemaUtils.getDisplayLabel(optionSchema, renderedOptionUiSchema, globalUiOptions)
-      ? (isOptionUiSchemaInherited ? undefined : getUiOptions<T, S, F>(optionUiSchema).description) ||
-        optionSchema.description
-      : undefined;
-  // A theme that renders a description without its label, as antd's `FieldTemplate` and mantine's widgets do, would
-  // otherwise render it a second time for the option's own id
-  const optionFieldSchema = useMemo(
-    () => (optionDescription && optionSchema ? withoutDescription<S>(optionSchema) : optionSchema),
-    [optionDescription, optionSchema],
-  );
-  const optionFieldUiSchema = useMemo(
-    () => (optionDescription ? withoutUiDescription<T, S, F>(renderedOptionUiSchema) : renderedOptionUiSchema),
-    [optionDescription, renderedOptionUiSchema],
-  );
-
+  // The option renders for this field's own id, so where the field around it labels that id it passes that on. A
+  // description the option has of its own describes the option the selector chose, so where the field around it has
+  // rendered a description already it goes under the selector's description id, which the selector's
+  // `aria-describedby` names
   const optionsSchemaField =
-    (optionSchema && optionFieldSchema && optionSchema.type !== 'null' && (
-      <>
-        {optionDescription ? (
-          <DescriptionFieldTemplate
-            id={descriptionId(fieldId)}
-            description={optionDescription}
-            schema={optionSchema}
-            uiSchema={renderedOptionUiSchema}
-            registry={registry}
-          />
-        ) : null}
+    (optionSchema && optionSchema.type !== 'null' && (
+      <LabelledFieldProvider
+        id={labelledField?.id}
+        description={labelledField?.description}
+        descriptionId={isLabelledAbove ? descriptionId(fieldId) : labelledField?.descriptionId}
+      >
         <RawFormDataContext value={readsFormData ? SchemaFieldComponent : undefined}>
-          <SchemaFieldComponent {...props} schema={optionFieldSchema} uiSchema={optionFieldUiSchema} />
+          <SchemaFieldComponent {...props} schema={optionSchema} uiSchema={renderedOptionUiSchema} />
         </RawFormDataContext>
-      </>
+      </LabelledFieldProvider>
     )) ||
     null;
 

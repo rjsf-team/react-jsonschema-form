@@ -1790,13 +1790,13 @@ describe('anyOf', () => {
       },
     };
 
-    it('labels the control once, and describes the option under the id the selector is described by', () => {
+    it('labels the control once, and describes the option under the id its control is described by', () => {
       const { node } = createFormComponent({ schema, formData: { region: 'DE' } });
 
       expect(node.querySelectorAll('label[for="root_region"]')).toHaveLength(1);
       expect(screen.getByLabelText('region')).toBe(node.querySelector('select#root_region'));
       expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
-      expect(node.querySelector('#root_region__anyof_select__description')).toHaveTextContent('A country in Europe');
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
     });
   });
 

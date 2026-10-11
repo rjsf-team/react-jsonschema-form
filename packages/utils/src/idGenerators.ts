@@ -74,10 +74,9 @@ export function ariaDescribedByIds(id: string, includeExamples = false) {
  * reference of its own: an `aria-labelledby` pointing here outranks that association, so under a `FieldTemplate` that
  * renders no label with this id it would leave the control named by its own contents, or by nothing at all.
  *
- * Two labels end up with this id wherever two `FieldTemplate`s render for one field id, which already gives that
- * control two `label htmlFor` of its own: a `oneOf` of constants, whose selected option renders again inside the
- * field, and a layout that places the same field twice. A reference resolves to the first, which is the field's own
- * label rather than the option's.
+ * Two labels end up with this id wherever two `FieldTemplate`s render a label for one field id, which already gives
+ * that control two `label htmlFor` of its own, as a layout that places the same field twice does. A reference resolves
+ * to the first.
  *
  * @param id - The id of the field
  * @returns - The consistent id for that field's label element

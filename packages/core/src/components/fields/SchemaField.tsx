@@ -56,8 +56,9 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
-import LabelledIdContext from './LabelledIdContext.ts';
+import LabelledFieldContext, { LabelledFieldProvider } from './LabelledFieldContext.tsx';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+import shadowUiOptions from './shadowUiOptions.ts';
 import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
 /** The map of component type to FieldName */
@@ -232,6 +233,17 @@ function resolveUiField<
 }
 
 const RenderNothing = () => null;
+
+/** Returns `schema` without its `description`, for a field whose description is rendered by the field around it or by
+ * the field itself in place of its template
+ *
+ * @param schema - The schema to remove the `description` from
+ * @returns - A copy of `schema` without its `description`
+ */
+function withoutDescription<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+  const { description: _description, ...rest } = schema;
+  return rest as S;
+}
 
 /** Computes and returns which `Field` implementation to return in order to render the field represented by the
  * `schema`. The `uiOptions` are used to alter what potential `Field` implementation is actually returned. If no
@@ -438,7 +450,7 @@ function SchemaFieldRender<
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
   const readsFormData = useReadsFormData(SchemaField);
-  const labelledId = use(LabelledIdContext);
+  const labelledField = use(LabelledFieldContext);
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
@@ -491,8 +503,29 @@ function SchemaFieldRender<
     const callerWidget = resolvedUiSchema[UI_WIDGET_KEY] ?? resolvedUiSchema[UI_OPTIONS_KEY]?.widget;
     return { ...resolvedUiSchema, [UI_WIDGET_KEY]: callerWidget ?? inferredWidget };
   }, [inferredWidget, resolvedUiSchema, fields]);
+  const ownUiOptions = getUiOptions<T, S, F>(uiSchema);
+  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time
+  const uiOptions: UIOptionsType<T, S, F> = { ...globalUiOptions, ...ownUiOptions };
+  const description = uiOptions.description || props.schema.description || schema.description || '';
+  // A field around this one that labels the same control renders its own description alongside that label, under the
+  // id the control's `aria-describedby` names, so this field's template renders neither. The same description is not
+  // rendered again, here or by a widget that renders one itself. One of its own is rendered by this field in place of
+  // its template, but only where its template would have rendered it, alongside a label of its own: a widget that
+  // labels itself, such as a checkbox, renders its own description too, and keeps doing so
+  const isLabelledAbove = labelledField?.id === fieldId;
+  const displaysOwnLabel = !isRefCycle && schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const sharesDescriptionAbove = isLabelledAbove && description === labelledField.description;
+  const relocatesDescription = isLabelledAbove && !sharesDescriptionAbove && displaysOwnLabel;
+  const handsOffDescription = description !== '' && (sharesDescriptionAbove || relocatesDescription);
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
-  const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
+  const fieldSchema = useMemo(
+    () => (handsOffDescription ? withoutDescription<S>(schema) : schema),
+    [handsOffDescription, schema],
+  );
+  const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => {
+    const styledUiSchema = omitConsumedStyling<T, S, F>(uiSchema);
+    return handsOffDescription ? shadowUiOptions<T, S, F>(styledUiSchema, ['description']) : styledUiSchema;
+  }, [uiSchema, handsOffDescription]);
   // The `uiSchema` the `anyOf`/`oneOf` options are rendered against when they are rendered in place of the field a
   // `ui:field` named, see `optionsReplaceNamedField`. Memoized alongside the `uiSchema` it shadows the `field` of, since
   // `MultiSchemaField` derives its per-option `uiSchema` array from this one and hands that array to a `useCallback`:
@@ -507,12 +540,7 @@ function SchemaFieldRender<
     ) {
       return uiSchema;
     }
-    const shadowedUiSchema: UiSchema<T, S, F> = {
-      ...uiSchema,
-      [UI_OPTIONS_KEY]: { ...uiSchema[UI_OPTIONS_KEY], field: undefined },
-    };
-    delete shadowedUiSchema[UI_FIELD_KEY];
-    return shadowedUiSchema;
+    return shadowUiOptions<T, S, F>(uiSchema, ['field']);
   }, [uiSchema, globalUiOptions]);
   const ownErrors = errorSchema?.__errors;
   // Memoized so that an `ArrayField` below, which reads it, isn't re-rendered past its `memo` by a new value each render
@@ -531,9 +559,6 @@ function SchemaFieldRender<
     );
   }
 
-  const ownUiOptions = getUiOptions<T, S, F>(uiSchema);
-  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time
-  const uiOptions: UIOptionsType<T, S, F> = { ...globalUiOptions, ...ownUiOptions };
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
@@ -608,22 +633,23 @@ function SchemaFieldRender<
 
   // Only the template's label is turned off for a control a field around this one already labels: the field component
   // decides its widget's label for itself, which is the only one a theme drawing labels in its widgets puts on it
-  let displayLabel = labelledId !== fieldId && schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  let displayLabel = !isLabelledAbove && displaysOwnLabel;
 
   let XxxOfField: Field<T, S, F> | undefined;
   let XxxOfOptions: S[] | undefined;
   // An option that declares no `uiSchema` of its own is rendered against this one, so a `ui:field` the options are
   // rendered in place of would reach every option and have each render the field this schema declined. Shadowed rather
-  // than deleted, for the reason `FallbackField` shadows the same key: `getUiOptions()` layers a
-  // `ui:globalOptions.field` under the local entry, so deleting the local one leaves the global showing through
+  // than deleted, see `shadowUiOptions()`: `getUiOptions()` layers a `ui:globalOptions.field` under the local entry, so
+  // deleting the local one leaves the global showing through
   const XxxOfUiSchema: UiSchema<T, S, F> = optionsReplaceNamedField ? uiSchemaWithoutNamedField : uiSchema;
   // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
   // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
   let fieldComponentId = fieldId;
   // When the option selector is an optional data control AND it does not have form data, hide the label: it names a
   // control that is not on screen yet. This is decided here rather than with the `XxxOfField` below because the
-  // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within is
-  // already labelled `false`, which leaves this the only field either label can come from
+  // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within has
+  // its template's label turned off by this one labelling the same id, which leaves this the only field either label
+  // can come from
   if (rendersOptionSelector) {
     const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema);
     displayLabel = displayLabel && (!isOptionalRender || isFormDataAvailable<T>(formData));
@@ -650,7 +676,7 @@ function SchemaFieldRender<
       {...props}
       onChange={handleFieldComponentChange}
       id={fieldComponentId}
-      schema={schema}
+      schema={fieldSchema}
       uiSchema={fieldUiSchema}
       {...(fieldUiRequired !== undefined ? { required: effectiveRequired } : {})}
       disabled={disabled}
@@ -664,15 +690,15 @@ function SchemaFieldRender<
     />
   );
   // What renders for this same id below — the selected `anyOf`/`oneOf` option, or the value field the fallback UI
-  // renders its options within — is told whether this template labelled it, rather than re-deriving `displayLabel`
-  // from a `uiSchema` it is not handed
-  const labelledIdBelow = displayLabel || labelledId === fieldId ? fieldId : undefined;
+  // renders its options within — is told whether this template labelled it, and the description rendered with that
+  // label, rather than re-deriving `displayLabel` from a `uiSchema` it is not handed
+  const labelsBelow = isLabelledAbove || displayLabel;
+  const descriptionBelow = isLabelledAbove && !relocatesDescription ? labelledField.description : description;
+  const descriptionIdBelow = isLabelledAbove ? labelledField.descriptionId : undefined;
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
   const field = (
     <WithheldErrorsContext value={XxxOfField ? withheldErrors : undefined}>
-      <LabelledIdContext value={labelledIdBelow}>
-        <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
-      </LabelledIdContext>
+      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
     </WithheldErrorsContext>
   );
 
@@ -691,7 +717,6 @@ function SchemaFieldRender<
     label = registry.translateString(TranslatableString.DeprecatedLabel, [label]);
   }
 
-  const description = uiOptions.description || props.schema.description || schema.description || '';
   const { help } = uiOptions;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
@@ -720,17 +745,31 @@ function SchemaFieldRender<
         registry={registry}
       />
     );
-  const fieldProps: Omit<FieldTemplateProps<T, S, F>, 'children'> = {
-    description: (
+  const templateDescription = handsOffDescription ? '' : description;
+  // Under this field's own description id, unless the field around it has rendered a description there already
+  const relocatedDescription =
+    relocatesDescription && description ? (
       <DescriptionFieldTemplate
-        id={descriptionId(fieldId)}
+        id={
+          labelledField?.description ? (labelledField.descriptionId ?? descriptionId(fieldId)) : descriptionId(fieldId)
+        }
         description={description}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
+    ) : null;
+  const fieldProps: Omit<FieldTemplateProps<T, S, F>, 'children'> = {
+    description: (
+      <DescriptionFieldTemplate
+        id={descriptionId(fieldId)}
+        description={templateDescription}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
     ),
-    rawDescription: description,
+    rawDescription: templateDescription,
     help: helpComponent,
     rawHelp: help,
     errors: errorsComponent,
@@ -764,33 +803,36 @@ function SchemaFieldRender<
   return (
     <RawFormDataContext value={undefined}>
       <FieldTemplate {...fieldProps}>
-        <>
+        <LabelledFieldProvider
+          id={labelsBelow ? fieldId : undefined}
+          description={descriptionBelow}
+          descriptionId={descriptionIdBelow}
+        >
+          {relocatedDescription}
           {field}
           {XxxOfField && (
-            <LabelledIdContext value={labelledIdBelow}>
-              <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-                <XxxOfField
-                  name={name}
-                  disabled={disabled}
-                  readonly={readonly}
-                  hideError={hideError}
-                  errorSchema={errorSchema}
-                  formData={formData}
-                  fieldPath={fieldPath}
-                  id={fieldId}
-                  onBlur={props.onBlur}
-                  onChange={props.onChange}
-                  onFocus={props.onFocus}
-                  options={XxxOfOptions}
-                  registry={registry}
-                  required={effectiveRequired}
-                  schema={schema}
-                  uiSchema={XxxOfUiSchema}
-                />
-              </RawFormDataContext>
-            </LabelledIdContext>
+            <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
+              <XxxOfField
+                name={name}
+                disabled={disabled}
+                readonly={readonly}
+                hideError={hideError}
+                errorSchema={errorSchema}
+                formData={formData}
+                fieldPath={fieldPath}
+                id={fieldId}
+                onBlur={props.onBlur}
+                onChange={props.onChange}
+                onFocus={props.onFocus}
+                options={XxxOfOptions}
+                registry={registry}
+                required={effectiveRequired}
+                schema={schema}
+                uiSchema={XxxOfUiSchema}
+              />
+            </RawFormDataContext>
           )}
-        </>
+        </LabelledFieldProvider>
       </FieldTemplate>
     </RawFormDataContext>
   );

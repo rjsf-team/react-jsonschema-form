@@ -268,7 +268,7 @@ describe('antd specific tests', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  test('describes a selected option once, under the id its selector is described by', () => {
+  test('describes a selected option once, under the id its control is described by', () => {
     const { container } = render(
       <Form
         schema={{
@@ -291,6 +291,30 @@ describe('antd specific tests', () => {
     );
 
     expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
-    expect(container.querySelector('#root_region__oneof_select__description')).toHaveTextContent('A country in Europe');
+    expect(container.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
+  });
+
+  test("renders an option's inherited ui:description once, as the field's", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                { title: 'Text', type: 'string' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { 'ui:description': 'Where you live' } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByText('Where you live')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_region__description')).toHaveLength(1);
   });
 });

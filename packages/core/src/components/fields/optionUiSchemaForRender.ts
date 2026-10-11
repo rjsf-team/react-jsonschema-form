@@ -1,12 +1,7 @@
-import type {
-  FormContextType,
-  GlobalUISchemaOptions,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UIOptionsType,
-  UiSchema,
-} from '@rjsf/utils';
+import type { FormContextType, GlobalUISchemaOptions, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import { UI_FIELD_KEY, UI_OPTIONS_KEY } from '@rjsf/utils';
+
+import shadowUiOptions from './shadowUiOptions.ts';
 
 const HELP_UI_KEY = 'ui:help';
 
@@ -18,11 +13,16 @@ const HELP_UI_KEY = 'ui:help';
  * An option that inherits its parent's `uiSchema`, for having no `uiSchema.oneOf`/`anyOf` entry of its own, has both
  * dropped wherever they were written. One with its own entry keeps a `ui:field` or `ui:help` it declares, since that
  * is the option's rather than the parent's, but has a `ui:globalOptions` one shadowed, which the parent has already
- * rendered too. Shadowed rather than deleted, as `FallbackField` does: `getUiOptions()` layers the global options
- * under the local ones, so only a local `undefined` keeps a global one from showing through.
+ * rendered too.
+ *
+ * An inherited `ui:description` is dropped too where the field around the option labels its control, since that field
+ * renders the description alongside its label. Left in place, it would also outrank the option's own `description`,
+ * which then could not be told apart from the parent's. A field around an object labels nothing, which leaves the
+ * option the only place the description renders
  *
  * @param optionUiSchema - The option's `uiSchema`, from `selectOptionUiSchema()`
  * @param isInherited - Whether `optionUiSchema` is the parent's own `uiSchema`, rather than the option's entry
+ * @param isLabelledAbove - Whether the field around the option labels the control the option renders
  * @param [globalUiOptions] - The form's `ui:globalOptions`
  * @returns - `optionUiSchema` itself when there is nothing to drop, otherwise a copy without it
  */
@@ -33,6 +33,7 @@ export default function optionUiSchemaForRender<
 >(
   optionUiSchema: UiSchema<T, S, F> | undefined,
   isInherited: boolean,
+  isLabelledAbove: boolean,
   globalUiOptions?: GlobalUISchemaOptions,
 ): UiSchema<T, S, F> | undefined {
   const ownOptions = optionUiSchema?.[UI_OPTIONS_KEY];
@@ -40,20 +41,11 @@ export default function optionUiSchemaForRender<
   const declaresHelp = optionUiSchema?.[HELP_UI_KEY] !== undefined || ownOptions?.help !== undefined;
   const shadowsField = declaresField ? isInherited : globalUiOptions?.field !== undefined;
   const shadowsHelp = declaresHelp ? isInherited : globalUiOptions?.help !== undefined;
-  if (!shadowsField && !shadowsHelp) {
-    return optionUiSchema;
-  }
-  const noUiSchema: UiSchema<T, S, F> = {};
-  const renderedUiSchema = { ...(optionUiSchema ?? noUiSchema) };
-  const renderedOptions = { ...ownOptions } as UIOptionsType<T, S, F>;
-  if (shadowsField) {
-    delete renderedUiSchema[UI_FIELD_KEY];
-    renderedOptions.field = undefined;
-  }
-  if (shadowsHelp) {
-    delete renderedUiSchema[HELP_UI_KEY];
-    renderedOptions.help = undefined;
-  }
-  renderedUiSchema[UI_OPTIONS_KEY] = renderedOptions;
-  return renderedUiSchema;
+  const shadowsDescription = isInherited && isLabelledAbove;
+  const shadowed = [
+    ...(shadowsField ? ['field'] : []),
+    ...(shadowsHelp ? ['help'] : []),
+    ...(shadowsDescription ? ['description'] : []),
+  ];
+  return shadowed.length > 0 ? shadowUiOptions<T, S, F>(optionUiSchema, shadowed) : optionUiSchema;
 }

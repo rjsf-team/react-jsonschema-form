@@ -2446,18 +2446,63 @@ describe('oneOf', () => {
       expect(screen.getByText('option help')).toBeInTheDocument();
     });
 
-    it('describes the option once, under the id the selector is described by', () => {
+    it('describes the option once, under the id its control is described by', () => {
       const { node } = createFormComponent({
         schema: regionSchema({ ...europe, description: 'A country in Europe' }),
         formData,
       });
 
       expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
+      expect(node.querySelector('select#root_region')).toHaveAttribute(
+        'aria-describedby',
+        expect.stringContaining('root_region__description'),
+      );
+    });
+
+    it('describes the option under the id the selector is described by when the field has a description too', () => {
+      const describedSchema = regionSchema({ ...europe, description: 'A country in Europe' });
+      const { node } = createFormComponent({
+        schema: describedSchema,
+        uiSchema: { region: { 'ui:description': 'Where you live' } },
+        formData,
+      });
+
+      expect(screen.getAllByText('Where you live')).toHaveLength(1);
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_region__description')).toHaveLength(1);
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('Where you live');
       expect(node.querySelector('#root_region__oneof_select__description')).toHaveTextContent('A country in Europe');
       expect(node.querySelector('select#root_region__oneof_select')).toHaveAttribute(
         'aria-describedby',
         expect.stringContaining('root_region__oneof_select__description'),
       );
+    });
+
+    it('describes an option whose constants render as a select', () => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                {
+                  type: 'boolean',
+                  description: 'Yes or no',
+                  oneOf: [
+                    { const: true, title: 'Yes' },
+                    { const: false, title: 'No' },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        formData: { region: true },
+      });
+
+      expect(screen.getAllByText('Yes or no')).toHaveLength(1);
     });
 
     it('describes the option with the ui:description it declares for itself', () => {
@@ -2467,9 +2512,7 @@ describe('oneOf', () => {
         uiSchema: { region: { oneOf: [{}, { 'ui:description': 'Pick a European country' }] } },
       });
 
-      expect(node.querySelector('#root_region__oneof_select__description')).toHaveTextContent(
-        'Pick a European country',
-      );
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('Pick a European country');
     });
 
     it('renders the field ui:description once', () => {
@@ -2526,7 +2569,7 @@ describe('oneOf', () => {
       expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
       expect(screen.getByLabelText('X')).toBe(node.querySelector('input#root_x'));
       expect(screen.getAllByText('Some text')).toHaveLength(1);
-      expect(node.querySelector('#root_x__oneof_select__description')).toHaveTextContent('Some text');
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Some text');
     });
 
     it('renders a ui:field an option declares for itself', () => {
