@@ -1251,8 +1251,7 @@ describe('SchemaField', () => {
     };
 
     it('renders a cycle indicator for a recursion reached through a nested property', () => {
-      // The flag was the walk's only change to the subtree, which was then handed back without it, so each render
-      // expanded the reference again
+      // A recursion the cycle flag alone stops: the flag is the walk's only change to the subtree holding it
       const node: RJSFSchema = {
         type: 'object',
         properties: { wrap: { type: 'object', properties: { child: { $ref: '#/definitions/node' } } } },
@@ -1264,8 +1263,7 @@ describe('SchemaField', () => {
     });
 
     it('renders a cycle indicator for a recursion reached through a then branch', () => {
-      // The defaults followed the recursion one level further on every call, since the branch's `$ref` was expanded
-      // by the time they reached it, so nothing rendered
+      // A recursion the defaults reach through the branch's expanded `$ref` rather than through a `$ref` of their own
       const node: RJSFSchema = {
         type: 'object',
         properties: { name: { type: 'string' } },
