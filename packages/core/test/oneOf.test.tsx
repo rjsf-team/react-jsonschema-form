@@ -2521,6 +2521,41 @@ describe('oneOf', () => {
       expect(node.querySelector('#root_x__description')).toHaveTextContent('Opt desc');
     });
 
+    it.each([
+      ['has no description', {}],
+      ['has a description', { 'ui:description': 'Where you live' }],
+    ])('hides the description of an option whose ui:label is false when the field %s', (_, fieldUiSchema) => {
+      createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        uiSchema: { region: { ...fieldUiSchema, oneOf: [{}, { 'ui:label': false }] } },
+        formData,
+      });
+
+      expect(screen.queryByText('A country in Europe')).toBeNull();
+    });
+
+    it('renders no second description under the field description id for a fallback value described apart', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              description: 'Field desc',
+              type: ['string', 'number'],
+              if: { type: 'string' },
+              then: { description: 'Value desc' },
+            },
+          },
+        },
+        formData: { x: 'a' },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelectorAll('#root_x__description')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Field desc');
+    });
+
     it('describes an option whose constants render as a select', () => {
       createFormComponent({
         schema: {

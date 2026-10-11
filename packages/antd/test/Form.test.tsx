@@ -317,4 +317,29 @@ describe('antd specific tests', () => {
     expect(screen.getAllByText('Where you live')).toHaveLength(1);
     expect(container.querySelectorAll('#root_region__description')).toHaveLength(1);
   });
+
+  test('renders no second description under the field description id for a fallback value described apart', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              description: 'Field desc',
+              type: ['string', 'number'],
+              if: { type: 'string' },
+              then: { description: 'Value desc' },
+            },
+          },
+        }}
+        formData={{ x: 'a' }}
+        validator={validator}
+        useFallbackUiForUnsupportedType
+      />,
+    );
+
+    expect(container.querySelectorAll('#root_x__description')).toHaveLength(1);
+    expect(container.querySelector('#root_x__description')).toHaveTextContent('Field desc');
+  });
 });

@@ -516,11 +516,22 @@ function SchemaFieldRender<
     !isRefCycle &&
     (!isLabelledAbove || (hasOwnDescriptionBelow && labelledField.description === '')) &&
     schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  // Under this field's own description id, unless the field above has rendered a description there already. A field
+  // above that names no other id, as the fallback UI's does, leaves nowhere to put one that would not share its id
+  const relocatedDescriptionId = labelledField?.description ? labelledField.descriptionId : descriptionId(fieldId);
   // A description the template would have rendered beside a label of its own is rendered in the template's place. One
   // that a widget drawing its own label, such as a checkbox, draws itself is left to it, unless the field above has a
-  // description too, which the widget's would otherwise share an id with
-  const relocatesDescription = hasOwnDescriptionBelow && (labelledField.description !== '' || displaysOwnLabel);
-  const handsOffDescription = relocatesDescription || (sharesDescriptionAbove && description !== '');
+  // description too, which the widget's would otherwise share an id with. A `ui:label` of `false` hides the
+  // description along with the label either way
+  const relocatesDescription =
+    hasOwnDescriptionBelow &&
+    relocatedDescriptionId !== undefined &&
+    (labelledField.description !== '' ? uiBooleanOption(uiOptions.label) !== false : displaysOwnLabel);
+  // With nowhere to put it, it is withheld rather than left to a template or widget that renders a description whatever
+  // the label, which would put it under the field's id
+  const withholdsDescription = hasOwnDescriptionBelow && relocatedDescriptionId === undefined;
+  const handsOffDescription =
+    relocatesDescription || withholdsDescription || (sharesDescriptionAbove && description !== '');
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldSchema = useMemo(
     () => (handsOffDescription ? withoutDescription<S>(schema) : schema),
@@ -756,10 +767,9 @@ function SchemaFieldRender<
       />
     );
   const templateDescription = handsOffDescription ? '' : description;
-  // Under this field's own description id, unless the field around it has rendered a description there already
   const relocatedDescription = relocatesDescription ? (
     <DescriptionFieldTemplate
-      id={(labelledField.description && labelledField.descriptionId) || descriptionId(fieldId)}
+      id={relocatedDescriptionId}
       description={description}
       schema={schema}
       uiSchema={uiSchema}
