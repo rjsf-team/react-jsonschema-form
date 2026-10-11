@@ -43,6 +43,9 @@ export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(schemaNode: S[keyof S]): S[keyof S];
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
   schemaNode: S | S[] | S[keyof S],
+): S | S[] | S[keyof S];
+export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
+  schemaNode: S | S[] | S[keyof S],
 ): S | S[] | S[keyof S] {
   if (Array.isArray(schemaNode)) {
     return withIdRefPrefixArray<S>([...schemaNode]);
