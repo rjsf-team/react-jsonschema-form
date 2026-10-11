@@ -392,6 +392,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       fieldPath,
       newErrorSchema,
       newKeyOf: move?.newKeyOf,
+      newOwnKeyOf: move?.newOwnKeyOf,
       dropsOwnErrors: move?.dropsOwnErrors,
     };
     const next = applyChange(pending ?? start, edit, props);

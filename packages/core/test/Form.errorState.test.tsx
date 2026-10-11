@@ -993,6 +993,36 @@ describe('Error state consistency when deriving from new props', () => {
     });
   });
 
+  it('keeps the validator errors under a property the new option of an anyOf declares too when the option is switched', async () => {
+    const withName = (title: string, key: string): RJSFSchema => ({
+      title,
+      type: 'object',
+      properties: { name: { type: 'string', minLength: 3 }, [key]: { type: 'string' } },
+    });
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { payment: { anyOf: [withName('Card', 'holder'), withName('Invoice', 'reference')] } },
+        }}
+        validator={validator}
+        widgets={errorRaisingWidgets}
+        initialFormData={{ payment: { name: 'ab' } }}
+      />,
+    );
+    await submitForm(container, user);
+    const tooShort = 'must NOT have fewer than 3 characters';
+    const noMatch = 'must match a schema in anyOf';
+    expect(fieldErrorsById(container)).toEqual({ root_payment: [noMatch], root_payment_name: [tooShort] });
+
+    await user.selectOptions(screen.getByRole('combobox'), 'Invoice');
+
+    // The data still breaks a constraint the new option shares, so the validator's errors stay until the next
+    // validation, the one on the switched field itself included
+    expect(fieldErrorsById(container)).toEqual({ root_payment: [noMatch], root_payment_name: [tooShort] });
+    expect(errorListMessages(container)).toEqual([`.payment.name ${tooShort}`, `.payment ${noMatch}`]);
+  });
+
   it('clears the errors raised below a property both options of an anyOf declare when the option is switched', async () => {
     const onSubmit = vi.fn();
     const addrWith = (key: string): RJSFSchema => ({

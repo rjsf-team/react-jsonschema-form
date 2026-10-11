@@ -127,6 +127,10 @@ export interface PendingChange<T> {
    * key go with it
    */
   newKeyOf?: KeyMove;
+  /** For a change that moved keys, where the fields' own errors under each key went when not where the validator's
+   * did; see `AnnouncedMove`
+   */
+  newOwnKeyOf?: KeyMove;
   /** For a change that moved keys, whether the errors raised at `fieldPath` itself go too; see `AnnouncedMove` */
   dropsOwnErrors?: boolean;
 }
@@ -138,6 +142,11 @@ export type KeyMove = (key: string) => string | undefined;
 export interface AnnouncedMove {
   fieldPath: FieldPath;
   newKeyOf: KeyMove;
+  /** Where the fields' own errors under each key went, when not where the validator's did: an option switch drops
+   * what was raised under a key the new option declares too, since another widget renders for it, while the
+   * validator's errors there describe a constraint the new option may well share
+   */
+  newOwnKeyOf?: KeyMove;
   /** Whether the errors raised at `fieldPath` itself go with the move. A reorder or rename leaves the array or object
    * that raised them in place, so they stay; an option switch renders another field at the path, so a raise of the
    * option's widget would be shown by one that never made it
@@ -549,13 +558,13 @@ export function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends Fo
   current: FormState<T, S, F>,
   change: PendingChange<T>,
 ): ErrorSchema<T> | undefined {
-  const { fieldPath, newKeyOf, dropsOwnErrors } = change;
+  const { fieldPath, newKeyOf, newOwnKeyOf, dropsOwnErrors } = change;
   const path = fieldPathToList(fieldPath);
   const raised = raiseOf(change);
   let { customErrors } = current;
   const hasOwnErrors = getByPath<string[]>(customErrors, [...path, ERRORS_KEY], []).length > 0;
   if (newKeyOf && customErrors) {
-    customErrors = moveErrorSchemaKeys(customErrors, path, newKeyOf);
+    customErrors = moveErrorSchemaKeys(customErrors, path, newOwnKeyOf ?? newKeyOf);
   }
   if (raised) {
     // A copy without what holds nothing, so the form neither holds an object the field may go on to change, such as
