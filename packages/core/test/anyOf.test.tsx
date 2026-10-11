@@ -868,6 +868,33 @@ describe('anyOf', () => {
     expect(retrievedOptions.sort()).toEqual(['A', 'A', 'A', 'B']);
   });
 
+  it('switches options under StrictMode as it does without it', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        shape: {
+          anyOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'string', default: 'a' } } },
+            { title: 'B', type: 'object', properties: { b: { type: 'string', default: 'b' } } },
+          ],
+        },
+      },
+    };
+    const onChange = vi.fn();
+    const { container } = render(
+      <StrictMode>
+        <Form schema={schema} validator={validator} initialFormData={{ shape: { a: 'a' } }} onChange={onChange} />
+      </StrictMode>,
+    );
+    const select = container.querySelector<HTMLSelectElement>('#root_shape__anyof_select')!;
+
+    await user.selectOptions(select, '1');
+
+    expect(select.value).toBe('1');
+    expect(container.querySelector('#root_shape_b')).toBeInTheDocument();
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ shape: { b: 'b' } });
+  });
+
   it('should not change the selected option when entering values', async () => {
     const schema: RJSFSchema = {
       type: 'object',
