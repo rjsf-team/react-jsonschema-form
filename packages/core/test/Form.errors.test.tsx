@@ -1468,6 +1468,22 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         },
       );
 
+      it('keeps listing the message once after the validator stops reporting it', async () => {
+        const { node, onError } = createFormComponent({ schema, extraErrors });
+        const input = node.querySelector<HTMLInputElement>('input')!;
+
+        await user.type(input, 'a');
+        await submitForm(node, user);
+        await user.type(input, 'bc');
+        await submitForm(node, user);
+
+        expect(input.value).toBe('abc');
+        expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
+        expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+        expect(onError).toHaveBeenCalledTimes(2);
+        expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ property: '.addr.street', message })]);
+      });
+
       it('passes the message once to onChange under live validation', async () => {
         const { node, onChange } = createFormComponent({ schema, extraErrors, liveValidate: 'onChange' });
 
