@@ -14,6 +14,11 @@ const objectOptions = [
   { label: 'Two', value: { a: 2 } },
 ];
 
+const stringOptions = [
+  { label: 'One', value: 'one' },
+  { label: 'Two', value: 'two' },
+];
+
 const schema: RJSFSchema = {
   type: 'object',
   required: ['choices'],
@@ -56,6 +61,17 @@ describe('CheckboxesWidget', () => {
     await user.click(screen.getByRole('checkbox', { name: 'One' }));
 
     expect(onChange).toHaveBeenLastCalledWith([{ a: 1 }, { a: 2 }]);
+  });
+
+  test('disables only the options ui:enumDisabled lists', () => {
+    render(
+      <CheckboxesWidget
+        {...makeWidgetMockProps({ value: [], options: { enumOptions: stringOptions, enumDisabled: ['two'] } })}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox', { name: 'One' })).toBeEnabled();
+    expect(screen.getByRole('checkbox', { name: 'Two' })).toBeDisabled();
   });
 
   // HTML5 constraint validation weighs each box on its own, so a `required` option demands *that* box — every box, for
@@ -118,18 +134,4 @@ describe('CheckboxesWidget focus and blur', () => {
       ]);
     },
   );
-
-  test('disables only the options ui:enumDisabled lists', () => {
-    render(
-      <Form
-        schema={schema}
-        uiSchema={{ choices: { 'ui:widget': 'checkboxes', 'ui:enumDisabled': ['b'] } }}
-        validator={validator}
-      />,
-    );
-
-    expect(screen.getByRole('checkbox', { name: 'a' })).toBeEnabled();
-    expect(screen.getByRole('checkbox', { name: 'b' })).toBeDisabled();
-    expect(screen.getByRole('checkbox', { name: 'c' })).toBeEnabled();
-  });
 });
