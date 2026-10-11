@@ -174,7 +174,7 @@ export function FancySelect({
         )}
       >
         <span className={cn('flex-1 line-clamp-1', !selectedItem && 'text-muted-foreground')}>
-          {selectedItem?.label || placeholder}
+          {selectedItem ? selectedItem.label : placeholder}
         </span>
         <ChevronDown className='h-4 w-4 opacity-50' />
       </button>
