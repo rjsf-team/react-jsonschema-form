@@ -145,17 +145,18 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const { selectedOption } = selection;
 
   // Adjusted while rendering rather than in an effect, so the option that no longer describes the data is never
-  // committed. A pending proposal is settled by the first render after it, whether or not the data followed it.
+  // committed. A pending proposal is settled by the first render after it under the same id, whether or not the data
+  // followed it; a render that changed the id only records what it rendered and leaves the proposal to the next pass.
   // `Object.is`, since `NaN !== NaN` would have data a widget parsed to `NaN` set this state on every pass
   if (!Object.is(selection.formData, formData) || selection.id !== id || selection.proposal) {
+    const isSameField = selection.id === id;
     setSelection({
-      selectedOption:
-        selection.id === id
-          ? optionForData<T, S, F>(selection, formData, retrievedOptions, schema, registry)
-          : selectedOption,
+      selectedOption: isSameField
+        ? optionForData<T, S, F>(selection, formData, retrievedOptions, schema, registry)
+        : selectedOption,
       formData,
       id,
-      proposal: undefined,
+      proposal: isSameField ? undefined : selection.proposal,
     });
   }
 
