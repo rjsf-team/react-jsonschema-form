@@ -25,7 +25,9 @@ import {
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, {
-  findSchemaDefinitionWithBaseURI,
+  findSchemaDefinitionWithBaseURIOrUndefined,
+  normalizeRootReferences,
+  originalRefOf,
   resolveUri,
   splitKeyElementFromObject,
 } from '../findSchemaDefinition.ts';
@@ -593,13 +595,48 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   expandedRefs?: string[],
   passCount = 0,
 ): S {
+  return resolveAllReferencesInternal<S>(
+    schema,
+    rootSchema,
+    recurseList,
+    baseURI,
+    resolveAnyOfOrOneOfRefs,
+    markCycleOnDetection,
+    expandedRefs,
+    passCount,
+  );
+}
+
+/** The recursive worker behind `resolveAllReferences`; adds the `pointerScope` threading that keeps same-document
+ * (`#...`) refs pointing at the resource the referring schema belongs to as the walk descends, without letting
+ * that scope rewrite the meaning of ordinary relative refs.
+ */
+function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  rootSchema: S,
+  recurseList: string[],
+  baseURI: string | undefined,
+  resolveAnyOfOrOneOfRefs: boolean | undefined,
+  markCycleOnDetection: boolean,
+  expandedRefs: string[] | undefined,
+  passCount: number,
+  parentPointerScope?: string,
+): S {
   if (!isObject(schema)) {
     return schema;
   }
   let resolvedSchema: S = schema;
+  // The root the lookups below run against: every ref inside it is already resolved against the
+  // root's own base, so nested content keeps the meaning it was written with (see `normalizeRootReferences`).
+  const normalizedRoot = normalizeRootReferences(rootSchema);
   // The lookup treats an undefined base as the root's own `$id` (its parameter default); keeping the
   // same effective base here means a local `$id` below resolves against the scope the lookup used.
   let currentBaseURI = baseURI ?? (typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined);
+  // The scope same-document (`#...`) refs resolve against: inherited from the referring schema until a `$ref`
+  // target with its own resource identity takes over. Unlike `currentBaseURI` it never changes the meaning of
+  // relative refs, so a target's scope cannot leak into refs the normalization already resolved against the
+  // root base.
+  let pointerScope = parentPointerScope ?? currentBaseURI;
   // The recurse list is a path stack: entries are added only for the refs being expanded on the current resolution
   // path and are never shared with sibling subtrees or back with the caller. A $ref is a cycle only when it already
   // appears on the current path.
@@ -618,26 +655,67 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       return markCycleOnDetection ? { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } : resolvedSchema;
     }
     pathList = [...pathList, $ref!];
-    // Retrieve the referenced schema definition. The lookup reports the scope it resolved the target in, so
-    // the base below never has to be re-derived from object identity or an as-written `$id`.
-    const { schema: refSchema, baseURI: refBaseURI } = findSchemaDefinitionWithBaseURI<S>(
-      $ref,
-      rootSchema,
-      [],
-      currentBaseURI,
-    );
-    resolvedSchema = { ...refSchema, ...localSchema, [RJSF_REF_KEY]: $ref };
-    if (ID_KEY in localSchema && typeof localSchema[ID_KEY] === 'string' && localSchema[ID_KEY] !== refSchema[ID_KEY]) {
-      // A `$id` written on the referring schema itself, distinct from the target's, resolves against the
-      // referring schema's scope. When it repeats the target's own `$id` as written, the lookup already
-      // reported the scope with it applied, so the target scope below stands.
-      currentBaseURI = resolveUri(currentBaseURI ?? '', localSchema[ID_KEY]);
-    } else if (refBaseURI !== undefined) {
-      // Otherwise the target's scope applies. The lookup reports it with the target's own `$id`
-      // already applied, so it is used as reported rather than resolved again.
-      currentBaseURI = refBaseURI;
+    // Look the ref up against the normalized root: its refs are already resolved against the root's own base,
+    // so a ref carried by a nested resource resolves in the root's scope instead of being re-resolved against
+    // the referring schema's scope. A same-document ref (one starting with `#`) names a pointer inside the
+    // resource the referring schema currently belongs to, so it looks up against `pointerScope`; every other
+    // ref goes against the referring scope first, so that a relative ref written on the caller's own schema
+    // (which the normalization never touched) keeps its lexical meaning, and only a miss there falls back to
+    // the root's scope. Chain failures inside the lookup still throw rather than fall back.
+    const lookupBase = $ref!.startsWith('#') ? pointerScope : currentBaseURI;
+    const rootBaseURI = typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined;
+    let found =
+      findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, normalizedRoot, [], lookupBase) ??
+      (lookupBase !== rootBaseURI
+        ? findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, normalizedRoot, [], rootBaseURI)
+        : undefined);
+    if (found === undefined) {
+      throw new Error(`Could not find a definition for ${$ref}.`);
     }
-    expandedRefs?.push($ref!);
+    let localOverride = false;
+    if (
+      ID_KEY in localSchema &&
+      typeof localSchema[ID_KEY] === 'string' &&
+      localSchema[ID_KEY] !== found.schema[ID_KEY]
+    ) {
+      // A `$id` written on the referring schema itself, distinct from the target's, re-identifies the resource
+      // the merged schema belongs to: the target's own content is then read as written (from the un-normalized
+      // root) so that the refs it carries resolve against the overriding scope, not the scope the
+      // normalization baked in. That is the documented meaning of a local `$id` overriding the referenced
+      // resource scope.
+      localOverride = true;
+      found = findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, rootSchema, [], lookupBase) ?? found;
+    }
+    const { schema: refSchema, baseURI: refBaseURI } = found;
+    // The marker keeps the spelling the document author wrote, which is what `resolveUiSchema` looks up;
+    // normalization only changed how the ref resolves, not where the schema came from.
+    const sourceRef = originalRefOf(resolvedSchema) ?? $ref!;
+    resolvedSchema = {
+      ...refSchema,
+      ...localSchema,
+      [RJSF_REF_KEY]: sourceRef,
+    };
+    if (localOverride) {
+      // The overriding `$id` resolves against the referring schema's scope, and same-document refs now point
+      // into that local resource.
+      currentBaseURI = resolveUri(currentBaseURI ?? '', localSchema[ID_KEY] as string);
+      pointerScope = currentBaseURI;
+    } else if (
+      ID_KEY in localSchema &&
+      typeof localSchema[ID_KEY] === 'string' &&
+      localSchema[ID_KEY] === refSchema[ID_KEY] &&
+      refBaseURI !== undefined
+    ) {
+      // When the local `$id` repeats the target's own `$id` as written, the lookup already reported the scope
+      // with it applied, so the target scope stands for same-document refs.
+      pointerScope = refBaseURI;
+    } else if (!localOverride && !(ID_KEY in localSchema) && refBaseURI !== undefined) {
+      // A same-document ref alongside this one names a pointer inside the target's resource, so the scope the
+      // lookup reported (with the target's own `$id` already applied) becomes the pointer scope. The referring
+      // scope itself does not change: refs carried by root content are already resolved against the root base.
+      pointerScope = refBaseURI;
+    }
+    expandedRefs?.push(sourceRef);
   } else if (passCount > 0) {
     // Only on fixpoint re-walks (pass > 0): a subtree materialized by a previous pass still carries its source
     // $ref as RJSF_REF_KEY, and putting it back on the path keeps refs inside the subtree at their fixpoint
@@ -662,7 +740,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       // in an object property always causes an infinite render loop and must be caught; in anyOf/oneOf mode a $ref
       // already expanded by an earlier option is collapsed on purpose (see the optionsPath handling below), so it
       // must not be marked.
-      updatedProps[key] = resolveAllReferences(
+      updatedProps[key] = resolveAllReferencesInternal(
         value as S,
         rootSchema,
         pathList,
@@ -671,6 +749,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         !resolveAnyOfOrOneOfRefs,
         expandedRefs,
         passCount,
+        pointerScope,
       );
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
@@ -684,7 +763,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     resolvedSchema = {
       ...resolvedSchema,
       // Array items are only rendered when data exists, so a $ref cycle here does NOT cause an infinite render.
-      items: resolveAllReferences(
+      items: resolveAllReferencesInternal(
         resolvedSchema.items as S,
         rootSchema,
         pathList,
@@ -693,6 +772,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         false,
         expandedRefs,
         passCount,
+        pointerScope,
       ),
     };
   }
@@ -711,7 +791,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         ...resolvedSchema,
         [key]: (resolvedSchema[key] as S[]).map((s: S) => {
           const expandedBefore = expandedRefs?.length ?? 0;
-          const option = resolveAllReferences(
+          const option = resolveAllReferencesInternal(
             s,
             rootSchema,
             optionsPath,
@@ -720,6 +800,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
             false,
             expandedRefs,
             passCount,
+            pointerScope,
           );
           if (expandedRefs && expandedRefs.length > expandedBefore) {
             optionsPath = [...optionsPath, ...expandedRefs.slice(expandedBefore)];

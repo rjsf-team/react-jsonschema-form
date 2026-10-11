@@ -1,5 +1,6 @@
 import type { MockInstance } from 'vitest';
 
+import { findSchemaDefinitionWithBaseURI } from '../../src/findSchemaDefinition.ts';
 import type { RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -758,6 +759,41 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         type: 'integer',
         [RJSF_REF_KEY]: 'https://jsonschema.dev/schemas/mixins/non-negative-integer',
       });
+    });
+    it('#5467: resolves a properties-carrying $ref chain in a bundle whose root has no $id', () => {
+      // Refs inside the nested resources are written relative to their resource. Normalization resolves them
+      // against the root's base, and the resolver must not resolve them a second time against the nested scope
+      // (which used to throw `Could not find a definition for nested/nested/child.json`).
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          parent: {
+            $id: 'nested/parent.json',
+            properties: { c: { $ref: 'child.json' } },
+          },
+          child: {
+            $id: 'nested/child.json',
+            $ref: 'leaf.json',
+            properties: { extra: { type: 'string' } },
+          },
+          leaf: {
+            $id: 'nested/leaf.json',
+            properties: { y: { $ref: 'other.json' } },
+          },
+          other: { $id: 'nested/other.json', type: 'boolean' },
+        },
+        $ref: 'nested/parent.json',
+      };
+      const resolved = retrieveSchema({ validator: testValidator }, root, root);
+      const { c } = resolved.properties as Record<string, RJSFSchema>;
+      expect(c.allOf).toHaveLength(2);
+      const [childPart, leafPart] = c.allOf as RJSFSchema[];
+      expect(childPart.properties).toHaveProperty('extra', { type: 'string' });
+      // The ref the leaf carries resolves against the root scope, exactly as written.
+      const leafRef = (leafPart.properties as Record<string, RJSFSchema>).y.$ref as string;
+      expect(findSchemaDefinitionWithBaseURI(leafRef, root, [], undefined).schema).toEqual(
+        expect.objectContaining({ type: 'boolean' }),
+      );
     });
     describe('property dependencies', () => {
       describe('false condition', () => {

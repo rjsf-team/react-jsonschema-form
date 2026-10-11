@@ -336,13 +336,62 @@ function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(
  * @param schema - The schema to be processed
  * @param baseURI - The base URI to be used for resolving relative references
  */
+/** The ref each normalized node carried before `makeAllReferencesAbsolute` rewrote it, kept so that markers
+ * naming where a schema was resolved from (`RJSF_REF_KEY`) can keep the spelling the document author wrote
+ * (and `resolveUiSchema` looks up) rather than the canonical form the rewrite produced.
+ */
+const originalRefs = new WeakMap<StrictRJSFSchema, string>();
+
+/** Returns the ref `schema` carried before normalization rewrote it, or undefined when it holds its original
+ * spelling (or was never normalized).
+ */
+export function originalRefOf<S extends StrictRJSFSchema>(schema: S): string | undefined {
+  return originalRefs.get(schema);
+}
+
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
   const visit = (node: S, currentURI: string): S => {
     const ref = node[REF_KEY];
     const refChange = typeof ref === 'string' ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
-    return mapSubschemas(node, (subSchema) => visit(subSchema, childScope(subSchema, currentURI)), refChange);
+    const visited = mapSubschemas(node, (subSchema) => visit(subSchema, childScope(subSchema, currentURI)), refChange);
+    if (typeof ref === 'string' && visited[REF_KEY] !== ref) {
+      originalRefs.set(visited, ref);
+    }
+    return visited;
   };
   return visit(schema, typeof schema[ID_KEY] === 'string' ? schema[ID_KEY] : baseURI);
+}
+
+/** Roots already returned by `normalizeRootReferences`, and the per-root memo. Normalization resolves every ref
+ * against the scope its subtree sits in, so running it twice would resolve the already-resolved refs a second
+ * time and corrupt them; the marker set is what makes the function idempotent.
+ */
+const normalizedRoots = new WeakSet<StrictRJSFSchema>();
+const normalizedRootCache = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
+
+/** Returns `rootSchema` with every ref inside it resolved against the root's own base (`$id` when present, `#`
+ * otherwise), so that refs carried by nested content keep the meaning they were written with no matter which
+ * scope later looks them up. The result is memoized per root object, and a root this function already produced
+ * comes back unchanged, so repeated entry points (`createSchemaUtils` at construction, `resolveAllReferences`
+ * on every walk) share one normalization instead of stacking it.
+ *
+ * @param rootSchema - The root schema to normalize
+ * @returns - The normalized root; the original object when normalization changed nothing
+ */
+export function normalizeRootReferences<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): S {
+  if (normalizedRoots.has(rootSchema)) {
+    return rootSchema;
+  }
+  let normalized = normalizedRootCache.get(rootSchema) as S | undefined;
+  if (normalized === undefined) {
+    normalized = makeAllReferencesAbsolute<S>(
+      rootSchema,
+      typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : '#',
+    );
+    normalizedRoots.add(normalized);
+    normalizedRootCache.set(rootSchema, normalized);
+  }
+  return normalized;
 }
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
@@ -382,6 +431,28 @@ export function findSchemaDefinitionWithBaseURI<S extends StrictRJSFSchema = RJS
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
   return resolveFoundChain<S>(found, ref, rootSchema, recurseList, baseURI);
+}
+
+/** The undefined-returning form of `findSchemaDefinitionWithBaseURI`, for callers that want to retry a miss against
+ * another scope rather than be thrown out. Only a ref that names nothing in the given scope comes back undefined: a
+ * ref that hits a schema which itself carries a `$ref` chain still goes through `resolveFoundChain`, so a chain that
+ * leads nowhere throws exactly as `findSchemaDefinitionWithBaseURI` would.
+ *
+ * @param $ref - The ref to resolve
+ * @param rootSchema - The schema to search
+ * @param recurseList - List of refs already expanded on the current resolution path
+ * @param baseURI - The URI scope the ref resolves against
+ * @returns - The found schema and its scope, or undefined when the ref names nothing in that scope
+ */
+export function findSchemaDefinitionWithBaseURIOrUndefined<S extends StrictRJSFSchema = RJSFSchema>(
+  $ref?: string,
+  rootSchema: S = {} as S,
+  recurseList: string[] = [],
+  baseURI: string | undefined = rootSchema[ID_KEY],
+): FoundSchema<S> | undefined {
+  const ref = $ref || '';
+  const found = lookupSchemaDefinition<S>(ref, rootSchema, baseURI);
+  return found === undefined ? undefined : resolveFoundChain<S>(found, ref, rootSchema, recurseList, baseURI);
 }
 
 /** The lookup half of `findSchemaDefinitionWithBaseURI()`: where `ref` points, and the scope the found
