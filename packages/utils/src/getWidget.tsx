@@ -203,24 +203,6 @@ export function getWidgetKey<S extends StrictRJSFSchema = RJSFSchema>(
   return getAliasKey<S>(schema, widget, type, getTypeListSelectType<S>(schema, type));
 }
 
-/** The keys `@rjsf/core` registers its widgets under: every one an alias stands for, and `RatingWidget`, which only its
- * key names
- */
-const STANDARD_WIDGET_KEYS: ReadonlySet<string> = new Set([
-  ...Object.values(widgetMap).flatMap((widgets) => Object.values(widgets)),
-  'RatingWidget',
-]);
-
-/** Determines whether `key` is one `@rjsf/core` registers a widget under, which a theme's
- * `ThemePresentation.standardWidgets` declaration applies to
- *
- * @param key - A widget registry key
- * @returns - True when `@rjsf/core` registers a widget under `key`
- */
-export function isStandardWidgetKey(key: string): boolean {
-  return STANDARD_WIDGET_KEYS.has(key);
-}
-
 /** Determines whether a `type` list can render through another field than the one for the type it resolves to. Only a
  * list naming a non-null type besides that one has another field that could render the value, so a nullable
  * `['string', 'null']` can't. A list resolving to `null` names nothing else, but can, as the select rule renders it

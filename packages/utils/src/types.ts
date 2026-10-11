@@ -809,8 +809,9 @@ export type ResolvedPresentationDeclaration = Record<PresentationPart, Exclude<P
  * under, so a component replacing another under the same key draws what that key declares
  */
 export interface ThemePresentation {
-  /** Applies to every widget key `@rjsf/core` registers, for a theme whose widgets all draw the same parts, beneath
-   * any declaration under the widget's own key
+  /** For a theme whose widgets all draw the same parts: `mergeThemePresentation()` expands it into an entry, at this
+   * layer, for every widget key `@rjsf/core` registers, beneath this layer's own entry for that key. So it overrides
+   * the parts it declares in the layers beneath it, even under a key one of them declares
    */
   standardWidgets?: PresentationDeclaration;
   /** Declarations for widgets, by the key they are registered under */
@@ -818,6 +819,11 @@ export interface ThemePresentation {
   /** Declarations for fields, by the key they are registered under */
   fields?: Readonly<Record<string, PresentationDeclaration>>;
 }
+
+/** A form's `ThemePresentation` once `mergeThemePresentation()` merged its layers and expanded their `standardWidgets`
+ * into entries by key
+ */
+export type MergedThemePresentation = Required<Omit<ThemePresentation, 'standardWidgets'>>;
 
 /** Where one part of a field is drawn: by its template, by its field or widget component, by a field above it
  * rendering the same id, or not at all

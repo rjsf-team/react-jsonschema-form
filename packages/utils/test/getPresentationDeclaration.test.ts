@@ -55,28 +55,12 @@ describe('getPresentationDeclaration()', () => {
     ).toEqual({ ...TEMPLATE, labelledBy: 'aria-labelledby' });
   });
 
-  it('layers a widget key declaration over standardWidgets, and the component declaration over both', () => {
+  it("layers the component's declaration over the theme's for its key", () => {
     const MyCheckbox: Widget = Object.assign(() => null, { presentation: { errors: 'self' } as const });
-    const theme: PresentationSource = {
-      widgets: { CheckboxWidget: MyCheckbox, TextWidget },
-      presentation: { ...presentation, standardWidgets: { label: 'self', help: 'self' } },
-    };
+    const theme: PresentationSource = { widgets: { CheckboxWidget: MyCheckbox, TextWidget }, presentation };
     expect(
       getPresentationDeclaration(theme, { schema: { type: 'boolean' }, field: StringField, widget: 'CheckboxWidget' }),
-    ).toEqual({ label: 'self', description: 'self', errors: 'self', help: 'self', labelledBy: 'for' });
-    expect(
-      getPresentationDeclaration(theme, { schema: { type: 'string' }, field: StringField, widget: 'text' }),
-    ).toEqual({ ...TEMPLATE, label: 'self', help: 'self' });
-  });
-
-  it('applies standardWidgets only to keys @rjsf/core registers', () => {
-    const theme: PresentationSource = {
-      widgets: { MyWidget: TextWidget },
-      presentation: { standardWidgets: { label: 'self' } },
-    };
-    expect(
-      getPresentationDeclaration(theme, { schema: { type: 'string' }, field: StringField, widget: 'MyWidget' }),
-    ).toEqual(TEMPLATE);
+    ).toEqual({ ...TEMPLATE, label: 'self', description: 'self', errors: 'self' });
   });
 
   it('reads a widget given as a component by its own declaration alone', () => {
@@ -93,7 +77,7 @@ describe('getPresentationDeclaration()', () => {
   it('leaves every part to the template for a widget that is neither registered nor an alias', () => {
     expect(
       getPresentationDeclaration(
-        { ...source, presentation: { standardWidgets: { label: 'self' } } },
+        { ...source, presentation: { widgets: { Unregistered: { label: 'self' } } } },
         { schema: { type: 'string' }, field: StringField, widget: 'Unregistered' },
       ),
     ).toEqual(TEMPLATE);

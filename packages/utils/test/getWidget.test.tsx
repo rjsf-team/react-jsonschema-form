@@ -3,7 +3,7 @@ import type { ForwardedRef } from 'react';
 import { createContext, forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
-import { getWidgetKey, isStandardWidgetKey } from '../src/getWidget.tsx';
+import { getWidgetKey } from '../src/getWidget.tsx';
 import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
 import { getFieldTypeForWidget, getWidget, getWidgetType, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
 
@@ -367,19 +367,6 @@ describe('getWidgetKey()', () => {
 
   it('should not return a registered name for a widget that is not registered', () => {
     expect(getWidgetKey({ type: 'string' }, 'TextWidget')).toBeUndefined();
-  });
-});
-
-describe('isStandardWidgetKey()', () => {
-  it.each(['TextWidget', 'CheckboxWidget', 'CheckboxesWidget', 'AltDateTimeWidget', 'RatingWidget'])(
-    'should be true for %s, which @rjsf/core registers',
-    (key) => {
-      expect(isStandardWidgetKey(key)).toBe(true);
-    },
-  );
-
-  it.each(['text', 'MyWidget', 'toString'])('should be false for %s', (key) => {
-    expect(isStandardWidgetKey(key)).toBe(false);
   });
 });
 
