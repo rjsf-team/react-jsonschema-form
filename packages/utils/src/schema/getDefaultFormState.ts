@@ -316,7 +316,11 @@ export function computeDefaults<
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
   let contextToCompute = context;
-  let updatedRecurseList = _recurseList;
+  // Seed the path with the reference this schema was itself resolved from, so a `$ref` back to it from anywhere in
+  // what the definition holds reads as a recursion however deep the branch that carries it sits (#5493). Branches
+  // that stood beside the `$ref` re-derive their own path with the keyword they are entered through, since a `$ref`
+  // back to the same definition from one of those is a second use, not a recursion.
+  let updatedRecurseList = enclosingRefPath<S>(schema, _recurseList);
   // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.

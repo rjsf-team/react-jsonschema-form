@@ -1455,7 +1455,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             properties: { a: { type: 'string', default: 'x' } },
             dependencies: { a: { properties: { child: { $ref: '#/definitions/node' } } } },
           };
-          const expected = { a: 'x', child: { a: 'x' } };
+          const expected = { a: 'x' };
 
           test.each<[string, RJSFSchema, unknown]>([
             ['the root', { definitions: { node }, $ref: '#/definitions/node' }, expected],
@@ -1465,7 +1465,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { p: expected },
             ],
           ])('getDefaultFormState stops at the recursion the entry declares, from %s', (_, schema, defaults) => {
-            // The default meets the dependency at every level, so the entry applies wherever the definition is reached
+            // The entry's content is the definition itself, whose defaults are the ones already computed at this
+            // level, so the recursion adds no level of its own
             expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(defaults);
           });
         });
@@ -1671,6 +1672,97 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
           test('getObjectDefaults', () => {
             expect(getObjectDefaults({ validator: testValidator }, schema, { rootSchema: schema })).toEqual(expected);
+          });
+        });
+
+        describe('a recursive $ref reached through a dependencies entry (#5493)', () => {
+          // A `dependencies` entry holding a `$ref` back to the definition it sits in: the dependency's
+          // condition is met by a default, so the entry resolves, and the defaults must stop at the
+          // recursion, the way they do for a `$ref` reached through a property
+          const node = {
+            type: 'object',
+            properties: { a: { type: 'string', default: 'x' } },
+            dependencies: { a: { properties: { child: { $ref: '#/definitions/node' } } } },
+          } as RJSFSchema;
+
+          test('a root-level $ref', () => {
+            const schema: RJSFSchema = { definitions: { node }, $ref: '#/definitions/node' };
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              a: 'x',
+            });
+          });
+
+          test('a $ref reached through a property', () => {
+            const schema: RJSFSchema = {
+              definitions: { node },
+              type: 'object',
+              properties: { p: { $ref: '#/definitions/node' } },
+            };
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              p: { a: 'x' },
+            });
+          });
+        });
+
+        describe('a dependencies branch that stood beside the $ref', () => {
+          // A `dependencies` next to the `$ref` is not part of the definition, so its `$ref` back to the same
+          // definition is a second use: it resolves, and the sibling branch keeps its own defaults too
+          const Base: RJSFSchema = { type: 'object', properties: { name: { type: 'string', default: 'n' } } };
+
+          test('a $ref entry keeps the sibling defaults and the definition ones', () => {
+            const schema: RJSFSchema = {
+              definitions: { Base },
+              type: 'object',
+              properties: {
+                p: {
+                  $ref: '#/definitions/Base',
+                  properties: { flag: { type: 'string', default: 'on' } },
+                  dependencies: { flag: { $ref: '#/definitions/Base' } },
+                },
+              },
+            };
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              p: { flag: 'on', name: 'n' },
+            });
+          });
+
+          test('an allOf entry keeps every branch', () => {
+            const schema: RJSFSchema = {
+              definitions: { Base },
+              type: 'object',
+              properties: {
+                p: {
+                  $ref: '#/definitions/Base',
+                  properties: { flag: { type: 'string', default: 'on' } },
+                  dependencies: {
+                    flag: { allOf: [{ $ref: '#/definitions/Base' }, { properties: { more: { default: 'm' } } }] },
+                  },
+                },
+              },
+            };
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              p: { flag: 'on', more: 'm', name: 'n' },
+            });
+          });
+        });
+
+        describe('the depth defaults reach into a recursive definition', () => {
+          // The path is seeded once at the top of `computeDefaults()`, so the recursion stops at the same depth
+          // however the definition is reached
+          const node = {
+            type: 'object',
+            properties: { a: { type: 'string', default: 'x' }, child: { $ref: '#/definitions/node' } },
+            dependencies: { a: { $ref: '#/definitions/node' } },
+          } as RJSFSchema;
+          const rootSchema: RJSFSchema = { definitions: { node }, $ref: '#/definitions/node' };
+          const expected = { a: 'x' };
+
+          test('the raw definition, a $ref to it, and getDefaultFormState agree', () => {
+            expect(computeDefaults({ validator: testValidator }, node, { rootSchema })).toEqual(expected);
+            expect(computeDefaults({ validator: testValidator }, { $ref: '#/definitions/node' }, { rootSchema })).toEqual(
+              expected,
+            );
+            expect(getDefaultFormState({ validator: testValidator }, { schema: rootSchema, rootSchema })).toEqual(expected);
           });
         });
 
