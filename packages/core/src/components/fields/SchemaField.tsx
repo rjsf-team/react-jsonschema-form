@@ -535,15 +535,16 @@ function SchemaFieldRender<
   // type in effect — and only the inner one would follow the type the user chose.
   // `xxxOfKey` is what `rendersOptionSelector` was decided from, so it is set whenever that is, which the narrowing
   // here restates for the lookup below. Memoized so `MultiSchemaField`, which retrieves each option again against the
-  // data and keys its memos on this array, isn't handed a new one by a re-render that changed neither
+  // data and keys its memos on this array, isn't handed a new one by a re-render that changed neither. A `$ref` cycle
+  // returns below without rendering them, so its options are left unretrieved like its schema
   const xxxOfOptions = useMemo(
     () =>
-      rendersOptionSelector && xxxOfKey !== undefined && !rendersOptionsItself
+      rendersOptionSelector && xxxOfKey !== undefined && !rendersOptionsItself && !isRefCycle
         ? schema[xxxOfKey]?.map((xxxOfSchema) =>
             schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
           )
         : undefined,
-    [rendersOptionSelector, rendersOptionsItself, xxxOfKey, schema, schemaUtils, formData],
+    [rendersOptionSelector, rendersOptionsItself, xxxOfKey, isRefCycle, schema, schemaUtils, formData],
   );
 
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
