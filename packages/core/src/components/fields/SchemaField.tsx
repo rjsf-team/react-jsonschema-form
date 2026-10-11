@@ -534,9 +534,10 @@ function SchemaFieldRender<
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
   // type in effect — and only the inner one would follow the type the user chose.
   // `xxxOfKey` is what `rendersOptionSelector` was decided from, so it is set whenever that is, which the narrowing
-  // here restates for the lookup below. Memoized so `MultiSchemaField`, which retrieves each option again against the
-  // data and keys its memos on this array, isn't handed a new one by a re-render that changed neither. A `$ref` cycle
-  // returns below without rendering them, so its options are left unretrieved like its schema
+  // here restates for the lookup below. This is the one place the options are retrieved: `MultiSchemaField` renders
+  // what it is handed. Memoized so a re-render that changed neither the schema nor the data hands it the same array,
+  // which its callbacks key on. A `$ref` cycle returns below without rendering them, so its options are left
+  // unretrieved like its schema
   const xxxOfOptions = useMemo(
     () =>
       rendersOptionSelector && xxxOfKey !== undefined && !rendersOptionsItself && !isRefCycle

@@ -48,7 +48,7 @@ interface OptionSelection<T> {
  *
  * @param selection - The selected option, and the data it was last matched against
  * @param formData - The data now rendered
- * @param retrievedOptions - The retrieved schema of each option
+ * @param options - The retrieved schema of each option
  * @param schema - The schema holding the options
  * @param registry - The `registry` object
  * @returns - The index of the option to select
@@ -60,7 +60,7 @@ function optionForData<
 >(
   selection: OptionSelection<T>,
   formData: T | undefined,
-  retrievedOptions: S[],
+  options: S[],
   schema: S,
   registry: Registry<T, S, F>,
 ): number {
@@ -76,7 +76,7 @@ function optionForData<
     // looks like (RFC, section 5): the chosen option stays while the data still fits it, so a form whose data
     // matches several options keeps the explicit choice, and one whose data does not is put back on the option that
     // describes it
-    const chosen = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
+    const chosen = selectedOption >= 0 ? options[selectedOption] : undefined;
     // The retrieved option is not the schema its own `$id` names, and a validator caches what it compiles under
     // that `$id`, so it is validated under one derived from its content, as the option scoring does
     if (chosen && schemaUtils.getValidator().isValid(withVariantId<S>(chosen), formData, registry.rootSchema)) {
@@ -87,7 +87,7 @@ function optionForData<
   }
   return schemaUtils.getClosestMatchingOption(
     formData,
-    retrievedOptions,
+    options,
     selectedOption,
     getDiscriminatorFieldFromSchema<S>(schema),
   );
@@ -96,10 +96,11 @@ function optionForData<
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
  * the currently selected option and cleans up any irrelevant data in `formData`.
  *
- * @param props - The `FieldProps` for this template. `options` is not a declared `FieldProps` key, so it would be read
- *   as `any` through `FieldProps`' `GenericObjectType` index signature; declaring it as `S[]` here names what
- *   `SchemaField` passes, but nothing checks it, since `SchemaField` renders this through a `Field` slot that only
- *   knows `FieldProps`
+ * @param props - The `FieldProps` for this template. `options` holds the option schemas, each already retrieved for
+ *   `formData` by `SchemaField`, which is the one place they are retrieved; a custom field rendering this itself
+ *   retrieves them the same way. It is not a declared `FieldProps` key, so it would be read as `any` through
+ *   `FieldProps`' `GenericObjectType` index signature; declaring it as `S[]` here names what `SchemaField` passes,
+ *   but nothing checks it, since `SchemaField` renders this through a `Field` slot that only knows `FieldProps`
  */
 function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F> & { options: S[] },
@@ -126,15 +127,10 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const readsFormData = useReadsFormData(AnyOfField);
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
 
-  const retrievedOptions = useMemo(
-    () => options.map((opt) => schemaUtils.retrieveSchema(opt, formData)),
-    [options, schemaUtils, formData],
-  );
-
   const [selection, setSelection] = useState<OptionSelection<T>>(() => ({
     selectedOption: schemaUtils.getClosestMatchingOption(
       formData,
-      retrievedOptions,
+      options,
       0,
       getDiscriminatorFieldFromSchema<S>(schema),
     ),
@@ -152,7 +148,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     const isSameField = selection.id === id;
     setSelection({
       selectedOption: isSameField
-        ? optionForData<T, S, F>(selection, formData, retrievedOptions, schema, registry)
+        ? optionForData<T, S, F>(selection, formData, options, schema, registry)
         : selectedOption,
       formData,
       id,
@@ -208,8 +204,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       if (intOption === selectedOption) {
         return;
       }
-      const newOption = intOption >= 0 ? retrievedOptions[intOption] : undefined;
-      const oldOption = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
+      const newOption = intOption >= 0 ? options[intOption] : undefined;
+      const oldOption = selectedOption >= 0 ? options[selectedOption] : undefined;
 
       // `uiSchemaDefinitions` comes from the registry since an option's uiSchema is only its own sub-uiSchema and
       // never carries the root's `ui:definitions` itself.
@@ -226,7 +222,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     },
     [
       selectedOption,
-      retrievedOptions,
+      options,
       disabled,
       readonly,
       schema,
@@ -254,7 +250,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   delete fieldErrorSchema[ERRORS_KEY];
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
-  const option = selectedOption >= 0 ? retrievedOptions[selectedOption] || null : null;
+  const option = selectedOption >= 0 ? options[selectedOption] || null : null;
   let optionSchema: S | undefined | null;
 
   if (option) {
@@ -284,7 +280,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     ? TranslatableString.TitleOptionPrefix
     : TranslatableString.OptionPrefix;
   const translateParams = title ? [title] : [];
-  const enumOptions = retrievedOptions.map((opt, index) => {
+  const enumOptions = options.map((opt, index) => {
     const { title: uiTitle } = getUiOptions<T, S, F>(optionsUiSchema[index]);
     return {
       label: (uiTitle ?? opt.title) || translateString(translateEnum, translateParams.concat(String(index + 1))),

@@ -1,10 +1,13 @@
-import { createRef, useEffect } from 'react';
-import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { createRef, StrictMode, useEffect } from 'react';
+import type { FieldProps, FormValidation, MultiSchemaFieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
-import { waitFor } from '@testing-library/react';
+import validator from '@rjsf/validator-ajv8';
+import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import MultiSchemaFieldTemplate from '../src/components/templates/MultiSchemaFieldTemplate.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
+import Form from '../src/index.ts';
 import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -818,6 +821,51 @@ describe('anyOf', () => {
     });
     expect(select.value).toBe('1');
     expect(node.querySelector('#root_shape_b')).toBeInTheDocument();
+  });
+
+  it('retrieves each option once for a keystroke inside the selected option', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        shape: {
+          anyOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+            { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const retrievedOptions: string[] = [];
+    /** The default template, with the field's `schemaUtils` spied on once it is in hand */
+    function SpyingTemplate(props: MultiSchemaFieldTemplateProps) {
+      const { schemaUtils } = props.registry;
+      if (!vi.isMockFunction(schemaUtils.retrieveSchema)) {
+        const { retrieveSchema } = schemaUtils;
+        vi.spyOn(schemaUtils, 'retrieveSchema').mockImplementation((...args) => {
+          const { title } = args[0];
+          if (title === 'A' || title === 'B') {
+            retrievedOptions.push(title);
+          }
+          return retrieveSchema.apply(schemaUtils, args);
+        });
+      }
+      return <MultiSchemaFieldTemplate {...props} />;
+    }
+    const { node } = createFormComponent({
+      schema,
+      initialFormData: { shape: { a: '' } },
+      templates: { MultiSchemaFieldTemplate: SpyingTemplate },
+    });
+    // The second keystroke is counted: the first one's render still carries the renders the focus queued
+    await user.type(node.querySelector('#root_shape_a')!, 'x');
+    retrievedOptions.length = 0;
+
+    await user.keyboard('y');
+
+    // Each option once, by `SchemaField` for the new data, and the selected one twice more, by the field rendered for
+    // it and that field's `ObjectField`, which retrieve the schema they are handed like any field; the option field
+    // itself retrieves none
+    expect(retrievedOptions.sort()).toEqual(['A', 'A', 'A', 'B']);
   });
 
   it('should not change the selected option when entering values', async () => {
