@@ -34,7 +34,6 @@ interface FancyMultiSelectProps {
   ariaDescribedby?: string;
   /** Visible placeholder text for the search input */
   placeholder?: string;
-  /** Aria placeholder text */
   /** Whether a selection is required, exposed as `aria-required` on the combobox input */
   required?: boolean;
   /** Additional className for styling */

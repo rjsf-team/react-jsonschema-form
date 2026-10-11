@@ -524,6 +524,11 @@ describe('multiple SelectWidget accessible name', () => {
       },
     },
   };
+  const untitledRootSchema = {
+    type: 'array' as const,
+    uniqueItems: true,
+    items: { type: 'string' as const, enum: ['red', 'blue'] },
+  };
 
   test('uses the field title', () => {
     render(<Form schema={colorsSchema} validator={validator} />);
@@ -538,11 +543,7 @@ describe('multiple SelectWidget accessible name', () => {
   });
 
   test('falls back to a fixed translated name for an untitled root field', () => {
-    const schema = {
-      type: 'array' as const,
-      uniqueItems: true,
-      items: { type: 'string' as const, enum: ['red', 'blue'] },
-    };
+    const schema = untitledRootSchema;
     render(<Form schema={schema} validator={validator} />);
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
   });
@@ -553,37 +554,33 @@ describe('multiple SelectWidget accessible name', () => {
   });
 
   test('prefers ui:placeholder for the name and the visible placeholder of an untitled root field', () => {
-    const schema = {
-      type: 'array' as const,
-      uniqueItems: true,
-      items: { type: 'string' as const, enum: ['red', 'blue'] },
-    };
+    const schema = untitledRootSchema;
     render(<Form schema={schema} uiSchema={{ 'ui:placeholder': 'Pick colors' }} validator={validator} />);
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pick colors');
     expect(screen.getByPlaceholderText('Pick colors')).toBeInTheDocument();
   });
 
   test('fills the visible placeholder with the translated fallback when no ui:placeholder is given', () => {
-    const schema = {
-      type: 'array' as const,
-      uniqueItems: true,
-      items: { type: 'string' as const, enum: ['red', 'blue'] },
-    };
+    const schema = untitledRootSchema;
     render(<Form schema={schema} validator={validator} />);
     expect(screen.getByPlaceholderText('Select ...')).toBeInTheDocument();
   });
 
   test('a custom translateString drives both the name and the visible placeholder', () => {
-    const schema = {
-      type: 'array' as const,
-      uniqueItems: true,
-      items: { type: 'string' as const, enum: ['red', 'blue'] },
-    };
+    const schema = untitledRootSchema;
     const translateString = (stringToTranslate: TranslatableString) =>
       stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
     render(<Form schema={schema} validator={validator} translateString={translateString} />);
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Choisir ...');
     expect(screen.getByPlaceholderText('Choisir ...')).toBeInTheDocument();
+  });
+
+  test('a custom translateString drives the single select trigger', () => {
+    const schema = { type: 'string' as const, enum: ['red', 'blue'] };
+    const translateString = (stringToTranslate: TranslatableString) =>
+      stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
+    render(<Form schema={schema} validator={validator} translateString={translateString} />);
+    expect(screen.getByRole('button', { expanded: false })).toHaveTextContent('Choisir ...');
   });
 
   test('passes required and the field description to the combobox input', () => {

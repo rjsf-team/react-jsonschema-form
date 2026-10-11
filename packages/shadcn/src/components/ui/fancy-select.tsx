@@ -69,7 +69,7 @@ interface FancySelectInterface {
   /** Whether the field is required */
   required?: boolean;
   /** Placeholder text when no item is selected */
-  placeholder?: string;
+  placeholder: string;
 }
 
 /**
@@ -85,7 +85,7 @@ export function FancySelect({
   onValueChange,
   autoFocus = false,
   disabled = false,
-  placeholder = 'Select...',
+  placeholder,
   ariaDescribedby,
   ariaPlaceholder,
   onFocus,
