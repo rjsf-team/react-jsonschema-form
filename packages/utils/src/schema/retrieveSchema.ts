@@ -561,8 +561,8 @@ export function resolveReference<
 
 /** How many times one `resolveAllReferences()` walk has replaced part of a schema with what it refers to. A level of
  * the walk hands back the schema it was given unless the count rose beneath it, which is what lets `resolveReference()`
- * tell by reference that a pass changed nothing. Flagging a cycle is not counted: the flag describes a `$ref` the walk
- * left in place, so a subtree that gained nothing else is returned as it came, without it.
+ * tell by reference that a pass changed nothing. A cycle flag newly set counts too, since the flag is what stops the
+ * next walk from expanding the `$ref` again.
  */
 class ReferenceTally {
   resolved = 0;
@@ -627,7 +627,13 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       pathList.includes($ref!) ||
       (passCount > 0 && (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY] === $ref)
     ) {
-      return markCycleOnDetection ? { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } : resolvedSchema;
+      if (markCycleOnDetection && !(RJSF_REF_CYCLE_KEY in resolvedSchema)) {
+        // Counted when newly set, so the levels above hand the flagged copy back rather than the schema they were
+        // given: a recursion the flag alone stops would otherwise be expanded again at the next render, without end
+        tally.count();
+        return { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true };
+      }
+      return resolvedSchema;
     }
     pathList = [...pathList, $ref!];
     // Retrieve the referenced schema definition.

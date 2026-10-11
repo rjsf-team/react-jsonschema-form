@@ -1250,6 +1250,19 @@ describe('SchemaField', () => {
       },
     };
 
+    it('renders a cycle indicator for a recursion reached through a nested property', () => {
+      // The flag was the walk's only change to the subtree, which was then handed back without it, so each render
+      // expanded the reference again
+      const node: RJSFSchema = {
+        type: 'object',
+        properties: { wrap: { type: 'object', properties: { child: { $ref: '#/definitions/node' } } } },
+      };
+      const { node: form } = createFormComponent({ schema: { definitions: { node }, $ref: '#/definitions/node' } });
+
+      expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
+      expect(form.querySelector('#root_wrap_child-button')).toHaveTextContent('Expand Cycle');
+    });
+
     it('clicking the expand button shows the next level of the cycle', async () => {
       const { node } = createFormComponent({ schema });
 

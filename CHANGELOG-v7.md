@@ -530,6 +530,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** `shouldRenderOptionalField()` takes the field's `fieldPath` as a required fifth argument, and its fourth, `uiSchema`, is no longer optional. It returns `false` for the root field, `ROOT_FIELD_PATH`
 - `retrieveSchema()` is up to twice as fast on a schema with no `$ref`
 - **BREAKING CHANGE:** Removed `isRootSchema()`. It decided whether a schema was the root by deep-comparing it with the root schema, which costs two whole-schema comparisons per call and mistakes a nested field that a recursive `$ref: '#'` describes for the root. Compare the field's `fieldPath` with `ROOT_FIELD_PATH` instead
+- `retrieveSchema()` keeps the cycle flag it sets on a recursive `$ref` when that flag is the only change to the subtree holding it, so a recursion reached through a nested property, an `allOf` or a `dependencies` entry renders a cycle indicator where it used to be expanded again on every render, hanging the form or overflowing the stack. A dependent property that points back at its enclosing definition is flagged too, where it was left as a bare `$ref`
 
 ## @rjsf/validator-ajv8
 
