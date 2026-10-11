@@ -26,7 +26,6 @@ export default function toErrorSchema<T = unknown>(errors: RJSFValidationError[]
   if (errors.length) {
     errors.forEach((error) => {
       const { property, message } = error;
-      // When the property is missing or the root element ('.'), toPath produces an empty path
       const path = propertyToPath(property);
       if (message) {
         builder.addErrors(message, path);
