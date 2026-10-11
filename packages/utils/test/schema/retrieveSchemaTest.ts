@@ -1284,7 +1284,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               [RJSF_REF_KEY]: '#/definitions/node',
             });
           });
-          it('collapses a dependent property that points back at its enclosing definition', () => {
+          it('flags a dependent property that points back at its enclosing definition as a cycle', () => {
             const node: RJSFSchema = {
               type: 'object',
               properties: { k: { type: 'string' } },
@@ -1296,7 +1296,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             });
             expect(result).toEqual({
               type: 'object',
-              properties: { k: { type: 'string' }, child: { $ref: '#/definitions/node' } },
+              properties: { k: { type: 'string' }, child: { $ref: '#/definitions/node', [RJSF_REF_CYCLE_KEY]: true } },
               [RJSF_REF_KEY]: '#/definitions/node',
             });
           });
