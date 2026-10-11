@@ -32,6 +32,28 @@ describe('normalizeLiveSettings', () => {
     });
   });
 
+  it('leaves out the keys of an older link that name no Form prop', () => {
+    const settings = normalizeLiveSettings({ validate: false, useFallbackField: false, disabled: true });
+
+    expect(settings).toEqual({ disabled: true });
+    expect(settings).not.toHaveProperty('validate');
+    expect(settings).not.toHaveProperty('useFallbackField');
+  });
+
+  it('drops the `populate` an older link carries as arrayMinItems, keeping the rest of the behavior', () => {
+    expect(
+      normalizeLiveSettings({
+        defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
+      }).defaultFormStateBehavior,
+    ).toEqual({ emptyObjectFields: 'populateAllDefaults' });
+  });
+
+  it('keeps a current arrayMinItems and the id settings', () => {
+    const settings = { defaultFormStateBehavior: { arrayMinItems: { populate: 'never' as const } }, idPrefix: 'foo' };
+
+    expect(normalizeLiveSettings(settings)).toEqual(settings);
+  });
+
   it('preserves other settings while normalizing liveValidate/liveOmit', () => {
     expect(
       normalizeLiveSettings({ liveValidate: true, liveOmit: false, showErrorList: 'top', disabled: true }),

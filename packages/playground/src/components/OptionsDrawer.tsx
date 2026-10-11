@@ -90,7 +90,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
           properties: {
             populate: {
               type: 'string',
-              default: 'populate',
+              default: 'all',
               title: 'Populate minItems in arrays',
               oneOf: [
                 {
@@ -293,6 +293,8 @@ export type LiveSettings = Pick<
   FormProps,
   | 'disabled'
   | 'readonly'
+  | 'idPrefix'
+  | 'idSeparator'
   | 'noHtml5Validate'
   | 'noValidate'
   | 'omitExtraData'
@@ -305,10 +307,18 @@ export type LiveSettings = Pick<
   defaultFormStateBehavior?: DefaultFormStateBehavior;
 };
 
-/** The settings as a shared link may carry them: a v5 or v6 link holds `liveValidate` and `liveOmit` as booleans. */
-export type LoadedLiveSettings = Omit<LiveSettings, 'liveValidate' | 'liveOmit'> & {
+/** The settings as a shared link may carry them. A v5 or v6 link holds `liveValidate` and `liveOmit` as booleans. A link
+ * shared from the initial settings the playground had through v6 holds an `arrayMinItems` of `'populate'`, which
+ * `DefaultFormStateBehavior` never allowed, and `validate` and `useFallbackField`, which name no `Form` prop.
+ */
+export type LoadedLiveSettings = Omit<LiveSettings, 'liveValidate' | 'liveOmit' | 'defaultFormStateBehavior'> & {
   liveValidate?: LiveFlag | boolean;
   liveOmit?: LiveFlag | boolean;
+  defaultFormStateBehavior?: Omit<DefaultFormStateBehavior, 'arrayMinItems'> & {
+    arrayMinItems?: DefaultFormStateBehavior['arrayMinItems'] | 'populate';
+  };
+  validate?: boolean;
+  useFallbackField?: boolean;
 };
 
 interface OptionsDrawerProps {
