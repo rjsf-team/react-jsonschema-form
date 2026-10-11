@@ -1339,9 +1339,13 @@ type MakeUIType<Type> = {
 /** The per-field template overrides `ui:options` supports, i.e. all the properties of `TemplatesType` except
  * "ButtonTemplates". Shared by `UIOptionsBaseType` (the open, unnarrowed vocabulary) and `CommonUiOptions` (the
  * closed vocabulary's always-available common options), so the two lists can't drift apart.
+ *
+ * Typed for `unknown` form data on purpose: a slot checks its component bivariantly, so a template written for a
+ * form's data still fits, and the overrides no longer instantiate every template props type once per data shape a
+ * `UiSchema<T>` is applied to, which was a fifth of the types in the type-check.
  */
-type UIOptionsTemplateOverrides<T, S extends StrictRJSFSchema, F extends FormContextType> = Pick<
-  TemplatesType<T, S, F>,
+type UIOptionsTemplateOverrides<S extends StrictRJSFSchema, F extends FormContextType> = Pick<
+  TemplatesType<unknown, S, F>,
   | 'ArrayFieldDescriptionTemplate'
   | 'ArrayFieldItemTemplate'
   | 'ArrayFieldTemplate'
@@ -1365,7 +1369,7 @@ type UIOptionsBaseType<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Partial<UIOptionsTemplateOverrides<T, S, F>> &
+> = Partial<UIOptionsTemplateOverrides<S, F>> &
   GlobalUISchemaOptions & {
     /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
      * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
@@ -1544,7 +1548,7 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
     widget?: WidgetsFor<T, Checks> | Widget<T, S, F>;
     field?: FieldsFor<T, Checks> | Field<T, S, F>;
   } & RawOptsFor<T, Checks> &
-    CommonUiOptions<T, S, F>;
+    CommonUiOptions<S, F>;
 }
 
 /** @internal Common `ui:*` options valid on any field regardless of its type, kept separate from a `Checks` union
@@ -1553,8 +1557,8 @@ interface UiOptionsComponentPart<T, S extends StrictRJSFSchema, F extends FormCo
  * `GlobalUISchemaOptions` keys the open vocabulary carries, since those are also type-agnostic and unrecoverable
  * through `Checks` otherwise.
  */
-type CommonUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> = Partial<
-  UIOptionsTemplateOverrides<T, S, F>
+type CommonUiOptions<S extends StrictRJSFSchema, F extends FormContextType> = Partial<
+  UIOptionsTemplateOverrides<S, F>
 > &
   GlobalUISchemaOptionsKeys & {
     help?: string | ReactElement;
@@ -1578,7 +1582,7 @@ type CommonUiOptions<T, S extends StrictRJSFSchema, F extends FormContextType> =
  * in by whoever passes `Checks`.
  */
 type StrictUiVocabulary<T, S extends StrictRJSFSchema, F extends FormContextType, Checks> = MakeUIType<
-  CommonUiOptions<T, S, F>
+  CommonUiOptions<S, F>
 > &
   UiOptionsComponentPart<T, S, F, Checks> &
   MakeUIType<RawOptsFor<T, Checks>>;
