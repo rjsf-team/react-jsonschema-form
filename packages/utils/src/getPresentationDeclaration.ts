@@ -1,4 +1,4 @@
-import { getWidgetKey, isStandardWidgetKey } from './getWidget.tsx';
+import { getWidgetKey } from './getWidget.tsx';
 import { getOwnDeclaration, layerDeclarations } from './mergeThemePresentation.ts';
 import type {
   Field,
@@ -9,7 +9,7 @@ import type {
   ResolvedPresentationDeclaration,
   RJSFSchema,
   StrictRJSFSchema,
-  ThemePresentation,
+  MergedThemePresentation,
   Widget,
 } from './types.ts';
 
@@ -19,8 +19,8 @@ export type PresentationSource<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 > = Pick<Registry<T, S, F>, 'widgets'> & {
-  /** The declarations the form's theme registered */
-  readonly presentation?: ThemePresentation;
+  /** The declarations of the form's layers, as `mergeThemePresentation()` merged them */
+  readonly presentation?: Partial<MergedThemePresentation>;
 };
 
 /** The components that render a field, as `SchemaField` resolved them */
@@ -72,8 +72,7 @@ function ownerOf(
   return (owner === 'widget' ? widgetDeclaration[part] : owner) === 'self' ? 'self' : 'template';
 }
 
-/** Gets the declaration of the widget a field renders: its key's `standardWidgets` and `widgets` declarations, under
- * the component's own. An alias is looked up by the key it stands for, and a component given directly by its own
+/** Gets the declaration of the widget a field renders: the theme's declaration for its key, under the component's own. An alias is looked up by the key it stands for, and a component given directly by its own
  * declaration alone. A name that is neither registered nor an alias declares nothing, so the template draws every part
  */
 function getWidgetDeclaration<
@@ -83,7 +82,7 @@ function getWidgetDeclaration<
 >(
   schema: S,
   widget: Widget<T, S, F> | string,
-  { widgets, presentation = {} }: PresentationSource<T, S, F>,
+  { widgets, presentation }: PresentationSource<T, S, F>,
 ): PresentationDeclaration {
   if (typeof widget !== 'string') {
     return layerDeclarations(widget.presentation);
@@ -93,8 +92,7 @@ function getWidgetDeclaration<
     return NO_DECLARATION;
   }
   return layerDeclarations(
-    isStandardWidgetKey(key) ? presentation.standardWidgets : undefined,
-    getOwnDeclaration(presentation.widgets, key),
+    getOwnDeclaration(presentation?.widgets, key),
     Object.hasOwn(widgets, key) ? widgets[key].presentation : undefined,
   );
 }
@@ -106,11 +104,11 @@ function getWidgetDeclaration<
  * A field component's declaration layers its own `presentation` over the theme's under its key, and that over the
  * default for how it was chosen: a field named by a `ui:field` or a `$id` draws its label and description, and one
  * chosen for the schema's type that renders a single widget leaves every part to that widget. A widget's declaration
- * layers its own `presentation` over the theme's under its key, and that over `standardWidgets` for a key
- * `@rjsf/core` registers. A part a field leaves to its widget, with no widget given, and a part nothing declares, are
- * drawn by the template.
+ * layers its own `presentation` over the theme's under its key, which is where `mergeThemePresentation()` put any
+ * `standardWidgets` that reach it. A part a field leaves to its widget, with no widget given, and a part nothing
+ * declares, are drawn by the template.
  *
- * @param source - The registry's widgets and the theme's `presentation`
+ * @param source - The registry's widgets and the merged `presentation`
  * @param subject - The field's schema and the components that render it
  * @returns - The owner of each part, and how a label the template draws reaches the control
  */
