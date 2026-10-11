@@ -205,12 +205,11 @@ describe('antd specific tests', () => {
     );
 
     // `SchemaField` leaves `errors` undefined for the option selector while still reporting `rawErrors`, so this block
-    // is in the error state with nothing but help to render. The block is found rather than indexed because the option
-    // selector and the option it selected both render this field's help, under the same id — a pre-existing duplication
-    // in `MultiSchemaField`, unrelated to the help/error precedence under test here
-    const explains = Array.from(container.querySelectorAll('.ant-form-item-explain'));
-    const helpOnly = explains.find((explain) => !explain.querySelector('[id$="__error"]'));
-    expect(helpOnly).toBeDefined();
+    // is in the error state with nothing but help to render
+    expect(container.querySelectorAll('#root_name__help')).toHaveLength(1);
+    const helpOnly = container.querySelector('#root_name__help')!.closest('.ant-form-item-explain');
+    expect(helpOnly).not.toBeNull();
+    expect(helpOnly!.querySelector('[id$="__error"]')).toBeNull();
     expect(helpOnly!.querySelector('.ant-form-item-explain-error')).not.toBeNull();
     expect(helpOnly!.querySelector('.help-block')).toHaveStyle({
       color: theme.getDesignToken().colorTextDescription,
@@ -267,5 +266,80 @@ describe('antd specific tests', () => {
 
     await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test('describes a selected option once, under the id its control is described by', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { region: { oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] } },
+          $defs: {
+            europe: {
+              title: 'Europe',
+              description: 'A country in Europe',
+              oneOf: [
+                { const: 'FR', title: 'France' },
+                { const: 'DE', title: 'Germany' },
+              ],
+            },
+          },
+        }}
+        formData={{ region: 'DE' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+    expect(container.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
+  });
+
+  test("renders an option's inherited ui:description once, as the field's", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                { title: 'Text', type: 'string' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { 'ui:description': 'Where you live' } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByText('Where you live')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_region__description')).toHaveLength(1);
+  });
+
+  test('renders no second description under the field description id for a fallback value described apart', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              description: 'Field desc',
+              type: ['string', 'number'],
+              if: { type: 'string' },
+              then: { description: 'Value desc' },
+            },
+          },
+        }}
+        formData={{ x: 'a' }}
+        validator={validator}
+        useFallbackUiForUnsupportedType
+      />,
+    );
+
+    expect(container.querySelectorAll('#root_x__description')).toHaveLength(1);
+    expect(container.querySelector('#root_x__description')).toHaveTextContent('Field desc');
   });
 });

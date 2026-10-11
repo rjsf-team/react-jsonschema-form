@@ -10,7 +10,7 @@ import {
   useOptionFocusHandlers,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
+import { cleanupOptions, useDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -44,6 +44,7 @@ export default function CheckboxesWidget<
   const selectedValues: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
   const { groupProps, optionProps } = useGroupAriaProps('CheckboxGroup', props);
+  const descriptionProps = useDescriptionProps(props);
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
@@ -54,7 +55,7 @@ export default function CheckboxesWidget<
       readOnly={disabled || readonly}
       {...themeProps}
       {...groupProps}
-      {...getDescriptionProps(props)}
+      {...descriptionProps}
     >
       <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
         <GroupOptions optionProps={optionProps}>

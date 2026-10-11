@@ -4,7 +4,13 @@ import { Textarea } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
 import { labelValue } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import {
+  cleanupOptions,
+  useDescriptionProps,
+  useAriaDescribedByProps,
+  useSelectorDescriptionId,
+  useVisibleErrors,
+} from '../utils.tsx';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
  *
@@ -60,7 +66,11 @@ export default function TextareaWidget<
     [onFocus, id],
   );
 
-  const ariaDescribedByProps = useAriaDescribedByProps('Textarea', id, options);
+  const selectorDescriptionId = useSelectorDescriptionId(props);
+  const ariaDescribedByProps = useAriaDescribedByProps('Textarea', id, options, {
+    alsoDescribedBy: selectorDescriptionId,
+  });
+  const descriptionProps = useDescriptionProps(props);
   const error = useVisibleErrors(props);
 
   return (
@@ -79,7 +89,7 @@ export default function TextareaWidget<
       error={error}
       {...themeProps}
       {...ariaDescribedByProps}
-      {...getDescriptionProps(props)}
+      {...descriptionProps}
     />
   );
 }

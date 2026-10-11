@@ -4,7 +4,13 @@ import { TimeInput } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, useTimeWidgetProps } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../../utils.tsx';
+import {
+  cleanupOptions,
+  useDescriptionProps,
+  useAriaDescribedByProps,
+  useSelectorDescriptionId,
+  useVisibleErrors,
+} from '../../utils.tsx';
 
 /** The `TimeWidget` component uses the `TimeInput` component from `@mantine/dates` for rendering.
  *
@@ -72,7 +78,11 @@ export default function TimeWidget<
     [onFocus, id],
   );
 
-  const ariaDescribedByProps = useAriaDescribedByProps('TimeInput', id, options);
+  const selectorDescriptionId = useSelectorDescriptionId(props);
+  const ariaDescribedByProps = useAriaDescribedByProps('TimeInput', id, options, {
+    alsoDescribedBy: selectorDescriptionId,
+  });
+  const descriptionProps = useDescriptionProps(props);
   const error = useVisibleErrors(props);
 
   return (
@@ -91,7 +101,7 @@ export default function TimeWidget<
       error={error}
       {...themeProps}
       {...ariaDescribedByProps}
-      {...getDescriptionProps(props)}
+      {...descriptionProps}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
     />
   );

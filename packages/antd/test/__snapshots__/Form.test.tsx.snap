@@ -4891,17 +4891,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                           class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                                         >
                                           <div
-                                            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                          >
-                                            <label
-                                              class=""
-                                              for="root_region"
-                                              title="Europe"
-                                            >
-                                              Europe
-                                            </label>
-                                          </div>
-                                          <div
                                             class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
                                           >
                                             <div

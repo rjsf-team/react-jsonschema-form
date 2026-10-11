@@ -116,6 +116,46 @@ export function SelectorErrorsIdProvider({ id, children }: { id?: string; childr
   return <SelectorErrorsIdContext value={id}>{children}</SelectorErrorsIdContext>;
 }
 
+// The id of the field whose `oneOf`/`anyOf` selector renders the field's own description
+const SelectorFieldIdContext = createContext<string | undefined>(undefined);
+
+/** Provides the id of a field to the `oneOf`/`anyOf` selector it renders. The field has no widget of its own to render
+ * its description in, so the selector renders it, under the field's description id rather than its own: the
+ * selector's own is where `@rjsf/core` renders the description of the option it chose, once the field has one
+ */
+export function SelectorFieldIdProvider({ id, children }: { id?: string; children: ReactNode }) {
+  return <SelectorFieldIdContext value={id}>{children}</SelectorFieldIdContext>;
+}
+
+/** Returns the description a widget renders beside its input, which is none while its label is hidden
+ *
+ * @param widgetProps - The props of the widget, from which the description and `hideLabel` are read
+ * @returns - The description the widget renders, if any
+ */
+function shownDescription<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(widgetProps: WidgetProps<T, S, F>) {
+  const { hideLabel, options, schema } = widgetProps;
+  return hideLabel ? undefined : options.description || schema.description;
+}
+
+/** A hook for the id of the field description a `oneOf`/`anyOf` selector renders, for the selector to be described by,
+ * which is `undefined` for any other widget and for a selector that renders none
+ *
+ * @param widgetProps - The props of the widget
+ * @returns - The id the selector renders the field's description under, if it renders one
+ */
+export function useSelectorDescriptionId<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(widgetProps: WidgetProps<T, S, F>) {
+  const selectorFieldId = use(SelectorFieldIdContext);
+  return selectorFieldId && shownDescription(widgetProps) ? descriptionId(selectorFieldId) : undefined;
+}
+
 /** A hook for the `error` prop Mantine's inputs render, from the errors a widget or template shows, which are none for the field a `oneOf`/`anyOf` selector renders
  * the errors of, since the selected option's field has the same id and is given the same errors. The fields inside the
  * option have their own ids, and so their own errors.
@@ -161,26 +201,26 @@ export function cleanupOptions<T extends object>(
  * @returns - An object to spread on the props of the component that should render the description field
  *
  */
-export function getDescriptionProps<
+export function useDescriptionProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(widgetProps: WidgetProps<T, S, F>) {
-  const { id, schema, uiSchema, registry, options, hideLabel } = widgetProps;
-  const description = options.description || schema.description;
+  const { id, schema, uiSchema, registry, options } = widgetProps;
+  const selectorFieldId = use(SelectorFieldIdContext);
+  const description = shownDescription(widgetProps);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
   return {
-    description:
-      !hideLabel && !!description ? (
-        <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
-          schema={schema}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      ) : undefined,
+    description: description ? (
+      <DescriptionFieldTemplate
+        id={descriptionId(selectorFieldId ?? id)}
+        description={description}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
+    ) : undefined,
   };
 }
 
@@ -492,7 +532,7 @@ export function useFieldWrapperProps<
   F extends FormContextType = FormContextType,
 >(widgetProps: WidgetProps<T, S, F>, containerOnInputs = false) {
   const { id, label, hideLabel, required, options } = widgetProps;
-  const { description } = getDescriptionProps(widgetProps);
+  const { description } = useDescriptionProps(widgetProps);
   const { labelElement, wrapperProps: inputWrapperProps } = useInputProps(
     'InputWrapper',
     {},
@@ -545,7 +585,7 @@ export function useFieldWrapperProps<
  * @param id - The id of the field the input belongs to
  * @param [options={}] - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
  * @param [settings={}] - `includeExamples`, whether to also describe the input by the field's examples list,
- *   `alsoDescribedBy`, further ids to describe the input by, and `wrapperOverrides`, set over the `wrapperProps` the
+ *   `alsoDescribedBy`, further ids to describe the input by, `wrapperOverrides`, set over the `wrapperProps` the
  *   input would otherwise take, rather than replacing them
  * @returns - An object to spread on the props of the Mantine input, after the theme props
  */
@@ -646,13 +686,16 @@ export function useGroupAriaProps<
   // Mantine's `Checkbox` and `Radio` only style an `error`. Each radio is required, as in `@rjsf/core`, since checking
   // any one of them satisfies it, where a required checkbox would have to be checked.
   const optionRequired = component === 'RadioGroup' && required;
+  const fieldDescriptionId = useSelectorDescriptionId(widgetProps);
   const optionProps = useMemo(
     () => ({
-      'aria-describedby': ariaDescribedByIds(id),
+      'aria-describedby': fieldDescriptionId
+        ? `${ariaDescribedByIds(id)} ${fieldDescriptionId}`
+        : ariaDescribedByIds(id),
       'aria-invalid': invalid || undefined,
       required: optionRequired || undefined,
     }),
-    [id, invalid, optionRequired],
+    [id, invalid, optionRequired, fieldDescriptionId],
   );
   return {
     groupProps: {

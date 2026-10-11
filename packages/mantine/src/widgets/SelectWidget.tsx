@@ -15,7 +15,13 @@ import {
   useSelectFocusHandlers,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import {
+  cleanupOptions,
+  useDescriptionProps,
+  useAriaDescribedByProps,
+  useSelectorDescriptionId,
+  useVisibleErrors,
+} from '../utils.tsx';
 
 /** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
  * leaves a bare heading behind, so the groups it emptied are dropped here.
@@ -86,7 +92,11 @@ export default function SelectWidget<
     );
   }, [enumDisabled, enumOptions, optgroups, domValues]);
 
-  const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options);
+  const selectorDescriptionId = useSelectorDescriptionId(props);
+  const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options, {
+    alsoDescribedBy: selectorDescriptionId,
+  });
+  const descriptionProps = useDescriptionProps(props);
 
   const sharedProps = {
     id,
@@ -106,7 +116,7 @@ export default function SelectWidget<
     comboboxProps: { withinPortal: false },
     ...themeProps,
     ...ariaDescribedByProps,
-    ...getDescriptionProps(props),
+    ...descriptionProps,
   };
 
   return (

@@ -174,8 +174,9 @@ See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.
 
 By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or `OneOfField` component.
 This default behavior may be undesirable if your custom field already handles behavior related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
-By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
-If the flag is omitted or set to `false`, your custom field will be wrapped by `AnyOfField`/`OneOfField`.
+By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be omitted, so only the custom field is rendered.
+If the flag is omitted or set to `false`, your custom field is rendered beside the `AnyOfField`/`OneOfField` option selector, and the selected option is rendered with the field its own schema calls for.
+The `ui:field` is not passed down to an option, even one that inherits the field's `uiSchema`; give the option a `ui:field` of its own in the `uiSchema`'s `oneOf`/`anyOf` list to render one there.
 
 The flag needs a `ui:field` that resolves to a field.
 A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.

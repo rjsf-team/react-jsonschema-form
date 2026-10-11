@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { use, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
   deepEquals,
+  descriptionId,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getTemplates,
@@ -22,6 +23,8 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
+import LabelledFieldContext, { LabelledFieldProvider } from './LabelledFieldContext.tsx';
+import optionUiSchemaForRender from './optionUiSchemaForRender.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
@@ -55,6 +58,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   } = props;
   const { schemaUtils } = registry;
   const readsFormData = useReadsFormData(AnyOfField);
+  const labelledField = use(LabelledFieldContext);
 
   // Hash formData by value so the memo only invalidates when data actually changes, not on every
   // new object reference. hashObject(undefined) throws, so null is used as the fallback.
@@ -158,6 +162,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
+  const isOptionUiSchemaInherited = optionUiSchema === uiSchema;
+  const isLabelledAbove = labelledField?.id === id;
+  // Kept apart from `optionUiSchema`, which `formDataForNewOption()` reads the option's `ui:initialValue` and
+  // `ui:emptyValue` from
+  const renderedOptionUiSchema = useMemo(
+    () => optionUiSchemaForRender<T, S, F>(optionUiSchema, isOptionUiSchemaInherited, isLabelledAbove, globalUiOptions),
+    [optionUiSchema, isOptionUiSchemaInherited, isLabelledAbove, globalUiOptions],
+  );
 
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
@@ -283,11 +295,21 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       />
     ) : undefined;
 
+  // The option renders for this field's own id, so where the field around it labels that id it passes that on. A
+  // description the option has of its own describes the option the selector chose, so where the field around it has
+  // rendered a description already it goes under the selector's description id, which the selector's
+  // `aria-describedby` names
   const optionsSchemaField =
     (optionSchema && optionSchema.type !== 'null' && (
-      <RawFormDataContext value={readsFormData ? SchemaFieldComponent : undefined}>
-        <SchemaFieldComponent {...props} schema={optionSchema} uiSchema={optionUiSchema} />
-      </RawFormDataContext>
+      <LabelledFieldProvider
+        id={labelledField?.id}
+        description={labelledField?.description}
+        descriptionId={isLabelledAbove ? descriptionId(fieldId) : labelledField?.descriptionId}
+      >
+        <RawFormDataContext value={readsFormData ? SchemaFieldComponent : undefined}>
+          <SchemaFieldComponent {...props} schema={optionSchema} uiSchema={renderedOptionUiSchema} />
+        </RawFormDataContext>
+      </LabelledFieldProvider>
     )) ||
     null;
 

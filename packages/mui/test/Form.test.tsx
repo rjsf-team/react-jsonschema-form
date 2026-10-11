@@ -2,7 +2,7 @@ import { withTheme } from '@rjsf/core';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import Form, { Theme, generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
@@ -32,5 +32,21 @@ describe('typed form data', () => {
     const TypedForm = withTheme<Data>(Theme);
     const { container } = render(<TypedForm schema={schema} validator={validator} formData={{ name: 'b' }} />);
     expect(container.querySelector<HTMLInputElement>('#root_name')?.value).toBe('b');
+  });
+});
+
+describe('fallback UI', () => {
+  it('names the value control with the field title, and describes it once', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { title: 'X', description: 'An x', type: ['string', 'number'] } } }}
+        formData={{ x: 'a' }}
+        validator={validator}
+        useFallbackUiForUnsupportedType
+      />,
+    );
+
+    expect(screen.getByLabelText('X')).toBe(container.querySelector('input#root_x'));
+    expect(screen.getAllByText('An x')).toHaveLength(1);
   });
 });

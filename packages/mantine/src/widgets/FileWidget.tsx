@@ -3,7 +3,13 @@ import { FileInput, Pill } from '@mantine/core';
 import type { FormContextType, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, useFileWidgetProps } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import {
+  cleanupOptions,
+  useDescriptionProps,
+  useAriaDescribedByProps,
+  useSelectorDescriptionId,
+  useVisibleErrors,
+} from '../utils.tsx';
 
 /**
  * The `FileWidget` is a widget for rendering file upload fields.
@@ -60,7 +66,11 @@ export default function FileWidget<
     return null;
   }, [handleRemove, filesInfo]);
 
-  const ariaDescribedByProps = useAriaDescribedByProps('FileInput', id, options);
+  const selectorDescriptionId = useSelectorDescriptionId(props);
+  const ariaDescribedByProps = useAriaDescribedByProps('FileInput', id, options, {
+    alsoDescribedBy: selectorDescriptionId,
+  });
+  const descriptionProps = useDescriptionProps(props);
   const error = useVisibleErrors(props);
 
   return (
@@ -79,7 +89,7 @@ export default function FileWidget<
       error={error}
       {...themeProps}
       {...ariaDescribedByProps}
-      {...getDescriptionProps(props)}
+      {...descriptionProps}
     />
   );
 }

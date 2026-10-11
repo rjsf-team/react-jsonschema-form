@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import type { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
+import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
@@ -1756,15 +1757,46 @@ describe('anyOf', () => {
     const uiSchema = {
       'ui:field': () => <div className='custom-field'>Custom field</div>,
     };
-    it('should be rendered twice', () => {
+    it('should be rendered once, beside the option selector', () => {
       const { node } = createFormComponent({ schema, uiSchema });
-      const fields = node.querySelectorAll('.custom-field');
-      expect(fields).toHaveLength(2);
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
+    });
+    it('should render the selected option with its own field rather than the custom one', () => {
+      const { node } = createFormComponent({ schema, uiSchema });
+      expect(node.querySelector('input#root')).toHaveAttribute('inputmode', 'decimal');
     });
     it('should render <select>', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(1);
+    });
+  });
+
+  describe('the selected option rendered for the same id as its field', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        region: { anyOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] },
+      },
+      $defs: {
+        europe: {
+          title: 'Europe',
+          description: 'A country in Europe',
+          anyOf: [
+            { const: 'FR', title: 'France' },
+            { const: 'DE', title: 'Germany' },
+          ],
+        },
+      },
+    };
+
+    it('labels the control once, and describes the option under the id its control is described by', () => {
+      const { node } = createFormComponent({ schema, formData: { region: 'DE' } });
+
+      expect(node.querySelectorAll('label[for="root_region"]')).toHaveLength(1);
+      expect(screen.getByLabelText('region')).toBe(node.querySelector('select#root_region'));
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
     });
   });
 
