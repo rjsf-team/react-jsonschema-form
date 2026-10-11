@@ -3,6 +3,7 @@ import type { FieldPath } from '@rjsf/utils';
 
 import { useReadsFormData } from '../components/fields/RawFormDataContext.ts';
 import FormDataContext from '../components/FormDataContext.ts';
+import type { KeyMove } from '../components/formState.ts';
 
 /** What a container field's event handlers read instead of render-time props. Each committed render installs the
  * field's view from an insertion Effect, so an abandoned render never publishes one, and a layout Effect of the same
@@ -34,17 +35,22 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
        * view of the form's data or renders outside a `Form`
        */
       readData: <D>(fallback: D) => (access && readsFormData ? access.readField<D>(fieldPath) : fallback),
-      /** The field's current errors, with the same choice between `Form`'s latest and `fallback` */
-      readErrors: <E>(fallback: E) => (access && readsFormData ? access.readErrors<E>(fieldPath) : fallback),
       /** Proposes the view `next` by calling `send`, recording it first so a second handler before the form's next
        * commit builds on it, as `Form` builds on the proposal itself. A custom parent may flush a render from `send`,
        * committing the form before the proposal has gone anywhere, so the record is dated once `send` has returned,
        * and only then is the form told. It is told when `send` throws too: nothing else would end the record.
+       *
+       * `newKeyOf` says where the proposal put what the field's array or object held under each key, for the form to
+       * move the errors along. The keys are those of the `formData` the field was given, which a custom parent passing
+       * the form's data on leaves as they are; one that reorders or filters the items it shows moves the errors by its
+       * own indexes. The form moves them for the change `send` makes before it returns: one a wrapper passes on later,
+       * from a debounce or after an `await`, reaches the form as a change it knows no move of.
        */
-      propose: (next: V, send: () => void) => {
+      propose: (next: V, send: () => void, newKeyOf?: KeyMove) => {
         const record = access && { view: next, epoch: access.epoch() };
         advanced.current = record;
         const proposed = access?.proposing();
+        const sendProposal = access && newKeyOf ? () => access.sendMove({ fieldPath, newKeyOf }, send) : send;
         const settle = () => {
           if (access && advanced.current === record) {
             advanced.current = { view: next, epoch: access.epoch() };
@@ -52,7 +58,7 @@ export default function useFieldView<V>(fieldPath: FieldPath, value: V, self: un
           proposed?.();
         };
         try {
-          send();
+          sendProposal();
         } catch (error) {
           settle();
           throw error;

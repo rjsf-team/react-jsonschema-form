@@ -57,7 +57,6 @@ import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
-import WithheldErrorsContext from './WithheldErrorsContext.ts';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {
@@ -512,13 +511,6 @@ function SchemaFieldRender<
     delete shadowedUiSchema[UI_FIELD_KEY];
     return shadowedUiSchema;
   }, [uiSchema, globalUiOptions]);
-  const ownErrors = errorSchema?.__errors;
-  // Memoized so that an `ArrayField` below, which reads it, isn't re-rendered past its `memo` by a new value each render
-  const withheldErrors = useMemo(
-    () => (ownErrors?.length ? { fieldPath, errors: ownErrors } : undefined),
-    [fieldPath, ownErrors],
-  );
-
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
   // The check must come after all hook calls to satisfy React's rules of hooks.
   if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
@@ -661,9 +653,7 @@ function SchemaFieldRender<
   );
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
   const field = (
-    <WithheldErrorsContext value={XxxOfField ? withheldErrors : undefined}>
-      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
-    </WithheldErrorsContext>
+    <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
   );
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
