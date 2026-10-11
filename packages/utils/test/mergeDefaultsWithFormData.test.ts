@@ -181,13 +181,6 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData<any>({ a: [1, 2] }, { a: { x: 1 } })).toEqual({ a: { x: 1 } });
   });
 
-  it.each([
-    ['string', 'x'],
-    ['array', [1, 2]],
-  ])('should return a %s default over object formData when overrideFormDataWithDefaults is true', (_, defaults) => {
-    expect(mergeDefaultsWithFormData<any>(defaults, { b: 2 }, true, false, true)).toEqual(defaults);
-  });
-
   describe('test with overrideFormDataWithDefaults set to true', () => {
     it('should return data in formData when no defaults', () => {
       expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, true)).toEqual([2]);
@@ -360,6 +353,23 @@ describe('mergeDefaultsWithFormData()', () => {
         a: file,
       };
       expect(mergeDefaultsWithFormData(obj1, obj2)?.a).toBeInstanceOf(File);
+    });
+
+    it.each([
+      ['string', 'x'],
+      ['array', [1, 2]],
+      ['null', null],
+      ['number', 5],
+    ])('should keep object formData over a %s default', (_, defaults) => {
+      expect(mergeDefaultsWithFormData<any>(defaults, { b: 2 }, true, false, true)).toEqual({ b: 2 });
+    });
+
+    it.each([
+      ['null', { a: null }],
+      ['number', { a: 5 }],
+      ['array', { a: [1, 2] }],
+    ])('should keep nested object formData over a nested %s default', (_, defaults) => {
+      expect(mergeDefaultsWithFormData<any>(defaults, { a: { x: 1 } }, true, false, true)).toEqual({ a: { x: 1 } });
     });
   });
 });

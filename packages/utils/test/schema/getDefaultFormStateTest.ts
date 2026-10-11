@@ -4524,9 +4524,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual('x');
         expect(getDefaultFormState({ validator: testValidator }, { schema, formData: 'y' })).toEqual('y');
       });
-      it('should return the const, not index keys, for object form data on a string const schema', () => {
+      it('should return object form data, not index keys, on a string const schema', () => {
         const schema: RJSFSchema = { type: 'string', const: 'x', default: { a: 1 } };
-        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { b: 2 } })).toEqual('x');
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { b: 2 } })).toEqual({ b: 2 });
       });
       it('should not spread a primitive form data value into an object default', () => {
         const schema: RJSFSchema = { type: 'string', enum: ['a', 'b'], default: { a: 1 } };

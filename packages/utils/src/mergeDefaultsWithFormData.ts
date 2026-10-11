@@ -60,10 +60,6 @@ export default function mergeDefaultsWithFormData<T = unknown>(
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
-    // A non-object default cannot be merged key by key, so the override hands it back as the scalar path below does
-    if (overrideFormDataWithDefaults && defaults !== undefined && !isObject(defaults)) {
-      return defaults;
-    }
     const formDataObj: GenericObjectType = formData;
     const defaultsObj: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
     const acc = { ...defaultsObj } as { [key in keyof T]: any }; // Prevent mutation of source object.
