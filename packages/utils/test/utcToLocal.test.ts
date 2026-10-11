@@ -44,9 +44,25 @@ describe('utcToLocal()', () => {
     ['null', null],
     ['false', false],
     ['true', true],
+  ])('returns empty string when given %s, which means no value', (_, value) => {
+    expect(utcToLocal(value)).toEqual('');
+  });
+  it.each([
     ['the bigint 0n', 0n],
     ['a symbol', Symbol('epoch')],
-  ])('returns empty string when given %s, which Date reads as the epoch or throws on', (_, value) => {
+    ['a wrapped bigint, which typeof calls an object', Object(5n)],
+    ['a wrapped symbol', Object(Symbol('epoch'))],
+    ['an object with no primitive value', Object.create(null)],
+    [
+      'an object whose valueOf() throws',
+      {
+        valueOf: () => {
+          throw new Error('no epoch');
+        },
+      },
+    ],
+  ])('returns empty string when given %s, which Date throws on', (_, value) => {
+    expect(() => new Date(value as string)).toThrow(Error);
     expect(utcToLocal(value)).toEqual('');
   });
   it.each([
@@ -62,7 +78,7 @@ describe('utcToLocal()', () => {
   it.each([NaN, Infinity, 8.64e15 + 1])('returns empty string when given the out-of-range number %s', (value) => {
     expect(utcToLocal(value)).toEqual('');
   });
-  // `pad()` would otherwise give `-1199-02-15T…` and `00-5-10-17T…`, which `datetime-local` drops
+  // A `datetime-local` input takes no year before 1, such as `-1199` or the year `-5` that `pad()` can't format
   it.each([-1e14, -62300000000000])(
     'returns empty string when given the valid epoch %s, whose local year is before 1',
     (value) => {

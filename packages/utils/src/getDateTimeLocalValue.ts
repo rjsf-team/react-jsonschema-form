@@ -8,9 +8,9 @@ export interface DateTimeLocalValueResult {
   /** True when `schema.format` is `date-time` or `datetime`, meaning the stored value must carry a timezone offset */
   requiresOffset: boolean;
   /** `value` with any timezone offset stripped when `isIsoDateTime`, otherwise unchanged. A finite epoch number or a
-   * valid `Date` is converted to its UTC ISO string for `date-time`/`datetime`, to the UTC day it names for `date` when
-   * it is a UTC midnight, and to local wall-clock time otherwise (`undefined` when that falls outside the years
-   * 1-9999). `undefined` for any other `value` */
+   * valid `Date` is converted to its UTC ISO string for `date-time`/`datetime`, whatever its year; to the UTC day it
+   * names for `date` when it is a UTC midnight; and to local wall-clock time otherwise. The last two are `undefined`
+   * for a year outside 1-9999. `undefined` for any other `value` */
   localValue: string | undefined;
 }
 
@@ -22,8 +22,9 @@ export interface DateTimeLocalValueResult {
  *
  * A finite epoch number or a valid `Date` is an exact instant. It is converted to its UTC ISO string when
  * `schema.format` requires an offset (`date-time`/`datetime`), to the day it names when `schema.format` is `date` and
- * the instant is a UTC midnight, and to local wall-clock time for any other format. A year outside 1-9999 has no
- * four-digit text a picker can parse, so it gives `undefined`.
+ * the instant is a UTC midnight, and to local wall-clock time for any other format. The `date` and local wall-clock
+ * results need a four-digit year the pickers can parse, so a year outside 1-9999 gives `undefined` there; the UTC ISO
+ * string keeps any year.
  *
  * @param schema - The schema for the date-time field
  * @param value - The current value of the field

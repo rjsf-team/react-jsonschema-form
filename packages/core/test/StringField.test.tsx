@@ -1080,9 +1080,12 @@ describe('StringField', () => {
         expectEmpty(renderWithFormData('not-a-date'));
       });
 
-      it.each([false, true, 0n])('should render an empty value for %s, which is not a date', (initialFormData) => {
-        expectEmpty(renderWithFormData(initialFormData));
-      });
+      it.each([false, true, 0n, Object(5n), Object.create(null)])(
+        'should render an empty value for %s, which is not a date',
+        (initialFormData) => {
+          expectEmpty(renderWithFormData(initialFormData));
+        },
+      );
 
       it.each([-1e14, -62300000000000, new Date(2000, 6, 1).setFullYear(0)])(
         'should render an empty value for the epoch %s, whose local year is before 1',
