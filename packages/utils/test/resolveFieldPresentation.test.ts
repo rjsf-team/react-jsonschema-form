@@ -111,10 +111,11 @@ describe('resolveFieldPresentation()', () => {
     });
   });
 
-  it('describes the control by its selected option description and examples', () => {
-    expect(resolve({ hasSelectedOptionDescription: true, hasExamples: true }).describedBy).toEqual([
-      `${ID}__selectedOptionDescription`,
-      `${ID}__examples`,
+  it('describes the control by the elements it renders to describe itself, after its own parts', () => {
+    const controlDescribedBy = [`${ID}__selectedOptionDescription`, `${ID}__examples`];
+    expect(resolve({ description: 'Describes foo', controlDescribedBy }).describedBy).toEqual([
+      `${ID}__description`,
+      ...controlDescribedBy,
     ]);
   });
 

@@ -1,5 +1,22 @@
 import type { PresentationDeclaration, ThemePresentation } from './types.ts';
 
+/** Gets the value the last of `declarations` that declares `part` gives it
+ *
+ * @param declarations - The declarations, from the bottom
+ * @param part - The part to read
+ * @returns - The value of the topmost declaration of `part`, or `undefined` when none declares it
+ */
+function topmost<Part extends keyof PresentationDeclaration>(
+  declarations: readonly (PresentationDeclaration | undefined)[],
+  part: Part,
+): PresentationDeclaration[Part] | undefined {
+  let value: PresentationDeclaration[Part] | undefined;
+  for (const declaration of declarations) {
+    value = declaration?.[part] ?? value;
+  }
+  return value;
+}
+
 /** Layers `declarations` over one another, each later one replacing a part an earlier one declares. A part declared
  * `undefined` is left to the layers beneath it, so spreading an options object can't erase one
  *
@@ -9,29 +26,27 @@ import type { PresentationDeclaration, ThemePresentation } from './types.ts';
 export function layerDeclarations(
   ...declarations: readonly (PresentationDeclaration | undefined)[]
 ): PresentationDeclaration {
-  const layered: PresentationDeclaration = {};
-  for (const declaration of declarations) {
-    for (const [part, owner] of Object.entries(declaration ?? {})) {
-      if (owner !== undefined) {
-        Object.assign(layered, { [part]: owner });
-      }
-    }
-  }
-  return layered;
+  return {
+    label: topmost(declarations, 'label'),
+    description: topmost(declarations, 'description'),
+    errors: topmost(declarations, 'errors'),
+    help: topmost(declarations, 'help'),
+    labelledBy: topmost(declarations, 'labelledBy'),
+  };
 }
 
 /** Gets the declaration `record` holds under `key` as an own property, so a key such as `constructor` doesn't read
  * `Object.prototype`
  *
  * @param record - The declarations by key, if any
- * @param key - The key to look up
+ * @param key - The key to look up, if any
  * @returns - The declaration under `key`, or `undefined` when `record` has none of its own
  */
 export function getOwnDeclaration(
   record: Readonly<Record<string, PresentationDeclaration>> | undefined,
-  key: string,
+  key: string | undefined,
 ): PresentationDeclaration | undefined {
-  return record && Object.hasOwn(record, key) ? record[key] : undefined;
+  return record && key !== undefined && Object.hasOwn(record, key) ? record[key] : undefined;
 }
 
 /** Layers the declarations of each key in `layers` over one another

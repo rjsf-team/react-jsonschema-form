@@ -796,6 +796,9 @@ export interface FieldProps<
  */
 export type PartOwner = 'template' | 'self' | 'widget';
 
+/** The parts of a field a template or a component can draw */
+export type PresentationPart = 'label' | 'description' | 'errors' | 'help';
+
 /** Which parts of a field a field or widget component draws itself. A part it leaves out is drawn by the template */
 export interface PresentationDeclaration {
   /** Who draws the label naming the field's control */
@@ -817,10 +820,7 @@ export interface PresentationDeclaration {
 /** A `PresentationDeclaration` with every part settled on the template or the component, as
  * `getPresentationDeclaration()` returns it
  */
-export type ResolvedPresentationDeclaration = Record<
-  'label' | 'description' | 'errors' | 'help',
-  Exclude<PartOwner, 'widget'>
-> &
+export type ResolvedPresentationDeclaration = Record<PresentationPart, Exclude<PartOwner, 'widget'>> &
   Required<Pick<PresentationDeclaration, 'labelledBy'>>;
 
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered

@@ -4,6 +4,7 @@ import type {
   Field,
   FormContextType,
   PresentationDeclaration,
+  PresentationPart,
   Registry,
   ResolvedPresentationDeclaration,
   RJSFSchema,
@@ -57,6 +58,20 @@ const WIDGET_FIELD: PresentationDeclaration = {
   help: 'widget',
 };
 
+const NO_DECLARATION: PresentationDeclaration = {};
+
+/** Gets who draws `part`: the field, or the widget when the field leaves the part to it, settled on the template
+ * unless that one draws it itself
+ */
+function ownerOf(
+  part: PresentationPart,
+  fieldDeclaration: PresentationDeclaration,
+  widgetDeclaration: PresentationDeclaration,
+) {
+  const owner = fieldDeclaration[part];
+  return (owner === 'widget' ? widgetDeclaration[part] : owner) === 'self' ? 'self' : 'template';
+}
+
 /** Gets the declaration of the widget a field renders: its key's `standardWidgets` and `widgets` declarations, under
  * the component's own. An alias is looked up by the key it stands for, and a component given directly by its own
  * declaration alone. A name that is neither registered nor an alias declares nothing, so the template draws every part
@@ -75,7 +90,7 @@ function getWidgetDeclaration<
   }
   const key = getWidgetKey<S>(schema, widget, widgets);
   if (key === undefined) {
-    return {};
+    return NO_DECLARATION;
   }
   return layerDeclarations(
     isStandardWidgetKey(key) ? presentation.standardWidgets : undefined,
@@ -114,21 +129,14 @@ export default function getPresentationDeclaration<
   } else if (widget !== undefined) {
     base = WIDGET_FIELD;
   }
-  const fieldDeclaration = layerDeclarations(
-    base,
-    fieldKey === undefined ? undefined : getOwnDeclaration(fields, fieldKey),
-    field.presentation,
-  );
-  const widgetDeclaration = widget === undefined ? {} : getWidgetDeclaration<T, S, F>(schema, widget, source);
-  const ownerOf = (part: 'label' | 'description' | 'errors' | 'help') => {
-    const owner = fieldDeclaration[part];
-    return (owner === 'widget' ? widgetDeclaration[part] : owner) === 'self' ? 'self' : 'template';
-  };
+  const fieldDeclaration = layerDeclarations(base, getOwnDeclaration(fields, fieldKey), field.presentation);
+  const widgetDeclaration =
+    widget === undefined ? NO_DECLARATION : getWidgetDeclaration<T, S, F>(schema, widget, source);
   return {
-    label: ownerOf('label'),
-    description: ownerOf('description'),
-    errors: ownerOf('errors'),
-    help: ownerOf('help'),
+    label: ownerOf('label', fieldDeclaration, widgetDeclaration),
+    description: ownerOf('description', fieldDeclaration, widgetDeclaration),
+    errors: ownerOf('errors', fieldDeclaration, widgetDeclaration),
+    help: ownerOf('help', fieldDeclaration, widgetDeclaration),
     // How the template's label reaches the control, which is the widget's when the field leaves its label to it and
     // the widget says
     labelledBy:
