@@ -807,17 +807,26 @@ describe('Error state consistency when deriving from new props', () => {
       street: { type: 'string', minLength: 3 },
       server: 'server',
       expected: ['.addr.street must NOT have fewer than 3 characters'],
+      listed: ['.addr.street must NOT have fewer than 3 characters', '.addr.street server'],
     },
     {
       name: 'the message the validator reports',
       street: { type: 'string', minLength: 3 },
       server: 'must NOT have fewer than 3 characters',
       expected: ['.addr.street must NOT have fewer than 3 characters'],
+      // A server message the validator reports at the same path is listed once, not twice
+      listed: ['.addr.street must NOT have fewer than 3 characters'],
     },
-    { name: 'the only error on the path', street: { type: 'string' }, server: 'server', expected: [] },
-  ] satisfies { name: string; street: RJSFSchema; server: string; expected: string[] }[])(
+    {
+      name: 'the only error on the path',
+      street: { type: 'string' },
+      server: 'server',
+      expected: [],
+      listed: ['.addr.street server'],
+    },
+  ] satisfies { name: string; street: RJSFSchema; server: string; expected: string[]; listed: string[] }[])(
     'takes none of the errors it displayed for its own when an optional object Remove is declined, with $name',
-    async ({ street, server, expected }) => {
+    async ({ street, server, expected, listed }) => {
       const addrSchema: RJSFSchema = {
         type: 'object',
         properties: { addr: { type: 'object', properties: { street } } },
@@ -840,7 +849,7 @@ describe('Error state consistency when deriving from new props', () => {
       const { container, rerender } = render(<Parent extraErrors={addrServerErrors} />);
 
       await submitForm(container.querySelector('form')!, user);
-      expect(errorListMessages(container)).toEqual([...expected, `.addr.street ${server}`]);
+      expect(errorListMessages(container)).toEqual(listed);
 
       await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
       rerender(<Parent />);

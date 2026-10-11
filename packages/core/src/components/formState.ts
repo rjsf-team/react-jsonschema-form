@@ -284,7 +284,7 @@ function mergeErrors<T>(
 ): ValidationData<T> {
   let { errorSchema, errors } = schemaValidation;
   if (extraErrors) {
-    const merged = validationDataMerge(schemaValidation, extraErrors);
+    const merged = validationDataMerge(schemaValidation, extraErrors, true);
     errorSchema = merged.errorSchema;
     errors = merged.errors;
   }
