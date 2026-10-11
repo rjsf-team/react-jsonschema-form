@@ -2454,6 +2454,40 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll('.rjsf-array-item-move-up')[1]).toHaveAttribute('title', 'Move report.pdf (2) up');
     });
 
+    it('can renumber shared names when a parent replaces the data, as arrays.md says', async () => {
+      function Parent() {
+        const [data, setData] = useState<unknown[]>(['r', 'r']);
+        return (
+          <>
+            <Form
+              schema={{ type: 'array', items: { type: 'string' } }}
+              uiSchema={{ 'ui:itemLabel': '.' }}
+              validator={validator}
+              formData={data}
+              onChange={(event) => setData(event.formData)}
+            />
+            <button type='button' onClick={() => setData(['r', 'r'])}>
+              Same length
+            </button>
+            <button type='button' onClick={() => setData(['r', 'r', 'r'])}>
+              New length
+            </button>
+          </>
+        );
+      }
+      const { container } = render(<Parent />);
+      await user.click(container.querySelectorAll('.rjsf-array-item-move-up')[1]);
+      expect(removeTitles(container)).toEqual(['Remove r (2)', 'Remove r (1)']);
+
+      // Data of the same length keeps the rows, and so the order of the items it replaced
+      await user.click(screen.getByText('Same length'));
+      expect(removeTitles(container)).toEqual(['Remove r (2)', 'Remove r (1)']);
+
+      // Data of another length gets fresh rows, numbered in its order
+      await user.click(screen.getByText('New length'));
+      expect(removeTitles(container)).toEqual(['Remove r (1)', 'Remove r (2)', 'Remove r (3)']);
+    });
+
     it('keeps the numbers of items with a shared name when an item with another name is edited', async () => {
       const { node } = createFormComponent({
         schema,

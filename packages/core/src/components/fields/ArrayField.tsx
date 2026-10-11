@@ -41,25 +41,23 @@ import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
-/** An item of the `formData` paired with its stable React key */
-interface KeyedFormDataType<T> {
+/** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
+interface RowId {
   key: string;
+  order: number;
+}
+
+/** An item of the `formData` paired with its row's identity */
+interface KeyedFormDataType<T> extends RowId {
   item: T;
 }
 
 /** Used to generate a unique ID for an element in a row */
 let rowIdCounter = 0;
-const ROW_ID_PREFIX = 'rjsf-array-item-';
 
-function generateRowId() {
+function generateRowId(): RowId {
   rowIdCounter += 1;
-  return `${ROW_ID_PREFIX}${rowIdCounter}`;
-}
-
-/** The order in which a row's key was generated, so rows can be sorted by when they were added */
-function rowIdOrder(key: string) {
-  const order = Number(key.slice(ROW_ID_PREFIX.length));
-  return Number.isFinite(order) ? order : Number.MAX_SAFE_INTEGER;
+  return { key: `rjsf-array-item-${rowIdCounter}`, order: rowIdCounter };
 }
 
 /** Converts `KeyedFormDataType` data into the inner `formData`
@@ -504,9 +502,9 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
     () =>
       path &&
       JSON.stringify(
-        keyedItems.map(({ key, item }, index) => [
+        keyedItems.map(({ order, item }, index) => [
           index < firstNamedIndex ? null : (itemNameFrom(path.length === 0 ? item : getByPath(item, path)) ?? null),
-          rowIdOrder(key),
+          order,
         ]),
       ),
     [keyedItems, path, firstNamedIndex],
@@ -1029,8 +1027,8 @@ const NO_ITEMS: never[] = [];
  */
 function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
-  const freshKeys = () => items.map(generateRowId);
-  const [keys, setKeys] = useState<string[]>(freshKeys);
+  const freshKeys = () => items.map(() => generateRowId());
+  const [keys, setKeys] = useState<RowId[]>(freshKeys);
 
   let itemKeys = keys;
   if (itemKeys.length !== items.length) {
@@ -1038,10 +1036,13 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
     setKeys(itemKeys);
   }
 
-  const keyedFormData = useMemo(() => itemKeys.map((key, index) => ({ key, item: items[index] })), [itemKeys, items]);
+  const keyedFormData = useMemo(
+    () => itemKeys.map(({ key, order }, index) => ({ key, order, item: items[index] })),
+    [itemKeys, items],
+  );
 
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
-    setKeys(newData.map((keyedItem) => keyedItem.key));
+    setKeys(newData.map(({ key, order }) => ({ key, order })));
     return keyedToPlainFormData(newData);
   }, []);
 
@@ -1071,7 +1072,10 @@ export default function ArrayField<
     if (!Array.isArray(current)) {
       return [];
     }
-    return current.map((item, index) => ({ key: rows[index]?.key ?? generateRowId(), item }));
+    return current.map((item, index) => {
+      const { key, order } = rows[index] ?? generateRowId();
+      return { key, order, item };
+    });
   }, [view]);
 
   /** Proposes the rows a handler built from `rows`, recording them first so a second handler in the same event starts
@@ -1105,7 +1109,7 @@ export default function ArrayField<
 
       const rows = readRows();
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
+        ...generateRowId(),
         item: getNewFormDataRow<T, S, F>(registry, schema, index ?? rows.length, uiSchema),
       };
       const newKeyedFormData = [...rows];
@@ -1137,7 +1141,7 @@ export default function ArrayField<
       }
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
+        ...generateRowId(),
         item: structuredClone(rows[index].item),
       };
       const newKeyedFormData = [...rows];

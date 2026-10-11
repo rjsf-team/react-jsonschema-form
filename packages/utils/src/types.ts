@@ -1437,8 +1437,9 @@ type UIOptionsBaseType<
      * buttons, such as `Remove report.pdf`. A dotted path, such as `'file.name'`, reads a nested property, and `'.'`
      * names each item by its own value, for an array of strings or numbers. Items whose value there isn't a non-empty
      * string or a number keep the default titles. Items that share a name are numbered in the order they were added,
-     * such as `Remove report.pdf (1)` and `Remove report.pdf (2)`, so a number stays with its item and a copy takes the
-     * next one, and a number that would repeat a name already in use is skipped. A value that isn't a non-empty string
+     * such as `Remove report.pdf (1)` and `Remove report.pdf (2)`, so while the items change through the field a number
+     * stays with its item and a copy takes the next one. Remounting the field or replacing its data from outside can
+     * renumber them. A number that would repeat a name already in use is skipped. A value that isn't a non-empty string
      * is ignored, and only `'.'` names items by their own value
      */
     itemLabel?: string;
