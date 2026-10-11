@@ -85,7 +85,7 @@ export default function RadioWidget<
                   id={optionId(id, i)}
                   value={domValues[i]}
                   label={option.label}
-                  disabled={enumOptionsIsDisabled(option.value, enumDisabled)}
+                  disabled={disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled)}
                   autoFocus={i === 0 && autofocus}
                   onBlur={handleBlur}
                   onFocus={handleFocus}

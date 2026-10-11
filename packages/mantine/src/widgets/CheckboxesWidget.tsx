@@ -68,7 +68,7 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 value={domValues[i]}
                 label={option.label}
-                disabled={enumOptionsIsDisabled(option.value, enumDisabled)}
+                disabled={disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled)}
                 autoFocus={i === 0 && autofocus}
                 onBlur={blurHandlers[i]}
                 onFocus={focusHandlers[i]}
