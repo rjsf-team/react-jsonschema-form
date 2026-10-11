@@ -770,6 +770,40 @@ describe('aria-describedby', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  test.each([
+    ['without', {}],
+    ['with', { 'ui:description': 'Where you live' }],
+  ])('renders a nested oneOf option description once, %s a field description', (_, fieldUiSchema) => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                {
+                  title: 'Inner',
+                  oneOf: [
+                    { title: 'Text', type: 'string' },
+                    { title: 'Number', type: 'number' },
+                  ],
+                },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { ...fieldUiSchema, oneOf: [{}, { 'ui:description': 'Inner desc' }] } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(shownWithText('Inner desc')).toHaveLength(1);
+    const ids = Array.from(container.querySelectorAll('[id$="__description"]'), (element) => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
   test('describes a selector by the field description it renders, and by no other', () => {
     const schema: RJSFSchema = {
       type: 'object',

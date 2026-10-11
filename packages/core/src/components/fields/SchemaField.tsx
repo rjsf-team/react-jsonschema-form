@@ -507,16 +507,18 @@ function SchemaFieldRender<
   // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time
   const uiOptions: UIOptionsType<T, S, F> = { ...globalUiOptions, ...ownUiOptions };
   const description = uiOptions.description || props.schema.description || schema.description || '';
-  // A field around this one that labels the same control renders its own description alongside that label, under the
-  // id the control's `aria-describedby` names, so this field's template renders neither. The same description is not
-  // rendered again, here or by a widget that renders one itself. One of its own is rendered by this field in place of
-  // its template, but only where its template would have rendered it, alongside a label of its own: a widget that
-  // labels itself, such as a checkbox, renders its own description too, and keeps doing so
   const isLabelledAbove = labelledField?.id === fieldId;
-  const displaysOwnLabel = !isRefCycle && schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   const sharesDescriptionAbove = isLabelledAbove && description === labelledField.description;
-  const relocatesDescription = isLabelledAbove && !sharesDescriptionAbove && displaysOwnLabel;
-  const handsOffDescription = description !== '' && (sharesDescriptionAbove || relocatesDescription);
+  // Under a field that labels the same control, the label is not read at all, so it is only worked out where it
+  // decides whether this field renders a description of its own in its template's place
+  const displaysOwnLabel =
+    !isRefCycle &&
+    (!isLabelledAbove || (description !== '' && !sharesDescriptionAbove)) &&
+    schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  // Only a description the template would have rendered beside a label of its own: a widget that draws its own label,
+  // such as a checkbox, draws its own description too
+  const relocatesDescription = isLabelledAbove && displaysOwnLabel;
+  const handsOffDescription = relocatesDescription || (sharesDescriptionAbove && description !== '');
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldSchema = useMemo(
     () => (handsOffDescription ? withoutDescription<S>(schema) : schema),
@@ -526,22 +528,28 @@ function SchemaFieldRender<
     const styledUiSchema = omitConsumedStyling<T, S, F>(uiSchema);
     return handsOffDescription ? shadowUiOptions<T, S, F>(styledUiSchema, ['description']) : styledUiSchema;
   }, [uiSchema, handsOffDescription]);
+  // The `anyOf`/`oneOf` field renders for this same id too, and a theme's option selector, such as `@rjsf/mantine`'s,
+  // renders the `ui:description` it is given, so a description handed off is withheld from it as well
+  const xxxOfBaseUiSchema = useMemo<UiSchema<T, S, F>>(
+    () => (handsOffDescription ? shadowUiOptions<T, S, F>(uiSchema, ['description']) : uiSchema),
+    [uiSchema, handsOffDescription],
+  );
   // The `uiSchema` the `anyOf`/`oneOf` options are rendered against when they are rendered in place of the field a
   // `ui:field` named, see `optionsReplaceNamedField`. Memoized alongside the `uiSchema` it shadows the `field` of, since
   // `MultiSchemaField` derives its per-option `uiSchema` array from this one and hands that array to a `useCallback`:
   // a new object per render would rebuild both and re-render the option selector on every keystroke
   const uiSchemaWithoutNamedField = useMemo<UiSchema<T, S, F>>(() => {
-    // Nothing names a field in any of the three spellings, so there is nothing to shadow: the caller's own `uiSchema` is
-    // what the options render against, and every field in a form that names none keeps the identity it already had
+    // Nothing names a field in any of the three spellings, so there is nothing to shadow: the options render against the
+    // `uiSchema` above, and every field in a form that names none keeps the identity it already had
     if (
       uiSchema[UI_FIELD_KEY] === undefined &&
       uiSchema[UI_OPTIONS_KEY]?.field === undefined &&
       globalUiOptions?.field === undefined
     ) {
-      return uiSchema;
+      return xxxOfBaseUiSchema;
     }
-    return shadowUiOptions<T, S, F>(uiSchema, ['field']);
-  }, [uiSchema, globalUiOptions]);
+    return shadowUiOptions<T, S, F>(xxxOfBaseUiSchema, ['field']);
+  }, [uiSchema, xxxOfBaseUiSchema, globalUiOptions]);
   const ownErrors = errorSchema?.__errors;
   // Memoized so that an `ArrayField` below, which reads it, isn't re-rendered past its `memo` by a new value each render
   const withheldErrors = useMemo(
@@ -641,7 +649,7 @@ function SchemaFieldRender<
   // rendered in place of would reach every option and have each render the field this schema declined. Shadowed rather
   // than deleted, see `shadowUiOptions()`: `getUiOptions()` layers a `ui:globalOptions.field` under the local entry, so
   // deleting the local one leaves the global showing through
-  const XxxOfUiSchema: UiSchema<T, S, F> = optionsReplaceNamedField ? uiSchemaWithoutNamedField : uiSchema;
+  const XxxOfUiSchema: UiSchema<T, S, F> = optionsReplaceNamedField ? uiSchemaWithoutNamedField : xxxOfBaseUiSchema;
   // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
   // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
   let fieldComponentId = fieldId;
@@ -747,18 +755,15 @@ function SchemaFieldRender<
     );
   const templateDescription = handsOffDescription ? '' : description;
   // Under this field's own description id, unless the field around it has rendered a description there already
-  const relocatedDescription =
-    relocatesDescription && description ? (
-      <DescriptionFieldTemplate
-        id={
-          labelledField?.description ? (labelledField.descriptionId ?? descriptionId(fieldId)) : descriptionId(fieldId)
-        }
-        description={description}
-        schema={schema}
-        uiSchema={uiSchema}
-        registry={registry}
-      />
-    ) : null;
+  const relocatedDescription = relocatesDescription ? (
+    <DescriptionFieldTemplate
+      id={(labelledField.description && labelledField.descriptionId) || descriptionId(fieldId)}
+      description={description}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  ) : null;
   const fieldProps: Omit<FieldTemplateProps<T, S, F>, 'children'> = {
     description: (
       <DescriptionFieldTemplate

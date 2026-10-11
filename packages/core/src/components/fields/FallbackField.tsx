@@ -203,35 +203,31 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S, type
  * instead of this one, so the only `ui:field` that reaches here is one this render has already satisfied — or one
  * naming no field, which reaches here only when the `ui:globalOptions.field` it falls back to doesn't resolve to
  * another field either, so the value field would have nothing to render for it.
- * The label is turned off where the field around the value labels it and the value's own field draws a title of its
- * own, which `SchemaField` turning the value field's template label off does not reach: an object's or an array's
- * heading, or a checkbox's label. Shadowed first, so a caller's `ui:label` cannot outrank it.
  * @param uiSchema - The uiSchema for the field being rendered.
  * @param keepsWidget - Whether a widget implements the `ui:widget`, its own or a `ui:globalOptions` one, for the type
  * the selector is on.
- * @param hidesTitle - Whether the value's own field leaves out the title it draws itself.
  */
 function getValueUiSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(uiSchema: UiSchema<T, S, F> | undefined, keepsWidget: boolean, hidesTitle: boolean): UiSchema<T, S, F> {
-  const valueUiSchema = shadowUiOptions<T, S, F>(uiSchema, [
-    'help',
-    'field',
-    ...(keepsWidget ? [] : ['widget']),
-    ...(hidesTitle ? ['label'] : []),
-  ]);
-  if (hidesTitle) {
-    valueUiSchema[UI_OPTIONS_KEY] = { ...valueUiSchema[UI_OPTIONS_KEY], label: false };
-  }
-  return valueUiSchema;
+>(uiSchema: UiSchema<T, S, F> | undefined, keepsWidget: boolean): UiSchema<T, S, F> {
+  return shadowUiOptions<T, S, F>(uiSchema, ['help', 'field', ...(keepsWidget ? [] : ['widget'])]);
 }
 
-/** The types whose field draws the value's title itself, rather than leaving it to the template: an object's or an
- * array's heading, and the label a checkbox renders beside its box
+/**
+ * Get `uiSchema` with its label turned off, shadowed first so that a caller's `ui:label` cannot outrank it.
+ * @param uiSchema - The uiSchema to turn the label off in.
  */
-const SELF_TITLED_TYPES: readonly JSONSchema7TypeName[] = ['object', 'array', 'boolean'];
+function withLabelOff<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(uiSchema: UiSchema<T, S, F>): UiSchema<T, S, F> {
+  const unlabelledUiSchema = shadowUiOptions<T, S, F>(uiSchema, ['label']);
+  unlabelledUiSchema[UI_OPTIONS_KEY] = { ...unlabelledUiSchema[UI_OPTIONS_KEY], label: false };
+  return unlabelledUiSchema;
+}
 
 /** The text that reads as a `false` boolean, once trimmed and lower-cased
  */
@@ -306,8 +302,7 @@ function castToNewType<T = unknown>(formData: T, newType: JSONSchema7TypeName): 
 /**
  * The `FallbackUiField` component renders the opt-in fallback UI: a selector for the type the value is entered as, and
  * the field for the type it is on. It is a component of its own so that a form without the opt-in builds none of what
- * it takes to render — the schemas and the `uiSchema` behind them — for every typeless
- * or unknown-type field it has.
+ * it takes to render — the schemas and the `uiSchema` behind them — for every typeless or unknown-type field it has.
  */
 function FallbackUiField<
   T = unknown,
@@ -330,7 +325,7 @@ function FallbackUiField<
     errorSchema,
     rawErrors,
   } = props;
-  const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions } = registry;
+  const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const readsFormData = useReadsFormData(FallbackField);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
@@ -409,16 +404,18 @@ function FallbackUiField<
   }, [label, globalUiOptions, templates]);
 
   // The value field renders for this field's own id, so where this field's template labels the value `SchemaField`
-  // tells it so, and it renders neither that label nor the description again. A title the value's own field draws
-  // itself is left out here
+  // tells it so, and it renders neither that label nor the description again. A value whose own field renders no
+  // template label draws its title itself — an object's or an array's heading, a checkbox's label — which that does
+  // not reach, so its label is turned off here
   const isLabelled = use(LabelledFieldContext)?.id === id;
-  const valueHidesTitle = isLabelled && SELF_TITLED_TYPES.includes(type);
   const valueSchema = useMemo(() => getValueSchema<S>(schema, type), [schema, type]);
   const valueKeepsWidget = useMemo(() => keepsWidget(type), [keepsWidget, type]);
-  const valueUiSchema = useMemo(
-    () => getValueUiSchema<T, S, F>(uiSchema, valueKeepsWidget, valueHidesTitle),
-    [uiSchema, valueKeepsWidget, valueHidesTitle],
-  );
+  const valueUiSchema = useMemo(() => {
+    const shadowedUiSchema = getValueUiSchema<T, S, F>(uiSchema, valueKeepsWidget);
+    return isLabelled && !schemaUtils.getDisplayLabel(valueSchema, shadowedUiSchema, globalUiOptions)
+      ? withLabelOff<T, S, F>(shadowedUiSchema)
+      : shadowedUiSchema;
+  }, [uiSchema, valueKeepsWidget, isLabelled, schemaUtils, valueSchema, globalUiOptions]);
 
   const { SchemaField } = fields;
   // The value field renders this field's own data; the type selector, which renders the type, is not vouched for

@@ -5,7 +5,13 @@ import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
 import { examplesId, getExampleSuggestions, getInputProps, labelValue } from '@rjsf/utils';
 
-import { cleanupOptions, useDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import {
+  cleanupOptions,
+  useDescriptionProps,
+  useAriaDescribedByProps,
+  useSelectorDescriptionId,
+  useVisibleErrors,
+} from '../utils.tsx';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
@@ -99,9 +105,10 @@ export default function BaseInputTemplate<
   // to receive, so a widget that supplies one gets the plain input every other theme renders for a numeric field.
   const isNumeric = !onChangeOverride && (inputProps.type === 'number' || inputProps.type === 'integer');
 
+  const selectorDescriptionId = useSelectorDescriptionId(props);
   const ariaDescribedByProps = useAriaDescribedByProps(isNumeric ? 'NumberInput' : 'TextInput', id, options, {
     includeExamples: hasExamples,
-    hideLabel,
+    alsoDescribedBy: selectorDescriptionId,
   });
 
   const input = isNumeric ? (

@@ -6,9 +6,6 @@ import { createContext, useMemo } from 'react';
  * same id — `MultiSchemaField` the selected option, `FallbackField` the value field it renders the options within —
  * whose `FieldTemplate` would otherwise put a second `<label>` on that same control, and a second description under
  * the id its `aria-describedby` names.
- *
- * Only the template's label is turned off: a theme whose widgets draw their own labels never had the template's label
- * on the control, so the widget keeps naming it there.
  */
 export interface LabelledField {
   /** The id of the control the field around it labels */

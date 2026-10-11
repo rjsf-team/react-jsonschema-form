@@ -2461,9 +2461,8 @@ describe('oneOf', () => {
     });
 
     it('describes the option under the id the selector is described by when the field has a description too', () => {
-      const describedSchema = regionSchema({ ...europe, description: 'A country in Europe' });
       const { node } = createFormComponent({
-        schema: describedSchema,
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
         uiSchema: { region: { 'ui:description': 'Where you live' } },
         formData,
       });
@@ -2503,6 +2502,16 @@ describe('oneOf', () => {
       });
 
       expect(screen.getAllByText('Yes or no')).toHaveLength(1);
+    });
+
+    it('describes the option with its own description under a ui:globalOptions description', () => {
+      createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
+        formData,
+      });
+
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
     });
 
     it('describes the option with the ui:description it declares for itself', () => {

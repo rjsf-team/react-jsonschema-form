@@ -1,9 +1,7 @@
 import type { FormContextType, GlobalUISchemaOptions, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { UI_FIELD_KEY, UI_OPTIONS_KEY } from '@rjsf/utils';
+import { getUiOptions } from '@rjsf/utils';
 
 import shadowUiOptions from './shadowUiOptions.ts';
-
-const HELP_UI_KEY = 'ui:help';
 
 /** Returns the `uiSchema` `MultiSchemaField` renders the selected option with: `optionUiSchema` without the `ui:field`
  * and `ui:help` that the field around the option has already rendered. That field renders for the same `id`, so an
@@ -36,12 +34,11 @@ export default function optionUiSchemaForRender<
   isLabelledAbove: boolean,
   globalUiOptions?: GlobalUISchemaOptions,
 ): UiSchema<T, S, F> | undefined {
-  const ownOptions = optionUiSchema?.[UI_OPTIONS_KEY];
-  const declaresField = optionUiSchema?.[UI_FIELD_KEY] !== undefined || ownOptions?.field !== undefined;
-  const declaresHelp = optionUiSchema?.[HELP_UI_KEY] !== undefined || ownOptions?.help !== undefined;
-  const shadowsField = declaresField ? isInherited : globalUiOptions?.field !== undefined;
-  const shadowsHelp = declaresHelp ? isInherited : globalUiOptions?.help !== undefined;
-  const shadowsDescription = isInherited && isLabelledAbove;
+  const { field, help, description } = getUiOptions<T, S, F>(optionUiSchema);
+  const shadowsField = field !== undefined ? isInherited : globalUiOptions?.field !== undefined;
+  const shadowsHelp = help !== undefined ? isInherited : globalUiOptions?.help !== undefined;
+  const shadowsDescription =
+    isInherited && isLabelledAbove && (description !== undefined || globalUiOptions?.description !== undefined);
   const shadowed = [
     ...(shadowsField ? ['field'] : []),
     ...(shadowsHelp ? ['help'] : []),

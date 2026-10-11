@@ -61,6 +61,8 @@ export default function RadioWidget<
 
   const { groupProps, optionProps } = useGroupAriaProps('RadioGroup', props);
 
+  const descriptionProps = useDescriptionProps(props);
+
   return (
     <Radio.Group
       id={id}
@@ -71,7 +73,7 @@ export default function RadioWidget<
       readOnly={disabled || readonly}
       {...themeProps}
       {...groupProps}
-      {...useDescriptionProps(props)}
+      {...descriptionProps}
     >
       {Array.isArray(enumOptions) ? (
         <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
