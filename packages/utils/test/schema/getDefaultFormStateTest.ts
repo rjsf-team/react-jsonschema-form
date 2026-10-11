@@ -1406,6 +1406,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        describe('a recursive schema whose then branch refers back to it', () => {
+          const node: RJSFSchema = {
+            type: 'object',
+            properties: { name: { type: 'string', default: 'n' } },
+            if: {},
+            then: { properties: { child: { $ref: '#/definitions/node' } } },
+          };
+          const schema: RJSFSchema = { definitions: { node }, $ref: '#/definitions/node' };
+
+          test('getDefaultFormState stops at the recursion the branch expanded', () => {
+            // `retrieveSchema()` expands the branch's `$ref` into the property, so the recursion check has no `$ref`
+            // to stop at and the defaults followed it without end
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              name: 'n',
+              child: { name: 'n' },
+            });
+          });
+        });
+
         describe('a recursive allof schema', () => {
           const schema = RECURSIVE_REF_ALLOF;
           const expected = {
