@@ -232,6 +232,21 @@ Given a `formData` object, recursively creates a `FormValidation` error handling
 
 - FormValidation&lt;T>: A `FormValidation` object based on the `formData` structure
 
+### createRootSchemaGuard&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns a guard that throws when the `schema` it is given is neither the `rootSchema` a precompiled validator was compiled from nor that schema's resolution for the `formData`.
+A schema is compared once per object: one the guard accepted before is accepted again without comparing, including when it was changed since or, for a resolution, the data differs from the data it was resolved for.
+A form validates with the same schema object until its schema changes, and passes the resolution for the data being validated, so the comparison runs once per schema rather than on every validation.
+
+#### Parameters
+
+- schemaContext: SchemaContext&lt;S, F> - The context to resolve the `rootSchema` with: the validator itself and the merge its schemas were compiled with
+- rootSchema: S - The root schema the validator was compiled from
+
+#### Returns
+
+- (schema: S, formData?: unknown) => void: A function that takes the `schema` to validate with and the `formData` the schema may have been resolved for, and throws when the schema is neither the `rootSchema` nor its resolution
+
 ### dataURItoBlob()
 
 Given the `FileReader.readAsDataURL()` based `dataURI` extracts that data into an actual Blob along with the name

@@ -10,6 +10,7 @@ import asNumber from './asNumber.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
+import createRootSchemaGuard from './createRootSchemaGuard.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dataURItoBlob from './dataURItoBlob.ts';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
@@ -200,6 +201,7 @@ export {
   callWithDeferredThrow,
   canExpand,
   createErrorHandler,
+  createRootSchemaGuard,
   createSchemaUtils,
   DateElement,
   dataURItoBlob,
