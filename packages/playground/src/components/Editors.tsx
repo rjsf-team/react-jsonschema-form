@@ -33,13 +33,13 @@ const AccordionSummary = styled(MuiAccordionSummary)({
   },
 });
 
-interface EditorProps {
+interface EditorProps<T> {
   title: string;
   code: string;
-  onChange: (data: any) => void;
+  onChange: (data: T) => void;
 }
 
-function Editor({ title, code, onChange }: EditorProps) {
+function Editor<T>({ title, code, onChange }: EditorProps<T>) {
   const [valid, setValid] = useState(true);
 
   const onCodeChange = useCallback(
@@ -89,8 +89,8 @@ interface EditorsProps {
   setSchema: React.Dispatch<React.SetStateAction<RJSFSchema>>;
   uiSchema: UiSchema;
   setUiSchema: React.Dispatch<React.SetStateAction<UiSchema>>;
-  formData: any;
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  formData: unknown;
+  setFormData: React.Dispatch<React.SetStateAction<unknown>>;
   extraErrors: ErrorSchema | undefined;
   setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
   setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
@@ -122,14 +122,14 @@ export default function Editors({
   setStylesheet,
 }: EditorsProps) {
   const onSubthemeSelected = useCallback(
-    (newSubtheme: any, { stylesheet }: SubthemeType) => {
+    (newSubtheme: string, { stylesheet }: SubthemeType) => {
       setSubtheme(newSubtheme);
       setStylesheet(stylesheet || null);
     },
     [setSubtheme, setStylesheet],
   );
   const onSchemaEdited = useCallback(
-    (newSchema: any) => {
+    (newSchema: RJSFSchema) => {
       setSchema(newSchema);
       setShareURL(null);
     },
@@ -137,7 +137,7 @@ export default function Editors({
   );
 
   const onUISchemaEdited = useCallback(
-    (newUiSchema: any) => {
+    (newUiSchema: UiSchema) => {
       setUiSchema(newUiSchema);
       setShareURL(null);
     },
@@ -145,7 +145,7 @@ export default function Editors({
   );
 
   const onFormDataEdited = useCallback(
-    (newFormData: any) => {
+    (newFormData: unknown) => {
       // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
       // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
       // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
@@ -158,7 +158,7 @@ export default function Editors({
   );
 
   const onExtraErrorsEdited = useCallback(
-    (newExtraErrors: any) => {
+    (newExtraErrors: ErrorSchema) => {
       setExtraErrors(newExtraErrors);
       setShareURL(null);
     },

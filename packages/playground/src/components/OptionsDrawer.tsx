@@ -1,9 +1,9 @@
 import type { ButtonHTMLAttributes, Dispatch, PropsWithChildren, RefObject, SetStateAction } from 'react';
 import { useCallback } from 'react';
 import Drawer from '@mui/material/Drawer';
-import type { FormRef, IChangeEvent } from '@rjsf/core';
+import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/core';
-import type { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, isObject } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
@@ -284,15 +284,37 @@ const liveSettingsBooleanUiSchema: UiSchema = {
   },
 };
 
-export interface LiveSettings {
-  showErrorList?: false | 'top' | 'bottom';
-  [key: string]: any;
-}
+/** The drawer's settings. Most are `Form` props spread straight onto it; `liveValidate` and `liveOmit` hold the drawer's
+ * radio value, which `toLiveSetting()` maps onto the prop since `Form` has no `'off'`.
+ */
+export type LiveFlag = 'off' | 'onChange' | 'onBlur';
+
+export type LiveSettings = Pick<
+  FormProps,
+  | 'disabled'
+  | 'readonly'
+  | 'noHtml5Validate'
+  | 'noValidate'
+  | 'omitExtraData'
+  | 'showErrorList'
+  | 'useFallbackUiForUnsupportedType'
+> & {
+  focusOnFirstError?: boolean;
+  liveValidate?: LiveFlag;
+  liveOmit?: LiveFlag;
+  defaultFormStateBehavior?: DefaultFormStateBehavior;
+};
+
+/** The settings as a shared link may carry them: a v5 or v6 link holds `liveValidate` and `liveOmit` as booleans. */
+export type LoadedLiveSettings = Omit<LiveSettings, 'liveValidate' | 'liveOmit'> & {
+  liveValidate?: LiveFlag | boolean;
+  liveOmit?: LiveFlag | boolean;
+};
 
 interface OptionsDrawerProps {
   schema: RJSFSchema;
   uiSchema: UiSchema;
-  formData: any;
+  formData: unknown;
   shareURL: string | null;
   theme: string;
   sampleName: string;

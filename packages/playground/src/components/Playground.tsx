@@ -3,7 +3,7 @@ import type { SubmitEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import type { FormProps, IChangeEvent } from '@rjsf/core';
+import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
 import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
@@ -16,7 +16,7 @@ import DemoFrame from './DemoFrame.tsx';
 import Editors from './Editors.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
 import GeoPosition from './GeoPosition.tsx';
-import type { LiveSettings } from './OptionsDrawer.tsx';
+import type { LiveFlag, LiveSettings, LoadedLiveSettings } from './OptionsDrawer.tsx';
 import OptionsDrawer from './OptionsDrawer.tsx';
 import SampleSelector from './SampleSelector.tsx';
 import SpecialInput from './SpecialInput.tsx';
@@ -35,9 +35,9 @@ export function toLiveSetting(value: unknown): 'onChange' | 'onBlur' | undefined
 }
 
 /** Converts a legacy boolean `liveValidate`/`liveOmit` value - `true` from a v5 shared link, `false` from a v5/v6
- * one - into the current string value. Any other value (including `undefined`) passes through unchanged.
+ * one - into the current string value. A current value passes through.
  */
-function normalizeLiveFlag(value: unknown): unknown {
+function normalizeLiveFlag(value: LiveFlag | boolean | undefined): LiveFlag | undefined {
   if (value === true) {
     return 'onChange';
   }
@@ -51,7 +51,7 @@ function normalizeLiveFlag(value: unknown): unknown {
  * shared URL predating `liveSettings` support omits it entirely) so callers never have to null-check it, and
  * converts any legacy boolean `liveValidate`/`liveOmit` values to their current string equivalents.
  */
-export function normalizeLiveSettings(loadedLiveSettings?: LiveSettings): LiveSettings {
+export function normalizeLiveSettings(loadedLiveSettings?: LoadedLiveSettings): LiveSettings {
   const settings = loadedLiveSettings ?? {};
   return {
     ...settings,
@@ -64,7 +64,6 @@ const DEFAULT_VALIDATOR = 'AJV8';
 
 const INITIAL_LIVE_SETTINGS: LiveSettings = {
   showErrorList: 'top',
-  validate: false,
   disabled: false,
   noHtml5Validate: false,
   readonly: false,
@@ -72,15 +71,15 @@ const INITIAL_LIVE_SETTINGS: LiveSettings = {
   liveOmit: 'off',
   liveValidate: 'off',
   defaultFormStateBehavior: {
-    arrayMinItems: 'populate',
+    arrayMinItems: { populate: 'all' },
     emptyObjectFields: 'populateAllDefaults',
   },
-  useFallbackField: false,
+  useFallbackUiForUnsupportedType: false,
 };
 
 type LoadData = Sample & {
   theme?: string;
-  liveSettings: LiveSettings;
+  liveSettings: LoadedLiveSettings;
   sampleName?: string;
   validator?: string;
 };
@@ -216,7 +215,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [liveSettings, setLiveSettings] = useState<LiveSettings>(initial.liveSettings);
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>(initial.otherFormProps);
 
-  const playGroundFormRef = useRef<any>(null);
+  const playGroundFormRef = useRef<FormRef>(null);
 
   useEffect(() => {
     if (sharedSetupError !== undefined) {
@@ -295,12 +294,15 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     [setFormData, setShareURL],
   );
 
-  const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<any>) => {
-    console.log('submitted formData', submittedFormData);
-    console.log('submit event', event);
-    // oxlint-disable-next-line no-alert
-    window.alert('Form submitted');
-  }, []);
+  const onFormDataSubmit = useCallback(
+    ({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<HTMLFormElement>) => {
+      console.log('submitted formData', submittedFormData);
+      console.log('submit event', event);
+      // oxlint-disable-next-line no-alert
+      window.alert('Form submitted');
+    },
+    [],
+  );
 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
