@@ -509,15 +509,17 @@ function SchemaFieldRender<
   const description = uiOptions.description || props.schema.description || schema.description || '';
   const isLabelledAbove = labelledField?.id === fieldId;
   const sharesDescriptionAbove = isLabelledAbove && description === labelledField.description;
+  const hasOwnDescriptionBelow = isLabelledAbove && description !== '' && !sharesDescriptionAbove;
   // Under a field that labels the same control, the label is not read at all, so it is only worked out where it
   // decides whether this field renders a description of its own in its template's place
   const displaysOwnLabel =
     !isRefCycle &&
-    (!isLabelledAbove || (description !== '' && !sharesDescriptionAbove)) &&
+    (!isLabelledAbove || (hasOwnDescriptionBelow && labelledField.description === '')) &&
     schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  // Only a description the template would have rendered beside a label of its own: a widget that draws its own label,
-  // such as a checkbox, draws its own description too
-  const relocatesDescription = isLabelledAbove && displaysOwnLabel;
+  // A description the template would have rendered beside a label of its own is rendered in the template's place. One
+  // that a widget drawing its own label, such as a checkbox, draws itself is left to it, unless the field above has a
+  // description too, which the widget's would otherwise share an id with
+  const relocatesDescription = hasOwnDescriptionBelow && (labelledField.description !== '' || displaysOwnLabel);
   const handsOffDescription = relocatesDescription || (sharesDescriptionAbove && description !== '');
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldSchema = useMemo(

@@ -804,6 +804,32 @@ describe('aria-describedby', () => {
     expect(new Set(ids).size).toBe(ids.length);
   });
 
+  test('gives the field description and a checkbox option description an id each', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              oneOf: [
+                { type: 'boolean', description: 'Opt desc' },
+                { type: 'string', title: 'Text' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ x: { 'ui:description': 'Field desc' } }}
+        formData={{ x: true }}
+        validator={validator}
+      />,
+    );
+
+    expect(shownWithText('Field desc')).toHaveLength(1);
+    expect(shownWithText('Opt desc')).toHaveLength(1);
+    const ids = Array.from(container.querySelectorAll('[id$="__description"]'), (element) => element.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
   test('describes a selector by the field description it renders, and by no other', () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -832,5 +858,30 @@ describe('aria-describedby', () => {
     expect(
       selectorDescribedBy({ region: { 'ui:description': 'Where you live', 'ui:options': { label: false } } }),
     ).not.toContain(descriptionId('root_region'));
+  });
+
+  test('describes a range selector by the field description it renders', () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'Text', type: 'string' },
+                { title: 'Flag', type: 'boolean' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { 'ui:widget': 'range', 'ui:description': 'Where you live', oneOf: [{}, {}] } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider').getAttribute('aria-describedby')?.split(' ')).toContain(
+      descriptionId('root_region'),
+    );
   });
 });

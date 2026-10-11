@@ -2478,6 +2478,49 @@ describe('oneOf', () => {
       );
     });
 
+    it('describes a checkbox option under the id the selector is described by when the field has a description too', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              description: 'Field desc',
+              oneOf: [
+                { type: 'boolean', description: 'Opt desc' },
+                { type: 'string', title: 'Text' },
+              ],
+            },
+          },
+        },
+        formData: { x: true },
+      });
+
+      expect(screen.getAllByText('Opt desc')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_x__description')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Field desc');
+      expect(node.querySelector('#root_x__oneof_select__description')).toHaveTextContent('Opt desc');
+    });
+
+    it('leaves a checkbox option its own description when the field has none', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              oneOf: [
+                { type: 'boolean', description: 'Opt desc' },
+                { type: 'string', title: 'Text' },
+              ],
+            },
+          },
+        },
+        formData: { x: true },
+      });
+
+      expect(screen.getAllByText('Opt desc')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Opt desc');
+    });
+
     it('describes an option whose constants render as a select', () => {
       createFormComponent({
         schema: {

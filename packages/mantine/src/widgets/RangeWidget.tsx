@@ -15,7 +15,7 @@ import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, 
 import { ariaDescribedByIds, rangeSpec, titleId } from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
-import { cleanupOptions, useFieldWrapperProps, useShownSuccessId } from '../utils.tsx';
+import { cleanupOptions, useFieldWrapperProps, useSelectorDescriptionId, useShownSuccessId } from '../utils.tsx';
 
 /** The Mantine input and `InputWrapper` props `Slider` doesn't take, such as a `ui:globalOptions` meant for the text
  * inputs, which it would pass on to its root element as unknown attributes
@@ -67,15 +67,26 @@ interface FieldSliderProps extends Omit<SliderProps, 'thumbProps'> {
   // Mantine's `Thumb` also reads a `thumbLabel` from it, which `SliderProps` doesn't type
   thumbProps?: GenericObjectType;
   successId: string;
+  alsoDescribedBy?: string;
   invalid: boolean;
   titled: boolean;
 }
 
 /** A `Slider` whose focusable thumb is named by the field's title and described by its ids, including the success
- * message of the `Input.Wrapper` it is rendered in while Mantine renders it. Every other prop, including the ref and
- * handlers a single-child `inputContainer` such as `Tooltip` adds, is passed on to the `Slider`.
+ * message of the `Input.Wrapper` it is rendered in while Mantine renders it, and any `alsoDescribedBy`. Every other
+ * prop, including the ref and handlers a single-child `inputContainer` such as `Tooltip` adds, is passed on to the
+ * `Slider`.
  */
-function FieldSlider({ id, successId, invalid, titled, thumbProps, thumbLabel, ...props }: FieldSliderProps) {
+function FieldSlider({
+  id,
+  successId,
+  alsoDescribedBy,
+  invalid,
+  titled,
+  thumbProps,
+  thumbLabel,
+  ...props
+}: FieldSliderProps) {
   const shownSuccessId = useShownSuccessId(successId);
   return (
     <Slider
@@ -84,7 +95,7 @@ function FieldSlider({ id, successId, invalid, titled, thumbProps, thumbLabel, .
       {...props}
       thumbProps={{
         ...thumbProps,
-        'aria-describedby': [ariaDescribedByIds(id), shownSuccessId, thumbProps?.['aria-describedby']]
+        'aria-describedby': [ariaDescribedByIds(id), alsoDescribedBy, shownSuccessId, thumbProps?.['aria-describedby']]
           .filter(Boolean)
           .join(' '),
         'aria-invalid': thumbProps?.['aria-invalid'] ?? (invalid || undefined),
@@ -116,6 +127,7 @@ export default function RangeWidget<
   const themeProps = cleanupOptions(options, sliderExcludedKeys);
   const { min, max, step } = rangeSpec(schema);
   const { wrapperProps, hiddenTitle, invalid, successId } = useFieldWrapperProps(props);
+  const selectorDescriptionId = useSelectorDescriptionId(props);
   const { thumbProps, thumbLabel } = useProps<GenericObjectType>(
     'Slider',
     {},
@@ -161,6 +173,7 @@ export default function RangeWidget<
           onFocus={handleFocus}
           {...themeProps}
           successId={successId}
+          alsoDescribedBy={selectorDescriptionId}
           invalid={invalid}
           titled={!!label}
           thumbProps={thumbProps}
