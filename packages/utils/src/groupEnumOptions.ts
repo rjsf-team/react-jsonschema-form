@@ -31,7 +31,7 @@ import type {
  * A group value matches an option whose `value` is equal to it. Failing that, primitive values also match by their
  * string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas authored as
  * JSON often stringify them. Object and array enum values only match the very same object, so a JSON-authored
- * uiSchema can't group them. `enumDisabled` values match strictly, as they do in every other enum widget.
+ * uiSchema can't group them.
  *
  * @param enumOptions - The available enum options
  * @param [optgroups] - The `ui:options.optgroups` mapping of group label to the enum values it contains

@@ -1397,7 +1397,7 @@ The following cases are handled rather than being allowed to break a render:
 - A group value matching no remaining option is skipped, and a group left with no options is omitted entirely, so no group renders as an empty heading
 - A group whose value is not an array at all is ignored the same way
 - When several options share a `value`, each reference to that value claims the next not-yet-claimed option with it, by index, rather than collapsing them into one
-- A group value that is not an exact match for an option's `value` also matches a primitive one by its string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since a uiSchema authored as JSON often stringifies them. Object and array enum values only match the very same object, so a JSON-authored uiSchema cannot group them. `ui:enumDisabled` values always match strictly, as they do in every other enum widget
+- A group value that is not an exact match for an option's `value` also matches a primitive one by its string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since a uiSchema authored as JSON often stringifies them. Object and array enum values only match the very same object, so a JSON-authored uiSchema cannot group them.
 
 Note that JavaScript orders integer-like keys (e.g. `'2024'`) ahead of all other keys, in ascending numeric order, regardless of the order they were written in, so those groups come first.
 
