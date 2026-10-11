@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import type { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
 import {
   enumOptionsDomValues,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionValueDecoder,
   getOptionValueFormat,
@@ -42,7 +43,7 @@ export default function RadioWidget<
   onFocus,
   onBlur,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
@@ -93,7 +94,7 @@ export default function RadioWidget<
               value={domValues[index]}
               checked={enumOptionsIsSelected<S>(option.value, value, false)}
               required={required}
-              disabled={disabled || readonly}
+              disabled={disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled)}
               data-index={index}
               onChange={handleChange}
               onFocus={handleFocus}

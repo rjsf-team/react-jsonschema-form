@@ -12231,6 +12231,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               <input
                 class="checkbox"
                 data-index="1"
+                disabled=""
                 id="root-1"
                 name="root"
                 type="checkbox"
@@ -12709,6 +12710,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               <input
                 class="radio"
                 data-index="1"
+                disabled=""
                 id="root-1"
                 name="root"
                 type="radio"

@@ -118,4 +118,18 @@ describe('CheckboxesWidget focus and blur', () => {
       ]);
     },
   );
+
+  test('disables only the options ui:enumDisabled lists', () => {
+    render(
+      <Form
+        schema={schema}
+        uiSchema={{ choices: { 'ui:widget': 'checkboxes', 'ui:enumDisabled': ['b'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox', { name: 'a' })).toBeEnabled();
+    expect(screen.getByRole('checkbox', { name: 'b' })).toBeDisabled();
+    expect(screen.getByRole('checkbox', { name: 'c' })).toBeEnabled();
+  });
 });

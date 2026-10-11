@@ -3,6 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -54,8 +55,7 @@ export default function RadioWidget<
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled =
-              Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
+            const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>
                 <RadioGroupItem value={domValues[index]} id={optionId(id, index)} disabled={itemDisabled} />

@@ -14,6 +14,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  enumOptionsIsDisabled,
   getByPath,
   hasByPath,
   setByPath,
@@ -592,8 +593,7 @@ export default function ObjectField<
       let firstOption: EnumOptionsType<S> | undefined;
       if (isConstantSelect<S>(resolvedKeySchema)) {
         const enabledOptions = (optionsList<T, S, F>(resolvedKeySchema, resolvedKeyUiSchema) ?? []).filter(
-          (option) =>
-            !(Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)),
+          (option) => !enumOptionsIsDisabled(option.value, enumDisabled),
         );
         const zeroValue = getDefaultValue<T, S, F>(translateString, type);
         firstOption = enabledOptions.some((option) => deepEquals(option.value, zeroValue))

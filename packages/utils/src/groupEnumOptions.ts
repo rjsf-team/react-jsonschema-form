@@ -1,3 +1,4 @@
+import enumOptionsIsDisabled from './enumOptionsIsDisabled.ts';
 import isContainerValue from './isContainerValue.ts';
 import type {
   EnumOptionsGroupType,
@@ -48,7 +49,7 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   const indexed: IndexedEnumOptionType<S>[] = enumOptions.map((option, index) => ({
     ...option,
     index,
-    disabled: Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value),
+    disabled: enumOptionsIsDisabled(option.value, enumDisabled),
   }));
   if (!optgroups || typeof optgroups !== 'object') {
     return indexed;

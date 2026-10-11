@@ -3,6 +3,7 @@ import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, 
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -68,10 +69,7 @@ export default function RadioWidget<
             id={optionId(id, i)}
             name={htmlName || id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={
-              disabled ||
-              (Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value))
-            }
+            disabled={disabled || enumOptionsIsDisabled(option.value, enumDisabled)}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
             value={domValues[i]}

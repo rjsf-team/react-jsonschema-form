@@ -2,6 +2,7 @@ import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema, Generi
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -67,9 +68,7 @@ export default function CheckboxesWidget<
               id={optionId(id, i)}
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
-              disabled={
-                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
-              }
+              disabled={enumOptionsIsDisabled(option.value, enumDisabled)}
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}
               onFocus={!readonly ? focusHandlers[i] : undefined}

@@ -11,6 +11,7 @@ import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   getOptionValueFormat,
@@ -90,8 +91,7 @@ export default function CheckboxesWidget<
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index: number) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-            const itemDisabled =
-              Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
+            const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
             const checkbox = (
               <Checkbox
                 {...muiSlotProps?.checkbox}

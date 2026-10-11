@@ -463,6 +463,20 @@ Otherwise the index of an option whose value is the whole `value` is returned, s
 
 - string | string[] | undefined: A single string index for the first `value` in `allEnumOptions`, if not `multiple`. Otherwise, the list of indexes for (each of) the value(s) in `value`.
 
+### enumOptionsIsDisabled()
+
+Determines whether the option with the given `value` is one the `ui:enumDisabled` list disables.
+The values match strictly, and an `enumDisabled` that isn't a list disables nothing.
+
+#### Parameters
+
+- value: unknown - The value of the enum option being checked
+- [enumDisabled]: EnumValue[] | undefined - The `ui:enumDisabled` list of enum values that should be rendered disabled
+
+#### Returns
+
+- boolean: true if `enumDisabled` lists the `value`, false otherwise
+
 ### enumOptionsIsSelected&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Determines whether the given `value` is (one of) the `selected` value(s).

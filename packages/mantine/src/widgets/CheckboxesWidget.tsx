@@ -3,6 +3,7 @@ import { Checkbox, Flex } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -67,9 +68,7 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 value={domValues[i]}
                 label={option.label}
-                disabled={
-                  Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
-                }
+                disabled={enumOptionsIsDisabled(option.value, enumDisabled)}
                 autoFocus={i === 0 && autofocus}
                 onBlur={blurHandlers[i]}
                 onFocus={focusHandlers[i]}

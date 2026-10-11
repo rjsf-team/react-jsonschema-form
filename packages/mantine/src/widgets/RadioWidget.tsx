@@ -4,6 +4,7 @@ import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -84,9 +85,7 @@ export default function RadioWidget<
                   id={optionId(id, i)}
                   value={domValues[i]}
                   label={option.label}
-                  disabled={
-                    Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
-                  }
+                  disabled={enumOptionsIsDisabled(option.value, enumDisabled)}
                   autoFocus={i === 0 && autofocus}
                   onBlur={handleBlur}
                   onFocus={handleFocus}
