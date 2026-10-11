@@ -10,6 +10,11 @@ import type { ErrorSchema, ValidationData } from './types.ts';
  * path (`foo`, `.foo`, `.arr[0]`, `.arr.0`, `''` or `.` for the root) matches, since `toErrorSchema()` has already split
  * it into keys.
  *
+ * Accepted edge case: the validators file an invalid-schema error under `$schema`, which is also where a property named
+ * `$schema` keeps its errors. An additional error there that reads the same as the invalid-schema message is left out of
+ * the list, so that property's field shows it while the only listed copy is the invalid-schema error, whose missing
+ * `property` points at no field. Keeping one rule for the list and the `ErrorSchema` is worth that.
+ *
  * @param additionalErrorSchema - The additional errors, viewed as the plain object they are at runtime
  * @param errorSchema - The node of the existing `ErrorSchema` at the same keys
  * @returns - A copy of `additionalErrorSchema` without the array entries `errorSchema` already holds
