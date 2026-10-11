@@ -33,7 +33,7 @@ export default function RangeWidget<
 
   const emptyValue = options.emptyValue || '';
 
-  const handleChange = (nextValue: any) => onChange(nextValue === '' ? emptyValue : nextValue);
+  const handleChange = (nextValue: number | '') => onChange(nextValue === '' ? emptyValue : nextValue);
 
   const handleBlur = () => onBlur(id, value);
 

@@ -19,7 +19,7 @@ const dateParser = (input: string | undefined, format: string) => {
   return d.isValid() ? d.toDate() : null;
 };
 
-const dateFormat = (date?: Date, format?: string) => {
+const dateFormat = (date?: DateStringValue | Date | null, format?: string) => {
   if (!date || !dayjs(date).isValid()) {
     return '';
   }
@@ -79,7 +79,7 @@ export default function DateTimeInput<
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
-    (nextValue: any) => {
+    (nextValue: DateStringValue | null) => {
       onChange(requiresOffset ? offsetValueFormatter(nextValue) : dateFormat(nextValue, valueFormat as string));
     },
     [onChange, valueFormat, requiresOffset],

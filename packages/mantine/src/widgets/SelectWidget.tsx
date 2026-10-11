@@ -61,9 +61,10 @@ export default function SelectWidget<
   logUnsupportedDefaultForEnum<S>(id, schema, enumOptions, multiple);
 
   const handleChange = useCallback(
-    (nextValue: any) => {
+    (nextValue: string | string[] | null) => {
       if (!disabled && !readonly && onChange) {
-        onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
+        // `Select` reports a cleared value as `null`, which decodes as the empty string does
+        onChange(enumOptionValueDecoder<S>(nextValue ?? '', enumOptions, optionValueFormat, emptyValue));
       }
     },
     [onChange, disabled, readonly, enumOptions, emptyValue, optionValueFormat],
