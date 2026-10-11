@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, ID_KEY, JUNK_OPTION_ID, retrieveSchema, schemaKey } from '@rjsf/utils';
+import { createRootSchemaGuard, ID_KEY, JUNK_OPTION_ID, schemaKey } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -67,13 +67,11 @@ export default class ATAPrecompiledValidator<
    */
   private readonly schemaContext: SchemaContext<S, F>;
 
-  /** The schemas `ensureSameRootSchema()` has accepted, whether equal to the root schema as compiled or to its
-   * resolution. A form validates with the same schema object until its schema changes, so the comparison is made once
-   * per object rather than on every validation
+  /** What `ensureSameRootSchema()` checks a schema with, see `createRootSchemaGuard()`
    *
    * @private
    */
-  private readonly acceptedSchemas = new WeakSet<object>();
+  private readonly guardRootSchema: (schema: S, formData?: unknown) => void;
 
   /** Constructs an `ATAPrecompiledValidator` instance using the `validateFns` and `rootSchema`
    *
@@ -91,6 +89,7 @@ export default class ATAPrecompiledValidator<
     this.localizer = localizer;
     this.suppressDuplicateFiltering = suppressDuplicateFiltering;
     this.schemaContext = { validator: this, customMergeAllOf };
+    this.guardRootSchema = createRootSchemaGuard(this.schemaContext, rootSchema);
     this.mainValidator = this.getValidator(rootSchema);
   }
 
@@ -110,31 +109,17 @@ export default class ATAPrecompiledValidator<
   }
 
   /** Ensures that the validator is using the same schema as the root schema used to construct the precompiled
-   * validator. It first compares the given `schema` against the root schema and if they aren't the same, then it
-   * checks against the resolved root schema, on the chance that a resolved version of the root schema was passed in
-   * instead of the raw root schema.
+   * validator: the `schema` has to be that root schema or its resolution for the `formData`. A schema is compared once
+   * per object, so one accepted before is accepted again without comparing, including when it was changed since or,
+   * for a resolution, the `formData` differs from the data it was resolved for: pass the resolution for the data being
+   * validated, as `Form` does
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate if any
+   * @throws - Error when `schema` is neither the root schema nor its resolution for the `formData`
    */
   ensureSameRootSchema(schema: S, formData?: unknown) {
-    if (this.acceptedSchemas.has(schema)) {
-      return true;
-    }
-    if (!deepEquals(schema, this.rootSchema)) {
-      // Resolved with this validator and the merge its schemas were compiled with: only its own precompiled functions
-      // can answer for the `oneOf`/`anyOf` options and conditions of its root schema, and only that merge builds the
-      // sub-schemas the precompiled map holds. The form data is passed since it can affect the resolution. Live
-      // validation hands `Form`'s resolved schema in, the same object until the resolution changes, so it is
-      // remembered too
-      const resolvedRootSchema = retrieveSchema(this.schemaContext, this.rootSchema, this.rootSchema, formData);
-      if (!deepEquals(schema, resolvedRootSchema)) {
-        throw new Error(
-          'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
-        );
-      }
-    }
-    this.acceptedSchemas.add(schema);
+    this.guardRootSchema(schema, formData);
     return true;
   }
 
