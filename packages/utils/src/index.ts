@@ -13,7 +13,7 @@ import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dataURItoBlob from './dataURItoBlob.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
-import deepEquals from './deepEquals.ts';
+import deepEquals, { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue.ts';
 import enumOptionsDomValues from './enumOptionsDomValues.ts';
@@ -201,6 +201,7 @@ export {
   dateElementId,
   dateRangeOptions,
   deepEquals,
+  deepEqualsUndefinedAsMissing,
   DEFAULT_BOOLEAN_WIDGET,
   descriptionId,
   englishStringTranslator,

@@ -19,7 +19,7 @@ import {
   unsetByPath,
   createSchemaUtils,
   deepEquals,
-  ErrorSchemaBuilder,
+  deepEqualsUndefinedAsMissing,
   getChangedFields,
   getDiscriminatorFieldFromSchema,
   getUiOptions,
@@ -32,13 +32,13 @@ import {
   replaceEqualDeep,
   schemaHasNestedConditional,
   toErrorList,
-  toErrorSchema,
   fieldPathFromList,
   fieldPathToList,
   UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
   validationDataMerge,
   ERRORS_KEY,
+  SCHEMA_KEY,
   ANY_OF_KEY,
   ONE_OF_KEY,
 } from '@rjsf/utils';
@@ -60,6 +60,20 @@ type ErrorState<T> = Pick<
   FormState<T>,
   'errors' | 'errorSchema' | 'schemaValidationErrors' | 'schemaValidationErrorSchema'
 >;
+
+/** The errors a parent-owned form owns: those on display, the validator's, and the fields' own they are built from */
+export type OwnedErrorState<T> = ErrorState<T> & Pick<FormState<T>, 'customErrors'>;
+
+/** The error members of `state` that a parent-owned form owns */
+export function ownedErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
+  errors,
+  errorSchema,
+  schemaValidationErrors,
+  schemaValidationErrorSchema,
+  customErrors,
+}: FormState<T, S, F>): OwnedErrorState<T> {
+  return { errors, errorSchema, schemaValidationErrors, schemaValidationErrorSchema, customErrors };
+}
 
 /** The form data as an event hands it back. The overload is the one trust point for `EventFormData`'s promise that an
  * object or array root is never `undefined`.
@@ -107,8 +121,44 @@ export interface PendingChange<T> {
   fieldPath: FieldPath;
   /** The new value to set into the formData */
   newValue?: T;
-  /** The new errors to be set into the errorSchema, if any */
+  /** The field's own errors at `fieldPath`, if it raises any */
   newErrorSchema?: ErrorSchema<T>;
+  /** For a change that moved what the array or object at `fieldPath` holds, where each key went; the errors under a
+   * key go with it
+   */
+  newKeyOf?: KeyMove;
+  /** For a change that moved keys, where the fields' own errors under each key went when not where the validator's
+   * did; see `AnnouncedMove`
+   */
+  newOwnKeyOf?: KeyMove;
+  /** For a change that moved keys, whether the errors raised at `fieldPath` itself go too; see `AnnouncedMove` */
+  dropsOwnErrors?: boolean;
+}
+
+/** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
+export type KeyMove = (key: string) => string | undefined;
+
+/** A `KeyMove` with the path of the array or object whose keys it moved */
+export interface AnnouncedMove {
+  fieldPath: FieldPath;
+  newKeyOf: KeyMove;
+  /** Where the fields' own errors under each key went, when not where the validator's did: an option switch drops
+   * what was raised under a key the new option declares too, since another widget renders for it, while the
+   * validator's errors there describe a constraint the new option may well share
+   */
+  newOwnKeyOf?: KeyMove;
+  /** Whether the errors raised at `fieldPath` itself go with the move. A reorder or rename leaves the array or object
+   * that raised them in place, so they stay; an option switch renders another field at the path, so a raise of the
+   * option's widget would be shown by one that never made it
+   */
+  dropsOwnErrors?: boolean;
+}
+
+/** The `KeyMove` of an array whose items went where `newIndexOf` says, `undefined` for one that was removed. A key that
+ * names no item stays where it is
+ */
+export function moveOfItems(newIndexOf: (index: number) => number | undefined): KeyMove {
+  return (key) => (/^(0|[1-9]\d*)$/.test(key) ? newIndexOf(Number(key))?.toString() : key);
 }
 
 /** The part of the state that rendering derives from the props and the data alone: the schema utilities, the root and
@@ -146,23 +196,6 @@ function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContext
   // the root schema) is rebuilt.
   const rootSchema = schemaUtils.getRootSchema();
   return { schemaUtils, hasNestedConditionalSchema: schemaHasNestedConditional(rootSchema, rootSchema) };
-}
-
-/** `value` without its `undefined` entries, at any depth, so settings that spell a key out as `undefined` compare equal
- * to settings leaving it out, which `deepEquals()` alone does not see
- *
- * @param value - The settings to compare
- * @returns - `value` with every `undefined` entry of a plain object dropped
- */
-function withoutUndefinedEntries(value: unknown): unknown {
-  if (!isPlainObject(value)) {
-    return value;
-  }
-  return Object.fromEntries(
-    Object.entries(value)
-      .filter(([, entry]) => entry !== undefined)
-      .map(([key, entry]) => [key, withoutUndefinedEntries(entry)]),
-  );
 }
 
 const UI_EMPTY_VALUE_KEY = 'ui:emptyValue';
@@ -219,10 +252,10 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
   const { schemaUtils, hasNestedConditionalSchema } = resolved;
   const rootSchema = schemaUtils.getRootSchema();
   // Shared before `replaceEqualDeep()` sees it, which compares a function by identity: an `arrayMinItems`
-  // `computeSkipPopulate` written inline would then make every render look like a change of the settings
+  // `computeSkipPopulate` written inline would then make every render look like a change of the settings. Settings
+  // that spell a key out as `undefined` are the settings that leave it out
   const defaultsBehavior =
-    prev &&
-    deepEquals(withoutUndefinedEntries(prev.defaultsBehavior), withoutUndefinedEntries(defaultFormStateBehavior))
+    prev && deepEqualsUndefinedAsMissing(prev.defaultsBehavior, defaultFormStateBehavior)
       ? prev.defaultsBehavior
       : defaultFormStateBehavior;
   return replaceEqualDeep(prev, {
@@ -247,7 +280,7 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
 function mergeErrors<T>(
   schemaValidation: ValidationData<T>,
   extraErrors?: ErrorSchema<T>,
-  customErrors?: ErrorSchemaBuilder<T>,
+  customErrors?: ErrorSchema<T>,
 ): ValidationData<T> {
   let { errorSchema, errors } = schemaValidation;
   if (extraErrors) {
@@ -256,9 +289,15 @@ function mergeErrors<T>(
     errors = merged.errors;
   }
   if (customErrors) {
-    const merged = validationDataMerge({ errors, errorSchema }, customErrors.ErrorSchema, true);
+    const listed = errors;
+    const merged = validationDataMerge({ errors, errorSchema }, customErrors, true);
     errorSchema = merged.errorSchema;
-    errors = merged.errors;
+    // The merge shows a message the field already carries once, so the list names it once too. Compared by path, since
+    // a validator may spell the `property` of the root or of a property of the root without the leading `.`
+    const keyOf = (error: RJSFValidationError) => JSON.stringify([error.message, ...errorPath(error)]);
+    const listedKeys = new Set(listed.map(keyOf));
+    // The merge lists the raised errors after `listed`
+    errors = [...listed, ...merged.errors.slice(listed.length).filter((raised) => !listedKeys.has(keyOf(raised)))];
   }
   return { errors, errorSchema };
 }
@@ -320,13 +359,6 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
     formContext ?? ({} as F),
   );
-  if (Object.keys(uiRequiredErrorSchema).length === 0) {
-    // validationDataMerge() isn't a no-op for an empty-but-truthy additional errorSchema: when `schemaValidation`
-    // has message-less errors (e.g. from a `transformErrors` that clears `message`), its own `errorSchema` can have
-    // fewer keys than its `errors` list (`toErrorSchema()` only adds entries with a truthy message), so merging in
-    // `{}` would silently drop those entries from `errors` instead of returning `schemaValidation` unchanged.
-    return schemaValidation;
-  }
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
 }
 
@@ -350,7 +382,7 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
   props: FormProps<T, S, F>,
   context: RenderContext<T, S, F>,
   formData: T | undefined,
-  customErrors?: ErrorSchemaBuilder<T>,
+  customErrors?: ErrorSchema<T>,
   retrievedSchema?: S,
 ) {
   const schemaValidation = validateFormData(props, context, formData, retrievedSchema);
@@ -375,77 +407,233 @@ function errorPath(error: RJSFValidationError): string[] {
   return error.property ? toPath(error.property) : [];
 }
 
-/** Counts the messages of `errorSchema` into `counts`, keyed by the property each sits at, or by the message alone when
- * `pooled`: after an array-valued raise, such as an `ArrayField` reorder, remove or copy, an item's errors may sit at
- * an index other than the one they came from, so only the message still says which is which
- *
- * @param errorSchema - The `ErrorSchema` whose messages are counted
- * @param pooled - Whether to key by the message alone
- * @param [counts] - The counts to add to
- * @param [sign] - 1 to add the messages, -1 to take them away
- * @returns - `counts`
+/** A copy of `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold
+ * nothing, an empty `__errors` included, which a raise at an ancestor would read as errors still being there. `path`
+ * is that of `errorSchema` itself
  */
-function countMessages(errorSchema: unknown, pooled: boolean, counts = new Map<string, number>(), sign = 1) {
-  for (const { property, message } of toErrorList(errorSchema as ErrorSchema)) {
-    const key = pooled ? `${message}` : `${property} ${message}`;
-    counts.set(key, (counts.get(key) ?? 0) + sign);
-  }
-  return counts;
-}
-
-/** `raised` without the messages `supplied` counts, one copy per count. A field may hand back the `errorSchema` it
- * displays, which already carries `extraErrors`/`customErrors`, and those must not enter the stored validator result,
- * or they outlive the props supplying them. Only the message tells them apart, so a field's own error that reads the
- * same as a supplied one at the same place is taken for the supplied one (#5348)
- *
- * @param raised - The `ErrorSchema` a field raised
- * @param supplied - The supplied messages, from `countMessages()`; consumed
- * @param pooled - Whether `supplied` is keyed by the message alone
- * @returns - What is left of `raised`, with no empty `__errors` or branches
- */
-function withoutSupplied<T>(raised: ErrorSchema<T>, supplied: Map<string, number>, pooled: boolean): ErrorSchema<T> {
-  const kept = toErrorList(raised).filter(({ property, message }) => {
-    const key = pooled ? `${message}` : `${property} ${message}`;
-    const count = supplied.get(key) ?? 0;
-    supplied.set(key, count - 1);
-    return count <= 0;
-  });
-  return toErrorSchema<T>(kept);
-}
-
-/** `errors` with the ones at or below `path` replaced by the messages `raised` holds there. A validator error whose
- * message is still raised at its property stays as it was, keeping its place and the `name`, `params` and
- * `schemaPath` that a copy built from the `ErrorSchema` would lose. New messages go where the first error at `path`
- * was, so the list keeps the validator's order
- *
- * @param errors - The validator's errors
- * @param path - The path the raise was made at
- * @param raised - The errors raised at `path`
- * @returns - The errors with the raise applied
- */
-function replaceErrorsAt<T>(errors: RJSFValidationError[], path: FieldPathList, raised: ErrorSchema<T>) {
-  const incoming = toErrorList(raised, path.map(String));
-  const kept: RJSFValidationError[] = [];
-  let insertAt = -1;
-  for (const error of errors) {
-    const pathOfError = errorPath(error);
-    if (!isPathPrefix(path, pathOfError)) {
-      kept.push(error);
-    } else {
-      if (insertAt === -1) {
-        insertAt = kept.length;
+function pruneErrorSchema(
+  errorSchema: ErrorSchema,
+  isDropped: (path: FieldPathList) => boolean,
+  path: FieldPathList = [],
+): ErrorSchema {
+  const kept: ErrorSchema = {};
+  for (const [key, value] of Object.entries(errorSchema)) {
+    if (key === ERRORS_KEY) {
+      if (Array.isArray(value) && value.length > 0 && !isDropped(path)) {
+        // Copied, so the form does not hold on to an array the field that raised it may go on to change
+        kept[key] = [...value];
       }
-      const found = incoming.findIndex(
-        (entry) => entry.message === error.message && String(errorPath(entry)) === String(pathOfError),
-      );
-      if (found !== -1) {
-        incoming.splice(found, 1);
-        kept.push(error);
+    } else {
+      const child = isPlainObject(value) ? pruneErrorSchema(value, isDropped, [...path, key]) : value;
+      if (!isPlainObject(child) || Object.keys(child).length > 0) {
+        kept[key] = child;
       }
     }
   }
-  kept.splice(insertAt === -1 ? kept.length : insertAt, 0, ...incoming);
   return kept;
+}
+
+/** The messages of the error an invalid schema is reported with, if any. It names no field: the validators list it
+ * without a `property` and file it under the `$schema` key of the `ErrorSchema`, where the errors of a property named
+ * `$schema` are filed too, so it is what sits there that no listed error of that property says. A `transformErrors`
+ * may reword all the listed one says, so it is known by those two alone: without a listed error that names no field,
+ * `$schema` is the path of a field like any other
+ */
+function invalidSchemaMessages<T>({ errors, errorSchema }: ValidationData<T>): string[] {
+  if (!errors.some((error) => error.property === undefined)) {
+    return [];
+  }
+  const ofProperty = new Set(
+    errors.filter((error) => String(errorPath(error)) === SCHEMA_KEY).map((error) => error.message),
+  );
+  return getByPath<string[]>(errorSchema, [SCHEMA_KEY, ERRORS_KEY], []).filter((message) => !ofProperty.has(message));
+}
+
+/** `validation` without the errors at the paths `isDropped` names, the list and the `ErrorSchema` by one rule. The
+ * error an invalid schema is reported with names no field, so it stays in both; see `invalidSchemaMessages()`
+ */
+function withoutErrors<T>(
+  validation: ValidationData<T>,
+  isDropped: (path: FieldPathList) => boolean,
+): ValidationData<T> {
+  const invalidSchema = invalidSchemaMessages(validation);
+  const hasInvalidSchema = invalidSchema.length > 0;
+  const errorSchema = pruneErrorSchema(validation.errorSchema, isDropped);
+  return {
+    errors: validation.errors.filter(
+      (error) => (hasInvalidSchema && error.property === undefined) || !isDropped(errorPath(error)),
+    ),
+    errorSchema:
+      hasInvalidSchema && isDropped([SCHEMA_KEY])
+        ? { ...errorSchema, [SCHEMA_KEY]: { [ERRORS_KEY]: invalidSchema } }
+        : errorSchema,
+  };
+}
+
+/** `getByPath()` reading an empty path as the root itself. The overload is the one trust point that the value at a
+ * path has the type its reader names: the type a field renders for the form's data, an `ErrorSchema` node for an
+ * `ErrorSchema`.
+ */
+export function getAt<V>(data: unknown, segments: FieldPathList): V;
+export function getAt(data: unknown, segments: FieldPathList): unknown {
+  return segments.length === 0 ? data : getByPath(data, segments);
+}
+
+/** A copy of `errorSchema` with the node at `path` replaced by `node`. A `node` that holds nothing is gone, with the
+ * ancestors that leaves empty, which a raise at one of them would read as errors still being there
+ */
+function replaceErrorSchemaNode<T>(
+  errorSchema: ErrorSchema<T>,
+  path: FieldPathList,
+  node: ErrorSchema<T>,
+): ErrorSchema<T> {
+  if (path.length === 0) {
+    return node;
+  }
+  // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
+  const replaced = setByPath(copyAlongPath(errorSchema, path), path, node, true);
+  // Every container along `path` is a copy or newly made, so unsetting in place touches nothing the state holds
+  for (let depth = path.length; depth > 0; depth--) {
+    const ancestor = path.slice(0, depth);
+    if (Object.keys(getByPath<object>(replaced, ancestor, {})).length > 0) {
+      break;
+    }
+    unsetByPath(replaced, ancestor);
+  }
+  return replaced;
+}
+
+/** `errorSchema` after the keys of the array or object at `path` moved: the errors under each key sit under its new
+ * one and those under a key that is gone are gone. Its own, such as `minItems`, belong to no key and stay
+ */
+function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList, newKeyOf: KeyMove): ErrorSchema<T> {
+  const moved: ErrorSchema = {};
+  for (const [key, node] of Object.entries(getAt<ErrorSchema | undefined>(errorSchema, path) ?? {})) {
+    const newKey = key === ERRORS_KEY ? key : newKeyOf(key);
+    if (newKey !== undefined) {
+      // A rename onto a key that holds errors, such as a declared property the data lacks, keeps both
+      moved[newKey] = Object.hasOwn(moved, newKey) ? mergeObjects(moved[newKey], node, true) : node;
+    }
+  }
+  return replaceErrorSchemaNode(errorSchema, path, moved);
+}
+
+/** `validation` after the keys of the array or object at `path` moved, the list by the rule `moveErrorSchemaKeys()`
+ * moves the `ErrorSchema` by. A moved error keeps what the validator said of it, under its new `property`
+ */
+function moveErrorKeys<T>(validation: ValidationData<T>, path: FieldPathList, newKeyOf: KeyMove): ValidationData<T> {
+  const errors = validation.errors.flatMap((error) => {
+    const pathOfError = errorPath(error);
+    const key = isPathPrefix(path, pathOfError) ? pathOfError[path.length] : undefined;
+    const newKey = key === undefined ? key : newKeyOf(key);
+    if (newKey === key) {
+      return [error];
+    }
+    if (newKey === undefined) {
+      return [];
+    }
+    const property = `.${[...pathOfError.slice(0, path.length), newKey, ...pathOfError.slice(path.length + 1)].join('.')}`;
+    // A stack that names the field by its title instead of its `property` says nothing of the key
+    const isStackOfProperty = error.stack === `${error.property} ${error.message}`;
+    return [{ ...error, property, stack: isStackOfProperty ? `${property} ${error.message}` : error.stack }];
+  });
+  return { errors, errorSchema: moveErrorSchemaKeys(validation.errorSchema, path, newKeyOf) };
+}
+
+/** What a change says of the field's own errors: its raise, with the removal of a key counting as an empty one, since
+ * nothing is left at its path for an error to describe
+ */
+function raiseOf<T>({ newValue, newErrorSchema }: PendingChange<T>): ErrorSchema<T> | undefined {
+  return newErrorSchema ?? (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE ? {} : undefined);
+}
+
+/** The fields' own errors of `current` after `change`, by the rules of `applyChangeToErrors()`: the part of what a
+ * change does to the errors that needs no validator result, which is all that live validation keeps of it
+ *
+ * @param current - The state the change applies to
+ * @param change - The change
+ * @returns - The fields' own errors after the change, `current`'s own when the change left them as they were
+ */
+export function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  change: PendingChange<T>,
+): ErrorSchema<T> | undefined {
+  const { fieldPath, newKeyOf, newOwnKeyOf, dropsOwnErrors } = change;
+  const path = fieldPathToList(fieldPath);
+  const raised = raiseOf(change);
+  let { customErrors } = current;
+  const hasOwnErrors = getByPath<string[]>(customErrors, [...path, ERRORS_KEY], []).length > 0;
+  if (newKeyOf && customErrors) {
+    customErrors = moveErrorSchemaKeys(customErrors, path, newOwnKeyOf ?? newKeyOf);
+  }
+  if (raised) {
+    // A copy without what holds nothing, so the form neither holds an object the field may go on to change, such as
+    // the `ErrorSchema` of a builder it keeps, nor walks an empty `__errors` on every later merge
+    customErrors = replaceErrorSchemaNode(
+      customErrors ?? {},
+      path,
+      pruneErrorSchema(raised, () => false),
+    );
+  } else if (customErrors && hasOwnErrors && (!newKeyOf || dropsOwnErrors)) {
+    customErrors = pruneErrorSchema(
+      customErrors,
+      (pathOfError) => pathOfError.length === path.length && isPathPrefix(path, pathOfError),
+    );
+  }
+  // An empty raise leaves none, rather than a `{}` every later merge would walk
+  return customErrors && Object.keys(customErrors).length === 0 ? undefined : customErrors;
+}
+
+/** The errors of `current` after `change`, before any validation of the changed data. The fields' own errors are kept
+ * apart from the validator's, which the next validation and a parent replacing the data both rewrite, so a field's
+ * raise outlives either until the field raises again (#5347).
+ *
+ * A change that moved the keys of an array or object, an item to another index or a property to another name, moves
+ * the errors of both with them, drops those under a key that is gone, and leaves the container's own where they are
+ * unless it says they go too, as an option switch does. One that raises errors replaces the field's own at its path,
+ * an empty raise included, and takes the validator's off that path until the form validates again: the raise is the
+ * field's say over its path. One that removes the key at its path counts as an empty raise. Any other change clears
+ * the field's own `__errors` there.
+ *
+ * Reads none of the data, so a parent-owned form can apply a change to the errors it owns without deriving the data
+ * the change proposes.
+ *
+ * @param current - The state the change applies to
+ * @param change - The change
+ * @param extraErrors - The `extraErrors` prop, which the displayed errors carry
+ * @returns - The error members of the state after the change, `current`'s own when the change left them as they were
+ */
+export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F>,
+  change: PendingChange<T>,
+  extraErrors: ErrorSchema<T> | undefined,
+): OwnedErrorState<T> {
+  const { fieldPath, newKeyOf } = change;
+  const customErrors = ownErrorsAfterChange(current, change);
+  const raised = raiseOf(change);
+  if (!newKeyOf && !raised && customErrors === current.customErrors) {
+    return ownedErrorsOf(current);
+  }
+  const path = fieldPathToList(fieldPath);
+  // The validator's own result is the base `extraErrors` and the fields' own errors are merged onto again, as in
+  // `reconcileErrors()`: `errors` and `errorSchema` already carry them, so merging onto those would add each a second
+  // time on every change (#5041)
+  let validation: ValidationData<T> = {
+    errors: current.schemaValidationErrors,
+    errorSchema: current.schemaValidationErrorSchema,
+  };
+  if (newKeyOf) {
+    validation = moveErrorKeys(validation, path, newKeyOf);
+  }
+  if (raised) {
+    validation = withoutErrors(validation, (pathOfError) => isPathPrefix(path, pathOfError));
+  }
+  return {
+    ...mergeErrors(validation, extraErrors, customErrors),
+    schemaValidationErrors: validation.errors,
+    schemaValidationErrorSchema: validation.errorSchema,
+    customErrors,
+  };
 }
 
 /** The data a derivation pass settles on, with what it took to get there */
@@ -771,10 +959,44 @@ interface ErrorOptions<S> {
   mustValidate: boolean;
   /** The schema to validate with in place of the root, when it still describes the data; see `runLiveValidation()` */
   validationSchema?: S;
-  /** Returns the path of each `formData` field that changed; called only when live validation does not run, which is
-   * when those paths are needed to clear the fields' errors
+  /** Returns what changed in the `formData`; called only when live validation does not run, which is when it is needed
+   * to clear the changed fields' errors
    */
-  getFormDataChangedFields?: () => string[];
+  getDataChange?: () => DataChange;
+}
+
+/** What differs between two values of the form's data */
+interface DataChange {
+  /** The difference cannot be narrowed below the root: a primitive, an array of another length, or a change of type */
+  isRootReplaced: boolean;
+  /** The path of each field that differs, split the way `toErrorSchema()` splits an error's property, so the two
+   * address the same entry. A key that splits to no segment at all, such as `''`, has its errors filed at the root, so
+   * its path is the empty one
+   */
+  paths: FieldPathList[];
+}
+
+const UNCHANGED: DataChange = { isRootReplaced: false, paths: [] };
+
+function dataChange(formData: unknown, previous: unknown): DataChange {
+  if (Object.is(formData, previous)) {
+    return UNCHANGED;
+  }
+  // The wrapper below would name the same paths for an object root, after a deep comparison of the whole root that
+  // comparing its fields one by one makes a second time; the data of a parent-owned form is compared on every render
+  // that hands it new data, so an object root is spared that
+  if (isPlainObject(formData) && isPlainObject(previous)) {
+    return { isRootReplaced: false, paths: getChangedFields(formData, previous, true).map((field) => toPath(field)) };
+  }
+  // Any other root is compared as the one property of a wrapper, so a root array is narrowed to its items the way an
+  // array under a property is, and a difference that can't be narrowed comes back as the wrapper's own key:
+  // `getChangedFields()` names the fields of an object, so it has no name for a replaced root
+  const root = 'root';
+  const fields = getChangedFields({ [root]: formData }, { [root]: previous }, true);
+  return {
+    isRootReplaced: fields.includes(root),
+    paths: fields.map((field) => toPath(field).slice(1)),
+  };
 }
 
 /** Reconciles the errors for a derivation, either by validating `formData` or by carrying the committed validation
@@ -794,66 +1016,40 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   formData: T | undefined,
   options: ErrorOptions<S>,
 ): ErrorState<T> {
-  const { isSchemaChanged = false, mustValidate, validationSchema, getFormDataChangedFields = () => [] } = options;
+  const { isSchemaChanged = false, mustValidate, validationSchema, getDataChange = () => UNCHANGED } = options;
   if (mustValidate) {
     return runLiveValidation(props, context, formData, current?.customErrors, validationSchema);
   }
-  // If the `props.noValidate` option is set or the schema has changed, we reset the error state. Otherwise the base
-  // has to be the validator's own result, since `extraErrors` and `customErrors` are merged in below and
-  // `state.errors` already carries them, which would merge each in a second time
   // oxlint-disable-next-line typescript/no-deprecated
-  const isErrorStateReset = props.noValidate || isSchemaChanged;
-  const validation: ValidationData<T> = isErrorStateReset
+  const isErrorStateDropped = props.noValidate || isSchemaChanged;
+  // If the `props.noValidate` option is set or the schema has changed, we reset the error state. Otherwise the base has
+  // to be the validator's own result, since `extraErrors` and `customErrors` are merged in below and `state.errors`
+  // already carries them, which would merge each in a second time
+  let validation: ValidationData<T> = isErrorStateDropped
     ? { errors: [], errorSchema: {} }
     : {
         errors: current?.schemaValidationErrors ?? [],
         errorSchema: current?.schemaValidationErrorSchema ?? {},
       };
-  let schemaValidationErrorSchema = validation.errorSchema;
-  let schemaValidationErrors = validation.errors;
-  const formDataChangedFields = getFormDataChangedFields();
-  if (formDataChangedFields.length > 0) {
-    // `formDataChangedFields` carries the path of each field that changed, so clearing has to follow that path
-    // instead of dropping the whole branch it starts in. The path is split with `toPath()`, the same way
-    // `toErrorSchema()` splits a validation error property, so the two address the same entry. Intermediate
-    // objects are forced so the numeric segment of an array item stays an object key, which is how an
-    // `ErrorSchema` addresses array items.
-    const changedPaths = formDataChangedFields.map((path) => toPath(path));
-    const newErrorSchema = changedPaths.reduce<GenericObjectType>((acc, pathOfField) => {
-      // Every container holding the field changed along with it, so an error of their own, such as the
-      // `uniqueItems` of the array the field sits in, is cleared too. Only their own errors go: the other
-      // fields they hold did not change and keep theirs.
-      for (let i = 1; i < pathOfField.length; i++) {
-        setByPath(acc, [...pathOfField.slice(0, i), ERRORS_KEY], undefined, true);
-      }
-      return setByPath(acc, pathOfField, undefined, true);
-    }, {});
-    schemaValidationErrorSchema = mergeObjects(
-      validation.errorSchema,
-      newErrorSchema,
-      'preventDuplicates',
-    ) as ErrorSchema<T>;
-    // The list is what the `ErrorList` and the `onChange` payload carry, so it drops the same errors: the changed
-    // field's own and those below it, and the own errors of every container holding it
-    schemaValidationErrors = validation.errors.filter((error) => {
-      const pathOfError = errorPath(error);
-      return (
-        pathOfError.length === 0 ||
-        !changedPaths.some(
-          (pathOfField) => isPathPrefix(pathOfField, pathOfError) || isPathPrefix(pathOfError, pathOfField),
-        )
-      );
-    });
+  const { isRootReplaced, paths } = isErrorStateDropped ? UNCHANGED : getDataChange();
+  if (isRootReplaced) {
+    // Every error the validator reported on a field describes the value that was replaced
+    validation = withoutErrors(validation, () => true);
+  } else if (paths.length > 0) {
+    // A changed field's errors go, with those of everything below it. Every container holding the field changed along
+    // with it, the root included, so an error of their own, such as the `uniqueItems` of the array the field sits in,
+    // goes too. Only their own: the other fields they hold did not change and keep theirs
+    validation = withoutErrors(validation, (pathOfError) =>
+      paths.some(
+        (pathOfField) =>
+          isPathPrefix(pathOfError, pathOfField) || (pathOfField.length > 0 && isPathPrefix(pathOfField, pathOfError)),
+      ),
+    );
   }
-  const merged = mergeErrors(
-    { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema },
-    props.extraErrors,
-    current?.customErrors,
-  );
   return {
-    ...merged,
-    schemaValidationErrors,
-    schemaValidationErrorSchema,
+    ...mergeErrors(validation, props.extraErrors, current?.customErrors),
+    schemaValidationErrors: validation.errors,
+    schemaValidationErrorSchema: validation.errorSchema,
   };
 }
 
@@ -967,11 +1163,11 @@ function deriveControlledState<T, S extends StrictRJSFSchema, F extends FormCont
     // The committed data is the previous prop, shared, so unchanged subtrees are skipped by identity
     // The clearing stands in for the validation pass a live-validated form does not get, so it is for the other modes
     // only: when the pass is merely skipped, the committed errors already describe this data and stay as they are.
-    // Construction has no committed errors to clear, and walking against nothing would list every key of the data
-    getFormDataChangedFields:
+    // Construction has no committed errors to clear
+    getDataChange:
       current === undefined || (edit && isLiveValidated(props))
         ? undefined
-        : () => getChangedFields(formData, current.formData, true),
+        : () => dataChange(formData, current.formData),
   });
   return {
     ...(current ?? { isControlled: true, initialDefaultsGenerated: true }),
@@ -1235,10 +1431,9 @@ function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormConte
 /** Applies one `change` to `current`, returning the next state. The `newValue` is set at the change's path in the
  * data, which is then run through `deriveFormData()` for any missing defaults and, when the resolved schema changed,
  * sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered to remove any extra data not in
- * a form field. The change's `newErrorSchema`, if any, either updates an existing validation error at its path or
- * becomes a custom error; then the data is validated if required. Reads nothing but its arguments and performs no
- * callbacks: committing the result and notifying are the caller's, which is what lets one pipeline serve a form that
- * owns its data and one whose parent does.
+ * a form field. The errors the form holds are changed as `applyChangeToErrors()` describes; then the data is validated
+ * if required. Reads nothing but its arguments and performs no callbacks: committing the result and notifying are the
+ * caller's, which is what lets one pipeline serve a form that owns its data and one whose parent does.
  *
  * @param current - The state the change applies to
  * @param change - The change to apply
@@ -1250,24 +1445,14 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
   change: PendingChange<T>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  const { newValue, fieldPath, newErrorSchema } = change;
+  const { newValue, fieldPath } = change;
   // The single place where a `FieldPath` is parsed back into segments for writing into the formData
   const path = fieldPathToList(fieldPath);
-  // oxlint-disable-next-line typescript/no-deprecated
-  const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, disabled, readonly } = props;
-  const { formData: oldFormData, schemaValidationErrorSchema, schemaValidationErrors } = current;
-  let { customErrors } = current;
+  const { extraErrors, omitExtraData, liveOmit, disabled, readonly } = props;
+  const { formData: oldFormData } = current;
   // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
   // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
-  // Use the un-merged AJV-only schema as the base for re-merging extraErrors, as `reconcileErrors()` does:
-  // state.errorSchema already carries them, so merging onto it would add each a second time.
-  let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema;
-  // `state.errors` is the matching list and needs the same treatment; see the merge below.
-  let mergeBaseErrors = schemaValidationErrors;
-  // The stored validator result, when a raise made part of it stale
-  let storedValidation: Partial<Pick<FormState<T, S, F>, 'schemaValidationErrors' | 'schemaValidationErrorSchema'>> =
-    {};
   const isRootPath = path.length === 0;
   let formData: T | undefined;
   if (isRootPath) {
@@ -1354,104 +1539,23 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     }
   }
 
-  const mustValidate = !noValidate && liveValidate === 'onChange';
   let newFormData = formData;
 
   if (omitExtraData === true && liveOmit === 'onChange') {
     newFormData = context.schemaUtils.omitExtraData(context.schema, formData);
   }
 
-  if (newErrorSchema) {
-    // First check to see if there is an existing validation error on this path...
-    const oldValidationError = !isRootPath ? getByPath(schemaValidationErrorSchema, path) : schemaValidationErrorSchema;
-    // True for any array-valued raise, not only an `ArrayField` reorder, remove or copy that moved item errors to new
-    // indexes: the errors a custom tags or multi-select field raises are matched by message alone too
-    const isArrayRaise = Array.isArray(newValue);
-    // If there is an old validation error for this path, assume we are updating it directly
-    if (oldValidationError && Object.keys(oldValidationError).length > 0) {
-      // What the field displays beyond the validator's own errors is supplied by `extraErrors`/`customErrors`; the
-      // rest of the raise is the field's own say over the validator's errors at this path, an empty rest included
-      const supplied = countMessages(
-        isRootPath ? current.errorSchema : getByPath(current.errorSchema, path),
-        isArrayRaise,
-      );
-      const raisedErrorSchema = withoutSupplied(
-        newErrorSchema,
-        countMessages(oldValidationError, isArrayRaise, supplied, -1),
-        isArrayRaise,
-      );
-      if (isRootPath) {
-        mergeBaseErrorSchema = raisedErrorSchema;
-      } else {
-        // Applied to a clone of the AJV-only base, so the committed state is not mutated
-        mergeBaseErrorSchema = structuredClone(schemaValidationErrorSchema);
-        if (Object.keys(raisedErrorSchema).length > 0) {
-          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(mergeBaseErrorSchema, path, raisedErrorSchema, true);
-        } else {
-          // Not an empty node, which an ancestor's raise would read as a validator error still being there
-          unsetByPath(mergeBaseErrorSchema, path);
-        }
-      }
-      mergeBaseErrors = replaceErrorsAt(schemaValidationErrors, path, raisedErrorSchema);
-      // Stored, so in an uncontrolled form the next derivation rebuilds from a base that carries the raise instead of
-      // losing it; a controlled parent's echo counts the raised path as changed and clears it (#5347). Remapped item
-      // errors describe the reordered data, which only an uncontrolled form keeps: a controlled parent either echoes
-      // it, which clears the changed items' errors, or snaps back to its own order, which the old indexes describe
-      if (!isArrayRaise || !current.isControlled) {
-        storedValidation = {
-          schemaValidationErrors: mergeBaseErrors,
-          schemaValidationErrorSchema: mergeBaseErrorSchema,
-        };
-      }
-    } else {
-      // Only `extraErrors` is left out: the raise replaces the node, so leaving out what `customErrors` holds
-      // there would drop an error a field re-raises
-      const raisedErrorSchema = withoutSupplied(
-        newErrorSchema,
-        countMessages(isRootPath ? extraErrors : getByPath(extraErrors, path), isArrayRaise),
-        isArrayRaise,
-      );
-      // The committed builder is left as it is; the edit lands on a copy, which the constructor clones. A root raise
-      // replaces everything, as a raise at any other path replaces its node
-      customErrors = new ErrorSchemaBuilder<T>(isRootPath ? raisedErrorSchema : customErrors?.ErrorSchema);
-      if (!isRootPath) {
-        if (Object.keys(raisedErrorSchema).length > 0) {
-          // An `ErrorSchema` nests plain objects even at numeric segments, so never auto-vivify arrays
-          setByPath(customErrors.ErrorSchema, path, raisedErrorSchema, true);
-        } else {
-          unsetByPath(customErrors.ErrorSchema, path);
-        }
-      }
-    }
-  }
-  let clearedCustomError = false;
-  // `clearErrors()` leaves an empty `__errors` behind, which is still a truthy read, so the length is what says
-  // whether there is anything left to clear; without it every later change at this path would clone the builder
-  // and rebuild the displayed errors again
-  if (
-    !newErrorSchema &&
-    customErrors &&
-    getByPath<string[]>(customErrors.ErrorSchema, [...path, ERRORS_KEY], []).length > 0
-  ) {
-    customErrors = new ErrorSchemaBuilder<T>(customErrors.ErrorSchema).clearErrors(path);
-    clearedCustomError = true;
-  }
-  let next: Partial<FormState<T, S, F>> = { formData: newFormData, customErrors };
-  if (mustValidate) {
-    const liveValidation = runLiveValidation(props, context, newFormData, customErrors, context.retrievedSchema);
-    next = { ...next, ...liveValidation };
-  } else if ((!noValidate && newErrorSchema) || clearedCustomError) {
-    // Rebuild the display from the validator's own result: `current.errors` already carries `extraErrors` and
-    // `customErrors`, so merging them onto it appends each a second time on every change (#5041). That base is also
-    // what makes a cleared custom error leave the error list and not just the field. `mergeBaseErrorSchema` is
-    // `schemaValidationErrorSchema` unless a `newErrorSchema` above replaced an existing validation error at its path.
-    const mergedErrors = mergeErrors(
-      { errorSchema: mergeBaseErrorSchema, errors: mergeBaseErrors },
-      extraErrors,
+  let next: Partial<FormState<T, S, F>> = { formData: newFormData };
+  if (isLiveValidated(props)) {
+    // The validation replaces the validator's result whole, so only the fields' own errors are carried through
+    const customErrors = ownErrorsAfterChange(current, change);
+    next = {
+      ...next,
+      ...runLiveValidation(props, context, newFormData, customErrors, context.retrievedSchema),
       customErrors,
-    );
-    next = { ...next, ...mergedErrors, ...storedValidation };
+    };
+  } else {
+    next = { ...next, ...applyChangeToErrors(current, change, extraErrors) };
   }
   return { ...current, ...context, ...next };
 }
@@ -1529,7 +1633,7 @@ export function applyValidation<T, S extends StrictRJSFSchema, F extends FormCon
   const hasBlockingExtraErrors = !extraErrorsAreWarnings && !!extraErrors && toErrorList(extraErrors).length > 0;
   // customErrors are raised imperatively by field/widget components (via onChange's errorSchema argument) and,
   // like schema errors, always block regardless of extraErrorsAreWarnings.
-  const hasCustomErrors = !!customErrors && toErrorList(customErrors.ErrorSchema).length > 0;
+  const hasCustomErrors = !!customErrors && toErrorList(customErrors).length > 0;
   const hasError = schemaValidation.errors.length > 0 || hasBlockingExtraErrors || hasCustomErrors;
   let next = current;
   if (hasError) {
