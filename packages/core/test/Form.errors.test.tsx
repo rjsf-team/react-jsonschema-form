@@ -165,7 +165,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
           await user.type(screen.getByLabelText(/^foo\.bar/), 'a');
           // Clearing has to reach the same place, and leave the field that was not touched alone
           expect(renderedErrorSchema()).toEqual({
-            foo: {},
             baz: { __errors: ["must have required property 'baz'"] },
           });
         });

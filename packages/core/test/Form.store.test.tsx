@@ -734,7 +734,7 @@ describe('validateForm() from a passive Effect after a prop change (#5034)', () 
     expect(errorListMessages(container)).toEqual(['must NOT have more than 15 characters']);
   });
 
-  it('renders the data a parent passes after validating only as it mounted', async () => {
+  it('renders the data a parent passes after validating only as it mounted, without the errors of the data it replaced', async () => {
     function ValidatedOnMountParent() {
       const ref = useRef<FormRef<string>>(null);
       const [formData, setFormData] = useState(valueA);
@@ -750,10 +750,12 @@ describe('validateForm() from a passive Effect after a prop change (#5034)', () 
         </>
       );
     }
-    render(<ValidatedOnMountParent />);
+    const { container } = render(<ValidatedOnMountParent />);
+    expect(errorListMessages(container)).toEqual(['must NOT have fewer than 10 characters']);
 
     await user.click(screen.getByRole('button', { name: 'Toggle data' }));
 
     expect(screen.getByRole('textbox')).toHaveValue(valueB);
+    expect(errorListMessages(container)).toEqual([]);
   });
 });
