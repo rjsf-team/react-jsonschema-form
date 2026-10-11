@@ -35,28 +35,28 @@ export interface PresentationSubject<
   field: Field<T, S, F>;
   /** The key the field component is registered under, when a key named it */
   fieldKey?: string;
-  /** Whether the field component was named by a `ui:field` or a `$id`, rather than chosen for the schema's type */
-  isNamedField?: boolean;
   /** The single widget the field renders its value with, as an alias, a registry key or a component. Left out for a
    * field that renders no single widget, such as an object's or an array's
    */
   widget?: Widget<T, S, F> | string;
 }
 
-/** A field named by a `ui:field` or a `$id` was written for its schema, so it is trusted to draw its own label and
- * description, unless it or the theme declares otherwise
+/** What a field draws when nothing declares otherwise: its own label and description, as a field written for its
+ * schema does, leaving its errors and help to the template. It is also what a part the field leaves to its widget
+ * falls back to when it renders no single widget
  */
-const NAMED_FIELD: PresentationDeclaration = { label: 'self', description: 'self' };
+const FIELD_DEFAULT: PresentationDeclaration = { label: 'self', description: 'self' };
 
-/** A field chosen for a schema's type that renders a single widget leaves every part to whoever that widget says
- * draws it
+/** The declaration of a field that renders its value with a single widget and leaves every part to whoever that widget
+ * says draws it, such as `@rjsf/core`'s `StringField`. A field that renders a single widget only sometimes, such as
+ * `ArrayField` for a multi-select, falls back to `FIELD_DEFAULT` for every part when it renders none
  */
-const WIDGET_FIELD: PresentationDeclaration = {
+export const WIDGET_FIELD_PRESENTATION: Readonly<PresentationDeclaration> = Object.freeze({
   label: 'widget',
   description: 'widget',
   errors: 'widget',
   help: 'widget',
-};
+});
 
 const NO_DECLARATION: PresentationDeclaration = {};
 
@@ -101,12 +101,12 @@ function getWidgetDeclaration<
  * declarations the theme registered and the components carry. Read from the components `SchemaField` already resolved,
  * never by predicting one, and never throwing where `getWidget()` would.
  *
- * A field component's declaration layers its own `presentation` over the theme's under its key, and that over the
- * default for how it was chosen: a field named by a `ui:field` or a `$id` draws its label and description, and one
- * chosen for the schema's type that renders a single widget leaves every part to that widget. A widget's declaration
- * layers its own `presentation` over the theme's under its key, which is where `mergeThemePresentation()` put any
- * `standardWidgets` that reach it. A part a field leaves to its widget, with no widget given, and a part nothing
- * declares, are drawn by the template.
+ * A field component's declaration layers its own `presentation` over the merged declaration for its key, and that over
+ * the default, which draws its own label and description, so a component gets the same answer however `SchemaField`
+ * chose it. A field that renders a single widget declares `WIDGET_FIELD_PRESENTATION` to leave its parts to that
+ * widget, whose declaration layers its own `presentation` over the merged declaration for its key, which is where
+ * `mergeThemePresentation()` put any `standardWidgets` that reach it. A part a field leaves to its widget, with no
+ * widget given, falls back to the default, and a part nothing declares is drawn by the template.
  *
  * @param source - The registry's widgets and the merged `presentation`
  * @param subject - The field's schema and the components that render it
@@ -118,18 +118,15 @@ export default function getPresentationDeclaration<
   F extends FormContextType = FormContextType,
 >(
   source: PresentationSource<T, S, F>,
-  { schema, field, fieldKey, isNamedField = false, widget }: PresentationSubject<T, S, F>,
+  { schema, field, fieldKey, widget }: PresentationSubject<T, S, F>,
 ): ResolvedPresentationDeclaration {
-  const fields = source.presentation?.fields;
-  let base: PresentationDeclaration | undefined;
-  if (isNamedField) {
-    base = NAMED_FIELD;
-  } else if (widget !== undefined) {
-    base = WIDGET_FIELD;
-  }
-  const fieldDeclaration = layerDeclarations(base, getOwnDeclaration(fields, fieldKey), field.presentation);
+  const fieldDeclaration = layerDeclarations(
+    FIELD_DEFAULT,
+    getOwnDeclaration(source.presentation?.fields, fieldKey),
+    field.presentation,
+  );
   const widgetDeclaration =
-    widget === undefined ? NO_DECLARATION : getWidgetDeclaration<T, S, F>(schema, widget, source);
+    widget === undefined ? FIELD_DEFAULT : getWidgetDeclaration<T, S, F>(schema, widget, source);
   return {
     label: ownerOf('label', fieldDeclaration, widgetDeclaration),
     description: ownerOf('description', fieldDeclaration, widgetDeclaration),
