@@ -4,7 +4,15 @@ import { createContext, forwardRef, memo } from 'react';
 import { render } from '@testing-library/react';
 
 import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
-import { getFieldTypeForWidget, getWidget, getWidgetType, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
+import {
+  getFieldTypeForWidget,
+  getWidget,
+  getWidgetKey,
+  getWidgetType,
+  isStandardWidgetKey,
+  resolveWidget,
+  ROOT_FIELD_PATH,
+} from '../src/index.ts';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -335,6 +343,50 @@ describe('getWidgetType()', () => {
   it('should treat an array select over whole array constants as a whole-value select', () => {
     expect(getWidgetType({ type: 'array', enum: [[1], [2]] }, 'radio')).toBe('array');
     expect(getWidgetType({ type: 'array', enum: [[1], [2]] }, 'checkboxes')).toBeUndefined();
+  });
+});
+
+describe('getWidgetKey()', () => {
+  it('should return a registered name as its own key', () => {
+    expect(getWidgetKey({ type: 'string' }, 'MyWidget', { MyWidget: TestRefWidget })).toBe('MyWidget');
+  });
+
+  it('should return a registered name over the alias it spells', () => {
+    expect(getWidgetKey({ type: 'string' }, 'text', { text: TestRefWidget })).toBe('text');
+  });
+
+  it("should return the key an alias stands for on the schema's type", () => {
+    expect(getWidgetKey({ type: 'string' }, 'textarea')).toBe('TextareaWidget');
+    expect(getWidgetKey({ type: 'boolean' }, 'checkbox')).toBe('CheckboxWidget');
+    expect(getWidgetKey({ type: 'array', items: { type: 'string' } }, 'files')).toBe('FileWidget');
+  });
+
+  it('should return the key an alias stands for on another type a type list names', () => {
+    expect(getWidgetKey({ type: ['null', 'number', 'string'] }, 'textarea')).toBe('TextareaWidget');
+  });
+
+  it('should return undefined where getWidget() throws', () => {
+    expect(getWidgetKey({ type: 'string' }, 'updown')).toBeUndefined();
+    expect(getWidgetKey({ type: 'string' }, 'Unregistered')).toBeUndefined();
+    expect(getWidgetKey({}, 'text')).toBeUndefined();
+    expect(getWidgetKey({ type: 'string' }, 'constructor')).toBeUndefined();
+  });
+
+  it('should not return a registered name for a widget that is not registered', () => {
+    expect(getWidgetKey({ type: 'string' }, 'TextWidget')).toBeUndefined();
+  });
+});
+
+describe('isStandardWidgetKey()', () => {
+  it.each(['TextWidget', 'CheckboxWidget', 'CheckboxesWidget', 'AltDateTimeWidget', 'RatingWidget'])(
+    'should be true for %s, which @rjsf/core registers',
+    (key) => {
+      expect(isStandardWidgetKey(key)).toBe(true);
+    },
+  );
+
+  it.each(['text', 'MyWidget', 'toString'])('should be false for %s', (key) => {
+    expect(isStandardWidgetKey(key)).toBe(false);
   });
 });
 

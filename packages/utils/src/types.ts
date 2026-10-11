@@ -773,6 +773,98 @@ export interface FieldProps<
   rawErrors?: string[];
 }
 
+/** Who draws one part of a field: its `FieldTemplate`, or the field or widget component itself. `widget` is for a field
+ * component that renders a single widget and leaves the part to whoever that widget says draws it
+ */
+export type PartOwner = 'template' | 'self' | 'widget';
+
+/** Which parts of a field a field or widget component draws itself. A part it leaves out is drawn by the template */
+export interface PresentationDeclaration {
+  /** Who draws the label naming the field's control */
+  label?: PartOwner;
+  /** Who draws the field's description */
+  description?: PartOwner;
+  /** Who draws the field's errors. A component drawing them itself promises one element carrying `errorId(id)`
+   * whenever there are messages to show, and none when there are not
+   */
+  errors?: PartOwner;
+  /** Who draws the field's `ui:help` */
+  help?: PartOwner;
+  /** How a label the template draws reaches the control: its `for`, or the control pointing `aria-labelledby` at the
+   * label's `fieldLabelId(id)`, which a group of controls needs since `for` names a single element
+   */
+  labelledBy?: 'for' | 'aria-labelledby';
+}
+
+/** A `PresentationDeclaration` with every part settled on the template or the component, as
+ * `getPresentationDeclaration()` returns it
+ */
+export type ResolvedPresentationDeclaration = Record<
+  'label' | 'description' | 'errors' | 'help',
+  Exclude<PartOwner, 'widget'>
+> &
+  Required<Pick<PresentationDeclaration, 'labelledBy'>>;
+
+/** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
+ * under, so a component replacing another under the same key draws what that key declares
+ */
+export interface ThemePresentation {
+  /** Applies to every widget key `@rjsf/core` registers, for a theme whose widgets all draw the same parts, beneath
+   * any declaration under the widget's own key
+   */
+  standardWidgets?: PresentationDeclaration;
+  /** Declarations for widgets, by the key they are registered under */
+  widgets?: Readonly<Record<string, PresentationDeclaration>>;
+  /** Declarations for fields, by the key they are registered under */
+  fields?: Readonly<Record<string, PresentationDeclaration>>;
+}
+
+/** Where one part of a field is drawn: by its template, by its field or widget component, by a field above it
+ * rendering the same id, or not at all
+ */
+export type PartPlacement = 'template' | 'self' | 'above' | 'none';
+
+/** One part of a field's plan: where it is drawn, and the id of the element drawing it */
+export interface PartPresentation {
+  by: PartPlacement;
+  id: string;
+}
+
+/** The attributes the element(s) of a field's control carry, which are the elements that also carry its `id` */
+export interface ControlAttributes {
+  'aria-labelledby'?: string;
+  /** Lists only the ids of the parts that render */
+  'aria-describedby'?: string;
+  'aria-invalid'?: true;
+  required?: true;
+}
+
+/** One field's plan of what draws its label, description, help and errors, and the attributes its control carries.
+ * Resolved once by `resolveFieldPresentation()`
+ */
+export interface FieldPresentation {
+  /** The label text, decorated for a deprecated field, or `''` when there is none */
+  label: PartPresentation & { text: string };
+  description: PartPresentation & { text: string };
+  help: PartPresentation & { text?: string | ReactElement };
+  errors: PartPresentation & {
+    /** The messages to show, with `ui:hideError` applied */
+    messages: readonly string[];
+  };
+  /** The ids describing the field's control, in order, counting only parts that render here or above */
+  describedBy: readonly string[];
+  /** The control the label names. Undefined when there is no control on screen to name: a container, an opted-out
+   * optional field or a hidden one
+   */
+  control?: {
+    id: string;
+    /** Spread onto the element(s) carrying `id`, and nowhere else */
+    attributes: ControlAttributes;
+    /** Whether the label shows a required marker, which a checkbox can show without its control being `required` */
+    requiredMarker: boolean;
+  };
+}
+
 /** The definition of a React-based Field component */
 export type Field<
   T = unknown,
@@ -781,6 +873,8 @@ export type Field<
 > = SlotComponent<FieldProps<T, S, F>> & {
   /** The optional TEST_IDS block that some fields contain, exported for testing purposes */
   TEST_IDS?: TestIdShape;
+  /** The parts of the field the component draws itself, which outranks a theme's declaration for its key */
+  presentation?: PresentationDeclaration;
 };
 
 /** The properties that are passed to a `FieldTemplate` implementation */
@@ -1274,7 +1368,10 @@ export type Widget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = SlotComponent<WidgetProps<T, S, F>>;
+> = SlotComponent<WidgetProps<T, S, F>> & {
+  /** The parts of the field the widget draws itself, which outranks a theme's declaration for its key */
+  presentation?: PresentationDeclaration;
+};
 
 /** The properties that are passed to the BaseInputTemplate */
 export interface BaseInputTemplateProps<

@@ -9,7 +9,10 @@ import {
   fieldLabelId,
   helpId,
   optionalControlsId,
+  optionDescriptionId,
+  optionHelpId,
   optionId,
+  selectedOptionDescriptionId,
   titleId,
   triggerValueId,
 } from '../src/index.ts';
@@ -69,5 +72,14 @@ describe('idGenerators', () => {
   });
   it('optional controls ids of a Remove element are generated for simple id', () => {
     expect(optionalControlsId(SIMPLE_ID, 'Remove')).toEqual(`${SIMPLE_ID}__optionalRemove`);
+  });
+  it('option description id is generated for simple id', () => {
+    expect(optionDescriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionDescription`);
+  });
+  it('option help id is generated for simple id', () => {
+    expect(optionHelpId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionHelp`);
+  });
+  it('selected option description id is generated for simple id', () => {
+    expect(selectedOptionDescriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__selectedOptionDescription`);
   });
 });

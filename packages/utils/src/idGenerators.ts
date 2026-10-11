@@ -42,6 +42,36 @@ export function helpId(id: string) {
   return idGenerator(id, 'help');
 }
 
+/** Return a consistent `id` for the description a selected `anyOf`/`oneOf` option or the fallback UI's value field
+ * renders of its own, beneath a field that renders a different description under `descriptionId()` for the same `id`
+ *
+ * @param id - The id of the field
+ * @returns - The consistent id for the option's own description element from the given `id`
+ */
+export function optionDescriptionId(id: string) {
+  return idGenerator(id, 'optionDescription');
+}
+
+/** Return a consistent `id` for the help a selected `anyOf`/`oneOf` option or the fallback UI's value field renders of
+ * its own, beneath a field that renders a different help under `helpId()` for the same `id`
+ *
+ * @param id - The id of the field
+ * @returns - The consistent id for the option's own help element from the given `id`
+ */
+export function optionHelpId(id: string) {
+  return idGenerator(id, 'optionHelp');
+}
+
+/** Return a consistent `id` for the description of the option a select widget has selected, which describes that
+ * option rather than the field, so it can't share the field's `descriptionId()`
+ *
+ * @param id - The id of the field
+ * @returns - The consistent id for the selected option's description element from the given `id`
+ */
+export function selectedOptionDescriptionId(id: string) {
+  return idGenerator(id, 'selectedOptionDescription');
+}
+
 /** Return a consistent `id` for the field title element
  *
  * @param id - The id of the field

@@ -165,6 +165,62 @@ export function getWidgetType<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   return findWidgetType<S>(schema, widget, type, getTypeListSelectType<S>(schema, type))?.type;
 }
 
+/** Gets the registry key the alias `widget` stands for on `schema`. A registered name is not an alias, so it has none
+ *
+ * @param schema - The schema for the field
+ * @param widget - The alias or registered name of the widget
+ * @param type - The type `getSchemaType()` resolves `schema` to
+ * @param selectType - The type `getTypeListSelectType()` gives `schema`
+ * @returns - The registry key of the widget the alias names, or `undefined` when `widget` is no alias for `schema`
+ */
+function getAliasKey<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  widget: string,
+  type: string | undefined,
+  selectType: string | undefined,
+): string | undefined {
+  const widgets = findWidgetType<S>(schema, widget, type, selectType)?.widgets;
+  return widgets && Object.hasOwn(widgets, widget) ? widgets[widget] : undefined;
+}
+
+/** Gets the registry key `getWidget()` looks `widget` up by for `schema`, without throwing where it would: a name
+ * registered in `registeredWidgets` is its own key, and an alias is the key it stands for on the schema's type
+ *
+ * @param schema - The schema for the field
+ * @param widget - The alias or registered name of the widget
+ * @param [registeredWidgets={}] - A registry of widget name to `Widget` implementation
+ * @returns - The registry key, or `undefined` when `widget` is neither registered nor an alias for `schema`
+ */
+export function getWidgetKey<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  widget: string,
+  registeredWidgets: Readonly<Record<string, unknown>> = {},
+): string | undefined {
+  if (Object.hasOwn(registeredWidgets, widget)) {
+    return widget;
+  }
+  const type = getSchemaType<S>(schema);
+  return getAliasKey<S>(schema, widget, type, getTypeListSelectType<S>(schema, type));
+}
+
+/** The keys `@rjsf/core` registers its widgets under: every one an alias stands for, and `RatingWidget`, which only its
+ * key names
+ */
+const STANDARD_WIDGET_KEYS: ReadonlySet<string> = new Set([
+  ...Object.values(widgetMap).flatMap((widgets) => Object.values(widgets)),
+  'RatingWidget',
+]);
+
+/** Determines whether `key` is one `@rjsf/core` registers a widget under, which a theme's
+ * `ThemePresentation.standardWidgets` declaration applies to
+ *
+ * @param key - A widget registry key
+ * @returns - True when `@rjsf/core` registers a widget under `key`
+ */
+export function isStandardWidgetKey(key: string): boolean {
+  return STANDARD_WIDGET_KEYS.has(key);
+}
+
 /** Determines whether a `type` list can render through another field than the one for the type it resolves to. Only a
  * list naming a non-null type besides that one has another field that could render the value, so a nullable
  * `['string', 'null']` can't. A list resolving to `null` names nothing else, but can, as the select rule renders it
@@ -317,10 +373,9 @@ export default function getWidget<
       throw new Error(`No widget for type '${fieldType}' in schema: ${JSON.stringify(schema)}`);
     }
 
-    const widgetsForType = findWidgetType(schema, widget, type, selectType)?.widgets;
-    if (widgetsForType && Object.hasOwn(widgetsForType, widget)) {
-      const registeredWidget = registeredWidgets[widgetsForType[widget]];
-      return getWidget<T, S, F>(schema, registeredWidget, registeredWidgets);
+    const aliasKey = getAliasKey(schema, widget, type, selectType);
+    if (aliasKey !== undefined) {
+      return getWidget<T, S, F>(schema, registeredWidgets[aliasKey], registeredWidgets);
     }
   }
 
