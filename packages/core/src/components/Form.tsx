@@ -263,6 +263,27 @@ export interface FormState<
    * live validation do not resolve it again
    */
   retrievedSchema: S;
+  /** The root schema the committed `formData` last settled under: it was sanitized against that root, or it has
+   * only ever lived under it. Undefined while a schema swap or an unsanitized change has left the data unchecked
+   * against the current root; the previous-data filter chain in `sanitizeDataForNewSchema()` is only fed data
+   * whose marker matches, since both sides of that chain resolve `$ref`s against the one new root
+   */
+  formDataSchema?: S;
+  /** The committed data as it was when it last settled under `formDataSchema`: the snapshot the sanitize call is
+   * given as the previous data. A change no sanitize checked (a declined pass, a pushed parent value, a reset)
+   * leaves the snapshot alone, so it shows up as a real difference where the previous-data filter runs
+   */
+  settledFormData?: T;
+  /** The schema `settledFormData` was resolved under when it settled: the previous-data side of the sanitize
+   * call resolves from it, since the committed data's `retrievedSchema` already carries the root's
+   * conditionals merged for data that can sit on the other side of a flip
+   */
+  settledRetrievedSchema?: S;
+  /** The sanitized proposal the edit path last reported: when a parent-owned form's parent pushes this exact
+   * value back, the push is the proposal accepted unchanged, so the render settles it as the new snapshot.
+   * Only a proposal the edit path sanitized may advance the snapshot this way
+   */
+  proposedFormData?: T;
   /** @description result of schemaHasNestedConditional(rootSchema, rootSchema). A memoized value, recomputed only
    * when `schemaUtils` (and thus the root schema) is rebuilt, to avoid re-walking the whole schema on every
    * derivation

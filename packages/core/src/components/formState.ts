@@ -463,6 +463,18 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * for the root when validating; see `runLiveValidation()`
    */
   areSchemaUtilsReused: boolean;
+  /** The root schema the settled data settles under this pass; see `settledFormDataState()`
+   */
+  formDataSchema: S | undefined;
+  /** The data the marker vouches for: the data as of the last settle, so an unchecked change since then shows up as
+   * a real difference where the filter runs
+   */
+  settledFormData: T | undefined;
+  /** The schema the settling pass resolved for `settledFormData`: the previous-data side of the sanitize call
+   * resolves from it, since the committed data's resolved schema already carries the root's conditionals for
+   * data that can sit on the other side of a flip
+   */
+  settledRetrievedSchema: S | undefined;
 }
 
 /** The schema resolved for `formData`. Resolving walks the whole root schema, so it is skipped outright when the
@@ -508,6 +520,48 @@ interface DeriveDataOptions<T, S extends StrictRJSFSchema, F extends FormContext
   changedPath?: FieldPathList;
 }
 
+/** The last settled form data and the root schema it settled under, for the `formDataSchema` marker pair: recorded
+ * on construction and on every pass that sanitized, and otherwise carried untouched. A declined sanitize, a pushed
+ * parent value or a reset leaves the snapshot alone, so no path needs its own clearing rule; a schema swap drops it
+ * at the sanitize call, where the marker root no longer matches. The root is shared through `replaceEqualDeep()` so
+ * a deep-equal rebuild of the schema keeps the reference
+ *
+ * @param current - The state the pass starts from; `undefined` on construction
+ * @param rootSchema - The root schema this pass settles under, shared against `current.formDataSchema` by the caller
+ * @param sanitizeRan - Whether this pass sanitized the data
+ * @param formData - The data this pass settled
+ * @param retrievedSchema - The schema this pass resolved for `formData`
+ * @returns - The marker triple to commit
+ */
+function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  current: FormState<T, S, F> | undefined,
+  rootSchema: S,
+  sanitizeRan: boolean,
+  formData: T | undefined,
+  retrievedSchema: S | undefined,
+): { formDataSchema: S | undefined; settledFormData: T | undefined; settledRetrievedSchema: S | undefined } {
+  if (sanitizeRan || current === undefined) {
+    return {
+      formDataSchema: replaceEqualDeep(current?.formDataSchema, rootSchema),
+      settledFormData: formData,
+      settledRetrievedSchema: retrievedSchema,
+    };
+  }
+  // A marker whose root no longer matches can never become usable again, so it is dropped rather than held for
+  // the form's whole life; an empty marker also fails `hasSettledData`, so the sanitize call is unaffected
+  if (current.formDataSchema !== undefined && rootSchema !== current.formDataSchema) {
+    const shared = replaceEqualDeep(current.formDataSchema, rootSchema);
+    if (shared !== current.formDataSchema) {
+      return { formDataSchema: undefined, settledFormData: undefined, settledRetrievedSchema: undefined };
+    }
+  }
+  return {
+    formDataSchema: current.formDataSchema,
+    settledFormData: current.settledFormData,
+    settledRetrievedSchema: current.settledRetrievedSchema,
+  };
+}
+
 /** Settles the data for `props` and `inputFormData`: any missing required defaults are filled in, then, when asked,
  * the result is sanitized for its resolved schema until the two stop moving. Every caller that needs derived data
  * goes through here, so the resolved schema and the data it describes are always produced together.
@@ -544,7 +598,13 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   let formData: T;
   let retrievedSchema: S;
   let wasSanitized = false;
+  let sanitizeRan = false;
   const preventInfiniteSanitize: string[] = [];
+  // The settled snapshot is a valid previous counterpart only while the root it settled under matches this pass's
+  // root; shared once, so a deep-equal schema rebuild keeps the reference and the helper walks nothing twice
+  const sharedRoot =
+    current?.formDataSchema === undefined ? rootSchema : replaceEqualDeep(current.formDataSchema, rootSchema);
+  const hasSettledData = current?.formDataSchema !== undefined && sharedRoot === current.formDataSchema;
   let sanitize = shouldSanitize;
   // Each value dropped as a swapped-away branch's default, keyed by its path: the keys let a repeat search skip a path
   // it has already reported, the paths let a later iteration judge the refill the fill has since written there, the
@@ -587,6 +647,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     // Only hash when sanitizing, wrapping `formData` in an object to deal with a scalar/undefined value
     const formHash = isSanitizing ? hashObject({ formData }) : '';
     if (isSanitizing) {
+      sanitizeRan = true;
       // Sanitizing itself is skipped for data already processed, but the stale-default search below is not: the
       // iteration that makes a second swap visible is often one whose data the fill left untouched, so its hash is
       // already here and the sanitize it would repeat is the only part worth skipping
@@ -597,7 +658,16 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         ? formData
         : replaceEqualDeep(
             formData,
-            schemaUtils.sanitizeDataForNewSchema(retrievedSchema, current?.retrievedSchema, formData),
+            // The previous-data side is the data as it last settled under the current root schema and the
+            // schema that settling resolved, so a change no sanitize checked (a declined pass, a pushed parent
+            // value, a reset) still reads as a real difference where the enum filter runs (#5451)
+            schemaUtils.sanitizeDataForNewSchema(
+              retrievedSchema,
+              current?.retrievedSchema,
+              formData,
+              hasSettledData ? current?.settledFormData : undefined,
+              hasSettledData ? current?.settledRetrievedSchema : undefined,
+            ),
           );
       // A path dropped on an earlier iteration has been refilled above with the newly selected branch's own default,
       // and the sanitize above is not the judge of it. It compares against `current.retrievedSchema` on every
@@ -760,7 +830,12 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context keeps every
   // reference the fields hold.
   const context = deriveRenderContext(props, retrievedSchema, current, resolved);
-  return { formData, context, areSchemaUtilsReused };
+  return {
+    formData,
+    context,
+    areSchemaUtilsReused,
+    ...settledFormDataState(current, sharedRoot, sanitizeRan, formData, retrievedSchema),
+  };
 }
 
 /** What reconciling the errors of a derivation needs to know */
@@ -915,7 +990,8 @@ function deriveOwnedState<T, S extends StrictRJSFSchema, F extends FormContextTy
   inputFormData: T | undefined,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  const { formData, context, areSchemaUtilsReused } = deriveFormData(current, inputFormData, {}, props);
+  const { formData, context, areSchemaUtilsReused, formDataSchema, settledFormData, settledRetrievedSchema } =
+    deriveFormData(current, inputFormData, {}, props);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   const edit = current ? current.edit : inputFormData !== undefined;
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
@@ -929,6 +1005,9 @@ function deriveOwnedState<T, S extends StrictRJSFSchema, F extends FormContextTy
     ...(current ?? { isControlled: false }),
     ...context,
     formData,
+    formDataSchema,
+    settledFormData,
+    settledRetrievedSchema,
     edit,
     ...errors,
     initialDefaultsGenerated: true,
@@ -973,10 +1052,20 @@ function deriveControlledState<T, S extends StrictRJSFSchema, F extends FormCont
         ? undefined
         : () => getChangedFields(formData, current.formData, true),
   });
+  // A pushed value identical to the edit path's sanitized proposal is that proposal accepted unchanged: the
+  // sanitize that produced it ran under this root, so the push settles it, moving the snapshot and the marker
+  // root to it and to the schema resolved for it here. Any other pushed value leaves the snapshot alone
+  const acceptedProposal = current?.proposedFormData !== undefined && props.formData === current.proposedFormData;
   return {
     ...(current ?? { isControlled: true, initialDefaultsGenerated: true }),
     ...context,
     formData,
+    // A parent-owned value is never sanitized here, so the snapshot is recorded on construction and then carried;
+    // a pushed value leaves it alone unless it accepts the edit path's sanitized proposal unchanged, and the edit
+    // path's sanitize compares against it
+    ...settledFormDataState(current, schemaUtils.getRootSchema(), acceptedProposal, formData, retrievedSchema),
+    // A new pushed value answers the outstanding proposal either way; only an unchanged render keeps it pending
+    proposedFormData: isDataChanged ? undefined : current?.proposedFormData,
     edit,
     ...errors,
     isBlurValidationOwed: false,
@@ -1260,6 +1349,12 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
   // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
   // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
   let context: RenderContext<T, S, F> = current;
+  // Carried from the committed state unless the derivation below settles the data anew
+  let { formDataSchema, settledFormData, settledRetrievedSchema } = current;
+  // The proposal this change reports, kept only when the derivation sanitized it: a proposal the snapshot did
+  // not settle on must not move the snapshot when a parent accepts it, since an unsanitized or declined
+  // proposal that advanced it would re-hide the flip the next sanitize is meant to catch
+  let proposedFormData: T | undefined;
   // Use the un-merged AJV-only schema as the base for re-merging extraErrors, as `reconcileErrors()` does:
   // state.errorSchema already carries them, so merging onto it would add each a second time.
   let mergeBaseErrorSchema: ErrorSchema<T> = schemaValidationErrorSchema;
@@ -1341,6 +1436,10 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     const derived = deriveFormData(current, inputForDefaults, { shouldSanitize, changedPath: path }, props);
     formData = derived.formData;
     context = derived.context;
+    formDataSchema = derived.formDataSchema;
+    settledFormData = derived.settledFormData;
+    settledRetrievedSchema = derived.settledRetrievedSchema;
+    proposedFormData = derived.settledFormData === formData ? formData : undefined;
 
     // Re-set to undefined after merging defaults so the user's clear is preserved in
     // state (#5125 regression: without this, clearing a second field re-applies the
@@ -1437,7 +1536,14 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     customErrors = new ErrorSchemaBuilder<T>(customErrors.ErrorSchema).clearErrors(path);
     clearedCustomError = true;
   }
-  let next: Partial<FormState<T, S, F>> = { formData: newFormData, customErrors };
+  let next: Partial<FormState<T, S, F>> = {
+    formData: newFormData,
+    formDataSchema,
+    settledFormData,
+    settledRetrievedSchema,
+    proposedFormData,
+    customErrors,
+  };
   if (mustValidate) {
     const liveValidation = runLiveValidation(props, context, newFormData, customErrors, context.retrievedSchema);
     next = { ...next, ...liveValidation };
@@ -1468,11 +1574,19 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  const { formData, context } = deriveFormData(current, props.initialFormData, { isReset: true }, props);
+  const { formData, context, formDataSchema, settledFormData, settledRetrievedSchema } = deriveFormData(
+    current,
+    props.initialFormData,
+    { isReset: true },
+    props,
+  );
   return {
     ...current,
     ...context,
     formData,
+    formDataSchema,
+    settledFormData,
+    settledRetrievedSchema,
     errorSchema: {},
     errors: [],
     schemaValidationErrors: [],

@@ -1,11 +1,18 @@
 import { createRef } from 'react';
 import type { ErrorListProps, ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
-import { render, screen } from '@testing-library/react';
+import { customizeValidator } from '@rjsf/validator-ajv8';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import { AcceptingParent, describeRepeated, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  createFormRef,
+  describeRepeated,
+  expectToHaveBeenCalledWithFormData,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -1203,6 +1210,224 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_m_animal')!, '0');
 
         expectToHaveBeenCalledWithFormData(onChange, { m: { animal: 'Cat', food: 'meat' } }, 'root_m_animal');
+      });
+
+      it('should keep the empty minItems placeholders of a scalar enum array on an unrelated edit (#5451)', async () => {
+        const conditionalSiblingSchema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: {
+              type: 'array',
+              minItems: 2,
+              items: { type: 'string', enum: ['a', 'b'] },
+            },
+            pick: { type: 'string', enum: ['x', 'y'] },
+          },
+          allOf: [
+            {
+              if: { properties: { pick: { const: 'y' } }, required: ['pick'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          ],
+        };
+        const { node, onChange } = createFormComponent({
+          schema: conditionalSiblingSchema,
+          initialFormData: { list: [null, null] },
+        });
+
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_pick')!, '0');
+
+        expectToHaveBeenCalledWithFormData(onChange, { list: [null, null], pick: 'x' }, 'root_pick');
+      });
+
+      it('should replace a value a swapped-in schema narrows out of a $ref target enum on the next edit', async () => {
+        const makeSchema = (colorEnum: string[]): RJSFSchema => ({
+          type: 'object',
+          definitions: {
+            Color: { type: 'string', enum: colorEnum },
+          },
+          properties: {
+            color: { $ref: '#/definitions/Color' },
+            unrelated: { type: 'string' },
+          },
+          // A nested conditional, so any edit runs the sanitize pass
+          allOf: [
+            {
+              if: { properties: { unrelated: { const: 'z' } }, required: ['unrelated'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          ],
+        });
+        const { node, rerender, getFormData } = createFormComponent({
+          schema: makeSchema(['a', 'b']),
+          initialFormData: { color: 'b' },
+        });
+
+        expect(getFormData()).toEqual({ color: 'b' });
+
+        // The swap alone does not sanitize; the next edit does, and the value the narrowed `$ref` target enum
+        // rejects is replaced then, since the previous data settled under the old root schema
+        rerender({ schema: makeSchema(['a']) });
+        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'x');
+
+        expect(getFormData()).toEqual({ color: 'a', unrelated: 'x' });
+      });
+
+      it('should not re-settle the data on a non-sanitizing edit after a swap', async () => {
+        // A top-level `if` folds into the root retrieved schema, so an edit that keeps it false resolves the same
+        // schema and sanitizes nothing; the data must stay unsettled until a pass actually checks it
+        const makeSchema = (colorEnum: string[]): RJSFSchema => ({
+          type: 'object',
+          definitions: {
+            Color: { type: 'string', enum: colorEnum },
+          },
+          properties: {
+            color: { $ref: '#/definitions/Color' },
+            unrelated: { type: 'string' },
+          },
+          if: { properties: { unrelated: { const: 'z' } }, required: ['unrelated'] },
+          then: { properties: { extra: { type: 'string' } } },
+        });
+        const { node, rerender, getFormData } = createFormComponent({
+          schema: makeSchema(['a', 'b']),
+          initialFormData: { color: 'b' },
+        });
+
+        rerender({ schema: makeSchema(['a']) });
+        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'x');
+
+        // No sanitize ran, so the narrowed-out value is still there, still unchecked
+        expect(getFormData()).toEqual({ color: 'b', unrelated: 'x' });
+
+        // Flipping the `if` changes the retrieved schema; the sanitize then still sees data that never settled
+        // under the narrowed root, so the rejected value is replaced rather than kept
+        await user.clear(node.querySelector<HTMLInputElement>('#root_unrelated')!);
+        await user.type(node.querySelector<HTMLInputElement>('#root_unrelated')!, 'z');
+
+        expect(getFormData()).toEqual({ color: 'a', unrelated: 'z' });
+      });
+
+      it('should not treat data changed by a declined sanitize as checked', async () => {
+        // Adding a row is a container write whose sanitize is declined, but it flips the `then` onto `color`;
+        // the next sanitize must not get that post-flip data as its previous counterpart
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            pet: {
+              type: 'object',
+              properties: {
+                list: { type: 'array', items: { type: 'string' } },
+                color: { type: 'string', enum: ['r', 'g'] },
+              },
+              allOf: [
+                {
+                  if: { properties: { list: { minItems: 2 } }, required: ['list'] },
+                  then: { properties: { color: { type: 'string', enum: ['r'] } } },
+                },
+              ],
+            },
+            name: { type: 'string' },
+          },
+        };
+        const { node, getFormData } = createFormComponent({
+          schema,
+          initialFormData: { pet: { color: 'g', list: ['x'] } },
+        });
+
+        // Add a row: the `then` starts applying, but the array write sanitizes nothing
+        await user.click(node.querySelector<HTMLButtonElement>('button[title="Add"]')!);
+
+        expect(getFormData()).toEqual({ pet: { color: 'g', list: ['x', undefined] } });
+
+        // The sibling edit sanitizes; 'g' never settled under the flipped schema, so it is replaced
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
+
+        expect(getFormData()).toEqual({ pet: { color: 'r', list: ['x', undefined] }, name: 'n' });
+      });
+
+      it('should keep prior data available when only the validator instance changed', async () => {
+        // Rebuilding the schema utilities from an inline prop does not change the root schema the data settled
+        // under, so the next sanitize still receives it and the unchanged-enum placeholders survive
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            list: { type: 'array', minItems: 2, items: { type: 'string', enum: ['a'] } },
+            name: { type: 'string' },
+          },
+          allOf: [
+            {
+              if: { properties: { name: { const: 'z' } }, required: ['name'] },
+              then: { properties: { extra: { type: 'string' } } },
+            },
+          ],
+        };
+        const { node, rerender, getFormData } = createFormComponent({
+          schema,
+          initialFormData: { list: [null, null] },
+        });
+
+        rerender({ schema }, customizeValidator({}));
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
+
+        expect(getFormData()).toEqual({ list: [null, null], name: 'n' });
+      });
+
+      const placeholdersSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          list: {
+            type: 'array',
+            minItems: 2,
+            items: { type: 'string', enum: ['a'] },
+          },
+          name: { type: 'string' },
+        },
+        allOf: [
+          {
+            if: { properties: { name: { const: 'z' } }, required: ['name'] },
+            then: { properties: { extra: { type: 'string' } } },
+          },
+        ],
+      };
+
+      it('should keep placeholders through two sibling keystrokes', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: placeholdersSchema,
+          initialFormData: { list: [null, null] },
+        });
+
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'nm');
+
+        expect(getFormData()).toEqual({ list: [null, null], name: 'nm' });
+      });
+
+      it('should keep placeholders through a declined sanitize and a sibling edit', async () => {
+        const { node, getFormData } = createFormComponent({
+          schema: placeholdersSchema,
+          initialFormData: { list: [null, null] },
+        });
+
+        // The array write sanitizes nothing, and it changes nothing a conditional reads
+        await user.click(node.querySelector<HTMLButtonElement>('button[title="Add"]')!);
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
+
+        expect(getFormData()).toEqual({ list: [null, null, undefined], name: 'n' });
+      });
+
+      it('should keep placeholders through a reset and a sibling edit', async () => {
+        const formRef = createFormRef();
+        const { node, getFormData } = createFormComponent({
+          ref: formRef,
+          schema: placeholdersSchema,
+          initialFormData: { list: [null, null] },
+        });
+
+        act(() => {
+          formRef.current!.reset();
+        });
+        await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'n');
+
+        expect(getFormData()).toEqual({ list: [null, null], name: 'n' });
       });
 
       /** The branch payload every #5349 case below swaps between, declared on the nested object's own property */

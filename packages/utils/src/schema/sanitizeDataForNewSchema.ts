@@ -1,4 +1,4 @@
-import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, PROPERTIES_KEY } from '../constants.ts';
+import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -76,7 +76,10 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *             - Replace `removeOldSchemaData[key]` with the new `const`
  *             - Otherwise, replace `removeOldSchemaData[key]` with undefined
  *         - If the form value is none of the new `enum` or constant options, replace it with the new `default` when that
- *           is an option, the only option when there is one, or undefined
+ *           is an option, the only option when there is one, or undefined; when the previous form data is passed,
+ *           the replacement only runs where the old and new keyed schemas, each resolved against its own data,
+ *           disagree, except for a property the old schema never covered, such as one inside a row of a newly
+ *           introduced array, which is always replaced
  *   - Once all keys have been processed, return an object built as follows:
  *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
  * - If the new and old schema types are array and the `data` is an array then:
@@ -87,7 +90,11 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  *         then:
  *         - For each element in the `data` recursively sanitize the data, stopping at `maxItems` if specified
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
- *         any values after `maxItems` if it is set
+ *         any values after `maxItems` if it is set. When the previous form data is passed (the way `Form` calls it),
+ *         the filter is skipped where the old and new `items` schemas, each resolved against its own array, agree;
+ *         without it the filter always runs. The same comparison decides whether a scalar value outside the new
+ *         `enum` or constant options is replaced. A select over object or array constants is always filtered, since
+ *         it holds each item as a whole
  *   - If the type of the old and new schema `items` are booleans of the same value, return `data` as is
  * - Otherwise return `undefined`
  *
@@ -96,6 +103,16 @@ function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+ * @param [oldData] - The previous form data, used only to decide whether the enum filter runs: when given
+ *      (which `Form` does, passing the data as it last settled under the current root schema), the filter is skipped
+ *      at a position whose old and
+ *      new schemas, each resolved against its own data, agree. When omitted, the filter always runs. `$ref`s on
+ *      both sides resolve against the one `rootSchema`, so a change to a `$ref` target between the old and new
+ *      root schemas is invisible to the comparison: pass `oldData` only when the root schema is unchanged,
+ *      which is how `Form` calls it
+ * @param [resolvedOldSchema] - `oldSchema` already resolved for `oldData` at the root: the root frame's
+ *      filter chain uses it directly instead of resolving `oldSchema` again. `Form` passes the schema its
+ *      settled snapshot was resolved under, so the previous-data side is read as that data saw it
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
@@ -103,9 +120,77 @@ export default function sanitizeDataForNewSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}): T {
+>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  newSchema?: S,
+  oldSchema?: S,
+  data: any = {},
+  oldData?: any,
+  resolvedOldSchema?: S,
+): T {
+  return sanitizeDataForNewSchemaInternal<T, S, F>(
+    context,
+    rootSchema,
+    newSchema,
+    oldSchema,
+    data,
+    oldData,
+    oldData === undefined ? undefined : () => resolvedOldSchema ?? oldSchema,
+    resolvedOldSchema !== undefined,
+  );
+}
+
+/** Internal recursive implementation of `sanitizeDataForNewSchema()`, carrying the previous-data filter
+ * chain as a lazy getter.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root schema of the entire form
+ * @param [newSchema] - The new schema for which the data is being sanitized
+ * @param [oldSchema] - The old schema from which the data originated
+ * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+ * @param [oldData] - The previous data at this position; a position simply missing from the previous data
+ *      arrives as an `undefined` value
+ * @param [getOldSchemaPrevRaw] - Returns the raw old schema for this position as the previous data resolves
+ *      the chain down to it, or undefined when no previous data was passed or the old schema never covered
+ *      this position. Only the enum filter decisions call it: resolving the old side against the previous
+ *      data at every level lets an ancestor conditional that flipped between the previous and current data
+ *      show up as a real difference where the filter runs. Kept lazy so a frame pays the resolve only when
+ *      one of its own enum checks runs
+ * @param [oldSchemaPrevIsResolved] - Internal: the outermost frame's raw old schema is already resolved for
+ *      `oldData`, so it is used directly instead of paying a `retrieveSchema` for the same input pair. Only the
+ *      outermost call carries it; recursive frames resolve as usual
+ * @returns - The sanitized form data
+ */
+function sanitizeDataForNewSchemaInternal<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  newSchema: S | undefined,
+  oldSchema: S | undefined,
+  data: any,
+  oldData: any,
+  getOldSchemaPrevRaw?: () => S | undefined,
+  oldSchemaPrevIsResolved = false,
+): T {
   // By default, we will clear the form data
   let newFormData;
+  // The filter chain: the old schema resolved against the previous data. A position missing from the
+  // previous data resolves it without data (a previous value of `undefined`), so a conditional an ancestor
+  // flip controls resolves the way the previous data saw it. The resolve runs on first need, since it costs
+  // a `retrieveSchema` (and its validator calls) even where no enum check follows. Every call site guards on
+  // `getOldSchemaPrevRaw` being passed, so the getter always has a schema to resolve; the resolution returns
+  // a schema, so `??=` memoization never mistakes a computed value for "not yet run"
+  let resolvedOldSchemaPrev: S | undefined;
+  const resolveOldSchemaPrev = (): S | undefined => {
+    resolvedOldSchemaPrev ??= oldSchemaPrevIsResolved
+      ? getOldSchemaPrevRaw!()
+      : retrieveSchema<T, S, F>(context, getOldSchemaPrevRaw!() as S, rootSchema, oldData);
+    return resolvedOldSchemaPrev;
+  };
   const newProperties = newSchema?.[PROPERTIES_KEY];
   // If the new schema is of type object and that object contains a list of properties
   if (newProperties) {
@@ -127,8 +212,10 @@ export default function sanitizeDataForNewSchema<
       const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
       const oldRawKeyedSchema = getPropertySchema<S>(oldSchema, key);
       const newRawKeyedSchema = getPropertySchema<S>(newSchema, key);
-      // Resolve refs, dependencies, if/then/else and allOf so a dependency nested inside this key
-      // (not just at the root schema) is taken into account when sanitizing its data (#5250)
+      // Resolve refs, dependencies, if/then/else and allOf against the current data, so a dependency nested
+      // inside this key (not just at the root schema) is taken into account when sanitizing its data (#5250).
+      // The previous data only feeds the enum filter decision below; field removal, the type check and the
+      // default/const swap all read the schema as the current data resolves it
       const oldKeyedSchema = retrieveSchema<T, S, F>(context, oldRawKeyedSchema, rootSchema, formValue);
       // The old and new raw schema for a key are usually identical (most keys aren't touched by whatever changed),
       // so skip resolving (and re-running any oneOf/dependency validity checks) a second time in that common case.
@@ -155,13 +242,22 @@ export default function sanitizeDataForNewSchema<
           (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) &&
           !isWholeValueSelect<S>(newKeyedSchema);
         if (isContainer) {
-          // SIDE-EFFECT: process the new schema type of object recursively to save iterations
-          const itemData = sanitizeDataForNewSchema<T, S, F>(
+          // SIDE-EFFECT: process the new schema type of object recursively to save iterations. A position the
+          // old schema does not cover borrows the new schema as its old side (an array property the new schema
+          // introduces), so its data is filtered against the new schema without manufacturing a fake
+          // difference. A borrowed position gets no filter-chain getter, which is how it always filters: its
+          // enum checks then behave as if no previous data was passed
+          const borrowOld = isNewProperty && newSchemaTypeForKey === 'array';
+          const itemData = sanitizeDataForNewSchemaInternal<T, S, F>(
             context,
             rootSchema,
             newKeyedSchema,
-            isNewProperty && newSchemaTypeForKey === 'array' ? newKeyedSchema : oldKeyedSchema,
+            borrowOld ? newKeyedSchema : oldKeyedSchema,
             formValue,
+            oldData?.[key],
+            borrowOld || getOldSchemaPrevRaw === undefined
+              ? undefined
+              : () => getPropertySchema<S>(resolveOldSchemaPrev(), key),
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -190,9 +286,42 @@ export default function sanitizeDataForNewSchema<
             removeOldSchemaData[key] = deepEquals(oldOptionConst, formValue) ? newOptionConst : undefined;
           }
 
+          // The enum replacement always runs for a select over object or array constants, which holds its
+          // value as a whole (see `isWholeValueSelect()`), the way the array path always filters such a
+          // select, and when no previous data was passed. With previous data it only runs when the
+          // constraint could have changed: the old schema resolved against the previous value differs from
+          // the new schema resolved against the current one. When the two agree, a value the schema offered
+          // when it was entered is kept, the way the array path keeps it. The comparison reads the filter
+          // chain, which resolves the old side against the previous data at every level, so an ancestor
+          // conditional that flipped between the previous and current data shows up as a real difference
+          // here (#5250). It runs only when a replacement would actually happen, since it costs a resolve
+          // and a deep compare
           if (hasByPath(data, key)) {
             const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
-            if (enumReplacement !== NO_VALUE) {
+            if (
+              enumReplacement !== NO_VALUE &&
+              (getOldSchemaPrevRaw === undefined ||
+                isWholeValueSelect<S>(newKeyedSchema) ||
+                // A kept out-of-enum value lands here on every later pass, so skip the old-side resolve the
+                // way the array path does: when the raw keyed schemas and the values at this key agree, the
+                // resolved sides must agree, and the filter is skipped without resolving. The raw comparison
+                // only stands in for the chain when the chain's root IS the old schema here: a caller that
+                // passes the settled data's own resolved schema can hold a root on the other side of a flip
+                (!(
+                  getOldSchemaPrevRaw() === oldSchema &&
+                  deepEquals(oldRawKeyedSchema, newRawKeyedSchema) &&
+                  deepEquals(oldData?.[key], formValue)
+                ) &&
+                  !deepEquals(
+                    retrieveSchema<T, S, F>(
+                      context,
+                      getPropertySchema<S>(resolveOldSchemaPrev(), key),
+                      rootSchema,
+                      oldData?.[key],
+                    ),
+                    newKeyedSchema,
+                  )))
+            ) {
               removeOldSchemaData[key] = enumReplacement;
             }
           }
@@ -221,13 +350,19 @@ export default function sanitizeDataForNewSchema<
       // re-resolved per element below, against that element's own value, rather than the whole array (#5250)
       const oldSchemaItemsRaw = oldSchemaItems as S;
       const newSchemaItemsRaw = newSchemaItems as S;
-      // Resolve refs, dependencies, if/then/else and allOf, not just a direct `$ref`, so the type check below
-      // reflects an items schema whose object type is only reachable through one of those keywords (#5250)
+      // Resolve refs, dependencies, if/then/else and allOf against the current array, not just a direct
+      // `$ref`, so the type check below reflects an items schema whose object type is only reachable through
+      // one of those keywords (#5250). The previous data only feeds the enum filter decision below, through
+      // the filter chain's own items schema, itself resolved on first need: the per-element children and the
+      // filter comparison ask for it only when an enum check actually follows
+      // `resolveOldSchemaPrev()` already memoizes, so this stays a plain read of it
+      const resolveOldSchemaItemsPrevRaw = () => resolveOldSchemaPrev()?.[ITEMS_KEY] as S | undefined;
       oldSchemaItems = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data as T);
-      // The old and new raw items schema are usually identical, so skip resolving a second time in that common case.
-      // Neither changes per element, so compare them once rather than inside the per-element loop below
-      const sameItemsSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw);
-      newSchemaItems = sameItemsSchema
+      // The old and new raw items schema are usually identical, so skip resolving a second time in that
+      // common case. The raw comparison does not change per element, so it is computed once here rather
+      // than inside the per-element loop below
+      const sameRawItemsSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw);
+      newSchemaItems = sameRawItemsSchema
         ? oldSchemaItems
         : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data as T);
       // Now get types and see if they are the same
@@ -239,19 +374,29 @@ export default function sanitizeDataForNewSchema<
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
         if (newSchemaType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
-          newFormData = data.reduce<unknown[]>((newValue, aValue: T) => {
+          newFormData = data.reduce<unknown[]>((newValue, aValue: T, index: number) => {
             // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
             // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
             const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
-            const newItemSchema = sameItemsSchema
+            const newItemSchema = sameRawItemsSchema
               ? oldItemSchema
               : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
-            const itemValue = sanitizeDataForNewSchema<T, S, F>(
+            const itemValue = sanitizeDataForNewSchemaInternal<T, S, F>(
               context,
               rootSchema,
               newItemSchema,
               oldItemSchema,
               aValue,
+              // Pairing by index is the only rule that needs no identity of its own. An insert, remove or
+              // reorder compares an element against a different element's previous value, but a wrong pair
+              // can only get the enum filter decision below wrong - removal, the type check and the
+              // default/const swap all read the schema as this element resolves it. A previous array whose
+              // length differs, after a declined remove or an unchecked insert since the snapshot, pairs
+              // every shifted row against a neighbour, and that wrong pair turns the filter against values
+              // the schema offered when they were entered (#5451 data loss), so such an element is paired
+              // with itself: the filter then sees agreeing sides and is skipped
+              Array.isArray(oldData) ? (oldData.length === data.length ? oldData[index] : aValue) : undefined,
+              getOldSchemaPrevRaw === undefined ? undefined : resolveOldSchemaItemsPrevRaw,
             );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
@@ -259,11 +404,34 @@ export default function sanitizeDataForNewSchema<
             return newValue;
           }, []);
         } else {
-          // Filter out items that are no longer valid in the new items schema (e.g., enum values that changed)
+          // Filter out items that are no longer valid in the new items schema (e.g., enum values that
+          // changed). The filter always runs for a borrowed position (the old schema never covered it), for
+          // a select over object or array constants, which holds each item as a whole (see
+          // `isWholeValueSelect()`), and when no previous data was passed. With previous data it is skipped
+          // when the old items schema resolved against the previous array agrees with the new one resolved
+          // against the current array: values entered while the schema offered them are kept rather than
+          // silently dropped by an unrelated sanitize pass (#5451), while a conditional that flipped between
+          // the previous and current data shows up as a real difference and the filter still runs (#5250).
+          // The comparison runs only when some item would actually be dropped, since it can cost a resolve
           const newItemEnumValues = enumValuesForSchema(newSchemaItems as S);
-          const filteredData = newItemEnumValues
+          const filtered = newItemEnumValues
             ? data.filter((item: any) => newItemEnumValues.some((v: any) => deepEquals(v, item)))
             : data;
+          const filteredData =
+            newItemEnumValues &&
+            filtered.length < data.length &&
+            (getOldSchemaPrevRaw === undefined ||
+              isWholeValueSelect<S>(newSchemaItems as S) ||
+              !deepEquals(
+                sameRawItemsSchema &&
+                  deepEquals(resolveOldSchemaItemsPrevRaw(), newSchemaItemsRaw) &&
+                  deepEquals(oldData, data)
+                  ? oldSchemaItems
+                  : retrieveSchema<T, S, F>(context, resolveOldSchemaItemsPrevRaw() as S, rootSchema, oldData as T),
+                newSchemaItems,
+              ))
+              ? filtered
+              : data;
           // `maxItems` of 0 allows no item at all, which is how the per-element path above reads it too
           newFormData =
             maxItems >= 0 && filteredData.length > maxItems ? filteredData.slice(0, maxItems) : filteredData;
