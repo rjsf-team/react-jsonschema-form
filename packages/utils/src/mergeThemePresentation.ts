@@ -1,4 +1,10 @@
-import type { MergedThemePresentation, PresentationDeclaration, ThemePresentation } from './types.ts';
+import type {
+  MergedThemePresentation,
+  PartOwner,
+  PresentationDeclaration,
+  ThemePresentation,
+  WidgetPresentationDeclaration,
+} from './types.ts';
 
 /** Gets the value the last of `declarations` that declares `part` gives it
  *
@@ -6,11 +12,11 @@ import type { MergedThemePresentation, PresentationDeclaration, ThemePresentatio
  * @param part - The part to read
  * @returns - The value of the topmost declaration of `part`, or `undefined` when none declares it
  */
-function topmost<Part extends keyof PresentationDeclaration>(
-  declarations: readonly (PresentationDeclaration | undefined)[],
+function topmost<Owner extends PartOwner, Part extends keyof PresentationDeclaration<Owner>>(
+  declarations: readonly (PresentationDeclaration<Owner> | undefined)[],
   part: Part,
-): PresentationDeclaration[Part] | undefined {
-  let value: PresentationDeclaration[Part] | undefined;
+): PresentationDeclaration<Owner>[Part] | undefined {
+  let value: PresentationDeclaration<Owner>[Part] | undefined;
   for (const declaration of declarations) {
     value = declaration?.[part] ?? value;
   }
@@ -18,21 +24,28 @@ function topmost<Part extends keyof PresentationDeclaration>(
 }
 
 /** Layers `declarations` over one another, each later one replacing a part an earlier one declares. A part declared
- * `undefined` is left to the layers beneath it, so spreading an options object can't erase one
+ * `undefined` is left to the layers beneath it, so spreading an options object can't erase one, and a part none of
+ * them declares is left out, so spreading the result can't erase one either
  *
  * @param declarations - The declarations to layer, from the bottom; `undefined` entries are skipped
  * @returns - The layered declaration
  */
-export function layerDeclarations(
-  ...declarations: readonly (PresentationDeclaration | undefined)[]
-): PresentationDeclaration {
-  return {
-    label: topmost(declarations, 'label'),
-    description: topmost(declarations, 'description'),
-    errors: topmost(declarations, 'errors'),
-    help: topmost(declarations, 'help'),
-    labelledBy: topmost(declarations, 'labelledBy'),
+export function layerDeclarations<Owner extends PartOwner>(
+  ...declarations: readonly (PresentationDeclaration<Owner> | undefined)[]
+): PresentationDeclaration<Owner> {
+  const layered: PresentationDeclaration<Owner> = {};
+  const layer = <Part extends keyof PresentationDeclaration<Owner>>(part: Part) => {
+    const value = topmost(declarations, part);
+    if (value !== undefined) {
+      layered[part] = value;
+    }
   };
+  layer('label');
+  layer('description');
+  layer('errors');
+  layer('help');
+  layer('labelledBy');
+  return layered;
 }
 
 /** Gets the declaration `record` holds under `key` as an own property, so a key such as `constructor` doesn't read
@@ -42,10 +55,10 @@ export function layerDeclarations(
  * @param key - The key to look up, if any
  * @returns - The declaration under `key`, or `undefined` when `record` has none of its own
  */
-export function getOwnDeclaration(
-  record: Readonly<Record<string, PresentationDeclaration>> | undefined,
+export function getOwnDeclaration<Declaration extends PresentationDeclaration>(
+  record: Readonly<Record<string, Declaration>> | undefined,
   key: string | undefined,
-): PresentationDeclaration | undefined {
+): Declaration | undefined {
   return record && key !== undefined && Object.hasOwn(record, key) ? record[key] : undefined;
 }
 
@@ -54,9 +67,9 @@ export function getOwnDeclaration(
  * @param layers - The records to merge, from the bottom; `undefined` entries are skipped
  * @returns - The merged record
  */
-function layerRecords(
-  layers: readonly (Readonly<Record<string, PresentationDeclaration>> | undefined)[],
-): Record<string, PresentationDeclaration> {
+function layerRecords<Owner extends PartOwner>(
+  layers: readonly (Readonly<Record<string, PresentationDeclaration<Owner>>> | undefined)[],
+): Record<string, PresentationDeclaration<Owner>> {
   const keys = new Set(layers.flatMap((layer) => Object.keys(layer ?? {})));
   return Object.fromEntries(
     [...keys].map((key) => [key, layerDeclarations(...layers.map((layer) => getOwnDeclaration(layer, key)))]),
@@ -73,7 +86,7 @@ function layerRecords(
 function expandStandardWidgets(
   layer: ThemePresentation | undefined,
   standardWidgetKeys: readonly string[],
-): Readonly<Record<string, PresentationDeclaration>> | undefined {
+): Readonly<Record<string, WidgetPresentationDeclaration>> | undefined {
   if (!layer?.standardWidgets) {
     return layer?.widgets;
   }

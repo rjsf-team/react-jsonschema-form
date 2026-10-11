@@ -13,7 +13,7 @@ In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG` and 
 `GUESSED_TYPE_FLAG` marks the stub schema built for an `additionalProperties` entry the schema puts no constraint on at all — `true`, or a schema with no keyword that asserts something about the value, such as `enum`, `const`, `format`, a length, a range, `properties`, `items` or a subschema keyword like `allOf` or `not`: its `type` was guessed from the data the property holds rather than declared by the schema, so `sanitizeDataForNewSchema()` treats it as no type at all when the schema it is compared against is equally unconstrained, and the [fallback UI](./form-props.md#usefallbackuiforunsupportedtype) offers every type for it.
 An `additionalProperties` schema that constrains the value some other way without naming a type is not marked.
 There is also `JSON_SCHEMA_TYPES`, the list of every type name JSON Schema defines, in the order that fallback UI offers them.
-`WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)).
+`WIDGET_FIELD_PRESENTATION` is the `PresentationDeclaration` of a field that renders its value with a single widget and leaves every part to whoever that widget says draws it, for a theme or `@rjsf/core` to declare such a field with (see [getPresentationDeclaration()](#getpresentationdeclaration)). It is defined in [getPresentationDeclaration.ts](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getPresentationDeclaration.ts) rather than with the other constants.
 `DEFAULT_BOOLEAN_WIDGET` is the registry key the `checkbox` alias of a `boolean` resolves to (`CheckboxWidget`), so a theme can read that widget from its registry, as `registry.widgets[DEFAULT_BOOLEAN_WIDGET]`, without copying the key. It is defined next to the widget map in [getWidget.tsx](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/getWidget.tsx) rather than with the other constants.
 
 These constants can be found on GitHub [here](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/utils/src/constants.ts).
@@ -33,7 +33,7 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
-**`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, and `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `standardWidgets`, a declaration for every widget key `@rjsf/core` registers, which [mergeThemePresentation()](#mergethemepresentation) expands into an entry for each of those keys at its layer, so it overrides the parts it declares in the layers beneath, even under a key one of them declares. The merged result is a `MergedThemePresentation`, with only `widgets` and `fields`; a `Field` or `Widget` component can also carry one as its static `presentation`. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries.
+**`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, and `labelledBy`; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `standardWidgets`, a declaration for every widget key `@rjsf/core` registers, which [mergeThemePresentation()](#mergethemepresentation) expands into an entry for each of those keys at its layer, so it overrides the parts it declares in the layers beneath, even under a key one of them declares. The merged result is a `MergedThemePresentation`, with only `widgets` and `fields`; a `Field` or `Widget` component can also carry one as its static `presentation`. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
 
 ## Enums
 
@@ -891,7 +891,7 @@ const separator = getDecimalSeparator('fr');
 console.log(separator); // Output: ','
 ```
 
-### getDeprecatedHandling&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### getDeprecatedHandling&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getdeprecatedhandling}
 
 Resolves how a field has to render a schema marked `deprecated`: `label` appends a deprecation marker to the label it hands its `FieldTemplate`, `disable` disables the field, and `hide` tells the `FieldTemplate` the field is hidden.
 Returns `undefined` for a schema that is not deprecated, so a `ui:deprecatedHandling` on an undeprecated schema cannot hide or disable a field on its own, and a caller can treat the three modes as the only cases.
@@ -984,10 +984,11 @@ That spelling is this function's to change, in one place for every field that ca
 
 - string: The space-separated class list for the field
 
-### getFieldLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### getFieldLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getfieldlabel}
 
 Computes the label of a field: the label its `FieldTemplate` shows, and the one its field component hands its widget, so the two can't disagree.
 The label is the first non-empty one of the `ui:title`, the unresolved schema's `title` (the one beside a `$ref`), the resolved schema's `title`, the `title` prop and the property name, so an empty `title` falls through to the name.
+The schema's `title` comes before the `title` prop, as in the label the `FieldTemplate` shows, so an array item whose `items` schema has a `title` is labelled by it rather than by the numbered title (`Tags-1`) `ArrayField` hands each item.
 An `additionalProperties` entry, or one whose key the user renamed, is labelled by its key.
 A deprecated field's label is decorated with the `DeprecatedLabel` marker under the `label` [deprecated handling](#getdeprecatedhandling), but only a label there is: a field with no title and no name, such as the root or an array item, stays unlabelled.
 
@@ -1171,7 +1172,7 @@ Widgets should call this helper once and pass the result to `enumOptionsDomValue
 
 - OptionValueFormat: The resolved `OptionValueFormat`, defaulting to `'indexed'` when not set
 
-### getPresentationDeclaration&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### getPresentationDeclaration&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getpresentationdeclaration}
 
 Gets which parts of a field (its label, description, errors and help) its template draws and which the components rendering it draw themselves, from the form's merged [`ThemePresentation`](#types) and the `presentation` the components carry.
 It reads the components `SchemaField` already resolved rather than predicting one, and never throws where [getWidget()](#getwidget) would.
@@ -1181,7 +1182,7 @@ A field that renders its value with a single widget declares `WIDGET_FIELD_PRESE
 A widget's declaration layers its own `presentation` over the merged `widgets` entry for its key, which is where [mergeThemePresentation()](#mergethemepresentation) put any `standardWidgets` that reach it.
 An alias is looked up by the key it stands for, and a widget given as a component by its own declaration alone.
 A part a field leaves to its widget, with no widget given, falls back to the default, so a field such as `ArrayField` that renders a single widget only for a multi-select draws its own heading otherwise.
-A part nothing declares is drawn by the template, as is every part a field leaves to a widget that is neither registered nor an alias.
+A part nothing declares is drawn by the template, as is every part a field leaves to a widget that is neither registered nor an alias, or that is `null` or registered as nothing, which `getWidget()` rejects.
 
 #### Parameters
 
@@ -1421,7 +1422,7 @@ Components rendering an error state (a red outline, an invalid flag, inline erro
 
 - string[]: The errors to display, or an empty array when there are none or they are being hidden
 
-### getWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### getWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getwidget}
 
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
 React component that is used to render the widget. If the `widget` is already a React component, it is returned
@@ -1444,7 +1445,7 @@ object constants, or one whose `type` is `null`, renders with. A schema whose `t
 
 - An error if there is no `Widget` component that can be returned
 
-### getWidgetType&lt;S extends StrictRJSFSchema = RJSFSchema>()
+### getWidgetType&lt;S extends StrictRJSFSchema = RJSFSchema>() {#getwidgettype}
 
 2Gets the type whose field renders a widget for a schema, matching the widget's alias or the registered name an alias maps to, such as `textarea` or `TextareaWidget`. That is the type the schema resolves to when it has the widget, otherwise, when that type is a `string`, `number`, `integer` or `boolean`, the first other one of those its `type` list names that does: a `textarea` on a `['null', 'number', 'string']` is the `string` one, and a `checkbox` on a `['number', 'boolean']` the `boolean` one. No `null`, `object` or `array` type is looked to, since the field of the type the list resolves to would be left rendering the widget: a `radio` of the `null` type would replace the list an `ArrayField` multi-select edits with one value. A list resolving to `object` or `array` takes only its own widgets, since form data of that type, which the list is written to hold, would otherwise be handed to a scalar widget. A select over a `type` list takes only the widgets of the field [getSelectFieldType()](#getselectfieldtype) renders it through, and only `select`, `radio` and `hidden` when that is a `string` over a list naming an `object` or `array`, so a `checkbox` on an `enum` of `['a', true]` has no type. `getWidget()` looks a widget alias up by the type it returns, and [getFieldTypeForWidget()](#getfieldtypeforwidget) builds on it for the field `SchemaField` renders.
 
@@ -1936,7 +1937,7 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 
 Merges the `ThemePresentation`s of a form's layers, the way `@rjsf/core` merges its own components with a theme's and a theme's with the `Form`'s props.
 Declarations are merged part by part rather than replaced whole, so a theme declaring that its `CheckboxWidget` draws its errors keeps `@rjsf/core`'s declaration that it draws its label.
-A part declared `undefined` is left to the layers beneath it.
+A part declared `undefined` is left to the layers beneath it, and a part no layer declares is left out of the merged entry, so spreading one over another declaration can't erase a part.
 A layer's `standardWidgets` is expanded into an entry, at that layer, for every one of `standardWidgetKeys`, beneath the layer's own entry for the key.
 So a theme's or the `Form` props' `standardWidgets` overrides the parts it declares in the layers beneath it, even under a key one of them declares, while parts it doesn't declare keep theirs.
 
@@ -1965,26 +1966,32 @@ Return a consistent `id` for the optional data controls `element`
 ### optionDescriptionId()
 
 Return a consistent `id` for the description a selected `anyOf`/`oneOf` option or the fallback UI's value field renders of its own, beneath a field that renders a different description under [descriptionId()](#descriptionid) for the same `id`.
+Each further level showing a description of its own beneath those is numbered, so an option of an option that shows its own takes `optionDescription2`.
+`@rjsf/core` doesn't render under this id yet; it is the id [resolveFieldPresentation()](#resolvefieldpresentation) plans for it.
 
 #### Parameters
 
 - id: string - The id of the field
+- [depth=1]: number - How many fields above rendering the same `id` show a description of their own
 
 #### Returns
 
-- string: The consistent id for the option's own description element from the given `id`
+- string: The consistent id for the option's own description element from the given `id` and `depth`
 
 ### optionHelpId()
 
 Return a consistent `id` for the help a selected `anyOf`/`oneOf` option or the fallback UI's value field renders of its own, beneath a field that renders a different help under [helpId()](#helpid) for the same `id`.
+Each further level showing a help of its own beneath those is numbered, so an option of an option that shows its own takes `optionHelp2`.
+`@rjsf/core` doesn't render under this id yet; it is the id [resolveFieldPresentation()](#resolvefieldpresentation) plans for it.
 
 #### Parameters
 
 - id: string - The id of the field
+- [depth=1]: number - How many fields above rendering the same `id` show a help of their own
 
 #### Returns
 
-- string: The consistent id for the option's own help element from the given `id`
+- string: The consistent id for the option's own help element from the given `id` and `depth`
 
 ### optionId()
 
@@ -2228,7 +2235,7 @@ It predicts nothing: whether a part shows is decided from the decisions passed i
 Each part is placed `template` or `self` by its declared owner, `above` when a field above rendering the same id already draws it, or `none`.
 
 - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name, and is `above` when the template of a field above rendering the same id already draws it; a label the widget draws stays, so a widget that names its own control keeps naming it.
-- The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text a field above already shows is `above`, as is a part with no text under a field above that shows one; text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when that field shows its own text under the usual id.
+- The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one; text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the usual id, numbered by how many fields above show text of their own, so each level's text has an id of its own.
 - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
 - The control is described by the parts that render, here or above, and is `aria-invalid` whenever errors show. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at [fieldLabelId()](#fieldlabelid).
 
@@ -2352,6 +2359,7 @@ Check to see if a `schema` specifies that a value must be true. This happens whe
 ### selectedOptionDescriptionId()
 
 Return a consistent `id` for the description of the option a select widget has selected, which describes that option rather than the field, so it can't share the field's [descriptionId()](#descriptionid).
+`@rjsf/core`'s `SelectedOptionDescription` still renders under `descriptionId()`, so nothing carries this id until `@rjsf/core` reads the [presentation plan](#resolvefieldpresentation).
 
 #### Parameters
 

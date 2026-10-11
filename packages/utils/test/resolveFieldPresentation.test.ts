@@ -76,7 +76,7 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.describedBy).toEqual([`${ID}__help`]);
     });
 
-    // A `<label for>` naming nothing is what an opted-out optional field's selector used to get
+    // An opted-out optional field has no control on screen for a `<label for>` to name
     it('draws no template label with no control to name', () => {
       const plan = resolve({ hasControl: false, description: 'Describes foo', errors: ['is required'] });
       expect(plan.label.by).toBe('none');
@@ -138,6 +138,11 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.control?.attributes['aria-labelledby']).toBe(`${ID}__label`);
     });
 
+    it("doesn't draw the template label again beneath a level whose widget draws its own", () => {
+      const widgetLabelled = resolve({ inherited: above, declaration: WIDGET_LABEL });
+      expect(resolve({ inherited: widgetLabelled }).label.by).toBe('above');
+    });
+
     it('keeps the label a widget draws, so its control stays named', () => {
       expect(resolve({ inherited: above, declaration: WIDGET_LABEL }).label.by).toBe('self');
     });
@@ -191,11 +196,53 @@ describe('resolveFieldPresentation()', () => {
       expect(own.help.id).toBe(`${ID}__optionHelp`);
     });
 
+    it('links the plan to the one it was built under', () => {
+      expect(resolve({ inherited: above }).inherited).toBe(above);
+    });
+
+    it('draws the text of its own at each nesting level under an id of its own', () => {
+      const middle = resolve({ inherited: above, description: 'Describes the option', help: 'Helps with the option' });
+      const bottom = resolve({ inherited: middle, description: 'Describes the inner option', help: 'Helps inside' });
+      expect(bottom.description).toEqual({
+        text: 'Describes the inner option',
+        by: 'template',
+        id: `${ID}__optionDescription2`,
+      });
+      expect(bottom.help).toEqual({ text: 'Helps inside', by: 'template', id: `${ID}__optionHelp2` });
+      expect(bottom.describedBy).toEqual([
+        `${ID}__error`,
+        `${ID}__description`,
+        `${ID}__help`,
+        `${ID}__optionDescription`,
+        `${ID}__optionHelp`,
+        `${ID}__optionDescription2`,
+        `${ID}__optionHelp2`,
+      ]);
+    });
+
+    it("doesn't draw again a description a field further above shows", () => {
+      const middle = resolve({ inherited: above, description: 'Describes the option' });
+      const plan = resolve({ inherited: middle, description: 'Describes the field' });
+      expect(plan.description).toEqual({ text: 'Describes the field', by: 'above', id: `${ID}__description` });
+    });
+
     it('keeps hidden a description the field above hides', () => {
       const hidden = resolve({ showLabel: false, description: 'Describes the field' });
       const plan = resolve({ inherited: hidden, description: 'Describes the field' });
       expect(plan.description.by).toBe('none');
       expect(plan.describedBy).toEqual([]);
+    });
+
+    it('carries the description a field above shows past a level that keeps a hidden one hidden', () => {
+      const hidden = resolve({ showLabel: false, description: 'Describes the field' });
+      const shown = resolve({ inherited: hidden, description: 'Describes the option' });
+      const kept = resolve({ inherited: shown, description: 'Describes the field' });
+      expect(kept.description.by).toBe('none');
+      expect(resolve({ inherited: kept }).description).toEqual({
+        text: 'Describes the option',
+        by: 'above',
+        id: `${ID}__description`,
+      });
     });
 
     it('leaves the errors to the field above, and is described by them and invalid', () => {

@@ -79,6 +79,11 @@ describe('idGenerators', () => {
   it('option help id is generated for simple id', () => {
     expect(optionHelpId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__optionHelp`);
   });
+  it('option description and help ids are numbered past the first nesting level', () => {
+    expect(optionDescriptionId(SIMPLE_ID, 1)).toEqual(`${SIMPLE_ID}__optionDescription`);
+    expect(optionDescriptionId(SIMPLE_ID, 2)).toEqual(`${SIMPLE_ID}__optionDescription2`);
+    expect(optionHelpId(SIMPLE_ID, 3)).toEqual(`${SIMPLE_ID}__optionHelp3`);
+  });
   it('selected option description id is generated for simple id', () => {
     expect(selectedOptionDescriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__selectedOptionDescription`);
   });

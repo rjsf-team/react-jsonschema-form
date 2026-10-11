@@ -11,6 +11,7 @@ import type {
   StrictRJSFSchema,
   MergedThemePresentation,
   Widget,
+  WidgetPresentationDeclaration,
 } from './types.ts';
 
 /** The parts of the registry a declaration is looked up in. A `Registry` carrying its theme's `presentation` is one */
@@ -45,7 +46,7 @@ export interface PresentationSubject<
  * schema does, leaving its errors and help to the template. It is also what a part the field leaves to its widget
  * falls back to when it renders no single widget
  */
-const FIELD_DEFAULT: PresentationDeclaration = { label: 'self', description: 'self' };
+const FIELD_DEFAULT: WidgetPresentationDeclaration = { label: 'self', description: 'self' };
 
 /** The declaration of a field that renders its value with a single widget and leaves every part to whoever that widget
  * says draws it, such as `@rjsf/core`'s `StringField`. A field that renders a single widget only sometimes, such as
@@ -58,7 +59,7 @@ export const WIDGET_FIELD_PRESENTATION: Readonly<PresentationDeclaration> = Obje
   help: 'widget',
 });
 
-const NO_DECLARATION: PresentationDeclaration = {};
+const NO_DECLARATION: WidgetPresentationDeclaration = {};
 
 /** Gets who draws `part`: the field, or the widget when the field leaves the part to it, settled on the template
  * unless that one draws it itself
@@ -66,14 +67,16 @@ const NO_DECLARATION: PresentationDeclaration = {};
 function ownerOf(
   part: PresentationPart,
   fieldDeclaration: PresentationDeclaration,
-  widgetDeclaration: PresentationDeclaration,
+  widgetDeclaration: WidgetPresentationDeclaration,
 ) {
   const owner = fieldDeclaration[part];
   return (owner === 'widget' ? widgetDeclaration[part] : owner) === 'self' ? 'self' : 'template';
 }
 
-/** Gets the declaration of the widget a field renders: the theme's declaration for its key, under the component's own. An alias is looked up by the key it stands for, and a component given directly by its own
- * declaration alone. A name that is neither registered nor an alias declares nothing, so the template draws every part
+/** Gets the declaration of the widget a field renders: the theme's declaration for its key, under the component's own.
+ * An alias is looked up by the key it stands for, and a component given directly by its own declaration alone. A name
+ * that is neither registered nor an alias, or a key registered as nothing, declares nothing, so the template draws
+ * every part
  */
 function getWidgetDeclaration<
   T = unknown,
@@ -83,17 +86,20 @@ function getWidgetDeclaration<
   schema: S,
   widget: Widget<T, S, F> | string,
   { widgets, presentation }: PresentationSource<T, S, F>,
-): PresentationDeclaration {
+): WidgetPresentationDeclaration {
+  // A `null` from a JSON `uiSchema`, or a key registered as nothing, is left to throw in `getWidget()`, whose error
+  // names the schema
   if (typeof widget !== 'string') {
-    return layerDeclarations(widget.presentation);
+    return layerDeclarations(widget?.presentation);
   }
   const key = getWidgetKey<S>(schema, widget, widgets);
-  if (key === undefined) {
+  const registered = key !== undefined && Object.hasOwn(widgets, key);
+  if (key === undefined || (registered && !widgets[key])) {
     return NO_DECLARATION;
   }
   return layerDeclarations(
     getOwnDeclaration(presentation?.widgets, key),
-    Object.hasOwn(widgets, key) ? widgets[key].presentation : undefined,
+    registered ? widgets[key].presentation : undefined,
   );
 }
 
