@@ -1454,11 +1454,12 @@ export function retrieveSchemaInternal<
       // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
       // (external library) only operates on string keys and will drop them.
       const allOfSymbols: Record<symbol, unknown> = {};
-      resolvedSchema.allOf?.forEach((allOfItem) => {
-        // A boolean subschema carries no symbols; `getOwnPropertySymbols` coerces it and returns an empty list
+      // A boolean subschema carries no symbols
+      resolvedSchema.allOf?.filter(isObject).forEach((allOfItem) => {
         for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
           if (!(sym in allOfSymbols)) {
-            allOfSymbols[sym] = Object.getOwnPropertyDescriptor(allOfItem, sym)?.value;
+            // `Reflect.get` reads through a getter, and a schema's type has no symbol key to index it by
+            allOfSymbols[sym] = Reflect.get(allOfItem, sym);
           }
         }
       });
