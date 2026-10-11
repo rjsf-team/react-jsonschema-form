@@ -9,7 +9,6 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
-  getByPath,
   toPath,
   replaceEqualDeep,
   fieldPathFromList,
@@ -26,6 +25,7 @@ import {
   applyReset,
   applySubmit,
   applyValidation,
+  getAt,
   asFieldValue,
   deriveState,
   freezeFormData,
@@ -114,14 +114,6 @@ function withOwned<T, S extends StrictRJSFSchema, F extends FormContextType>(
   result: FormState<T, S, F>,
 ): FormState<T, S, F> {
   return base.isControlled ? withMembers<FormState<T, S, F>>(IS_OWNED_BY_FORM, base, result) : result;
-}
-
-/** `getByPath()` reading an empty path as the root itself. The overload is the one trust point that the value at a
- * field's path has the type that field renders.
- */
-function getAt<V>(data: unknown, segments: FieldPathList): V;
-function getAt(data: unknown, segments: FieldPathList): unknown {
-  return segments.length === 0 ? data : getByPath(data, segments);
 }
 
 /** Reports to the consumer for the model, and knows whether the form is attached. Its layout Effects are disconnected
