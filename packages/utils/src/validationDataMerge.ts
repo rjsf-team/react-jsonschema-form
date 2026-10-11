@@ -1,18 +1,36 @@
+import { ERRORS_KEY } from './constants.ts';
+import isPlainObject from './isPlainObject.ts';
 import mergeObjects from './mergeObjects.ts';
-import { propertyToPath } from './pathUtils.ts';
 import toErrorList from './toErrorList.ts';
-import type { ErrorSchema, RJSFValidationError, ValidationData } from './types.ts';
+import type { ErrorSchema, ValidationData } from './types.ts';
 
-/** The key under which an error counts as the same as another: the path its `property` addresses, split the way
- * `toErrorSchema()` splits it (which is how `mergeObjects()` keys the `ErrorSchema` it merges), and its message. The
- * validators, `toErrorList()` and a `customValidate()` or `transformErrors()` do not spell one location alike (`foo`,
- * `.foo`, `.arr[0]`, `.arr.0`, `''` and `.` for the root), so the raw `property` string cannot be compared
+/** A copy of `additionalErrorSchema` without the messages that `errorSchema` already holds under the same keys, which
+ * are the ones `mergeObjects()` with `preventDuplicates` leaves out of the merged `ErrorSchema`. Listing this copy
+ * rather than `additionalErrorSchema` keeps the `errors` list in step with the merged `ErrorSchema`: an additional
+ * error is left out of both or listed where the merge shows it. Matching on the `ErrorSchema` rather than on the
+ * `property` of the existing errors also means any spelling of a path (`foo`, `.foo`, `.arr[0]`, `.arr.0`, `''` or `.`
+ * for the root) matches, since `toErrorSchema()` has already split it into keys.
  *
- * @param error - The error to key
- * @returns - The key made of the error's path and message
+ * @param additionalErrorSchema - The additional errors, viewed as the plain object they are at runtime
+ * @param errorSchema - The node of the existing `ErrorSchema` at the same keys, if there is one
+ * @returns - A copy of `additionalErrorSchema` without the messages `errorSchema` already holds
  */
-function errorKey({ property, message }: RJSFValidationError): string {
-  return JSON.stringify([propertyToPath(property), message]);
+function withoutMergedErrors(additionalErrorSchema: Record<string, unknown>, errorSchema: unknown) {
+  const existing = isPlainObject(errorSchema) ? errorSchema : {};
+  // Without a prototype, so that a `__proto__` key is copied as a plain key
+  const kept: Record<string, unknown> = Object.create(null);
+  for (const key of Object.keys(additionalErrorSchema)) {
+    const value = additionalErrorSchema[key];
+    const existingValue = Object.hasOwn(existing, key) ? existing[key] : undefined;
+    if (key === ERRORS_KEY && Array.isArray(value) && Array.isArray(existingValue)) {
+      kept[key] = value.filter((message) => !existingValue.includes(message));
+    } else if (isPlainObject(value)) {
+      kept[key] = withoutMergedErrors(value, existingValue);
+    } else {
+      kept[key] = value;
+    }
+  }
+  return kept;
 }
 
 /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the
@@ -24,8 +42,8 @@ function errorKey({ property, message }: RJSFValidationError): string {
  * @param validationData - The current `ValidationData` into which to merge the additional errors
  * @param [additionalErrorSchema] - The optional additional set of errors in an `ErrorSchema`
  * @param [preventDuplicates=false] - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates` and
- * skip additional errors already in the existing errors list (same path and `message`, whatever way the `property`
- * spells the path)
+ * leave out of the appended errors those it leaves out of the merged `ErrorSchema`: the messages the existing
+ * `errorSchema` already holds under the same keys
  * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
  */
 export default function validationDataMerge<T = unknown>(
@@ -36,16 +54,19 @@ export default function validationDataMerge<T = unknown>(
   if (!additionalErrorSchema || Object.keys(additionalErrorSchema).length === 0) {
     return validationData;
   }
-  const { errors: oldErrors = [], errorSchema: oldErrorSchema = {} } = validationData as Partial<ValidationData<T>>;
-  let errors = toErrorList(additionalErrorSchema);
-  const errorSchema = mergeObjects(
-    oldErrorSchema,
-    additionalErrorSchema,
-    preventDuplicates ? 'preventDuplicates' : true,
-  ) as ErrorSchema<T>;
-  if (preventDuplicates && errors.length > 0 && oldErrors.length > 0) {
-    const known = new Set(oldErrors.map(errorKey));
-    errors = errors.filter((error) => !known.has(errorKey(error)));
+  const { errors: oldErrors, errorSchema: oldErrorSchema } = validationData;
+  const errors = toErrorList(
+    preventDuplicates
+      ? (withoutMergedErrors(additionalErrorSchema, oldErrorSchema) as ErrorSchema<T>)
+      : additionalErrorSchema,
+  );
+  let errorSchema = additionalErrorSchema;
+  if (oldErrorSchema && Object.keys(oldErrorSchema).length > 0) {
+    errorSchema = mergeObjects(
+      oldErrorSchema,
+      additionalErrorSchema,
+      preventDuplicates ? 'preventDuplicates' : true,
+    ) as ErrorSchema<T>;
   }
   return { errorSchema, errors: [...oldErrors, ...errors] };
 }
