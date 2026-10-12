@@ -12,28 +12,13 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    autofocus,
-    disabled,
-    registry,
-    id,
-    onBlur,
-    onChange,
-    onFocus,
-    options,
-    placeholder,
-    readonly,
-    schema,
-    value,
-  } = props;
+  const { autofocus, disabled, registry, id, onBlur, onChange, onFocus, placeholder, readonly, schema, value } = props;
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { min, max, step } = rangeSpec(schema);
 
-  const emptyValue = options.emptyValue || '';
-
-  const handleChange = (nextValue: number | '') => onChange(nextValue === '' ? emptyValue : nextValue);
+  const handleChange = (nextValue: number) => onChange(nextValue);
 
   const handleBlur = () => onBlur(id, value);
 
