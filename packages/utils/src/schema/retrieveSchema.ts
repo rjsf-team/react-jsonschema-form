@@ -597,9 +597,13 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   expandedRefs?: string[],
   passCount = 0,
 ): S {
+  // Normalize here, once per top-level walk: the worker re-enters itself for every property, item and option,
+  // and normalizing on each entry would walk the whole root at every node. The worker's own normalization of
+  // this already-normalized root comes back unchanged, and a root edited in place is still read as it now
+  // stands on the next top-level call
   return resolveAllReferencesInternal<S>(
     schema,
-    rootSchema,
+    normalizeRootReferences(rootSchema),
     recurseList,
     baseURI,
     resolveAnyOfOrOneOfRefs,
