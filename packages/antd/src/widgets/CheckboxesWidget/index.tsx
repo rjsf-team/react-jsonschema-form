@@ -35,6 +35,7 @@ export default function CheckboxesWidget<
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const fieldDisabled = disabled || (readonlyAsDisabled && readonly);
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -53,7 +54,9 @@ export default function CheckboxesWidget<
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      // `undefined` rather than `false` for an enabled field, since antd reads its `DisabledContext` only when neither
+      // the checkbox nor its group sets `disabled`
+      disabled={fieldDisabled || undefined}
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
       value={selectValue}
@@ -68,9 +71,7 @@ export default function CheckboxesWidget<
               id={optionId(id, i)}
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
-              disabled={
-                disabled || (readonlyAsDisabled && readonly) || enumOptionsIsDisabled(option.value, enumDisabled)
-              }
+              disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}
               onFocus={!readonly ? focusHandlers[i] : undefined}

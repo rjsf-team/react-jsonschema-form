@@ -36,6 +36,7 @@ export default function RadioWidget<
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const fieldDisabled = disabled || (readonlyAsDisabled && readonly);
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -54,7 +55,9 @@ export default function RadioWidget<
 
   return (
     <Radio.Group
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      // `undefined` rather than `false` for an enabled field, since antd reads its `DisabledContext` only when neither
+      // the radio nor its group sets `disabled`
+      disabled={fieldDisabled || undefined}
       id={id}
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
@@ -69,7 +72,7 @@ export default function RadioWidget<
             id={optionId(id, i)}
             name={htmlName || id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={disabled || (readonlyAsDisabled && readonly) || enumOptionsIsDisabled(option.value, enumDisabled)}
+            disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
             value={domValues[i]}
