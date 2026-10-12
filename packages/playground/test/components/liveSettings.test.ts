@@ -40,6 +40,15 @@ describe('normalizeLiveSettings', () => {
     expect(settings).not.toHaveProperty('useFallbackField');
   });
 
+  it('reads the `validate` of an early v5 link as liveValidate', () => {
+    expect(normalizeLiveSettings({ validate: true })).toEqual({ liveValidate: 'onChange' });
+  });
+
+  it('prefers the liveValidate a link holds over its `validate`', () => {
+    expect(normalizeLiveSettings({ validate: true, liveValidate: 'off' })).toEqual({ liveValidate: 'off' });
+    expect(normalizeLiveSettings({ validate: true, liveValidate: false })).toEqual({ liveValidate: 'off' });
+  });
+
   it('drops the `populate` an older link carries as arrayMinItems, keeping the rest of the behavior', () => {
     expect(
       normalizeLiveSettings({

@@ -309,7 +309,8 @@ export type LiveSettings = Pick<
 
 /** The settings as a shared link may carry them. A v5 or v6 link holds `liveValidate` and `liveOmit` as booleans. A link
  * shared from the initial settings the playground had through v6 holds an `arrayMinItems` of `'populate'`, which
- * `DefaultFormStateBehavior` never allowed, and `validate` and `useFallbackField`, which name no `Form` prop.
+ * `DefaultFormStateBehavior` never allowed, a `validate` of `false`, and `useFallbackField`, which names no `Form` prop.
+ * `validate` was the name of the live validation toggle in early v5, whose links hold it in place of `liveValidate`.
  */
 export type LoadedLiveSettings = Omit<LiveSettings, 'liveValidate' | 'liveOmit' | 'defaultFormStateBehavior'> & {
   liveValidate?: LiveFlag | boolean;

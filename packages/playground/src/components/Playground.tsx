@@ -49,8 +49,10 @@ function normalizeLiveFlag(value: LiveFlag | boolean | undefined): LiveFlag | un
 
 /** Normalizes `liveSettings` decoded from a shared playground URL or sample: defaults a missing object to `{}` (a
  * shared URL predating `liveSettings` support omits it entirely) so callers never have to null-check it, converts any
- * legacy boolean `liveValidate`/`liveOmit` values to their current string equivalents, and leaves out what an older
- * link carries that the form has no use for: `validate`, `useFallbackField` and an `arrayMinItems` of `'populate'`.
+ * legacy boolean `liveValidate`/`liveOmit` values to their current string equivalents, reads a `validate` of `true`, the
+ * name the live validation toggle had in early v5, as `liveValidate` when the link holds none, and leaves out what an
+ * older link carries that the form has no use for: `validate` itself, `useFallbackField` and an `arrayMinItems` of
+ * `'populate'`.
  */
 export function normalizeLiveSettings(loadedLiveSettings: LoadedLiveSettings = {}): LiveSettings {
   const { validate, useFallbackField, defaultFormStateBehavior, ...settings } = loadedLiveSettings;
@@ -61,7 +63,7 @@ export function normalizeLiveSettings(loadedLiveSettings: LoadedLiveSettings = {
       ...behavior,
       arrayMinItems: arrayMinItems === 'populate' ? undefined : arrayMinItems,
     },
-    liveValidate: normalizeLiveFlag(settings.liveValidate),
+    liveValidate: normalizeLiveFlag(settings.liveValidate ?? (validate || undefined)),
     liveOmit: normalizeLiveFlag(settings.liveOmit),
   };
 }
