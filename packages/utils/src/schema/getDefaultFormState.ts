@@ -35,7 +35,7 @@ import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
-import { resolvedFromRef } from '../refOf.ts';
+import { enclosingRefPath, resolvedFromRef } from '../refOf.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import toConstant from '../toConstant.ts';
 import type {
@@ -276,21 +276,6 @@ function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectT
   return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
 }
 
-/** Returns the `$ref`s a schema the defaults are being computed for sits inside of, as the resolution path a retrieve
- * of it is seeded with: the refs `computeDefaults()` is expanding plus the one `schema` was itself resolved from. A
- * `$ref` back to any of them is a recursion, which the retrieve then leaves as the `$ref` the `$ref` branch of
- * `computeDefaults()` stops at, where expanding it in place would hand the defaults one more level to descend into on
- * every call.
- *
- * @param schema - The schema about to be retrieved
- * @param recurseList - The refs `computeDefaults()` is expanding
- * @returns - `recurseList` plus the ref `schema` was resolved from, when it carries one that is not on it already
- */
-function refsOnPath<S extends StrictRJSFSchema>(schema: S, recurseList: string[]): string[] {
-  const sourceRef = resolvedFromRef<S>(schema);
-  return sourceRef === undefined || recurseList.includes(sourceRef) ? recurseList : [...recurseList, sourceRef];
-}
-
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
  * each level of the schema, recursively, to fill out every level of defaults provided by the schema.
  *
@@ -397,7 +382,7 @@ export function computeDefaults<
       schema,
       rootSchema,
       false,
-      refsOnPath(schema, _recurseList),
+      enclosingRefPath<S>(schema, _recurseList, DEPENDENCIES_KEY),
       defaultFormData,
     );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
@@ -500,7 +485,7 @@ export function computeDefaults<
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
     // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
     // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
-    const pathWithOwnRef = refsOnPath(schema, _recurseList);
+    const pathWithOwnRef = enclosingRefPath<S>(schema, _recurseList);
     [schemaToCompute] = retrieveSchemaInternal<T, S, F>(
       context,
       schema,
@@ -511,7 +496,7 @@ export function computeDefaults<
     );
     // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
     // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at
-    updatedRecurseList = refsOnPath(schemaToCompute, pathWithOwnRef);
+    updatedRecurseList = enclosingRefPath<S>(schemaToCompute, pathWithOwnRef);
   }
 
   if (schemaToCompute) {
@@ -664,7 +649,14 @@ export function getObjectDefaults<
       shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) ||
       (defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in schema);
     const [retrievedSchema] = shouldRetrieveSchema
-      ? retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, formData, false, refsOnPath(schema, _recurseList))
+      ? retrieveSchemaInternal<T, S, F>(
+          context,
+          schema,
+          rootSchema,
+          formData,
+          false,
+          enclosingRefPath<S>(schema, _recurseList),
+        )
       : [schema];
     // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` joins the path of everything below, the way
     // one the `$ref` branch of `computeDefaults()` expands does. The ref `schema` was itself resolved from does not:
@@ -672,7 +664,7 @@ export function getObjectDefaults<
     const childRecurseList =
       resolvedFromRef<S>(retrievedSchema) === resolvedFromRef<S>(schema)
         ? _recurseList
-        : refsOnPath(retrievedSchema, _recurseList);
+        : enclosingRefPath<S>(retrievedSchema, _recurseList);
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties ?? {}).reduce(
       (acc: GenericObjectType, key: string) => {

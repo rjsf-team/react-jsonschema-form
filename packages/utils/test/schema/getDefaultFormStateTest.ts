@@ -1446,6 +1446,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        describe('a branch beside a $ref that uses the definition a second time', () => {
+          const Q: RJSFSchema = { type: 'object', properties: { name: { type: 'string', default: 'd' } } };
+          const friend: RJSFSchema = { properties: { friend: { $ref: '#/definitions/Q' } } };
+
+          test.each<[string, RJSFSchema]>([
+            ['an allOf entry', { allOf: [friend] }],
+            ['a then branch', { if: {}, then: friend }],
+            ['a dependencies entry', { dependencies: { name: friend } }],
+          ])('getDefaultFormState fills in the property %s declares', (_, sibling) => {
+            // The branch is not part of the definition, so its `$ref` to the definition is not a recursion to stop at
+            const schema: RJSFSchema = {
+              definitions: { Q },
+              type: 'object',
+              properties: { b: { $ref: '#/definitions/Q', ...sibling } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+                { schema, rootSchema: schema },
+              ),
+            ).toEqual({ b: { name: 'd', friend: { name: 'd' } } });
+          });
+        });
+
         describe('a recursive schema whose if has its properties resolved', () => {
           // Resolving the `if` expands the `$ref` back to the definition in place, so the recursion is reached through
           // the expanded property rather than through the `$ref` the plain schema holds; both pin the same result
