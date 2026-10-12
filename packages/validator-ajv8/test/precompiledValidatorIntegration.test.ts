@@ -274,6 +274,33 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       },
     );
   });
+  describe('an option with an `if` that has no `else`', () => {
+    /** Until the data satisfies the `if`, a form renders the option without its `then`, so that schema has to be
+     * compiled as well as the one with `then` applied
+     */
+    const CONDITIONAL_ONEOF_SCHEMA: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          if: { properties: { a: { const: 'x' } }, required: ['a'] },
+          then: { properties: { extra: { type: 'string' } } },
+        },
+        { type: 'object', properties: { z: { type: 'number' } } },
+      ],
+    };
+
+    it.each([[{}], [{ a: 'q' }], [{ a: 'x' }]])('scores the option it retrieved for %s', (formData) => {
+      const validator = buildPrecompiledValidator(CONDITIONAL_ONEOF_SCHEMA);
+      const schemaUtils = createSchemaUtils({ validator }, CONDITIONAL_ONEOF_SCHEMA);
+      const options = CONDITIONAL_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+      const chosen = getClosestMatchingOption({ validator }, CONDITIONAL_ONEOF_SCHEMA, formData, options, 0);
+      const retrieved = schemaUtils.retrieveSchema(options[chosen], formData);
+      // threw "No precompiled validator function was found for the given schema" while the `if` didn't hold
+      expect(validator.isValid(withVariantId(retrieved), formData, CONDITIONAL_ONEOF_SCHEMA)).toBe(true);
+    });
+  });
   describe('a retrieved option validated as it stands', () => {
     /** The options carry an `$id`, which is what a validator keys the function it compiles by, so a retrieved option
      * validated under it would be answered by the function compiled for the option as declared
