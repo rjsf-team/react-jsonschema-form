@@ -1,6 +1,6 @@
 import { mergeThemePresentation } from '../src/index.ts';
 
-const EMPTY = { default: {}, widgets: {}, fields: {} };
+const EMPTY = { default: {}, widgets: {}, fields: {}, fieldDefault: {} };
 
 const core = {
   widgets: {
@@ -28,6 +28,7 @@ describe('mergeThemePresentation()', () => {
         RadioWidget: { labelledBy: 'aria-labelledby' },
       },
       fields: { ObjectField: { label: 'self', description: 'self', errors: 'self' } },
+      fieldDefault: {},
     });
   });
 
@@ -44,6 +45,7 @@ describe('mergeThemePresentation()', () => {
         MyWidget: { label: 'self', errors: 'self', help: 'self' },
       },
       fields: {},
+      fieldDefault: {},
     });
   });
 
@@ -56,6 +58,7 @@ describe('mergeThemePresentation()', () => {
         RadioWidget: { description: 'template', labelledBy: 'aria-labelledby' },
       },
       fields: {},
+      fieldDefault: {},
     });
   });
 
@@ -63,6 +66,17 @@ describe('mergeThemePresentation()', () => {
     const theme = { default: { label: 'self' } } as const;
     const props = { widgets: { MyWidget: { errors: 'self' } } } as const;
     expect(mergeThemePresentation(theme, props).widgets).toStrictEqual({ MyWidget: { label: 'self', errors: 'self' } });
+  });
+
+  it('layers each fieldDefault over the ones beneath it, leaving the field entries as they are', () => {
+    const core = {
+      fields: { StringField: { label: 'widget' } },
+      fieldDefault: { errors: 'self', help: 'self' },
+    } as const;
+    const theme = { fieldDefault: { description: 'template', help: undefined } } as const;
+    const merged = mergeThemePresentation(core, theme, { fieldDefault: { errors: 'template' } });
+    expect(merged.fieldDefault).toStrictEqual({ description: 'template', errors: 'template', help: 'self' });
+    expect(merged.fields).toStrictEqual({ StringField: { label: 'widget' } });
   });
 
   it('leaves a part declared undefined to the layers beneath it', () => {

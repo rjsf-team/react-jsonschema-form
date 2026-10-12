@@ -80,7 +80,8 @@ function layerRecords<Owner extends PartOwner>(
  * declaring that its `CheckboxWidget` draws its errors keeps `@rjsf/core`'s declaration that it draws its label. A
  * layer's `default` is layered beneath that layer's own entry for every widget key any layer declares, so it overrides
  * the parts it declares in the layers beneath it, even under a key one of them declares, and the layered `default`s
- * are what a widget no layer declares draws
+ * are what a widget no layer declares draws. The `fieldDefault`s are layered over one another only, since they sit
+ * beneath the merged field entries
  *
  * @param layers - The presentations to merge, from the bottom; `undefined` entries are skipped
  * @returns - The merged presentation
@@ -96,5 +97,6 @@ export default function mergeThemePresentation(
       defaults,
     ),
     fields: layerRecords(layers.map((layer) => layer?.fields)),
+    fieldDefault: layerDeclarations<Exclude<PartOwner, 'widget'>>(...layers.map((layer) => layer?.fieldDefault)),
   };
 }

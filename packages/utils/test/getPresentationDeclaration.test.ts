@@ -77,15 +77,39 @@ describe('getPresentationDeclaration()', () => {
     ).toEqual(TEMPLATE);
   });
 
-  it('reads a field by the key that named it over the key it is registered under', () => {
-    expect(
-      getPresentationDeclaration(source, {
-        schema: { type: 'string' },
-        field: StringField,
-        fieldKey: 'MyField',
-        widget: 'text',
-      }),
-    ).toEqual(FIELD_DEFAULT);
+  it('reads a field by the key that named it when that key declares it, otherwise by its registered key', () => {
+    const subject = { schema: { type: 'string' }, field: StringField, fieldKey: 'MyField', widget: 'text' } as const;
+    const fields = { ...presentation.fields, MyField: { label: 'template' } } as const;
+    expect(getPresentationDeclaration({ ...source, presentation: { ...presentation, fields } }, subject)).toEqual({
+      ...FIELD_DEFAULT,
+      label: 'template',
+    });
+    expect(getPresentationDeclaration(source, subject)).toEqual(TEMPLATE);
+  });
+
+  it('reads a component registered under several keys by the first of them that declares it', () => {
+    const MultiSchemaField: Field = () => null;
+    const MyInput: Widget = () => null;
+    const theme: PresentationSource = {
+      fields: { AnyOfField: MultiSchemaField, OneOfField: MultiSchemaField },
+      widgets: { TextWidget: MyInput, MyInput },
+      presentation: {
+        fields: { OneOfField: { label: 'template' }, StringField: WIDGET_FIELD_PRESENTATION },
+        widgets: { MyInput: { label: 'self' } },
+      },
+    };
+    const expected = { ...FIELD_DEFAULT, label: 'template' };
+    expect(getPresentationDeclaration(theme, { schema: {}, field: MultiSchemaField })).toEqual(expected);
+    expect(getPresentationDeclaration(theme, { schema: {}, field: MultiSchemaField, fieldKey: 'AnyOfField' })).toEqual(
+      expected,
+    );
+    const subject = { schema: { type: 'string' }, field: StringField, fieldKey: 'StringField' } as const;
+    expect(getPresentationDeclaration(theme, { ...subject, widget: 'MyInput' })).toEqual({
+      ...TEMPLATE,
+      label: 'self',
+    });
+    expect(getPresentationDeclaration(theme, { ...subject, widget: MyInput })).toEqual({ ...TEMPLATE, label: 'self' });
+    expect(getPresentationDeclaration(theme, { ...subject, widget: 'text' })).toEqual({ ...TEMPLATE, label: 'self' });
   });
 
   it("reads the declaration of a field's widget by the key its alias stands for", () => {
@@ -112,6 +136,54 @@ describe('getPresentationDeclaration()', () => {
         widget: 'checkboxes',
       }),
     ).toEqual(TEMPLATE);
+  });
+
+  describe("the theme's fieldDefault", () => {
+    const fieldDefault = { description: 'template', errors: 'self' } as const;
+    const theme: PresentationSource = { ...source, presentation: { ...presentation, fieldDefault } };
+    const array: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true };
+
+    it('is what a field draws for a part nothing declares for it, custom fields included', () => {
+      const MyField: Field = () => null;
+      const expected = { ...FIELD_DEFAULT, ...fieldDefault };
+      expect(getPresentationDeclaration(theme, { schema: { type: 'string' }, field: MyField })).toEqual(expected);
+      expect(getPresentationDeclaration(theme, { schema: { type: 'object' }, field: ObjectField })).toEqual(expected);
+    });
+
+    it('is what a part left to a widget falls back to when the field renders none', () => {
+      expect(getPresentationDeclaration(theme, { schema: array, field: ArrayField, fieldKey: 'ArrayField' })).toEqual({
+        ...FIELD_DEFAULT,
+        ...fieldDefault,
+      });
+    });
+
+    it("doesn't override a part a field's entry declares, such as one left to its widget", () => {
+      expect(
+        getPresentationDeclaration(theme, {
+          schema: array,
+          field: ArrayField,
+          fieldKey: 'ArrayField',
+          widget: 'select',
+        }),
+      ).toEqual(TEMPLATE);
+      const fields = { ...presentation.fields, ObjectField: { description: 'self' } } as const;
+      expect(
+        getPresentationDeclaration(
+          { ...source, presentation: { ...presentation, fields, fieldDefault } },
+          { schema: { type: 'object' }, field: ObjectField },
+        ),
+      ).toEqual({ ...FIELD_DEFAULT, errors: 'self' });
+    });
+
+    it('gives an unmerged layer the same answer as a merged one', () => {
+      const layer: ThemePresentation = { fields: { ObjectField: { label: 'template' } }, fieldDefault };
+      const subject = { schema: { type: 'object' }, field: ObjectField } as const;
+      const expected = { ...FIELD_DEFAULT, ...fieldDefault, label: 'template' };
+      expect(getPresentationDeclaration({ ...source, presentation: layer }, subject)).toEqual(expected);
+      expect(getPresentationDeclaration({ ...source, presentation: mergeThemePresentation(layer) }, subject)).toEqual(
+        expected,
+      );
+    });
   });
 
   it("takes the widget's labelledBy, which is how the template's label reaches its control", () => {
@@ -173,6 +245,7 @@ describe('getPresentationDeclaration()', () => {
   it("types a widget's declarations without the widget owner, which has no widget beneath it", () => {
     type WidgetOwner = Exclude<PartOwner, 'widget'> | undefined;
     expectTypeOf<NonNullable<ThemePresentation['default']>['errors']>().toEqualTypeOf<WidgetOwner>();
+    expectTypeOf<NonNullable<ThemePresentation['fieldDefault']>['label']>().toEqualTypeOf<WidgetOwner>();
     expectTypeOf<NonNullable<ThemePresentation['widgets']>[string]['help']>().toEqualTypeOf<WidgetOwner>();
     expectTypeOf<NonNullable<ThemePresentation['fields']>[string]['label']>().toEqualTypeOf<PartOwner | undefined>();
   });
@@ -182,32 +255,28 @@ describe('getPresentationDeclaration()', () => {
     expectTypeOf<Widget>().not.toHaveProperty('presentation');
   });
 
-  // A duplicate label is recoverable; a control left unnamed because its widget was guessed to name it is not
-  it('leaves every part to the template for a widget that is neither registered nor an alias', () => {
-    expect(
-      getPresentationDeclaration(
-        {
-          ...source,
-          presentation: { ...presentation, default: { label: 'self' }, widgets: { Unregistered: { label: 'self' } } },
-        },
-        { schema: { type: 'string' }, field: StringField, fieldKey: 'StringField', widget: 'Unregistered' },
-      ),
-    ).toEqual(TEMPLATE);
-  });
-
-  // Neither is a widget `getWidget()` accepts; its error names the schema, so the throw is left to it
-  it('leaves every part to the template for a null widget, or one registered as nothing', () => {
+  // `getWidget()` throws on each of these, with an error naming the schema, so none of them renders
+  it('gives a widget getWidget() rejects whatever is declared for it, without throwing', () => {
     const { 'ui:widget': nullWidget, widgets } = JSON.parse('{ "ui:widget": null, "widgets": { "TextWidget": null } }');
     const subject = { schema: { type: 'string' }, field: StringField, fieldKey: 'StringField' } as const;
     const declared = {
       ...presentation,
       default: { label: 'self' },
-      widgets: { TextWidget: { label: 'self', errors: 'self' } },
+      widgets: { TextWidget: { errors: 'self' }, Unregistered: { help: 'self' } },
     } as const;
-    const nothing: PresentationSource = { fields: {}, widgets, presentation: declared };
-    expect(getPresentationDeclaration(nothing, { ...subject, widget: 'text' })).toEqual(TEMPLATE);
-    expect(getPresentationDeclaration(nothing, { ...subject, widget: 'TextWidget' })).toEqual(TEMPLATE);
-    expect(getPresentationDeclaration(nothing, { ...subject, widget: nullWidget })).toEqual(TEMPLATE);
+    const theme: PresentationSource = { fields: {}, widgets, presentation: declared };
+    const byDefault = { ...TEMPLATE, label: 'self' };
+    expect(getPresentationDeclaration(theme, { ...subject, widget: 'Unregistered' })).toEqual({
+      ...byDefault,
+      help: 'self',
+    });
+    expect(getPresentationDeclaration(theme, { ...subject, widget: 'nope' })).toEqual(byDefault);
+    expect(getPresentationDeclaration(theme, { ...subject, widget: 'text' })).toEqual({ ...byDefault, errors: 'self' });
+    expect(getPresentationDeclaration(theme, { ...subject, widget: 'TextWidget' })).toEqual({
+      ...byDefault,
+      errors: 'self',
+    });
+    expect(getPresentationDeclaration(theme, { ...subject, widget: nullWidget })).toEqual(byDefault);
   });
 
   it('reads a widget key that is declared but not registered', () => {
@@ -290,7 +359,7 @@ describe('getPresentationDeclaration()', () => {
     expect(
       getPresentationDeclaration(source, {
         schema: { type: 'string' },
-        field: StringField,
+        field: () => null,
         fieldKey: 'constructor',
         widget: 'text',
       }),

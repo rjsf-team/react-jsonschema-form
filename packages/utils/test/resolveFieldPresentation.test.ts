@@ -139,13 +139,22 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.control?.attributes['aria-labelledby']).toBe(`${ID}__label`);
     });
 
-    it("doesn't draw the template label again beneath a level whose widget draws its own", () => {
+    it("doesn't draw a label its widget draws beneath the template label that already names the control", () => {
       const widgetLabelled = resolve({ inherited: above, declaration: WIDGET_LABEL });
+      expect(widgetLabelled.label.by).toBe('above');
+      expect(widgetLabelled.control?.attributes['aria-labelledby']).toBeUndefined();
       expect(resolve({ inherited: widgetLabelled }).label.by).toBe('above');
     });
 
-    it('keeps the label a widget draws, so its control stays named', () => {
-      expect(resolve({ inherited: above, declaration: WIDGET_LABEL }).label.by).toBe('self');
+    it('points a control with another id at the template label above, which its for does not name', () => {
+      const selector = resolveFieldPresentation({
+        id: `${ID}__oneof_select`,
+        declaration: TEMPLATE,
+        label: 'Foo',
+        inherited: above,
+      });
+      expect(selector.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label` });
+      expect(selector.control?.attributes['aria-labelledby']).toBe(`${ID}__label`);
     });
 
     it('chains a template label through a level that drew none', () => {
@@ -153,9 +162,17 @@ describe('resolveFieldPresentation()', () => {
       expect(resolve({ inherited: middle }).label.by).toBe('above');
     });
 
-    it('draws its template label when the field above draws none of its own', () => {
-      const unlabelled = resolve({ declaration: WIDGET_LABEL });
+    it('draws its template label when the field above draws none', () => {
+      const unlabelled = resolve({ label: '' });
+      expect(unlabelled.label.by).toBe('none');
       expect(resolve({ inherited: unlabelled }).label.by).toBe('template');
+    });
+
+    // What a component above draws names that component's own control, such as a selector, not this one
+    it('draws its template label beneath a field whose component draws its own', () => {
+      const componentLabelled = resolve({ declaration: WIDGET_LABEL });
+      expect(componentLabelled.label.by).toBe('self');
+      expect(resolve({ inherited: componentLabelled }).label.by).toBe('template');
     });
 
     it("doesn't draw a description or help the field above shows", () => {

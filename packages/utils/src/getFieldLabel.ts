@@ -19,7 +19,8 @@ export interface FieldLabelSources<S extends StrictRJSFSchema = RJSFSchema> {
  * widget, so the two can't disagree. An empty `title` falls through to the next source, ending at the property name.
  * An `additionalProperties` entry is labelled by its key, since its schema's `title` describes every entry alike. A
  * deprecated field's label is decorated with the `DeprecatedLabel` marker, but only a label there is: a field with no
- * title and no name, such as the root or an array item, stays unlabelled rather than reading `(deprecated)` alone.
+ * title and no name, such as the root or an item of an array that has no name or title of its own, stays unlabelled
+ * rather than reading `(deprecated)` alone.
  *
  * @param schema - The resolved schema of the field
  * @param uiOptions - The resolved UI options of the field, read for `title` and `deprecatedHandling`

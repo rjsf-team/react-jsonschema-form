@@ -15,7 +15,7 @@ describe('getFieldLabel()', () => {
     expect(getFieldLabel({ type: 'string' }, {}, translateString, { name: 'foo' })).toBe('foo');
   });
 
-  // An empty title is no title, as the template label has always read it (#5394)
+  // An empty title is no title (#5394)
   it('falls through an empty title to the name', () => {
     expect(getFieldLabel({ type: 'string', title: '' }, { title: '' }, translateString, { name: 'foo' })).toBe('foo');
   });
