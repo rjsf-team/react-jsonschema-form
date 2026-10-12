@@ -1425,6 +1425,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        describe('a recursive schema whose dependencies entry refers back to it', () => {
+          const node: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string', default: 'x' } },
+            dependencies: { a: { properties: { child: { $ref: '#/definitions/node' } } } },
+          };
+          const expected = { a: 'x', child: { a: 'x' } };
+
+          test.each<[string, RJSFSchema, unknown]>([
+            ['the root', { definitions: { node }, $ref: '#/definitions/node' }, expected],
+            [
+              'a property',
+              { definitions: { node }, type: 'object', properties: { p: { $ref: '#/definitions/node' } } },
+              { p: expected },
+            ],
+          ])('getDefaultFormState stops at the recursion the entry declares, from %s', (_, schema, defaults) => {
+            // The default meets the dependency at every level, so the entry applies wherever the definition is reached
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual(defaults);
+          });
+        });
+
         describe('a recursive schema whose if has its properties resolved', () => {
           // Resolving the `if` expands the `$ref` back to the definition in place, so the recursion is reached through
           // the expanded property rather than through the `$ref` the plain schema holds; both pin the same result
