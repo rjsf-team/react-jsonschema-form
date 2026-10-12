@@ -843,7 +843,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     current?.formDataSchema === undefined ? rootSchema : replaceEqualDeep(current.formDataSchema, rootSchema);
   const hasSettledData = current?.formDataSchema !== undefined && sharedRoot === current.formDataSchema;
   // A dropped pairing view (a root-level array whose length desynced drops the whole view) leaves the settled
-  // side nothing to pair by; handing the settled data over anyway would pair by index against it, the v7 shape.
+  // side nothing to pair by; handing the settled data over anyway would pair rows by index against it.
   // Treat a dropped view as no settled data at the sanitize call, so the filter runs with no previous value
   const hasSettledPairingView = hasSettledData && current?.settledFormDataForPairing !== undefined;
   let sanitize = shouldSanitize;
@@ -1358,7 +1358,9 @@ function deriveControlledState<T, S extends StrictRJSFSchema, F extends FormCont
     // a pushed value leaves it alone unless it accepts the edit path's sanitized proposal unchanged, and the edit
     // path's sanitize compares against it
     ...settledState,
-    ...(pendingPairingAdopted ? { settledFormDataForPairing: current?.pendingPairingView } : {}),
+    ...(pendingPairingAdopted && settledState.formDataSchema !== undefined
+      ? { settledFormDataForPairing: current?.pendingPairingView }
+      : {}),
     // A new pushed value answers the outstanding proposal either way, and an accepted one has just been
     // settled; only an unchanged render with the proposal still unanswered keeps it pending. An edit whose
     // sanitized result deep-equals the committed data is accepted without counting as a change, so clearing

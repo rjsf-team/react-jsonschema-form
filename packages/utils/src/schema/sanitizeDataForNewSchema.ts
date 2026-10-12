@@ -207,7 +207,6 @@ const NO_PREVIOUS_VALUE = Symbol('no previous value');
  *      chain resolves the parent's schema instead
  * @returns - The sanitized form data
  */
-
 function sanitizeDataForNewSchemaInternal<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
