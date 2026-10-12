@@ -1,4 +1,4 @@
-import { allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
+import { allowsAdditionalProperties, withoutStubbedProperties } from '../additionalPropertiesUtils.ts';
 import { ALL_OF_KEY, ID_KEY, JUNK_OPTION_ID, PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import hashForSchema from '../hashForSchema.ts';
@@ -110,6 +110,10 @@ const MATCHES_NOTHING: StrictRJSFSchema = { not: {} };
  * @returns - The schema asserting the option and the keys scoring it needs
  */
 function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
+  const unstubbed = withoutStubbedProperties<S>(option);
+  if (unstubbed) {
+    return scoringSchemaWithDataKeys<S>(unstubbed);
+  }
   // Only an option that declares `properties` describes an object whose keys scoring can assert. One that declares
   // none describes something else -- a string, a number, a map -- and is scored as it stands
   if (!option[PROPERTIES_KEY]) {
@@ -150,6 +154,29 @@ function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S)
   return (
     option.anyOf ? { ...base, allOf: [...(content.allOf ?? []), requiresAnyOf] } : { ...base, ...requiresAnyOf }
   ) as S;
+}
+
+/** Returns the schema an object option is scored by once `retrieveSchema()` has stubbed keys of the form data into its
+ * `properties`, given the option without those stubs. The stubs are the keys its `patternProperties` or
+ * `additionalProperties` take, named by the data being scored, so they cannot be part of the schema scored: a
+ * precompiled validator only holds the schemas a parse reaches, and the keys a user types are not among them. Nor
+ * are they needed. Each one validates its key as the keyword that takes it does, and the data scored holds every one
+ * of them, so the `anyOf` of the option's names that scoring asserts already holds. That leaves the option without
+ * its `required`, which scoring drops, under a derived `$id`, as for any other schema scoring derives from an option.
+ *
+ * `schemaParser()` scores each retrieved option that takes such keys in this form as well, so that a precompiled
+ * validator has it compiled.
+ *
+ * @param option - A retrieved object option, without the properties stubbed into it
+ * @returns - The schema the option is scored by while the data holds a key it stubs
+ */
+export function scoringSchemaWithDataKeys<S extends StrictRJSFSchema = RJSFSchema>(option: S): S {
+  // The junk option is answered by its `$id` alone, so it keeps it
+  if (option[ID_KEY] === JUNK_OPTION_ID) {
+    return option;
+  }
+  const { [REQUIRED_KEY]: _required, ...content } = option;
+  return withVariantId<S>(content as S);
 }
 
 /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.

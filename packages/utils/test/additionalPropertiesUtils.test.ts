@@ -3,7 +3,9 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
+  withoutStubbedProperties,
 } from '../src/additionalPropertiesUtils.ts';
+import { ADDITIONAL_PROPERTY_FLAG } from '../src/constants.ts';
 import type { RJSFSchema } from '../src/index.ts';
 
 describe('getMatchingPatternProperties()', () => {
@@ -122,5 +124,47 @@ describe('getAdditionalPropertySchema()', () => {
   });
   it('lets any additionalProperties leave the unevaluatedProperties nothing to say', () => {
     expect(getAdditionalPropertySchema({ additionalProperties: true, unevaluatedProperties: false }, 'x')).toBe(true);
+  });
+});
+
+describe('withoutStubbedProperties()', () => {
+  const stub = (schema: RJSFSchema): RJSFSchema => ({ ...schema, [ADDITIONAL_PROPERTY_FLAG]: true });
+
+  it('returns undefined for a schema with no properties', () => {
+    expect(withoutStubbedProperties({ type: 'string' })).toBeUndefined();
+  });
+  it('returns undefined for a schema with no stubbed property', () => {
+    expect(
+      withoutStubbedProperties({ type: 'object', properties: { a: { type: 'string' }, b: true } }),
+    ).toBeUndefined();
+  });
+  it('drops the stubbed properties and keeps the rest of the schema', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string' }, s_x: stub({ type: 'string' }), b: true },
+      patternProperties: { '^s_': { type: 'string' } },
+    };
+    const unstubbed = withoutStubbedProperties(schema);
+    expect(unstubbed).toEqual({
+      type: 'object',
+      properties: { a: { type: 'string' }, b: true },
+      patternProperties: { '^s_': { type: 'string' } },
+    });
+    // The schema given is left as it was
+    expect(Object.keys(schema.properties!)).toEqual(['a', 's_x', 'b']);
+  });
+  it('keeps an empty properties when every property was stubbed, as a retrieval with no data leaves it', () => {
+    expect(withoutStubbedProperties({ type: 'object', properties: { x: stub({ type: 'number' }) } })).toEqual({
+      type: 'object',
+      properties: {},
+    });
+  });
+  it('keeps a property called __proto__ as a property', () => {
+    const properties = {};
+    Object.defineProperty(properties, '__proto__', { value: { type: 'string' }, enumerable: true });
+    Object.defineProperty(properties, 'extra', { value: stub({ type: 'string' }), enumerable: true });
+    const unstubbed = withoutStubbedProperties({ type: 'object', properties })!;
+    expect(Object.keys(unstubbed.properties)).toEqual(['__proto__']);
+    expect(Object.getPrototypeOf(unstubbed.properties)).toBe(Object.prototype);
   });
 });

@@ -340,6 +340,28 @@ describe('schemaParser()', () => {
     const relaxed = Object.entries(schemaMap).filter(([, schema]) => schema.additionalProperties === true);
     expect(relaxed).toEqual([[expect.stringMatching(/^bare\?rjsf=.+/), expect.objectContaining({ type: 'object' })]]);
   });
+  it('parses the scored form of an option that stubs the keys of the data into its properties', () => {
+    const option: RJSFSchema = {
+      type: 'object',
+      properties: { id: { type: 'string' } },
+      required: ['id'],
+      patternProperties: { '^s_': { type: 'string' } },
+    };
+    const strict: RJSFSchema = {
+      type: 'object',
+      properties: { name: { type: 'string' } },
+      additionalProperties: false,
+    };
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [option, strict] } } };
+    const schemaMap = schemaParser(rootSchema);
+    // Scored while the data holds a key the patterns take: the option as it stands, less the `required` scoring drops
+    // and with no `anyOf` of its names, which the stubbed key satisfies
+    const { required: _required, ...scored } = option;
+    expect(Object.values(schemaMap)).toContainEqual(
+      expect.objectContaining({ ...scored, properties: option.properties }),
+    );
+    expect(Object.values(schemaMap)).not.toContainEqual(expect.objectContaining({ ...strict, anyOf: undefined }));
+  });
   it('parses each combination of patternProperties a key can match, as the form merges every one it matches', () => {
     const rootSchema: RJSFSchema = {
       type: 'object',

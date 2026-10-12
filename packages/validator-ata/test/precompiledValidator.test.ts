@@ -1,6 +1,8 @@
 import type { ErrorSchema, FormValidation, RJSFSchema, RJSFValidationError, UiSchema } from '@rjsf/utils';
 import {
+  createSchemaUtils,
   ErrorSchemaBuilder,
+  getFirstMatchingOption,
   JUNK_OPTION_ID,
   RJSF_REF_KEY,
   hashForSchema,
@@ -503,5 +505,38 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
     expect(() => validator.rawValidation(resolvedRootSchema, formData)).toThrow(
       'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
     );
+  });
+});
+
+describe('an option whose patternProperties or additionalProperties take keys from the form data', () => {
+  // Retrieving the option against the data stubs each key the patterns take into its `properties`, so the option
+  // `MultiSchemaField` validates and scores depends on the keys the user typed, which no parse can enumerate
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      v: {
+        oneOf: [
+          {
+            type: 'object',
+            properties: { id: { type: 'string' } },
+            patternProperties: { '^s_': { type: 'string' }, '^s_n': { enum: ['xx', 'yy'] } },
+          },
+          { type: 'number' },
+        ],
+      },
+    },
+  };
+  const options = (schema.properties!.v as RJSFSchema).oneOf as RJSFSchema[];
+  const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(schema)), schema);
+  const schemaUtils = createSchemaUtils({ validator }, schema);
+
+  it.each([
+    [{ id: 'a', s_na: 'xx' }, true],
+    [{ id: 'a', s_na: 'x' }, false],
+  ])('validates and scores the option retrieved against %j', (subFormData, valid) => {
+    const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
+    // threw "No precompiled validator function was found for the given schema"
+    expect(validator.isValid(retrieved[0], subFormData, schema)).toBe(valid);
+    expect(getFirstMatchingOption({ validator }, subFormData, retrieved, schema)).toBe(0);
   });
 });

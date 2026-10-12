@@ -2,6 +2,7 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
+  withoutStubbedProperties,
 } from './additionalPropertiesUtils.ts';
 import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
@@ -341,6 +342,7 @@ export {
   utcToLocal,
   validationDataMerge,
   withIdRefPrefix,
+  withoutStubbedProperties,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };

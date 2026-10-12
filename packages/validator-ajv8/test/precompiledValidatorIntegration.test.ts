@@ -20,7 +20,7 @@ import {
 } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
-import { createPrecompiledValidator } from '../src/index.ts';
+import { createPrecompiledValidator, customizeValidator } from '../src/index.ts';
 import { evalValidatorCode } from './harness/compileSuperSchema.ts';
 
 /** Compiles `schema` to AJV standalone code in memory and wraps it in an AJV8PrecompiledValidator. */
@@ -309,5 +309,63 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       const retrieved = schemaUtils.retrieveSchema(anonymous.oneOf![1] as RJSFSchema, { b: 1 });
       expect(validator.isValid(withVariantId(retrieved), { b: 1 }, anonymous)).toBe(true);
     });
+  });
+});
+
+describe('an option whose patternProperties or additionalProperties take keys from the form data', () => {
+  /** Retrieving an option against the data stubs each key its `patternProperties` or `additionalProperties` match into
+   * its `properties`, so the option `MultiSchemaField` scores depends on the keys the user typed, which no parse can
+   * enumerate
+   */
+  const STUBBING_SCHEMA: RJSFSchema = {
+    type: 'object',
+    properties: {
+      v: {
+        oneOf: [
+          {
+            type: 'object',
+            properties: { id: { type: 'string' } },
+            patternProperties: { '^s_': { type: 'string' }, '^s_n': { minLength: 2 } },
+          },
+          {
+            type: 'object',
+            properties: { kind: { const: 'extra' } },
+            additionalProperties: { type: 'number' },
+          },
+          { type: 'object', properties: { name: { type: 'string' } }, additionalProperties: false },
+          { type: 'number' },
+        ],
+      },
+    },
+  };
+  const options = (STUBBING_SCHEMA.properties!.v as RJSFSchema).oneOf as RJSFSchema[];
+
+  it.each([
+    [{ id: 'a', s_na: 'xx' }],
+    [{ id: 'a', s_na: 'x' }],
+    [{ kind: 'extra', n: 1 }],
+    [{ kind: 'extra', n: 'one' }],
+    [{ name: 'a', other: null }],
+  ])('scores the options retrieved against %j as the non-precompiled validator does', (subFormData) => {
+    const validator = buildPrecompiledValidator(STUBBING_SCHEMA);
+    const schemaUtils = createSchemaUtils({ validator }, STUBBING_SCHEMA);
+    const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
+    // threw "No precompiled validator function was found for the given schema" for every stubbed option
+    const answers = retrieved.map((option) => validator.isValid(option, subFormData, STUBBING_SCHEMA));
+    const live = customizeValidator();
+    const liveUtils = createSchemaUtils({ validator: live }, STUBBING_SCHEMA);
+    const expected = options.map((option) =>
+      live.isValid(liveUtils.retrieveSchema(option, subFormData), subFormData, STUBBING_SCHEMA),
+    );
+    expect(answers).toEqual(expected);
+    expect(getFirstMatchingOption({ validator }, subFormData, retrieved, STUBBING_SCHEMA)).toBe(
+      getFirstMatchingOption({ validator: live }, subFormData, retrieved, STUBBING_SCHEMA),
+    );
+  });
+  it('still throws for a schema the parse never saw', () => {
+    const validator = buildPrecompiledValidator(STUBBING_SCHEMA);
+    expect(() => validator.isValid({ type: 'string', minLength: 99 }, 'x', STUBBING_SCHEMA)).toThrow(
+      /No precompiled validator function was found/,
+    );
   });
 });

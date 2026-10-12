@@ -43,7 +43,7 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
 } from '../types.ts';
-import getFirstMatchingOption, { withVariantId } from './getFirstMatchingOption.ts';
+import getFirstMatchingOption, { scoringSchemaWithDataKeys, withVariantId } from './getFirstMatchingOption.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 // Backstop for the resolveReference <-> retrieveSchemaInternal loop: with the path reconstructed from RJSF_REF_KEY
@@ -1653,6 +1653,14 @@ export function resolveAnyOrOneOfSchemas<
       // the option under the derived `$id` scoring gives it, since the retrieved form is not what the option's own
       // `$id` names, so the derivation is applied to the option here too
       retrievedOptions.forEach((item) => context.validator.isValid(withVariantId<S>(item), formData, rootSchema));
+      // Once the user adds a key an option's `patternProperties` or `additionalProperties` take, the option is
+      // retrieved with that key stubbed into its `properties`, and scored in the form that doesn't depend on which
+      // keys they were
+      retrievedOptions.forEach((item) => {
+        if (isObject(item) && allowsAdditionalProperties<S>(item)) {
+          context.validator.isValid(scoringSchemaWithDataKeys<S>(item), formData, rootSchema);
+        }
+      });
       getFirstMatchingOption<T, S, F>(
         context,
         formData,

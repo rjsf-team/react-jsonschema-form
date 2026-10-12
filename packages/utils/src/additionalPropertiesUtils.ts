@@ -1,5 +1,6 @@
-import { ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
-import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+import { ADDITIONAL_PROPERTY_FLAG, ALL_OF_KEY, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
+import isObject from './isObject.ts';
+import type { RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** The compiled form of every `patternProperties` pattern seen so far, so that testing a key against one costs no
  * compile of its own. A schema names a small, fixed set of patterns, where the keys they are tested against are the
@@ -125,4 +126,40 @@ export function getAdditionalPropertySchema<S extends StrictRJSFSchema = RJSFSch
     }
   }
   return additionalPropertiesKeyword<S>(schema) ?? true;
+}
+
+/** Returns the `schema` without the properties `retrieveSchema()` stubbed into it for the keys of the form data that
+ * its `patternProperties` or `additionalProperties` take, or undefined when it has none. A retrieved object schema
+ * names every such key the user has typed, so its content, and with it its hash, depends on the data, where the
+ * schemas a precompiled validator holds come from the schema alone. Each stub describes its key through the keyword
+ * that takes it, and that keyword still applies to the key once the stub is gone, so the schema left validates the
+ * data as the stubbed one does and is the one a parse records for the object.
+ *
+ * @param schema - A schema that may have been retrieved against form data
+ * @returns - The schema without its stubbed properties, or undefined when it has no stubbed property
+ */
+export function withoutStubbedProperties<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S | undefined {
+  const { properties } = schema;
+  if (!isObject(properties)) {
+    return undefined;
+  }
+  const keys = Object.keys(properties);
+  const kept = keys.filter((key) => {
+    const property = properties[key];
+    return !(isObject(property) && (property as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
+  });
+  if (kept.length === keys.length) {
+    return undefined;
+  }
+  const keptProperties: NonNullable<S['properties']> = {};
+  for (const key of kept) {
+    // `defineProperty`, as `stubExistingAdditionalProperties()` does, so a property called `__proto__` stays a property
+    Object.defineProperty(keptProperties, key, {
+      value: properties[key],
+      configurable: true,
+      enumerable: true,
+      writable: true,
+    });
+  }
+  return { ...schema, properties: keptProperties };
 }

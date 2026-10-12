@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, ID_KEY, JUNK_OPTION_ID, retrieveSchema, schemaKey } from '@rjsf/utils';
+import { deepEquals, ID_KEY, JUNK_OPTION_ID, retrieveSchema, schemaKey, withoutStubbedProperties } from '@rjsf/utils';
 import type { ValidationError } from 'ata-validator';
 
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -94,7 +94,14 @@ export default class ATAPrecompiledValidator<
    */
   getValidator(schema: S) {
     const key = schemaKey(schema);
-    const validator = this.validateFns[key];
+    let validator: (typeof this.validateFns)[string] | undefined = this.validateFns[key];
+    if (!validator) {
+      // An object retrieved against form data has a property stubbed in for each key its `patternProperties` or
+      // `additionalProperties` take, and those keys are whatever the user typed, so no parse can have compiled it. The
+      // schema without the stubs validates the data the same way and is the one the parse compiled
+      const unstubbed = withoutStubbedProperties<S>(schema);
+      validator = unstubbed ? this.validateFns[schemaKey(unstubbed)] : undefined;
+    }
     if (!validator) {
       throw new Error(`No precompiled validator function was found for the given schema for "${key}"`);
     }
