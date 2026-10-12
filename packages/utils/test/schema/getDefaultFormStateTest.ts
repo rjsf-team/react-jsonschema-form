@@ -6486,6 +6486,38 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual([{ a: 'dflt' }, { a: 'dflt' }]);
       });
+      it("computes an array's defaults from a selected option written as a $ref as from the option it names", () => {
+        const schema: RJSFSchema = {
+          definitions: { loose: { items: true, minItems: 1 } },
+          type: 'array',
+          minItems: 2,
+          items: { type: 'object', properties: { a: { type: 'string', default: 'dflt' } } },
+          anyOf: [{ $ref: '#/definitions/loose' }, { maxItems: 3 }],
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual([
+          { a: 'dflt' },
+          { a: 'dflt' },
+        ]);
+      });
+      it('stops following a selected option written as a $ref once it leads back to a $ref already followed', () => {
+        const schema: RJSFSchema = {
+          definitions: {
+            a: { type: 'string', anyOf: [{ $ref: '#/definitions/b' }, { minLength: 1 }] },
+            b: { type: 'string', default: 'b', anyOf: [{ $ref: '#/definitions/a' }, { maxLength: 3 }] },
+          },
+          $ref: '#/definitions/a',
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual('b');
+      });
+      it("computes a tuple's defaults from its selected option as it is rendered", () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [{ type: 'string', default: 'a' }],
+          additionalItems: { type: 'string', default: 'z' },
+          anyOf: [{ minItems: 3 }, { maxItems: 5 }],
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual(['a', 'z', 'z']);
+      });
       it("seeds a field's selected option with the field's default, whether the option is a schema or true", () => {
         const schema: RJSFSchema = { type: 'string', default: 'x', anyOf: [true, { minLength: 1 }] };
         expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual('x');

@@ -14,6 +14,7 @@ const NO_VALUE = Symbol('no Value');
 
 /** The keywords that describe an array's items by position, or that leave them undescribed when none is declared */
 const TUPLE_KEYWORDS = ['items', 'prefixItems', 'additionalItems'] as const;
+const ITEMS_KEYWORDS = ['items', 'prefixItems'] as const;
 
 function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
   // An empty `enum` lists no value to check against, which is how the `anyOf`/`oneOf` below and `isConstantSelect()`
@@ -488,33 +489,39 @@ function sanitizeDataForNewSchemaInternal<
       // Check if the old option has the same key with the same type
       if (!oldSchemaType || isSameType(oldSchemaType, newSchemaType)) {
         const maxItems = newSchema.maxItems ?? -1;
+        // Items whose type list also allows `null` are read through `getSchemaType()`, as a property is above, so an
+        // object one holds is sanitized as an object item is and a `null` it allows stays as it is
+        const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newSchemaItems as S);
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
-        if (newSchemaType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
+        if (itemsType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
           newFormData = data.reduce<unknown[]>((newValue, aValue: T, index: number) => {
-            // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
-            // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
-            const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
-            const newItemSchema = sameRawItemsSchema
-              ? oldItemSchema
-              : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
-            const itemValue = sanitizeDataForNewSchemaInternal<T, S, F>(
-              context,
-              rootSchema,
-              newItemSchema,
-              oldItemSchema,
-              aValue,
-              // Pairing by index is the only rule that needs no identity of its own, and it is only
-              // offered a pair at all while the lengths match. The pairing view is the settled array as
-              // the announced container writes moved it, so a survivor stays paired with its own previous value
-              // across an insert, remove or reorder: a row follows its item, an inserted row pairs with
-              // its own starting value, and only a change no container write announced - a pushed parent
-              // value, a reset - can still leave the lengths apart. A row with no pair is filtered with no
-              // previous value, against the schema as this element resolves it alone: a stale value is
-              // never kept, though placeholders the flipped branch rejects are lost with it (#5451)
-              Array.isArray(pairingData) && pairingData.length === data.length ? pairingData[index] : undefined,
-              oldSchemaPrevRawForFrame === undefined ? undefined : resolveOldSchemaItemsPrevRaw,
-            );
+            let itemValue: unknown = aValue;
+            if (newSchemaType === 'object' || isPlainObject(aValue)) {
+              // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
+              // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
+              const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
+              const newItemSchema = sameRawItemsSchema
+                ? oldItemSchema
+                : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
+              itemValue = sanitizeDataForNewSchemaInternal<T, S, F>(
+                context,
+                rootSchema,
+                newItemSchema,
+                oldItemSchema,
+                aValue,
+                // Pairing by index is the only rule that needs no identity of its own, and it is only
+                // offered a pair at all while the lengths match. The pairing view is the settled array as
+                // the announced container writes moved it, so a survivor stays paired with its own previous value
+                // across an insert, remove or reorder: a row follows its item, an inserted row pairs with
+                // its own starting value, and only a change no container write announced - a pushed parent
+                // value, a reset - can still leave the lengths apart. A row with no pair is filtered with no
+                // previous value, against the schema as this element resolves it alone: a stale value is
+                // never kept, though placeholders the flipped branch rejects are lost with it (#5451)
+                Array.isArray(pairingData) && pairingData.length === data.length ? pairingData[index] : undefined,
+                oldSchemaPrevRawForFrame === undefined ? undefined : resolveOldSchemaItemsPrevRaw,
+              );
+            }
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
             }
@@ -562,19 +569,13 @@ function sanitizeDataForNewSchemaInternal<
         }
       }
     } else if (
-      typeof oldSchemaItems === 'boolean' &&
-      typeof newSchemaItems === 'boolean' &&
-      oldSchemaItems === newSchemaItems
-    ) {
-      // If they are both booleans and have the same value just return the data as is otherwise fall-thru to undefined
-      newFormData = data;
-    } else if (
-      TUPLE_KEYWORDS.every((key) =>
+      // `additionalItems` describes nothing beside an `items` that is not a tuple, so it only counts beside one
+      (Array.isArray(oldSchemaItems) || Array.isArray(newSchemaItems) ? TUPLE_KEYWORDS : ITEMS_KEYWORDS).every((key) =>
         deepEquals((oldSchema as GenericObjectType)[key], (newSchema as GenericObjectType)[key]),
       )
     ) {
-      // A tuple, or an array declaring no `items`, that both schemas describe alike holds what it held, up to the new
-      // schema's `maxItems` as items described by a single schema are
+      // A tuple, a boolean `items`, or an array declaring no `items`, that both schemas describe alike holds what it
+      // held, up to the new schema's `maxItems` as items described by a single schema are
       const { maxItems } = newSchema;
       newFormData = maxItems !== undefined && data.length > maxItems ? data.slice(0, maxItems) : data;
     }

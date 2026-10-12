@@ -914,6 +914,21 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [1])).toEqual([1]);
     });
+    it('trims an array whose boolean items both schemas share to the new maxItems', () => {
+      const oldSchema: RJSFSchema = { type: 'array', items: true };
+      const newSchema: RJSFSchema = { type: 'array', items: true, maxItems: 2 };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [1, 2, 3])).toEqual([1, 2]);
+    });
+    it('returns data when two arrays share boolean items and differ only in the additionalItems they ignore', () => {
+      const oldSchema: RJSFSchema = { type: 'array', items: true, additionalItems: { type: 'string' } };
+      const newSchema: RJSFSchema = { type: 'array', items: true };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['a', 1])).toEqual(['a', 1]);
+    });
+    it('returns undefined when two tuples differ in their additionalItems', () => {
+      const oldSchema: RJSFSchema = { type: 'array', items: [{ type: 'string' }], additionalItems: { type: 'string' } };
+      const newSchema: RJSFSchema = { type: 'array', items: [{ type: 'string' }] };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['a', 'b'])).toBeUndefined();
+    });
     it('returns undefined when two arrays have differing boolean items', () => {
       const oldSchema: RJSFSchema = {
         type: 'array',
@@ -1148,6 +1163,23 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a', extra: 'x' }])).toEqual([
         { id: 'a' },
       ]);
+    });
+    it('sanitizes the object items of a type list naming object per property, keeping a null it allows', () => {
+      const items = (extra: string): RJSFSchema => ({
+        type: ['object', 'null'],
+        properties: { id: { type: 'string' }, [extra]: { type: 'string' } },
+      });
+      const oldSchema: RJSFSchema = { type: 'array', items: items('extra') };
+      const newSchema: RJSFSchema = { type: 'array', items: items('other') };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a', extra: 'x' }, null])).toEqual([
+        { id: 'a' },
+        null,
+      ]);
+    });
+    it('keeps the items of an items schema naming no type as they are, rather than guessing an object from them', () => {
+      const oldSchema: RJSFSchema = { type: 'array', items: { properties: { id: { type: 'string' } } } };
+      const newSchema: RJSFSchema = { type: 'array', items: { properties: { other: { type: 'string' } } } };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, [{ id: 'a' }])).toEqual([{ id: 'a' }]);
     });
     it('trims object items picked as a whole to maxItems (#5346)', () => {
       const oldSchema: RJSFSchema = {

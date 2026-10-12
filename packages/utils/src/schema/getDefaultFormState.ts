@@ -378,9 +378,10 @@ export function computeDefaults<
     const defaultFormData: T = { ...objectDefaults, ...formData };
     const resolvedSchema = resolveDependencies<T, S, F>(context, schema, rootSchema, false, [], defaultFormData);
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
-  } else if (isFixedItems(schema) && !preferParentDefaults) {
+  } else if (isFixedItems(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
-    // Then construct defaults from defaults of array items.
+    // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
+    // option, which it is met into below, so its defaults are those of the option as rendered
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
       computeDefaults<T, S, F>(context, itemSchema, {
         rootSchema,
@@ -444,12 +445,21 @@ export function computeDefaults<
       const option = options[optionIndex];
       // An object's defaults are those of its own properties as well as the option's, so the option is merged with the
       // whole object. Any other field renders only the option, so its defaults are those of the option as rendered,
-      // with a boolean option read as the empty schema `SchemaField` retrieves it as
-      schemaToCompute = (
-        getSchemaType<S>(remaining as S) === 'object'
-          ? mergeSchemas(remaining, option)
-          : withDefaultOf(remaining, getRenderedOptionSchema<S>(remaining as S, isObject(option) ? option : ({} as S)))
-      ) as S;
+      // with a boolean option read as the empty schema `SchemaField` retrieves it as, and one written as a `$ref`
+      // resolved as `SchemaField` resolves it: met as it is, the `$ref` would be followed alone below, dropping all the
+      // option inherits. A `$ref` already being followed is left as it is, so the `$ref` branch below ends the cycle
+      if (getSchemaType<S>(remaining as S) === 'object') {
+        schemaToCompute = mergeSchemas(remaining, option) as S;
+      } else {
+        const optionSchema = isObject(option) ? option : ({} as S);
+        const optionRef = optionSchema[REF_KEY];
+        let resolvedOption = optionSchema;
+        if (optionRef !== undefined && !_recurseList.includes(optionRef)) {
+          updatedRecurseList = _recurseList.concat(optionRef);
+          resolvedOption = retrieveSchema<T, S, F>(context, optionSchema, rootSchema, rawFormData);
+        }
+        schemaToCompute = withDefaultOf(remaining, getRenderedOptionSchema<S>(remaining as S, resolvedOption)) as S;
+      }
       branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, optionIndex);
     }
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {

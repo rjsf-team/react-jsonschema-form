@@ -3770,6 +3770,68 @@ describe('oneOf', () => {
       },
     );
 
+    it.each<[string, RJSFSchema, UiSchema, string]>([
+      [
+        'the uiSchema of the option switched to renders the item with another field',
+        { type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { maxItems: 5 }] },
+        { anyOf: [{ items: { 'ui:field': 'raising' } }, { items: { 'ui:field': 'other' } }] },
+        'bad',
+      ],
+      [
+        'the option switched to renders the enumerated items as one multi-select',
+        { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, anyOf: [{ minItems: 1 }, { uniqueItems: true }] },
+        { items: { 'ui:field': 'raising' } },
+        'a',
+      ],
+    ])('should drop the errors an item raised when %s', async (_, opt, optUiSchema, raised) => {
+      function RaisingField({ fieldPath, onChange }: FieldProps) {
+        return (
+          <button type='button' onClick={() => onChange(raised, fieldPath, { __errors: ['Custom error'] })}>
+            Raise
+          </button>
+        );
+      }
+      function OtherField() {
+        return <span>Other field</span>;
+      }
+      const { node, onChange } = createFormComponent({
+        schema: wrap(opt),
+        uiSchema: { opt: optUiSchema },
+        fields: { raising: RaisingField, other: OtherField },
+        initialFormData: { opt: [raised] },
+      });
+      await user.click(screen.getByRole('button', { name: 'Raise' }));
+      expect(onChange.mock.lastCall![0].errorSchema).toEqual({ opt: { 0: { __errors: ['Custom error'] } } });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Option 2');
+
+      expect(onChange.mock.lastCall![0].formData).toEqual({ opt: [raised] });
+      expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
+    });
+
+    it('should drop the errors an item raised when the switch trims the array, which mounts every item anew', async () => {
+      function RaisingField({ fieldPath, formData, onChange }: FieldProps) {
+        return (
+          <button type='button' onClick={() => onChange(formData, fieldPath, { __errors: ['Custom error'] })}>
+            Raise {String(formData)}
+          </button>
+        );
+      }
+      const schema = wrap({ type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { maxItems: 2 }] });
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: { opt: { items: { 'ui:field': RaisingField } } },
+        initialFormData: { opt: ['x', 'y', 'z'] },
+      });
+      await user.click(screen.getByRole('button', { name: 'Raise x' }));
+      expect(onChange.mock.lastCall![0].errorSchema).toEqual({ opt: { 0: { __errors: ['Custom error'] } } });
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Option 2');
+
+      expect(onChange.mock.lastCall![0].formData).toEqual({ opt: ['x', 'y'] });
+      expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
+    });
+
     it('should drop the errors an item raised when the option switched to replaces the item with its default', async () => {
       function RaisingField({ fieldPath, onChange }: FieldProps) {
         return (
@@ -3921,29 +3983,65 @@ describe('oneOf', () => {
       expect(screen.getAllByText('Parent description')).toHaveLength(1);
     });
 
-    it("should leave an unlabelled field's title unrendered when the uiSchema turns its label off", () => {
+    it.each([false, null, 0, ''])(
+      "should leave a field's title and description unrendered when its ui:label is %j, whatever its options' uiSchemas",
+      (label) => {
+        const schema = wrap({
+          type: 'string',
+          title: 'Parent title',
+          description: 'Parent description',
+          anyOf: [{ minLength: 1 }, { maxLength: 3 }],
+        });
+        createFormComponent({
+          schema,
+          uiSchema: { opt: { 'ui:label': label, anyOf: [{ 'ui:placeholder': 'p' }, {}] } },
+        });
+
+        expect(screen.queryByText('Parent title')).not.toBeInTheDocument();
+        expect(screen.queryByText('Parent description')).not.toBeInTheDocument();
+      },
+    );
+
+    it("should render an unlabelled field's own title and description over its option's, which the selector names", () => {
       const schema = wrap({
         type: 'array',
         title: 'Parent title',
+        description: 'Parent description',
         items: { type: 'string' },
-        anyOf: [{ minItems: 1 }, { maxItems: 3 }],
-      });
-      createFormComponent({ schema, uiSchema: { opt: { 'ui:label': false } } });
-
-      expect(screen.queryByText('Parent title')).not.toBeInTheDocument();
-    });
-
-    it("should render an unlabelled field's option with the option's own title over the parent's", () => {
-      const schema = wrap({
-        type: 'array',
-        title: 'Parent title',
-        items: { type: 'string' },
-        anyOf: [{ title: 'Short list', maxItems: 3 }],
+        anyOf: [
+          { title: 'Short list', description: 'Option description', maxItems: 3 },
+          { title: 'Long list', minItems: 1 },
+        ],
       });
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('legend')).toHaveTextContent('Short list');
-      expect(screen.queryByText('Parent title')).not.toBeInTheDocument();
+      expect(node.querySelector('legend')).toHaveTextContent('Parent title');
+      expect(screen.getAllByText('Parent description')).toHaveLength(1);
+      expect(screen.queryByText('Option description')).not.toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
+    });
+
+    it("should render an unlabelled field's own title and description over its option's ui:title and ui:description", () => {
+      const schema = wrap({
+        type: 'array',
+        title: 'Parent title',
+        description: 'Parent description',
+        items: { type: 'string' },
+        anyOf: [{ maxItems: 3 }, { minItems: 1 }],
+      });
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: {
+          opt: {
+            anyOf: [{ 'ui:title': 'Short list', 'ui:options': { description: 'Option description' } }, {}],
+          },
+        },
+      });
+
+      expect(node.querySelector('legend')).toHaveTextContent('Parent title');
+      expect(screen.getAllByText('Parent description')).toHaveLength(1);
+      expect(screen.queryByText('Option description')).not.toBeInTheDocument();
+      expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
     });
 
     it("should render a typeless object parent's typeless option as the object a typed parent's renders", () => {

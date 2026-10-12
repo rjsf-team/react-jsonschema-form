@@ -14,7 +14,6 @@ import {
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
-  getSchemaType,
   getTemplates,
   getUiOptions,
   getXxxOfKey,
@@ -25,12 +24,14 @@ import {
   selectOptionUiSchema,
   shouldRenderOptionalField,
   TranslatableString,
+  UI_OPTIONS_KEY,
   withVariantId,
 } from '@rjsf/utils';
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
+import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** The option an `AnyOfField` has selected, with what it last rendered, to tell a change of data from a re-render */
@@ -92,6 +93,38 @@ function optionForData<
     selectedOption,
     getDiscriminatorFieldFromSchema<S>(schema),
   );
+}
+
+/** Returns `optionUiSchema` with the field's `title` and `description` in place of the option's own, each where the
+ * field declares one. They go in `ui:options`, and the option's top-level `ui:title`/`ui:description` they replace are
+ * dropped, since `getUiOptions()` lets whichever of the two keys comes later win.
+ *
+ * @param optionUiSchema - The uiSchema the option's field renders with
+ * @param [title] - The field's title
+ * @param [description] - The field's description
+ * @returns - The uiSchema the option's field renders the field's title and description with
+ */
+function withFieldLabel<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  optionUiSchema: UiSchema<T, S, F>,
+  title?: string,
+  description?: string,
+): UiSchema<T, S, F> {
+  if (title === undefined && description === undefined) {
+    return optionUiSchema;
+  }
+  const uiSchema: UiSchema<T, S, F> = { ...optionUiSchema };
+  if (title !== undefined) {
+    delete uiSchema['ui:title'];
+  }
+  if (description !== undefined) {
+    delete uiSchema['ui:description'];
+  }
+  uiSchema[UI_OPTIONS_KEY] = {
+    ...optionUiSchema[UI_OPTIONS_KEY],
+    ...(title !== undefined && { title }),
+    ...(description !== undefined && { description }),
+  };
+  return uiSchema;
 }
 
 /** The `AnyOfField` component is used to render a field in the schema that is an `anyOf`, `allOf` or `oneOf`. It tracks
@@ -211,15 +244,20 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
       // `uiSchemaDefinitions` comes from the registry since an option's uiSchema is only its own sub-uiSchema and
       // never carries the root's `ui:definitions` itself.
+      const newOptionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption);
       const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
-        newOptionUiSchema: selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, intOption),
+        newOptionUiSchema,
         oldOptionUiSchema: optionUiSchema,
         uiSchemaDefinitions,
       });
 
       setSelection((current) => ({ ...current, selectedOption: intOption, proposal: { formData: newFormData } }));
-      sendOptionSwitch(schema, oldOption, newOption, formData, newFormData, () =>
-        onChange(newFormData, fieldPath, undefined, fieldId),
+      sendOptionSwitch(
+        schema,
+        { oldOption, newOption, oldUiSchema: optionUiSchema, newUiSchema: newOptionUiSchema },
+        formData,
+        newFormData,
+        () => onChange(newFormData, fieldPath, undefined, fieldId),
       );
     },
     [
@@ -255,19 +293,30 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const option = selectedOption >= 0 ? options[selectedOption] || null : null;
   // A parent allowing several types passes all of them on: when the fallback UI is on, it pins one type on the schema
   // it hands down, so such a union only reaches here with the fallback UI off
-  const renderedOption = option ? getRenderedOptionSchema<S>(schema, option) : null;
-  // A field its own template leaves unlabelled, such as an array or a checkbox, has its title and description rendered
-  // nowhere but the option's field, so they go to that field unless the uiSchema turns the label off. An option's own
-  // title or description is the one it renders. An object's own `ObjectField` renders them beside the option
+  // Memoized, since the meet walks every subschema the two share. `SchemaField` retrieves the options afresh when the
+  // data changes, so this only spares a render that leaves the data as it was
+  const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
+  // The field's own title and description are the ones the option's field renders in their place, since the selector
+  // already shows an option's title, and the field's description belongs under the field's title
   const description = uiOptions.description ?? schema.description;
-  const optionSchema =
-    renderedOption && !displayLabel && uiOptions.label !== false && getSchemaType<S>(schema) !== 'object'
-      ? ({
-          ...(title !== undefined && { title }),
-          ...(description !== undefined && { description }),
-          ...renderedOption,
-        } as S)
-      : renderedOption;
+  const rendersFieldLabel =
+    renderedOption !== null && optionRendersFieldLabel<S>(schema, uiOptions.label, displayLabel);
+  const optionSchema = rendersFieldLabel
+    ? ({
+        ...renderedOption,
+        ...(title !== undefined && { title }),
+        ...(description !== undefined && { description }),
+      } as S)
+    : renderedOption;
+  // An option's own uiSchema would otherwise label its field with the option's `ui:title` and `ui:description`, which
+  // the selector already shows, over the field's own
+  const optionFieldUiSchema = useMemo(
+    () =>
+      rendersFieldLabel && optionUiSchema
+        ? withFieldLabel<T, S, F>(optionUiSchema, title, description)
+        : optionUiSchema,
+    [rendersFieldLabel, optionUiSchema, title, description],
+  );
 
   const translateEnum: TranslatableString = title
     ? TranslatableString.TitleOptionPrefix
@@ -310,7 +359,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const optionsSchemaField =
     (optionSchema && optionSchema.type !== 'null' && (
       <RawFormDataContext value={readsFormData ? SchemaFieldComponent : undefined}>
-        <SchemaFieldComponent {...props} schema={optionSchema} uiSchema={optionUiSchema} />
+        <SchemaFieldComponent {...props} schema={optionSchema} uiSchema={optionFieldUiSchema} />
       </RawFormDataContext>
     )) ||
     null;

@@ -1,4 +1,5 @@
 import {
+  ALL_OF_KEY,
   ANY_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
@@ -7,6 +8,7 @@ import {
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
+  REF_KEY,
   REQUIRED_KEY,
   THEN_KEY,
 } from './constants.ts';
@@ -22,8 +24,9 @@ import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts
  * `discriminator` that picks between them describe the choice rather than the value. The annotations describe the
  * field the parent's own `FieldTemplate` and option selector already label, so the option's field would show them a
  * second time; `MultiSchemaField` hands them to the option's field itself where they leave the field unlabelled. The
- * `default` is applied to the parent's value, and to the option's only from the option's own, when it is selected. The identifiers name the parent, and a `$id` a field registered for it, which the option would otherwise
- * render in its place. The rest are about the schema document rather than the value.
+ * `default` is applied to the parent's value, and to the option's only from the option's own, when it is selected.
+ * The identifiers name the parent, and a `$id` a field registered for it, which the option would otherwise render in
+ * its place. The rest are about the schema document rather than the value.
  */
 const KEYWORDS_LEFT_ON_PARENT = new Set<string>([
   ANY_OF_KEY,
@@ -125,7 +128,8 @@ function meetKeyword(key: string, parentValue: unknown, optionValue: unknown): u
       return [...new Set([...parentValue, ...optionValue])];
     }
     if (key === ENUM_KEY) {
-      return parentValue.filter((value) => optionValue.some((allowed) => deepEquals(allowed, value)));
+      // In the option's order, since its uiSchema is the one its field renders with, and a `ui:enumNames` is read by index
+      return optionValue.filter((value) => parentValue.some((allowed) => deepEquals(allowed, value)));
     }
   }
   if (KEYWORDS_TAKEN_FROM_OPTION.has(key)) {
@@ -178,7 +182,11 @@ function meetTuples(parent: unknown[], option: unknown[]): unknown[] {
 /** Returns the subschema that meets both `parent` and `option`. A parent's `false`, which nothing meets, stays in place
  * of the option's subschema, and an option's `true`, which adds nothing to meet, leaves the parent's in place: an
  * option's `items: true` would otherwise drop the parent's `items` and render each item as an unsupported field. Two
- * schemas are met by `meetSchemas()`, and any other pair is the option's.
+ * schemas are met by `meetSchemas()`, unless either holds a `$ref`, and any other pair is the option's.
+ *
+ * A `$ref` is resolved only where the subschema is rendered, which is where the root schema it points into is known,
+ * and the keywords beside it are then layered over the ones it names, so a looser bound met in beside it would win.
+ * Such a pair is left to the field's own `allOf` merge, which meets them once the `$ref` is resolved.
  *
  * @param parent - The parent's subschema
  * @param option - The option's subschema
@@ -188,7 +196,12 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
   if (parent === false || option === true) {
     return parent;
   }
-  return isObject(parent) && isObject(option) ? meetSchemas(parent, option) : option;
+  if (!isObject(parent) || !isObject(option)) {
+    return option;
+  }
+  return Object.hasOwn(parent, REF_KEY) || Object.hasOwn(option, REF_KEY)
+    ? { [ALL_OF_KEY]: [parent, option] }
+    : meetSchemas(parent, option);
 }
 
 /** Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with, the one place that decides what an option

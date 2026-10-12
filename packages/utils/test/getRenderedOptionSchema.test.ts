@@ -186,6 +186,25 @@ describe('getRenderedOptionSchema()', () => {
         items: { type: 'string', enum: ['b'] },
       });
     });
+    test("lists the enum values both list in the option's order, which its ui:enumNames are read by", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b', 'c'] } };
+      expect(getRenderedOptionSchema(parent, { items: { enum: ['c', 'a'] } })).toEqual({
+        type: 'array',
+        items: { type: 'string', enum: ['c', 'a'] },
+      });
+    });
+    test.each<[string, RJSFSchema, RJSFSchema]>([
+      ['option', { title: 'Item', maxLength: 10 }, { $ref: '#/definitions/short' }],
+      ['parent', { $ref: '#/definitions/short' }, { maxLength: 10 }],
+    ])(
+      "leaves a subschema the %s's $ref names to the field's allOf merge, where the root schema resolves it",
+      (_, parentItems, optionItems) => {
+        expect(getRenderedOptionSchema({ type: 'array', items: parentItems }, { items: optionItems })).toEqual({
+          type: 'array',
+          items: { allOf: [parentItems, optionItems] },
+        });
+      },
+    );
     test('asks for every name either required list asks for, whatever type the two name', () => {
       expect(getRenderedOptionSchema({ required: ['a'] }, { required: ['b', 'a'] })).toEqual({ required: ['a', 'b'] });
     });
