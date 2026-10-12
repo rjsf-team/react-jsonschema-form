@@ -1754,11 +1754,11 @@ Converts a local Date string into a UTC date string
 
 #### Parameters
 
-- dateString: string - The string representation of a date as accepted by the `Date()` constructor
+- dateString: string - The string representation of a date as accepted by the `Date()` constructor, or a `datetime-local` value whose year has five or six digits. The input writes such a year as plain digits, `10000-07-01T00:01`, which `Date` reads only in the signed six-digit form, so it is expanded to `+010000-07-01T00:01` before parsing; any other text goes to `Date` as written
 
 #### Returns
 
-- string | undefined: A UTC date string if `dateString` is truthy, otherwise undefined
+- string | undefined: A UTC date string if `dateString` is truthy and names a valid date; `undefined` for an empty value, and `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date, though its type says `string`
 
 ### logOnce()
 
