@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { startTransition, useEffect, useLayoutEffect, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
   ArrayFieldItemButtonsTemplateProps,
@@ -2452,6 +2452,35 @@ describe('ArrayField', () => {
       await user.click(node.querySelectorAll('.rjsf-array-item-move-up')[2]);
       expect(removeTitles(node)).toEqual(['Remove report.pdf (1)', 'Remove report.pdf (2)', 'Remove report.pdf (3)']);
       expect(node.querySelectorAll('.rjsf-array-item-move-up')[1]).toHaveAttribute('title', 'Move report.pdf (2) up');
+    });
+
+    it.each<[string, (update: () => void) => void]>([
+      ['after a timeout', (update) => setTimeout(update, 0)],
+      ['in a transition', (update) => startTransition(update)],
+    ])('keeps a copy numbered next when a parent applies the change later, %s', async (_, apply) => {
+      function Parent() {
+        const [data, setData] = useState<unknown[]>(['r', 'r']);
+        return (
+          <Form
+            schema={{ type: 'array', items: { type: 'string' } }}
+            uiSchema={{ 'ui:options': { itemLabel: '.', copyable: true } }}
+            validator={validator}
+            formData={data}
+            onChange={(event) => apply(() => setData(event.formData))}
+          />
+        );
+      }
+      const { container } = render(<Parent />);
+      expect(removeTitles(container)).toEqual(['Remove r (1)', 'Remove r (2)']);
+
+      await user.click(container.querySelectorAll('.rjsf-array-item-copy')[0]);
+      await waitFor(() => expect(container.querySelectorAll('.rjsf-array-item-remove')).toHaveLength(3));
+      expect(removeTitles(container)).toEqual(['Remove r (1)', 'Remove r (3)', 'Remove r (2)']);
+
+      // Once that data arrives its rows are the confirmed ones, so a second late copy starts from them
+      await user.click(container.querySelectorAll('.rjsf-array-item-copy')[0]);
+      await waitFor(() => expect(container.querySelectorAll('.rjsf-array-item-remove')).toHaveLength(4));
+      expect(removeTitles(container)).toEqual(['Remove r (1)', 'Remove r (4)', 'Remove r (3)', 'Remove r (2)']);
     });
 
     it('can renumber shared names when a parent replaces the data, as arrays.md says', async () => {

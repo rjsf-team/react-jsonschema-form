@@ -117,6 +117,15 @@ function canAddItem<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   return addable;
 }
 
+/** `canAddItem()` for a tuple, which can only add an item that its `additionalItems` describes */
+function canAddTupleItem<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(registry: Registry<T[], S, F>, schema: S, formItems: T[], uiSchema?: UiSchema<T[], S, F>) {
+  return isObject(schema.additionalItems) && canAddItem<T, S, F>(registry, schema, formItems, uiSchema);
+}
+
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
  * that the schema is fixed and allows additional items.
  *
@@ -427,7 +436,8 @@ function itemButtonOptions<T, S extends StrictRJSFSchema, F extends FormContextT
 }
 
 /** Whether Copy can ever show on an array's items, whatever their number. Copy shows only while an item can be added,
- * so this asks `canAddItem` about the fewest items there can be with one to copy, `itemsBeforeCopy`
+ * so this asks the rule the array's own Add and Copy buttons follow, `canAddItem` or for a tuple `canAddTupleItem`,
+ * about the fewest items there can be with one to copy, `itemsBeforeCopy`
  */
 function canEverCopy<T, S extends StrictRJSFSchema, F extends FormContextType>(
   registry: Registry<T[], S, F>,
@@ -435,10 +445,11 @@ function canEverCopy<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiSchema: UiSchema<T[], S, F> | undefined,
   uiOptions: UIOptionsType<T[], S, F>,
   itemsBeforeCopy: number,
+  isTuple: boolean,
 ) {
+  const canAdd = isTuple ? canAddTupleItem : canAddItem;
   return (
-    itemButtonOptions(uiOptions).copyable &&
-    canAddItem<T, S, F>(registry, schema, new Array<T>(itemsBeforeCopy), uiSchema)
+    itemButtonOptions(uiOptions).copyable && canAdd<T, S, F>(registry, schema, new Array<T>(itemsBeforeCopy), uiSchema)
   );
 }
 
@@ -478,8 +489,7 @@ function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const canCopy = useMemo(
     () =>
       labelled &&
-      (!isTuple || isObject(schema.additionalItems)) &&
-      canEverCopy<T, S, F>(registry, schema, uiSchema, uiOptions, Math.max(fixedItemCount ?? 0, 1)),
+      canEverCopy<T, S, F>(registry, schema, uiSchema, uiOptions, Math.max(fixedItemCount ?? 0, 1), isTuple),
     [labelled, isTuple, fixedItemCount, registry, schema, uiSchema, uiOptions],
   );
   const { orderable, removable } = itemButtonOptions(uiOptions);
@@ -913,7 +923,6 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formData);
   const schemaItems = useMemo<S[]>(() => (Array.isArray(schema.items) ? (schema.items as S[]) : []), [schema.items]);
-  const hasAdditionalItems = isObject(schema.additionalItems);
 
   if (items.length < schemaItems.length) {
     // to make sure at least all fixed items are generated
@@ -924,10 +933,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
 
   // These are the props passed into the render function
-  const canAdd =
-    canAddItem<T, S, F>(registry, schema, items, uiSchema) &&
-    hasAdditionalItems &&
-    (!renderOptionalField || hasFormData);
+  const canAdd = canAddTupleItem<T, S, F>(registry, schema, items, uiSchema) && (!renderOptionalField || hasFormData);
   const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiSchema, uiOptions, schemaItems.length);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
@@ -1028,12 +1034,26 @@ const NO_ITEMS: never[] = [];
 function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
   const freshKeys = () => items.map(() => generateRowId());
-  const [keys, setKeys] = useState<RowId[]>(freshKeys);
+  // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them
+  const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[] }>(() => {
+    const keys = freshKeys();
+    return { keys, confirmed: keys };
+  });
 
-  let itemKeys = keys;
-  if (itemKeys.length !== items.length) {
+  let itemKeys: RowId[];
+  if (rows.keys.length === items.length) {
+    itemKeys = rows.keys;
+    if (rows.confirmed !== rows.keys) {
+      setRows({ keys: rows.keys, confirmed: rows.keys });
+    }
+  } else if (rows.confirmed.length === items.length) {
+    // A parent that applies `onChange` later, after an `await` or in a transition, still passes the data from before the
+    // field's change, which matches the confirmed rows; keeping those, and the change's rows for when its data arrives,
+    // stops the rows and the order they were added in from being regenerated in between
+    itemKeys = rows.confirmed;
+  } else {
     itemKeys = freshKeys();
-    setKeys(itemKeys);
+    setRows({ keys: itemKeys, confirmed: itemKeys });
   }
 
   const keyedFormData = useMemo(
@@ -1042,7 +1062,8 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
   );
 
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
-    setKeys(newData.map(({ key, order }) => ({ key, order })));
+    const keys = newData.map(({ key, order }) => ({ key, order }));
+    setRows((current) => ({ keys, confirmed: current.confirmed }));
     return keyedToPlainFormData(newData);
   }, []);
 
