@@ -20,7 +20,8 @@ import isObject from './isObject.ts';
  * @param [overrideFormDataWithDefaults=false] - If true, the default value will overwrite the form data value. If the value
  *        doesn't exist in the default, we take it from formData and in the case where the value is set to undefined in formData.
  *       This is useful when we have already merged formData with defaults and want to add an additional field from formData
- *       that does not exist in defaults.
+ *       that does not exist in defaults. A non-object default never overwrites object form data, so
+ *       `mergeDefaultsWithFormData('x', { b: 2 }, false, false, true)` returns `{ b: 2 }`.
  * @returns - The resulting merged form data with defaults
  */
 export default function mergeDefaultsWithFormData<T = unknown>(
