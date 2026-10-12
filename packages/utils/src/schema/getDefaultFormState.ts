@@ -302,6 +302,10 @@ export function computeDefaults<
   const preferParentDefaults = defaults && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
+  // Set by the `dependencies` branch: its resolved schema is the definition merged with the dependency branch, not
+  // the ref's plain materialization, so a materialization marker on it would make the guard above read the round
+  // trip as the recursion the marker annotates and collapse the branch's own defaults (#5349)
+  let stripRefMarker = false;
   let contextToCompute = context;
   let updatedRecurseList = _recurseList;
   // `RJSF_REF_KEY` marks a schema that `retrieveSchema()` materialized by expanding a `$ref`, which is how a `$ref`
@@ -312,7 +316,9 @@ export function computeDefaults<
   // exactly as they do for `child: { $ref: ... }`. A materialized ref not yet on the list is counted once, the way
   // the plain `$ref` branch counts one expansion, so a recursive definition stops at the same depth through any
   // keyword. The outermost call is exempt: `getDefaultFormState()` hands its already-retrieved root here, and
-  // counting the root's own expansion would stop a plain recursive schema one level earlier than it does today.
+  // counting the root's own expansion would stop a plain recursive schema one level earlier than it does today. The
+  // `dependencies` branch below drops the marker from its merged result, since the merge is the definition plus the
+  // branch rather than the ref's plain materialization, so the round trip through it is never read as the recursion.
   if (!(REF_KEY in schema)) {
     const materializedRef = (schema as RJSFMarkedSchema)[RJSF_REF_KEY];
     if (typeof materializedRef === 'string') {
@@ -392,6 +398,7 @@ export function computeDefaults<
       defaultFormData,
     );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
+    stripRefMarker = true;
   } else if (isFixedItems(schema) && !preferParentDefaults) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items.
@@ -467,6 +474,18 @@ export function computeDefaults<
   }
 
   if (schemaToCompute) {
+    if (stripRefMarker) {
+      // Drop the materialization marker before the recursion (see the declaration), moving the ref onto the recurse
+      // list instead so the nested resolutions stay seeded and a branch that refers back still terminates
+      const strippedRef = (schemaToCompute as RJSFMarkedSchema)[RJSF_REF_KEY];
+      if (typeof strippedRef === 'string') {
+        const withoutMarker = { ...schemaToCompute };
+        delete (withoutMarker as RJSFMarkedSchema)[RJSF_REF_KEY];
+        schemaToCompute = withoutMarker;
+        // A repeat only makes the list hold the ref twice, which the `includes()` reads do not mind
+        updatedRecurseList = updatedRecurseList.concat(strippedRef);
+      }
+    }
     return computeDefaults<T, S, F>(contextToCompute, schemaToCompute, {
       rootSchema,
       includeUndefinedValues,
