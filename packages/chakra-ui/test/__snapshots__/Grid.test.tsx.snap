@@ -1683,7 +1683,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     </span>
                                   </label>
                                   <div
-                                    aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                     class="chakra-select__root emotion-92"
                                     data-part="root"
                                     data-scope="select"
@@ -2001,6 +2000,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       >
                                         <button
                                           aria-controls="select:root_person_address_state:content"
+                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
@@ -4208,7 +4208,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </label>
                             <div
-                              aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                               class="chakra-select__root emotion-92"
                               data-part="root"
                               data-scope="select"
@@ -4526,6 +4525,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <button
                                     aria-controls="select:root_employment_location_state:content"
+                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -7986,7 +7986,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     </span>
                                   </label>
                                   <div
-                                    aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                     class="chakra-select__root emotion-92"
                                     data-part="root"
                                     data-scope="select"
@@ -8304,6 +8303,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       >
                                         <button
                                           aria-controls="select:root_person_address_state:content"
+                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
@@ -10558,7 +10558,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </label>
                             <div
-                              aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                               class="chakra-select__root emotion-92"
                               data-part="root"
                               data-scope="select"
@@ -10876,6 +10875,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <button
                                     aria-controls="select:root_employment_location_state:content"
+                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -14381,7 +14381,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     </span>
                                   </label>
                                   <div
-                                    aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                     class="chakra-select__root emotion-92"
                                     data-part="root"
                                     data-scope="select"
@@ -14699,6 +14698,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       >
                                         <button
                                           aria-controls="select:root_person_address_state:content"
+                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
@@ -18472,7 +18472,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                     </span>
                                   </label>
                                   <div
-                                    aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                     class="chakra-select__root emotion-92"
                                     data-part="root"
                                     data-scope="select"
@@ -18790,6 +18789,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                       >
                                         <button
                                           aria-controls="select:root_person_address_state:content"
+                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                           aria-expanded="false"
                                           aria-haspopup="listbox"
                                           aria-invalid="false"
@@ -20997,7 +20997,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               </span>
                             </label>
                             <div
-                              aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                               class="chakra-select__root emotion-92"
                               data-part="root"
                               data-scope="select"
@@ -21315,6 +21314,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <button
                                     aria-controls="select:root_employment_location_state:content"
+                                    aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -24597,7 +24597,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                         </span>
                       </label>
                       <div
-                        aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                         class="chakra-select__root emotion-81"
                         data-part="root"
                         data-scope="select"
@@ -24915,6 +24914,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                           >
                             <button
                               aria-controls="select:root_person_address_state:content"
+                              aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
@@ -28195,7 +28195,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         </span>
                       </label>
                       <div
-                        aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                         class="chakra-select__root emotion-81"
                         data-part="root"
                         data-scope="select"
@@ -28513,6 +28512,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           >
                             <button
                               aria-controls="select:root_person_address_state:content"
+                              aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"

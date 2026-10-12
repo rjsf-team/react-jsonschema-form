@@ -12,6 +12,7 @@ import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dataURItoBlob from './dataURItoBlob.ts';
+import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import deepEquals, { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
@@ -157,6 +158,8 @@ import type { UseTimeWidgetPropsResult } from './useTimeWidgetProps.ts';
 import useTimeWidgetProps from './useTimeWidgetProps.ts';
 import utcToLocal from './utcToLocal.ts';
 import validationDataMerge from './validationDataMerge.ts';
+import type { WidgetAriaPropsInput } from './widgetAriaProps.ts';
+import widgetAriaProps from './widgetAriaProps.ts';
 import withIdRefPrefix from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
@@ -183,6 +186,7 @@ export type {
   UseTimeWidgetPropsResult,
   VisibleErrorsProps,
   WidgetAliasFor,
+  WidgetAriaPropsInput,
 };
 
 export {
@@ -199,6 +203,8 @@ export {
   DateElement,
   dataURItoBlob,
   dateElementId,
+  dateElementAriaLabel,
+  dateElementLabel,
   dateRangeOptions,
   deepEquals,
   deepEqualsUndefinedAsMissing,
@@ -340,6 +346,7 @@ export {
   useTimeWidgetProps,
   utcToLocal,
   validationDataMerge,
+  widgetAriaProps,
   withIdRefPrefix,
   bracketNameGenerator,
   dotNotationNameGenerator,
