@@ -1,19 +1,36 @@
 import { use, useCallback } from 'react';
-import type { FieldPath, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { deepEquals, deepEqualsUndefinedAsMissing, getRenderedOptionSchema } from '@rjsf/utils';
+import type { FieldPath, FormContextType, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import {
+  deepEquals,
+  deepEqualsUndefinedAsMissing,
+  getRenderedOptionSchema,
+  getXxxOfKey,
+  isWholeValueSelect,
+} from '@rjsf/utils';
 
 import FormDataContext from '../components/FormDataContext.ts';
 
 /** The options of an `anyOf`/`oneOf` field a switch leaves and selects, each with the uiSchema its field renders with */
-interface OptionSwitch<S extends StrictRJSFSchema> {
+interface OptionSwitch<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The option switched away from */
   oldOption: S | undefined;
   /** The option switched to */
   newOption: S | undefined;
   /** The uiSchema the field of the option switched away from rendered with */
-  oldUiSchema: UiSchema<any, S, any> | undefined;
+  oldUiSchema: UiSchema<T, S, F> | undefined;
   /** The uiSchema the field of the option switched to renders with */
-  newUiSchema: UiSchema<any, S, any> | undefined;
+  newUiSchema: UiSchema<T, S, F> | undefined;
+}
+
+/** Whether the field of an option as it is rendered renders a field per item. A select over whole arrays renders one
+ * control for the array, and an option holding options of its own renders its items under a nested
+ * `MultiSchemaField`, which mounts their fields anew
+ *
+ * @param rendered - The option as `getRenderedOptionSchema()` renders it
+ * @returns - True when the option's field renders a field per item
+ */
+function rendersItemFields<S extends StrictRJSFSchema>(rendered: S): boolean {
+  return !isWholeValueSelect<S>(rendered) && getXxxOfKey<S>(rendered) === undefined;
 }
 
 /** Whether the options of `schema` a switch leaves and selects render the items of an array alike, as
@@ -26,9 +43,9 @@ interface OptionSwitch<S extends StrictRJSFSchema> {
  * @param optionSwitch - The options switched between, with their uiSchemas
  * @returns - True when both options render the same items
  */
-function rendersItemsAlike<S extends StrictRJSFSchema>(
+function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schema: S,
-  { oldOption, newOption, oldUiSchema, newUiSchema }: OptionSwitch<S>,
+  { oldOption, newOption, oldUiSchema, newUiSchema }: OptionSwitch<T, S, F>,
 ): boolean {
   if (!oldOption || !newOption || oldUiSchema !== newUiSchema) {
     return false;
@@ -36,6 +53,8 @@ function rendersItemsAlike<S extends StrictRJSFSchema>(
   const oldRendered = getRenderedOptionSchema<S>(schema, oldOption);
   const newRendered = getRenderedOptionSchema<S>(schema, newOption);
   return (
+    rendersItemFields<S>(oldRendered) &&
+    rendersItemFields<S>(newRendered) &&
     oldRendered.items !== undefined &&
     deepEquals(oldRendered.items, newRendered.items) &&
     deepEquals(oldRendered.additionalItems, newRendered.additionalItems) &&
@@ -57,9 +76,9 @@ function rendersItemsAlike<S extends StrictRJSFSchema>(
 export default function useSendOptionSwitch(fieldPath: FieldPath) {
   const access = use(FormDataContext);
   return useCallback(
-    <S extends StrictRJSFSchema>(
+    <T, S extends StrictRJSFSchema, F extends FormContextType>(
       schema: S,
-      optionSwitch: OptionSwitch<S>,
+      optionSwitch: OptionSwitch<T, S, F>,
       formData: unknown,
       newFormData: unknown,
       send: () => void,

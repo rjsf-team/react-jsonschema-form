@@ -56,7 +56,7 @@ import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscr
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
-import getRenderedOptionSchema from './getRenderedOptionSchema.ts';
+import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from './getRenderedOptionSchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
@@ -311,6 +311,7 @@ export {
   padTimeSeconds,
   parseDateString,
   rangeSpec,
+  rendersOwnFieldBesideOption,
   replaceEqualDeep,
   replaceStringParameters,
   resetLogOnce,

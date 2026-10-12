@@ -1,5 +1,5 @@
 import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getSchemaType, uiBooleanOption } from '@rjsf/utils';
+import { rendersOwnFieldBesideOption, uiBooleanOption } from '@rjsf/utils';
 
 /** Whether the field of the selected `anyOf`/`oneOf` option of `schema` renders the title and description of the field
  * holding the options. A field its own template leaves unlabelled, such as an array or a checkbox, has them rendered
@@ -19,5 +19,5 @@ export default function optionRendersFieldLabel<S extends StrictRJSFSchema = RJS
   label: unknown,
   displayLabel: boolean,
 ): boolean {
-  return !displayLabel && uiBooleanOption(label) !== false && getSchemaType<S>(schema) !== 'object';
+  return !displayLabel && uiBooleanOption(label) !== false && !rendersOwnFieldBesideOption<S>(schema);
 }

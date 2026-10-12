@@ -3783,6 +3783,22 @@ describe('oneOf', () => {
         { items: { 'ui:field': 'raising' } },
         'a',
       ],
+      [
+        'the option switched to is a select over whole arrays, which renders one control for the array',
+        { type: 'array', items: { type: 'string' }, anyOf: [{ minItems: 1 }, { enum: [['a'], ['b']] }] },
+        { items: { 'ui:field': 'raising' } },
+        'a',
+      ],
+      [
+        'the option switched to holds options of its own, which render its items anew',
+        {
+          type: 'array',
+          items: { type: 'string' },
+          anyOf: [{ minItems: 1 }, { anyOf: [{ maxItems: 3 }, { maxItems: 4 }] }],
+        },
+        { items: { 'ui:field': 'raising' } },
+        'a',
+      ],
     ])('should drop the errors an item raised when %s', async (_, opt, optUiSchema, raised) => {
       function RaisingField({ fieldPath, onChange }: FieldProps) {
         return (
@@ -3878,6 +3894,18 @@ describe('oneOf', () => {
         'root_opt__anyof_select',
       );
       expect(node.querySelector<HTMLInputElement>('input#root_opt_2')).toHaveValue('more');
+    });
+
+    it('should offer no Add for a tuple declaring no additionalItems whose options give its items a schema', () => {
+      const schema = wrap({
+        type: 'array',
+        items: [{ type: 'string' }, { type: 'string' }],
+        anyOf: [{ items: { maxLength: 3 } }, { items: { minLength: 5 } }],
+      });
+      const { node } = createFormComponent({ schema, initialFormData: { opt: ['a', 'b'] } });
+
+      expect(node.querySelector('input#root_opt_1')).not.toEqual(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).toEqual(null);
     });
 
     it("should replace the items with the const of the option switched to when they don't equal it", async () => {

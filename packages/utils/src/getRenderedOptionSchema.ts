@@ -12,7 +12,6 @@ import {
   REQUIRED_KEY,
   THEN_KEY,
 } from './constants.ts';
-import deepEquals from './deepEquals.ts';
 import { isSubschemaKeyword, keywordShape } from './findSchemaDefinition.ts';
 import getSchemaType from './getSchemaType.ts';
 import isObject from './isObject.ts';
@@ -48,9 +47,11 @@ const UPPER_BOUNDS = new Set<string>(['maxItems', 'maxLength', 'maxProperties', 
 /** The keywords the option's value is taken whole for when both declare one. `mergeSchemas()` would merge two `const`
  * or `default` objects key by key into a value neither declared, and two `not` subschemas into one rejecting what
  * neither rejects. A `true` constrains the value within a `not`, as `not: true` rejects every value, so it is the
- * option's there too
+ * option's there too. An `enum` is the option's list as it stands, since its `ui:enumNames` are read by position, and
+ * dropping a value the parent does not list would hand every name after it to the value before; validation still
+ * rejects that value
  */
-const KEYWORDS_TAKEN_FROM_OPTION = new Set<string>([CONST_KEY, DEFAULT_KEY, 'not']);
+const KEYWORDS_TAKEN_FROM_OPTION = new Set<string>([CONST_KEY, DEFAULT_KEY, ENUM_KEY, 'not']);
 
 /** The keywords of a conditional, which the option's replaces as a whole once it declares any of them: one schema's
  * `if` with the other's `then` is a condition neither declared, and a bound within an `if` is one a value is tested
@@ -68,12 +69,12 @@ const POSITIONAL_KEYWORDS = new Set<string>([ITEMS_KEY, 'prefixItems']);
  * The two are merged as `mergeSchemas()` merges them, except where a keyword both declare combines into a stricter
  * value. A bound keeps the stricter of the two: an option's `maxItems: 5` beside a parent's `maxItems: 3` would
  * otherwise keep the Add button enabled for items that validation then rejects. `uniqueItems` holds when either asks
- * for it, an `enum` allows only the values both list, and a `required` list asks for every name either asks for. A
- * keyword holding subschemas is met subschema by subschema, see `meetSubschema()`, within a map of named schemas such as
- * `properties` entry by entry, since the names are data, and within a tuple position by position. Which keywords hold
- * subschemas is read from the classifier the schema walks in `findSchemaDefinition()` share, so a value keyword such
- * as a `const` object is never read as a schema. Any other keyword both declare that cannot be combined into one
- * value, such as a `format`, a `pattern` or a `multipleOf`, is the option's.
+ * for it, and a `required` list asks for every name either asks for. A keyword holding subschemas is met subschema by
+ * subschema, see `meetSubschema()`, within a map of named schemas such as `properties` entry by entry, since the names
+ * are data, and within a tuple position by position. Which keywords hold subschemas is read from the classifier the
+ * schema walks in `findSchemaDefinition()` share, so a value keyword such as a `const` object is never read as a
+ * schema. Any other keyword both declare that cannot be combined into one value, such as a `format`, a `pattern`, a
+ * `multipleOf` or an `enum`, is the option's.
  *
  * @param parent - What the option inherits from the parent
  * @param option - The option
@@ -88,13 +89,20 @@ function meetSchemas(parent: GenericObjectType, option: GenericObjectType): Gene
     }
   }
   // A single `items` schema applies to every item, so beside a tuple it also describes the items past it, which the
-  // tuple's `additionalItems` describes
+  // tuple's `additionalItems` describes. A tuple declaring no `additionalItems` is one `ArrayField` offers no Add for,
+  // so it gets none here either
   const parentItems = parent[ITEMS_KEY];
   const optionItems = option[ITEMS_KEY];
-  if (Array.isArray(parentItems) && optionItems !== undefined && optionItems !== true && !Array.isArray(optionItems)) {
-    result.additionalItems = meetSubschema(parent.additionalItems ?? true, optionItems);
-  } else if (isObject(parentItems) && Array.isArray(optionItems)) {
-    result.additionalItems = meetSubschema(parentItems, option.additionalItems ?? true);
+  if (
+    Array.isArray(parentItems) &&
+    parent.additionalItems !== undefined &&
+    optionItems !== undefined &&
+    optionItems !== true &&
+    !Array.isArray(optionItems)
+  ) {
+    result.additionalItems = meetSubschema(parent.additionalItems, optionItems);
+  } else if (isObject(parentItems) && Array.isArray(optionItems) && option.additionalItems !== undefined) {
+    result.additionalItems = meetSubschema(parentItems, option.additionalItems);
   }
   if (takesOptionConditional) {
     for (const key of CONDITIONAL_KEYWORDS) {
@@ -123,14 +131,8 @@ function meetKeyword(key: string, parentValue: unknown, optionValue: unknown): u
   if (key === 'uniqueItems') {
     return parentValue === true || optionValue;
   }
-  if (Array.isArray(parentValue) && Array.isArray(optionValue)) {
-    if (key === REQUIRED_KEY) {
-      return [...new Set([...parentValue, ...optionValue])];
-    }
-    if (key === ENUM_KEY) {
-      // In the option's order, since its uiSchema is the one its field renders with, and a `ui:enumNames` is read by index
-      return optionValue.filter((value) => parentValue.some((allowed) => deepEquals(allowed, value)));
-    }
+  if (key === REQUIRED_KEY && Array.isArray(parentValue) && Array.isArray(optionValue)) {
+    return [...new Set([...parentValue, ...optionValue])];
   }
   if (KEYWORDS_TAKEN_FROM_OPTION.has(key)) {
     return optionValue;
@@ -204,6 +206,19 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
     : meetSchemas(parent, option);
 }
 
+/** Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's
+ * `ObjectField` does (see `getFieldComponent()` in `SchemaField`). Such a field shows its own properties and other
+ * keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option
+ * as `getRenderedOptionSchema()` renders it. Everything that picks between the two reads this, so that none of them
+ * renders one option and seeds or walks another.
+ *
+ * @param schema - The schema holding the options
+ * @returns - True when the field renders a field of its own beside the option
+ */
+export function rendersOwnFieldBesideOption<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
+  return getSchemaType<S>(schema) === 'object';
+}
+
 /** Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with, the one place that decides what an option
  * inherits from the schema holding it, so that `MultiSchemaField`, the `getUiRequiredErrorSchema()` walk and the
  * defaults `getDefaultFormState()` computes for a field that is not an object read the same option.
@@ -228,9 +243,9 @@ function meetSubschema(parent: unknown, option: unknown): unknown {
  * @returns - The option as it is rendered, or `option` itself when the parent has nothing to pass on
  */
 export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJSFSchema>(parent: S, option: S): S {
-  const parentType = getSchemaType<S>(parent);
+  const rendersOwnField = rendersOwnFieldBesideOption<S>(parent);
   const inherited: GenericObjectType = {};
-  if (parentType === 'object') {
+  if (rendersOwnField) {
     if (parent.required) {
       inherited[REQUIRED_KEY] = parent.required;
     }
@@ -250,5 +265,5 @@ export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJS
     return option;
   }
   // An object parent passes on no bound, so there is none to tighten
-  return (parentType === 'object' ? mergeSchemas(inherited, option) : meetSchemas(inherited, option)) as S;
+  return (rendersOwnField ? mergeSchemas(inherited, option) : meetSchemas(inherited, option)) as S;
 }

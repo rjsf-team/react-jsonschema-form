@@ -1141,12 +1141,12 @@ It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`
 The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
 A bound both declare (`minItems`, `maxItems`, `minLength`, `maxLength`, `minProperties`, `maxProperties`, `minimum`, `maximum`, `exclusiveMinimum` or `exclusiveMaximum`) keeps the stricter of the two, since a value has to meet both.
 It does so within each subschema keyword both declare, such as `items` or a property, and position by position within a tuple, but not within a keyword holding a value rather than a schema, such as a `const`, or one JSON Schema does not define.
-`uniqueItems` holds when either asks for it, two `enum` lists allow only the values both list, in the option's order, and two `required` lists ask for every name either does.
+`uniqueItems` holds when either asks for it, and two `required` lists ask for every name either does.
 An option's `true` subschema, such as `items: true`, adds nothing to meet, so it leaves the parent's subschema in place, a tuple included, rather than replacing it.
 A parent's `false` subschema, which nothing meets, likewise stays in place of the option's.
-An option's `items` schema beside the parent's tuple applies to each of its positions and to the items past it, as the parent's beside the option's tuple does.
+An option's `items` schema beside the parent's tuple applies to each of its positions, and to the items past it where the tuple declares `additionalItems`, as the parent's beside the option's tuple does; a tuple declaring none stays at its length, as `ArrayField` offers it no Add.
 A `not`, or a conditional (`if`, `then` and `else` together), that the option declares replaces the parent's as a whole: `not: true` rejects every value, and one schema's `if` with the other's `then` is a condition neither declared.
-Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf` or a `const` or `default` object, is the option's.
+Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf`, an `enum` or a `const` or `default` object, is the option's. An `enum` is the option's list as it stands, since its `ui:enumNames` are read by position against it, so a value the parent doesn't list stays, for validation to reject.
 A pair of subschemas either of which holds a `$ref` is returned as an `allOf` of the two, since the `$ref` is resolved only where the subschema is rendered, against the root schema, and the keywords met in beside it would be layered over the ones it names; the field's `allOf` merge meets them once it is resolved.
 An option naming no `type` takes the parent's, every type of a type list included, and an object parent that names none, such as one with only `properties`, passes on `object`.
 
@@ -2053,6 +2053,20 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 #### Returns
 
 - RangeSpecType: A range specification from the schema
+
+### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+Such a field shows its own properties and other keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option as [getRenderedOptionSchema()](#getrenderedoptionschema) renders it.
+`getRenderedOptionSchema()`, the defaults `getDefaultFormState()` computes, the `getUiRequiredErrorSchema()` walk and `MultiSchemaField` all read it to choose between the two, so none of them renders one option and seeds or walks another.
+
+#### Parameters
+
+- schema: S - The schema holding the options
+
+#### Returns
+
+- boolean: True when the field renders a field of its own beside the option
 
 ### replaceEqualDeep&lt;T>()
 

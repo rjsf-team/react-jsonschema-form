@@ -301,13 +301,18 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const description = uiOptions.description ?? schema.description;
   const rendersFieldLabel =
     renderedOption !== null && optionRendersFieldLabel<S>(schema, uiOptions.label, displayLabel);
-  const optionSchema = rendersFieldLabel
-    ? ({
-        ...renderedOption,
-        ...(title !== undefined && { title }),
-        ...(description !== undefined && { description }),
-      } as S)
-    : renderedOption;
+  // Memoized as well, since the option's `SchemaField` keys its own memos on the schema it is handed
+  const optionSchema = useMemo(
+    () =>
+      rendersFieldLabel
+        ? {
+            ...renderedOption,
+            ...(title !== undefined && { title }),
+            ...(description !== undefined && { description }),
+          }
+        : renderedOption,
+    [rendersFieldLabel, renderedOption, title, description],
+  );
   // An option's own uiSchema would otherwise label its field with the option's `ui:title` and `ui:description`, which
   // the selector already shows, over the field's own
   const optionFieldUiSchema = useMemo(

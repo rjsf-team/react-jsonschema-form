@@ -130,21 +130,28 @@ function constraintMayHaveChanged<
  *           introduced array, which is always replaced
  *   - Once all keys have been processed, return an object built as follows:
  *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
- * - If the new and old schema types are array and the `data` is an array then:
- *   - If the type of the old and new schema `items` are a non-array objects:
+ * - If the old and new schema types, read through `getSchemaType()` so that a type list also allowing `null` counts,
+ *   are both array, the `data` is an array, the new schema's `const` is not an array other than the `data`, and the
+ *   `data` is one of the new schema's `enum` or constant options when it lists any, then:
+ *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
- *       - If the type is "object" and the items aren't a select over object constants (see `isWholeValueSelect()`),
- *         then:
- *         - For each element in the `data` recursively sanitize the data, stopping at `maxItems` if specified
+ *       - If the new items' type, read through `getSchemaType()`, is "object" and the items aren't a select over object
+ *         constants (see `isWholeValueSelect()`), then:
+ *         - For each element in the `data`, recursively sanitize it against the items schemas retrieved for that
+ *           element, stopping at `maxItems` if specified. Under a type list, only an element that is an object is
+ *           sanitized, and any other, such as a `null` the list allows, is kept as it is
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
  *         any values after `maxItems` if it is set. When the previous form data is passed (the way `Form` calls it),
  *         the filter is skipped where the old and new `items` schemas, each resolved against its own array, agree;
  *         without it the filter always runs. The same comparison decides whether a scalar value outside the new
  *         `enum` or constant options is replaced. A select over object or array constants is always filtered, since
  *         it holds each item as a whole
- *   - If the type of the old and new schema `items` are booleans of the same value, return `data` as is
- * - Otherwise return `undefined`
+ *   - Otherwise, if both schemas declare the same `items` and `prefixItems`, and the same `additionalItems` where
+ *     either `items` is a tuple, as a tuple, a boolean `items` or an array declaring no `items` does, return the `data`,
+ *     removing any values after the new `maxItems` if it is set
+ * - Otherwise return `undefined`, which clears an array the new schema's array `const` differs from, or that its
+ *   `enum` or constant options do not list
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -452,7 +459,9 @@ function sanitizeDataForNewSchemaInternal<
     // An array the new schema's `const` rejects is cleared, so that the `const` can take its place, as the defaults
     // computed for the new schema do. Only an array `const` is compared: an ajv `$data` reference is an object, and
     // reading it as the value would clear the array on every sanitize pass
-    (!Array.isArray(newSchema.const) || deepEquals(newSchema.const, data))
+    (!Array.isArray(newSchema.const) || deepEquals(newSchema.const, data)) &&
+    // A select over whole arrays holds one of its values, so an array it does not list is cleared as well
+    replacementForInvalidEnumValue<S>(newSchema, data) === NO_VALUE
   ) {
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;

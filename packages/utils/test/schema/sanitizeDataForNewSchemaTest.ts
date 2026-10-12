@@ -892,6 +892,12 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x'])).toBeUndefined();
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['a', 'b'])).toEqual(['a', 'b']);
     });
+    it('returns undefined for an array the new schema selects whole values from that it does not list', () => {
+      const oldSchema: RJSFSchema = { type: 'array', items: { type: 'string' }, minItems: 1 };
+      const newSchema: RJSFSchema = { type: 'array', items: { type: 'string' }, enum: [['a'], ['b']] };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x'])).toBeUndefined();
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['b'])).toEqual(['b']);
+    });
     it('keeps an array whose const is an ajv $data reference rather than a value', () => {
       const schema: RJSFSchema = {
         type: 'object',

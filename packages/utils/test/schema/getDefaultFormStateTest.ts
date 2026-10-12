@@ -6499,6 +6499,58 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           { a: 'dflt' },
         ]);
       });
+      describe('a selected option written as a $ref naming an allOf', () => {
+        const pet = (field: RJSFSchema): RJSFSchema => ({
+          $defs: {
+            Base: { type: 'object', properties: { id: { type: 'string', default: 'ID' } } },
+            Cat: {
+              allOf: [
+                { $ref: '#/$defs/Base' },
+                { type: 'object', properties: { meow: { type: 'boolean', default: true } } },
+              ],
+            },
+          },
+          type: 'object',
+          properties: { pet: { ...field, anyOf: [{ $ref: '#/$defs/Cat' }] } },
+        });
+        it.each<[string, RJSFSchema]>([
+          ['that inherits nothing', {}],
+          ['that inherits from its field', { minProperties: 1 }],
+        ])('leaves the allOf defaults to the allOf behavior for an option %s', (_, field) => {
+          const schema = pet(field);
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { pet: {} } }),
+          ).toEqual({ pet: {} });
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+              { schema, rootSchema: schema, formData: { pet: {} } },
+            ),
+          ).toEqual({ pet: { id: 'ID', meow: true } });
+        });
+      });
+      it("hands a selected option written as a $ref its field's default, as a $ref property is handed it", () => {
+        const schema: RJSFSchema = {
+          $defs: {
+            O: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } },
+            S: { type: 'string', default: 'child' },
+          },
+          type: 'object',
+          properties: {
+            o: { default: { a: 1 }, anyOf: [{ $ref: '#/$defs/O' }] },
+            s: { default: 'parent', anyOf: [{ $ref: '#/$defs/S' }] },
+          },
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { o: { b: 2 } } }),
+        ).toEqual({ o: { b: 2 }, s: 'child' });
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
+            { schema, rootSchema: schema, formData: { o: { b: 2 } } },
+          ),
+        ).toEqual({ o: { b: 2 }, s: 'parent' });
+      });
       it('stops following a selected option written as a $ref once it leads back to a $ref already followed', () => {
         const schema: RJSFSchema = {
           definitions: {

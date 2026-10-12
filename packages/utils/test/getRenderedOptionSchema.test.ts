@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { ADDITIONAL_PROPERTY_FLAG, getRenderedOptionSchema } from '../src/index.ts';
+import { ADDITIONAL_PROPERTY_FLAG, getRenderedOptionSchema, rendersOwnFieldBesideOption } from '../src/index.ts';
 
 describe('getRenderedOptionSchema()', () => {
   describe('a non-object parent', () => {
@@ -129,7 +129,15 @@ describe('getRenderedOptionSchema()', () => {
           { type: 'string', maxLength: 5, minLength: 1 },
           { maxLength: 9, minLength: 1 },
         ],
-        additionalItems: { maxLength: 9, minLength: 1 },
+      });
+      const open: RJSFSchema = { ...parent, additionalItems: { type: 'string', maxLength: 5 } };
+      expect(getRenderedOptionSchema(open, { items: { maxLength: 9, minLength: 1 } })).toEqual({
+        type: 'array',
+        items: [
+          { type: 'string', maxLength: 5, minLength: 1 },
+          { maxLength: 9, minLength: 1 },
+        ],
+        additionalItems: { type: 'string', maxLength: 5, minLength: 1 },
       });
       const closed: RJSFSchema = { type: 'array', items: [{ type: 'string' }], additionalItems: false };
       expect(getRenderedOptionSchema(closed, { items: { minLength: 1 } })).toEqual({
@@ -147,10 +155,17 @@ describe('getRenderedOptionSchema()', () => {
           additionalItems: { type: 'string', maxLength: 5 },
         },
       );
-      expect(getRenderedOptionSchema(parent, { items: [{ minLength: 1 }] })).toEqual({
+    });
+    test.each<[string, RJSFSchema, RJSFSchema]>([
+      ["the parent's", { type: 'array', items: [{ type: 'string' }, { type: 'string' }] }, { items: { maxLength: 3 } }],
+      ["the option's", { type: 'array', items: { type: 'string' } }, { items: [{ maxLength: 3 }, { maxLength: 3 }] }],
+    ])('keeps %s tuple declaring no additionalItems at its length, as ArrayField renders it', (_, parent, option) => {
+      expect(getRenderedOptionSchema(parent, option)).toEqual({
         type: 'array',
-        items: [{ type: 'string', maxLength: 5, minLength: 1 }],
-        additionalItems: { type: 'string', maxLength: 5 },
+        items: [
+          { type: 'string', maxLength: 3 },
+          { type: 'string', maxLength: 3 },
+        ],
       });
     });
     test('meets two tuples position by position, keeping the positions only one of them describes', () => {
@@ -179,18 +194,14 @@ describe('getRenderedOptionSchema()', () => {
         items: { type: 'object', properties: { a: { type: 'string' }, constructor: true } },
       });
     });
-    test('allows only the enum values both list', () => {
-      const parent: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b'] } };
-      expect(getRenderedOptionSchema(parent, { items: { enum: ['b', 'c'] } })).toEqual({
+    test.each<[string, string[]]>([
+      ['a value the parent does not list', ['a', 'b', 'c']],
+      ['its own order', ['c', 'b']],
+    ])("takes the option's enum whole, which its ui:enumNames are read by position against, with %s", (_, values) => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['b', 'c'] } };
+      expect(getRenderedOptionSchema(parent, { items: { enum: values } })).toEqual({
         type: 'array',
-        items: { type: 'string', enum: ['b'] },
-      });
-    });
-    test("lists the enum values both list in the option's order, which its ui:enumNames are read by", () => {
-      const parent: RJSFSchema = { type: 'array', items: { type: 'string', enum: ['a', 'b', 'c'] } };
-      expect(getRenderedOptionSchema(parent, { items: { enum: ['c', 'a'] } })).toEqual({
-        type: 'array',
-        items: { type: 'string', enum: ['c', 'a'] },
+        items: { type: 'string', enum: values },
       });
     });
     test.each<[string, RJSFSchema, RJSFSchema]>([
@@ -329,5 +340,16 @@ describe('getRenderedOptionSchema()', () => {
         required: ['a'],
       });
     });
+  });
+});
+
+describe('rendersOwnFieldBesideOption()', () => {
+  test.each<[string, RJSFSchema, boolean]>([
+    ['an object', { type: 'object' }, true],
+    ['a schema read as an object for its properties', { properties: { a: { type: 'string' } } }, true],
+    ['an array', { type: 'array', items: { type: 'string' } }, false],
+    ['a typeless schema', {}, false],
+  ])('reads %s as rendering its own field: %s', (_, schema, expected) => {
+    expect(rendersOwnFieldBesideOption(schema)).toBe(expected);
   });
 });

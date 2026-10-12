@@ -11,7 +11,7 @@ import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
-import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
+import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getUiOptions from '../getUiOptions.ts';
@@ -83,7 +83,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   // A boolean option is rendered as an empty schema, as `SchemaField` retrieves it
   const option = isObject(options[index]) ? options[index] : ({} as S);
   const optionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, index) ?? {};
-  if (getSchemaType<S>(schema) !== 'object') {
+  if (!rendersOwnFieldBesideOption<S>(schema)) {
     return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
   }
   return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema };
@@ -196,7 +196,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
     // showing the properties it shares with the option unless the node is a control that hides them as well
     (!xxxOf ||
-      getSchemaType<S>(resolvedSchema) !== 'object' ||
+      !rendersOwnFieldBesideOption<S>(resolvedSchema) ||
       (!effectiveRequired && isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)))
   ) {
     return;

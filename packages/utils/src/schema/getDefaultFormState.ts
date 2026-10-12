@@ -18,7 +18,7 @@ import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
-import getRenderedOptionSchema from '../getRenderedOptionSchema.ts';
+import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -445,20 +445,24 @@ export function computeDefaults<
       const option = options[optionIndex];
       // An object's defaults are those of its own properties as well as the option's, so the option is merged with the
       // whole object. Any other field renders only the option, so its defaults are those of the option as rendered,
-      // with a boolean option read as the empty schema `SchemaField` retrieves it as, and one written as a `$ref`
-      // resolved as `SchemaField` resolves it: met as it is, the `$ref` would be followed alone below, dropping all the
-      // option inherits. A `$ref` already being followed is left as it is, so the `$ref` branch below ends the cycle
-      if (getSchemaType<S>(remaining as S) === 'object') {
+      // with a boolean option read as the empty schema `SchemaField` retrieves it as. An option written as a `$ref`
+      // that inherits something is met with it once the reference is followed, as `SchemaField` resolves it: met as it
+      // is, the `$ref` would be followed alone below, dropping all it inherits. Only the reference is followed, so an
+      // `allOf` within it is still left to the `allOf` defaults behavior. One that inherits nothing, or whose `$ref` is
+      // already being followed, is left to the `$ref` branch below, which also ends the cycle
+      if (rendersOwnFieldBesideOption<S>(remaining as S)) {
         schemaToCompute = mergeSchemas(remaining, option) as S;
       } else {
         const optionSchema = isObject(option) ? option : ({} as S);
+        let renderedOption = getRenderedOptionSchema<S>(remaining as S, optionSchema);
         const optionRef = optionSchema[REF_KEY];
-        let resolvedOption = optionSchema;
-        if (optionRef !== undefined && !_recurseList.includes(optionRef)) {
+        if (renderedOption !== optionSchema && optionRef !== undefined && !_recurseList.includes(optionRef)) {
           updatedRecurseList = _recurseList.concat(optionRef);
-          resolvedOption = retrieveSchema<T, S, F>(context, optionSchema, rootSchema, rawFormData);
+          const { [REF_KEY]: _ref, ...besideRef } = optionSchema;
+          const referenced = findSchemaDefinition<S>(optionRef, rootSchema);
+          renderedOption = getRenderedOptionSchema<S>(remaining as S, { ...referenced, ...besideRef });
         }
-        schemaToCompute = withDefaultOf(remaining, getRenderedOptionSchema<S>(remaining as S, resolvedOption)) as S;
+        schemaToCompute = withDefaultOf(remaining, renderedOption) as S;
       }
       branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, optionIndex);
     }
