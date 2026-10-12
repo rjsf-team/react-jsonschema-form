@@ -52,7 +52,7 @@ const NONE: readonly string[] = Object.freeze([]);
 
 /** Drops the empty ids and the repeats from `ids`, keeping the first of each */
 function uniqueIds(ids: readonly string[]) {
-  return ids.filter((describer, index) => describer && ids.indexOf(describer) === index);
+  return [...new Set(ids)].filter(Boolean);
 }
 
 /** Whether a part with this placement renders an element here */
