@@ -392,7 +392,14 @@ export function computeDefaults<
         : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
-    const resolvedSchema = resolveDependencies<T, S, F>(context, schema, rootSchema, false, [], defaultFormData);
+    const resolvedSchema = resolveDependencies<T, S, F>(
+      context,
+      schema,
+      rootSchema,
+      false,
+      refsOnPath(schema, _recurseList),
+      defaultFormData,
+    );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
