@@ -9,7 +9,7 @@ import type {
   ThemePresentation,
   Widget,
 } from '../src/index.ts';
-import { getPresentationDeclaration, WIDGET_FIELD_PRESENTATION } from '../src/index.ts';
+import { getPresentationDeclaration, mergeThemePresentation, WIDGET_FIELD_PRESENTATION } from '../src/index.ts';
 
 const TEMPLATE = {
   label: 'template',
@@ -149,6 +149,25 @@ describe('getPresentationDeclaration()', () => {
     });
     expect(getPresentationDeclaration(theme, { ...subject, widget: Inline })).toEqual({ ...TEMPLATE, label: 'self' });
     expect(getPresentationDeclaration(source, { ...subject, widget: Inline })).toEqual(TEMPLATE);
+  });
+
+  it("reads an unmerged layer's default beneath its own entry, as mergeThemePresentation() would", () => {
+    const layer: ThemePresentation = {
+      default: { label: 'self' },
+      widgets: { TextWidget: { errors: 'self' } },
+      fields: { StringField: WIDGET_FIELD_PRESENTATION },
+    };
+    const subject = {
+      schema: { type: 'string' },
+      field: StringField,
+      fieldKey: 'StringField',
+      widget: 'text',
+    } as const;
+    const expected = { ...TEMPLATE, label: 'self', errors: 'self' };
+    expect(getPresentationDeclaration({ ...source, presentation: layer }, subject)).toEqual(expected);
+    expect(getPresentationDeclaration({ ...source, presentation: mergeThemePresentation(layer) }, subject)).toEqual(
+      expected,
+    );
   });
 
   it("types a widget's declarations without the widget owner, which has no widget beneath it", () => {
