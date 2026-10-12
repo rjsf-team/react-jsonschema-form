@@ -2028,8 +2028,28 @@ export interface SchemaUtilsType<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @param [oldData] - The previous form data. The old schema itself resolves against the current `data`;
+   *      a separate chain resolved against `oldData` feeds only the enum filter decision, so a branch flip
+   *      between the previous and current data still filters a value the current data no longer resolves to.
+   *      `Form` passes the data as it last settled under the current root schema. `$ref`s on both sides
+   *      resolve against the one root schema, so pass `oldData` only when the root schema is unchanged,
+   *      which is how `Form` calls it
+   * @param [resolvedOldSchema] - `oldSchema` already resolved for `oldData` at the root: the root frame's
+   *      filter chain uses it directly instead of resolving `oldSchema` again. `Form` passes the schema its
+   *      settled snapshot was resolved under
+   * @param [oldDataForPairing] - The previous data array elements pair with, as the announced container
+   *      writes moved it: a row follows its item across a remove or reorder, and an inserted row pairs with
+   *      its own starting value. `Form` passes the settled data as its container writes moved it; omitted,
+   *      elements pair with `oldData` by index
    * @returns - The new form data, with all of the fields uniquely associated with the old schema set
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
-  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T;
+  sanitizeDataForNewSchema(
+    newSchema?: S,
+    oldSchema?: S,
+    data?: any,
+    oldData?: any,
+    resolvedOldSchema?: S,
+    oldDataForPairing?: any,
+  ): T;
 }
