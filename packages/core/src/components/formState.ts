@@ -6,7 +6,6 @@ import type {
   GenericObjectType,
   StrictRJSFSchema,
   RJSFSchema,
-  RJSFValidationError,
   SchemaContext,
   SchemaUtilsType,
   UiSchema,
@@ -15,6 +14,7 @@ import type {
 import {
   getByPath,
   setByPath,
+  propertyToPath,
   toPath,
   unsetByPath,
   createSchemaUtils,
@@ -282,23 +282,10 @@ function mergeErrors<T>(
   extraErrors?: ErrorSchema<T>,
   customErrors?: ErrorSchema<T>,
 ): ValidationData<T> {
-  let { errorSchema, errors } = schemaValidation;
-  if (extraErrors) {
-    const merged = validationDataMerge(schemaValidation, extraErrors);
-    errorSchema = merged.errorSchema;
-    errors = merged.errors;
-  }
-  if (customErrors) {
-    const listed = errors;
-    const merged = validationDataMerge({ errors, errorSchema }, customErrors, true);
-    errorSchema = merged.errorSchema;
-    // The merge shows a message the field already carries once, so the list names it once too. Compared by path, since
-    // a validator may spell the `property` of the root or of a property of the root without the leading `.`
-    const keyOf = (error: RJSFValidationError) => JSON.stringify([error.message, ...errorPath(error)]);
-    const listedKeys = new Set(listed.map(keyOf));
-    // The merge lists the raised errors after `listed`
-    errors = [...listed, ...merged.errors.slice(listed.length).filter((raised) => !listedKeys.has(keyOf(raised)))];
-  }
+  // With `preventDuplicates`, a message a field already carries is shown on it once and listed once, the raised errors
+  // after the validator's and `extraErrors`
+  const withExtra = validationDataMerge(schemaValidation, extraErrors, true);
+  const { errors, errorSchema } = validationDataMerge(withExtra, customErrors, true);
   return { errors, errorSchema };
 }
 
@@ -402,11 +389,6 @@ function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
-/** The path an `RJSFValidationError` addresses, the same way `toErrorSchema()` splits it */
-function errorPath(error: RJSFValidationError): string[] {
-  return error.property ? toPath(error.property) : [];
-}
-
 /** A copy of `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold
  * nothing, an empty `__errors` included, which a raise at an ancestor would read as errors still being there. `path`
  * is that of `errorSchema` itself
@@ -444,7 +426,7 @@ function invalidSchemaMessages<T>({ errors, errorSchema }: ValidationData<T>): s
     return [];
   }
   const ofProperty = new Set(
-    errors.filter((error) => String(errorPath(error)) === SCHEMA_KEY).map((error) => error.message),
+    errors.filter((error) => String(propertyToPath(error.property)) === SCHEMA_KEY).map((error) => error.message),
   );
   return getByPath<string[]>(errorSchema, [SCHEMA_KEY, ERRORS_KEY], []).filter((message) => !ofProperty.has(message));
 }
@@ -461,7 +443,7 @@ function withoutErrors<T>(
   const errorSchema = pruneErrorSchema(validation.errorSchema, isDropped);
   return {
     errors: validation.errors.filter(
-      (error) => (hasInvalidSchema && error.property === undefined) || !isDropped(errorPath(error)),
+      (error) => (hasInvalidSchema && error.property === undefined) || !isDropped(propertyToPath(error.property)),
     ),
     errorSchema:
       hasInvalidSchema && isDropped([SCHEMA_KEY])
@@ -523,7 +505,7 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
  */
 function moveErrorKeys<T>(validation: ValidationData<T>, path: FieldPathList, newKeyOf: KeyMove): ValidationData<T> {
   const errors = validation.errors.flatMap((error) => {
-    const pathOfError = errorPath(error);
+    const pathOfError = propertyToPath(error.property);
     const key = isPathPrefix(path, pathOfError) ? pathOfError[path.length] : undefined;
     const newKey = key === undefined ? key : newKeyOf(key);
     if (newKey === key) {

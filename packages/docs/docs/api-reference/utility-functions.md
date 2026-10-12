@@ -1939,6 +1939,27 @@ Parses the `dateString` into a `DateObject`, including the time information when
 
 - Error when the date cannot be parsed from the string
 
+### propertyToPath()
+
+Converts the `property` of a validation error into its list of path segments, the way `toErrorSchema()` keys the errors it builds.
+It is [toPath()](#topath) for a `property` that may be missing: a missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path.
+
+#### Parameters
+
+- [property]: string | undefined - The `property` of an `RJSFValidationError`, such as `'.level1.level2[2].level3'`
+
+#### Returns
+
+- string[]: The list of path segments, such as `['level1', 'level2', '2', 'level3']`
+
+#### Example
+
+```typescript
+propertyToPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
+propertyToPath(undefined); // []
+propertyToPath('.'); // []
+```
+
 ### rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
@@ -2480,7 +2501,7 @@ The existing `errors` are always kept, also when their `errorSchema` is empty, a
 
 - validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
 - [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The optional additional set of errors in an `ErrorSchema`
-- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates`
+- [preventDuplicates=false]: boolean - Optional flag, if true, leaves out of both the merged `ErrorSchema` and the appended errors the messages the existing `errorSchema` already holds under the same keys
 
 #### Returns
 
