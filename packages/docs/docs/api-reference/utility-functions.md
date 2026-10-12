@@ -2237,11 +2237,11 @@ Each part is placed `template` or `self` by its declared owner, `above` when a f
 - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name, and is `above` when the template of a field above rendering the same id already draws it; a label the widget draws stays, so a widget that names its own control keeps naming it.
 - The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one; text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the usual id, numbered by how many fields above show text of their own, so each level's text has an id of its own.
 - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
-- The control is described by the parts that render, here or above, and is `aria-invalid` whenever errors show. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at [fieldLabelId()](#fieldlabelid).
+- The control is described by the parts that render, here or above, which the plan lists as `describedBy`, then by its own `controlDescribedBy`, and is `aria-invalid` whenever errors show. A field below rendering the same id inherits `describedBy`, so the elements a control renders to describe itself alone don't describe the control beneath it. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at [fieldLabelId()](#fieldlabelid).
 
 #### Parameters
 
-- inputs: FieldPresentationInputs - The `id`, the `declaration`, the `label` from [getFieldLabel()](#getfieldlabel), and the optional `showLabel`, `description`, `help`, `errors`, `hideError`, `controlDescribedBy` (the ids of the elements the control renders to describe itself, such as its `examplesId()` list, which come last), `hasControl`, `required`, `requiredAttribute` and `inherited` plan of the field above
+- inputs: FieldPresentationInputs - The `id`, the `declaration`, the `label` from [getFieldLabel()](#getfieldlabel), and the optional `showLabel`, `description`, `help`, `errors`, `hideError`, `controlDescribedBy` (the ids of the elements the control renders to describe itself, such as its `examplesId()` list, which come last in its `aria-describedby` and stay out of the plan's `describedBy`), `hasControl`, `required`, `requiredAttribute` and `inherited` plan of the field above
 
 #### Returns
 

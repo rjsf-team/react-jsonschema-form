@@ -28,7 +28,8 @@ export interface FieldPresentationInputs {
   /** Whether `ui:hideError` is in effect for the field */
   hideError?: boolean;
   /** The ids of the elements the control renders to describe itself, such as its `selectedOptionDescriptionId()` or
-   * its `examplesId()` list, which describe it after the field's own parts
+   * its `examplesId()` list, which describe it after the field's parts. They describe this control alone, so they go
+   * in its `aria-describedby` but not in the plan's `describedBy`, which a field below rendering the same id inherits
    */
   controlDescribedBy?: readonly string[];
   /** Whether a control is on screen for the label to name: false for an opted-out optional field or a hidden one, and
@@ -48,6 +49,11 @@ export interface FieldPresentationInputs {
 }
 
 const NONE: readonly string[] = Object.freeze([]);
+
+/** Drops the empty ids and the repeats from `ids`, keeping the first of each */
+function uniqueIds(ids: readonly string[]) {
+  return ids.filter((describer, index) => describer && ids.indexOf(describer) === index);
+}
 
 /** Whether a part with this placement renders an element here */
 function rendersHere(by: PartPlacement) {
@@ -93,7 +99,8 @@ function placeText<Text>(
  *   takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the usual id, numbered by how
  *   many fields above show text of their own, so each level's own text has an id of its own.
  * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
- * - The control is described by the parts that render, here or above, and is `aria-invalid` whenever errors show.
+ * - The control is described by the parts that render, here or above, then by its own `controlDescribedBy`, and is
+ *   `aria-invalid` whenever errors show.
  *
  * @param inputs - The decisions the plan is built from
  * @returns - The field's plan
@@ -151,13 +158,12 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     id: errorsId,
   };
 
-  const describedBy = [
+  const describedBy = uniqueIds([
     rendersHere(errorsPlan.by) ? errorsId : '',
     ...(inherited?.describedBy ?? NONE),
     rendersHere(descriptionPlacement.by) ? descriptionPlacement.id : '',
     rendersHere(helpPlacement.by) ? helpPlacement.id : '',
-    ...controlDescribedBy,
-  ].filter((describer, index, describers) => describer && describers.indexOf(describer) === index);
+  ]);
 
   let control: FieldPresentation['control'];
   if (hasControl) {
@@ -165,8 +171,9 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     if ((labelBy === 'template' || labelBy === 'above') && declaration.labelledBy === 'aria-labelledby') {
       attributes['aria-labelledby'] = labelId;
     }
-    if (describedBy.length > 0) {
-      attributes['aria-describedby'] = describedBy.join(' ');
+    const controlDescribers = uniqueIds([...describedBy, ...controlDescribedBy]);
+    if (controlDescribers.length > 0) {
+      attributes['aria-describedby'] = controlDescribers.join(' ');
     }
     if (messages.length > 0) {
       attributes['aria-invalid'] = true;
