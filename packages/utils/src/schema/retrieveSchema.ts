@@ -650,17 +650,22 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
   // resolve top level ref
   if (REF_KEY in resolvedSchema) {
     const { $ref, ...localSchema } = resolvedSchema;
-    // Check for a recursive reference and stop the loop. On a re-walk (passCount > 0), a schema whose
-    // RJSF_REF_KEY marker equals its $ref was materialized from that ref by an earlier pass and had the
-    // collapsed $ref merged back onto it (e.g. by a dependencies or if/then merge): expanding it again would
-    // repeat the earlier pass forever, so it stays collapsed too.
+    // The path holds each ref as this walk carries it and as the expanded target carries it: a ref
+    // normalization rewrote meets its own target again under the resolved spelling, and either spelling
+    // repeating is the cycle. On a re-walk (passCount > 0), a schema whose RJSF_REF_KEY marker equals its
+    // $ref was materialized from that ref by an earlier pass and had the collapsed $ref merged back onto it
+    // (e.g. by a dependencies or if/then merge): expanding it again would repeat the earlier pass forever,
+    // so it stays collapsed too.
+    const cycleBase = $ref!.startsWith('#') ? pointerScope : currentBaseURI;
+    const resolvedRef = cycleBase !== undefined ? resolveUri(cycleBase, $ref!) : $ref!;
     if (
       pathList.includes($ref!) ||
+      pathList.includes(resolvedRef) ||
       (passCount > 0 && (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY] === $ref)
     ) {
       return markCycleOnDetection ? { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } : resolvedSchema;
     }
-    pathList = [...pathList, $ref!];
+    pathList = resolvedRef !== $ref ? [...pathList, $ref!, resolvedRef] : [...pathList, $ref];
     // Look the ref up against the normalized root: its refs are already resolved against the root's own base,
     // so the lookup treats the ref as already resolved first and only resolves it against the given scope when
     // it matches nothing as given (a relative ref written on the caller's own schema, which the normalization
@@ -729,7 +734,12 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     // built from it) with duplicates.
     const sourceRef = (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY];
     if (typeof sourceRef === 'string') {
-      pathList = [...pathList, sourceRef];
+      // The marker is the ref as the earlier pass walked it; the target it materialized carries the resolved
+      // spelling, so the path holds both, the way the expansion above pushes both
+      const sourceBase = sourceRef.startsWith('#') ? pointerScope : currentBaseURI;
+      const resolvedSourceRef = sourceBase !== undefined ? resolveUri(sourceBase, sourceRef) : sourceRef;
+      pathList =
+        resolvedSourceRef !== sourceRef ? [...pathList, sourceRef, resolvedSourceRef] : [...pathList, sourceRef];
       if (expandedRefs && !expandedRefs.includes(sourceRef)) {
         expandedRefs.push(sourceRef);
       }

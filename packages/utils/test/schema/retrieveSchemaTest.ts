@@ -938,6 +938,19 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect((viaUtils.properties!.q as RJSFSchema).title).toEqual('BO');
       expect((viaUtils.properties!.q as RJSFSchema).title).toEqual((direct.properties!.q as RJSFSchema).title);
     });
+    it('collapses a recursive ref on a draft-7 root with an $id at the first repeat', () => {
+      // The first repeat of the ref, spelled either way, is the cycle: the expanded target's inner ref
+      // carries the resolved spelling while the path holds the walked one, and the two name one ref
+      const root: RJSFSchema = {
+        $id: 'https://ex.com/r.json',
+        definitions: { node: { type: 'object', properties: { child: { $ref: '#/definitions/node' } } } },
+        properties: { n: { $ref: '#/definitions/node' } },
+      };
+      const resolved = retrieveSchema({ validator: testValidator }, root, root);
+      const child = (resolved.properties!.n as RJSFSchema).properties!.child as RJSFSchema;
+      expect(child.type).toBeUndefined();
+      expect(child.$ref).toEqual('https://ex.com/r.json#/definitions/node');
+    });
     it('matches a root $id that ends in a slash', () => {
       // The ref and the root name the same resource, slash or no slash
       const root: RJSFSchema = {
