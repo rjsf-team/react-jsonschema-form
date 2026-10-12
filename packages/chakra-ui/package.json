@@ -60,7 +60,6 @@
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
-    "@emotion/is-prop-valid": "^1.4.0",
     "@emotion/weak-memoize": "^0.4.0",
     "lucide-react": "^1.49.0",
     "react-icons": "^5.7.0"

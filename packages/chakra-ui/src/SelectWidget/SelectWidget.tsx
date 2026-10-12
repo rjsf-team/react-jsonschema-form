@@ -42,7 +42,6 @@ export default function SelectWidget<
     autofocus,
     onChange,
     schema,
-    uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -92,7 +91,7 @@ export default function SelectWidget<
   );
 
   const containerRef = useRef(null);
-  const chakraProps = getChakra(uiSchema);
+  const chakraProps = getChakra(options);
 
   function renderItem(option: IndexedEnumOptionType<S>) {
     const item = toItem(option);

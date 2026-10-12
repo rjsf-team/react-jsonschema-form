@@ -27,14 +27,13 @@ export default function TextareaWidget<
   required,
   rawErrors,
   hideError,
-  uiSchema,
 }: WidgetProps<T, S, F>) {
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target?.value);
 
-  const chakraProps = getChakra(uiSchema);
+  const chakraProps = getChakra(options);
 
   return (
     <Field

@@ -33,7 +33,6 @@ export default function RadioWidget<
   onChange,
   onBlur,
   onFocus,
-  uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -49,7 +48,7 @@ export default function RadioWidget<
   const row = options ? options.inline : false;
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null);
 
-  const chakraProps = getChakra(uiSchema);
+  const chakraProps = getChakra(options);
 
   return (
     <Field

@@ -1,6 +1,5 @@
 import type { JsxStyleProps } from '@chakra-ui/react';
 import { defaultSystem } from '@chakra-ui/react';
-import shouldForwardProp from '@emotion/is-prop-valid';
 import type { UiSchema } from '@rjsf/utils';
 import { isObject } from '@rjsf/utils';
 
@@ -15,24 +14,17 @@ export type ChakraUiSchema = UiSchema & {
 
 type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: JsxStyleProps };
 
-/** Reads the style props a `uiSchema` carries under `ui:options.chakra`.
+/** Reads the style props a widget's `options` carry under `chakra`. The `options` are the merged ones `getUiOptions()`
+ * returns, so a `chakra` set through `ui:globalOptions` or the `ui:chakra` shorthand is read like one in `ui:options`.
  *
- * NOTE: takes only the member it reads rather than a `ChakraUiSchema`, which a widget's `UiSchema<T, S, F>` does not
- * fit, and whose index signature would accept a wrapper such as `{ uiSchema }` and read nothing from it.
+ * Only what Chakra knows as a style prop is returned, so nothing else in the bag reaches the component as a prop.
  */
-export function getChakra(uiSchema: { 'ui:options'?: Record<string, unknown> } = {}): JsxStyleProps {
-  const { chakra } = uiSchema['ui:options'] ?? {};
+export function getChakra(options: Record<string, unknown> = {}): JsxStyleProps {
+  const { chakra } = options;
   const chakraProps = isObject(chakra) ? chakra : {};
 
-  /**
-   * Leveraging `shouldForwardProp` to remove props
-   * https://chakra-ui.com/docs/styling/chakra-factory#forwarding-props
-   *
-   * Filtered into a copy, since `chakraProps` belongs to the caller's uiSchema.
-   */
-  return Object.fromEntries(
-    Object.entries(chakraProps).filter(([key]) => defaultSystem.isValidProperty(key) && !shouldForwardProp(key)),
-  );
+  // Filtered into a copy, since `chakraProps` belongs to the caller's uiSchema
+  return Object.fromEntries(Object.entries(chakraProps).filter(([key]) => defaultSystem.isValidProperty(key)));
 }
 
 /** Duck-typed on `valueAsNumber`, which only inputs have, rather than `instanceof HTMLInputElement`, which is false for
