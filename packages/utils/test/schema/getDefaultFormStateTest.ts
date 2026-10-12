@@ -1464,6 +1464,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toEqual({ name: 'n', child: [{ name: 'n', child: [undefined] }] });
           });
 
+          test('an if/then that is itself the ref', () => {
+            const schema = recursiveNode({ type: 'object', if: {}, then: ref });
+            // One level of the recursion is expanded, the way every keyword's materialization is counted once,
+            // then the defaults stop at the definition the descent already built
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              name: 'n',
+              child: { name: 'n' },
+            });
+          });
+
+          test('an allOf entry that is itself the ref, with populateDefaults', () => {
+            const schema = recursiveNode({ type: 'object', allOf: [ref] });
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+                { schema, rootSchema: schema },
+              ),
+            ).toEqual({ name: 'n', child: { name: 'n' } });
+          });
+
           test('an if/then holding the ref', () => {
             const schema = recursiveNode({ type: 'object', if: {}, then: { properties: { x: ref } } });
             expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({

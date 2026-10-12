@@ -592,12 +592,28 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   if (!isObject(schema)) {
     return schema;
   }
+  // A schema already flagged as a `$ref` cycle is terminal for a fixpoint re-walk (pass > 0): it was collapsed on
+  // purpose, and expanding it again re-opens the loop the flag stopped, so the re-walk would never converge. A
+  // fresh (pass 0) walk still expands it - that is what lets `CyclicSchemaField` reveal the next level of a cycle,
+  // and what a pattern merge that applies to the flagged key needs. A branch the pattern merge left undone carries
+  // the flag as bookkeeping rather than collapse, so it is exempt either way.
+  if (
+    passCount > 0 &&
+    (schema as Record<symbol, unknown>)[RJSF_REF_CYCLE_KEY] === true &&
+    !(schema as Record<symbol, unknown>)[PATTERN_MERGE_LEFT_UNDONE]
+  ) {
+    return schema;
+  }
   let resolvedSchema: S = schema;
   let currentBaseURI = baseURI;
   // The recurse list is a path stack: entries are added only for the refs being expanded on the current resolution
   // path and are never shared with sibling subtrees or back with the caller. A $ref is a cycle only when it already
   // appears on the current path.
   let pathList = recurseList;
+  // Whether anything on this subtree actually changed, tracked by reference. `deepEquals()` ignores symbol-keyed
+  // markers, so a walk that only adds a `RJSF_REF_CYCLE_KEY` flag or `RJSF_REF_KEY` marker would otherwise collapse
+  // to the original schema here and lose the marker.
+  let changed = false;
   // resolve top level ref
   if (REF_KEY in resolvedSchema) {
     const { $ref, ...localSchema } = resolvedSchema;
@@ -619,6 +635,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       currentBaseURI = resolvedSchema[ID_KEY];
     }
     expandedRefs?.push($ref!);
+    changed = true;
   } else if (passCount > 0) {
     // Only on fixpoint re-walks (pass > 0): a subtree materialized by a previous pass still carries its source
     // $ref as RJSF_REF_KEY, and putting it back on the path keeps refs inside the subtree at their fixpoint
@@ -643,7 +660,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       // in an object property always causes an infinite render loop and must be caught; in anyOf/oneOf mode a $ref
       // already expanded by an earlier option is collapsed on purpose (see the optionsPath handling below), so it
       // must not be marked.
-      updatedProps[key] = resolveAllReferences(
+      const updated = resolveAllReferences(
         value as S,
         rootSchema,
         pathList,
@@ -653,6 +670,8 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         expandedRefs,
         passCount,
       );
+      changed = changed || updated !== (value as S);
+      updatedProps[key] = updated;
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
   }
@@ -665,17 +684,56 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     resolvedSchema = {
       ...resolvedSchema,
       // Array items are only rendered when data exists, so a $ref cycle here does NOT cause an infinite render.
-      items: resolveAllReferences(
-        resolvedSchema.items as S,
-        rootSchema,
-        pathList,
-        currentBaseURI,
-        resolveAnyOfOrOneOfRefs,
-        false,
-        expandedRefs,
-        passCount,
-      ),
+      items: (() => {
+        const updated = resolveAllReferences(
+          resolvedSchema.items as S,
+          rootSchema,
+          pathList,
+          currentBaseURI,
+          resolveAnyOfOrOneOfRefs,
+          false,
+          expandedRefs,
+          passCount,
+        );
+        changed = changed || updated !== (resolvedSchema.items as S);
+        return updated;
+      })(),
     };
+  }
+
+  // A recursion a property reaches through a keyword on the property itself - an `allOf` entry or a
+  // `then`/`else` branch holding the `$ref` back to the definition - loops the render just as a property `$ref`
+  // does, because the field's own retrieve starts from an empty path and expands the keyword one level every
+  // time. The branches are NOT walked: expanding them here is what `resolveCondition()` and the `allOf` merge
+  // do with the path threaded through, and a walk would only re-expand a branch on a fresh path on every
+  // fixpoint pass. All the render needs is the flag: a branch that declares a `$ref` already on the path is the
+  // edge that closes the cycle, so the schema holding it is flagged below and `SchemaField` renders the cycle
+  // indicator instead of nesting fields until the heap runs out. An `if` is only evaluated, never rendered, so
+  // a cycle inside it is no render loop and does not flag this schema. Cycles hidden deeper inside a branch are
+  // caught when the branch is expanded, by the same walk that catches them anywhere else.
+  let branchCycle = false;
+  const branchRefs: (string | undefined)[] = [];
+  if (ALL_OF_KEY in resolvedSchema && Array.isArray(resolvedSchema[ALL_OF_KEY])) {
+    for (const element of resolvedSchema[ALL_OF_KEY] as S[]) {
+      branchRefs.push(isObject(element) ? declaredRef<S>(element) : undefined);
+    }
+  }
+  for (const key of [THEN_KEY, ELSE_KEY] as const) {
+    if (key in resolvedSchema && isObject(resolvedSchema[key])) {
+      branchRefs.push(declaredRef<S>(resolvedSchema[key] as S));
+    }
+  }
+  for (const branchRef of branchRefs) {
+    if (branchRef !== undefined && pathList.includes(branchRef)) {
+      branchCycle = true;
+      break;
+    }
+  }
+  if (branchCycle && markCycleOnDetection && (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_CYCLE_KEY] !== true) {
+    // The keyword hid the cycle edge from the top-level `$ref` check, but the field is the edge: flag the schema
+    // itself so `SchemaField` renders the cycle indicator for it instead of nesting fields until the heap runs out.
+    resolvedSchema = { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true };
+    changed = true;
   }
 
   if (resolveAnyOfOrOneOfRefs) {
@@ -705,12 +763,19 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
           if (expandedRefs && expandedRefs.length > expandedBefore) {
             optionsPath = [...optionsPath, ...expandedRefs.slice(expandedBefore)];
           }
+          changed = changed || option !== s;
           return option;
         }),
       };
     }
   }
 
+  // Symbol-only diffs (a cycle flag or a ref marker) survive the `deepEquals()` collapse only on the first pass:
+  // the flag a fresh detection sets must reach `SchemaField`, but the same flag re-derived by a fixpoint re-walk
+  // (pass > 0) is the walk recognising its own work and collapses away, so a re-walk stays a no-op
+  if (passCount === 0 && changed) {
+    return resolvedSchema;
+  }
   return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 

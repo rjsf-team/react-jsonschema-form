@@ -1263,5 +1263,36 @@ describe('SchemaField', () => {
       expect(node.querySelector('#root_child_child-button')).toBeNull();
       expect(node.querySelector<HTMLButtonElement>('#root_child_child_child_child-button')).not.toBeNull();
     });
+
+    describe('a property that reaches its own definition through a keyword (issue 5501)', () => {
+      const nodeSchema: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string' }, child: { allOf: [{ $ref: '#/definitions/node' }] } },
+      };
+      const viaThen: RJSFSchema = {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          child: { type: 'object', if: {}, then: { $ref: '#/definitions/node' } },
+        },
+      };
+      const wrap = (node: RJSFSchema): RJSFSchema => ({ definitions: { node }, $ref: '#/definitions/node' });
+
+      it('allOf holding the ref renders the cycle indicator', () => {
+        const { node } = createFormComponent({ schema: wrap(nodeSchema) });
+
+        const expandButton = node.querySelector<HTMLButtonElement>('#root_child-button');
+        expect(expandButton).not.toBeNull();
+        expect(expandButton).toHaveTextContent('Expand Cycle');
+      });
+
+      it('then holding the ref renders the cycle indicator', () => {
+        const { node } = createFormComponent({ schema: wrap(viaThen) });
+
+        const expandButton = node.querySelector<HTMLButtonElement>('#root_child-button');
+        expect(expandButton).not.toBeNull();
+        expect(expandButton).toHaveTextContent('Expand Cycle');
+      });
+    });
   });
 });

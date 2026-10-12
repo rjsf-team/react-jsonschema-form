@@ -634,9 +634,32 @@ export function getObjectDefaults<
     const shouldRetrieveSchema =
       shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) ||
       (defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in schema);
-    const retrievedSchema = shouldRetrieveSchema
-      ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData)
-      : schema;
+    // A condition's `then`/`else` is resolved through `retrieveSchemaInternal()` with the defaults recursion path
+    // threaded through: a branch that refers back to a definition this descent already expanded collapses there
+    // instead of materializing the definition again, which is what looped the defaults of a recursion reached
+    // through `if`/`then` without end. The `allOf` branch keeps the plain retrieve: its marker handling is what
+    // the materialization guard in `computeDefaults()` reads.
+    let retrievedSchema = schema;
+    if (shouldRetrieveSchema) {
+      retrievedSchema =
+        IF_KEY in schema
+          ? retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, formData, undefined, _recurseList)[0]
+          : retrieveSchema<T, S, F>(context, schema, rootSchema, formData);
+    }
+    // A retrieved schema materialized by expanding a `$ref` carries that ref as `RJSF_REF_KEY`. Counting it on the
+    // descent is what stops a recursion reached through a keyword: the next level's retrieve or `$ref` branch
+    // reads the ref on the path and collapses, the way a plain `child: { $ref }` stops. Without the count the
+    // descent re-expands the definition at every level and the defaults never terminate. Reaching this node with
+    // the ref already counted means the expansion looped back to a definition this descent already built, so the
+    // defaults stop here, exactly as `computeDefaults()` collapses the materialization to the bare `$ref`.
+    let descendList = _recurseList;
+    const retrievedRef = (retrievedSchema as RJSFMarkedSchema)[RJSF_REF_KEY];
+    if (typeof retrievedRef === 'string' && retrievedSchema !== schema) {
+      if (_recurseList.includes(retrievedRef)) {
+        return (defaults ?? {}) as T;
+      }
+      descendList = _recurseList.concat(retrievedRef);
+    }
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties ?? {}).reduce(
       (acc: GenericObjectType, key: string) => {
@@ -656,7 +679,7 @@ export function getObjectDefaults<
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
           rootSchema,
-          _recurseList,
+          _recurseList: descendList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
