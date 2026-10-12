@@ -109,9 +109,11 @@ export interface Experimental_DefaultFormStateBehavior {
    */
   emptyObjectFields?: 'populateAllDefaults' | 'populateRequiredDefaults' | 'skipDefaults' | 'skipEmptyDefaults';
   /**
-   * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults'.
+   * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults`.
    * NOTE: `skipDefaults` only skips the `allOf` schemas nested inside the schema that `getDefaultFormState()` computes
-   * defaults from, so the defaults of that schema's own `allOf` are still populated.
+   * defaults from, so the defaults of that schema's own `allOf` are still populated. The `if-then-else` branch is picked
+   * from `formData`, not from the computed defaults, so when the `if` lists in `required` a property that only a default
+   * provides, the `then` default is left out until `formData` holds that value.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
   /** Optional enumerated flag controlling how the defaults are merged into the form data when dealing with undefined

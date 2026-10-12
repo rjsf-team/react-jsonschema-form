@@ -5684,6 +5684,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ],
       };
       const animalInfoArraySchema: RJSFSchema = { type: 'array', items: animalInfoSchema };
+      const [animalCondition] = animalInfoSchema.allOf as RJSFSchema[];
 
       it('should populate root defaults for allOf', () => {
         schema = {
@@ -5860,6 +5861,36 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               allOf: 'skipDefaults',
             }),
           ).toEqual({ animal: 'Cat', food: 'meat' });
+        });
+
+        it('should pick the if-then-else branch from the form data, so a then default whose if requires a defaulted value is left out', () => {
+          testValidator.setReturnValues({ isValid: [false] });
+          const requiredAnimalSchema: RJSFSchema = {
+            ...animalInfoSchema,
+            allOf: [{ ...animalCondition, if: { ...(animalCondition.if as RJSFSchema), required: ['animal'] } }],
+          };
+          expect(
+            getDefaultFormState(testValidator, requiredAnimalSchema, undefined, requiredAnimalSchema, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ animal: 'Cat' });
+        });
+
+        it('should populate the conditional defaults of an if-then-else placed directly in array items', () => {
+          const directConditionArraySchema: RJSFSchema = {
+            type: 'array',
+            items: { properties: animalInfoSchema.properties, ...animalCondition },
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              directConditionArraySchema,
+              [{ animal: 'Cat' }],
+              directConditionArraySchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat', food: 'meat' }]);
         });
       });
     });

@@ -200,15 +200,19 @@ render(
 
 Optional enumerated flag controlling how empty defaults are populated when `allOf` schemas are provided, defaulting to `skipDefaults`:
 
-| Flag Value         | Description                                                                                  |
-| ------------------ | -------------------------------------------------------------------------------------------- |
-| `skipDefaults`     | Skip parsing defaults from `allOf` schemas                                                   |
-| `populateDefaults` | Generate default values for properties in the `allOf` schema including `if-then-else` syntax |
+| Flag Value         | Description                                                                                    |
+| ------------------ | ---------------------------------------------------------------------------------------------- |
+| `skipDefaults`     | Skip parsing defaults from `allOf` schemas nested inside the schema defaults are computed from |
+| `populateDefaults` | Generate default values for properties in the `allOf` schema including `if-then-else` syntax   |
 
 `skipDefaults` only skips the `allOf` schemas nested inside the schema that defaults are computed from, not that schema's own `allOf`.
 When the form computes defaults from the root schema, a root-level `allOf` provides its defaults with either value.
-The branch of an `if-then-else` is picked from the form data, not from the computed defaults, so a `then` default is left out when only a default satisfies the `if`.
+The branch of an `if-then-else` is picked from the form data, not from the computed defaults.
+So when the `if` lists a property in `required` and only a default provides that property, the `then` default is left out until the form data holds the value, for instance on the initial render.
+Without `required`, a missing property still satisfies the `if`'s `properties`, so the `if` passes with no data.
 The same `allOf` in an object property or in an array's `items` usually needs `populateDefaults` to provide its defaults.
+This is specific to `allOf`: an `if-then-else` placed directly in a nested object schema is resolved with either value, unless `emptyObjectFields` is `skipEmptyDefaults`.
+For example, under `skipDefaults`, `items: { if, then }` fills in the `then` default, while `items: { allOf: [{ if, then }] }` does not.
 Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value.
 
 ```tsx
