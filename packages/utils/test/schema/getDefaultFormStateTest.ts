@@ -1431,6 +1431,84 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        describe('a recursive $ref held inside a keyword on a property', () => {
+          // https://github.com/rjsf-team/react-jsonschema-form/issues/5500 - the `$ref` back to the enclosing
+          // definition sits inside an `allOf`, an `if`/`then` or a `dependencies` on the property (or array
+          // `items`), rather than being the property's own `$ref`. The defaults must stop at the recursion, as
+          // they do for a plain `child: { $ref }`.
+          const ref = { $ref: '#/definitions/node' };
+          const recursiveNode = (child: RJSFSchema): RJSFSchema => ({
+            definitions: {
+              node: { type: 'object', properties: { name: { type: 'string', default: 'n' }, child } },
+            },
+            $ref: '#/definitions/node',
+          });
+
+          test('an allOf holding the ref, with populateDefaults', () => {
+            const schema = recursiveNode({ type: 'object', allOf: [{ properties: { x: ref } }] });
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+                { schema, rootSchema: schema },
+              ),
+            ).toEqual({ name: 'n', child: { x: { name: 'n' } } });
+          });
+
+          test('an allOf holding the ref in array items, with populateDefaults', () => {
+            const schema = recursiveNode({ type: 'array', minItems: 1, allOf: [{ items: ref }] });
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+                { schema, rootSchema: schema },
+              ),
+            ).toEqual({ name: 'n', child: [{ name: 'n', child: [undefined] }] });
+          });
+
+          test('an if/then holding the ref', () => {
+            const schema = recursiveNode({ type: 'object', if: {}, then: { properties: { x: ref } } });
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              name: 'n',
+              child: { x: { name: 'n' } },
+            });
+          });
+
+          test('an if/then holding the ref in array items', () => {
+            const schema = recursiveNode({
+              type: 'array',
+              minItems: 1,
+              items: { type: 'object', if: {}, then: { properties: { x: ref } } },
+            });
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              name: 'n',
+              child: [{ x: { name: 'n', child: [{}] } }],
+            });
+          });
+
+          test('a dependencies entry that is the ref', () => {
+            const schema = recursiveNode({
+              type: 'object',
+              properties: { x: { type: 'string', default: 'x' } },
+              dependencies: { x: ref },
+            });
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              name: 'n',
+              child: { x: 'x', name: 'n', child: { x: 'x' } },
+            });
+          });
+
+          test('a dependencies entry holding the ref in its properties', () => {
+            const schema = recursiveNode({
+              type: 'object',
+              properties: { x: { type: 'string', default: 'x' } },
+              dependencies: { x: { properties: { y: ref } } },
+            });
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              name: 'n',
+              child: { x: 'x', y: { name: 'n', child: { x: 'x' } } },
+            });
+          });
+        });
+
         describe('a simple schema and no optional args', () => {
           const schema: RJSFSchema = { type: 'string' };
           const expected = undefined;
