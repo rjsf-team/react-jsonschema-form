@@ -127,7 +127,7 @@ import orderProperties from './orderProperties.ts';
 import pad from './pad.ts';
 import padTimeSeconds from './padTimeSeconds.ts';
 import parseDateString from './parseDateString.ts';
-import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
+import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
@@ -328,6 +328,7 @@ export {
   fieldPathToList,
   fieldPathToName,
   toPath,
+  propertyToPath,
   triggerValueId,
   uiBooleanOption,
   unsetByPath,

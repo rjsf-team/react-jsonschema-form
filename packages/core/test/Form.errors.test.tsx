@@ -5,7 +5,14 @@ import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps } from '../src/index.ts';
-import { AcceptingParent, describeRepeated, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import {
+  AcceptingParent,
+  describeRepeated,
+  errorListMessages,
+  expectToHaveBeenCalledWithFormData,
+  fieldErrorsById,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -1434,6 +1441,57 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         await submitForm(node, user, true);
         expect(onError).toHaveBeenCalled();
         expect(onError.mock.calls[0][0]).toHaveLength(1);
+      });
+    });
+
+    describe('extraErrors identical to a validator error', () => {
+      const message = 'must NOT have fewer than 3 characters';
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          addr: { type: 'object', properties: { street: { type: 'string', minLength: 3 } } },
+        },
+      };
+      const extraErrors: ErrorSchema = { addr: { street: { __errors: [message] } } };
+
+      it.each([undefined, true])(
+        'lists the message once in the top ErrorList, on the field and to onError after submit, with extraErrorsAreWarnings %s',
+        async (extraErrorsAreWarnings) => {
+          const { node, onError } = createFormComponent({ schema, extraErrors, extraErrorsAreWarnings });
+
+          await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
+          await submitForm(node, user);
+
+          expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
+          expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+          expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ property: '.addr.street', message })]);
+        },
+      );
+
+      it('keeps listing the message once after the validator stops reporting it', async () => {
+        const { node, onError } = createFormComponent({ schema, extraErrors });
+        const input = node.querySelector<HTMLInputElement>('input')!;
+
+        await user.type(input, 'a');
+        await submitForm(node, user);
+        await user.type(input, 'bc');
+        await submitForm(node, user);
+
+        expect(input.value).toBe('abc');
+        expect(fieldErrorsById(node)).toEqual({ root_addr_street: [message] });
+        expect(errorListMessages(node)).toEqual([`.addr.street ${message}`]);
+        expect(onError).toHaveBeenCalledTimes(2);
+        expect(onError).toHaveBeenLastCalledWith([expect.objectContaining({ property: '.addr.street', message })]);
+      });
+
+      it('passes the message once to onChange under live validation', async () => {
+        const { node, onChange } = createFormComponent({ schema, extraErrors, liveValidate: 'onChange' });
+
+        await user.type(node.querySelector<HTMLInputElement>('input')!, 'a');
+
+        expect(onChange.mock.lastCall![0].errors).toEqual([
+          expect.objectContaining({ property: '.addr.street', message }),
+        ]);
       });
     });
   });

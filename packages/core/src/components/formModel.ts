@@ -9,7 +9,7 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
-  toPath,
+  propertyToPath,
   replaceEqualDeep,
   fieldPathFromList,
   fieldPathToId,
@@ -301,7 +301,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const focusOnError = (error: RJSFValidationError) => {
     const { idPrefix = 'root', idSeparator = '_' } = committedProps;
     const { property } = error;
-    const path = toPath(property ?? '');
+    const path = propertyToPath(property);
     // The id of the root element is the idPrefix, so prepend it to the path
     path.unshift(idPrefix);
 
