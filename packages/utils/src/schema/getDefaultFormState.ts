@@ -493,17 +493,18 @@ export function computeDefaults<
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
     // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
     // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
+    const pathWithOwnRef = refsOnPath(schema, _recurseList);
     [schemaToCompute] = retrieveSchemaInternal<T, S, F>(
       context,
       schema,
       rootSchema,
       rawFormData,
       false,
-      refsOnPath(schema, _recurseList),
+      pathWithOwnRef,
     );
     // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
     // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at
-    updatedRecurseList = refsOnPath(schemaToCompute, refsOnPath(schema, _recurseList));
+    updatedRecurseList = refsOnPath(schemaToCompute, pathWithOwnRef);
   }
 
   if (schemaToCompute) {
@@ -658,6 +659,13 @@ export function getObjectDefaults<
     const [retrievedSchema] = shouldRetrieveSchema
       ? retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, formData, false, refsOnPath(schema, _recurseList))
       : [schema];
+    // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` joins the path of everything below, the way
+    // one the `$ref` branch of `computeDefaults()` expands does. The ref `schema` was itself resolved from does not:
+    // it seeds the retrieve above, but one more `$ref` back to it is still followed, as it is without the retrieve
+    const childRecurseList =
+      resolvedFromRef<S>(retrievedSchema) === resolvedFromRef<S>(schema)
+        ? _recurseList
+        : refsOnPath(retrievedSchema, _recurseList);
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties ?? {}).reduce(
       (acc: GenericObjectType, key: string) => {
@@ -677,7 +685,7 @@ export function getObjectDefaults<
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
           rootSchema,
-          _recurseList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
@@ -732,7 +740,7 @@ export function getObjectDefaults<
       keys.forEach((key) => {
         const computedDefault = computeDefaults(context, additionalPropertiesSchema as S, {
           rootSchema,
-          _recurseList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
