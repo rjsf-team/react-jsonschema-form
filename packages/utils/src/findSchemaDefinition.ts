@@ -542,7 +542,7 @@ function resolveFoundChain<S extends StrictRJSFSchema = RJSFSchema>(
     if (subFound === undefined) {
       throw new Error(`Could not find a definition for ${nextRef}.`);
     }
-    const sub = resolveFoundChain<S>(subFound, nextRef, rootSchema, [...recurseList, ref], found.baseURI);
+    const sub = resolveFoundChain<S>(subFound, nextRef, rootSchema, [...recurseList, ref]);
     if (Object.keys(remaining).length > 0) {
       if (
         rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2019_09 ||

@@ -860,7 +860,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         properties: { x: { $ref: '#/definitions/a' } },
       };
       const resolved = retrieveSchema({ validator: testValidator }, root, root);
-      expect(resolved.properties!.x.items).toStrictEqual({
+      expect((resolved.properties!.x as RJSFSchema).items).toStrictEqual({
         type: 'string',
         [RJSF_REF_KEY]: 'https://ex.com/r.json#/definitions/b',
         [RJSF_SOURCE_REF_KEY]: '#/definitions/b',
@@ -907,13 +907,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       const utils = createSchemaUtils({ validator: testValidator }, root);
       const normalizedRoot = utils.getRootSchema();
-      expect(utils.retrieveSchema(normalizedRoot.properties!.x, undefined)).toStrictEqual({
+      expect(utils.retrieveSchema(normalizedRoot.properties!.x as RJSFSchema, undefined)).toStrictEqual({
         $id: 'a.json',
         type: 'string',
         [RJSF_REF_KEY]: 'schemas/a.json',
         [RJSF_SOURCE_REF_KEY]: 'a.json',
       });
-      expect(utils.retrieveSchema(normalizedRoot.properties!.y, undefined)).toStrictEqual({
+      expect(utils.retrieveSchema(normalizedRoot.properties!.y as RJSFSchema, undefined)).toStrictEqual({
         $id: 'a.json',
         type: 'string',
         [RJSF_REF_KEY]: 'schemas/root.json#/$defs/a',
