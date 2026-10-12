@@ -25,6 +25,7 @@ import {
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
   getFreePropertyNames,
+  getDeprecatedHandling,
   getMatchingPatternProperties,
   getFieldTypeForWidget,
   getTemplates,
@@ -794,13 +795,16 @@ export default function ObjectField<
         uiSchema,
         addedByAdditionalProperties ? ADDITIONAL_PROPERTIES_KEY : propertyName,
       );
-      const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
+      const propertySchema = getPropertySchema<S>(schema, propertyName);
+      const fieldUiOptions = getUiOptions<T, S, F>(fieldUiSchema, registry.globalUiOptions);
+      const hidden =
+        fieldUiOptions.widget === 'hidden' || getDeprecatedHandling<T, S, F>(propertySchema, fieldUiOptions) === 'hide';
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}
           propertyName={propertyName}
           required={isRequired<S>(schema, propertyName)}
-          schema={getPropertySchema<S>(schema, propertyName)}
+          schema={propertySchema}
           uiSchema={fieldUiSchema}
           errorSchema={getByPath(errorSchema, propertyName)}
           fieldPath={fieldPath}

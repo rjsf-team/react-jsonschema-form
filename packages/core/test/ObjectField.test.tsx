@@ -91,6 +91,53 @@ describe('ObjectField', () => {
       expect(node.querySelector('div.hidden > fieldset')).toBeInTheDocument();
     });
 
+    describe('deprecated property visibility', () => {
+      const cases: { name: string; uiSchema: UiSchema; deprecated?: boolean; hidden: boolean }[] = [
+        { name: 'global hide', uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' } }, hidden: true },
+        { name: 'local hide', uiSchema: { b: { 'ui:deprecatedHandling': 'hide' } }, hidden: true },
+        { name: 'local options hide', uiSchema: { b: { 'ui:options': { deprecatedHandling: 'hide' } } }, hidden: true },
+        { name: 'default label', uiSchema: {}, hidden: false },
+        { name: 'global label', uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'label' } }, hidden: false },
+        { name: 'global disable', uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'disable' } }, hidden: false },
+        {
+          name: 'local label overrides global hide',
+          uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' }, b: { 'ui:deprecatedHandling': 'label' } },
+          hidden: false,
+        },
+        {
+          name: 'local disable overrides global hide',
+          uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' }, b: { 'ui:deprecatedHandling': 'disable' } },
+          hidden: false,
+        },
+        {
+          name: 'non-deprecated property stays visible',
+          uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' } },
+          deprecated: false,
+          hidden: false,
+        },
+        { name: 'hidden widget stays hidden', uiSchema: { b: { 'ui:widget': 'hidden' } }, hidden: true },
+      ];
+
+      it.each(cases)('passes $name to the object template', ({ uiSchema, deprecated = true, hidden }) => {
+        const template = vi.fn(({ properties }: ObjectFieldTemplateProps) => (
+          <div>{properties.map((property) => property.content)}</div>
+        ));
+        createFormComponent({
+          schema: {
+            type: 'object',
+            properties: { a: { type: 'string' }, b: { type: 'string', deprecated } },
+          },
+          uiSchema,
+          templates: { ObjectFieldTemplate: template },
+        });
+
+        expect(template.mock.lastCall?.[0].properties).toEqual([
+          expect.objectContaining({ name: 'a', hidden: false }),
+          expect.objectContaining({ name: 'b', hidden }),
+        ]);
+      });
+    });
+
     it('should render a customized title', () => {
       const CustomTitleField = ({ title }: TitleFieldProps) => <div id='custom'>{title}</div>;
 
