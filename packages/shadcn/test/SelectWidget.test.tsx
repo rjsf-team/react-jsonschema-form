@@ -8,6 +8,9 @@ import Form from '../src/index.ts';
 import SelectWidget from '../src/SelectWidget/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
+const translateToFrench = (stringToTranslate: TranslatableString) =>
+  stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
+
 describe('SelectWidget', () => {
   test('single select is reachable from the tab order and opens with the keyboard', async () => {
     const user = userEvent.setup();
@@ -529,8 +532,6 @@ describe('multiple SelectWidget accessible name', () => {
     uniqueItems: true,
     items: { type: 'string' as const, enum: ['red', 'blue'] },
   };
-  const translateToFrench = (stringToTranslate: TranslatableString) =>
-    stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
 
   test('uses the field title', () => {
     render(<Form schema={colorsSchema} validator={validator} />);
@@ -571,26 +572,6 @@ describe('multiple SelectWidget accessible name', () => {
     expect(screen.getByPlaceholderText('Choisir ...')).toBeInTheDocument();
   });
 
-  test('a custom translateString drives the single select trigger', () => {
-    const schema = { type: 'string' as const, enum: ['red', 'blue'] };
-    render(<Form schema={schema} validator={validator} translateString={translateToFrench} />);
-    expect(screen.getByRole('button', { expanded: false })).toHaveTextContent('Choisir ...');
-  });
-
-  test('an option with an empty label renders blank once selected instead of the placeholder', () => {
-    const schema = {
-      type: 'string' as const,
-      oneOf: [
-        { const: 'none', title: '' },
-        { const: 'red', title: 'Red' },
-      ],
-    };
-    render(<Form schema={schema} validator={validator} formData='none' />);
-    const trigger = screen.getByRole('button', { expanded: false });
-    expect(trigger.querySelector('span')?.textContent).toBe('');
-    expect(trigger).not.toHaveTextContent('Select ...');
-  });
-
   test('passes required and the field description to the combobox input', () => {
     const schema = {
       type: 'object' as const,
@@ -609,5 +590,26 @@ describe('multiple SelectWidget accessible name', () => {
     const combobox = screen.getByRole('combobox');
     expect(combobox).toHaveAttribute('aria-required', 'true');
     expect(combobox).toHaveAttribute('aria-describedby', expect.stringContaining('root_colors__description'));
+  });
+});
+
+describe('single SelectWidget translated placeholder', () => {
+  test('a custom translateString drives the trigger', () => {
+    const schema = { type: 'string' as const, enum: ['red', 'blue'] };
+    render(<Form schema={schema} validator={validator} translateString={translateToFrench} />);
+    expect(screen.getByRole('button', { expanded: false })).toHaveTextContent('Choisir ...');
+  });
+
+  test('an option with an empty label renders blank once selected instead of the placeholder', () => {
+    const schema = {
+      type: 'string' as const,
+      oneOf: [
+        { const: 'none', title: '' },
+        { const: 'red', title: 'Red' },
+      ],
+    };
+    render(<Form schema={schema} validator={validator} formData='none' />);
+    const trigger = screen.getByRole('button', { expanded: false });
+    expect(trigger).toHaveTextContent(/^$/);
   });
 });

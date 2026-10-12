@@ -42,7 +42,7 @@ export const TranslatableString = {
   ClearLabel: 'Clear',
   /** Aria date label, used by DateWidget */
   AriaDateLabel: 'Select a date',
-  /** Placeholder for a select input, and its accessible name when the field has no title, used by SelectWidget */
+  /** Placeholder for a select input, and its accessible name when the field has no title, used by the shadcn SelectWidget */
   SelectPlaceholder: 'Select ...',
   /** File preview label, used by FileWidget */
   PreviewLabel: 'Preview',
