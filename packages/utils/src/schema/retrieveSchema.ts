@@ -21,6 +21,7 @@ import {
   REF_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
+  RJSF_SOURCE_REF_KEY,
   THEN_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
@@ -28,6 +29,7 @@ import findSchemaDefinition, {
   findSchemaDefinitionWithBaseURIOrUndefined,
   normalizeRootReferences,
   originalRefOf,
+  restoreOriginalRefs,
   resolveUri,
   splitKeyElementFromObject,
 } from '../findSchemaDefinition.ts';
@@ -656,19 +658,13 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     }
     pathList = [...pathList, $ref!];
     // Look the ref up against the normalized root: its refs are already resolved against the root's own base,
-    // so a ref carried by a nested resource resolves in the root's scope instead of being re-resolved against
-    // the referring schema's scope. A same-document ref (one starting with `#`) names a pointer inside the
-    // resource the referring schema currently belongs to, so it looks up against `pointerScope`; every other
-    // ref goes against the referring scope first, so that a relative ref written on the caller's own schema
-    // (which the normalization never touched) keeps its lexical meaning, and only a miss there falls back to
-    // the root's scope. Chain failures inside the lookup still throw rather than fall back.
+    // so the lookup treats the ref as already resolved first and only resolves it against the given scope when
+    // it matches nothing as given (a relative ref written on the caller's own schema, which the normalization
+    // never touched). A same-document ref (one starting with `#`) names a pointer inside the resource the
+    // referring schema currently belongs to, so it looks up against `pointerScope`; every other ref goes
+    // against the referring scope. Chain failures inside the lookup still throw.
     const lookupBase = $ref!.startsWith('#') ? pointerScope : currentBaseURI;
-    const rootBaseURI = typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined;
-    let found =
-      findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, normalizedRoot, [], lookupBase) ??
-      (lookupBase !== rootBaseURI
-        ? findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, normalizedRoot, [], rootBaseURI)
-        : undefined);
+    let found = findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, normalizedRoot, [], lookupBase);
     if (found === undefined) {
       throw new Error(`Could not find a definition for ${$ref}.`);
     }
@@ -679,21 +675,24 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       localSchema[ID_KEY] !== found.schema[ID_KEY]
     ) {
       // A `$id` written on the referring schema itself, distinct from the target's, re-identifies the resource
-      // the merged schema belongs to: the target's own content is then read as written (from the un-normalized
-      // root) so that the refs it carries resolve against the overriding scope, not the scope the
-      // normalization baked in. That is the documented meaning of a local `$id` overriding the referenced
-      // resource scope.
+      // the merged schema belongs to: the target's own content is then read as written, with the refs the
+      // normalization rewrote restored to the spelling the author wrote, so they resolve against the
+      // overriding scope rather than the scope the normalization baked in. That is the documented meaning of
+      // a local `$id` overriding the referenced resource scope.
       localOverride = true;
-      found = findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, rootSchema, [], lookupBase) ?? found;
+      found = { schema: restoreOriginalRefs<S>(found.schema), baseURI: found.baseURI };
     }
     const { schema: refSchema, baseURI: refBaseURI } = found;
-    // The marker keeps the spelling the document author wrote, which is what `resolveUiSchema` looks up;
-    // normalization only changed how the ref resolves, not where the schema came from.
-    const sourceRef = originalRefOf(resolvedSchema) ?? $ref!;
+    // The marker is the ref as this walk carries it, which is what `pathList`, `expandedRefs` and the cycle
+    // checks compare against the `$ref` they meet. The spelling the document author wrote, when normalization
+    // rewrote it, is kept on a separate marker for `resolveUiSchema`, whose `ui:definitions` are keyed by that
+    // spelling.
+    const authorRef = originalRefOf(resolvedSchema);
     resolvedSchema = {
       ...refSchema,
       ...localSchema,
-      [RJSF_REF_KEY]: sourceRef,
+      [RJSF_REF_KEY]: $ref!,
+      ...(authorRef !== undefined && authorRef !== $ref ? { [RJSF_SOURCE_REF_KEY]: authorRef } : {}),
     };
     if (localOverride) {
       // The overriding `$id` resolves against the referring schema's scope, and same-document refs now point
@@ -709,13 +708,13 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       // When the local `$id` repeats the target's own `$id` as written, the lookup already reported the scope
       // with it applied, so the target scope stands for same-document refs.
       pointerScope = refBaseURI;
-    } else if (!localOverride && !(ID_KEY in localSchema) && refBaseURI !== undefined) {
+    } else if (!(ID_KEY in localSchema) && refBaseURI !== undefined) {
       // A same-document ref alongside this one names a pointer inside the target's resource, so the scope the
       // lookup reported (with the target's own `$id` already applied) becomes the pointer scope. The referring
       // scope itself does not change: refs carried by root content are already resolved against the root base.
       pointerScope = refBaseURI;
     }
-    expandedRefs?.push(sourceRef);
+    expandedRefs?.push($ref!);
   } else if (passCount > 0) {
     // Only on fixpoint re-walks (pass > 0): a subtree materialized by a previous pass still carries its source
     // $ref as RJSF_REF_KEY, and putting it back on the path keeps refs inside the subtree at their fixpoint
@@ -1016,10 +1015,7 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
   if (type === undefined) {
     return offersOptions ? { ...subSchema } : guessedTypeSchema<S>(formData, subSchema);
   }
-  return {
-    ...(offersOptions ? subSchema : stubbableSchema<S>(subSchema)),
-    type,
-  };
+  return { ...(offersOptions ? subSchema : stubbableSchema<S>(subSchema)), type };
 }
 
 /** Returns the subschemas a `dependencies` entry merges into the schema it belongs to for the `formData` in hand,
@@ -1066,10 +1062,7 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   // as a `$ref` leaves them behind that reference for `referencedDefinition()` to read as options beside the branch
   // settled here, which strips whatever the referring schema declares itself. Read as options, a name every branch
   // declares counts as one the form renders even where no single branch qualifies and none of the `oneOf` is merged in
-  const withoutOneOf = {
-    ...dependentWithoutOneOf,
-    [ONE_OF_KEY]: [] as S[],
-  } as unknown as S;
+  const withoutOneOf = { ...dependentWithoutOneOf, [ONE_OF_KEY]: [] as S[] } as unknown as S;
   const matching =
     rootSchema === undefined
       ? []
@@ -1088,10 +1081,7 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
           if (!conditionPropertySchema) {
             return false;
           }
-          const conditionSchema = {
-            type: 'object',
-            properties: { [dependencyKey]: conditionPropertySchema },
-          } as S;
+          const conditionSchema = { type: 'object', properties: { [dependencyKey]: conditionPropertySchema } } as S;
           return context.validator.isValid(conditionSchema, formData, rootSchema);
         });
   return matching.length === 1 ? [withoutOneOf, matching[0]] : [withoutOneOf];
@@ -1655,10 +1645,7 @@ export function retrieveSchemaInternal<
         return [{ key, branches }];
       });
       const firstBranches = Object.fromEntries(branchesByKey.map(({ key, branches: [first] }) => [key, first]));
-      const withFirstBranches: S = {
-        ...resolvedSchema,
-        properties: { ...properties, ...firstBranches },
-      };
+      const withFirstBranches: S = { ...resolvedSchema, properties: { ...properties, ...firstBranches } };
       withMergedProperties = [
         withFirstBranches,
         ...branchesByKey.flatMap(({ key, branches }) =>

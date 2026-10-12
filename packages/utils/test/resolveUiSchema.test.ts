@@ -1,5 +1,5 @@
 import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src/index.ts';
-import { RJSF_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
+import { RJSF_REF_KEY, RJSF_SOURCE_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -61,6 +61,22 @@ describe('resolveUiSchema() - branching keyword runtime resolution', () => {
 
     expect(resultA.shared).toEqual({ 'ui:widget': 'textarea', 'ui:help': 'Help for A' });
     expect(resultB.shared).toEqual({ 'ui:widget': 'select', 'ui:help': 'Help for B' });
+  });
+});
+
+describe('resolveUiSchema() - author-spelled ref marker', () => {
+  it('looks ui:definitions up by the spelling the author wrote when the walk carried a rewritten ref', () => {
+    // A schema resolved from a normalized root carries the resolved ref as RJSF_REF_KEY and the author's
+    // spelling as RJSF_SOURCE_REF_KEY; `ui:definitions` are keyed by what the author wrote
+    const definitions = { '#/$defs/optionA': { name: { 'ui:placeholder': 'Name for A' } } };
+    const reg = { ...baseRegistry, uiSchemaDefinitions: definitions };
+    const schema = {
+      type: 'object',
+      [RJSF_REF_KEY]: 'https://example.com/root.json#/$defs/optionA',
+      [RJSF_SOURCE_REF_KEY]: '#/$defs/optionA',
+    } as unknown as RJSFSchema;
+    const result = resolveUiSchema(schema, undefined, reg);
+    expect(result.name).toEqual({ 'ui:placeholder': 'Name for A' });
   });
 });
 

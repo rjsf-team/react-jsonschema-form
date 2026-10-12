@@ -12,6 +12,7 @@ import {
   retrieveSchema,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
+  RJSF_SOURCE_REF_KEY,
   noop,
 } from '../../src/index.ts';
 import {
@@ -670,9 +671,17 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           $defs: { child, y: { type: 'integer' } },
         };
         const resolved = retrieveSchema({ validator: testValidator }, { $ref: '#/$defs/child' }, root);
+        const canonical = 'https://example.com/root.json#/$defs/y';
         expect(resolved).toStrictEqual({
           ...child,
-          properties: { value: { type: 'integer', [RJSF_REF_KEY]: $ref } },
+          properties: {
+            value: {
+              type: 'integer',
+              [RJSF_REF_KEY]: canonical,
+              // The spelling the author wrote is kept on a separate marker when the walk rewrote it
+              ...(canonical === $ref ? {} : { [RJSF_SOURCE_REF_KEY]: $ref }),
+            },
+          },
           [RJSF_REF_KEY]: '#/$defs/child',
         });
       },
@@ -726,7 +735,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(retrieveSchema({ validator: testValidator }, { $ref: '#/$defs/child' }, root)).toStrictEqual({
         $id: 'child.json',
         $defs: { y: { type: 'string' } },
-        properties: { value: { type: 'string', [RJSF_REF_KEY]: '#/$defs/y' } },
+        properties: {
+          value: {
+            type: 'string',
+            // The marker is the ref as the walk carried it (resolved against the root base), with the
+            // author's spelling kept on a separate marker
+            [RJSF_REF_KEY]: 'https://example.com/child.json#/$defs/y',
+            [RJSF_SOURCE_REF_KEY]: '#/$defs/y',
+          },
+        },
         [RJSF_REF_KEY]: '#/$defs/child',
       });
     });
@@ -767,26 +784,22 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         'Could not find a definition for missing.json',
       );
     });
-    it('falls back to the root scope when a ref misses the referring scope', () => {
-      // child.json names nothing under other.example, so the lookup retries against the root base;
-      // the un-normalized re-lookup under the referring scope also misses and keeps that result
+    it('throws when a ref misses the referring scope, even if the root scope would hold it', () => {
+      // A relative ref resolves against the referring scope only: 'child.json' written on a schema based at
+      // other.example names other.example's child.json, and a miss there is final
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
         $id: 'https://example.com/root.json',
         $defs: { child: { $id: 'child.json', type: 'integer' } },
       };
-      expect(
+      expect(() =>
         resolveAllReferences(
           { $ref: 'child.json', $id: 'https://other.example/local.json' },
           root,
           [],
           'https://other.example/local.json',
         ),
-      ).toStrictEqual({
-        $id: 'https://other.example/local.json',
-        type: 'integer',
-        [RJSF_REF_KEY]: 'child.json',
-      });
+      ).toThrow('Could not find a definition for child.json');
     });
     it('anchors a local $id to an empty scope when the root has no $id', () => {
       const root: RJSFSchema = {
@@ -828,9 +841,125 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       expect(retrieveSchema({ validator: testValidator }, { $ref: '#/$defs/parent/$defs/child' }, root)).toStrictEqual({
         ...child,
-        properties: { value: { type: 'integer', [RJSF_REF_KEY]: $ref } },
+        properties: {
+          value: {
+            type: 'integer',
+            [RJSF_REF_KEY]: 'https://example.com/root.json#/$defs/y',
+            [RJSF_SOURCE_REF_KEY]: $ref,
+          },
+        },
         [RJSF_REF_KEY]: '#/$defs/parent/$defs/child',
       });
+    });
+    it('resolves refs inside definitions on a draft-7 root with an absolute $id', () => {
+      // A draft-7 root with an `$id` normalizes to refs that name the root by its absolute URI: the lookup
+      // must read what follows the `#` as a pointer into the root, whatever the draft
+      const root: RJSFSchema = {
+        $id: 'https://ex.com/r.json',
+        definitions: { a: { type: 'array', items: { $ref: '#/definitions/b' } }, b: { type: 'string' } },
+        properties: { x: { $ref: '#/definitions/a' } },
+      };
+      const resolved = retrieveSchema({ validator: testValidator }, root, root);
+      expect(resolved.properties!.x.items).toStrictEqual({
+        type: 'string',
+        [RJSF_REF_KEY]: 'https://ex.com/r.json#/definitions/b',
+        [RJSF_SOURCE_REF_KEY]: '#/definitions/b',
+      });
+    });
+    it('keeps a repeated anyOf $ref collapsed on an absolute-$id root', () => {
+      // The second option reuses a ref the first already expanded: markers and the path compare the same
+      // (resolved) ref, so the reuse is seen and the second option stays collapsed
+      const root: RJSFSchema = {
+        $id: 'https://example.com/r.json',
+        $defs: { big: { type: 'object', properties: { a: { type: 'string' } } } },
+        anyOf: [{ $ref: '#/$defs/big' }, { $ref: '#/$defs/big' }],
+      };
+      const resolved = resolveAllReferences(root, root, []);
+      expect(resolved.anyOf![1]).toStrictEqual({ $ref: '#/$defs/big' });
+    });
+    it('marks a pointer into a nested resource distinctly from the same pointer into the root', () => {
+      // The root's `#/$defs/x` and the nested resource's `#/$defs/x` are different schemas: the marker each
+      // resolved schema carries names the resource it came from, so neither cycle checks nor uiSchema lookup
+      // can confuse the two
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          x: { type: 'number' },
+          res: { $id: 'nested/res.json', $defs: { x: { type: 'string' } }, properties: { v: { $ref: '#/$defs/x' } } },
+        },
+        properties: { r: { $ref: '#/$defs/res' } },
+      };
+      const resolved = resolveAllReferences(root.properties!.r as RJSFSchema, root, []);
+      expect(resolved.properties!.v).toStrictEqual({
+        type: 'string',
+        [RJSF_REF_KEY]: 'nested/res.json#/$defs/x',
+        [RJSF_SOURCE_REF_KEY]: '#/$defs/x',
+      });
+    });
+    it('resolves a root with a relative $id through SchemaUtils', () => {
+      // Refs inside the normalized root are already resolved against the root's relative `$id`: looking them
+      // up must not resolve them against that `$id` a second time
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'schemas/root.json',
+        $defs: { a: { $id: 'a.json', type: 'string' } },
+        properties: { x: { $ref: 'a.json' }, y: { $ref: '#/$defs/a' } },
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, root);
+      const normalizedRoot = utils.getRootSchema();
+      expect(utils.retrieveSchema(normalizedRoot.properties!.x, undefined)).toStrictEqual({
+        $id: 'a.json',
+        type: 'string',
+        [RJSF_REF_KEY]: 'schemas/a.json',
+        [RJSF_SOURCE_REF_KEY]: 'a.json',
+      });
+      expect(utils.retrieveSchema(normalizedRoot.properties!.y, undefined)).toStrictEqual({
+        $id: 'a.json',
+        type: 'string',
+        [RJSF_REF_KEY]: 'schemas/root.json#/$defs/a',
+        [RJSF_SOURCE_REF_KEY]: '#/$defs/a',
+      });
+    });
+    it('resolves a local $id override the same through SchemaUtils as directly', () => {
+      // The overriding `$id` makes the target's content read as written; on the SchemaUtils path the target
+      // comes from the normalized root, so its refs are restored to the author's spelling first
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          c: { $id: 'a/child.json', properties: { q: { $ref: 'other.json' } } },
+          bo: { $id: 'b/other.json', title: 'BO' },
+          ao: { $id: 'a/other.json', title: 'AO' },
+        },
+      };
+      const referring = { $id: 'b/local.json', $ref: 'a/child.json' } as RJSFSchema;
+      const direct = resolveAllReferences(referring, root, [], undefined);
+      const utils = createSchemaUtils({ validator: testValidator }, root);
+      const viaUtils = utils.retrieveSchema(referring, undefined);
+      expect((viaUtils.properties!.q as RJSFSchema).title).toEqual('BO');
+      expect((viaUtils.properties!.q as RJSFSchema).title).toEqual((direct.properties!.q as RJSFSchema).title);
+    });
+    it('resolves a pointer into an embedded resource, and throws when that pointer does not exist', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: { a: { $id: 'a.json', properties: { x: { type: 'string' } } } },
+      };
+      expect(retrieveSchema({ validator: testValidator }, { $ref: 'a.json#/properties/x' }, root)).toStrictEqual({
+        type: 'string',
+        [RJSF_REF_KEY]: 'a.json#/properties/x',
+      });
+      expect(() => retrieveSchema({ validator: testValidator }, { $ref: 'a.json#/nope' }, root)).toThrow(
+        'Could not find a definition for a.json#/nope',
+      );
+    });
+    it('finds the root resource itself for a ref that names it without a fragment', () => {
+      const root: RJSFSchema = { $id: 'https://ex.com/r.json', definitions: { b: { type: 'string' } } };
+      expect(findSchemaDefinitionWithBaseURI('https://ex.com/r.json', root).schema).toBe(root);
+    });
+    it('throws when a ref names the root resource but the pointer does not exist', () => {
+      const root: RJSFSchema = { $id: 'https://ex.com/r.json', definitions: { b: { type: 'string' } } };
+      expect(() =>
+        retrieveSchema({ validator: testValidator }, { $ref: 'https://ex.com/r.json#/definitions/missing' }, root),
+      ).toThrow('Could not find a definition for https://ex.com/r.json#/definitions/missing');
     });
     it('should `resolve` a bundled draft 2020-12 JSON Schema', () => {
       const definitions: RJSFSchema = {

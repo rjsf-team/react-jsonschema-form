@@ -33,6 +33,11 @@ export const REF_KEY = '$ref';
 export const THEN_KEY = 'then';
 export const UNEVALUATED_PROPERTIES_KEY = 'unevaluatedProperties';
 export const RJSF_REF_KEY = Symbol('__rjsf_ref');
+/** The `$ref` spelling the document author wrote for the schema the marker sits on, kept when
+ * `makeAllReferencesAbsolute()` rewrote the ref the resolution walk carried. `resolveUiSchema` reads it because
+ * `ui:definitions` are keyed by the author's spelling; path and cycle checks read the canonical `RJSF_REF_KEY`.
+ */
+export const RJSF_SOURCE_REF_KEY = Symbol('__rjsf_source_ref');
 export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
 export const SCHEMA_KEY = '$schema';
 export const DEFAULT_ID_PREFIX = 'root';

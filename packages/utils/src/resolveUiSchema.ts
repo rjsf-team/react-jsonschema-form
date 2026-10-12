@@ -3,7 +3,7 @@ import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
-import { declaredRef, resolvedFromRef } from './refOf.ts';
+import { declaredRef, resolvedFromRef, sourceRefOf } from './refOf.ts';
 import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Merges a `ui:definitions` entry under the local uiSchema of a field whose schema `$ref`s it. A definition is typed
@@ -43,10 +43,11 @@ export default function resolveUiSchema<
   rawLocalUiSchema: UiSchema<T, S, F> | undefined,
   registry: Pick<Registry<T, S, F>, 'rootSchema' | 'uiSchemaDefinitions'>,
 ): UiSchema<T, S, F> {
-  // The marker comes first: a schema resolved from a definition is named by the definition it came from, which is
-  // the name a `ui:definitions` entry is keyed by, where a `$ref` it still holds is one nothing has followed yet.
-  // `refOf()` in `retrieveSchema.ts` reads the same two the other way about, for the opposite reason
-  const ref = resolvedFromRef<S>(schema) ?? declaredRef<S>(schema);
+  // The author's spelling comes first: a schema resolved from a definition is named by the definition the author
+  // wrote, which is the name a `ui:definitions` entry is keyed by, where a `$ref` it still holds is one nothing
+  // has followed yet. `refOf()` in `retrieveSchema.ts` reads the same two the other way about, for the opposite
+  // reason
+  const ref = sourceRefOf<S>(schema) ?? resolvedFromRef<S>(schema) ?? declaredRef<S>(schema);
   const definitions = registry.uiSchemaDefinitions;
   const definitionUiSchema = ref && definitions ? definitions[ref] : undefined;
 
