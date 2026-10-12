@@ -51,7 +51,8 @@ export default function CheckboxWidget<
     <Checkbox
       autoFocus={autofocus}
       checked={typeof value === 'undefined' ? false : value}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      // Leave enabled controls unset so antd can inherit its DisabledContext.
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       name={htmlName || id}
       required={required}

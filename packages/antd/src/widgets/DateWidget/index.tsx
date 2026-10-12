@@ -62,7 +62,8 @@ export default function DateWidget<
 
   return (
     <DatePicker
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      // Leave enabled controls unset so antd can inherit its DisabledContext.
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       getPopupContainer={getPopupContainer}
       id={id}
       name={id}

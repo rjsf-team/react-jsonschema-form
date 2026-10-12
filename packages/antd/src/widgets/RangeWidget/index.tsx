@@ -50,7 +50,8 @@ export default function RangeWidget<
   return (
     <Slider
       autoFocus={autofocus}
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      // Leave enabled controls unset so antd can inherit its DisabledContext.
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       max={max}
       min={min}

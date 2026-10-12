@@ -46,7 +46,8 @@ export default function TextareaWidget<
 
   return (
     <Input.TextArea
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      // Leave enabled controls unset so antd can inherit its DisabledContext.
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}

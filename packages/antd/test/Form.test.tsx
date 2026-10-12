@@ -1,9 +1,9 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { ErrorSchema, RJSFSchema } from '@rjsf/utils';
+import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { theme } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
@@ -267,5 +267,67 @@ describe('antd specific tests', () => {
 
     await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
+  });
+});
+
+describe('antd DisabledContext', () => {
+  const cases: { name: string; schema: RJSFSchema; uiSchema?: UiSchema; formData?: unknown; selector: string }[] = [
+    { name: 'text input', schema: { type: 'string' }, selector: 'input#root' },
+    { name: 'number input', schema: { type: 'number' }, selector: 'input#root' },
+    { name: 'select', schema: { type: 'string', enum: ['one', 'two'] }, selector: 'input#root' },
+    { name: 'checkbox', schema: { type: 'boolean' }, selector: 'input#root' },
+    { name: 'textarea', schema: { type: 'string' }, uiSchema: { 'ui:widget': 'textarea' }, selector: 'textarea#root' },
+    { name: 'date', schema: { type: 'string', format: 'date' }, selector: 'input#root' },
+    { name: 'password', schema: { type: 'string' }, uiSchema: { 'ui:widget': 'password' }, selector: 'input#root' },
+    { name: 'range', schema: { type: 'number' }, uiSchema: { 'ui:widget': 'range' }, selector: '.ant-slider' },
+    {
+      name: 'additional property key input',
+      schema: { type: 'object', additionalProperties: { type: 'string' } },
+      formData: { extra: 'value' },
+      selector: 'input#root_extra-key',
+    },
+    {
+      name: 'additional property key select',
+      schema: { type: 'object', additionalProperties: { type: 'string' }, propertyNames: { enum: ['extra', 'other'] } },
+      formData: { extra: 'value' },
+      selector: 'input#root_extra-key',
+    },
+  ];
+
+  describe.each(cases)('$name', ({ schema, uiSchema, formData, selector }) => {
+    test.each([
+      { name: 'inherits disabled context', contextDisabled: true, disabled: false, readonly: false, expected: true },
+      {
+        name: 'stays enabled without disabled context',
+        contextDisabled: false,
+        disabled: false,
+        readonly: false,
+        expected: false,
+      },
+      { name: 'keeps explicit disabled', contextDisabled: false, disabled: true, readonly: false, expected: true },
+      { name: 'keeps readonly disabled', contextDisabled: false, disabled: false, readonly: true, expected: true },
+    ])('$name', ({ contextDisabled, disabled, readonly, expected }) => {
+      const { container } = render(
+        <ConfigProvider componentDisabled={contextDisabled}>
+          <Form
+            schema={schema}
+            uiSchema={uiSchema}
+            formData={formData}
+            disabled={disabled}
+            readonly={readonly}
+            validator={validator}
+          />
+        </ConfigProvider>,
+      );
+      const control = container.querySelector(selector);
+      expect(control).toBeInTheDocument();
+      if (selector === '.ant-slider') {
+        expect(control?.classList.contains('ant-slider-disabled')).toBe(expected);
+      } else if (expected) {
+        expect(control).toBeDisabled();
+      } else {
+        expect(control).not.toBeDisabled();
+      }
+    });
   });
 });

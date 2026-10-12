@@ -27,7 +27,8 @@ export default function PasswordWidget<
 
   return (
     <Input.Password
-      disabled={disabled || (readonlyAsDisabled && readonly)}
+      // Leave enabled controls unset so antd can inherit its DisabledContext.
+      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
       id={id}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}

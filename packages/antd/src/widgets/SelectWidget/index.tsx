@@ -124,7 +124,8 @@ export default function SelectWidget<
       <Select
         open={open}
         autoFocus={autofocus}
-        disabled={disabled || (readonlyAsDisabled && readonly)}
+        // Leave enabled controls unset so antd can inherit its DisabledContext.
+        disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
         getPopupContainer={getPopupContainer}
         id={id}
         mode={multiple ? 'multiple' : undefined}
