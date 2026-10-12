@@ -1,4 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -14,6 +15,23 @@ describe('SelectWidget', () => {
     { label: 'Baz', value: 'baz' },
     { label: 'Qux', value: 'qux' },
   ];
+
+  test('translates the empty-selection fallback through translateString', () => {
+    const props = makeWidgetMockProps({
+      value: undefined,
+      label: '',
+      placeholder: undefined,
+      options: { enumOptions },
+    });
+    props.registry = {
+      ...props.registry,
+      translateString: (stringToTranslate: TranslatableString) =>
+        stringToTranslate === TranslatableString.SelectPlaceholder ? 'Elegir...' : stringToTranslate,
+    };
+    render(<SelectWidget {...props} />);
+
+    expect(screen.getByText('Elegir...')).toBeInTheDocument();
+  });
 
   test.each([
     ['nested BigInt', { count: 10n }, '{"count":"10"}'],
