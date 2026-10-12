@@ -511,34 +511,66 @@ function SchemaFieldRender<
     delete shadowedUiSchema[UI_FIELD_KEY];
     return shadowedUiSchema;
   }, [uiSchema, globalUiOptions]);
-  // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag.
-  // The check must come after all hook calls to satisfy React's rules of hooks.
-  if ((_schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
+  const ownUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
+  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time.
+  // Nothing compares either object by identity; both are memoized because the React Compiler
+  // (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on derive from an
+  // object rebuilt each render, which it takes for one that may still be mutated
+  const uiOptions = useMemo<UIOptionsType<T, S, F>>(
+    () => ({ ...globalUiOptions, ...ownUiOptions }),
+    [globalUiOptions, ownUiOptions],
+  );
+  // A `$ref` cycle returns below without rendering a field of its own, so neither the field nor the options are
+  // resolved for it. They are resolved up here, ahead of that return, because the options memo depends on them
+  const uiField = isRefCycle ? undefined : resolveUiField<T, S, F>(ownUiOptions, globalUiOptions?.field, fields);
+  const fieldToRender =
+    uiField &&
+    getFieldComponent<T, S, F>(
+      schema,
+      uiOptions,
+      ownUiOptions.widget,
+      uiField.namedField,
+      registry,
+      xxxOfKey,
+      isSelectSchema,
+      hasConstantOptions,
+    );
+  // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
+  // so rendering them here as well would show the same option selector twice — once for the union and once for the
+  // type in effect — and only the inner one would follow the type the user chose
+  const retrievesOptions =
+    fieldToRender !== undefined && fieldToRender.rendersOptionSelector && !fieldToRender.rendersOptionsItself;
+  // `xxxOfKey` is what `rendersOptionSelector` was decided from, so it is set whenever that is, which the narrowing
+  // here restates for the lookup below. This is the one place the options are retrieved: `MultiSchemaField` renders
+  // what it is handed. Memoized so a re-render that changed neither the schema nor the data hands it the same array,
+  // which its callbacks key on
+  const xxxOfOptions = useMemo(
+    () =>
+      retrievesOptions && xxxOfKey !== undefined
+        ? schema[xxxOfKey]?.map((xxxOfSchema) =>
+            schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
+          )
+        : undefined,
+    [retrievesOptions, xxxOfKey, schema, schemaUtils, formData],
+  );
+
+  // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag,
+  // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
+  // rules of hooks.
+  if (!uiField || !fieldToRender) {
     return (
       <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
         <CyclicSchemaField {...props} />
       </RawFormDataContext>
     );
   }
+  const { ignoredOwnField, ignoredGlobalField } = uiField;
+  const { FieldComponent, rendersOptionSelector, optionsReplaceNamedField } = fieldToRender;
 
-  const ownUiOptions = getUiOptions<T, S, F>(uiSchema);
-  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time
-  const uiOptions: UIOptionsType<T, S, F> = { ...globalUiOptions, ...ownUiOptions };
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
-
-  const { namedField, ignoredOwnField, ignoredGlobalField } = resolveUiField<T, S, F>(
-    ownUiOptions,
-    globalUiOptions?.field,
-    fields,
-  );
-  const { FieldComponent, rendersOptionsItself, rendersOptionSelector, optionsReplaceNamedField } = getFieldComponent<
-    T,
-    S,
-    F
-  >(schema, uiOptions, ownUiOptions.widget, namedField, registry, xxxOfKey, isSelectSchema, hasConstantOptions);
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
 
@@ -599,7 +631,6 @@ function SchemaFieldRender<
   let displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   let XxxOfField: Field<T, S, F> | undefined;
-  let XxxOfOptions: S[] | undefined;
   // An option that declares no `uiSchema` of its own is rendered against this one, so a `ui:field` the options are
   // rendered in place of would reach every option and have each render the field this schema declined. Shadowed rather
   // than deleted, for the reason `FallbackField` shadows the same key: `getUiOptions()` layers a
@@ -616,16 +647,8 @@ function SchemaFieldRender<
     const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema);
     displayLabel = displayLabel && (!isOptionalRender || isFormDataAvailable<T>(formData));
   }
-  // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
-  // so rendering them here as well would show the same option selector twice — once for the union and once for the
-  // type in effect — and only the inner one would follow the type the user chose
-  // `xxxOfKey` is what `rendersOptionSelector` was decided from, so it is set whenever that is, which the narrowing
-  // here restates for the lookup below
-  if (rendersOptionSelector && xxxOfKey !== undefined && !rendersOptionsItself) {
+  if (xxxOfOptions) {
     XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
-    XxxOfOptions = schema[xxxOfKey]!.map((xxxOfSchema) =>
-      schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
-    );
     // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
     // rendering of the same data address by the `XxxOfField`
     fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);
@@ -760,7 +783,7 @@ function SchemaFieldRender<
                 onBlur={props.onBlur}
                 onChange={props.onChange}
                 onFocus={props.onFocus}
-                options={XxxOfOptions}
+                options={xxxOfOptions}
                 registry={registry}
                 required={effectiveRequired}
                 schema={schema}

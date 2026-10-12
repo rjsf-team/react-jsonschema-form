@@ -1,5 +1,5 @@
-import type { ReactElement, ReactNode } from 'react';
-import { cloneElement, useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import type { EmotionCache } from '@emotion/cache';
 import createCache from '@emotion/cache';
@@ -168,10 +168,6 @@ function AntdPopupPatcher({ frameDoc }: { frameDoc?: Document }) {
 
 interface DemoFrameProps extends FrameComponentProps {
   theme: string;
-  /** override children to be ReactElement to avoid Typescript issue. In this case we don't need to worry about
-   * children being of the other valid ReactNode types, undefined and string as it always contains an RJSF `Form`
-   */
-  children: ReactElement<any>;
   subtheme: string;
 }
 
@@ -180,8 +176,6 @@ export default function DemoFrame(props: DemoFrameProps) {
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
-  const [container, setContainer] = useState<HTMLElement>();
-  const [window, setWindow] = useState<Window>();
 
   const instanceRef = useRef<HTMLIFrameElement>(null);
 
@@ -195,8 +189,6 @@ export default function DemoFrame(props: DemoFrameProps) {
         container: frameDoc?.getElementById(DEMO_FRAME_JSS) ?? undefined,
       }),
     );
-    setContainer(frameDoc?.body);
-    setWindow(instanceRef.current?.contentWindow ?? undefined);
   }, []);
 
   let body: ReactNode = children;
@@ -204,10 +196,7 @@ export default function DemoFrame(props: DemoFrameProps) {
     body = ready ? (
       <CacheProvider value={emotionCache}>
         <CssBaseline />
-        {cloneElement(children, {
-          container,
-          window,
-        })}
+        {children}
       </CacheProvider>
     ) : null;
   } else if (theme === 'fluentui-rc') {

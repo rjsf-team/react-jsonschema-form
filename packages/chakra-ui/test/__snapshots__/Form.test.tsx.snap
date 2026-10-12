@@ -4558,7 +4558,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                         color
                       </label>
                       <div
-                        aria-describedby="root_color__error root_color__description root_color__help"
                         class="chakra-select__root emotion-7"
                         data-part="root"
                         data-scope="select"
@@ -4610,6 +4609,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                           >
                             <button
                               aria-controls="select:root_color:content"
+                              aria-describedby="root_color__error root_color__description root_color__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
@@ -8716,7 +8716,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                         color
                       </label>
                       <div
-                        aria-describedby="root_color__error root_color__description root_color__help"
                         class="chakra-select__root emotion-7"
                         data-part="root"
                         data-scope="select"
@@ -8768,6 +8767,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                           >
                             <button
                               aria-controls="select:root_color:content"
+                              aria-describedby="root_color__error root_color__description root_color__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
@@ -10491,7 +10491,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               region
                             </label>
                             <div
-                              aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
                               class="chakra-select__root emotion-10"
                               data-part="root"
                               data-scope="select"
@@ -10536,6 +10535,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 >
                                   <button
                                     aria-controls="select:root_region__oneof_select:content"
+                                    aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -10695,7 +10695,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   Europe
                                 </label>
                                 <div
-                                  aria-describedby="root_region__error root_region__description root_region__help"
                                   class="chakra-select__root emotion-10"
                                   data-part="root"
                                   data-scope="select"
@@ -10740,6 +10739,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                     >
                                       <button
                                         aria-controls="select:root_region:content"
+                                        aria-describedby="root_region__error root_region__description root_region__help"
                                         aria-expanded="false"
                                         aria-haspopup="listbox"
                                         aria-invalid="false"
@@ -11366,7 +11366,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -11406,6 +11405,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -11992,7 +11992,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -12042,6 +12041,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -12688,7 +12688,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -12738,6 +12737,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -13384,7 +13384,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -13429,6 +13428,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -14045,7 +14045,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -14090,6 +14089,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -14706,7 +14706,6 @@ exports[`select widget with options sharing a String() in the realValue format (
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -14751,6 +14750,7 @@ exports[`select widget with options sharing a String() in the realValue format (
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -24087,7 +24087,6 @@ exports[`single fields > optional data controls > does not show optional control
                               optionalObjectWithOneofs
                             </label>
                             <div
-                              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                               class="chakra-select__root emotion-102"
                               data-part="root"
                               data-scope="select"
@@ -24137,6 +24136,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <button
                                     aria-controls="select:root_optionalObjectWithOneofs__oneof_select:content"
+                                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -24428,7 +24428,6 @@ exports[`single fields > optional data controls > does not show optional control
                               optionalArrayWithAnyofs
                             </label>
                             <div
-                              aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                               class="chakra-select__root emotion-102"
                               data-part="root"
                               data-scope="select"
@@ -24478,6 +24477,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <button
                                     aria-controls="select:root_optionalArrayWithAnyofs__anyof_select:content"
+                                    aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -26176,7 +26176,6 @@ exports[`single fields > optional data controls > does not show optional control
                               optionalObjectWithOneofs
                             </label>
                             <div
-                              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                               class="chakra-select__root emotion-102"
                               data-part="root"
                               data-readonly=""
@@ -26230,6 +26229,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <button
                                     aria-controls="select:root_optionalObjectWithOneofs__oneof_select:content"
+                                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -26538,7 +26538,6 @@ exports[`single fields > optional data controls > does not show optional control
                               optionalArrayWithAnyofs
                             </label>
                             <div
-                              aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                               class="chakra-select__root emotion-102"
                               data-part="root"
                               data-readonly=""
@@ -26592,6 +26591,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <button
                                     aria-controls="select:root_optionalArrayWithAnyofs__anyof_select:content"
+                                    aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -34629,7 +34629,6 @@ exports[`single fields > select field 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -34676,6 +34675,7 @@ exports[`single fields > select field 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -35292,7 +35292,6 @@ exports[`single fields > select field multiple choice 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -35350,6 +35349,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -36027,7 +36027,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -36086,6 +36085,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -37294,7 +37294,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -37351,6 +37350,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -38027,7 +38027,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -38080,6 +38079,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -38727,7 +38727,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -38775,6 +38774,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -40223,7 +40223,6 @@ exports[`single fields > select field single choice formData 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -40268,6 +40267,7 @@ exports[`single fields > select field single choice formData 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -40902,7 +40902,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -40959,6 +40958,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -41693,7 +41693,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -41751,6 +41750,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -42957,7 +42957,6 @@ exports[`single fields > select widget with description in schema and FieldTempl
               test
             </label>
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-6"
               data-part="root"
               data-scope="select"
@@ -43004,6 +43003,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -43630,7 +43630,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
               Foo description
             </sup>
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-4"
               data-part="root"
               data-scope="select"
@@ -43675,6 +43674,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -44291,7 +44291,6 @@ exports[`single fields > select widget with selected oneOf option description an
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-select__root emotion-3"
               data-part="root"
               data-scope="select"
@@ -44336,6 +44335,7 @@ exports[`single fields > select widget with selected oneOf option description an
                 >
                   <button
                     aria-controls="select:root:content"
+                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -50259,7 +50259,6 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                         My Answer
                       </label>
                       <div
-                        aria-describedby="root_answer__error root_answer__description root_answer__help"
                         class="chakra-select__root emotion-7"
                         data-part="root"
                         data-scope="select"
@@ -50304,6 +50303,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                           >
                             <button
                               aria-controls="select:root_answer:content"
+                              aria-describedby="root_answer__error root_answer__description root_answer__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"

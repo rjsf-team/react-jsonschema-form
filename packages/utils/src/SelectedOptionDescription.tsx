@@ -1,6 +1,5 @@
-import enumOptionsIsSelected from './enumOptionsIsSelected.ts';
+import getSelectedOptionDescription from './getSelectedOptionDescription.ts';
 import getTemplates from './getTemplates.ts';
-import getUiOptions from './getUiOptions.ts';
 import { descriptionId } from './idGenerators.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
@@ -15,28 +14,19 @@ export default function SelectedOptionDescription<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ hideLabel, id, multiple, options, registry, uiSchema, value }: SelectedOptionDescriptionProps<T, S, F>) {
-  if (multiple || hideLabel) {
+>(props: SelectedOptionDescriptionProps<T, S, F>) {
+  const selected = getSelectedOptionDescription<T, S, F>(props);
+  if (!selected) {
     return null;
   }
 
-  const { label = true } = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  if (!label) {
-    return null;
-  }
-
-  const option = options.enumOptions?.find(({ value: enumValue }) => enumOptionsIsSelected(enumValue, value, false));
-  const description = option?.schema?.description;
-  if (!description) {
-    return null;
-  }
-
+  const { id, options, registry, uiSchema } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <DescriptionFieldTemplate
       id={descriptionId(id)}
-      description={description}
-      schema={option.schema!}
+      description={selected.description}
+      schema={selected.schema}
       uiSchema={uiSchema}
       registry={registry}
     />

@@ -1,3 +1,4 @@
+import enumOptionsIsDisabled from './enumOptionsIsDisabled.ts';
 import isContainerValue from './isContainerValue.ts';
 import type {
   EnumOptionsGroupType,
@@ -30,7 +31,7 @@ import type {
  * A group value matches an option whose `value` is equal to it. Failing that, primitive values also match by their
  * string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since uiSchemas authored as
  * JSON often stringify them. Object and array enum values only match the very same object, so a JSON-authored
- * uiSchema can't group them. `enumDisabled` values match strictly, as they do in every other enum widget.
+ * uiSchema can't group them.
  *
  * @param enumOptions - The available enum options
  * @param [optgroups] - The `ui:options.optgroups` mapping of group label to the enum values it contains
@@ -48,7 +49,7 @@ export default function groupEnumOptions<S extends StrictRJSFSchema = RJSFSchema
   const indexed: IndexedEnumOptionType<S>[] = enumOptions.map((option, index) => ({
     ...option,
     index,
-    disabled: Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value),
+    disabled: enumOptionsIsDisabled(option.value, enumDisabled),
   }));
   if (!optgroups || typeof optgroups !== 'object') {
     return indexed;

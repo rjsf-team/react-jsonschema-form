@@ -8726,7 +8726,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-5.5 emotion-4"
               >
                 <div
-                  aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                   class="MuiFormControl-root MuiTextField-root emotion-5"
                 >
                   <div
@@ -8740,6 +8739,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-7"
                   >
                     <div
+                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       aria-labelledby="root_foo-key-label"
@@ -14029,7 +14029,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-5.5 emotion-4"
               >
                 <div
-                  aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                   class="MuiFormControl-root MuiTextField-root emotion-5"
                 >
                   <div
@@ -14043,6 +14042,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-7"
                   >
                     <div
+                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       aria-labelledby="root_foo-key-label"
@@ -15177,7 +15177,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                 class="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-5.5 emotion-4"
               >
                 <div
-                  aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                   class="MuiFormControl-root MuiTextField-root emotion-5"
                 >
                   <div
@@ -15191,6 +15190,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                     class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-7"
                   >
                     <div
+                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       aria-labelledby="root_foo-key-label"
