@@ -3,6 +3,8 @@ import {
   findSchemaDefinitionRecursive,
   findSchemaDefinitionWithBaseURI,
   makeAllReferencesAbsolute,
+  normalizeRootReferences,
+  restoreOriginalRefs,
   findSchemaDefinitionWithBaseURIOrUndefined,
 } from '../src/findSchemaDefinition.ts';
 import type { GenericObjectType, RJSFSchema } from '../src/index.ts';
@@ -150,7 +152,64 @@ const bundledSchema: RJSFSchema = {
 
 const EXTRA_EXPECTED = { type: 'string', title: 'foo' };
 
+describe('restoreOriginalRefs()', () => {
+  it('restores only the refs the walk resolves, and anyOf/oneOf options only when asked', () => {
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        c: {
+          $id: 'a/child.json',
+          properties: { p: { $ref: 'other.json' } },
+          items: { $ref: 'other.json' },
+          anyOf: [{ $ref: 'other.json' }],
+          allOf: [{ $ref: 'other.json' }],
+        },
+        ao: { $id: 'a/other.json' },
+      },
+    };
+    const normalized = normalizeRootReferences(root);
+    const c = (normalized.$defs as GenericObjectType).c as RJSFSchema;
+    const restored = restoreOriginalRefs(c);
+    expect((restored.properties!.p as RJSFSchema).$ref).toEqual('other.json');
+    expect((restored.items as RJSFSchema).$ref).toEqual('other.json');
+    expect((restored.anyOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
+    expect((restored.allOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
+    const restoredWithOptions = restoreOriginalRefs(c, true);
+    expect((restoredWithOptions.anyOf![0] as RJSFSchema).$ref).toEqual('other.json');
+    expect((restoredWithOptions.allOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
+  });
+  it('returns the same object when nothing in the walked keywords was rewritten', () => {
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        d: {
+          $id: 'a/d.json',
+          properties: { flag: true, plain: { type: 'string' } },
+          items: { type: 'string' },
+          anyOf: [true, { type: 'number' }],
+        },
+      },
+    };
+    const normalized = normalizeRootReferences(root);
+    const d = (normalized.$defs as GenericObjectType).d as RJSFSchema;
+    expect(restoreOriginalRefs(d, true)).toBe(d);
+  });
+});
+
 describe('findSchemaDefinition()', () => {
+  it('resolves a caller-written ref against the given base before an $id that repeats it', () => {
+    // A caller that passes a base means the ref to resolve against it: `other.json` under `sub/child.json`
+    // is the `sub` resource, not the one whose `$id` happens to be the same string
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        c: { $id: 'sub/child.json' },
+        o: { $id: 'sub/other.json', title: 'SUB' },
+        r: { $id: 'other.json', title: 'ROOT' },
+      },
+    };
+    expect(findSchemaDefinition('other.json', root, 'sub/child.json').title).toEqual('SUB');
+  });
   it('throws error when ref is missing', () => {
     expect(() => findSchemaDefinition()).toThrow('Could not find a definition for undefined');
   });

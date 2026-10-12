@@ -361,14 +361,59 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
   return visit(schema, typeof schema[ID_KEY] === 'string' ? schema[ID_KEY] : baseURI);
 }
 
-/** Returns `schema` with every ref `makeAllReferencesAbsolute()` rewrote set back to the spelling the document
+/** Returns `schema` with the refs `makeAllReferencesAbsolute()` rewrote set back to the spelling the document
  * author wrote, so a caller that must read the content as written - a local `$id` overriding the referenced
- * resource's scope - can do so even when all it holds is the normalized root.
+ * resource's scope - can do so even when all it holds is the normalized root. Only the refs the resolution walk
+ * itself resolves are restored: a ref under a keyword the walk does not visit (`allOf`, `if`/`then`,
+ * `dependencies`, or an unexpanded `anyOf`/`oneOf`) would come back relative to the root, where later passes
+ * could no longer find its resource, so it keeps the resolved spelling.
+ *
+ * @param schema - The schema whose restored subtree is needed
+ * @param [restoreOptions=false] - When true, refs under `anyOf`/`oneOf` are restored too (the caller walks them)
  */
-export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(schema: S): S {
+export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(schema: S, restoreOptions = false): S {
   const original = originalRefs.get(schema);
-  const refChange = original !== undefined ? { [REF_KEY]: original } : undefined;
-  return mapSubschemas(schema, (subSchema) => restoreOriginalRefs<S>(subSchema), refChange);
+  const changes: GenericObjectType = {};
+  if (original !== undefined) {
+    changes[REF_KEY] = original;
+  }
+  const properties = schema[PROPERTIES_KEY];
+  if (isObject(properties)) {
+    let propertiesChanged = false;
+    const mapped: GenericObjectType = {};
+    for (const [name, subSchema] of Object.entries(properties)) {
+      const next = isObject(subSchema) ? restoreOriginalRefs(subSchema as S, restoreOptions) : subSchema;
+      propertiesChanged = propertiesChanged || next !== subSchema;
+      mapped[name] = next;
+    }
+    if (propertiesChanged) {
+      changes[PROPERTIES_KEY] = mapped;
+    }
+  }
+  const items = schema[ITEMS_KEY];
+  if (isObject(items) && !Array.isArray(items)) {
+    const next = restoreOriginalRefs(items as S, restoreOptions);
+    if (next !== items) {
+      changes[ITEMS_KEY] = next;
+    }
+  }
+  if (restoreOptions) {
+    for (const key of [ANY_OF_KEY, ONE_OF_KEY] as const) {
+      const options = schema[key];
+      if (Array.isArray(options)) {
+        let optionsChanged = false;
+        const mapped = options.map((subSchema) => {
+          const next = isObject(subSchema) ? restoreOriginalRefs(subSchema as S, restoreOptions) : subSchema;
+          optionsChanged = optionsChanged || next !== subSchema;
+          return next;
+        });
+        if (optionsChanged) {
+          changes[key] = mapped;
+        }
+      }
+    }
+  }
+  return Object.keys(changes).length > 0 ? { ...schema, ...changes } : schema;
 }
 
 /** Roots already returned by `normalizeRootReferences`. Normalization resolves every ref against the scope its
@@ -429,8 +474,17 @@ export function findSchemaDefinitionWithBaseURI<S extends StrictRJSFSchema = RJS
   rootSchema: S = {} as S,
   recurseList: string[] = [],
   baseURI: string | undefined = rootSchema[ID_KEY],
+  refIsResolved = false,
+  chainRefsResolved = false,
 ): FoundSchema<S> {
-  const found = findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, rootSchema, recurseList, baseURI);
+  const found = findSchemaDefinitionWithBaseURIOrUndefined<S>(
+    $ref,
+    rootSchema,
+    recurseList,
+    baseURI,
+    refIsResolved,
+    chainRefsResolved,
+  );
   if (found === undefined) {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
@@ -446,6 +500,10 @@ export function findSchemaDefinitionWithBaseURI<S extends StrictRJSFSchema = RJS
  * @param rootSchema - The schema to search
  * @param recurseList - List of refs already expanded on the current resolution path
  * @param baseURI - The URI scope the ref resolves against
+ * @param [refIsResolved=false] - When true, the `$ref` already names its resource absolutely (it was resolved by
+ *      `normalizeRootReferences`), so its spelling is tried before resolving it against `baseURI`
+ * @param [chainRefsResolved=false] - Same as `refIsResolved`, for the `$ref`s encountered while following a
+ *      chained result
  * @returns - The found schema and its scope, or undefined when the ref names nothing in that scope
  */
 export function findSchemaDefinitionWithBaseURIOrUndefined<S extends StrictRJSFSchema = RJSFSchema>(
@@ -453,10 +511,12 @@ export function findSchemaDefinitionWithBaseURIOrUndefined<S extends StrictRJSFS
   rootSchema: S = {} as S,
   recurseList: string[] = [],
   baseURI: string | undefined = rootSchema[ID_KEY],
+  refIsResolved = false,
+  chainRefsResolved = false,
 ): FoundSchema<S> | undefined {
   const ref = $ref || '';
-  const found = lookupSchemaDefinition<S>(ref, rootSchema, baseURI);
-  return found === undefined ? undefined : resolveFoundChain<S>(found, ref, rootSchema, recurseList);
+  const found = lookupSchemaDefinition<S>(ref, rootSchema, baseURI, refIsResolved);
+  return found === undefined ? undefined : resolveFoundChain<S>(found, ref, rootSchema, recurseList, chainRefsResolved);
 }
 
 /** The lookup half of `findSchemaDefinitionWithBaseURI()`: where `ref` points, and the scope the found
@@ -467,6 +527,7 @@ function lookupSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   ref: string,
   rootSchema: S,
   baseURI: string | undefined,
+  refIsResolved = false,
 ): FoundSchema<S> | undefined {
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.
@@ -485,10 +546,16 @@ function lookupSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
     }
     return undefined;
   }
-  // A ref carried by a normalized root is already resolved against the root's own base, so it names its
-  // resource as given; only when the ref as given matches nothing is it a caller-written relative ref that
-  // still needs resolving against `baseURI`.
-  const candidates = baseURI !== undefined ? [...new Set([ref, resolveUri(baseURI, ref)])] : [ref];
+  // A ref that `normalizeRootReferences` resolved against its scope names its resource as given, so its
+  // spelling is tried first. Any other ref (for example one a caller of the public API wrote) resolves
+  // against the base URI first, so a resource whose `$id` merely repeats the spelling cannot shadow it.
+  let candidates: string[];
+  if (baseURI === undefined) {
+    candidates = [ref];
+  } else {
+    const resolved = resolveUri(baseURI, ref);
+    candidates = refIsResolved ? [...new Set([ref, resolved])] : [...new Set([resolved, ref])];
+  }
   const rootId = typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined;
   for (const candidate of candidates) {
     const [refId, ...refAnchor] = candidate.replace(/#\/?$/, '').split('#');
@@ -525,6 +592,7 @@ function resolveFoundChain<S extends StrictRJSFSchema = RJSFSchema>(
   ref: string,
   rootSchema: S,
   recurseList: string[],
+  chainRefsResolved = false,
 ): FoundSchema<S> {
   const nextRef = found.schema[REF_KEY];
   if (nextRef) {
@@ -538,11 +606,11 @@ function resolveFoundChain<S extends StrictRJSFSchema = RJSFSchema>(
       throw new Error(`Definition for ${firstRef} contains a circular reference through ${circularPath}`);
     }
     const [remaining] = splitKeyElementFromObject(REF_KEY, found.schema);
-    const subFound = lookupSchemaDefinition<S>(nextRef, rootSchema, found.baseURI);
+    const subFound = lookupSchemaDefinition<S>(nextRef, rootSchema, found.baseURI, chainRefsResolved);
     if (subFound === undefined) {
       throw new Error(`Could not find a definition for ${nextRef}.`);
     }
-    const sub = resolveFoundChain<S>(subFound, nextRef, rootSchema, [...recurseList, ref]);
+    const sub = resolveFoundChain<S>(subFound, nextRef, rootSchema, [...recurseList, ref], chainRefsResolved);
     if (Object.keys(remaining).length > 0) {
       if (
         rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2019_09 ||

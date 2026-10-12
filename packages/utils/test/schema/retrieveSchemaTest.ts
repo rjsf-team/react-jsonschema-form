@@ -967,6 +967,42 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const resolved = retrieveSchema({ validator: testValidator }, root, root);
       expect((resolved.properties!.l as RJSFSchema).title).toEqual('RIGHT');
     });
+    it('keeps refs the walk does not visit resolved under a local $id override', () => {
+      // Refs under `allOf`, `if`/`then`, `dependencies` and unexpanded `anyOf`/`oneOf` are not resolved by the
+      // walk, so restoring their author spelling would leave them relative to the root; they keep the resolved
+      // spelling so later passes (the allOf merge, the options the form renders) still find their resource
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          c: {
+            $id: 'a/child.json',
+            allOf: [{ $ref: 'other.json' }],
+            anyOf: [{ $ref: 'other.json' }],
+          },
+          ao: { $id: 'a/other.json', title: 'AO' },
+        },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, root);
+      const resolved = schemaUtils.retrieveSchema({ $id: 'b/local.json', $ref: 'a/child.json' }, root);
+      expect(resolved.title).toEqual('AO');
+      expect((resolved.anyOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
+    });
+    it('resolves a restored override ref against the overriding scope, not an $id that repeats it', () => {
+      // The restored `other.json` is the author's spelling, not a resolved one: in a root without `$id` it
+      // must resolve against the overriding scope before it can match a resource whose `$id` repeats it
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          c: { $id: 'a/child.json', properties: { q: { $ref: 'other.json' } } },
+          o: { $id: 'b/other.json', title: 'BO' },
+          ao: { $id: 'a/other.json', title: 'AO' },
+          ro: { $id: 'other.json', title: 'ROOT-O' },
+        },
+      };
+      const referring = { $id: 'b/local.json', $ref: 'a/child.json' } as RJSFSchema;
+      const resolved = resolveAllReferences(referring, root, [], undefined);
+      expect((resolved.properties!.q as RJSFSchema).title).toEqual('BO');
+    });
     it('matches a root $id that ends in a slash', () => {
       // The ref and the root name the same resource, slash or no slash
       const root: RJSFSchema = {

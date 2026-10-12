@@ -673,7 +673,16 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     // referring schema currently belongs to, so it looks up against `pointerScope`; every other ref goes
     // against the referring scope. Chain failures inside the lookup still throw.
     const lookupBase = $ref!.startsWith('#') ? pointerScope : currentBaseURI;
-    let found = findSchemaDefinitionWithBaseURIOrUndefined<S>($ref, normalizedRoot, [], lookupBase);
+    // A ref that normalization rewrote names its resource as given; any other (including a restored author
+    // spelling) resolves against the current scope first, and the refs inside the normalized root are resolved
+    let found = findSchemaDefinitionWithBaseURIOrUndefined<S>(
+      $ref,
+      normalizedRoot,
+      [],
+      lookupBase,
+      originalRefOf(resolvedSchema) !== undefined,
+      true,
+    );
     if (found === undefined) {
       throw new Error(`Could not find a definition for ${$ref}.`);
     }
@@ -693,7 +702,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       // overriding scope rather than the scope the normalization baked in. That is the documented meaning of
       // a local `$id` overriding the referenced resource scope.
       localOverride = true;
-      found = { schema: restoreOriginalRefs<S>(found.schema), baseURI: found.baseURI };
+      found = { schema: restoreOriginalRefs<S>(found.schema, resolveAnyOfOrOneOfRefs), baseURI: found.baseURI };
     }
     const { schema: refSchema, baseURI: refBaseURI } = found;
     // The marker is the ref as this walk carries it, which is what `pathList`, `expandedRefs` and the cycle
