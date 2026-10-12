@@ -710,6 +710,107 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         [RJSF_REF_KEY]: '#/$defs/child',
       });
     });
+    it('resolves same-document refs inside a nested resource against that resource', () => {
+      // A `#/...` ref written inside a resource names a pointer in that resource, so `value` finds child's own y
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: {
+          child: {
+            $id: 'child.json',
+            $defs: { y: { type: 'string' } },
+            properties: { value: { $ref: '#/$defs/y' } },
+          },
+        },
+      };
+      expect(retrieveSchema({ validator: testValidator }, { $ref: '#/$defs/child' }, root)).toStrictEqual({
+        $id: 'child.json',
+        $defs: { y: { type: 'string' } },
+        properties: { value: { type: 'string', [RJSF_REF_KEY]: '#/$defs/y' } },
+        [RJSF_REF_KEY]: '#/$defs/child',
+      });
+    });
+    it('keeps a local $id on a referring schema distinct from the target resource', () => {
+      // The local $id re-identifies the resource the merged schema belongs to: child's own ref is then
+      // read as written, against the overriding scope
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: {
+          child: {
+            $id: 'child.json',
+            type: 'object',
+            properties: { value: { $ref: 'value.json' } },
+          },
+          value: { $id: 'https://other.example/value.json', type: 'integer' },
+        },
+      };
+      expect(
+        resolveAllReferences({ $ref: '#/$defs/child', $id: 'https://other.example/local.json' }, root, [], undefined),
+      ).toStrictEqual({
+        $id: 'https://other.example/local.json',
+        type: 'object',
+        properties: {
+          value: { $id: 'https://other.example/value.json', type: 'integer', [RJSF_REF_KEY]: 'value.json' },
+        },
+        [RJSF_REF_KEY]: '#/$defs/child',
+      });
+    });
+    it('throws when a ref misses the only scope there is', () => {
+      // With the referring scope already the root's, there is nowhere to retry: the miss is final
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: { x: { type: 'integer' } },
+      };
+      expect(() => resolveAllReferences({ $ref: 'missing.json' }, root, [], undefined)).toThrow(
+        'Could not find a definition for missing.json',
+      );
+    });
+    it('falls back to the root scope when a ref misses the referring scope', () => {
+      // child.json names nothing under other.example, so the lookup retries against the root base;
+      // the un-normalized re-lookup under the referring scope also misses and keeps that result
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: { child: { $id: 'child.json', type: 'integer' } },
+      };
+      expect(
+        resolveAllReferences(
+          { $ref: 'child.json', $id: 'https://other.example/local.json' },
+          root,
+          [],
+          'https://other.example/local.json',
+        ),
+      ).toStrictEqual({
+        $id: 'https://other.example/local.json',
+        type: 'integer',
+        [RJSF_REF_KEY]: 'child.json',
+      });
+    });
+    it('anchors a local $id to an empty scope when the root has no $id', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: { x: { $id: 'x.json', type: 'integer' } },
+      };
+      expect(resolveAllReferences({ $ref: '#/$defs/x', $id: 'other.json' }, root, [], undefined)).toStrictEqual({
+        $id: 'other.json',
+        type: 'integer',
+        [RJSF_REF_KEY]: '#/$defs/x',
+      });
+    });
+    it('keeps the target scope when a referring $id repeats the target $id as written', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: { x: { $id: 'x.json', type: 'integer' } },
+      };
+      expect(resolveAllReferences({ $ref: '#/$defs/x', $id: 'x.json' }, root, [], undefined)).toStrictEqual({
+        $id: 'x.json',
+        type: 'integer',
+        [RJSF_REF_KEY]: '#/$defs/x',
+      });
+    });
     it('resolves references using the lexical parent of a deeply nested resource', () => {
       const $ref = '../root.json#/$defs/y';
       const child: RJSFSchema = {

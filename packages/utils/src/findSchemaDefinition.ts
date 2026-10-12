@@ -471,8 +471,7 @@ function lookupSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
     if (baseURI === undefined || (ID_KEY in rootSchema && rootSchema[ID_KEY] === baseURI)) {
       // The branch condition already guarantees the root's `$id` IS the base, so it is used as
       // written: resolving it against itself would double the directory part of a relative `$id`.
-      const rootScope =
-        ID_KEY in rootSchema && typeof rootSchema[ID_KEY] === 'string' ? (baseURI ?? rootSchema[ID_KEY]) : baseURI;
+      const rootScope = ID_KEY in rootSchema && typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : baseURI;
       found = getByPointerWithScope<S>(rootSchema, decodedRef, rootScope);
     } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
       const resource = findEmbeddedSchemaRecursive<S>(rootSchema, baseURI.replace(/\/$/, ''), '', baseURI);

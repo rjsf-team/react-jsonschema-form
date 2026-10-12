@@ -3,6 +3,7 @@ import {
   findSchemaDefinitionRecursive,
   findSchemaDefinitionWithBaseURI,
   makeAllReferencesAbsolute,
+  findSchemaDefinitionWithBaseURIOrUndefined,
 } from '../src/findSchemaDefinition.ts';
 import type { GenericObjectType, RJSFSchema } from '../src/index.ts';
 import { createSchemaUtils, findSchemaDefinition, ID_KEY } from '../src/index.ts';
@@ -1358,5 +1359,38 @@ describe('structure-aware walk pins', () => {
       };
       expect(() => findSchemaDefinition('child.json', root)).toThrow('Could not find a definition for missing.json');
     });
+  });
+});
+
+describe('pointer scope walk pins', () => {
+  it('descends through single-schema keywords without re-basing', () => {
+    // `not` wraps one schema: the walk steps into it but an `$id` below still re-bases, so the
+    // scope at the leaf is the root's
+    expect(
+      findSchemaDefinitionWithBaseURIOrUndefined('#/properties/a/not/type', {
+        properties: { a: { not: { type: 'string' } } },
+      }),
+    ).toEqual({ schema: 'string', baseURI: undefined });
+  });
+
+  it('uses the root $id as the walk scope when it is the base', () => {
+    expect(
+      findSchemaDefinitionWithBaseURIOrUndefined(
+        '#/definitions/a',
+        { $id: 'https://example.com/root.json', definitions: { a: { type: 'string' } } },
+        [],
+        'https://example.com/root.json',
+      ),
+    ).toEqual({ schema: { type: 'string' }, baseURI: 'https://example.com/root.json' });
+  });
+
+  it('treats an omitted ref as an empty one', () => {
+    expect(findSchemaDefinitionWithBaseURIOrUndefined()).toBeUndefined();
+  });
+
+  it('walks the root with an undefined scope when the root has no $id', () => {
+    expect(
+      findSchemaDefinitionWithBaseURIOrUndefined('#/definitions/a', { definitions: { a: { type: 'string' } } }),
+    ).toEqual({ schema: { type: 'string' }, baseURI: undefined });
   });
 });
