@@ -1262,7 +1262,7 @@ describe('SchemaField', () => {
       expect(form.querySelector('#root_wrap_child-button')).toHaveTextContent('Expand Cycle');
     });
 
-    it('renders a cycle indicator for a recursion reached through a then branch', () => {
+    it('renders a cycle indicator for a recursion reached through a then branch', async () => {
       // A recursion the defaults reach through the branch's expanded `$ref` rather than through a `$ref` of their own
       const node: RJSFSchema = {
         type: 'object',
@@ -1274,6 +1274,12 @@ describe('SchemaField', () => {
 
       expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
       expect(form.querySelector('#root_child-button')).toHaveTextContent('Expand Cycle');
+
+      // The expanded field is handed the definition resolved in place, with the branch still to resolve
+      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+
+      expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
+      expect(form.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
     });
 
     it('clicking the expand button shows the next level of the cycle', async () => {
