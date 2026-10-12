@@ -495,7 +495,11 @@ export function computeDefaults<
       pathWithOwnRef,
     );
     // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
-    // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at
+    // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at.
+    // `getObjectDefaults()` leaves the schema's own ref off that path and this keeps it on, so a recursion under an
+    // `allOf` stops one level sooner here: followed once more, a `$ref` back to the schema leads to its definition
+    // with the `allOf` unmerged, where the entry already on the path collapses and the level takes the defaults of
+    // the other entries alone
     updatedRecurseList = enclosingRefPath<S>(schemaToCompute, pathWithOwnRef);
   }
 

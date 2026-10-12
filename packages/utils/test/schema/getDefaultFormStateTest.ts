@@ -1542,6 +1542,26 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               ),
             ).toEqual({ a: { name: 'n', extra: 'e' } });
           });
+
+          test('stops a recursion under a populated allOf one level sooner than the same one without it', () => {
+            // The `allOf` branch of `computeDefaults()` keeps the schema's own ref on the path of what it computes
+            // below, which the test above relies on, and `getObjectDefaults()` and the array defaults do not
+            const tags: RJSFSchema = { type: 'array', minItems: 1, items: { $ref: '#/definitions/tags' } };
+            const populated = (definition: RJSFSchema) => {
+              const schema: RJSFSchema = {
+                definitions: { tags: definition },
+                type: 'object',
+                required: ['t'],
+                properties: { t: { $ref: '#/definitions/tags' } },
+              };
+              return getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+                { schema, rootSchema: schema },
+              );
+            };
+            expect(populated(tags)).toEqual({ t: [[undefined]] });
+            expect(populated({ ...tags, allOf: [{ minItems: 1 }] })).toEqual({ t: [undefined] });
+          });
         });
 
         describe('a recursive schema whose typed property resolves its way back to it', () => {
