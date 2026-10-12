@@ -111,12 +111,13 @@ describe('resolveFieldPresentation()', () => {
     });
   });
 
-  it('describes the control by the elements it renders to describe itself, after its own parts', () => {
+  it('describes the control by the elements it renders to describe itself, after its parts', () => {
     const controlDescribedBy = [`${ID}__selectedOptionDescription`, `${ID}__examples`];
-    expect(resolve({ description: 'Describes foo', controlDescribedBy }).describedBy).toEqual([
-      `${ID}__description`,
-      ...controlDescribedBy,
-    ]);
+    const plan = resolve({ description: 'Describes foo', controlDescribedBy });
+    expect(plan.describedBy).toEqual([`${ID}__description`]);
+    expect(plan.control?.attributes['aria-describedby']).toBe(
+      `${ID}__description ${ID}__selectedOptionDescription ${ID}__examples`,
+    );
   });
 
   it('carries the native required attribute apart from the marker', () => {
@@ -194,6 +195,13 @@ describe('resolveFieldPresentation()', () => {
       const own = resolve({ inherited: middle, description: 'Describes the option', help: 'Helps with the option' });
       expect(own.description.id).toBe(`${ID}__optionDescription`);
       expect(own.help.id).toBe(`${ID}__optionHelp`);
+    });
+
+    it("isn't described by the elements the control above renders to describe itself", () => {
+      const withExamples = resolve({ description: 'Describes the field', controlDescribedBy: [`${ID}__examples`] });
+      const plan = resolve({ inherited: withExamples });
+      expect(plan.describedBy).toEqual([`${ID}__description`]);
+      expect(plan.control?.attributes['aria-describedby']).toBe(`${ID}__description`);
     });
 
     it('links the plan to the one it was built under', () => {
