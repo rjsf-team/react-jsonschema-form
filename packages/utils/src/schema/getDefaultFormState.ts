@@ -10,6 +10,7 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
+  RJSF_REF_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
@@ -295,7 +296,7 @@ export function computeDefaults<
     : localUiSchema;
   const computeDefaultsProps = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
-  const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
+  let schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   let defaults: T | T[] | null | undefined = parentDefaults;
   const preferParentDefaults = defaults && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
@@ -303,6 +304,25 @@ export function computeDefaults<
   let schemaToCompute: S | null = null;
   let contextToCompute = context;
   let updatedRecurseList = _recurseList;
+  // `RJSF_REF_KEY` marks a schema that `retrieveSchema()` materialized by expanding a `$ref`, which is how a `$ref`
+  // nested inside a keyword (`allOf`, `if`/`then`, `dependencies`) arrives here: already resolved in place, so the
+  // plain `$ref` branch below never sees it. When that ref is already on the recurse list, this node is a recursive
+  // reference reached through the keyword, and descending into the materialized definition would rebuild it level
+  // by level without end. Collapse the node back to the unexpanded `$ref` so the defaults stop at the recursion,
+  // exactly as they do for `child: { $ref: ... }`. A materialized ref not yet on the list is counted once, the way
+  // the plain `$ref` branch counts one expansion, so a recursive definition stops at the same depth through any
+  // keyword. The outermost call is exempt: `getDefaultFormState()` hands its already-retrieved root here, and
+  // counting the root's own expansion would stop a plain recursive schema one level earlier than it does today.
+  if (!(REF_KEY in schema)) {
+    const materializedRef = (schema as RJSFMarkedSchema)[RJSF_REF_KEY];
+    if (typeof materializedRef === 'string') {
+      if (_recurseList.includes(materializedRef)) {
+        schema = { [REF_KEY]: materializedRef } as S;
+      } else if ('_recurseList' in inputProps) {
+        updatedRecurseList = _recurseList.concat(materializedRef);
+      }
+    }
+  }
   // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
@@ -363,7 +383,14 @@ export function computeDefaults<
         : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
-    const resolvedSchema = resolveDependencies<T, S, F>(context, schema, rootSchema, false, [], defaultFormData);
+    const resolvedSchema = resolveDependencies<T, S, F>(
+      context,
+      schema,
+      rootSchema,
+      false,
+      updatedRecurseList,
+      defaultFormData,
+    );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema) && !preferParentDefaults) {
     // If the schema contains fixed items and parentDefaults does not have precedence
@@ -475,7 +502,7 @@ export function computeDefaults<
   const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(
     context,
     schema,
-    computeDefaultsProps,
+    { ...computeDefaultsProps, _recurseList: updatedRecurseList },
     defaults,
     isWholeValue,
   );
