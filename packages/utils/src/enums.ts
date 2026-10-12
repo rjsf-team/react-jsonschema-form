@@ -56,6 +56,10 @@ export const TranslatableString = {
   AriaDateLabel: 'Select a date',
   /** Placeholder for a select input, and its accessible name when the field has no title, used by the shadcn SelectWidget */
   SelectPlaceholder: 'Select ...',
+  /** Done button label, used by the daisyUI date pickers */
+  DoneLabel: 'Done',
+  /** Time input label, used by the daisyUI DateTimeWidget */
+  TimeLabel: 'Time',
   /** File preview label, used by FileWidget */
   PreviewLabel: 'Preview',
   /** Decrement button aria label, used by UpDownWidget */

@@ -1,9 +1,14 @@
-import { createRef } from 'react';
-import type { FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import { createRef, StrictMode, useEffect, useState } from 'react';
+import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { noop, toFieldPath } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import { render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import AnyOfField from '../src/components/fields/MultiSchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
+import Form from '../src/index.ts';
+import { getTestRegistry } from '../src/testing.ts';
 import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -601,6 +606,27 @@ describe('anyOf', () => {
     expect(node.querySelectorAll('#custom-anyof-field')).toHaveLength(1);
   });
 
+  it('hands AnyOfField the same options across re-renders that leave the schema and data alone', () => {
+    const seenOptions = new Set<unknown>();
+    const seenErrors: unknown[] = [];
+    const RecordingField = (props: FieldProps) => {
+      seenOptions.add(props.options);
+      seenErrors.push(props.errorSchema?.__errors);
+      return null;
+    };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { union: { anyOf: [{ type: 'string' }, { type: 'number' }] } },
+    };
+    const { rerender } = createFormComponent({ schema, fields: { AnyOfField: RecordingField } });
+
+    rerender({ schema, fields: { AnyOfField: RecordingField }, extraErrors: { union: { __errors: ['changed'] } } });
+
+    // The new errors show the re-render reached the field, so one options identity isn't a single render's
+    expect(seenErrors).toContainEqual(['changed']);
+    expect(seenOptions.size).toBe(1);
+  });
+
   it('should support custom widget', async () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -711,6 +737,202 @@ describe('anyOf', () => {
     rerender({ schema, formData: { userId: 'foobarbaz' } });
 
     expect(node.querySelector('select')).toHaveValue('1');
+  });
+
+  it('should never commit the option the updated formData no longer fits', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { userId: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
+    };
+    const commits: { type: unknown; value: unknown }[] = [];
+    function CommitProbe({ schema: { type }, value }: WidgetProps) {
+      useEffect(() => {
+        commits.push({ type, value });
+      });
+      return null;
+    }
+
+    const { rerender } = createFormComponent({
+      schema,
+      formData: { userId: 5 },
+      widgets: { TextWidget: CommitProbe },
+    });
+    rerender({ schema, formData: { userId: 'foobarbaz' }, widgets: { TextWidget: CommitProbe } });
+
+    expect(commits).toContainEqual({ type: 'string', value: 'foobarbaz' });
+    expect(commits).not.toContainEqual({ type: 'number', value: 'foobarbaz' });
+  });
+
+  it('should render an anyOf whose formData is NaN', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { userId: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
+    };
+
+    const { node } = createFormComponent({ schema, formData: { userId: NaN } });
+
+    expect(node.querySelector('select')).toBeInTheDocument();
+  });
+
+  it('keeps the option a selector chose from a timeout, which the form renders before the choice is applied', async () => {
+    /** A selector that reports its choice later, as one behind a confirm dialog or a debounce does */
+    function DeferredSelect({ id, value, options, onChange }: WidgetProps) {
+      return (
+        <select
+          id={id}
+          value={String(value ?? '')}
+          onChange={({ target }) => {
+            const chosen = target.value;
+            setTimeout(() => onChange(chosen), 0);
+          }}
+        >
+          {options.enumOptions?.map((option) => (
+            <option key={String(option.value)} value={String(option.value)}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      );
+    }
+    // Two options the data `{}` fits alike, so only the choice itself says which one is selected
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        shape: {
+          anyOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+            { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { shape: {} },
+      widgets: { SelectWidget: DeferredSelect },
+    });
+    const select = node.querySelector<HTMLSelectElement>('#root_shape__anyof_select')!;
+
+    await user.selectOptions(select, '1');
+
+    // The deferred report has landed once the form reports it, and the option's field is only committed by the render
+    // that settles the choice, so a choice that was put back would leave this waiting
+    await waitFor(() => expect(onChange).toHaveBeenLastCalledWith(expect.anything(), 'root_shape__anyof_select'));
+    await waitFor(() => expect(node.querySelector('#root_shape_b')).toBeInTheDocument());
+    expect(select.value).toBe('1');
+  });
+
+  it('switches options under StrictMode as it does without it', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        shape: {
+          anyOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'string', default: 'a' } } },
+            { title: 'B', type: 'object', properties: { b: { type: 'string', default: 'b' } } },
+          ],
+        },
+      },
+    };
+    const onChange = vi.fn();
+    const { container } = render(
+      <StrictMode>
+        <Form schema={schema} validator={validator} initialFormData={{ shape: { a: 'a' } }} onChange={onChange} />
+      </StrictMode>,
+    );
+    const select = container.querySelector<HTMLSelectElement>('#root_shape__anyof_select')!;
+
+    await user.selectOptions(select, '1');
+
+    expect(select.value).toBe('1');
+    expect(container.querySelector('#root_shape_b')).toBeInTheDocument();
+    expect(onChange.mock.lastCall?.[0].formData).toEqual({ shape: { b: 'b' } });
+  });
+
+  describe('rendered without a SchemaField above it', () => {
+    // `B` requires `b`, so data without it does not fit that option, while `A` fits any object
+    const options: RJSFSchema[] = [
+      { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+      { title: 'B', type: 'object', properties: { b: { type: 'string' } }, required: ['b'] },
+    ];
+    const schema: RJSFSchema = { anyOf: options };
+    const fieldPath = toFieldPath('');
+
+    /** An `AnyOfField` whose parent answers an option switch with data of its own that still fits `A` alone, or by
+     * keeping the data it had, and that moves the field to another id in the same render when `moves` is set
+     */
+    function SwitchedField({ answers, moves }: { answers: boolean; moves: boolean }) {
+      const [field, setField] = useState({ id: 'root_0', formData: { a: 'x' } });
+      return (
+        <AnyOfField
+          name=''
+          fieldPath={fieldPath}
+          id={field.id}
+          formData={field.formData}
+          schema={schema}
+          options={options}
+          registry={getTestRegistry(schema)}
+          onBlur={noop}
+          onFocus={noop}
+          onChange={() =>
+            setField({ id: moves ? 'root_1' : field.id, formData: answers ? { a: 'y' } : field.formData })
+          }
+        />
+      );
+    }
+
+    it.each([
+      { moves: false, title: 'under the same id' },
+      { moves: true, title: 'moved to another id in the same render' },
+    ])('puts a declined switch back on the option the data fits, $title', async ({ moves }) => {
+      const { container } = render(<SwitchedField answers={false} moves={moves} />);
+
+      await user.selectOptions(container.querySelector('select')!, 'B');
+
+      expect(container.querySelector('select')).toHaveValue('0');
+      expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
+    });
+
+    it.each([
+      { moves: false, title: 'under the same id' },
+      { moves: true, title: 'moved to another id in the same render' },
+    ])(
+      'keeps a switch the parent answered with new data, though that data fits the option that was left, $title',
+      async ({ moves }) => {
+        const { container } = render(<SwitchedField answers moves={moves} />);
+
+        await user.selectOptions(container.querySelector('select')!, 'B');
+
+        expect(container.querySelector('select')).toHaveValue('1');
+        expect(container.querySelector('select')).toHaveAttribute('id', `root_${moves ? 1 : 0}__anyof_select`);
+      },
+    );
+
+    it('retrieves none of the options it is handed', () => {
+      const registry = getTestRegistry(schema, { SchemaField: () => null });
+      const retrieveSchema = vi.spyOn(registry.schemaUtils, 'retrieveSchema');
+      const field = (formData: unknown) => (
+        <AnyOfField
+          name=''
+          fieldPath={fieldPath}
+          id='root'
+          formData={formData}
+          schema={schema}
+          options={options}
+          registry={registry}
+          onBlur={noop}
+          onChange={noop}
+          onFocus={noop}
+        />
+      );
+      const { container, rerender } = render(field({ a: 'x' }));
+
+      rerender(field({ b: 'y' }));
+
+      // The selector following the data shows the field rendered and re-matched its option to it
+      expect(container.querySelector('select')).toHaveValue('1');
+      expect(retrieveSchema).not.toHaveBeenCalled();
+    });
   });
 
   it('should not change the selected option when entering values', async () => {
