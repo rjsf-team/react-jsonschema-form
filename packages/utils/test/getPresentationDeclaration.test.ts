@@ -175,6 +175,41 @@ describe('getPresentationDeclaration()', () => {
       ).toEqual({ ...FIELD_DEFAULT, errors: 'self' });
     });
 
+    it('gives its labelledBy only to fields that keep their label, not to one leaving it to a widget', () => {
+      const labelled: PresentationSource = {
+        ...source,
+        presentation: { ...presentation, fieldDefault: { label: 'template', labelledBy: 'aria-labelledby' } },
+      };
+      const MyField: Field = () => null;
+      expect(getPresentationDeclaration(labelled, { schema: { type: 'string' }, field: MyField })).toEqual({
+        ...FIELD_DEFAULT,
+        label: 'template',
+        labelledBy: 'aria-labelledby',
+      });
+      expect(
+        getPresentationDeclaration(labelled, {
+          schema: { type: 'string' },
+          field: StringField,
+          fieldKey: 'StringField',
+          widget: 'text',
+        }),
+      ).toEqual(TEMPLATE);
+    });
+
+    it("puts a field's own labelledBy over its fieldDefault's when it renders no widget to leave its label to", () => {
+      const fields = {
+        ...presentation.fields,
+        ArrayField: { ...WIDGET_FIELD_PRESENTATION, labelledBy: 'for' },
+      } as const;
+      const labelled: PresentationSource = {
+        ...source,
+        presentation: { ...presentation, fields, fieldDefault: { label: 'template', labelledBy: 'aria-labelledby' } },
+      };
+      expect(
+        getPresentationDeclaration(labelled, { schema: array, field: ArrayField, fieldKey: 'ArrayField' }),
+      ).toEqual({ ...FIELD_DEFAULT, label: 'template', labelledBy: 'for' });
+    });
+
     it('gives an unmerged layer the same answer as a merged one', () => {
       const layer: ThemePresentation = { fields: { ObjectField: { label: 'template' } }, fieldDefault };
       const subject = { schema: { type: 'object' }, field: ObjectField } as const;

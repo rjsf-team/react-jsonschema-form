@@ -849,7 +849,8 @@ export interface ThemePresentation {
    * of drawing its own label and description, e.g. a theme whose template draws every description. It is also what a
    * part a field leaves to its widget falls back to when the field renders none. Unlike `default`, it sits beneath the
    * merged entries rather than beneath each layer's own, so it can't override a part a lower layer declares under a
-   * key, such as a field leaving its parts to its widget
+   * key, such as a field leaving its parts to its widget. Its `labelledBy` reaches only fields that keep their label or
+   * render no widget to leave it to, since one leaving it to a widget it renders takes the widget's
    */
   fieldDefault?: WidgetPresentationDeclaration;
 }
