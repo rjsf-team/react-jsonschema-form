@@ -536,7 +536,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
-                                  />
+                                  >
+                                    Select ...
+                                  </span>
                                   <svg
                                     aria-hidden="true"
                                     class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -895,7 +897,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
-                        />
+                        >
+                          Select ...
+                        </span>
                         <svg
                           aria-hidden="true"
                           class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -1475,7 +1479,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
-                                  />
+                                  >
+                                    Select ...
+                                  </span>
                                   <svg
                                     aria-hidden="true"
                                     class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -1866,7 +1872,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
-                        />
+                        >
+                          Select ...
+                        </span>
                         <svg
                           aria-hidden="true"
                           class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -2446,7 +2454,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
-                                  />
+                                  >
+                                    Select ...
+                                  </span>
                                   <svg
                                     aria-hidden="true"
                                     class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -3251,7 +3261,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
-                                  />
+                                  >
+                                    Select ...
+                                  </span>
                                   <svg
                                     aria-hidden="true"
                                     class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -3610,7 +3622,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
-                        />
+                        >
+                          Select ...
+                        </span>
                         <svg
                           aria-hidden="true"
                           class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -4160,7 +4174,9 @@ exports[`Three even column grid > renders person and address in three columns, n
                     >
                       <span
                         class="flex-1 line-clamp-1 text-muted-foreground"
-                      />
+                      >
+                        Select ...
+                      </span>
                       <svg
                         aria-hidden="true"
                         class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -4712,7 +4728,9 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     >
                       <span
                         class="flex-1 line-clamp-1 text-muted-foreground"
-                      />
+                      >
+                        Select ...
+                      </span>
                       <svg
                         aria-hidden="true"
                         class="lucide lucide-chevron-down h-4 w-4 opacity-50"

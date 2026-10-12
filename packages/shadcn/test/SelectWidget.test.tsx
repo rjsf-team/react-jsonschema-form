@@ -1,9 +1,15 @@
 import { useState } from 'react';
+import { TranslatableString } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import Form from '../src/index.ts';
 import SelectWidget from '../src/SelectWidget/index.ts';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
+
+const translateToFrench = (stringToTranslate: TranslatableString) =>
+  stringToTranslate === TranslatableString.SelectPlaceholder ? 'Choisir ...' : stringToTranslate;
 
 describe('SelectWidget', () => {
   test('single select is reachable from the tab order and opens with the keyboard', async () => {
@@ -506,5 +512,104 @@ describe('SelectWidget', () => {
 
     expect(ungrouped).toEqual(['a', 'c', 'b']);
     expect(grouped).toEqual(ungrouped);
+  });
+});
+
+describe('multiple SelectWidget accessible name', () => {
+  const colorsSchema = {
+    type: 'object' as const,
+    properties: {
+      colors: {
+        type: 'array' as const,
+        title: 'Colors',
+        uniqueItems: true,
+        items: { type: 'string' as const, enum: ['red', 'blue'] },
+      },
+    },
+  };
+  const untitledRootSchema = {
+    type: 'array' as const,
+    uniqueItems: true,
+    items: { type: 'string' as const, enum: ['red', 'blue'] },
+  };
+
+  test('uses the field title', () => {
+    render(<Form schema={colorsSchema} validator={validator} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Colors');
+  });
+
+  test('uses an overridden ui:title', () => {
+    render(
+      <Form schema={colorsSchema} uiSchema={{ colors: { 'ui:title': 'Favorite colors' } }} validator={validator} />,
+    );
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Favorite colors');
+  });
+
+  test('falls back to a fixed translated name for an untitled root field', () => {
+    render(<Form schema={untitledRootSchema} validator={validator} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+  });
+
+  test('falls back to a fixed translated name for an explicit blank ui:title', () => {
+    render(<Form schema={colorsSchema} uiSchema={{ colors: { 'ui:title': '' } }} validator={validator} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+  });
+
+  test('prefers ui:placeholder for the name and the visible placeholder of an untitled root field', () => {
+    render(<Form schema={untitledRootSchema} uiSchema={{ 'ui:placeholder': 'Pick colors' }} validator={validator} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pick colors');
+    expect(screen.getByPlaceholderText('Pick colors')).toBeInTheDocument();
+  });
+
+  test('fills the visible placeholder with the translated fallback when no ui:placeholder is given', () => {
+    render(<Form schema={untitledRootSchema} validator={validator} />);
+    expect(screen.getByPlaceholderText('Select ...')).toBeInTheDocument();
+  });
+
+  test('a custom translateString drives both the name and the visible placeholder', () => {
+    render(<Form schema={untitledRootSchema} validator={validator} translateString={translateToFrench} />);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Choisir ...');
+    expect(screen.getByPlaceholderText('Choisir ...')).toBeInTheDocument();
+  });
+
+  test('passes required and the field description to the combobox input', () => {
+    const schema = {
+      type: 'object' as const,
+      required: ['colors'],
+      properties: {
+        colors: {
+          type: 'array' as const,
+          title: 'Colors',
+          description: 'Pick your colors',
+          uniqueItems: true,
+          items: { type: 'string' as const, enum: ['red', 'blue'] },
+        },
+      },
+    };
+    render(<Form schema={schema} validator={validator} />);
+    const combobox = screen.getByRole('combobox');
+    expect(combobox).toHaveAttribute('aria-required', 'true');
+    expect(combobox).toHaveAttribute('aria-describedby', expect.stringContaining('root_colors__description'));
+  });
+});
+
+describe('single SelectWidget translated placeholder', () => {
+  test('a custom translateString drives the trigger', () => {
+    const schema = { type: 'string' as const, enum: ['red', 'blue'] };
+    render(<Form schema={schema} validator={validator} translateString={translateToFrench} />);
+    expect(screen.getByRole('button', { expanded: false })).toHaveTextContent('Choisir ...');
+  });
+
+  test('an option with an empty label renders blank once selected instead of the placeholder', () => {
+    const schema = {
+      type: 'string' as const,
+      oneOf: [
+        { const: 'none', title: '' },
+        { const: 'red', title: 'Red' },
+      ],
+    };
+    render(<Form schema={schema} validator={validator} formData='none' />);
+    const trigger = screen.getByRole('button', { expanded: false });
+    expect(trigger).toHaveTextContent(/^$/);
   });
 });
