@@ -1,10 +1,4 @@
-import type {
-  MergedThemePresentation,
-  PartOwner,
-  PresentationDeclaration,
-  ThemePresentation,
-  WidgetPresentationDeclaration,
-} from './types.ts';
+import type { MergedThemePresentation, PartOwner, PresentationDeclaration, ThemePresentation } from './types.ts';
 
 /** Gets the value the last of `declarations` that declares `part` gives it
  *
@@ -62,60 +56,45 @@ export function getOwnDeclaration<Declaration extends PresentationDeclaration>(
   return record && key !== undefined && Object.hasOwn(record, key) ? record[key] : undefined;
 }
 
-/** Layers the declarations of each key in `layers` over one another
+/** Layers the declarations of each key in `records` over one another, each record's default beneath its own entry
  *
- * @param layers - The records to merge, from the bottom; `undefined` entries are skipped
- * @returns - The merged record
+ * @param records - The records to merge, from the bottom; `undefined` entries are skipped
+ * @param [defaults=[]] - The declaration each record gives a key it has no entry for, by the record's index
+ * @returns - The merged record, with an entry for every key any of `records` has
  */
 function layerRecords<Owner extends PartOwner>(
-  layers: readonly (Readonly<Record<string, PresentationDeclaration<Owner>>> | undefined)[],
+  records: readonly (Readonly<Record<string, PresentationDeclaration<Owner>>> | undefined)[],
+  defaults: readonly (PresentationDeclaration<Owner> | undefined)[] = [],
 ): Record<string, PresentationDeclaration<Owner>> {
-  const keys = new Set(layers.flatMap((layer) => Object.keys(layer ?? {})));
+  const keys = new Set(records.flatMap((record) => Object.keys(record ?? {})));
   return Object.fromEntries(
-    [...keys].map((key) => [key, layerDeclarations(...layers.map((layer) => getOwnDeclaration(layer, key)))]),
+    [...keys].map((key) => [
+      key,
+      layerDeclarations(...records.flatMap((record, index) => [defaults[index], getOwnDeclaration(record, key)])),
+    ]),
   );
-}
-
-/** Gets the widget declarations of one layer, with its `standardWidgets` expanded into an entry for each of
- * `standardWidgetKeys` beneath the layer's own entry for that key
- *
- * @param layer - The layer, if any
- * @param standardWidgetKeys - The keys `@rjsf/core` registers its widgets under
- * @returns - The layer's widget declarations by key
- */
-function expandStandardWidgets(
-  layer: ThemePresentation | undefined,
-  standardWidgetKeys: readonly string[],
-): Readonly<Record<string, WidgetPresentationDeclaration>> | undefined {
-  if (!layer?.standardWidgets) {
-    return layer?.widgets;
-  }
-  const { standardWidgets, widgets } = layer;
-  return {
-    ...widgets,
-    ...Object.fromEntries(
-      standardWidgetKeys.map((key) => [key, layerDeclarations(standardWidgets, getOwnDeclaration(widgets, key))]),
-    ),
-  };
 }
 
 /** Merges the `ThemePresentation`s of a form's layers, the way `@rjsf/core` merges its own components with a theme's
  * and a theme's with the `Form`'s props. Declarations are merged part by part rather than replaced whole, so a theme
  * declaring that its `CheckboxWidget` draws its errors keeps `@rjsf/core`'s declaration that it draws its label. A
- * layer's `standardWidgets` is expanded into an entry for every one of `standardWidgetKeys` at that layer, beneath the
- * layer's own entry for the key, so it overrides the parts it declares in the layers beneath it, even under a key one
- * of them declares
+ * layer's `default` is layered beneath that layer's own entry for every widget key any layer declares, so it overrides
+ * the parts it declares in the layers beneath it, even under a key one of them declares, and the layered `default`s
+ * are what a widget no layer declares draws
  *
- * @param standardWidgetKeys - The keys `@rjsf/core` registers its widgets under, which `standardWidgets` applies to
  * @param layers - The presentations to merge, from the bottom; `undefined` entries are skipped
- * @returns - The merged presentation, with no `standardWidgets` left to apply
+ * @returns - The merged presentation
  */
 export default function mergeThemePresentation(
-  standardWidgetKeys: readonly string[],
   ...layers: readonly (ThemePresentation | undefined)[]
 ): MergedThemePresentation {
+  const defaults = layers.map((layer) => layer?.default);
   return {
-    widgets: layerRecords(layers.map((layer) => expandStandardWidgets(layer, standardWidgetKeys))),
+    default: layerDeclarations<Exclude<PartOwner, 'widget'>>(...defaults),
+    widgets: layerRecords(
+      layers.map((layer) => layer?.widgets),
+      defaults,
+    ),
     fields: layerRecords(layers.map((layer) => layer?.fields)),
   };
 }

@@ -1,26 +1,28 @@
 import { mergeThemePresentation } from '../src/index.ts';
 
-const STANDARD = ['CheckboxWidget', 'RadioWidget', 'TextWidget'];
+const EMPTY = { default: {}, widgets: {}, fields: {} };
+
+const core = {
+  widgets: {
+    CheckboxWidget: { label: 'self', description: 'self' },
+    RadioWidget: { labelledBy: 'aria-labelledby' },
+  },
+} as const;
 
 describe('mergeThemePresentation()', () => {
   it('returns empty declarations when there is nothing to merge', () => {
-    expect(mergeThemePresentation(STANDARD)).toStrictEqual({ widgets: {}, fields: {} });
-    expect(mergeThemePresentation(STANDARD, undefined, {})).toStrictEqual({ widgets: {}, fields: {} });
+    expect(mergeThemePresentation()).toStrictEqual(EMPTY);
+    expect(mergeThemePresentation(undefined, {})).toStrictEqual(EMPTY);
   });
 
   it('merges each declaration part by part, later layers winning', () => {
-    const core = {
-      widgets: {
-        CheckboxWidget: { label: 'self', description: 'self' },
-        RadioWidget: { labelledBy: 'aria-labelledby' },
-      },
-      fields: { ObjectField: { label: 'self', description: 'self' } },
-    } as const;
+    const fieldsCore = { ...core, fields: { ObjectField: { label: 'self', description: 'self' } } } as const;
     const theme = {
       widgets: { CheckboxWidget: { errors: 'self', description: 'template' } },
       fields: { ObjectField: { errors: 'self' } },
     } as const;
-    expect(mergeThemePresentation(STANDARD, core, undefined, theme)).toStrictEqual({
+    expect(mergeThemePresentation(fieldsCore, undefined, theme)).toStrictEqual({
+      default: {},
       widgets: {
         CheckboxWidget: { label: 'self', description: 'template', errors: 'self' },
         RadioWidget: { labelledBy: 'aria-labelledby' },
@@ -29,40 +31,46 @@ describe('mergeThemePresentation()', () => {
     });
   });
 
-  it("expands a layer's standardWidgets into every standard key, beneath that layer's own entry", () => {
+  it("layers a layer's default beneath its own entry for every key any layer declares", () => {
     const theme = {
-      standardWidgets: { label: 'self', errors: 'self' },
+      default: { label: 'self', errors: 'self' },
       widgets: { CheckboxWidget: { errors: 'template' }, MyWidget: { help: 'self' } },
     } as const;
-    expect(mergeThemePresentation(STANDARD, theme).widgets).toStrictEqual({
-      CheckboxWidget: { label: 'self', errors: 'template' },
-      RadioWidget: { label: 'self', errors: 'self' },
-      TextWidget: { label: 'self', errors: 'self' },
-      MyWidget: { help: 'self' },
+    expect(mergeThemePresentation(core, theme)).toStrictEqual({
+      default: { label: 'self', errors: 'self' },
+      widgets: {
+        CheckboxWidget: { label: 'self', description: 'self', errors: 'template' },
+        RadioWidget: { label: 'self', errors: 'self', labelledBy: 'aria-labelledby' },
+        MyWidget: { label: 'self', errors: 'self', help: 'self' },
+      },
+      fields: {},
     });
   });
 
   it("overrides the parts it declares under a key a lower layer declares, keeping the lower layer's other parts", () => {
-    const core = {
+    const props = { default: { description: 'template' } } as const;
+    expect(mergeThemePresentation(core, props)).toStrictEqual({
+      default: { description: 'template' },
       widgets: {
-        CheckboxWidget: { label: 'self', description: 'self' },
-        RadioWidget: { labelledBy: 'aria-labelledby' },
+        CheckboxWidget: { label: 'self', description: 'template' },
+        RadioWidget: { description: 'template', labelledBy: 'aria-labelledby' },
       },
-    } as const;
-    const props = { standardWidgets: { description: 'template' } } as const;
-    expect(mergeThemePresentation(STANDARD, core, props).widgets).toStrictEqual({
-      CheckboxWidget: { label: 'self', description: 'template' },
-      RadioWidget: { description: 'template', labelledBy: 'aria-labelledby' },
-      TextWidget: { description: 'template' },
+      fields: {},
     });
+  });
+
+  it("keeps a lower layer's default beneath a key only a higher layer declares", () => {
+    const theme = { default: { label: 'self' } } as const;
+    const props = { widgets: { MyWidget: { errors: 'self' } } } as const;
+    expect(mergeThemePresentation(theme, props).widgets).toStrictEqual({ MyWidget: { label: 'self', errors: 'self' } });
   });
 
   it('leaves a part declared undefined to the layers beneath it', () => {
     const merged = mergeThemePresentation(
-      STANDARD,
-      { widgets: { TextWidget: { label: 'self' } } },
-      { standardWidgets: { label: undefined } },
+      { default: { errors: 'self' }, widgets: { TextWidget: { label: 'self' } } },
+      { default: { label: undefined, errors: undefined } },
     );
-    expect(merged.widgets.TextWidget).toStrictEqual({ label: 'self' });
+    expect(merged.default).toStrictEqual({ errors: 'self' });
+    expect(merged.widgets.TextWidget).toStrictEqual({ label: 'self', errors: 'self' });
   });
 });
