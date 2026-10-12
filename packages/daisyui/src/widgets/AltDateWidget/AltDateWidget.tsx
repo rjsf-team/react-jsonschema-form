@@ -48,7 +48,7 @@ export default function AltDateWidget<
               {/* The part's name as the user sees it. The select's `aria-label`, which `DateElement` builds from the
                 field's label and this same translated name, outranks this association as its accessible name */}
               <label htmlFor={dateElementId(id, elemProps.type)} className='label'>
-                <span className='label-text capitalize'>{elementLabel}</span>
+                <span className='label-text'>{elementLabel}</span>
               </label>
               <DateElement
                 rootId={id}

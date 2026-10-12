@@ -213,13 +213,10 @@ describe('mantine SelectWidget rendered by a caller that names and describes it'
     expect(screen.getByRole('combobox', { name: 'When, year' })).toBeInTheDocument();
   });
 
-  test('describes its input by the ids it is passed, rather than by the ones built from its own id', () => {
+  test('describes its input by the ids it is passed alone while it has no option selected', () => {
     renderWidget({ options: { enumOptions }, 'aria-describedby': 'root_when__error root_when__help' });
 
-    expect(screen.getByRole('combobox')).toHaveAttribute(
-      'aria-describedby',
-      'root_when__error root_when__help root__description',
-    );
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-describedby', 'root_when__error root_when__help');
   });
 
   test('still describes its input by the description of the option it has selected', () => {

@@ -2552,14 +2552,14 @@ The existing `errors` are always kept, also when their `errorSchema` is empty, a
 
 Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses.
 A select rendered inside another widget, such as each select of an `AltDateWidget`, has no label of its own and an id that no help or error element is rendered for, so only its caller can name it and link it to its field.
-When any of its options has a description, the ids the caller passed are followed by `descriptionId(props.id)`, the one element the select renders itself, for the description of the option it has selected, so that description is still announced.
-A select with no described option, such as a date part, is described by the ids the caller passed alone: it renders no such element, and its id may be another field's description id.
+While the select shows the description of its selected option, the ids the caller passed are followed by `descriptionId(props.id)`, the one element the select renders itself, so that description is still announced.
+A select that shows none is described by the ids the caller passed alone: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render no such element, and its id may be another field's description id.
 Without ids from the caller, the result is `ariaDescribedByIds(props.id)`.
 Every theme's `SelectWidget` gives the result to its control, and a replacement `SelectWidget` should do the same; no other widget is required to.
 
 #### Parameters
 
-- props: WidgetAriaPropsInput - The widget's props, of which only `id`, `aria-label`, `aria-describedby` and `options` are read
+- props: WidgetAriaPropsInput&lt;T, S, F> - The widget's props, of which `id`, `aria-label`, `aria-describedby` and those `SelectedOptionDescription` reads (`multiple`, `hideLabel`, `options`, `registry`, `uiSchema` and `value`) are used
 
 #### Returns
 
@@ -2568,9 +2568,10 @@ Every theme's `SelectWidget` gives the result to its control, and a replacement 
 #### Example
 
 ```typescript
-widgetAriaProps({ id: 'root' }); // { 'aria-label': undefined, 'aria-describedby': 'root__error root__description root__help' }
-widgetAriaProps({ id: 'root_when_year', 'aria-label': 'When, year', 'aria-describedby': 'root_when__error' });
-// { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error' }
+// `props` are the `WidgetProps` of a `SelectWidget` with the id `root`, rendered by a field
+widgetAriaProps(props); // { 'aria-label': undefined, 'aria-describedby': 'root__error root__description root__help' }
+// `partProps` are those of the year select of an `AltDateWidget`, which its `DateElement` names and describes
+widgetAriaProps(partProps); // { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error root_when__description root_when__help' }
 ```
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()

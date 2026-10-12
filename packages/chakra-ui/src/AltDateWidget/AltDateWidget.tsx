@@ -1,6 +1,6 @@
 import { Box, Button, FieldsetRoot } from '@chakra-ui/react';
 import type { DateElementProp, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
 import { getChakra } from '../utils.ts';
 
@@ -19,7 +19,7 @@ function AltDateWidget<
     <FieldsetRoot {...(chakraProps as any)}>
       <Box display='flex' flexWrap='wrap' alignItems='center'>
         {elements.map((elemProps: DateElementProp, i) => {
-          const elemId = `${id}_${elemProps.type}`;
+          const elemId = dateElementId(id, elemProps.type);
           return (
             <Box key={elemId} mr='2' mb='2' width='20'>
               <DateElement<T, S, F>

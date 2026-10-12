@@ -1,5 +1,5 @@
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 import { Row, Col, Button } from 'antd';
 
 export default function AltDateWidget<
@@ -25,7 +25,7 @@ export default function AltDateWidget<
   return (
     <Row gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]}>
       {elements.map((elemProps, i) => {
-        const elemId = `${id}_${elemProps.type}`;
+        const elemId = dateElementId(id, elemProps.type);
         return (
           <Col flex='88px' key={elemId}>
             <DateElement

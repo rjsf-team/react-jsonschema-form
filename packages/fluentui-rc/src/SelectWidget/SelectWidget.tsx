@@ -90,8 +90,9 @@ function SelectWidget<
 
   return (
     <Field
-      // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given
-      label={labelValue(label, hideLabel || !label)}
+      // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given. A required
+      // field keeps it, since the label is where the required mark is shown
+      label={labelValue(label, hideLabel || (!label && !required))}
       validationState={hasVisibleErrors({ rawErrors, hideError }) ? 'error' : undefined}
       required={required}
     >
