@@ -214,6 +214,22 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       getFirstMatchingOption({ validator }, { k: 'v' }, [option], rootSchema);
       expect(validated[0]).toEqual(option);
     });
+    it('scores an option describing a map through unevaluatedProperties as it stands', () => {
+      // The keyword describes the keys the option's `properties` don't name as much as `additionalProperties` does, so
+      // an option carrying it describes a map rather than nothing at all
+      const { validated, validator } = recordingValidator();
+      const option = { type: 'object', properties: {}, unevaluatedProperties: { type: 'number' } } as RJSFSchema;
+      getFirstMatchingOption({ validator }, { k: 1 }, [option], rootSchema);
+      expect(validated[0]).toEqual(option);
+    });
+    it('does not match an option whose additionalProperties is spelled undefined', () => {
+      // A keyword spelled `undefined`, as a schema built by spreading tends to spell one, reads as absent the way a
+      // validator reads it, so it leaves the option describing no key its `properties` don't name
+      const { validated, validator } = recordingValidator();
+      const option: RJSFSchema = { type: 'object', properties: {}, additionalProperties: undefined };
+      getFirstMatchingOption({ validator }, { a: 'x' }, [option], rootSchema);
+      expect(validated[0]).toEqual({ not: {} });
+    });
     it('does not match an option whose patternProperties name no pattern either', () => {
       // An empty `patternProperties` describes no key, so it leaves the option with nothing to match on, the same way
       // an empty `properties` does

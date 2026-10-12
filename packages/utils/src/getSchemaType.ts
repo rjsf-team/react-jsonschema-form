@@ -1,6 +1,6 @@
-import { JSON_SCHEMA_TYPES } from './constants.ts';
+import { JSON_SCHEMA_TYPES, UNEVALUATED_PROPERTIES_KEY } from './constants.ts';
 import guessType from './guessType.ts';
-import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Gets the type of a given `schema`. If the type is not explicitly defined, then an attempt is made to infer it from
  * other elements of the schema as follows:
@@ -9,6 +9,7 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * - schema.properties: Returns `object`
  * - schema.additionalProperties: Returns `object`
  * - schema.patternProperties: Returns `object`
+ * - schema.unevaluatedProperties: Returns `object`, since it describes the keys an object's other keywords leave over
  * - type is an array: Returns its first type other than 'null' that JSON Schema defines, since 'null' is the one type
  *   that holds no value to edit and an unrecognized name has no field to render it; failing that its first type other
  *   than 'null', and 'null' for an array listing nothing else
@@ -27,7 +28,15 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(s
     return 'string';
   }
 
-  if (!type && (schema.properties || schema.additionalProperties || schema.patternProperties)) {
+  if (
+    !type &&
+    (schema.properties ||
+      schema.additionalProperties ||
+      schema.patternProperties ||
+      // A 2019-09 keyword `JSONSchema7` does not declare, read off the schema the way the others are: it describes the
+      // keys the other keywords leave unevaluated, which only an object has
+      (schema as GenericObjectType)[UNEVALUATED_PROPERTIES_KEY])
+  ) {
     return 'object';
   }
 

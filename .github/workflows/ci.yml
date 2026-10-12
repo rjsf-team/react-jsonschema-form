@@ -7,6 +7,28 @@ on:
     branches: [main, v7]
 
 jobs:
+  # None of these depend on the Node version or on a build, so they run once in their own job rather
+  # than on one leg of the build matrix: a failure reports on its own instead of cancelling the other
+  # legs and withholding every build and test result. `cs-check` runs ahead of `lint` so the one
+  # failure that has an automatic fix is never hidden behind the slowest step.
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.x
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm dedupe --check
+      - run: pnpm run cs-check
+      - run: pnpm run lint
+      - run: pnpm run knip
+
   build:
     runs-on: ubuntu-latest
     strategy:
@@ -25,13 +47,6 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: 'pnpm-lock.yaml'
       - run: pnpm install --frozen-lockfile
-      # Lockfile hygiene is independent of the Node version, so check it once.
-      - if: matrix.node-version == '24.x'
-        run: pnpm dedupe --check
-      - run: pnpm run lint
-      # Workspace-wide and independent of the Node version, so run it once.
-      - if: matrix.node-version == '24.x'
-        run: pnpm run knip
 
       - name: Build with Netlify badge
         run: pnpm run build-serial
@@ -60,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     name: Deploy playground and docs to GitHub Pages
-    needs: [build]
+    needs: [build, checks]
     steps:
       - name: Download built playground
         uses: actions/download-artifact@v8

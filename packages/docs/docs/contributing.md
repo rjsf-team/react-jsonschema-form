@@ -52,9 +52,10 @@ When building in environments with limited memory, such as Netlify, it's recomme
 ## Coding style
 
 All the JavaScript/Typescript code in this project is formatted with [oxfmt](https://oxc.rs/docs/guide/usage/formatter) and linted with [oxlint](https://oxc.rs/docs/guide/usage/linter).
+oxfmt formats every file type it supports, not just source: Markdown, YAML, JSON and CSS are checked too, so a changelog or docs edit can need formatting as much as a component does.
 Staged files are automatically formatted upon commit using precommit hooks, assuming you followed the `First time step` above.
 
-You can also run `pnpm cs-format` from the repository root.
+CI checks the formatting with `pnpm cs-check`, so run `pnpm cs-format` from the repository root for any commit the hooks did not see — one made with `--no-verify`, from a fresh worktree, or through the GitHub web editor.
 
 ## Documentation
 

@@ -31,8 +31,11 @@ import {
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
   uiBooleanOption,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
+
+import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /**
  * Get the types the type selection component offers for a schema: the ones the schema allows, or every JSON Schema
@@ -183,10 +186,13 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   // An object the schema says nothing more about takes any key/value pair, which is what this UI is here to offer.
   // Options are what says more about it, even when the members they describe are their own rather than the schema's:
   // taking them for silence would stub the keys the data already holds as additional properties of the value field,
-  // rendering each of them a second time alongside the option's own, under a remove button for a described property
+  // rendering each of them a second time alongside the option's own, under a remove button for a described property.
+  // `unevaluatedProperties` says as much about them as `additionalProperties` does, and the `true` written in below
+  // would take precedence over it where `getAdditionalPropertySchema()` reads the two
   const describesMembers =
     PROPERTIES_KEY in valueSchema ||
     ADDITIONAL_PROPERTIES_KEY in valueSchema ||
+    UNEVALUATED_PROPERTIES_KEY in valueSchema ||
     PATTERN_PROPERTIES_KEY in valueSchema ||
     hasOptions;
   if (type === 'object' && !describesMembers) {
@@ -355,11 +361,10 @@ function FallbackUiField<
     registry,
     fieldPath,
     onChange,
-    errorSchema,
-    rawErrors,
   } = props;
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const readsFormData = useReadsFormData(FallbackField);
   const types = useMemo(() => getFallbackTypes<S>(schema), [schema]);
   const defaultType = useMemo(
     () => getDefaultType<S>(schema, types, uiOptions.widget),
@@ -452,7 +457,12 @@ function FallbackUiField<
   );
 
   const { SchemaField } = fields;
-  const valueField = <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />;
+  // The value field renders this field's own data; the type selector, which renders the type, is not vouched for
+  const valueField = (
+    <RawFormDataContext value={readsFormData ? SchemaField : undefined}>
+      <SchemaField {...props} schema={valueSchema} uiSchema={valueUiSchema} />
+    </RawFormDataContext>
+  );
 
   // One type is not a choice to be made, so the value field renders alone: without a control that can only be left as
   // it is, and without the template that lays that control out above it, whose wrapper would otherwise put a theme's
@@ -464,21 +474,13 @@ function FallbackUiField<
   }
 
   const typeSelectorFieldPath = toFieldPath('__internal_type_selector', fieldPath);
-  // The errors raised against the old value describe a type it no longer has, so an empty error schema replaces them:
-  // passing them on would re-assert them against the cast value, and passing none would leave them standing. With
-  // nothing to clear it stays `undefined`, since `Form` keeps an empty-but-truthy error schema as a custom error of
-  // its own that every later validation then has to merge, dropping message-less errors as it goes
-  const hasErrorsToClear = !!rawErrors?.length || Object.keys(errorSchema ?? {}).length > 0;
-
   const onTypeChange = (newType: T | undefined) => {
-    if (newType != null) {
-      setSelectedType(newType as JSONSchema7TypeName);
-      onChange(
-        castToNewType<T>(formData as T, newType as JSONSchema7TypeName),
-        fieldPath,
-        hasErrorsToClear ? {} : undefined,
-        id,
-      );
+    const selected = types.find((aType) => aType === newType);
+    if (selected) {
+      setSelectedType(selected);
+      // The errors raised against the old value describe a type it no longer has, so an empty raise takes them off:
+      // passing none would leave them standing
+      onChange(castToNewType(formData, selected), fieldPath, {}, id);
     }
   };
 

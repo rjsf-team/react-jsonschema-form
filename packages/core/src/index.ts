@@ -1,6 +1,6 @@
 import type { FormProps, FormState } from './components/Form.tsx';
 import Form from './components/Form.tsx';
-import type { FormHandle } from './components/FormHandle.ts';
+import type { FormRef } from './components/FormRef.ts';
 import type { EventFormData, IChangeEvent } from './components/IChangeEvent.ts';
 import type { RichDescriptionProps } from './components/RichDescription.tsx';
 import RichDescription from './components/RichDescription.tsx';
@@ -14,7 +14,7 @@ import withTheme from './withTheme.tsx';
 
 export type {
   EventFormData,
-  FormHandle,
+  FormRef,
   FormProps,
   FormState,
   IChangeEvent,

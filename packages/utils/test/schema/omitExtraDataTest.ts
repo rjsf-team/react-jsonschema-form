@@ -474,6 +474,21 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const formData = { test: { field1: '' } };
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ test: { field1: '' } });
       });
+
+      it('should keep an empty required object its additionalProperties describes', () => {
+        // The `required` names the key whatever keyword describes it, so an object the `properties` do not name is as
+        // required as one they do
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['test'],
+          additionalProperties: {
+            type: 'object',
+            properties: { field1: { type: 'string' } },
+          },
+        };
+        const formData = { test: { field1: '' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ test: { field1: '' } });
+      });
     });
 
     describe('nested optional objects', () => {
@@ -906,6 +921,19 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('drops a value whose allOf merges to false', () => {
+        // A `false` among the entries merges to `false`, which no value satisfies: the key goes, rather than keeping
+        // the value as it was written with none of the keys the other entries describe filtered out of it
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            forbidden: { allOf: [{ type: 'object', properties: { x: { type: 'string' } } }, false] },
+          },
+        };
+        const formData = { forbidden: { x: 'hi', extra: 'drop' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({});
+      });
+
       it('treats every key as optional when a property schema is boolean true (no required list)', () => {
         // boolean true is a JSON Schema shorthand for "allow anything". It carries no required list,
         // so setProperty treats all keys in the object value as optional.
@@ -1241,6 +1269,58 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it('keeps what every pattern matching a key describes', () => {
+        // `retrieveSchema()` stubs such a key with the merge of all of them, so a field edits the value each one
+        // describes; filtered by the first matching pattern alone, the rest are dropped out from under those fields
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: {
+            '^a': { type: 'object', properties: { x: { type: 'string' } } },
+            b$: { type: 'object', properties: { y: { type: 'string' } } },
+          },
+        };
+        const formData = { ab: { x: 'one', y: 'two' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          ab: { x: 'one', y: 'two' },
+        });
+      });
+
+      it('drops a key one of the patterns matching it forbids', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' }, b$: false },
+        };
+        const formData = { ab: 'gone', ac: 'kept' };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ ac: 'kept' });
+      });
+
+      it('keeps a pattern-matched object whose required child is empty', () => {
+        // The names a pattern-matched key requires are in the merge of the patterns matching it, not on the `allOf`
+        // wrapping them, so an empty required child must not take the object it belongs to with it
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: {
+            '^a': { type: 'object', required: ['x'], properties: { x: { type: 'string' } } },
+          },
+        };
+        const formData = { ab: { x: '' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ ab: { x: '' } });
+      });
+
+      it('keeps an empty pattern-matched object the object itself requires', () => {
+        // Dropping a key the `required` names leaves data the form then reports as missing, for a key the user has
+        // a field for and has filled in as far as it asks them to
+        const schema: RJSFSchema = {
+          type: 'object',
+          required: ['ab'],
+          patternProperties: {
+            '^a': { type: 'object', properties: { x: { type: 'string' } } },
+          },
+        };
+        const formData = { ab: { x: '' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ ab: { x: '' } });
+      });
+
       it('skips keys already handled by properties when processing patternProperties', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -1252,6 +1332,59 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
           name: 'Alice',
           nameExtra: 'Bob',
         });
+      });
+    });
+
+    describe('unevaluatedProperties support', () => {
+      it('keeps the keys an unevaluatedProperties describes where no additionalProperties evaluates them', () => {
+        // `retrieveSchema()` renders those keys and `canExpand()` offers the add button for another, so pruning them
+        // would leave the form showing a field whose value the next change deletes
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+        };
+        const formData = { a: 'q', b: 2 };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ a: 'q', b: 2 });
+      });
+
+      it('delegates the rest keys of a patternProperties to an unevaluatedProperties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^str_': { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+        };
+        const formData = { str_a: 'hello', num_b: 99 };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          str_a: 'hello',
+          num_b: 99,
+        });
+      });
+
+      it('drops the keys an unevaluatedProperties forbids, and the ones any additionalProperties evaluates', () => {
+        const forbiddenSchema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          unevaluatedProperties: false,
+        };
+        expect(omitExtraData({ validator: testValidator }, forbiddenSchema, forbiddenSchema, { a: 'q', b: 2 })).toEqual(
+          {
+            a: 'q',
+          },
+        );
+        // An `additionalProperties: false` evaluates the key itself, which leaves the `unevaluatedProperties` nothing
+        // to say about it, the same precedence `getAdditionalPropertySchema()` reads the two keywords with
+        const evaluatedSchema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: false,
+          unevaluatedProperties: { type: 'number' },
+        };
+        expect(omitExtraData({ validator: testValidator }, evaluatedSchema, evaluatedSchema, { a: 'q', b: 2 })).toEqual(
+          {
+            a: 'q',
+          },
+        );
       });
     });
 

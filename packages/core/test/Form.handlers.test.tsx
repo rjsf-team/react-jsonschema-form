@@ -6,7 +6,6 @@ import { act, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import type { FormProps, IChangeEvent } from '../src/index.ts';
-import type Form from '../src/index.ts';
 import {
   createFormComponent,
   describeRepeated,
@@ -14,6 +13,7 @@ import {
   expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
   submitForm,
+  createFormRef,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -139,7 +139,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       };
 
       const secondOnChange = vi.fn();
-      const ref = createRef<Form>();
+      const ref = createFormRef();
 
       const { onChange, rerender } = createFormComponent({ ref, schema, initialFormData: { foo: 'bar1' } });
 
@@ -221,6 +221,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         expect(ids).toHaveLength(2);
       });
 
+      // Both owners keep both: a parent-owned form builds the second proposal on the first
       expect(formData).toEqual({ foo: 'bar2', baz: 'blah2' });
       // One id per updated component; the defaults the seed was given are not reported
       expect(ids).toEqual(['root_foo', 'root_baz']);
@@ -593,7 +594,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
     });
     it('should keep a form value set in the same render as an unrelated prop change', async () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
-      const ref = createRef<Form>();
+      const ref = createFormRef();
       const { node, rerender } = createFormComponent({ schema, ref });
 
       await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'a');
@@ -649,7 +650,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
     });
     it('should clear the errors of an uncontrolled form when noValidate is turned on', () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };
-      const ref = createRef<Form>();
+      const ref = createFormRef();
       const { node, rerender } = createFormComponent({ schema, ref });
       act(() => {
         ref.current!.validateForm();
@@ -1056,4 +1057,19 @@ describe('Form: the prop changes a self-owned form re-derives its data for', () 
 
     expect(node.querySelector<HTMLSelectElement>('#root__oneof_select')).toHaveValue('1');
   });
+});
+
+// Ported from #5043's `toIChangeEvent` cases: an event is built from the form's state, which holds much more than an
+// `IChangeEvent` describes, so none of that internal state may leak into it
+it('onChange and onSubmit events carry only the public IChangeEvent members', async () => {
+  const { node, onChange, onSubmit } = createFormComponent({
+    schema: { type: 'object', properties: { name: { type: 'string' } } },
+  });
+
+  await user.type(screen.getByRole('textbox'), 'x');
+  await submitForm(node, user);
+
+  const members = ['errorSchema', 'errors', 'formData', 'schema', 'schemaUtils', 'uiSchema'];
+  expect(Object.keys(onChange.mock.lastCall?.[0] ?? {}).sort()).toEqual(members);
+  expect(Object.keys(onSubmit.mock.lastCall?.[0] ?? {}).sort()).toEqual([...members, 'status'].sort());
 });

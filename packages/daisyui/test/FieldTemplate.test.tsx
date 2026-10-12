@@ -1,9 +1,10 @@
-import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
 import Form from '../src/index.ts';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
+import DaisyToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
 
 /** The label `FieldTemplate` renders above the control. It is the only one pointing at the field's own id: a widget's
  * own label (`CheckboxWidget`, `ToggleWidget`) has no `htmlFor`, and `AltDateWidget`'s point at their sub-controls
@@ -163,6 +164,63 @@ describe('FieldTemplate', () => {
 
       expect(templateLabel()).toBeNull();
       expect(screen.getAllByText('Agree')).toHaveLength(1);
+    });
+
+    // Of the boolean aliases only `checkbox` is recognized, so a field that names another alias whose key holds a
+    // widget rendering its own label gets the template's label and description as well, the description twice under
+    // one id. A known limitation, pinned so it changes on purpose
+    test('renders a second label and description for another boolean alias whose key holds the toggle', () => {
+      const { container, templateLabel } = renderForm(
+        { agree: { 'ui:widget': 'radio' } },
+        { ...agree, description: 'Whether you agree' },
+        { RadioWidget: DaisyToggleWidget },
+      );
+
+      expect(templateLabel()).toHaveTextContent('Agree');
+      expect(screen.getAllByText('Agree')).toHaveLength(2);
+      expect(screen.getAllByText('Whether you agree')).toHaveLength(2);
+      expect(container.querySelectorAll('[id="root_agree__description"]')).toHaveLength(2);
+      expect(screen.getByRole('checkbox')).toHaveClass('toggle');
+    });
+
+    test('leaves the label and description to the toggle when the field names the key that holds it', () => {
+      const { templateLabel } = renderForm(
+        { agree: { 'ui:widget': 'RadioWidget' } },
+        { ...agree, description: 'Whether you agree' },
+        { RadioWidget: DaisyToggleWidget },
+      );
+
+      expect(templateLabel()).toBeNull();
+      expect(screen.getAllByText('Agree')).toHaveLength(1);
+      expect(screen.getAllByText('Whether you agree')).toHaveLength(1);
+      expect(screen.getByRole('checkbox')).toHaveClass('toggle');
+    });
+  });
+
+  // A custom `ui:field` reads its `ui:widget` itself, so the name can be one no widget has, such as `toString`, which
+  // is inherited from `Object.prototype`. `FieldTemplate` still asks whether that widget renders its own label, and has
+  // to answer without a failed widget lookup's `JSON.stringify()` of the field's schema on every render
+  describe('a widget name inherited from Object.prototype', () => {
+    function OwnField({ uiSchema }: FieldProps) {
+      return <output data-testid='own-field'>{String(uiSchema?.['ui:widget'])}</output>;
+    }
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    test.each<[string, RJSFSchema]>([
+      ['a string', { type: 'string', title: 'Agree' }],
+      ['a boolean', agree],
+    ])('is answered without stringifying %s schema', (_, fieldSchema) => {
+      const stringify = vi.spyOn(JSON, 'stringify');
+
+      const { container } = renderForm({ agree: { 'ui:field': OwnField, 'ui:widget': 'toString' } }, fieldSchema);
+
+      const ownField = screen.getByTestId('own-field');
+      expect(ownField).toHaveTextContent('toString');
+      expect(container.querySelector('.field-template')).toContainElement(ownField);
+      expect(stringify).not.toHaveBeenCalledWith(expect.objectContaining(fieldSchema));
     });
   });
 

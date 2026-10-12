@@ -12,13 +12,20 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
-import { act, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import MarkdownTemplate from '../src/markdown.tsx';
-import { createFormComponent, createFormRef, expectToHaveBeenCalledWithFormData, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  createParentLog,
+  expectToHaveBeenCalledWithFormData,
+  submitForm,
+  TransformingParent,
+} from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
 
 const user = userEvent.setup();
@@ -1088,6 +1095,718 @@ describe('ObjectField', () => {
       expect(propertyKeys).toEqual(['first', '1']);
     });
 
+    it('should keep a renamed property editable when its new key matches no pattern', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+        },
+        initialFormData: { abc: 'hello' },
+      });
+
+      const textNode = node.querySelector('#root_abc-key')!;
+      await user.clear(textNode);
+      await user.type(textNode, 'xyz');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'hello' }, 'root');
+      expect(node.querySelector('#root_xyz')).toHaveValue('hello');
+      expect(node.querySelector('.rjsf-field-null')).toBeNull();
+    });
+
+    it('should re-seed an untouched new property when it is renamed onto a pattern of another type', async () => {
+      // The add button has to seed the property before the user has picked its name, and the generic `newKey` matches
+      // no pattern, so the seed is the `New Value` an undescribed name takes. Renaming it onto a name the numeric
+      // pattern describes is the next thing anyone filling in a patterns-only object does, and that string is a value
+      // the number field the rename brings up cannot show
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'abc');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 0, newKey: undefined }, 'root');
+      expect(node.querySelector('#root_abc')).toHaveValue('0');
+    });
+
+    it('should keep a value the user entered when the renamed key is described by another schema', async () => {
+      // The seed is the form's to replace until the user enters something; what they entered is theirs to keep, even
+      // where the schema describing the new name would have seeded something else
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', patternProperties: { '^[a-z]+$': { type: 'number' } } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      const valueInput = node.querySelector('#root_newKey')!;
+      await user.clear(valueInput);
+      await user.type(valueInput, 'typed');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'abc');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'typed', newKey: undefined }, 'root');
+    });
+
+    it('should keep the value the form mounted with when a property is renamed onto a defaulted schema', async () => {
+      // The property was never added here, so there is no seed of the form's to replace: its `0` merely equals what
+      // the schema describing its old name would seed, as any `0`, `false`, `{}` or defaulted value does
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'number' },
+          patternProperties: { '^pct_': { type: 'number', default: 50 } },
+        },
+        formData: { score: 0 },
+      });
+
+      const keyInput = node.querySelector('#root_score-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'pct_score');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { pct_score: 0, score: undefined }, 'root');
+    });
+
+    it('should keep a value the user typed over the seed when the key is renamed', async () => {
+      // The value equals the seed again, having been typed back to it, but the property's history says it was changed
+      // after it was added, which is what leaves the value the user's rather than the form's
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'number' },
+          patternProperties: { '^s_': { type: 'string' } },
+        },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      const valueInput = node.querySelector('#root_newKey')!;
+      await user.clear(valueInput);
+      await user.type(valueInput, '7');
+      await user.clear(valueInput);
+      await user.type(valueInput, '0');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 's_x');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { s_x: 0, newKey: undefined }, 'root');
+    });
+
+    it('should keep a value a controlled parent wrote over the seed when the key is renamed', async () => {
+      // The add button's seed is a proposal, so the value the property holds is the parent's answer to it rather than
+      // the seed itself: a parent that rewrites or declines what the button proposed leaves a value of its own under
+      // that name, which is no more the form's to replace on a rename than one the user typed
+      const log = createParentLog<GenericObjectType>();
+      const { container } = render(
+        <TransformingParent<GenericObjectType>
+          schema={{
+            type: 'object',
+            additionalProperties: { type: 'string' },
+            patternProperties: { '^num': { type: 'number' } },
+          }}
+          initialValue={{}}
+          log={log}
+          transform={(proposal) =>
+            proposal && 'newKey' in proposal ? { ...proposal, newKey: 'the parent wrote this' } : proposal
+          }
+        />,
+      );
+
+      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
+      expect(log.value).toEqual({ newKey: 'the parent wrote this' });
+
+      const keyInput = container.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'num1');
+      await user.tab();
+
+      expect(log.value).toEqual({ num1: 'the parent wrote this' });
+    });
+
+    it('should re-seed an untouched new property after a rename the parent declined', async () => {
+      // The record a rename writes under the new name is a proposal like the add itself, so the one under the old name
+      // stays until the data says which of them it holds. Moving it would leave the property, still holding the seed
+      // under the name it never left, with no history to re-seed from
+      const log = createParentLog<GenericObjectType>();
+      const { container } = render(
+        <TransformingParent<GenericObjectType>
+          schema={{ type: 'object', patternProperties: { '^[0-9]+$': { type: 'number' } } }}
+          initialValue={{}}
+          log={log}
+          transform={(proposal) => (proposal && 'abc' in proposal ? { newKey: 'New Value' } : proposal)}
+        />,
+      );
+
+      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
+      expect(log.value).toEqual({ newKey: 'New Value' });
+
+      const renameTo = async (from: string, to: string) => {
+        const keyInput = container.querySelector(`#root_${from}-key`)!;
+        await user.clear(keyInput);
+        await user.type(keyInput, to);
+        await user.tab();
+      };
+
+      await renameTo('newKey', 'abc');
+      expect(log.value).toEqual({ newKey: 'New Value' });
+
+      await renameTo('newKey', '12');
+      expect(log.value).toEqual({ '12': 0 });
+    });
+
+    it('should re-seed an untouched new property after a change the parent declined', async () => {
+      // A change is a proposal too, and one the parent turns down leaves the property holding the seed the add button
+      // wrote: nothing has written to it, so the rename re-seeds it as it would one the user never touched
+      const log = createParentLog<GenericObjectType>();
+      const { container } = render(
+        <TransformingParent<GenericObjectType>
+          schema={{
+            type: 'object',
+            additionalProperties: { type: 'string' },
+            patternProperties: { '^num': { type: 'number' } },
+          }}
+          initialValue={{}}
+          log={log}
+          transform={(proposal) => (proposal?.newKey !== undefined ? { ...proposal, newKey: 'New Value' } : proposal)}
+        />,
+      );
+
+      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
+      expect(log.value).toEqual({ newKey: 'New Value' });
+
+      await user.type(container.querySelector('#root_newKey')!, 'typed');
+      expect(log.value).toEqual({ newKey: 'New Value' });
+
+      const keyInput = container.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'num1');
+      await user.tab();
+
+      expect(log.value).toEqual({ num1: 0 });
+    });
+
+    it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
+      // The field the declared name brings up reads `uiSchema.count`, so seeding through `uiSchema.additionalProperties`
+      // would hand that number field the `ui:initialValue` written for the string the other keys hold
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          additionalProperties: { type: 'string' },
+        },
+        uiSchema: { additionalProperties: { 'ui:initialValue': 'AP' } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'AP' }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'count');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { count: 0, newKey: undefined }, 'root');
+      expect(node.querySelector('#root_count')).toHaveValue('0');
+    });
+
+    it('should re-seed an untouched new property from the declared schema when it is renamed onto a declared name', async () => {
+      // The key input is free text, so a property can be renamed onto a name the object's own `properties` declare,
+      // and the field that name then renders is the declared property's. Reading `additionalProperties` for that name
+      // instead would leave the `New Value` string in the declared number field
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { count: { type: 'number' } },
+          additionalProperties: { type: 'string' },
+        },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'New Value' }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'count');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { count: 0, newKey: undefined }, 'root');
+      expect(node.querySelector('#root_count')).toHaveValue('0');
+    });
+
+    it('should keep the stubbed schema identifier so a field registered under it renders the property', async () => {
+      // A custom field by `$id` applies to any sub-schema carrying that `$id`, an `additionalProperties` schema
+      // included, so every property it describes is rendered by that field
+      function IdField() {
+        return <div id='by-id'>by id</div>;
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'object', additionalProperties: { $id: '/schemas/my-id', type: 'string' } },
+        fields: { '/schemas/my-id': IdField },
+        initialFormData: { a: 'x', b: 'y' },
+      });
+
+      expect(node.querySelectorAll('#by-id')).toHaveLength(2);
+    });
+
+    it('should render a key only an unselected oneOf option declares as a removable property', async () => {
+      // The option on screen declares no `b`, so nothing in the option renders one, and leaving it unstubbed would
+      // leave its value in the form data with no field to edit or remove it with
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            { title: 'A', properties: { kind: { const: 'a' }, a: { type: 'string' } } },
+            { title: 'B', properties: { kind: { const: 'b' }, b: { type: 'string' } } },
+          ],
+        },
+        initialFormData: { kind: 'a', b: 'keep me' },
+      });
+
+      expect(node.querySelector('#root_b')).toHaveValue('keep me');
+      expect(node.querySelector('#root_b-key')).toHaveValue('b');
+      // The discriminator both options declare is the option's to render, so it takes no second field
+      expect(node.querySelectorAll('#root_kind')).toHaveLength(1);
+      expect(node.querySelector('#root_kind-key')).toBeNull();
+    });
+
+    it('should render a key an option takes through patterns of its own just once', async () => {
+      // An option that takes keys of its own has the key stubbed into it, so a second stub in the object around it
+      // would give the one value two fields to be written from, under one pair of ids
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          unevaluatedProperties: { type: 'number' },
+          oneOf: [{ patternProperties: { '^s_': { type: 'string' } } }],
+        },
+        initialFormData: { s_a: 'hello' },
+      });
+
+      expect(node.querySelectorAll('#root_s_a')).toHaveLength(1);
+      expect(node.querySelector('#root_s_a')).toHaveValue('hello');
+    });
+
+    it('should render a key an option declares in the branch its condition takes just once', async () => {
+      // The option's `then` is merged into it for this data, so the option renders `extra` itself
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          oneOf: [
+            {
+              properties: { kind: { type: 'string' } },
+              if: { properties: { kind: { const: 'a' } }, required: ['kind'] },
+              then: { properties: { extra: { type: 'number' } } },
+            },
+          ],
+        },
+        initialFormData: { kind: 'a', extra: 5 },
+      });
+
+      expect(node.querySelectorAll('#root_extra')).toHaveLength(1);
+      expect(node.querySelector('#root_extra')).toHaveValue('5');
+    });
+
+    it('should render the keys of a subschema that describes them only through unevaluatedProperties', async () => {
+      // The keyword says the property holds an object as much as `additionalProperties` does, so the stub keeps it and
+      // the keys it describes render inside the property
+      const { node } = createFormComponent({
+        schema: { type: 'object', unevaluatedProperties: { unevaluatedProperties: { type: 'number' } } },
+        initialFormData: { a: { b: 1 } },
+      });
+
+      expect(node.querySelector('#root_a_b')).toHaveValue('1');
+    });
+
+    it('should select the option that describes a map only through unevaluatedProperties', async () => {
+      // Whether an option describes keys its `properties` don't name is what tells an option describing a map from one
+      // that matches nothing, and the keyword describes them as much as `additionalProperties` does
+      // `unevaluatedProperties` is a 2019-09 keyword `JSONSchema7` does not declare, so the options are typed as the
+      // `RJSFSchema`s they are rather than as the strict definitions a nested list is typed with
+      const thingOptions: RJSFSchema[] = [
+        { type: 'string' },
+        { type: 'object', unevaluatedProperties: { type: 'number' } },
+      ];
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { thing: { oneOf: thingOptions } } },
+        initialFormData: { thing: {} },
+      });
+
+      expect(node.querySelector<HTMLSelectElement>('#root_thing__oneof_select')).toHaveValue('1');
+    });
+
+    it('should render the keys an unevaluatedProperties describes for an object naming no other keyword', async () => {
+      // The keyword describes the keys the `properties` leave over, so an object naming it takes extra keys as much as
+      // one naming `additionalProperties` does: the key it describes renders as the field that description calls for,
+      // and the add button offers another of the same
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+        },
+        initialFormData: { a: 'q', b: 2 },
+      });
+
+      expect(node.querySelector('#root_b')).toHaveValue('2');
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { a: 'q', b: 2, newKey: 0 }, 'root');
+    });
+
+    it('should render a key only an unselected oneOf option declares as one unevaluatedProperties describes', () => {
+      // Only the option on screen evaluates the keys it declares, so a key another option declares is one nothing
+      // evaluates and the keyword describes: without a stub the value would have no field showing it and no remove
+      // button to clear it with
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { kind: { type: 'string', enum: ['a', 'b'] } },
+          unevaluatedProperties: { type: 'string' },
+          oneOf: [
+            { properties: { kind: { const: 'a' }, onlyA: { type: 'string' } } },
+            { properties: { kind: { const: 'b' }, onlyB: { type: 'string' } } },
+          ],
+        },
+        initialFormData: { kind: 'b', onlyA: 'left over', onlyB: 'shown' },
+      });
+
+      expect(node.querySelector('#root_onlyA')).toHaveValue('left over');
+      expect(node.querySelector('#root_onlyA-key')).toBeInTheDocument();
+      expect(node.querySelectorAll('#root_onlyB')).toHaveLength(1);
+      expect(node.querySelector('#root_onlyB-key')).toBeNull();
+    });
+
+    it('should render a key a oneOf option declares only where that option renders it', async () => {
+      // The option selector chooses between the options rather than merging the chosen one into the object, so a key
+      // an option declares is missing from the object's own properties and would otherwise take a field of its own
+      // beside the one the option renders for it, leaving the one value two fields to be written from
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^x_': { type: 'string' } },
+          oneOf: [{ properties: { kind: { const: 'a' }, a: { type: 'string' } } }],
+        },
+        initialFormData: { kind: 'a', a: 'v' },
+      });
+
+      expect(node.querySelectorAll('#root_a')).toHaveLength(1);
+      expect(node.querySelector('#root_a')).toHaveValue('v');
+      expect(node.querySelector('#root_a-key')).toBeNull();
+    });
+
+    it('should render no field for a key whose name unevaluatedProperties forbids', async () => {
+      // `unevaluatedProperties: false` rejects exactly the keys the patterns leave over, so a key none of them match
+      // is forbidden as surely as it is under `additionalProperties: false` and gets no field of its own, however
+      // permissive the absent `additionalProperties` would otherwise read
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          unevaluatedProperties: false,
+        },
+        initialFormData: { abc: 'hello', xyz: 'stranded' },
+      });
+
+      expect(node.querySelector('#root_abc')).toHaveValue('hello');
+      expect(node.querySelector<HTMLInputElement>('#root_xyz-key')).toHaveValue('xyz');
+      expect(node.querySelector('#root_xyz')).toBeNull();
+    });
+
+    it('should keep a property added under a pattern-matching name editable when renamed before it is typed in', async () => {
+      // The add button seeds the new property from the pattern its name matches, so the value a rename then carries to
+      // a name no pattern matches is one `retrieveSchema()` can stub a field from. A `null` seed would be stubbed as
+      // `{ type: 'null' }` there, leaving the renamed property with no input at all
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['abc', 'xyz'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      await user.selectOptions(node.querySelector('select#root_abc-key')!, 'xyz');
+
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'New Value' }, 'root');
+      expect(node.querySelector('#root_xyz')).toHaveValue('New Value');
+      expect(node.querySelector('.rjsf-field-null')).toBeNull();
+    });
+
+    it('should seed a property added under a pattern-matching name from that pattern', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^n': { type: 'number', default: 5 } },
+          propertyNames: { enum: ['num'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { num: 5 }, 'root');
+      expect(node.querySelector('#root_num')).toHaveDisplayValue('5');
+    });
+
+    it('should render an editable field for a key whose matching pattern names no type', async () => {
+      // A pattern that constrains the value without naming a type leaves `retrieveSchema()` the data to take the type
+      // from, the same way an `additionalProperties` schema naming no type does, so the value stays editable instead
+      // of landing in a field no type can render
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { minLength: 2 } },
+        },
+        initialFormData: { abc: 'hello' },
+      });
+
+      expect(node.querySelector('.rjsf-field-undefined')).toBeNull();
+      expect(node.querySelector('#root_abc')).toHaveValue('hello');
+
+      await user.type(node.querySelector('#root_abc')!, '!');
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'hello!' }, 'root_abc');
+    });
+
+    it('should render no field for a key a matching pattern forbids', () => {
+      // A `false` pattern rejects every value a key could hold, so a key it matches has no more to render it with than
+      // one `additionalProperties: false` forbids
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': false },
+        },
+        initialFormData: { abc: 'stranded' },
+      });
+
+      expect(node.querySelector<HTMLInputElement>('#root_abc-key')).toHaveValue('abc');
+      expect(node.querySelector('#root_abc')).toBeNull();
+    });
+
+    it('should prefer a free name a pattern describes over one a pattern forbids', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': false, '^z': { type: 'number' } },
+          propertyNames: { enum: ['abc', 'zzz'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
+    });
+
+    it('should seed a property whose matching pattern is a typeless enum with a value of the enum type', async () => {
+      // `getSchemaType()` answers `string` for any typeless `enum`, which would seed the `New Value` string and leave
+      // the stub a string select over numeric options. The seed is the first option the select offers, the number
+      // type's `0` not being one of them
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^n': { enum: [1, 2] } },
+          propertyNames: { enum: ['num'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { num: 1 }, 'root');
+      expect(node.querySelector('.rjsf-field-number')).not.toBeNull();
+    });
+
+    // The seed takes the type of the field that renders the new value, which for a `type` list is the one its widget
+    // picks. A key a pattern describes is stubbed with the pattern's own list, exactly as an `additionalProperties` one
+    // is stubbed with its, so the widget picks its type too
+    it.each<[string, RJSFSchema['type'], unknown]>([
+      ['textarea', ['null', 'number', 'string'], 'New Value'],
+      ['checkbox', ['number', 'boolean'], false],
+    ])(
+      'should seed a pattern-matched key with the default of the field rendering a %s on its %j',
+      async (widget, type, expected) => {
+        const { onChange } = createFormComponent({
+          schema: {
+            type: 'object',
+            patternProperties: { '^n': { type } },
+            propertyNames: { enum: ['num'] },
+          },
+          uiSchema: { additionalProperties: { 'ui:widget': widget } },
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { num: expected }, 'root');
+      },
+    );
+
+    it('should seed a key unevaluatedProperties describes with the default of the field its widget renders', async () => {
+      // `unevaluatedProperties` describes the keys the other keywords leave over, so a key it describes is stubbed with
+      // its `type` list and rendered by the field the widget picks, the same as any other extra key
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          unevaluatedProperties: { type: ['null', 'number', 'string'] },
+          propertyNames: { enum: ['num'] },
+        },
+        uiSchema: { additionalProperties: { 'ui:widget': 'textarea' } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { num: 'New Value' }, 'root');
+      expect(node.querySelector('textarea')).not.toBeNull();
+    });
+
+    it('should seed a pattern-matched key with the default of the field a ui:definitions widget renders', async () => {
+      // The entry is named by the definition the pattern refers to, which the key's schema reaches only once it is
+      // resolved: a pattern-matched key is described by an `allOf` of the patterns that match it, so the `$ref` naming
+      // the entry is not at the top of the schema the way an `additionalProperties` one is. Read off the unresolved
+      // schema the widget would go unseen here and the seed would be the `0` of the list's first type, a value the
+      // textarea the field does render cannot show
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          $defs: { text: { type: ['null', 'number', 'string'] } },
+          patternProperties: { '^n': { $ref: '#/$defs/text' } },
+          propertyNames: { enum: ['num'] },
+        },
+        uiSchema: { 'ui:definitions': { '#/$defs/text': { 'ui:widget': 'textarea' } } },
+        initialFormData: {},
+      });
+
+      await user.click(screen.getByRole('button', { name: 'Add' }));
+
+      expectToHaveBeenCalledWithFormData(onChange, { num: 'New Value' }, 'root');
+      expect(node.querySelector('textarea')).not.toBeNull();
+    });
+
+    // A select over a pattern-matched key starts where one over an `additionalProperties` key does: on its type's zero
+    // value where that is an option the user can pick, and otherwise on the first option it shows enabled
+    it.each<[RJSFSchema, EnumValue[] | undefined, unknown]>([
+      [{ type: ['integer', 'null'], enum: [5, 0] }, undefined, 0],
+      [{ type: 'string', enum: ['a', 'b'] }, undefined, 'a'],
+      [{ type: 'string', enum: ['a', 'b'] }, ['a'], 'b'],
+      [{ type: ['integer', 'null'], enum: [0, 5] }, [0], 5],
+    ])(
+      'should seed a pattern-matched select over %j disabling %j with the option the user can pick',
+      async (patternSchema, enumDisabled, expected) => {
+        const { onChange } = createFormComponent({
+          schema: {
+            type: 'object',
+            patternProperties: { '^n': patternSchema },
+            propertyNames: { enum: ['num'] },
+          },
+          uiSchema: enumDisabled ? { additionalProperties: { 'ui:enumDisabled': enumDisabled } } : undefined,
+          initialFormData: {},
+        });
+
+        await user.click(screen.getByRole('button', { name: 'Add' }));
+
+        expectToHaveBeenCalledWithFormData(onChange, { num: expected }, 'root');
+      },
+    );
+
+    it('should re-seed an untouched new property by the widget of the pattern it is renamed onto', async () => {
+      // The rename reads the seed from the same place the add button does, so the type list of the pattern the new name
+      // matches is read through the widget there too: the `0` the number `additionalProperties` seeded is a value the
+      // textarea that list renders through cannot show. The widget is named by a `ui:definitions` entry so that it
+      // reaches the pattern-matched name alone -- both names take the same `uiSchema.additionalProperties` entry, and
+      // a `textarea` on the number one would be a widget its field has no such thing as
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          $defs: { text: { type: ['null', 'number', 'string'] } },
+          patternProperties: { '^num': { $ref: '#/$defs/text' } },
+          additionalProperties: { type: 'number' },
+        },
+        uiSchema: { 'ui:definitions': { '#/$defs/text': { 'ui:widget': 'textarea' } } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'num1');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { num1: 'New Value', newKey: undefined }, 'root');
+    });
+
+    it('should render only the option selector for a key whose matching pattern options disagree about the type', async () => {
+      // Naming the property an `object` would render the field for that type beside the options, and seed it with the
+      // `{}` none of them accepts; the option the value matches is what renders it
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { anyOf: [{ type: 'string' }, { type: 'number' }] } },
+          propertyNames: { enum: ['abc'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
+      expect(node.querySelectorAll('.rjsf-field-object')).toHaveLength(1);
+    });
+
+    it('should render a key no pattern matches from the unevaluatedProperties schema that describes it', async () => {
+      // An `unevaluatedProperties` schema describes exactly the keys the patterns leave over where no
+      // `additionalProperties` evaluates them, so it is what such a key renders from and is seeded with, rather than
+      // the data it holds and the `New Value` string a key nothing describes gets
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+          propertyNames: { enum: ['zzz'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
+      expect(node.querySelector('.rjsf-field-number')).not.toBeNull();
+    });
+
+    it('should render an editable field for a $ref additionalProperties that names no type', async () => {
+      // The `$ref` is resolved before the key is stubbed, the same way a matching pattern's is, so what it describes
+      // takes the type of the data rather than rendering as the field no type can draw
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          $defs: { constrained: { minLength: 2 } },
+          additionalProperties: { $ref: '#/$defs/constrained' },
+        },
+        initialFormData: { abc: 'hello' },
+      });
+
+      expect(node.querySelector('.rjsf-field-undefined')).toBeNull();
+      expect(node.querySelector('#root_abc')).toHaveValue('hello');
+
+      await user.type(node.querySelector('#root_abc')!, '!');
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'hello!' }, 'root_abc');
+    });
+
     it('should not duplicate an additional property that becomes schema-defined after rerender', () => {
       const initialSchema: RJSFSchema = {
         type: 'object',
@@ -1902,6 +2621,59 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { newKey: { name: 'unnamed', active: true } }, 'root');
     });
 
+    it('should seed a property whose options disagree about the type with a value the first option holds', async () => {
+      // The stub names no type where the options disagree, since choosing one is what settles it, and the selector
+      // opens on the first option until a value matches another, so a seed of any other type than that option's is one
+      // the field the user is handed cannot show
+      const { node, onChange } = createFormComponent({
+        schema: {
+          ...schema,
+          additionalProperties: { anyOf: [{ type: 'number' }, { type: 'boolean' }] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+      expect(node.querySelector('#root_newKey')).toHaveValue('0');
+    });
+
+    it('should seed a property whose first option is a $ref with a value of the type that $ref names', async () => {
+      // `retrieveSchema()` leaves the options unresolved, so the first one's own `$ref` has to be resolved before its
+      // type is read: a reference names none of its own, where the field the selector opens on takes the type of what
+      // it refers to, and the `New Value` string is a value that numeric field cannot show
+      const { node, onChange } = createFormComponent({
+        schema: {
+          ...schema,
+          definitions: { aNumber: { type: 'number' } },
+          additionalProperties: { anyOf: [{ $ref: '#/definitions/aNumber' }, { type: 'boolean' }] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 0 }, 'root');
+      expect(node.querySelector('#root_newKey')).toHaveValue('0');
+    });
+
+    it('should apply the ui:definitions of a $ref additionalProperties that names no type', async () => {
+      // The stub keeps the marker naming the definition the property was described through, which is what
+      // `resolveUiSchema()` reads to find the definition's own uiSchema
+      const { node } = createFormComponent({
+        schema: {
+          ...schema,
+          definitions: { email: { format: 'email' } },
+          additionalProperties: { $ref: '#/definitions/email' },
+        },
+        uiSchema: { 'ui:definitions': { '#/definitions/email': { 'ui:placeholder': 'name@example.com' } } },
+        initialFormData: { contact: 'someone@example.com' },
+      });
+
+      expect(node.querySelector('#root_contact')).toHaveAttribute('placeholder', 'name@example.com');
+    });
+
     it('should generate the specified default key and value inputs if default is provided outside of additionalProperties schema', () => {
       const customSchema: RJSFSchema = {
         ...schema,
@@ -2329,16 +3101,54 @@ describe('ObjectField', () => {
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      // The object names no `additionalProperties`, so the new property has no schema to seed a value from
-      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'first', abc: null }, 'root');
+      // The only free name matches a pattern, so the new property is seeded from that pattern's schema
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'first', abc: 'New Value' }, 'root');
     });
 
-    it('should prefer a name matching a pattern when a patternProperties object has none to fall back on', async () => {
-      // A name matching no pattern has no subschema of its own, so `retrieveSchema()` stubs it as `{ type: 'null' }`
+    it('should prefer a name matching a pattern when the object names no additionalProperties', async () => {
+      // Nothing but the patterns describes a name here, so the matching one is preferred over the first the `enum`
+      // lists — it is the only one with a schema to seed from, and the only one `omitExtraData` keeps
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'object',
           patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        initialFormData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
+      expect(node.querySelector('#root_abc')).toHaveValue('New Value');
+    });
+
+    it('should add a property that survives omitExtraData when only the patterns describe a name', async () => {
+      // `omitExtraData` keeps only the data a schema describes, and patterns describe no name they don't match, so a
+      // new property added under an unmatched name would be pruned the moment it was added
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          propertyNames: { enum: ['xyz', 'abc'] },
+        },
+        initialFormData: {},
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
+      expect(node.querySelector('#root_abc')).toHaveValue('New Value');
+    });
+
+    it('should prefer a name matching a pattern when additionalProperties forbids every other name', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          additionalProperties: false,
           propertyNames: { enum: ['xyz', 'abc'] },
         },
         formData: {},
@@ -2346,10 +3156,125 @@ describe('ObjectField', () => {
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expectToHaveBeenCalledWithFormData(onChange, { abc: null }, 'root');
+      // `abc` is the only free name a pattern matches, and so the only one with a schema to seed from
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
     });
 
-    it('should not prefer a pattern match when additionalProperties gives every name a schema', async () => {
+    it('should seed a null when additionalProperties forbids the only name left to add under', async () => {
+      // No free name matches a pattern, so the new property has to go under one `additionalProperties: false` forbids,
+      // which `retrieveSchema()` can only stub as `{ type: 'null' }`: any other seed would be a value that field
+      // cannot show and nothing in the form could edit away
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          additionalProperties: false,
+          propertyNames: { enum: ['xyz'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
+    });
+
+    it('should seed a null when unevaluatedProperties forbids the only name left to add under', async () => {
+      // The forbidding keyword differs, but the name is as undescribed as it is under `additionalProperties: false`,
+      // so the seed has to be the one `retrieveSchema()`'s `{ type: 'null' }` stub can show
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          unevaluatedProperties: false,
+          propertyNames: { enum: ['xyz'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
+    });
+
+    it('should seed the defaults of the branch the subschema default takes', async () => {
+      // Resolving the subschema against no data at all answers its `if` with an empty object, which satisfies any
+      // condition vacuously, so the seed would carry the `then` defaults for a `default` the `else` branch describes
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: {
+            type: 'object',
+            default: { kind: 'b' },
+            properties: { kind: { type: 'string' } },
+            if: { properties: { kind: { const: 'a' } } },
+            then: { properties: { x: { type: 'string', default: 'ax' } } },
+            else: { properties: { y: { type: 'string', default: 'by' } } },
+          },
+        },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: { kind: 'b', y: 'by' } }, 'root');
+    });
+
+    it('should prefer a name no pattern matches over one a pattern forbids', async () => {
+      // Nothing describes `zzz`, but nothing forbids it either, so it renders a field for whatever it comes to hold —
+      // where `abc`, which the `false` pattern rejects, can only be stubbed as `{ type: 'null' }`
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': false },
+          propertyNames: { enum: ['abc', 'zzz'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { zzz: 'New Value' }, 'root');
+    });
+
+    it('should prefer a name additionalProperties describes over one a pattern forbids', async () => {
+      // The `additionalProperties` schema describes `zzz` as fully as a pattern would, so there is no matching pattern
+      // to prefer — but `abc`, which the `false` pattern rejects, can still only be stubbed as `{ type: 'null' }`, so
+      // the name that schema describes is the one a field can be rendered for
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': false },
+          additionalProperties: { type: 'number' },
+          propertyNames: { enum: ['abc', 'zzz'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { zzz: 0 }, 'root');
+    });
+
+    it('should prefer a name a pattern matches over one only unevaluatedProperties describes', async () => {
+      // `unevaluatedProperties` describes the value a pattern-unmatched name may hold without describing the name
+      // itself, where a pattern describes both, so the pattern-matched name is the one the schema has the most to say
+      // about
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          patternProperties: { '^a': { type: 'string' } },
+          unevaluatedProperties: { type: 'number' },
+          propertyNames: { enum: ['zzz', 'abc'] },
+        },
+        formData: {},
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+
+      expectToHaveBeenCalledWithFormData(onChange, { abc: 'New Value' }, 'root');
+    });
+
+    it('should seed a name matching no pattern from additionalProperties when it gives every name a schema', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'object',
@@ -2362,7 +3287,7 @@ describe('ObjectField', () => {
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
-      expectToHaveBeenCalledWithFormData(onChange, { xyz: null }, 'root');
+      expectToHaveBeenCalledWithFormData(onChange, { xyz: 'New Value' }, 'root');
     });
 
     it('should read the key of a deprecated property from its name rather than its decorated label', async () => {

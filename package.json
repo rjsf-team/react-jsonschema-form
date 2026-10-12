@@ -18,11 +18,11 @@
     "build-serial": "nx run-many --target=build --parallel=1",
     "start": "echo 'use \"pnpm run build\" from main directory and then \"pnpm start\" in the playground package'",
     "prepare": "is-ci || husky",
-    "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && pnpm update --latest && pnpm install && pnpm run lint && pnpm run build && pnpm run test",
+    "bump-all-packages": "echo 'NOTE: Make sure to sanity check the playground locally before commiting changes' && pnpm update --latest && pnpm install && pnpm run cs-format && pnpm run sanity-check",
     "refresh-node-modules": "rimraf packages/*/node_modules && rimraf node_modules && pnpm install",
     "update-version-tags": "git tag -f $(node scripts/get-version-tag.cjs) && git push -f origin $(node scripts/get-version-tag.cjs)",
     "nuke-build-env": "rimraf .nx && rimraf pnpm-lock.yaml",
-    "sanity-check": "pnpm run lint && pnpm run knip && pnpm run build && pnpm run test"
+    "sanity-check": "pnpm run cs-check && pnpm run lint && pnpm run knip && pnpm run build && pnpm run test"
   },
   "lint-staged": {
     "pnpm-lock.yaml": "sh -c 'pnpm dedupe --check'",

@@ -1,4 +1,4 @@
-import { createRef, forwardRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
 import type { ErrorSchema, FieldTemplateProps, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -12,6 +12,7 @@ import {
   createParentLog,
   RejectingParent,
   TransformingParent,
+  createFormRef,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -245,6 +246,43 @@ describe('render stability across sibling fields', () => {
     expect(renderCount('root_1')).toBe(otherBefore);
   });
 
+  // A schema with a nested conditional sanitizes on every change, whether or not a branch actually swapped, and the
+  // search for a swapped-away branch's stale defaults runs on that same path
+  it('typing in a field of a schema with a nested conditional re-renders no sibling', async () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          first: { type: 'string' },
+          second: { type: 'string' },
+          nested: {
+            type: 'object',
+            properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+            dependencies: {
+              mode: {
+                oneOf: [
+                  { properties: { mode: { const: 'a' }, cfg: { type: 'object', default: { name: 'a' } } } },
+                  { properties: { mode: { const: 'b' }, cfg: { type: 'object', default: { name: 'b' } } } },
+                ],
+              },
+            },
+          },
+        },
+      },
+      initialFormData: { first: '', second: '', nested: { mode: 'a' } },
+      templates: { FieldTemplate: CountingFieldTemplate },
+    });
+
+    const secondBefore = renderCount('root_second');
+    const nestedBefore = renderCount('root_nested');
+    expect(nestedBefore).toBeGreaterThan(0);
+
+    await user.type(node.querySelector('#root_first')!, 'abc');
+
+    expect(renderCount('root_second')).toBe(secondBefore);
+    expect(renderCount('root_nested')).toBe(nestedBefore);
+  });
+
   it('a replaced widget takes effect even when both are forwardRef components', () => {
     const First = forwardRef<HTMLInputElement, WidgetProps>((props, ref) => (
       <input ref={ref} id={props.id} data-which='first' onChange={() => undefined} value='' />
@@ -405,7 +443,7 @@ describe('render stability across sibling fields', () => {
         ...schema,
         properties: { ...schema.properties, first: { type: 'string', minLength: 1 } },
       };
-      const ref = createRef<Form>();
+      const ref = createFormRef();
       render(
         <Form
           ref={ref}

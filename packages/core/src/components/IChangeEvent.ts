@@ -8,7 +8,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 
-/** The form data a change, a submit or `FormHandle.getFormData()` hands back. No change below an object or array root
+/** The form data a change, a submit or `FormRef.getFormData()` hands back. No change below an object or array root
  * replaces it with `undefined` (the change writes into it, and defaults are computed from an object), so its type is
  * `T` itself; a scalar root is `undefined` whenever its field is cleared. A write at the root itself can still leave an
  * object or array root `undefined`, which this type does not reflect: `setFieldValue('', undefined)`, or a root-level

@@ -1,3 +1,8 @@
+import {
+  allowsAdditionalProperties,
+  getAdditionalPropertySchema,
+  getMatchingPatternProperties,
+} from './additionalPropertiesUtils.ts';
 import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
 import type { AdditionalPropertyKeySelectProps } from './AdditionalPropertyKeySelect.tsx';
 import allowAdditionalItems from './allowAdditionalItems.ts';
@@ -8,7 +13,7 @@ import createErrorHandler from './createErrorHandler.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dataURItoBlob from './dataURItoBlob.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
-import deepEquals from './deepEquals.ts';
+import deepEquals, { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue.ts';
 import enumOptionsDomValues from './enumOptionsDomValues.ts';
@@ -63,8 +68,14 @@ import getUnionTypes, { getKnownTypes } from './getUnionTypes.ts';
 import type { VisibleErrorsProps } from './getVisibleErrors.ts';
 import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
-import getWidget, { getFieldTypeForWidget, getWidgetType, resolveWidget } from './getWidget.tsx';
+import getWidget, {
+  DEFAULT_BOOLEAN_WIDGET,
+  getFieldTypeForWidget,
+  getWidgetType,
+  resolveWidget,
+} from './getWidget.tsx';
 import getXxxOfKey from './getXxxOfKey.ts';
+import getXxxOfOptions from './getXxxOfOptions.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
@@ -116,7 +127,7 @@ import orderProperties from './orderProperties.ts';
 import pad from './pad.ts';
 import padTimeSeconds from './padTimeSeconds.ts';
 import parseDateString from './parseDateString.ts';
-import { getByPath, hasByPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
+import { getByPath, hasByPath, propertyToPath, setByPath, toPath, unsetByPath } from './pathUtils.ts';
 import type { ObjectPath } from './pathUtils.ts';
 import rangeSpec from './rangeSpec.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
@@ -177,6 +188,7 @@ export type {
 export {
   AdditionalPropertyKeySelect,
   allowAdditionalItems,
+  allowsAdditionalProperties,
   ariaDescribedByIds,
   asNumber,
   buttonId,
@@ -189,6 +201,8 @@ export {
   dateElementId,
   dateRangeOptions,
   deepEquals,
+  deepEqualsUndefinedAsMissing,
+  DEFAULT_BOOLEAN_WIDGET,
   descriptionId,
   englishStringTranslator,
   enumOptionSelectedValue,
@@ -207,6 +221,7 @@ export {
   fieldLabelId,
   findSchemaDefinition,
   flattenGroupedOptions,
+  getAdditionalPropertySchema,
   getChangedFields,
   getDateElementProps,
   getDateTimeLocalValue,
@@ -219,6 +234,7 @@ export {
   getFreePropertyNames,
   getInputProps,
   getItemUiSchemaForItem,
+  getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
   getOptionMatchingSimpleDiscriminator,
@@ -242,6 +258,7 @@ export {
   getWidget,
   getWidgetType,
   getXxxOfKey,
+  getXxxOfOptions,
   groupEnumOptions,
   guessType,
   hasByPath,
@@ -311,6 +328,7 @@ export {
   fieldPathToList,
   fieldPathToName,
   toPath,
+  propertyToPath,
   triggerValueId,
   uiBooleanOption,
   unsetByPath,

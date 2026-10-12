@@ -1,9 +1,7 @@
-import { createRef } from 'react';
 import type { FormValidation, RJSFSchema } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 
-import type Form from '../src/index.ts';
-import { createFormComponent, errorListMessages } from './testUtils.tsx';
+import { createFormComponent, errorListMessages, createFormRef } from './testUtils.tsx';
 
 /** Deriving state from the props honors every input that changed, whether or not the reconciler's identity-prop
  * gate lists it. Reference retention across a derivation is `renderStability.test.tsx`'s job.
@@ -18,7 +16,7 @@ describe('state derivation', () => {
   };
 
   it('a replaced customValidate takes effect on the next change', async () => {
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const { node, rerender } = createFormComponent({
       ref: formRef,
       schema,
@@ -66,7 +64,7 @@ describe('state derivation', () => {
   });
 
   it('turning noValidate on drops the validator results, so turning it back off does not bring them back', () => {
-    const formRef = createRef<Form>();
+    const formRef = createFormRef();
     const props = { ref: formRef, schema: { type: 'string', minLength: 8 } as RJSFSchema, formData: 'short' };
     const { node, rerender } = createFormComponent(props);
     act(() => {
