@@ -294,6 +294,19 @@ Implements a deep equals that treats all functions as equivalent and tracks circ
 
 - boolean: True if the `a` and `b` are deeply equal, false otherwise
 
+### deepEqualsUndefinedAsMissing()
+
+`deepEquals()` for which a key that is missing reads as one holding `undefined`, whichever object lacks it and at any depth, so `{ a: 1, b: undefined }` equals `{ a: 1 }`.
+
+#### Parameters
+
+- a: any - The first element to compare
+- b: any - The second element to compare
+
+#### Returns
+
+- boolean: True if the `a` and `b` are deeply equal, false otherwise
+
 ### descriptionId()
 
 Return a consistent `id` for the field description element.
@@ -736,6 +749,8 @@ getByPath({ a: 1 }, [], 'fallback'); // 'fallback', an empty path resolves to no
 Compares two objects and returns the names of the fields that have changed.
 This function iterates over each field of object `a`, using `_.isEqual` to compare the field value with the corresponding field value in object `b`.
 If the values are different, the field name will be included in the returned array.
+A key that is missing reads as one holding `undefined`, whichever object lacks it and at any depth, so a key that only gained or lost an `undefined` value has not changed.
+So does an empty slot of an array.
 
 When `deep` is true, a field holding a nested object or a same-length array is descended into and the dotted path of the deepest field that changed is returned instead of the name of the top-level field holding it.
 A key that contains a `.` or a `[` is descended into like any other: the path it produces cannot be told apart from a path through nested keys, and neither can the entry an `ErrorSchema` keeps for it, since [toErrorSchema()](#toerrorschema) spells such a name out as a path in the same way.
@@ -1924,6 +1939,27 @@ Parses the `dateString` into a `DateObject`, including the time information when
 
 - Error when the date cannot be parsed from the string
 
+### propertyToPath()
+
+Converts the `property` of a validation error into its list of path segments, the way `toErrorSchema()` keys the errors it builds.
+It is [toPath()](#topath) for a `property` that may be missing: a missing `property`, or one naming the root element (`''` or `'.'`), gives an empty path.
+
+#### Parameters
+
+- [property]: string | undefined - The `property` of an `RJSFValidationError`, such as `'.level1.level2[2].level3'`
+
+#### Returns
+
+- string[]: The list of path segments, such as `['level1', 'level2', '2', 'level3']`
+
+#### Example
+
+```typescript
+propertyToPath('.level1.level2[2].level3'); // ['level1', 'level2', '2', 'level3']
+propertyToPath(undefined); // []
+propertyToPath('.'); // []
+```
+
 ### rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Extracts the range spec information `{ step?: number, min?: number, max?: number }` that can be spread onto an HTML input from the range analog in the schema `{ multipleOf?: number, minimum?: number, maximum?: number }`.
@@ -2458,13 +2494,14 @@ Converts a UTC date string into a local Date format
 ### validationDataMerge&lt;T = unknown>()
 
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `toErrorList()` on the `errors` in the `validationData`.
-If no `additionalErrorSchema` is passed, then `validationData` is returned.
+If no `additionalErrorSchema` is passed, or an empty one, then `validationData` is returned.
+The existing `errors` are always kept, also when their `errorSchema` is empty, as it is when a `transformErrors` clears every `message`.
 
 #### Parameters
 
 - validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
 - [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The optional additional set of errors in an `ErrorSchema`
-- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates`
+- [preventDuplicates=false]: boolean - Optional flag, if true, leaves out of both the merged `ErrorSchema` and the appended errors the messages the existing `errorSchema` already holds under the same keys
 
 #### Returns
 

@@ -48,7 +48,7 @@ describe('OptionalDataControlsField', () => {
     ['an object with an anyOf', { type: 'object', properties: { p: { type: 'string' } }, anyOf: ARRAY_OPTIONS }],
   ])('adding data to %s whose options are all arrays stores an empty array', async (_, schema) => {
     const onChange = await clickAdd(schema);
-    expect(onChange).toHaveBeenCalledWith([], toFieldPath('optional'), {});
+    expect(onChange).toHaveBeenCalledWith([], toFieldPath('optional'));
   });
 
   test.each<[string, RJSFSchema, unknown]>([
@@ -56,6 +56,6 @@ describe('OptionalDataControlsField', () => {
     ['array', { type: ['array', 'null'], items: { type: 'string' } }, []],
   ])('adding data to a nullable %s holding null stores the container', async (_, schema, expected) => {
     const onChange = await clickAdd(schema, null);
-    expect(onChange).toHaveBeenCalledWith(expected, toFieldPath('optional'), {});
+    expect(onChange).toHaveBeenCalledWith(expected, toFieldPath('optional'));
   });
 });

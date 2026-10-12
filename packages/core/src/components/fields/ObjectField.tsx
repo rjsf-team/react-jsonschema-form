@@ -704,7 +704,12 @@ export default function ObjectField<
           currentKey: actualNewKey,
         }));
         setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
-        view.propose(renamedObj, () => onChange(renamedObj, fieldPath));
+        // The errors the form holds under the old name describe the property, so they go to its new name with it
+        view.propose(
+          renamedObj,
+          () => onChange(renamedObj, fieldPath),
+          (key) => (key === oldKey ? actualNewKey : key),
+        );
       }
     },
     [onChange, fieldPath, getAvailableKey, schemaForKey, seedForKey, view, readData],

@@ -6,7 +6,9 @@ import type {
   UiSchema,
   UiSchemaDefinitions,
 } from '@rjsf/utils';
-import { CONST_KEY, DEFAULT_KEY, deepEquals, getPropertySchema, isPlainObject, mergeSchemas } from '@rjsf/utils';
+import { deepEquals, getPropertySchema, isPlainObject, mergeSchemas } from '@rjsf/utils';
+
+import { declaresOwnValue, declaresValueFor } from '../declaresValue.ts';
 
 /** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
  * populates a key at all under a `defaultFormStateBehavior` keyed off `required`. A schema's defaults
@@ -29,20 +31,8 @@ function withParentRequired<S extends StrictRJSFSchema = RJSFSchema>(parentSchem
   return mergeSchemas({ required: parentSchema.required }, option) as S;
 }
 
-/** Determines whether `schema` declares a value of its own, which is what an option that is not an object has
- * instead of a per-property declaration.
- *
- * @param schema - The schema to test
- * @returns - True when the schema declares a `default` or `const`
- */
-function declaresOwnValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
-  return DEFAULT_KEY in schema || CONST_KEY in schema;
-}
-
-/** Determines whether `option` declares a value of its own for `key`, either on the property or in the option's own
- * `default` object. The computed defaults are no guide on their own: they also contain a nested object's leaf
- * defaults, `[]` for a required array and `false` for a required boolean, none of which is the option saying what
- * the key should hold.
+/** Determines whether `option` declares a value of its own for `key`, resolving the property's schema first.
+ * `stalePathsForNewSchema()` applies the same rule to a conditional branch, through the same predicate.
  *
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve the property schema with
  * @param option - The option whose declaration is being tested
@@ -54,12 +44,7 @@ function optionDeclaresValueFor<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(schemaUtils: SchemaUtilsType<T, S, F>, option: S, key: string): boolean {
-  const propertySchema = schemaUtils.retrieveSchema(getPropertySchema<S>(option, key));
-  if (declaresOwnValue<S>(propertySchema)) {
-    return true;
-  }
-  const optionDefault = option[DEFAULT_KEY];
-  return isPlainObject(optionDefault) && key in optionDefault;
+  return declaresValueFor<S>(option, key, schemaUtils.retrieveSchema(getPropertySchema<S>(option, key)));
 }
 
 /** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped */
