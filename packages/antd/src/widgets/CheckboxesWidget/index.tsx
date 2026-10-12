@@ -54,9 +54,6 @@ export default function CheckboxesWidget<
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
-      // `undefined` rather than `false` for an enabled field, since antd reads its `DisabledContext` only when neither
-      // the checkbox nor its group sets `disabled`
-      disabled={fieldDisabled || undefined}
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
       value={selectValue}
@@ -71,6 +68,8 @@ export default function CheckboxesWidget<
               id={optionId(id, i)}
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
+              // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
+              // the checkbox leaves `disabled` unset
               disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}

@@ -55,10 +55,10 @@ export default function RadioWidget<
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
+            const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
             return (
               <div className='flex items-center gap-2' key={optionId(id, index)}>
-                <RadioGroupItem value={domValues[index]} id={optionId(id, index)} disabled={itemDisabled} />
+                <RadioGroupItem value={domValues[index]} id={optionId(id, index)} disabled={optionDisabled} />
                 <Label className='leading-tight' htmlFor={optionId(id, index)}>
                   {option.label}
                 </Label>

@@ -55,9 +55,6 @@ export default function RadioWidget<
 
   return (
     <Radio.Group
-      // `undefined` rather than `false` for an enabled field, since antd reads its `DisabledContext` only when neither
-      // the radio nor its group sets `disabled`
-      disabled={fieldDisabled || undefined}
       id={id}
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
@@ -72,6 +69,8 @@ export default function RadioWidget<
             id={optionId(id, i)}
             name={htmlName || id}
             autoFocus={i === 0 ? autofocus : false}
+            // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
+            // the radio leaves `disabled` unset
             disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}

@@ -11,19 +11,23 @@ const user = userEvent.setup();
 const schema: RJSFSchema = { type: 'array', uniqueItems: true, items: { enum: ['foo', 'bar'] } };
 
 describe('CheckboxesWidget', () => {
-  it.each(['ui:disabled', 'ui:readonly'] as const)('disables every option of a %s field', async (uiOption) => {
+  it.each(['ui:disabled', 'ui:readonly'] as const)('disables every option of a %s field', (uiOption) => {
+    render(<Form schema={schema} uiSchema={{ 'ui:widget': 'checkboxes', [uiOption]: true }} validator={validator} />);
+
+    expect(screen.getByRole('checkbox', { name: 'foo' })).toBeDisabled();
+    expect(screen.getByRole('checkbox', { name: 'bar' })).toBeDisabled();
+  });
+
+  it('leaves the data of a ui:disabled field alone when an option is clicked', async () => {
     const onChange = vi.fn();
     render(
       <Form
         schema={schema}
-        uiSchema={{ 'ui:widget': 'checkboxes', [uiOption]: true }}
+        uiSchema={{ 'ui:widget': 'checkboxes', 'ui:disabled': true }}
         validator={validator}
         onChange={onChange}
       />,
     );
-
-    expect(screen.getByRole('checkbox', { name: 'foo' })).toBeDisabled();
-    expect(screen.getByRole('checkbox', { name: 'bar' })).toBeDisabled();
 
     // antd takes pointer events off a disabled input, so the click a user can still make is on its label
     await user.click(screen.getByText('foo'));
