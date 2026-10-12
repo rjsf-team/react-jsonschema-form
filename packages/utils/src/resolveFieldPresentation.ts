@@ -91,9 +91,11 @@ function placeText<Text>(
  * carries, from the declaration of who draws each part and the field's own text. It predicts nothing: whether a part
  * shows is decided from the decisions in `inputs`, so a template and a widget reading the plan agree on it.
  *
- * - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name,
- *   and is `above` when the template of a field above rendering the same id already draws it; a label the widget
- *   draws stays, so a widget that names its own control keeps naming it.
+ * - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name.
+ *   It is `above`, under the id of the label drawn there, when the template of a field above rendering the same id
+ *   already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a
+ *   second time. The control points `aria-labelledby` at a label its template draws, or one above, when its
+ *   declaration says so, or when its id isn't the one that label's `for` names, such as a selector's.
  * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
  *   field above already shows is `above`, as is a part with no text under a field above that shows one, and text a
  *   field above hides stays hidden; text of its own takes `optionDescriptionId()` or `optionHelpId()` when a field
@@ -128,9 +130,10 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     plansAbove.push(plan);
   }
 
-  const labelId = fieldLabelId(id);
+  const templateLabelAbove = plansAbove.find((plan) => plan.label.by === 'template');
+  const labelId = templateLabelAbove?.label.id ?? fieldLabelId(id);
   let labelBy: PartPlacement = declaration.label;
-  if (declaration.label === 'template' && plansAbove.some((plan) => plan.label.by === 'template')) {
+  if (templateLabelAbove) {
     labelBy = 'above';
   } else if (!labelText || !showLabel || (declaration.label === 'template' && !hasControl)) {
     labelBy = 'none';
@@ -169,7 +172,11 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   let control: FieldPresentation['control'];
   if (hasControl) {
     const attributes: ControlAttributes = {};
-    if ((labelBy === 'template' || labelBy === 'above') && declaration.labelledBy === 'aria-labelledby') {
+    const forMissesControl = templateLabelAbove !== undefined && templateLabelAbove.control?.id !== id;
+    if (
+      (labelBy === 'template' || labelBy === 'above') &&
+      (declaration.labelledBy === 'aria-labelledby' || forMissesControl)
+    ) {
       attributes['aria-labelledby'] = labelId;
     }
     const controlDescribers = uniqueIds([...describedBy, ...controlDescribedBy]);

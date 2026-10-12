@@ -781,7 +781,10 @@ export type PartOwner = 'template' | 'self' | 'widget';
 /** The parts of a field a template or a component can draw */
 export type PresentationPart = 'label' | 'description' | 'errors' | 'help';
 
-/** Which parts of a field a field or widget component draws itself. A part it leaves out is drawn by the template */
+/** Which parts of a field a field or widget component draws itself. A part a widget's declaration leaves out takes the
+ * theme's `default`, or else is drawn by the template; one a field's leaves out takes the theme's `fieldDefault`, or
+ * else the field default, which draws its own label and description and leaves its errors and help to the template
+ */
 export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
   /** Who draws the label naming the field's control */
   label?: Owner;
@@ -810,8 +813,8 @@ export type ResolvedPresentationDeclaration = Required<WidgetPresentationDeclara
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
  * under, so a component replacing another under the same key draws what that key declares. A component given
  * directly, as a `ui:field` or `ui:widget`, is found by identity among the registered ones and takes the declaration
- * for the key it is registered under; nothing is declared on the component itself, so a wrapper such as `memo()` can't
- * lose it
+ * for the first key it is registered under that declares it; nothing is declared on the component itself, so a wrapper
+ * such as `memo()` can't lose it
  */
 export interface ThemePresentation {
   /** What every widget draws for a part this layer's own entry for it doesn't declare, custom and unregistered widgets
@@ -824,11 +827,18 @@ export interface ThemePresentation {
   widgets?: Readonly<Record<string, WidgetPresentationDeclaration>>;
   /** Declarations for fields, by the key they are registered under */
   fields?: Readonly<Record<string, PresentationDeclaration>>;
+  /** What every field draws for a part its merged entry doesn't declare, custom fields included, over the field default
+   * of drawing its own label and description, e.g. a theme whose template draws every description. It is also what a
+   * part a field leaves to its widget falls back to when the field renders none. Unlike `default`, it sits beneath the
+   * merged entries rather than beneath each layer's own, so it can't override a part a lower layer declares under a
+   * key, such as a field leaving its parts to its widget
+   */
+  fieldDefault?: WidgetPresentationDeclaration;
 }
 
 /** A form's `ThemePresentation` once `mergeThemePresentation()` merged its layers: an entry in `widgets` for every key
- * any layer declares, with each layer's `default` beneath that layer's own entry, and the layered `default` for a key
- * no layer declares
+ * any layer declares, with each layer's `default` beneath that layer's own entry, the layered `default` for a key no
+ * layer declares, and the layered `fieldDefault`
  */
 export type MergedThemePresentation = Required<ThemePresentation>;
 
