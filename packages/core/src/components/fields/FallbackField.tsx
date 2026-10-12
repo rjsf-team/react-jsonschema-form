@@ -24,6 +24,7 @@ import {
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   RJSF_REF_KEY,
+  RJSF_SOURCE_REF_KEY,
   toFieldPath,
   fieldPathToId,
   TranslatableString,
@@ -167,6 +168,7 @@ function getValueSchema<S extends StrictRJSFSchema = RJSFSchema>(
   delete valueSchema[GUESSED_TYPE_FLAG];
   delete valueSchema[ADDITIONAL_PROPERTY_FLAG];
   delete valueSchema[RJSF_REF_KEY];
+  delete valueSchema[RJSF_SOURCE_REF_KEY];
   delete valueSchema.$id;
   // A field around the value that renders the schema's title and description leaves the value field naming nothing but
   // its own role, which `getValueUiSchema()` then has it render nothing of. One that renders neither — an `object` or
