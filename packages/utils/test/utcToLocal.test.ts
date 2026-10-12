@@ -49,6 +49,11 @@ describe('utcToLocal()', () => {
   ])('returns empty string when given %s, which means no value', (_, value) => {
     expect(utcToLocal(value)).toEqual('');
   });
+  it('returns empty string when given a Boolean object from another realm, which fails instanceof Boolean', () => {
+    const foreignBoolean: unknown = vm.runInNewContext('new Boolean(false)');
+    expect(foreignBoolean).not.toBeInstanceOf(Boolean);
+    expect(utcToLocal(foreignBoolean)).toEqual('');
+  });
   it.each([
     ['the bigint 0n', 0n],
     ['a symbol', Symbol('epoch')],

@@ -12,16 +12,17 @@ import pad from './pad.ts';
  *        date, or when its local year is before 1. Otherwise a date string in local format
  */
 export default function utcToLocal(jsonDate: unknown) {
-  // `Date` reads `null` and `false` as the epoch, `true` as the millisecond after it and a `Boolean` object as the
-  // boolean it wraps, so they have to mean no value here. Anything else names a date, parses to an invalid one, or
-  // throws in `ToPrimitive`
-  if (jsonDate == null || typeof jsonDate === 'boolean' || jsonDate instanceof Boolean) {
+  // `Date` reads `null` and `false` as the epoch, `true` as the millisecond after it and a `Boolean` object, from any
+  // realm, as the boolean it wraps, so they have to mean no value here. Anything else names a date, parses to an
+  // invalid one, or throws in `ToPrimitive`
+  if (
+    jsonDate == null ||
+    typeof jsonDate === 'boolean' ||
+    Object.prototype.toString.call(jsonDate) === '[object Boolean]'
+  ) {
     return '';
   }
 
-  // required format of `'yyyy-MM-ddThh:mm' followed by optional ':ss' or ':ss.SSS'
-  // https://html.spec.whatwg.org/multipage/input.html#local-date-and-time-state-(type%3Ddatetime-local)
-  // > should be a _valid local date and time string_ (not GMT)
   let date: Date;
   try {
     // `Date` takes any value through `ToPrimitive`; its types only name the usual ones. It throws for a bigint or a
@@ -37,6 +38,9 @@ export default function utcToLocal(jsonDate: unknown) {
     return '';
   }
 
+  // required format of `'yyyy-MM-ddThh:mm' followed by optional ':ss' or ':ss.SSS'
+  // https://html.spec.whatwg.org/multipage/input.html#local-date-and-time-state-(type%3Ddatetime-local)
+  // > should be a _valid local date and time string_ (not GMT)
   const MM = pad(date.getMonth() + 1, 2);
   const dd = pad(date.getDate(), 2);
   const hh = pad(date.getHours(), 2);
