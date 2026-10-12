@@ -951,6 +951,22 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(child.type).toBeUndefined();
       expect(child.$ref).toEqual('https://ex.com/r.json#/definitions/node');
     });
+    it('does not read a root own $id beside a top-level $ref as an override', () => {
+      // The root's `$id` repeats the scope the walk is already in: the target's content keeps the scope
+      // the normalization gave it, so `leaf.json` stays the nested resource rather than the root-level one
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://x.com/r.json',
+        $ref: 'nested/p.json',
+        $defs: {
+          p: { $id: 'nested/p.json', type: 'object', properties: { l: { $ref: 'leaf.json' } } },
+          l: { $id: 'nested/leaf.json', title: 'RIGHT' },
+          w: { $id: 'leaf.json', title: 'WRONG' },
+        },
+      };
+      const resolved = retrieveSchema({ validator: testValidator }, root, root);
+      expect((resolved.properties!.l as RJSFSchema).title).toEqual('RIGHT');
+    });
     it('matches a root $id that ends in a slash', () => {
       // The ref and the root name the same resource, slash or no slash
       const root: RJSFSchema = {

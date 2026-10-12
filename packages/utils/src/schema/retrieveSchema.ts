@@ -681,7 +681,11 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     if (
       ID_KEY in localSchema &&
       typeof localSchema[ID_KEY] === 'string' &&
-      localSchema[ID_KEY] !== found.schema[ID_KEY]
+      localSchema[ID_KEY] !== found.schema[ID_KEY] &&
+      // A local `$id` that resolves to the scope the walk is already in - the root's own `$id` beside a
+      // top-level `$ref` is the common one - re-identifies nothing, so the target's content keeps the scope
+      // the normalization gave it rather than being restored and re-resolved against that same scope
+      resolveUri(currentBaseURI ?? '', localSchema[ID_KEY]) !== currentBaseURI
     ) {
       // A `$id` written on the referring schema itself, distinct from the target's, re-identifies the resource
       // the merged schema belongs to: the target's own content is then read as written, with the refs the
