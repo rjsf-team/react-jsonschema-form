@@ -44,6 +44,8 @@ describe('utcToLocal()', () => {
     ['null', null],
     ['false', false],
     ['true', true],
+    ['a wrapped false, which typeof calls an object', Object(false)],
+    ['a wrapped true', Object(true)],
   ])('returns empty string when given %s, which means no value', (_, value) => {
     expect(utcToLocal(value)).toEqual('');
   });
@@ -65,14 +67,17 @@ describe('utcToLocal()', () => {
     expect(() => new Date(value as string)).toThrow(Error);
     expect(utcToLocal(value)).toEqual('');
   });
+  // `Date` reads an object with no `valueOf()` epoch through its text, so what an array or a function gives depends
+  // on that text: these parse as invalid, where V8 reads `[0]`, like the string `'0'`, as the year 2000
   it.each([
     ['an empty string', ''],
     ['text that is not a date', 'not-a-date'],
     ['an invalid Date', new Date(NaN)],
     ['an object without a date in it', {}],
-    ['an array', [EPOCH]],
-    ['a function', () => EPOCH],
+    ['an array whose text is not a date', [EPOCH]],
+    ['a function whose text is not a date', () => EPOCH],
   ])('returns empty string when given %s, which does not parse to a valid date', (_, value) => {
+    expect(new Date(value as string).getTime()).toBeNaN();
     expect(utcToLocal(value)).toEqual('');
   });
   it.each([NaN, Infinity, 8.64e15 + 1])('returns empty string when given the out-of-range number %s', (value) => {
@@ -100,7 +105,7 @@ describe('utcToLocal()', () => {
     const last = new Date(9999, 11, 31, 23, 59, 59, 999);
     expectInstant(utcToLocal(last), last.getTime());
   });
-  // Years past 9999 are kept: `datetime-local` takes a year of four or more digits, and browsers go up to 275760
+  // A `datetime-local` input takes a year of four or more digits, and browsers go up to 275760
   it.each([Date.UTC(10000, 6, 1), 1e15])('converts the valid epoch %s, whose local year has five digits', (value) => {
     const local = utcToLocal(value);
     expect(local).toMatch(/^\d{5}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}$/);

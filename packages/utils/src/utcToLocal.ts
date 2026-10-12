@@ -3,16 +3,19 @@ import pad from './pad.ts';
 /** Converts a UTC date string, an epoch number or a `Date` into a local Date format
  *
  * @param jsonDate - A UTC date string, an epoch number in milliseconds or a `Date`. Any other value is handed to the
- *        `Date` constructor, so an object whose `valueOf()` gives an epoch, such as a moment, dayjs or Luxon object or a
- *        `Date` from another realm, converts too
- * @returns - An empty string when `jsonDate` is `undefined`, `null` or a boolean, when `Date` can't convert it (a
- *        bigint, a symbol or an object with no primitive value), when it doesn't parse to a valid date, or when its
- *        local year is before 1. Otherwise a date string in local format
+ *        `Date` constructor, so an object whose `valueOf()` gives an epoch, such as a moment, dayjs or Luxon object or
+ *        a `Date` from another realm, converts too. A string goes through `Date`'s string parsing, so an epoch written
+ *        as text, such as `'0'`, isn't read as an epoch; what text outside the ISO format means is up to the engine,
+ *        and V8 reads `'0'` as the year 2000
+ * @returns - An empty string when `jsonDate` is `undefined`, `null`, a boolean or a `Boolean` object, when `Date`
+ *        can't convert it (a bigint, a symbol or an object with no primitive value), when it doesn't parse to a valid
+ *        date, or when its local year is before 1. Otherwise a date string in local format
  */
 export default function utcToLocal(jsonDate: unknown) {
-  // `Date` reads `null` and `false` as the epoch and `true` as the millisecond after it, so they have to mean no value
-  // here. Anything else names a date, parses to an invalid one, or throws in `ToPrimitive`
-  if (jsonDate == null || typeof jsonDate === 'boolean') {
+  // `Date` reads `null` and `false` as the epoch, `true` as the millisecond after it and a `Boolean` object as the
+  // boolean it wraps, so they have to mean no value here. Anything else names a date, parses to an invalid one, or
+  // throws in `ToPrimitive`
+  if (jsonDate == null || typeof jsonDate === 'boolean' || jsonDate instanceof Boolean) {
     return '';
   }
 

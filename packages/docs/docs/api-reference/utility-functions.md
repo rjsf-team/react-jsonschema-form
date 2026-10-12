@@ -2485,11 +2485,11 @@ Converts a UTC date string, an epoch number or a `Date` into a local Date format
 
 #### Parameters
 
-- jsonDate: unknown - A UTC date string, an epoch number in milliseconds or a `Date`. Any other value is handed to the `Date` constructor, so an object whose `valueOf()` gives an epoch, such as a moment, dayjs or Luxon object or a `Date` from another realm, converts too
+- jsonDate: unknown - A UTC date string, an epoch number in milliseconds or a `Date`. Any other value is handed to the `Date` constructor, so an object whose `valueOf()` gives an epoch, such as a moment, dayjs or Luxon object or a `Date` from another realm, converts too. A string goes through `Date`'s string parsing, so an epoch written as text, such as `'0'`, isn't read as an epoch; what text outside the ISO format means is up to the engine, and V8 reads `'0'` as the year 2000
 
 #### Returns
 
-- string: An empty string when `jsonDate` is `undefined`, `null` or a boolean, when `Date` can't convert it (a bigint, a symbol or an object with no primitive value), when it doesn't parse to a valid date, or when its local year is before 1. Otherwise a date string in local format
+- string: An empty string when `jsonDate` is `undefined`, `null`, a boolean or a `Boolean` object, when `Date` can't convert it (a bigint, a symbol or an object with no primitive value), when it doesn't parse to a valid date, or when its local year is before 1. Otherwise a date string in local format
 
 ### validationDataMerge&lt;T = unknown>()
 

@@ -1080,7 +1080,7 @@ describe('StringField', () => {
         expectEmpty(renderWithFormData('not-a-date'));
       });
 
-      it.each([false, true, 0n, Object(5n), Object.create(null)])(
+      it.each([false, true, Object(false), 0n, Object(5n), Object.create(null)])(
         'should render an empty value for %s, which is not a date',
         (initialFormData) => {
           expectEmpty(renderWithFormData(initialFormData));
