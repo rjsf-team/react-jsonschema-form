@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { TranslatableString } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
 import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
@@ -209,7 +210,7 @@ export default function DateWidget<
             </div>
             <div className='p-3 flex justify-end border-t border-base-300'>
               <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
-                Done
+                {registry.translateString(TranslatableString.DoneLabel)}
               </button>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { Checkbox, Flex } from '@mantine/core';
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -28,14 +29,15 @@ export default function CheckboxesWidget<
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const themeProps = cleanupOptions(options);
+  const fieldDisabled = disabled || readonly;
 
   const handleChange = useCallback(
     (nextValue: any) => {
-      if (!disabled && !readonly && onChange) {
+      if (!fieldDisabled && onChange) {
         onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onChange, disabled, readonly, enumOptions, emptyValue, optionValueFormat],
+    [onChange, fieldDisabled, enumOptions, emptyValue, optionValueFormat],
   );
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
@@ -51,7 +53,7 @@ export default function CheckboxesWidget<
       value={selectedValues}
       onChange={handleChange}
       required={required}
-      readOnly={disabled || readonly}
+      readOnly={fieldDisabled}
       {...themeProps}
       {...groupProps}
       {...getDescriptionProps(props)}
@@ -67,9 +69,7 @@ export default function CheckboxesWidget<
                 name={htmlName || id}
                 value={domValues[i]}
                 label={option.label}
-                disabled={
-                  Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
-                }
+                disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled)}
                 autoFocus={i === 0 && autofocus}
                 onBlur={blurHandlers[i]}
                 onFocus={focusHandlers[i]}

@@ -7,7 +7,6 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -21,6 +20,7 @@ import {
   SelectedOptionDescription,
   TranslatableString,
   useSelectFocusHandlers,
+  widgetAriaProps,
 } from '@rjsf/utils';
 
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select.tsx';
@@ -59,27 +59,30 @@ export default function SelectWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  options,
-  required,
-  disabled,
-  readonly,
-  value,
-  schema,
-  multiple,
-  autofocus,
-  onChange,
-  onBlur,
-  onFocus,
-  placeholder,
-  rawErrors,
-  hideError,
-  className,
-  registry,
-  uiSchema,
-  label,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    options,
+    required,
+    name,
+    disabled,
+    readonly,
+    value,
+    schema,
+    multiple,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    placeholder,
+    rawErrors,
+    hideError,
+    className,
+    registry,
+    uiSchema,
+    label,
+    hideLabel,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -108,6 +111,8 @@ export default function SelectWidget<
     ? toSections<S>(groupEnumOptions<S>(enumOptions, optgroups, enumDisabled), toFancyItem)
     : undefined;
 
+  const { 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby } = widgetAriaProps(props);
+
   const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 
   const placeholderText = placeholder || registry.translateString(TranslatableString.SelectPlaceholder);
@@ -127,17 +132,20 @@ export default function SelectWidget<
           disabled={disabled || readonly}
           required={required}
           placeholder={placeholderText}
+          ariaLabel={ariaLabel}
+          // The template's label shows the property name for a field with no title, and `*` when required
+          named={!!ariaLabel || (!hideLabel && (!!label || !!name || !!required))}
           className={cnClassName}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
-          ariaDescribedby={ariaDescribedByIds(id)}
+          ariaDescribedby={ariaDescribedby}
         />
       ) : (
         <FancyMultiSelect
           id={id}
-          // `label` is "" for an untitled root field or an explicit `ui:title: ""`, which would leave the combobox
-          // unnamed
-          label={label || placeholderText}
+          // A caller's `aria-label` names the combobox over the field's label. `label` is "" for an untitled root field or
+          // an explicit `ui:title: ""`, which would leave the combobox unnamed
+          label={ariaLabel || label || placeholderText}
           placeholder={placeholderText}
           autoFocus={autofocus}
           disabled={disabled || readonly}
@@ -154,7 +162,7 @@ export default function SelectWidget<
           }}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}
-          ariaDescribedby={ariaDescribedByIds(id)}
+          ariaDescribedby={ariaDescribedby}
         />
       )}
       <SelectedOptionDescription

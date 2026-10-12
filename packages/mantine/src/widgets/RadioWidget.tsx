@@ -4,6 +4,7 @@ import { Radio, Flex } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -28,14 +29,15 @@ export default function RadioWidget<
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const themeProps = cleanupOptions(options);
+  const fieldDisabled = disabled || readonly;
 
   const handleChange = useCallback(
     (nextValue: any) => {
-      if (!disabled && !readonly && onChange) {
+      if (!fieldDisabled && onChange) {
         onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
       }
     },
-    [onChange, disabled, readonly, enumOptions, emptyValue, optionValueFormat],
+    [onChange, fieldDisabled, enumOptions, emptyValue, optionValueFormat],
   );
 
   const handleBlur = useCallback(
@@ -68,7 +70,7 @@ export default function RadioWidget<
       value={selected}
       onChange={handleChange}
       required={required}
-      readOnly={disabled || readonly}
+      readOnly={fieldDisabled}
       {...themeProps}
       {...groupProps}
       {...getDescriptionProps(props)}
@@ -84,9 +86,7 @@ export default function RadioWidget<
                   id={optionId(id, i)}
                   value={domValues[i]}
                   label={option.label}
-                  disabled={
-                    Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
-                  }
+                  disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled)}
                   autoFocus={i === 0 && autofocus}
                   onBlur={handleBlur}
                   onFocus={handleFocus}

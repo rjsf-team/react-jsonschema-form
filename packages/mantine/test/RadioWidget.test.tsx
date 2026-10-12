@@ -101,4 +101,13 @@ describe('RadioWidget', () => {
       expect(screen.getByRole('radio', { name: 'One' })).not.toBeChecked();
     },
   );
+
+  test.each(['disabled', 'readonly'] as const)('disables every option of a %s field', (state) => {
+    renderWidget({
+      [state]: true,
+      options: { enumOptions: ['one', 'two'].map((value) => ({ label: value, value })) },
+    });
+    expect(screen.getByRole('radio', { name: 'one' })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: 'two' })).toBeDisabled();
+  });
 });

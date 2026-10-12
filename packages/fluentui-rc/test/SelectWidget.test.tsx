@@ -187,4 +187,20 @@ describe('SelectWidget', () => {
 
     expect(await screen.findByRole('combobox')).toBeInTheDocument();
   });
+
+  test('shows the required mark of a required select whose label is empty', async () => {
+    render(<SelectWidget {...makeWidgetMockProps({ label: '', required: true, options: { enumOptions } })} />);
+
+    await screen.findByRole('combobox');
+    expect(screen.getByText('*')).toBeInTheDocument();
+  });
+
+  test('renders no label for a select with an empty label that is not required', async () => {
+    const { container } = render(
+      <SelectWidget {...makeWidgetMockProps({ label: '', 'aria-label': 'When, year', options: { enumOptions } })} />,
+    );
+
+    await screen.findByRole('combobox', { name: 'When, year' });
+    expect(container.querySelector('label')).not.toBeInTheDocument();
+  });
 });

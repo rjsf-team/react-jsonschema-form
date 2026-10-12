@@ -1,3 +1,5 @@
+export { altDateTests } from './altDateTests.tsx';
+
 export { arrayTests } from './arrayTests.tsx';
 
 export { formTests } from './formTests.tsx';

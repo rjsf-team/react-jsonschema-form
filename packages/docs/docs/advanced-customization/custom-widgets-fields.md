@@ -404,6 +404,16 @@ A field component will always be passed the following props:
 - `onBlur`: The input blur event handler; call it with the field id and value;
 - `onFocus`: The input focus event handler; call it with the field id and value;
 
+`SchemaField` sets one more prop, and only for `AnyOfField` and `OneOfField`, the fields that render a `oneOf`/`anyOf` option selector. Both pass their props on to the field of the selected option, so that field receives the union's `options` too, and its presence does not tell a field that it renders a union:
+
+- `options`: The option schemas, each already retrieved for the field's `formData` by `SchemaField`. A custom field that renders `AnyOfField` or `OneOfField` itself retrieves them the same way, reading a boolean option as an empty schema:
+
+  ```tsx
+  const options = (schema.anyOf ?? []).map((option) =>
+    registry.schemaUtils.retrieveSchema(typeof option === 'object' ? option : {}, formData),
+  );
+  ```
+
 ## The `registry` object
 
 The `registry` is an object containing the registered core, theme and custom fields and widgets as well as the root schema, form context, schema utils.

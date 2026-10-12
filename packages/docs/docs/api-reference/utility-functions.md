@@ -66,12 +66,14 @@ prop it is given is defined, so each theme only has to choose where the dropdown
 ### DateElement&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Renders one of the six date element selectors an `AltDateWidget` is made of, using the `SelectWidget` from the registry.
+Each element is a control of its own, so the `SelectWidget` receives [dateElementId()](#dateelementid) as both its `id` and its `name`, the element's translated name, from [dateElementLabel()](#dateelementlabel), as its `placeholder`, its accessible name, from [dateElementAriaLabel()](#dateelementarialabel), as its `aria-label`, and the field's description, help and error ids as its `aria-describedby`.
+Every theme's `SelectWidget` gives those two to the control it renders through [widgetAriaProps()](#widgetariaprops).
 The `useAltDateWidgetProps()` hook returns the props for each of them, so a theme's `AltDateWidget` maps over those rather than assembling the selectors itself.
 
 #### Props
 
 - value: any - The value currently selected for this element
-- name: string - The name of the field the element belongs to
+- [name]: string - Deprecated and ignored: the element takes [dateElementId()](#dateelementid) as its name
 - rootId: string - The id of the field, from which the element derives its own id with [dateElementId()](#dateelementid)
 - select: (property: keyof DateObject, value: any) => void - Records a value for one property of the `DateObject`
 - type: DateElementProp['type'] - Which element this is, e.g. `year`, `month` or `day`
@@ -83,6 +85,8 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 - [autofocus]: boolean - Optional flag, if true, the widget autofocuses
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
+- [label]: string - Optional label of the field, which leads the element's accessible name, as built by [dateElementAriaLabel()](#dateelementarialabel)
+- [elementLabel]: string - Optional translated name of the element, for a caller that already translated it to display it; defaults to [dateElementLabel()](#dateelementlabel)
 
 ### SelectedOptionDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -241,6 +245,29 @@ of that Blob if provided in the URL. If no name is provided, then the name falls
 
 - \{ blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
 
+### dateElementAriaLabel()
+
+Return the accessible name of a date element: the field's label combined with the element's translated name through `TranslatableString.DateElementAriaLabel` (`'%1, %2'` in english), so a locale controls both the order and the punctuation.
+The label is kept even when the field hides it on screen, since that is when the parts of two date fields are otherwise impossible to tell apart.
+Only an empty label leaves the element's name alone.
+
+#### Parameters
+
+- elementLabel: string - The translated name of the date element, as returned by [dateElementLabel()](#dateelementlabel)
+- translateString: Registry['translateString'] - The `translateString` function from the `registry`
+- [label]: string - The label of the field the date element belongs to
+
+#### Returns
+
+- string: The accessible name of the date element
+
+#### Example
+
+```typescript
+dateElementAriaLabel('year', englishStringTranslator, 'When'); // 'When, year'
+dateElementAriaLabel('year', englishStringTranslator, ''); // 'year'
+```
+
 ### dateElementId()
 
 Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders.
@@ -261,6 +288,20 @@ Note that the separator here is always `_`, independent of the form's `idSeparat
 ```typescript
 dateElementId('root_birthday', 'year'); // 'root_birthday_year'
 ```
+
+### dateElementLabel()
+
+Return the translated name of a date element, through the `TranslatableString` for its `type`: `YearLabel`, `MonthLabel`, `DayLabel`, `HourLabel`, `MinuteLabel` or `SecondLabel`.
+Any other `type` is returned as it is.
+
+#### Parameters
+
+- type: string - The type of the date element, as given by its `DateElementProp`
+- translateString: Registry['translateString'] - The `translateString` function from the `registry`
+
+#### Returns
+
+- string: The translated name of the date element
 
 ### dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -421,6 +462,20 @@ Otherwise the index of an option whose value is the whole `value` is returned, s
 #### Returns
 
 - string | string[] | undefined: A single string index for the first `value` in `allEnumOptions`, if not `multiple`. Otherwise, the list of indexes for (each of) the value(s) in `value`.
+
+### enumOptionsIsDisabled()
+
+Determines whether the option with the given `value` is one the `ui:enumDisabled` list disables.
+The values match strictly, and an `enumDisabled` that isn't a list disables nothing.
+
+#### Parameters
+
+- value: unknown - The value of the enum option being checked
+- [enumDisabled]: EnumValue[] | undefined - The `ui:enumDisabled` list of enum values that should be rendered disabled
+
+#### Returns
+
+- boolean: true if `enumDisabled` lists the `value`, false otherwise
 
 ### enumOptionsIsSelected&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -851,7 +906,7 @@ Given date & time information with optional yearRange & format, returns props fo
 
 Computes whether a date-time field's `schema.format` is `iso-date-time`, and the `value` to use for display accordingly. When `isIsoDateTime`, a stored value that happens to carry a timezone offset (legal, since that format's timezone is optional) is stripped, so it displays as the naive wall-clock time it represents instead of being converted to another timezone by a date/time picker that parses the offset as real. To be used by theme specific `DateTimeWidget` implementations.
 
-A finite epoch number or a valid `Date` is an exact instant. It is converted to its UTC ISO string when `schema.format` requires an offset (`date-time`/`datetime`), to the day it names when `schema.format` is `date` and the instant is a UTC midnight, and to local wall-clock time for any other format. A local year outside 0-9999 has no text a picker can parse, so it gives `undefined`.
+A finite epoch number or a valid `Date` is an exact instant. It is converted to its UTC ISO string when `schema.format` requires an offset (`date-time`/`datetime`), to the day it names when `schema.format` is `date` and the instant is a UTC midnight, and to local wall-clock time for any other format. The `date` and local wall-clock results need a four-digit year the pickers can parse, so a year outside 1-9999 gives `undefined` there; the UTC ISO string keeps any year.
 
 #### Parameters
 
@@ -1342,7 +1397,7 @@ The following cases are handled rather than being allowed to break a render:
 - A group value matching no remaining option is skipped, and a group left with no options is omitted entirely, so no group renders as an empty heading
 - A group whose value is not an array at all is ignored the same way
 - When several options share a `value`, each reference to that value claims the next not-yet-claimed option with it, by index, rather than collapsing them into one
-- A group value that is not an exact match for an option's `value` also matches a primitive one by its string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since a uiSchema authored as JSON often stringifies them. Object and array enum values only match the very same object, so a JSON-authored uiSchema cannot group them. `ui:enumDisabled` values always match strictly, as they do in every other enum widget
+- A group value that is not an exact match for an option's `value` also matches a primitive one by its string form (so `'1'` groups the enum value `1`), the same way `ui:enumOrder` does, since a uiSchema authored as JSON often stringifies them. Object and array enum values only match the very same object, so a JSON-authored uiSchema cannot group them.
 
 Note that JavaScript orders integer-like keys (e.g. `'2024'`) ahead of all other keys, in ascending numeric order, regardless of the order they were written in, so those groups come first.
 
@@ -2481,15 +2536,15 @@ implementations.
 
 ### utcToLocal()
 
-Converts a UTC date string into a local Date format
+Converts a UTC date string, an epoch number or a `Date` into a local Date format
 
 #### Parameters
 
-- jsonDate: string - A UTC date string
+- jsonDate: unknown - A UTC date string, an epoch number in milliseconds or a `Date`. Any other value is handed to the `Date` constructor, so an object whose `valueOf()` gives an epoch, such as a moment, dayjs or Luxon object or a `Date` from another realm, converts too. A string goes through `Date`'s string parsing, so an epoch written as text, such as `'0'`, isn't read as an epoch; what text outside the ISO format means is up to the engine, and V8 reads `'0'` as the year 2000
 
 #### Returns
 
-- string: An empty string when `jsonDate` is falsey, otherwise a date string in local format
+- string: An empty string when `jsonDate` is `undefined`, `null`, a boolean or a `Boolean` object, when `Date` can't convert it (a bigint, a symbol or an object with no primitive value), when it doesn't parse to a valid date, or when its local year is before 1. Otherwise a date string in local format
 
 ### validationDataMerge&lt;T = unknown>()
 
@@ -2506,6 +2561,32 @@ The existing `errors` are always kept, also when their `errorSchema` is empty, a
 #### Returns
 
 - ValidationData&lt;T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
+
+### widgetAriaProps()
+
+Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses.
+A select rendered inside another widget, such as each select of an `AltDateWidget`, has no label of its own and an id that no help or error element is rendered for, so only its caller can name it and link it to its field.
+While the select shows the description of its selected option, the ids the caller passed are followed by `descriptionId(props.id)`, the one element the select renders itself, so that description is still announced.
+A select that shows none is described by the ids the caller passed alone: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render no such element, and its id may be another field's description id.
+Without ids from the caller, the result is `ariaDescribedByIds(props.id)`.
+Every theme's `SelectWidget` gives the result to its control, and a replacement `SelectWidget` should do the same; no other widget is required to.
+
+#### Parameters
+
+- props: WidgetAriaPropsInput&lt;T, S, F> - The widget's props, of which `id`, `aria-label`, `aria-describedby` and those `SelectedOptionDescription` reads (`multiple`, `hideLabel`, `options`, `registry`, `uiSchema` and `value`) are used
+
+#### Returns
+
+- \{ 'aria-label'?: string, 'aria-describedby': string }: The props to spread on the focused element
+
+#### Example
+
+```typescript
+// `props` are the `WidgetProps` of a `SelectWidget` with the id `root`, rendered by a field
+widgetAriaProps(props); // { 'aria-label': undefined, 'aria-describedby': 'root__error root__description root__help' }
+// `partProps` are those of the year select of an `AltDateWidget`, which its `DateElement` names and describes
+widgetAriaProps(partProps); // { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error root_when__description root_when__help' }
+```
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2525,7 +2606,7 @@ This is used in isValid to make references to the rootSchema
 Returns a schema derived from one that carries an `$id` with an `$id` of its own, of `<the original's>?rjsf=<the derived schema's hash>`, and returns a schema with no `$id` as it stands.
 A validator caches the function it compiles for a schema under its `$id`, so a derived schema keeping the original's would be validated against the original's function.
 The original `$id` is kept as the base of the derived one, since a relative `$ref` the schema left for the validator to resolve resolves against it.
-This is what the option scoring applies to the forms of an option it validates — the one with `additionalProperties` relaxed, and the option an augmented schema holds — and what [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) applies to the option it retrieved before validating it, so each is compiled in its own right.
+This is what the option scoring applies to the forms of an option it validates — the one with `additionalProperties` relaxed, and the option an augmented schema holds — and what [`MultiSchemaField`](https://github.com/rjsf-team/react-jsonschema-form/blob/main/packages/core/src/components/fields/MultiSchemaField.tsx) applies to the retrieved option it is handed before validating it, so each is compiled in its own right.
 A suffix already present is replaced rather than appended to, so deriving from a derived schema names the same schema either way.
 
 #### Parameters

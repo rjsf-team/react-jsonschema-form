@@ -10,6 +10,7 @@ import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, 
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -82,8 +83,7 @@ export default function RadioWidget<
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
-            const itemDisabled =
-              Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
+            const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
             const radio = (
               <FormControlLabel
                 {...muiSlotProps?.formControlLabel}

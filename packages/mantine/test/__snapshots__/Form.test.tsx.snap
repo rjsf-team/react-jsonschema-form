@@ -17156,6 +17156,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     aria-describedby="root__error root__description root__help"
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
+                    disabled=""
                     id="root-0"
                     name="root"
                     type="radio"
@@ -17178,9 +17179,11 @@ exports[`single fields > select field single choice form disabled using radio wi
                 </div>
                 <div
                   class="m_d3ea56bb mantine-Radio-labelWrapper"
+                  data-disabled="true"
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
+                    data-disabled="true"
                     for="root-0"
                   >
                     foo
@@ -17204,6 +17207,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                     aria-describedby="root__error root__description root__help"
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
+                    disabled=""
                     id="root-1"
                     name="root"
                     type="radio"
@@ -17226,9 +17230,11 @@ exports[`single fields > select field single choice form disabled using radio wi
                 </div>
                 <div
                   class="m_d3ea56bb mantine-Radio-labelWrapper"
+                  data-disabled="true"
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
+                    data-disabled="true"
                     for="root-1"
                   >
                     bar
@@ -17949,6 +17955,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     aria-describedby="root__error root__description root__help"
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
+                    disabled=""
                     id="root-0"
                     name="root"
                     type="radio"
@@ -17971,9 +17978,11 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 </div>
                 <div
                   class="m_d3ea56bb mantine-Radio-labelWrapper"
+                  data-disabled="true"
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
+                    data-disabled="true"
                     for="root-0"
                   >
                     foo
@@ -17997,6 +18006,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                     aria-describedby="root__error root__description root__help"
                     class="mantine-focus-auto m_8a3dbb89 mantine-Radio-radio"
                     data-with-error-styles="true"
+                    disabled=""
                     id="root-1"
                     name="root"
                     type="radio"
@@ -18019,9 +18029,11 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 </div>
                 <div
                   class="m_d3ea56bb mantine-Radio-labelWrapper"
+                  data-disabled="true"
                 >
                   <label
                     class="m_8ee546b8 mantine-Radio-label"
+                    data-disabled="true"
                     for="root-1"
                   >
                     bar
