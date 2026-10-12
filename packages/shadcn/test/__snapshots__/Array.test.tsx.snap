@@ -540,6 +540,13 @@ exports[`array fields > checkboxes 1`] = `
                 class="flex gap-1 flex-wrap"
               >
                 <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
+                <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_0_"
                   aria-describedby="root__error root__description root__help"
@@ -1822,6 +1829,13 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               <div
                 class="flex gap-1 flex-wrap"
               >
+                <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_f_"
@@ -4465,6 +4479,13 @@ exports[`with title and description > checkboxes 1`] = `
                 class="flex gap-1 flex-wrap"
               >
                 <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
+                <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_3_"
                   aria-describedby="root__error root__description root__help"
@@ -5300,6 +5321,13 @@ exports[`with title and description from both > checkboxes 1`] = `
               <div
                 class="flex gap-1 flex-wrap"
               >
+                <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_9_"
@@ -6137,6 +6165,13 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 class="flex gap-1 flex-wrap"
               >
                 <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
+                <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_6_"
                   aria-describedby="root__error root__description root__help"
@@ -6882,6 +6917,13 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               <div
                 class="flex gap-1 flex-wrap"
               >
+                <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_c_"

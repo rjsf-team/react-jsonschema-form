@@ -679,3 +679,34 @@ describe('SelectWidget whose button the field label names', () => {
     expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
   });
 });
+
+describe('multi-select label association', () => {
+  const schema = {
+    type: 'object' as const,
+    properties: {
+      colors: {
+        type: 'array' as const,
+        title: 'Colors',
+        uniqueItems: true,
+        minItems: 1,
+        items: { type: 'string' as const, enum: ['red', 'blue'] },
+      },
+    },
+    required: ['colors'],
+  };
+  const uiSchema = { colors: { 'ui:widget': 'select' } };
+
+  test('clicking the field label focuses the combobox search input', async () => {
+    const user = userEvent.setup();
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+    await user.click(screen.getByText(/Colors/, { selector: 'label[for="root_colors"]' }));
+    expect(screen.getByPlaceholderText('Select ...')).toHaveFocus();
+  });
+
+  test('focusOnFirstError moves focus to the combobox search input', async () => {
+    const user = userEvent.setup();
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} focusOnFirstError />);
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    expect(screen.getByPlaceholderText('Select ...')).toHaveFocus();
+  });
+});

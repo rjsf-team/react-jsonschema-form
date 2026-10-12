@@ -11940,6 +11940,13 @@ exports[`single fields > select field multiple choice 1`] = `
                 class="flex gap-1 flex-wrap"
               >
                 <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
+                <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_3_"
                   aria-describedby="root__error root__description root__help"
@@ -12014,6 +12021,13 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
               <div
                 class="flex gap-1 flex-wrap"
               >
+                <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_i_"
@@ -12313,6 +12327,13 @@ exports[`single fields > select field multiple choice formData 1`] = `
                   </button>
                 </span>
                 <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
+                <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_u_"
                   aria-describedby="root__error root__description root__help"
@@ -12387,6 +12408,13 @@ exports[`single fields > select field multiple choice with labels 1`] = `
               <div
                 class="flex gap-1 flex-wrap"
               >
+                <input
+                  aria-hidden="true"
+                  class="sr-only"
+                  id="root"
+                  tabindex="-1"
+                  type="text"
+                />
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_6_"

@@ -217,7 +217,18 @@ export function FancyMultiSelect({
               </button>
             </Badge>
           ))}
-          {/* cmdk overwrites this input's id, aria-controls and aria-labelledby, so passing them has no effect. */}
+          {/* cmdk overwrites this input's id, aria-controls and aria-labelledby, so passing them has no effect. A
+              visually hidden proxy input carries the field id instead: the field label points at it and it forwards
+              focus into the search input. */}
+          <input
+            id={id}
+            type='text'
+            tabIndex={-1}
+            aria-hidden='true'
+            disabled={disabled}
+            className='sr-only'
+            onFocus={() => inputRef.current?.focus()}
+          />
           <CommandPrimitive.Input
             ref={inputRef}
             value={inputValue}
