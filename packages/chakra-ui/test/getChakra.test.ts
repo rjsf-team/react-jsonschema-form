@@ -1,3 +1,4 @@
+import type { UiSchema } from '../src/index.ts';
 import { getChakra } from '../src/utils.ts';
 
 describe('getChakra()', () => {
@@ -20,6 +21,15 @@ describe('getChakra()', () => {
   test('returns no props for options without a chakra object', () => {
     expect(getChakra()).toEqual({});
     expect(getChakra({ chakra: 'mb' })).toEqual({});
+  });
+
+  test('rejects a uiSchema, and a uiSchema in a wrapper, at compile time', () => {
+    const uiSchema: UiSchema = { 'ui:options': { chakra: { mb: 4 } } };
+
+    // @ts-expect-error a uiSchema is not the options
+    expect(getChakra(uiSchema)).toEqual({});
+    // @ts-expect-error neither is an object that wraps one
+    expect(getChakra({ uiSchema })).toEqual({});
   });
 
   test('does not mutate the `chakra` object it was given', () => {

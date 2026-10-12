@@ -18,8 +18,13 @@ type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: JsxStyleProps };
  * returns, so a `chakra` set through `ui:globalOptions` or the `ui:chakra` shorthand is read like one in `ui:options`.
  *
  * Only what Chakra knows as a style prop is returned, so nothing else in the bag reaches the component as a prop.
+ *
+ * NOTE: the two `never` members reject a `uiSchema` and a `{ uiSchema }` wrapper, which would otherwise fit the
+ * `Record` and have no `chakra` read from them.
  */
-export function getChakra(options: Record<string, unknown> = {}): JsxStyleProps {
+export function getChakra(
+  options: Record<string, unknown> & { 'ui:options'?: never; uiSchema?: never } = {},
+): JsxStyleProps {
   const { chakra } = options;
   const chakraProps = isObject(chakra) ? chakra : {};
 
