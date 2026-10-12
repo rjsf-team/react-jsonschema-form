@@ -52,6 +52,27 @@ describe('ObjectFieldTemplate colSpan map', () => {
     classes.forEach((c) => expect(c).toContain('ant-col-8'));
   });
 
+  it('falls through to the schema type when the map entry for the widget is not a number', () => {
+    const classes = getColClasses({ secret: { 'ui:widget': 'password' } }, { password: true, string: 8 });
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => expect(c).toContain('ant-col-8'));
+  });
+
+  it('ignores the map entry for a ui:field that names no registered field', () => {
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const classes = getColClasses({ secret: { 'ui:field': 'unknownField' } }, { unknownField: 4, string: 8 });
+      expect(classes).toHaveLength(2);
+      classes.forEach((c) => expect(c).toContain('ant-col-8'));
+      expect(warnSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:field for "root_secret" (secret) names no registered field ('unknownField'), so it is ignored and the ` +
+          'field is rendered as though no ui:field were given.',
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
   it('ignores prototype keys such as toString when looking up the map', () => {
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     try {
@@ -73,6 +94,18 @@ describe('ObjectFieldTemplate colSpan map', () => {
     const classes = getColClasses(uiSchema, { myField: 6, string: 8 }, schema, { myField: () => <span /> });
     expect(classes).toHaveLength(2);
     classes.forEach((c) => expect(c).toContain('ant-col-6'));
+  });
+
+  it('ignores a widget named in ui:globalOptions, which string fields do not render', () => {
+    const classes = getColClasses({ 'ui:globalOptions': { widget: 'radio' } }, { radio: 6, string: 8 });
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => expect(c).toContain('ant-col-8'));
+  });
+
+  it('keeps the default col span when ui:globalOptions names the textarea widget', () => {
+    const classes = getColClasses({ 'ui:globalOptions': { widget: 'textarea' } }, { number: 6 });
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => expect(c).toContain('ant-col-12'));
   });
 
   it('prefers the widget entry over the schema type entry', () => {

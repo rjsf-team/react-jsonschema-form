@@ -52,16 +52,16 @@ export default function ObjectFieldTemplate<
   } = formContext;
   const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = antdContext;
 
-  const findSchema = (element: ObjectFieldTemplatePropertyType<T, S, F>): S => element.content.props.schema;
-
-  const findUiSchema = (element: ObjectFieldTemplatePropertyType<T, S, F>): UiSchema<T, S, F> | undefined =>
-    element.content.props.uiSchema;
-
   const visibleProperties = properties.filter((e) => !e.hidden);
 
   const calculateColSpan = (element: ObjectFieldTemplatePropertyType<T, S, F>) => {
-    const type = getSchemaType<S>(findSchema(element));
-    const { field, widget } = getUiOptions<T, S, F>(findUiSchema(element), registry.globalUiOptions);
+    const type = getSchemaType<S>(element.content.props.schema);
+    const propertyUiSchema: UiSchema<T, S, F> | undefined = element.content.props.uiSchema;
+    // `SchemaField` honors a `field` from `ui:globalOptions`, but only one registered in `registry.fields`, while
+    // `StringField` and `NumberField` never read a `widget` from `ui:globalOptions`
+    const { field } = getUiOptions<T, S, F>(propertyUiSchema, registry.globalUiOptions);
+    const { widget } = getUiOptions<T, S, F>(propertyUiSchema);
+    const fieldKey = typeof field === 'string' && Object.hasOwn(registry.fields, field) ? field : undefined;
 
     const defaultColSpan =
       visibleProperties.length < 2 || // Single or no visible field in object.
@@ -72,8 +72,8 @@ export default function ObjectFieldTemplate<
         : 12;
 
     if (typeof colSpan === 'object' && colSpan !== null) {
-      for (const key of [widget, field, type]) {
-        if (typeof key === 'string' && Object.hasOwn(colSpan, key) && colSpan[key] != null) {
+      for (const key of [widget, fieldKey, type]) {
+        if (typeof key === 'string' && Object.hasOwn(colSpan, key) && typeof colSpan[key] === 'number') {
           return colSpan[key];
         }
       }
@@ -110,7 +110,7 @@ export default function ObjectFieldTemplate<
           </Col>
         )}
         {!showOptionalDataControlInTitle ? <Col span={24}>{optionalDataControl}</Col> : undefined}
-        {visibleProperties.map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
+        {visibleProperties.map((element) => (
           <Col key={element.name} span={calculateColSpan(element)}>
             {element.content}
           </Col>
