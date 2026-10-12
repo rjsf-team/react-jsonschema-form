@@ -10,7 +10,7 @@ import {
   optionId,
 } from '@rjsf/utils';
 
-import { getGroupProps } from '../../utils.ts';
+import { getGroupProps, getOptionClassNames } from '../../utils.ts';
 
 /** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
  *
@@ -85,11 +85,12 @@ export default function RadioWidget<
       <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'radiogroup' })}>
         {enumOptions?.map((option, index) => {
           const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
+          const classNames = getOptionClassNames(optionDisabled);
           return (
             <label
               // oxlint-disable-next-line react/no-array-index-key
               key={index}
-              className={`flex items-center ${optionDisabled ? 'cursor-not-allowed' : 'cursor-pointer'} gap-2`}
+              className={classNames.label}
             >
               <input
                 type='radio'
@@ -105,7 +106,7 @@ export default function RadioWidget<
                 onFocus={handleFocus}
                 onBlur={handleBlur}
               />
-              <span className={optionDisabled ? 'label-text opacity-50' : 'label-text'}>{option.label}</span>
+              <span className={classNames.text}>{option.label}</span>
             </label>
           );
         })}

@@ -103,6 +103,18 @@ export function getGroupProps({ id, label, name, hideLabel, role }: GetGroupProp
   return { id, role, 'aria-labelledby': fieldLabelId(id) };
 }
 
+/** Builds the classes of one option of a checkboxes or radio widget: its `label`, and the `text` beside the input.
+ *
+ * @param disabled - Whether the option is disabled, by the field or by `ui:enumDisabled`
+ * @returns - The `className` of the option's `label` element and of the text inside it
+ */
+export function getOptionClassNames(disabled: boolean) {
+  return {
+    label: `flex items-center ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} gap-2`,
+    text: disabled ? 'label-text opacity-50' : 'label-text',
+  };
+}
+
 interface GetTriggerDescribedBy {
   id: string;
   label?: string;

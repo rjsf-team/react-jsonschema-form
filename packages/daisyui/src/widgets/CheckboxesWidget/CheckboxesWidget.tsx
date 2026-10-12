@@ -11,7 +11,7 @@ import {
   useOptionFocusHandlers,
 } from '@rjsf/utils';
 
-import { getGroupProps } from '../../utils.ts';
+import { getGroupProps, getOptionClassNames } from '../../utils.ts';
 
 /** The `CheckboxesWidget` component renders a set of checkboxes for multiple choice selection
  * with DaisyUI styling.
@@ -77,11 +77,12 @@ export default function CheckboxesWidget<
       <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
         {enumOptions?.map((option, index) => {
           const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
+          const classNames = getOptionClassNames(optionDisabled);
           return (
             <label
               // oxlint-disable-next-line react/no-array-index-key
               key={index}
-              className={`flex items-center ${optionDisabled ? 'cursor-not-allowed' : 'cursor-pointer'} gap-2`}
+              className={classNames.label}
             >
               <input
                 type='checkbox'
@@ -96,7 +97,7 @@ export default function CheckboxesWidget<
                 onFocus={focusHandlers[index]}
                 onBlur={blurHandlers[index]}
               />
-              <span className={optionDisabled ? 'label-text opacity-50' : 'label-text'}>{option.label}</span>
+              <span className={classNames.text}>{option.label}</span>
             </label>
           );
         })}
