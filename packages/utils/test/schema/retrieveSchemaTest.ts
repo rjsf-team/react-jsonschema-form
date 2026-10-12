@@ -13,6 +13,7 @@ import {
   RJSF_REF_KEY,
   noop,
 } from '../../src/index.ts';
+import { REF_SIBLING_BRANCHES } from '../../src/refOf.ts';
 import {
   getAdditionalPropertyType,
   getAllPermutationsOfXxxOf,
@@ -1321,6 +1322,37 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               });
             },
           );
+          describe('a branch beside a $ref that uses the definition a second time', () => {
+            const Q: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+            const friend: RJSFSchema = { properties: { friend: { $ref: '#/definitions/Q' } } };
+            const expanded = { ...Q, [RJSF_REF_KEY]: '#/definitions/Q' };
+            const formData = { name: 'n' };
+            const siblings: [string, RJSFSchema][] = [
+              ['an allOf entry', { allOf: [friend] }],
+              ['a then branch', { if: {}, then: friend }],
+              ['a dependencies entry', { dependencies: { name: friend } }],
+            ];
+
+            it.each(siblings)('expands the property %s declares, with the $ref at the root', (_, sibling) => {
+              // The branch stands beside the `$ref` rather than in the definition, so it is not inside what the
+              // `$ref` expanded to
+              const schema: RJSFSchema = { definitions: { Q }, $ref: '#/definitions/Q', ...sibling };
+              const result = retrieveSchema({ validator: testValidator }, schema, schema, formData);
+              expect(result.properties?.friend).toEqual(expanded);
+            });
+
+            it.each(siblings)('expands the property %s declares, with the $ref in a property', (_, sibling) => {
+              const schema: RJSFSchema = {
+                definitions: { Q },
+                type: 'object',
+                properties: { b: { $ref: '#/definitions/Q', ...sibling } },
+              };
+              // The schema the field of `b` is handed: its `$ref` expanded in place, with the branch still to resolve
+              const b = retrieveSchema({ validator: testValidator }, schema, schema, { b: formData }).properties?.b;
+              const result = retrieveSchema({ validator: testValidator }, isObject(b) ? b : {}, schema, formData);
+              expect(result.properties?.friend).toEqual(expanded);
+            });
+          });
           it('collapses an OpenAPI-style discriminator pair that loops through if/then and allOf', () => {
             testValidator.setReturnValues({ isValid: [true] });
             const rootSchema: RJSFSchema = {
@@ -4445,6 +4477,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
           allOf: undefined,
           [RJSF_REF_KEY]: '#/definitions/baseSchema',
+          [REF_SIBLING_BRANCHES]: ['dependencies'],
         });
       });
       it('should handle customMergeAllOf with nested $ref resolution', () => {
@@ -4526,6 +4559,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             base: { type: 'string' },
           },
           [RJSF_REF_KEY]: '#/definitions/testRef',
+          [REF_SIBLING_BRANCHES]: ['dependencies'],
         });
       });
       it('should handle customMergeAllOf that throws an error', () => {

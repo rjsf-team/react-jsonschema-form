@@ -35,7 +35,7 @@ import isPlainObject from '../isPlainObject.ts';
 import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
-import { declaredRef, resolvedFromRef } from '../refOf.ts';
+import { declaredRef, enclosingRefPath, resolvedFromRef, resolvedSchemaOf } from '../refOf.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -153,7 +153,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList),
+          enclosingRefPath<S>(schema, recurseList, THEN_KEY),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -169,7 +169,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList),
+          enclosingRefPath<S>(schema, recurseList, ELSE_KEY),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -187,7 +187,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList),
+          enclosingRefPath<S>(schema, recurseList, conditionValue ? THEN_KEY : ELSE_KEY),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -470,7 +470,7 @@ export function resolveSchema<
         rootSchema,
         formData,
         expandAllBranches,
-        enclosingRefPath(schema, recurseList),
+        enclosingRefPath<S>(schema, recurseList, ALL_OF_KEY),
         undefined,
         preserveDependencies,
         passCount > 0 ? 1 : 0,
@@ -638,7 +638,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     pathList = [...pathList, $ref!];
     // Retrieve the referenced schema definition.
     const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
-    resolvedSchema = { ...refSchema, ...localSchema, [RJSF_REF_KEY]: $ref };
+    resolvedSchema = resolvedSchemaOf<S>($ref, refSchema, localSchema);
     tally.count();
     if (ID_KEY in resolvedSchema) {
       currentBaseURI = resolvedSchema[ID_KEY];
@@ -745,22 +745,6 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   }
 
   return tally.resolved === resolvedBefore ? schema : resolvedSchema;
-}
-
-/** Returns the resolution path for a nested branch (an `allOf` element, a `then`/`else` schema or a `dependencies`
- * value) of a schema that was itself materialized by expanding a `$ref`. Keeping the enclosing ref on the path lets a
- * branch that refers back to the enclosing definition collapse as a cycle instead of re-expanding without bound. It
- * goes on the path on the first pass of a fresh call as well, unlike the marker walk in `resolveAllReferences`: a
- * branch is resolved only by the call that is handed its schema, so a `$ref` it expanded there would reach the next
- * call inside a schema materialized the same way, and every level would expand one more.
- *
- * @param schema - The schema whose branch is about to be resolved
- * @param recurseList - The list of refs already expanded on the current resolution path
- * @returns - `recurseList` plus the schema's source ref when it carries one, else `recurseList`
- */
-function enclosingRefPath<S extends StrictRJSFSchema>(schema: S, recurseList: string[]): string[] {
-  const sourceRef = (schema as Record<symbol, unknown>)[RJSF_REF_KEY];
-  return typeof sourceRef === 'string' && !recurseList.includes(sourceRef) ? [...recurseList, sourceRef] : recurseList;
 }
 
 /** The keywords that constrain a value of a given type without naming the type itself. A typeless `additionalProperties`
@@ -2012,7 +1996,7 @@ export function withDependentSchema<
     rootSchema,
     formData,
     expandAllBranches,
-    enclosingRefPath(schema, recurseList),
+    enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY),
     undefined,
     undefined,
     passCount > 0 ? 1 : 0,
@@ -2035,7 +2019,7 @@ export function withDependentSchema<
         subschema as S,
         rootSchema,
         expandAllBranches,
-        enclosingRefPath(schema, recurseList),
+        enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY),
         formData,
         undefined,
         undefined,
@@ -2126,7 +2110,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      enclosingRefPath(schema, recurseList),
+      enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY),
       undefined,
       undefined,
       passCount > 0 ? 1 : 0,

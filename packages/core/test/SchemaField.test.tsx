@@ -1282,6 +1282,23 @@ describe('SchemaField', () => {
       expect(form.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
     });
 
+    it.each<[string, (b: RJSFSchema) => RJSFSchema, string]>([
+      ['in a property', (b) => ({ type: 'object', properties: { b } }), '#root_b_friend_name'],
+      ['at the root', (b) => b, '#root_friend_name'],
+    ])('renders a second use of a definition in a branch beside the $ref to it, %s', (_, withB, nameId) => {
+      // The `then` stands beside the `$ref` rather than in the definition, so its `$ref` to the definition is no way back
+      const Q: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+      const b: RJSFSchema = {
+        $ref: '#/definitions/Q',
+        if: {},
+        then: { properties: { friend: { $ref: '#/definitions/Q' } } },
+      };
+      const { node: form } = createFormComponent({ schema: { definitions: { Q }, ...withB(b) } });
+
+      expect(form.querySelector(nameId)).toBeInTheDocument();
+      expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
+    });
+
     it('clicking the expand button shows the next level of the cycle', async () => {
       const { node } = createFormComponent({ schema });
 
