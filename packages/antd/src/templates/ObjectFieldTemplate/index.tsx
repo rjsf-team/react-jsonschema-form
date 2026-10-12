@@ -7,7 +7,7 @@ import type {
   StrictRJSFSchema,
   UiSchema,
 } from '@rjsf/utils';
-import { canExpand, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import { canExpand, getSchemaType, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import type { RowProps } from 'antd';
 import classNames from 'classnames';
@@ -54,24 +54,17 @@ export default function ObjectFieldTemplate<
 
   const findSchema = (element: ObjectFieldTemplatePropertyType<T, S, F>): S => element.content.props.schema;
 
-  const findSchemaType = (element: ObjectFieldTemplatePropertyType<T, S, F>) => findSchema(element).type;
-
   const findUiSchema = (element: ObjectFieldTemplatePropertyType<T, S, F>): UiSchema<T, S, F> | undefined =>
     element.content.props.uiSchema;
 
-  const findUiSchemaField = (element: ObjectFieldTemplatePropertyType<T, S, F>) =>
-    getUiOptions(findUiSchema(element)).field;
-
-  const findUiSchemaWidget = (element: ObjectFieldTemplatePropertyType<T, S, F>) =>
-    getUiOptions(findUiSchema(element)).widget;
+  const visibleProperties = properties.filter((e) => !e.hidden);
 
   const calculateColSpan = (element: ObjectFieldTemplatePropertyType<T, S, F>) => {
-    const type = findSchemaType(element);
-    const field = findUiSchemaField(element);
-    const widget = findUiSchemaWidget(element);
+    const type = getSchemaType<S>(findSchema(element));
+    const { field, widget } = getUiOptions<T, S, F>(findUiSchema(element));
 
     const defaultColSpan =
-      properties.length < 2 || // Single or no field in object.
+      visibleProperties.length < 2 || // Single or no visible field in object.
       type === 'object' ||
       type === 'array' ||
       widget === 'textarea'
@@ -117,13 +110,11 @@ export default function ObjectFieldTemplate<
           </Col>
         )}
         {!showOptionalDataControlInTitle ? <Col span={24}>{optionalDataControl}</Col> : undefined}
-        {properties
-          .filter((e) => !e.hidden)
-          .map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
-            <Col key={element.name} span={calculateColSpan(element)}>
-              {element.content}
-            </Col>
-          ))}
+        {visibleProperties.map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
+          <Col key={element.name} span={calculateColSpan(element)}>
+            {element.content}
+          </Col>
+        ))}
       </Row>
       {canExpand(schema, uiSchema, formData) && (
         <Col span={24}>
