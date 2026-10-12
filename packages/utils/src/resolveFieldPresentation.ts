@@ -62,9 +62,9 @@ function rendersHere(by: PartPlacement) {
 
 /** Places a description or help: above when a field above rendering this id shows it, whether as the same text or,
  * for the nearest of them that shows text, as the only text, so a level with none of its own carries the one above on
- * to the levels beneath it; nowhere when it has no text; and otherwise by its owner, under `ownId` unless a field
- * above already shows text under that id, in which case it takes the option id numbered by how many of them show text
- * of their own
+ * to the levels beneath it; nowhere when it has no text, or when a field above hides the same text; and otherwise by
+ * its owner, under `ownId` unless a field above already shows text under that id, in which case it takes the option id
+ * numbered by how many of them show text of their own
  *
  * @param above - The part in the plans of the fields above rendering this id, nearest first
  */
@@ -95,9 +95,10 @@ function placeText<Text>(
  *   and is `above` when the template of a field above rendering the same id already draws it; a label the widget
  *   draws stays, so a widget that names its own control keeps naming it.
  * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
- *   field above already shows is `above`, as is a part with no text under a field above that shows one; text of its own
- *   takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the usual id, numbered by how
- *   many fields above show text of their own, so each level's own text has an id of its own.
+ *   field above already shows is `above`, as is a part with no text under a field above that shows one, and text a
+ *   field above hides stays hidden; text of its own takes `optionDescriptionId()` or `optionHelpId()` when a field
+ *   above shows text under the usual id, numbered by how many fields above show text of their own, so each level's own
+ *   text has an id of its own.
  * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
  * - The control is described by the parts that render, here or above, then by its own `controlDescribedBy`, and is
  *   `aria-invalid` whenever errors show.

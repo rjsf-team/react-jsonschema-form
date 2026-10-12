@@ -814,10 +814,10 @@ export type ResolvedPresentationDeclaration = Required<WidgetPresentationDeclara
  * lose it
  */
 export interface ThemePresentation {
-  /** What every widget draws that this layer doesn't name under `widgets`, custom and unregistered widgets included,
-   * e.g. a theme whose widgets all draw their own label. `mergeThemePresentation()` layers it beneath this layer's own
-   * entry for every key, so it overrides the parts it declares in the layers beneath it, even under a key one of them
-   * declares
+  /** What every widget draws for a part this layer's own entry for it doesn't declare, custom and unregistered widgets
+   * included, e.g. a theme whose widgets all draw their own label. `mergeThemePresentation()` layers it beneath this
+   * layer's own entry for every key, so it overrides the parts it declares in the layers beneath it, even under a key
+   * one of them declares
    */
   default?: WidgetPresentationDeclaration;
   /** Declarations for widgets, by the key they are registered under */

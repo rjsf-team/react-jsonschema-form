@@ -80,10 +80,11 @@ function findRegisteredKey(registered: Readonly<Record<string, unknown>>, compon
   return Object.keys(registered).find((key) => registered[key] === component);
 }
 
-/** Gets the declaration of the widget a field renders: the merged declaration for its key, or the merged `default` for
- * a key no layer declares. An alias is looked up by the key it stands for, and a component given directly by the key it
- * is registered under, or by the `default` alone when it isn't registered. A name that is neither registered nor an
- * alias, a `null` widget or a key registered as nothing declares nothing, so the template draws every part
+/** Gets the declaration of the widget a field renders: the merged declaration for its key over the merged `default`,
+ * which is all a key no layer declares gets. An alias is looked up by the key it stands for, and a component given
+ * directly by the key it is registered under, or by the `default` alone when it isn't registered. A name that is
+ * neither registered nor an alias, a `null` widget or a key registered as nothing declares nothing, so the template
+ * draws every part
  */
 function getWidgetDeclaration<
   T = unknown,
@@ -94,8 +95,8 @@ function getWidgetDeclaration<
   widget: Widget<T, S, F> | string,
   { widgets, presentation }: PresentationSource<T, S, F>,
 ): WidgetPresentationDeclaration {
-  // A `null` from a JSON `uiSchema`, an unknown name and a key registered as nothing are left to throw in `getWidget()`,
-  // whose error names the schema
+  // A `null` from a JSON `uiSchema`, an unknown name and a key registered as nothing are left to throw in
+  // `getWidget()`, whose error names the schema
   if (!widget) {
     return NO_DECLARATION;
   }
@@ -108,7 +109,9 @@ function getWidgetDeclaration<
   } else {
     key = findRegisteredKey(widgets, widget);
   }
-  return getOwnDeclaration(presentation?.widgets, key) ?? presentation?.default ?? NO_DECLARATION;
+  // Merged entries already hold the `default`s beneath them, so this only matters for a `presentation` that skipped
+  // `mergeThemePresentation()`, which the type can't tell apart from a merged one
+  return layerDeclarations(presentation?.default, getOwnDeclaration(presentation?.widgets, key));
 }
 
 /** Gets which parts of a field its template draws and which the components rendering it draw themselves, from the
