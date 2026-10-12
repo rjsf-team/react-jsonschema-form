@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '@rjsf/utils';
+import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -17,16 +17,19 @@ describe('SelectWidget', () => {
   ];
 
   test('translates the empty-selection fallback through translateString', () => {
-    const props = makeWidgetMockProps({
+    const baseProps = makeWidgetMockProps({
       value: undefined,
       label: '',
       placeholder: undefined,
       options: { enumOptions },
     });
-    props.registry = {
-      ...props.registry,
-      translateString: (stringToTranslate: TranslatableString) =>
-        stringToTranslate === TranslatableString.SelectPlaceholder ? 'Elegir...' : stringToTranslate,
+    const props: WidgetProps = {
+      ...baseProps,
+      registry: {
+        ...baseProps.registry,
+        translateString: (stringToTranslate: TranslatableString) =>
+          stringToTranslate === TranslatableString.SelectPlaceholder ? 'Elegir...' : stringToTranslate,
+      },
     };
     render(<SelectWidget {...props} />);
 
