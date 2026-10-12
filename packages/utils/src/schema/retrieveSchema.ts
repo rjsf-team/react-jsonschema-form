@@ -153,7 +153,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
+          enclosingRefPath(schema, recurseList),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -169,7 +169,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
+          enclosingRefPath(schema, recurseList),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -187,7 +187,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
+          enclosingRefPath(schema, recurseList),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -470,7 +470,7 @@ export function resolveSchema<
         rootSchema,
         formData,
         expandAllBranches,
-        enclosingRefPath(schema, recurseList, passCount),
+        enclosingRefPath(schema, recurseList),
         undefined,
         preserveDependencies,
         passCount > 0 ? 1 : 0,
@@ -525,8 +525,8 @@ export function resolveReference<
     return [{ ...schema, [RJSF_REF_CYCLE_KEY]: true }];
   }
   // Termination of the resolveReference -> retrieveSchemaInternal loop is structural: every expanded $ref leaves
-  // its source ref on the materialized subtree as RJSF_REF_KEY, and on a follow-up pass (passCount > 0) that
-  // marker goes back on the path - in resolveAllReferences for the subtree walk, and via `enclosingRefPath` for
+  // its source ref on the materialized subtree as RJSF_REF_KEY, and that marker goes back on the path - in
+  // resolveAllReferences for the subtree walk of a follow-up pass (passCount > 0), and via `enclosingRefPath` for
   // the allOf, then/else and dependencies branch resolutions - so a ref already expanded on the current path is
   // never expanded twice, the re-walk makes no changes, and the loop ends as soon as a pass makes no more
   // changes. `passCount` is only a backstop that collapses the resolution if a regression ever breaks that
@@ -748,20 +748,17 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Returns the resolution path for a nested branch (an `allOf` element, a `then`/`else` schema or a `dependencies`
- * value) of a schema that was itself materialized by expanding a `$ref` earlier in this resolution. Keeping the
- * enclosing ref on the path lets a branch that refers back to the enclosing definition collapse as a cycle instead
- * of re-expanding without bound. As with the marker walk in `resolveAllReferences`, this only happens on re-walks
- * (`passCount > 0`): on the first pass of a fresh call the branch expands the ref one more level.
+ * value) of a schema that was itself materialized by expanding a `$ref`. Keeping the enclosing ref on the path lets a
+ * branch that refers back to the enclosing definition collapse as a cycle instead of re-expanding without bound. It
+ * goes on the path on the first pass of a fresh call as well, unlike the marker walk in `resolveAllReferences`: a
+ * branch is resolved only by the call that is handed its schema, so a `$ref` it expanded there would reach the next
+ * call inside a schema materialized the same way, and every level would expand one more.
  *
  * @param schema - The schema whose branch is about to be resolved
  * @param recurseList - The list of refs already expanded on the current resolution path
- * @param passCount - The pass of the `resolveReference` fixpoint loop this resolution belongs to
- * @returns - `recurseList` plus the schema's source ref when it carries one on a re-walk, else `recurseList`
+ * @returns - `recurseList` plus the schema's source ref when it carries one, else `recurseList`
  */
-function enclosingRefPath<S extends StrictRJSFSchema>(schema: S, recurseList: string[], passCount: number): string[] {
-  if (passCount === 0) {
-    return recurseList;
-  }
+function enclosingRefPath<S extends StrictRJSFSchema>(schema: S, recurseList: string[]): string[] {
   const sourceRef = (schema as Record<symbol, unknown>)[RJSF_REF_KEY];
   return typeof sourceRef === 'string' && !recurseList.includes(sourceRef) ? [...recurseList, sourceRef] : recurseList;
 }
@@ -2015,7 +2012,7 @@ export function withDependentSchema<
     rootSchema,
     formData,
     expandAllBranches,
-    enclosingRefPath(schema, recurseList, passCount),
+    enclosingRefPath(schema, recurseList),
     undefined,
     undefined,
     passCount > 0 ? 1 : 0,
@@ -2038,7 +2035,7 @@ export function withDependentSchema<
         subschema as S,
         rootSchema,
         expandAllBranches,
-        enclosingRefPath(schema, recurseList, passCount),
+        enclosingRefPath(schema, recurseList),
         formData,
         undefined,
         undefined,
@@ -2129,7 +2126,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      enclosingRefPath(schema, recurseList, passCount),
+      enclosingRefPath(schema, recurseList),
       undefined,
       undefined,
       passCount > 0 ? 1 : 0,

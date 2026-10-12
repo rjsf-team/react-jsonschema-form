@@ -1300,6 +1300,27 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               [RJSF_REF_KEY]: '#/definitions/node',
             });
           });
+          it.each<[string, RJSFSchema]>([
+            ['an allOf entry', { allOf: [{ properties: { child: { $ref: '#/definitions/node' } } }] }],
+            ['a then branch', { if: {}, then: { properties: { child: { $ref: '#/definitions/node' } } } }],
+          ])(
+            'flags a property %s declares that points back at the definition the schema was resolved from',
+            (_, branch) => {
+              // The schema a field is handed once its parent's walk has expanded its `$ref` in place: the definition
+              // under its marker, with the branch still to resolve
+              const node: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, ...branch };
+              const resolvedInPlace = { ...node, [RJSF_REF_KEY]: '#/definitions/node' };
+              const result = retrieveSchema({ validator: testValidator }, resolvedInPlace, { definitions: { node } });
+              expect(result).toEqual({
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  child: { $ref: '#/definitions/node', [RJSF_REF_CYCLE_KEY]: true },
+                },
+                [RJSF_REF_KEY]: '#/definitions/node',
+              });
+            },
+          );
           it('collapses an OpenAPI-style discriminator pair that loops through if/then and allOf', () => {
             testValidator.setReturnValues({ isValid: [true] });
             const rootSchema: RJSFSchema = {
