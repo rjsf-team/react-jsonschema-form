@@ -4,6 +4,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -70,8 +71,7 @@ export default function RadioWidget<
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled =
-                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
+              const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
 
               return (
                 <Radio

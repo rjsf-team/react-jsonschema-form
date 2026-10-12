@@ -14,6 +14,11 @@ const objectOptions = [
   { label: 'Two', value: { a: 2 } },
 ];
 
+const stringOptions = [
+  { label: 'One', value: 'one' },
+  { label: 'Two', value: 'two' },
+];
+
 const schema: RJSFSchema = {
   type: 'object',
   required: ['choices'],
@@ -56,6 +61,30 @@ describe('CheckboxesWidget', () => {
     await user.click(screen.getByRole('checkbox', { name: 'One' }));
 
     expect(onChange).toHaveBeenLastCalledWith([{ a: 1 }, { a: 2 }]);
+  });
+
+  test('disables only the options ui:enumDisabled lists', () => {
+    render(
+      <CheckboxesWidget
+        {...makeWidgetMockProps({ value: [], options: { enumOptions: stringOptions, enumDisabled: ['two'] } })}
+      />,
+    );
+
+    expect(screen.getByRole('checkbox', { name: 'One' })).toBeEnabled();
+    expect(screen.getByRole('checkbox', { name: 'Two' })).toBeDisabled();
+  });
+
+  test('marks the label of a disabled option as not clickable', () => {
+    render(
+      <CheckboxesWidget
+        {...makeWidgetMockProps({ value: [], options: { enumOptions: stringOptions, enumDisabled: ['two'] } })}
+      />,
+    );
+
+    expect(screen.getByText('One').closest('label')).toHaveClass('cursor-pointer');
+    expect(screen.getByText('Two').closest('label')).toHaveClass('cursor-not-allowed');
+    expect(screen.getByText('Two').closest('label')).not.toHaveClass('cursor-pointer');
+    expect(screen.getByText('Two')).toHaveClass('opacity-50');
   });
 
   // HTML5 constraint validation weighs each box on its own, so a `required` option demands *that* box — every box, for

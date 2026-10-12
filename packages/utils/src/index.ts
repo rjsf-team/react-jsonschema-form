@@ -20,6 +20,7 @@ import enumOptionsDeselectValue from './enumOptionsDeselectValue.ts';
 import enumOptionsDomValues from './enumOptionsDomValues.ts';
 import enumOptionSelectedValue from './enumOptionSelectedValue.ts';
 import enumOptionsIndexForValue from './enumOptionsIndexForValue.ts';
+import enumOptionsIsDisabled from './enumOptionsIsDisabled.ts';
 import enumOptionsIsSelected from './enumOptionsIsSelected.ts';
 import enumOptionsSelectValue from './enumOptionsSelectValue.ts';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex.ts';
@@ -217,6 +218,7 @@ export {
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIndexForValue,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,

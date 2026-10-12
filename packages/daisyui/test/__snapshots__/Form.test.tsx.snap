@@ -12226,18 +12226,19 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               </span>
             </label>
             <label
-              class="flex items-center cursor-pointer gap-2"
+              class="flex items-center cursor-not-allowed gap-2"
             >
               <input
                 class="checkbox"
                 data-index="1"
+                disabled=""
                 id="root-1"
                 name="root"
                 type="checkbox"
                 value="1"
               />
               <span
-                class="label-text"
+                class="label-text opacity-50"
               >
                 bar
               </span>
@@ -12704,18 +12705,19 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               </span>
             </label>
             <label
-              class="flex items-center cursor-pointer gap-2"
+              class="flex items-center cursor-not-allowed gap-2"
             >
               <input
                 class="radio"
                 data-index="1"
+                disabled=""
                 id="root-1"
                 name="root"
                 type="radio"
                 value="1"
               />
               <span
-                class="label-text"
+                class="label-text opacity-50"
               >
                 bar
               </span>
@@ -12764,7 +12766,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             role="radiogroup"
           >
             <label
-              class="flex items-center cursor-pointer gap-2"
+              class="flex items-center cursor-not-allowed gap-2"
             >
               <input
                 class="radio"
@@ -12776,13 +12778,13 @@ exports[`single fields > select field single choice form disabled using radio wi
                 value="0"
               />
               <span
-                class="label-text"
+                class="label-text opacity-50"
               >
                 foo
               </span>
             </label>
             <label
-              class="flex items-center cursor-pointer gap-2"
+              class="flex items-center cursor-not-allowed gap-2"
             >
               <input
                 class="radio"
@@ -12794,7 +12796,7 @@ exports[`single fields > select field single choice form disabled using radio wi
                 value="1"
               />
               <span
-                class="label-text"
+                class="label-text opacity-50"
               >
                 bar
               </span>
@@ -13250,7 +13252,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             role="radiogroup"
           >
             <label
-              class="flex items-center cursor-pointer gap-2"
+              class="flex items-center cursor-not-allowed gap-2"
             >
               <input
                 class="radio"
@@ -13262,13 +13264,13 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 value="0"
               />
               <span
-                class="label-text"
+                class="label-text opacity-50"
               >
                 foo
               </span>
             </label>
             <label
-              class="flex items-center cursor-pointer gap-2"
+              class="flex items-center cursor-not-allowed gap-2"
             >
               <input
                 class="radio"
@@ -13280,7 +13282,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 value="1"
               />
               <span
-                class="label-text"
+                class="label-text opacity-50"
               >
                 bar
               </span>

@@ -11,6 +11,11 @@ const objectOptions = [
   { label: 'Two', value: { a: 2 } },
 ];
 
+const stringOptions = [
+  { label: 'One', value: 'one' },
+  { label: 'Two', value: 'two' },
+];
+
 describe('RadioWidget', () => {
   test.each(['indexed', 'realValue'] as const)(
     'checks only the selected object option in the %s format',
@@ -42,5 +47,35 @@ describe('RadioWidget', () => {
     await user.click(screen.getByRole('radio', { name: 'Two' }));
 
     expect(onChange).toHaveBeenLastCalledWith({ a: 2 });
+  });
+
+  test('disables only the options ui:enumDisabled lists', () => {
+    render(
+      <RadioWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          options: { enumOptions: stringOptions, enumDisabled: ['two'] },
+        })}
+      />,
+    );
+
+    expect(screen.getByRole('radio', { name: 'One' })).toBeEnabled();
+    expect(screen.getByRole('radio', { name: 'Two' })).toBeDisabled();
+  });
+
+  test('marks the label of a disabled option as not clickable', () => {
+    render(
+      <RadioWidget
+        {...makeWidgetMockProps({
+          value: undefined,
+          options: { enumOptions: stringOptions, enumDisabled: ['two'] },
+        })}
+      />,
+    );
+
+    expect(screen.getByText('One').closest('label')).toHaveClass('cursor-pointer');
+    expect(screen.getByText('Two').closest('label')).toHaveClass('cursor-not-allowed');
+    expect(screen.getByText('Two').closest('label')).not.toHaveClass('cursor-pointer');
+    expect(screen.getByText('Two')).toHaveClass('opacity-50');
   });
 });
