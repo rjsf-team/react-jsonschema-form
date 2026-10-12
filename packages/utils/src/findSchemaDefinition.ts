@@ -374,8 +374,7 @@ export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(sch
 /** Roots already returned by `normalizeRootReferences`. Normalization resolves every ref against the scope its
  * subtree sits in, so running it twice would resolve the already-resolved refs a second time and corrupt them;
  * the marker set is what makes the function idempotent. There is deliberately no memo per raw root: a root edited
- * in place after its first normalization must be read as it now stands, the way lookups read the live root before
- * normalization existed.
+ * in place after its first normalization must be read as it now stands.
  */
 const normalizedRoots = new WeakSet<StrictRJSFSchema>();
 
@@ -494,7 +493,8 @@ function lookupSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   for (const candidate of candidates) {
     const [refId, ...refAnchor] = candidate.replace(/#\/?$/, '').split('#');
     const anchor = refAnchor.length > 0 ? decodeURIComponent(refAnchor.join('#')) : undefined;
-    if (rootId !== undefined && uriEqual(refId.replace(/\/$/, ''), rootId)) {
+    // A trailing slash is part of neither name: the ref and the root name the same resource with or without it
+    if (rootId !== undefined && uriEqual(refId.replace(/\/$/, ''), rootId.replace(/\/$/, ''))) {
       // The ref names the root resource itself: what follows the `#` is a pointer into it, whatever the
       // draft. The root's `$id` is used as written for the scope: resolving a relative `$id` against
       // itself would double its directory part.

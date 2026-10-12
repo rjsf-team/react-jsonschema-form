@@ -938,6 +938,19 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect((viaUtils.properties!.q as RJSFSchema).title).toEqual('BO');
       expect((viaUtils.properties!.q as RJSFSchema).title).toEqual((direct.properties!.q as RJSFSchema).title);
     });
+    it('matches a root $id that ends in a slash', () => {
+      // The ref and the root name the same resource, slash or no slash
+      const root: RJSFSchema = {
+        $id: 'https://example.com/schemas/',
+        definitions: {
+          a: { type: 'object', properties: { b: { $ref: '#/definitions/b' } } },
+          b: { type: 'string' },
+        },
+        properties: { x: { $ref: '#/definitions/a' } },
+      };
+      const resolved = retrieveSchema({ validator: testValidator }, root.properties!.x as RJSFSchema, root);
+      expect((resolved.properties!.b as RJSFSchema).type).toEqual('string');
+    });
     it('resolves a pointer into an embedded resource, and throws when that pointer does not exist', () => {
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
