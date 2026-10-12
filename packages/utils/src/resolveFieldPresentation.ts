@@ -43,7 +43,8 @@ export interface FieldPresentationInputs {
    */
   requiredAttribute?: boolean;
   /** The plan of the field above that renders this same id: the field whose selected `anyOf`/`oneOf` option this is,
-   * or the fallback UI's field this is the value field of
+   * or the fallback UI's field this is the value field of. A selector, whose id is its own, takes the plan of the field
+   * it picks the option of
    */
   inherited?: FieldPresentation;
 }
@@ -94,8 +95,11 @@ function placeText<Text>(
  * - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name.
  *   It is `above`, under the id of the label drawn there, when the template of a field above rendering the same id
  *   already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a
- *   second time. The control points `aria-labelledby` at a label its template draws, or one above, when its
- *   declaration says so, or when its id isn't the one that label's `for` names, such as a selector's.
+ *   second time. A level with no control, such as a container whose label is its own heading, keeps its label only
+ *   when no field above already draws its text, or else is `above` under the id of the label that does. The control
+ *   points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the
+ *   control above was pointed at that label too, since its template may then draw it with no `for`, or when its id
+ *   isn't the one that label's `for` names, such as a selector's.
  * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
  *   field above already shows is `above`, as is a part with no text under a field above that shows one, and text a
  *   field above hides stays hidden; text of its own takes `optionDescriptionId()` or `optionHelpId()` when a field
@@ -130,10 +134,15 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     plansAbove.push(plan);
   }
 
-  const templateLabelAbove = plansAbove.find((plan) => plan.label.by === 'template');
-  const labelId = templateLabelAbove?.label.id ?? fieldLabelId(id);
+  // A template label above names a control; with none here, only a heading that says something no label above says
+  // stays
+  const labelAbove =
+    hasControl || declaration.label === 'template'
+      ? plansAbove.find((plan) => plan.label.by === 'template')
+      : plansAbove.find((plan) => rendersHere(plan.label.by) && plan.label.text === labelText);
+  const labelId = labelAbove?.label.id ?? fieldLabelId(id);
   let labelBy: PartPlacement = declaration.label;
-  if (templateLabelAbove) {
+  if (labelAbove) {
     labelBy = 'above';
   } else if (!labelText || !showLabel || (declaration.label === 'template' && !hasControl)) {
     labelBy = 'none';
@@ -172,7 +181,11 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   let control: FieldPresentation['control'];
   if (hasControl) {
     const attributes: ControlAttributes = {};
-    const forMissesControl = templateLabelAbove !== undefined && templateLabelAbove.control?.id !== id;
+    // The label above was drawn for the control of its own plan: with no `for` when that control was pointed at it
+    // instead, and naming another element when the ids differ
+    const forMissesControl =
+      labelAbove !== undefined &&
+      (labelAbove.control?.id !== id || labelAbove.control.attributes['aria-labelledby'] !== undefined);
     if (
       (labelBy === 'template' || labelBy === 'above') &&
       (declaration.labelledBy === 'aria-labelledby' || forMissesControl)

@@ -91,8 +91,14 @@ function getComponentDeclaration<Declaration extends PresentationDeclaration>(
   component: unknown,
   namingKey?: string,
 ): Declaration | undefined {
-  const registeredKeys = component ? Object.keys(registered).filter((key) => registered[key] === component) : [];
-  return [namingKey, ...registeredKeys].map((key) => getOwnDeclaration(declared, key)).find(Boolean);
+  const named = getOwnDeclaration(declared, namingKey);
+  if (named || !component) {
+    return named;
+  }
+  const declaredKey = Object.keys(registered).find(
+    (key) => registered[key] === component && getOwnDeclaration(declared, key),
+  );
+  return getOwnDeclaration(declared, declaredKey);
 }
 
 /** Gets the declaration of the widget a field renders: the merged declaration for its key over the merged `default`,
@@ -132,7 +138,9 @@ function getWidgetDeclaration<
  * under that declares it. A field that renders a single widget declares `WIDGET_FIELD_PRESENTATION` to leave its parts
  * to that widget, whose declaration is the merged one for its key, beneath which `mergeThemePresentation()` layered
  * each layer's `default`, or the merged `default` for a widget no layer declares. A part a field leaves to its widget,
- * with no widget given, falls back to the field default, and a part nothing declares is drawn by the template.
+ * with no widget given, falls back to the field default, and a part nothing declares is drawn by the template. A
+ * field leaving its label to the widget it renders takes that widget's `labelledBy`, or else its own entry's, never the
+ * `fieldDefault`'s.
  *
  * @param source - The registry's fields and widgets, and the merged `presentation`
  * @param subject - The field's schema and the components that render it
@@ -147,21 +155,19 @@ export default function getPresentationDeclaration<
   { schema, field, fieldKey, widget }: PresentationSubject<T, S, F>,
 ): ResolvedPresentationDeclaration {
   const fieldDefault = layerDeclarations(FIELD_DEFAULT, source.presentation?.fieldDefault);
-  const fieldDeclaration = layerDeclarations(
-    fieldDefault,
-    getComponentDeclaration(source.presentation?.fields, source.fields, field, fieldKey),
-  );
+  const ownDeclaration = getComponentDeclaration(source.presentation?.fields, source.fields, field, fieldKey);
+  const fieldDeclaration = layerDeclarations(fieldDefault, ownDeclaration);
   const widgetDeclaration = widget === undefined ? fieldDefault : getWidgetDeclaration<T, S, F>(schema, widget, source);
   return {
     label: ownerOf('label', fieldDeclaration, widgetDeclaration),
     description: ownerOf('description', fieldDeclaration, widgetDeclaration),
     errors: ownerOf('errors', fieldDeclaration, widgetDeclaration),
     help: ownerOf('help', fieldDeclaration, widgetDeclaration),
-    // How the template's label reaches the control, which is the widget's when the field leaves its label to it and
-    // the widget says
+    // How the template's label reaches the control: the widget's when the field leaves its label to one it renders, or
+    // else the field's own, since the theme's `fieldDefault` speaks for fields that keep their label
     labelledBy:
-      (fieldDeclaration.label === 'widget' ? widgetDeclaration.labelledBy : undefined) ??
-      fieldDeclaration.labelledBy ??
-      'for',
+      (fieldDeclaration.label === 'widget' && widget !== undefined
+        ? (widgetDeclaration.labelledBy ?? ownDeclaration?.labelledBy)
+        : fieldDeclaration.labelledBy) ?? 'for',
   };
 }

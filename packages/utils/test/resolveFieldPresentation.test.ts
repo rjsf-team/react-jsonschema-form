@@ -146,6 +146,39 @@ describe('resolveFieldPresentation()', () => {
       expect(resolve({ inherited: widgetLabelled }).label.by).toBe('above');
     });
 
+    it('keeps the heading a container draws itself beneath a template label above when it says something else', () => {
+      const container = resolve({ inherited: above, declaration: WIDGET_LABEL, label: 'Dog', hasControl: false });
+      expect(container.label).toEqual({ text: 'Dog', by: 'self', id: `${ID}__label` });
+      expect(container.control).toBeUndefined();
+    });
+
+    it("doesn't draw again, with no control, the text of the template label above", () => {
+      expect(resolve({ inherited: above, declaration: WIDGET_LABEL, hasControl: false }).label).toEqual({
+        text: 'Foo',
+        by: 'above',
+        id: `${ID}__label`,
+      });
+    });
+
+    it("doesn't draw again, with no control, the text of a heading a level above draws itself", () => {
+      const container = resolveFieldPresentation({
+        id: ID,
+        declaration: WIDGET_LABEL,
+        label: 'Dog',
+        hasControl: false,
+        inherited: above,
+      });
+      const nested = resolve({ inherited: container, declaration: WIDGET_LABEL, label: 'Dog', hasControl: false });
+      expect(nested.label).toEqual({ text: 'Dog', by: 'above', id: container.label.id });
+    });
+
+    it('points the control at a template label above that the control above was pointed at', () => {
+      const group = resolve({ declaration: { ...TEMPLATE, labelledBy: 'aria-labelledby' } });
+      const checkbox = resolve({ inherited: group, declaration: WIDGET_LABEL });
+      expect(checkbox.label.by).toBe('above');
+      expect(checkbox.control?.attributes['aria-labelledby']).toBe(`${ID}__label`);
+    });
+
     it('points a control with another id at the template label above, which its for does not name', () => {
       const selector = resolveFieldPresentation({
         id: `${ID}__oneof_select`,
