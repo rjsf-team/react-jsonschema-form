@@ -4524,9 +4524,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual('x');
         expect(getDefaultFormState({ validator: testValidator }, { schema, formData: 'y' })).toEqual('y');
       });
-      it('should return object form data, not index keys, on a string const schema', () => {
-        const schema: RJSFSchema = { type: 'string', const: 'x', default: { a: 1 } };
-        expect(getDefaultFormState({ validator: testValidator }, { schema, formData: { b: 2 } })).toEqual({ b: 2 });
+      it.each<[string, RJSFSchema, GenericObjectType, (string | number)[]]>([
+        ['a string const schema', { type: 'string', const: 'x', default: { a: 1 } }, { b: 2 }, ['0']],
+        ['an array default', { type: 'array', default: [1, 2] }, { b: 2 }, ['0']],
+        ['a string default inside allOf', { allOf: [{ type: 'string', default: 'x' }] }, { b: 2 }, ['0']],
+        [
+          'a nested string property default',
+          { type: 'object', properties: { a: { type: 'string', default: 'x' } } },
+          { a: { b: 2 } },
+          ['a', '0'],
+        ],
+      ])('should not add index keys to object form data for %s', (_, schema, formData, indexKeyPath) => {
+        expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).not.toHaveProperty(
+          indexKeyPath,
+        );
       });
       it('should not spread a primitive form data value into an object default', () => {
         const schema: RJSFSchema = { type: 'string', enum: ['a', 'b'], default: { a: 1 } };
