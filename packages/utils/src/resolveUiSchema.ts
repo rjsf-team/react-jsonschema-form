@@ -1,5 +1,5 @@
 import { ANY_OF_KEY, ONE_OF_KEY, UI_OPTIONS_KEY } from './constants.ts';
-import findSchemaDefinition from './findSchemaDefinition.ts';
+import findSchemaDefinition, { originalRefOf } from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
@@ -90,7 +90,12 @@ export default function resolveUiSchema<
         let hasExpanded = false;
         for (let i = 0; i < schemaOptions.length; i++) {
           const option = schemaOptions[i] as S | undefined;
-          const optionRef = resolvedFromRef<S>(option) ?? declaredRef<S>(option);
+          // An unexpanded option carries no ref markers; when it comes from a normalized root its `$ref` is
+          // absolute, so the author spelling `ui:definitions` entries are keyed by comes from `originalRefOf`
+          const optionRef =
+            option === undefined
+              ? undefined
+              : (originalRefOf<S>(option) ?? resolvedFromRef<S>(option) ?? declaredRef<S>(option));
           if (optionRef && optionRef in definitions) {
             uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
             hasExpanded = true;

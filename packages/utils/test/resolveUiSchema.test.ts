@@ -1,5 +1,8 @@
 import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src/index.ts';
-import { RJSF_REF_KEY, RJSF_SOURCE_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
+import { createSchemaUtils, RJSF_REF_KEY, RJSF_SOURCE_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
+
+const testValidator = getTestValidator({});
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -23,6 +26,37 @@ const baseRegistry: Registry = {
 function makeRegistry(rootSchema: RJSFSchema, uiSchemaDefinitions: UiSchemaDefinitions = {}): Registry {
   return { ...baseRegistry, rootSchema, uiSchemaDefinitions };
 }
+
+describe('resolveUiSchema() - normalized options', () => {
+  it('applies ui:definitions to unexpanded anyOf options keyed by the author spelling of their $ref', () => {
+    // An unexpanded option carries no ref markers; its object comes from the normalized root with an absolute
+    // `$ref`, so the author spelling a `ui:definitions` entry is keyed by is recovered through `originalRefOf`
+    const root: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      $id: 'https://ex.com/r.json',
+      definitions: {
+        a: { anyOf: [{ $ref: '#/definitions/b' }] },
+        b: { type: 'string' },
+      },
+      properties: { x: { $ref: '#/definitions/a' } },
+    };
+    const registry = makeRegistry(root, { '#/definitions/b': { 'ui:title': 'from-def' } });
+    const utils = createSchemaUtils({ validator: testValidator }, root);
+    const resolved = utils.retrieveSchema(root.properties!.x as RJSFSchema, root);
+    const result = resolveUiSchema(resolved, undefined, registry);
+    expect(result.anyOf).toEqual([{ 'ui:title': 'from-def' }]);
+  });
+});
+
+it('skips undefined options when matching anyOf ui:definitions', () => {
+  const registry = makeRegistry({}, { '#/definitions/b': { 'ui:title': 'from-def' } });
+  const result = resolveUiSchema(
+    { anyOf: [undefined as unknown as RJSFSchema, { $ref: '#/definitions/b' }] },
+    undefined,
+    registry,
+  );
+  expect(result.anyOf).toEqual([undefined, { 'ui:title': 'from-def' }]);
+});
 
 describe('resolveUiSchema() - branching keyword runtime resolution', () => {
   it('resolves correct definition for oneOf branch A at runtime', () => {
