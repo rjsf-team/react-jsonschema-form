@@ -19,7 +19,7 @@ export type PresentationSource<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Pick<Registry<T, S, F>, 'widgets'> & {
+> = Pick<Registry<T, S, F>, 'fields' | 'widgets'> & {
   /** The declarations of the form's layers, as `mergeThemePresentation()` merged them */
   readonly presentation?: Partial<MergedThemePresentation>;
 };
@@ -34,7 +34,9 @@ export interface PresentationSubject<
   schema: S;
   /** The field component that renders the field */
   field: Field<T, S, F>;
-  /** The key the field component is registered under, when a key named it */
+  /** The key that named the field component, when a key did. Otherwise the component is found by identity among the
+   * registered fields
+   */
   fieldKey?: string;
   /** The single widget the field renders its value with, as an alias, a registry key or a component. Left out for a
    * field that renders no single widget, such as an object's or an array's
@@ -73,10 +75,15 @@ function ownerOf(
   return (owner === 'widget' ? widgetDeclaration[part] : owner) === 'self' ? 'self' : 'template';
 }
 
-/** Gets the declaration of the widget a field renders: the theme's declaration for its key, under the component's own.
- * An alias is looked up by the key it stands for, and a component given directly by its own declaration alone. A name
- * that is neither registered nor an alias, or a key registered as nothing, declares nothing, so the template draws
- * every part
+/** Gets the key `component` is registered under in `registered`, the first one when it is registered under several */
+function findRegisteredKey(registered: Readonly<Record<string, unknown>>, component: unknown): string | undefined {
+  return Object.keys(registered).find((key) => registered[key] === component);
+}
+
+/** Gets the declaration of the widget a field renders: the merged declaration for its key, or the merged `default` for
+ * a key no layer declares. An alias is looked up by the key it stands for, and a component given directly by the key it
+ * is registered under, or by the `default` alone when it isn't registered. A name that is neither registered nor an
+ * alias, a `null` widget or a key registered as nothing declares nothing, so the template draws every part
  */
 function getWidgetDeclaration<
   T = unknown,
@@ -87,34 +94,36 @@ function getWidgetDeclaration<
   widget: Widget<T, S, F> | string,
   { widgets, presentation }: PresentationSource<T, S, F>,
 ): WidgetPresentationDeclaration {
-  // A `null` from a JSON `uiSchema`, or a key registered as nothing, is left to throw in `getWidget()`, whose error
-  // names the schema
-  if (typeof widget !== 'string') {
-    return layerDeclarations(widget?.presentation);
-  }
-  const key = getWidgetKey<S>(schema, widget, widgets);
-  const registered = key !== undefined && Object.hasOwn(widgets, key);
-  if (key === undefined || (registered && !widgets[key])) {
+  // A `null` from a JSON `uiSchema`, an unknown name and a key registered as nothing are left to throw in `getWidget()`,
+  // whose error names the schema
+  if (!widget) {
     return NO_DECLARATION;
   }
-  return layerDeclarations(
-    getOwnDeclaration(presentation?.widgets, key),
-    registered ? widgets[key].presentation : undefined,
-  );
+  let key: string | undefined;
+  if (typeof widget === 'string') {
+    key = getWidgetKey<S>(schema, widget, widgets);
+    if (key === undefined || (Object.hasOwn(widgets, key) && !widgets[key])) {
+      return NO_DECLARATION;
+    }
+  } else {
+    key = findRegisteredKey(widgets, widget);
+  }
+  return getOwnDeclaration(presentation?.widgets, key) ?? presentation?.default ?? NO_DECLARATION;
 }
 
 /** Gets which parts of a field its template draws and which the components rendering it draw themselves, from the
- * declarations the theme registered and the components carry. Read from the components `SchemaField` already resolved,
- * never by predicting one, and never throwing where `getWidget()` would.
+ * declarations the theme registered for the keys of those components. Read from the components `SchemaField` already
+ * resolved, never by predicting one, and never throwing where `getWidget()` would.
  *
- * A field component's declaration layers its own `presentation` over the merged declaration for its key, and that over
- * the default, which draws its own label and description, so a component gets the same answer however `SchemaField`
- * chose it. A field that renders a single widget declares `WIDGET_FIELD_PRESENTATION` to leave its parts to that
- * widget, whose declaration layers its own `presentation` over the merged declaration for its key, which is where
- * `mergeThemePresentation()` put any `standardWidgets` that reach it. A part a field leaves to its widget, with no
- * widget given, falls back to the default, and a part nothing declares is drawn by the template.
+ * A field component's declaration is the merged declaration for its key over the default, which draws its own label
+ * and description, so a component gets the same answer however `SchemaField` chose it; one no key named is found by
+ * identity among the registered fields. A field that renders a single widget declares `WIDGET_FIELD_PRESENTATION` to
+ * leave its parts to that widget, whose declaration is the merged one for its key, beneath which
+ * `mergeThemePresentation()` layered each layer's `default`, or the merged `default` for a widget no layer declares. A
+ * part a field leaves to its widget, with no widget given, falls back to the default, and a part nothing declares is
+ * drawn by the template.
  *
- * @param source - The registry's widgets and the merged `presentation`
+ * @param source - The registry's fields and widgets, and the merged `presentation`
  * @param subject - The field's schema and the components that render it
  * @returns - The owner of each part, and how a label the template draws reaches the control
  */
@@ -128,8 +137,7 @@ export default function getPresentationDeclaration<
 ): ResolvedPresentationDeclaration {
   const fieldDeclaration = layerDeclarations(
     FIELD_DEFAULT,
-    getOwnDeclaration(source.presentation?.fields, fieldKey),
-    field.presentation,
+    getOwnDeclaration(source.presentation?.fields, fieldKey ?? findRegisteredKey(source.fields, field)),
   );
   const widgetDeclaration =
     widget === undefined ? FIELD_DEFAULT : getWidgetDeclaration<T, S, F>(schema, widget, source);

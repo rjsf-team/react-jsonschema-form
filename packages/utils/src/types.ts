@@ -826,24 +826,29 @@ export type WidgetPresentationDeclaration = PresentationDeclaration<Exclude<Part
 export type ResolvedPresentationDeclaration = Required<WidgetPresentationDeclaration>;
 
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
- * under, so a component replacing another under the same key draws what that key declares
+ * under, so a component replacing another under the same key draws what that key declares. A component given
+ * directly, as a `ui:field` or `ui:widget`, is found by identity among the registered ones and takes the declaration
+ * for the key it is registered under; nothing is declared on the component itself, so a wrapper such as `memo()` can't
+ * lose it
  */
 export interface ThemePresentation {
-  /** For a theme whose widgets all draw the same parts: `mergeThemePresentation()` expands it into an entry, at this
-   * layer, for every widget key `@rjsf/core` registers, beneath this layer's own entry for that key. So it overrides
-   * the parts it declares in the layers beneath it, even under a key one of them declares
+  /** What every widget draws that this layer doesn't name under `widgets`, custom and unregistered widgets included,
+   * e.g. a theme whose widgets all draw their own label. `mergeThemePresentation()` layers it beneath this layer's own
+   * entry for every key, so it overrides the parts it declares in the layers beneath it, even under a key one of them
+   * declares
    */
-  standardWidgets?: WidgetPresentationDeclaration;
+  default?: WidgetPresentationDeclaration;
   /** Declarations for widgets, by the key they are registered under */
   widgets?: Readonly<Record<string, WidgetPresentationDeclaration>>;
   /** Declarations for fields, by the key they are registered under */
   fields?: Readonly<Record<string, PresentationDeclaration>>;
 }
 
-/** A form's `ThemePresentation` once `mergeThemePresentation()` merged its layers and expanded their `standardWidgets`
- * into entries by key
+/** A form's `ThemePresentation` once `mergeThemePresentation()` merged its layers: an entry in `widgets` for every key
+ * any layer declares, with each layer's `default` beneath that layer's own entry, and the layered `default` for a key
+ * no layer declares
  */
-export type MergedThemePresentation = Required<Omit<ThemePresentation, 'standardWidgets'>>;
+export type MergedThemePresentation = Required<ThemePresentation>;
 
 /** Where one part of a field is drawn: by its template, by its field or widget component, by a field above it
  * rendering the same id, or not at all
@@ -904,8 +909,6 @@ export type Field<
 > = SlotComponent<FieldProps<T, S, F>> & {
   /** The optional TEST_IDS block that some fields contain, exported for testing purposes */
   TEST_IDS?: TestIdShape;
-  /** The parts of the field the component draws itself, which outranks a theme's declaration for its key */
-  presentation?: PresentationDeclaration;
 };
 
 /** The properties that are passed to a `FieldTemplate` implementation */
@@ -1399,10 +1402,7 @@ export type Widget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = SlotComponent<WidgetProps<T, S, F>> & {
-  /** The parts of the field the widget draws itself, which outranks a theme's declaration for its key */
-  presentation?: WidgetPresentationDeclaration;
-};
+> = SlotComponent<WidgetProps<T, S, F>>;
 
 /** The properties that are passed to the BaseInputTemplate */
 export interface BaseInputTemplateProps<

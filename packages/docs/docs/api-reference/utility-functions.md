@@ -33,7 +33,7 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
-**`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, and `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `standardWidgets`, a declaration for every widget key `@rjsf/core` registers, which [mergeThemePresentation()](#mergethemepresentation) expands into an entry for each of those keys at its layer, so it overrides the parts it declares in the layers beneath, even under a key one of them declares. The merged result is a `MergedThemePresentation`, with only `widgets` and `fields`; a `Field` or `Widget` component can also carry one as its static `presentation`. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
+**`ThemePresentation`**, **`PresentationDeclaration`** and **`FieldPresentation`** — A theme's record of which parts of a field (the label, description, errors and help) each of its components draws itself, rather than leaving them to the `FieldTemplate`. A `PresentationDeclaration` names the owner of each part, `'template'`, `'self'` or, for a field that renders a single widget, `'widget'`, and `labelledBy`, whether a label the template draws reaches the control through its `for` or through the control's `aria-labelledby`; a widget's is a `WidgetPresentationDeclaration`, which has no `'widget'` owner. A `ThemePresentation` holds them by registry key under `widgets` and `fields`, plus `default`, what every widget draws that the layer doesn't name, custom and unregistered widgets included, which [mergeThemePresentation()](#mergethemepresentation) layers beneath the layer's own entry for every key, so it overrides the parts it declares in the layers beneath, even under a key one of them declares. The merged result is a `MergedThemePresentation`. Nothing is declared on a component itself: one given directly, as a `ui:field` or `ui:widget`, takes the declaration for the key it is registered under, so a wrapper such as `memo()` can't lose it. [getPresentationDeclaration()](#getpresentationdeclaration) resolves a field's declaration and [resolveFieldPresentation()](#resolvefieldpresentation) builds its `FieldPresentation`, the plan of where each part is drawn, under which id, and the attributes its control carries, linked as `inherited` to the plan of the field above it that renders the same id.
 
 ## Enums
 
@@ -1174,20 +1174,20 @@ Widgets should call this helper once and pass the result to `enumOptionsDomValue
 
 ### getPresentationDeclaration&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getpresentationdeclaration}
 
-Gets which parts of a field (its label, description, errors and help) its template draws and which the components rendering it draw themselves, from the form's merged [`ThemePresentation`](#types) and the `presentation` the components carry.
+Gets which parts of a field (its label, description, errors and help) its template draws and which the components rendering it draw themselves, from the form's merged [`ThemePresentation`](#types), by the key each component is registered under.
 It reads the components `SchemaField` already resolved rather than predicting one, and never throws where [getWidget()](#getwidget) would.
 
-A field component's declaration layers its own `presentation` over the merged `fields` entry for its key, and that over the default, which draws its own label and description and leaves its errors and help to the template. So a component gets the same answer however `SchemaField` chose it, by the schema's type, a `ui:field` or a `$id`.
+A field component's declaration is the merged `fields` entry for its key over the default, which draws its own label and description and leaves its errors and help to the template. So a component gets the same answer however `SchemaField` chose it, by the schema's type, a `ui:field` or a `$id`; one no key named is found by identity among the registered fields.
 A field that renders its value with a single widget declares `WIDGET_FIELD_PRESENTATION` to leave its parts to that widget.
-A widget's declaration layers its own `presentation` over the merged `widgets` entry for its key, which is where [mergeThemePresentation()](#mergethemepresentation) put any `standardWidgets` that reach it.
-An alias is looked up by the key it stands for, and a widget given as a component by its own declaration alone.
+A widget's declaration is the merged `widgets` entry for its key, beneath which [mergeThemePresentation()](#mergethemepresentation) layered each layer's `default`, or the merged `default` for a key no layer declares.
+An alias is looked up by the key it stands for, and a widget given as a component by the key it is registered under, or by the `default` alone when it isn't registered.
 A part a field leaves to its widget, with no widget given, falls back to the default, so a field such as `ArrayField` that renders a single widget only for a multi-select draws its own heading otherwise.
 A part nothing declares is drawn by the template, as is every part a field leaves to a widget that is neither registered nor an alias, or that is `null` or registered as nothing, which `getWidget()` rejects.
 
 #### Parameters
 
-- source: PresentationSource&lt;T, S, F> - The registry's `widgets` and the `presentation` [mergeThemePresentation()](#mergethemepresentation) merged
-- subject: PresentationSubject&lt;T, S, F> - The field's `schema`, its `field` component, the `fieldKey` that component is registered under, if a key named it, and the `widget` it renders its value with, if it renders a single one
+- source: PresentationSource&lt;T, S, F> - The registry's `fields` and `widgets`, and the `presentation` [mergeThemePresentation()](#mergethemepresentation) merged
+- subject: PresentationSubject&lt;T, S, F> - The field's `schema`, its `field` component, the `fieldKey` that named that component, if a key did, and the `widget` it renders its value with, if it renders a single one
 
 #### Returns
 
@@ -1938,17 +1938,16 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 Merges the `ThemePresentation`s of a form's layers, the way `@rjsf/core` merges its own components with a theme's and a theme's with the `Form`'s props.
 Declarations are merged part by part rather than replaced whole, so a theme declaring that its `CheckboxWidget` draws its errors keeps `@rjsf/core`'s declaration that it draws its label.
 A part declared `undefined` is left to the layers beneath it, and a part no layer declares is left out of the merged entry, so spreading one over another declaration can't erase a part.
-A layer's `standardWidgets` is expanded into an entry, at that layer, for every one of `standardWidgetKeys`, beneath the layer's own entry for the key.
-So a theme's or the `Form` props' `standardWidgets` overrides the parts it declares in the layers beneath it, even under a key one of them declares, while parts it doesn't declare keep theirs.
+A layer's `default` is layered beneath that layer's own entry for every widget key any layer declares, and the layered `default`s are what a widget no layer declares draws.
+So a theme's or the `Form` props' `default` overrides the parts it declares in the layers beneath it, even under a key one of them declares, while parts it doesn't declare keep theirs.
 
 #### Parameters
 
-- standardWidgetKeys: readonly string[] - The keys `@rjsf/core` registers its widgets under, which `standardWidgets` applies to
 - ...layers: (ThemePresentation | undefined)[] - The presentations to merge, from the bottom; `undefined` entries are skipped
 
 #### Returns
 
-- MergedThemePresentation: The merged `widgets` and `fields`, with no `standardWidgets` left to apply
+- MergedThemePresentation: The merged `default`, `widgets` and `fields`
 
 ### optionalControlsId()
 
