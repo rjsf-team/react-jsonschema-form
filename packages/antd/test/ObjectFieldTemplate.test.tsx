@@ -1,4 +1,4 @@
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { RegistryFieldsType, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render } from '@testing-library/react';
 
@@ -9,9 +9,14 @@ const schema: RJSFSchema = {
   properties: { plain: { type: 'string' }, secret: { type: 'string' } },
 };
 
-function getColClasses(uiSchema: UiSchema, colSpan: unknown, formSchema: RJSFSchema = schema) {
+function getColClasses(
+  uiSchema: UiSchema,
+  colSpan: unknown,
+  formSchema: RJSFSchema = schema,
+  fields?: RegistryFieldsType,
+) {
   const { container } = render(
-    <Form schema={formSchema} uiSchema={uiSchema} validator={validator} formContext={{ colSpan }} />,
+    <Form schema={formSchema} uiSchema={uiSchema} validator={validator} formContext={{ colSpan }} fields={fields} />,
   );
   const rootFieldset = container.querySelector('fieldset');
   const cols = rootFieldset ? Array.from(rootFieldset.querySelectorAll(':scope > .ant-row > .ant-col')) : [];
@@ -27,9 +32,18 @@ describe('ObjectFieldTemplate colSpan map', () => {
   });
 
   it('falls through to the schema type when the field name is missing from the map', () => {
-    const classes = getColClasses({ secret: { 'ui:field': 'unknownField' } }, { string: 8 });
-    expect(classes).toHaveLength(2);
-    classes.forEach((c) => expect(c).toContain('ant-col-8'));
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const classes = getColClasses({ secret: { 'ui:field': 'unknownField' } }, { string: 8 });
+      expect(classes).toHaveLength(2);
+      classes.forEach((c) => expect(c).toContain('ant-col-8'));
+      expect(warnSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:field for "root_secret" (secret) names no registered field ('unknownField'), so it is ignored and the ` +
+          'field is rendered as though no ui:field were given.',
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
   });
 
   it('falls through to the schema type when the map entry for the widget is null', () => {
@@ -39,9 +53,26 @@ describe('ObjectFieldTemplate colSpan map', () => {
   });
 
   it('ignores prototype keys such as toString when looking up the map', () => {
-    const classes = getColClasses({ secret: { 'ui:field': 'toString' } }, { string: 8 });
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      const classes = getColClasses({ secret: { 'ui:field': 'toString' } }, { string: 8 });
+      expect(classes).toHaveLength(2);
+      classes.forEach((c) => expect(c).toContain('ant-col-8'));
+      expect(warnSpy).toHaveBeenCalledExactlyOnceWith(
+        `ui:field for "root_secret" (secret) names no registered field ('toString'), so it is ignored and the ` +
+          'field is rendered as though no ui:field were given.',
+      );
+    } finally {
+      warnSpy.mockRestore();
+    }
+  });
+
+  it('looks up a field named in ui:globalOptions', () => {
+    // The root shadows the global field with `null`, so it still renders through this template
+    const uiSchema: UiSchema = JSON.parse('{ "ui:globalOptions": { "field": "myField" }, "ui:field": null }');
+    const classes = getColClasses(uiSchema, { myField: 6, string: 8 }, schema, { myField: () => <span /> });
     expect(classes).toHaveLength(2);
-    classes.forEach((c) => expect(c).toContain('ant-col-8'));
+    classes.forEach((c) => expect(c).toContain('ant-col-6'));
   });
 
   it('prefers the widget entry over the schema type entry', () => {

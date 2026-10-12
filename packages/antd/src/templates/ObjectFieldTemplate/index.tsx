@@ -61,7 +61,7 @@ export default function ObjectFieldTemplate<
 
   const calculateColSpan = (element: ObjectFieldTemplatePropertyType<T, S, F>) => {
     const type = getSchemaType<S>(findSchema(element));
-    const { field, widget } = getUiOptions<T, S, F>(findUiSchema(element));
+    const { field, widget } = getUiOptions<T, S, F>(findUiSchema(element), registry.globalUiOptions);
 
     const defaultColSpan =
       visibleProperties.length < 2 || // Single or no visible field in object.
