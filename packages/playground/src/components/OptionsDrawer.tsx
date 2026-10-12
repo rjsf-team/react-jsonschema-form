@@ -284,11 +284,12 @@ const liveSettingsBooleanUiSchema: UiSchema = {
   },
 };
 
+/** The value of the drawer's `liveValidate` and `liveOmit` radios */
+export type LiveFlag = 'off' | 'onChange' | 'onBlur';
+
 /** The drawer's settings. Most are `Form` props spread straight onto it; `liveValidate` and `liveOmit` hold the drawer's
  * radio value, which `toLiveSetting()` maps onto the prop since `Form` has no `'off'`.
  */
-export type LiveFlag = 'off' | 'onChange' | 'onBlur';
-
 export type LiveSettings = Pick<
   FormProps,
   | 'disabled'

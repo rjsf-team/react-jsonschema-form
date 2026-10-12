@@ -1,5 +1,5 @@
 import type { FieldPath, FieldProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
-import { getTemplates, isObject, noop, toFieldPath } from '@rjsf/utils';
+import { getTemplates, isObject, isSchemaObject, noop, toFieldPath } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
@@ -15,8 +15,8 @@ function UiField(props: FieldProps) {
   const { StringField, NumberField } = fields;
   const { FieldTemplate } = getTemplates(registry);
   const [firstBranch, secondBranch] = schema.anyOf ?? [];
-  const schema1: RJSFSchema = typeof firstBranch === 'object' ? firstBranch : {};
-  const schema2: RJSFSchema = typeof secondBranch === 'object' ? secondBranch : {};
+  const schema1: RJSFSchema = isSchemaObject(firstBranch) ? firstBranch : {};
+  const schema2: RJSFSchema = isSchemaObject(secondBranch) ? secondBranch : {};
   const cityLabel = 'City';
   const latLabel = 'Latitude';
   const lonLabel = 'Longitude';

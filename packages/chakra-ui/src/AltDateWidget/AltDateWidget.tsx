@@ -13,7 +13,7 @@ function AltDateWidget<
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
-  const chakraProps = getChakra(props.options);
+  const chakraProps = getChakra(options);
 
   return (
     <FieldsetRoot {...chakraProps}>
