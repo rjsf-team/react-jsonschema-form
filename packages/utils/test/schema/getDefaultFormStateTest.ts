@@ -1499,6 +1499,49 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        describe('a recursive schema whose typed property resolves its way back to it', () => {
+          // The property is an object or holds one, so `getObjectDefaults()` is what resolves its `allOf` or `then`,
+          // and what expands the `$ref` back to the definition where the `$ref` check cannot see it
+          const recursion: RJSFSchema = { $ref: '#/definitions/node' };
+          const throughAllOf: RJSFSchema = { type: 'object', allOf: [recursion] };
+          const rooted = (node: RJSFSchema): RJSFSchema => ({
+            definitions: { node: { type: 'object', ...node } },
+            $ref: '#/definitions/node',
+          });
+          const withChild = (child: RJSFSchema): RJSFSchema =>
+            rooted({ properties: { name: { type: 'string', default: 'n' }, child } });
+          const defaults = (schema: RJSFSchema, allOf?: 'populateDefaults') =>
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { allOf } },
+              { schema, rootSchema: schema },
+            );
+
+          test('stops at a recursion reached through the allOf of a property', () => {
+            expect(defaults(withChild(throughAllOf), 'populateDefaults')).toEqual({ name: 'n', child: { name: 'n' } });
+          });
+
+          test('stops at a recursion reached through the then branch of a property', () => {
+            expect(defaults(withChild({ type: 'object', if: {}, then: recursion }))).toEqual({
+              name: 'n',
+              child: { name: 'n' },
+            });
+          });
+
+          test('stops at a recursion reached through the allOf of array items', () => {
+            const schema = withChild({ type: 'array', minItems: 1, items: throughAllOf });
+            expect(defaults(schema, 'populateDefaults')).toEqual({ name: 'n', child: [{ name: 'n', child: [{}] }] });
+          });
+
+          test('stops at a recursion reached through the allOf of additionalProperties', () => {
+            // The keys come from a default, which names one at the recursion without holding data for it
+            const schema: RJSFSchema = {
+              ...rooted({ properties: { name: { type: 'string', default: 'n' } }, additionalProperties: throughAllOf }),
+              default: { extra: { extra: {} } },
+            };
+            expect(defaults(schema, 'populateDefaults')).toEqual({ name: 'n', extra: { name: 'n' } });
+          });
+        });
+
         describe('a recursive allof schema', () => {
           const schema = RECURSIVE_REF_ALLOF;
           const expected = {
