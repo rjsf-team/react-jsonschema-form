@@ -559,7 +559,7 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
 });
 
 describe('AJV8PrecompiledValidator handed the normalized root of a draft-7 schema that has an $id', () => {
-  // Probe from review: createSchemaUtils normalizes every draft at construction, so getRootSchema() returns
+  // createSchemaUtils normalizes every draft at construction, so getRootSchema() returns
   // refs resolved against the root's $id; the precompiled validator must accept that root alongside the raw
   // one it was compiled from
   const schema: RJSFSchema = {

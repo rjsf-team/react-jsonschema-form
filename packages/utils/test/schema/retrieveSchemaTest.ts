@@ -1116,7 +1116,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     it('keeps tuple items refs resolved under a local $id override', () => {
-      // Probe from review: the resolution walk skips array-valued `items`, so `restoreOriginalRefs`
+      // the resolution walk skips array-valued `items`, so `restoreOriginalRefs`
       // skipping them too keeps a tuple item's ref in the spelling the normalization left; restoring
       // the author's spelling would make a later lookup read it against the root and find ROOT-X
       const root: RJSFSchema = {
@@ -1157,7 +1157,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(resolvedItem.title).toEqual('T-X');
     });
     it('applies a nested $id under properties when called with the raw root as the schema', () => {
-      // Probe from review: a direct `retrieveSchema(root, root)` walks the normalized root, so a
+      // a direct `retrieveSchema(root, root)` walks the normalized root, so a
       // relative ref inside a property carrying its own `$id` resolves against that resource
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -1176,7 +1176,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       );
     });
     it('applies a nested $id when called with a raw subschema of the raw root', () => {
-      // Probe from review: a direct `retrieveSchema(root.properties.foo, root)` gets the scope `foo`'s own
+      // a direct `retrieveSchema(root.properties.foo, root)` gets the scope `foo`'s own
       // `$id` establishes, so the relative ref inside it finds its resource
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -1192,6 +1192,88 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect((out.properties as GenericObjectType).bar).toEqual(
         expect.objectContaining({ $id: 'child.json', title: 'CHILD' }),
       );
+    });
+    it('treats a raw root with a relative $id handed back to retrieveSchema as the root', () => {
+      // `createSchemaUtils` stores the normalized root, so the raw root the caller holds fails the identity
+      // check; its `$id` names it as the root instead, and its refs still resolve against that `$id` once
+      const raw: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'schemas/root.json',
+        $defs: { c: { $id: 'child.json', type: 'string' } },
+        properties: { a: { $ref: 'child.json' } },
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, raw);
+      expect(utils.retrieveSchema(raw).properties?.a).toEqual(
+        expect.objectContaining({ $id: 'child.json', type: 'string' }),
+      );
+    });
+    it('recovers a walked option’s nested resource scope on a later retrieveSchema', () => {
+      // The first walk resolves the option inside the `nested/parent.json` resource; the later call holds
+      // only the option node, so the lookup recovers the scope the node sits in within the root
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        type: 'object',
+        properties: { p: { $ref: 'nested/parent.json' } },
+        $defs: {
+          parent: {
+            $id: 'nested/parent.json',
+            oneOf: [{ $ref: 'child.json' }, { type: 'number' }],
+            $defs: { child: { $id: 'child.json', type: 'string', title: 'CHILD' } },
+          },
+        },
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, root);
+      const p = utils.retrieveSchema(utils.retrieveSchema(utils.getRootSchema()).properties?.p as RJSFSchema);
+      expect(utils.retrieveSchema((p.oneOf as RJSFSchema[])[0]).title).toEqual('CHILD');
+    });
+    it('recovers the nested scope for a node reached through allOf and additionalProperties', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        type: 'object',
+        properties: { p: { $ref: 'nested/parent.json' } },
+        $defs: {
+          parent: {
+            $id: 'nested/parent.json',
+            type: 'object',
+            allOf: [{ $ref: 'child.json' }],
+            additionalProperties: { $ref: 'child.json' },
+            $defs: { child: { $id: 'child.json', title: 'CHILD' } },
+          },
+        },
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, root);
+      const p = utils.retrieveSchema(utils.retrieveSchema(utils.getRootSchema()).properties?.p as RJSFSchema);
+      expect(p.title).toEqual('CHILD');
+      expect(utils.retrieveSchema(p.additionalProperties as RJSFSchema).title).toEqual('CHILD');
+    });
+    it('recovers the nested scope on a root with a relative $id beside a top-level $ref', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'root.json',
+        $ref: 'nested/parent.json',
+        $defs: {
+          parent: {
+            $id: 'nested/parent.json',
+            oneOf: [{ $ref: 'child.json' }, { type: 'number' }],
+            $defs: { child: { $id: 'child.json', type: 'string', title: 'CHILD' } },
+          },
+        },
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, root);
+      const p = utils.retrieveSchema(utils.getRootSchema());
+      expect(utils.retrieveSchema((p.oneOf as RJSFSchema[])[0]).title).toEqual('CHILD');
+    });
+    it('still throws for a ref that names nothing under the recovered scope either', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        type: 'object',
+        $defs: {
+          parent: { $id: 'nested/parent.json', oneOf: [{ $ref: 'missing.json' }, { type: 'number' }] },
+        },
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, root);
+      const option = (root.$defs!.parent as RJSFSchema).oneOf![0] as RJSFSchema;
+      expect(() => utils.retrieveSchema(option)).toThrow('Could not find a definition for missing.json');
     });
     it('collapses a nested-$id cycle whose refs were rewritten (both marker spellings on the path)', () => {
       // Covers `enclosingRefPath` carrying the author's spelling beside the resolved one

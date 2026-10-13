@@ -6,6 +6,7 @@ import {
   normalizeRootReferences,
   restoreOriginalRefs,
   findSchemaDefinitionWithBaseURIOrUndefined,
+  lexicalScopeOfNode,
 } from '../src/findSchemaDefinition.ts';
 import type { GenericObjectType, RJSFSchema } from '../src/index.ts';
 import { createSchemaUtils, findSchemaDefinition, ID_KEY, retrieveSchema } from '../src/index.ts';
@@ -252,9 +253,6 @@ describe('restoreOriginalRefs()', () => {
     const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema);
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
-<<<<<<< HEAD
-  it('reads a root edited in place after a no-op normalization as it now stands', () => {
-=======
   it('matches a root $id written with a trailing # against itself (draft-7)', () => {
     const root: RJSFSchema = {
       $id: 'http://ex.com/r.json#',
@@ -297,7 +295,6 @@ describe('restoreOriginalRefs()', () => {
     expect((resolved.properties as GenericObjectType).bb).toEqual({ type: 'string' });
   });
   it('snapshots the root at construction on every draft, while the standalone API re-reads an edited root', () => {
->>>>>>> 89bc0f288 (Fix the round-6 findings: normalize every draft once, resolve ui:definitions options under nested $ids, walk normalized raw roots, every-draft embedded # chains, tuple-items restore)
     const root: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       $defs: { a: { type: 'string', title: 'A' } },
@@ -1602,9 +1599,10 @@ describe('pointer scope walk pins', () => {
 });
 
 describe('draft-7 embedded-resource # chains (round 6)', () => {
-  it('resolves a # chain inside an embedded resource on a draft-7 root', () => {
-    // Probe from review: the embedded-resource lookup runs on every draft, so the `#` ref a resource
-    // chains to resolves inside it on draft-7 the way it already did on 2020-12
+  it('ignores an $id beside a $ref on a draft-7 root', () => {
+    // Pinned in review: before 2019-09 a `$ref` ignores every sibling keyword, `$id` included, so the
+    // `$id` of a `$ref`-holding node names no resource and re-bases nothing - `a`'s `$ref` resolves at
+    // the root scope, and a lookup naming `a`'s inert `$id` finds nothing
     const root: RJSFSchema = {
       definitions: {
         a: { $id: 'http://ex.com/a.json', $ref: '#/definitions/b', definitions: { b: { title: 'A-B' } } },
@@ -1612,10 +1610,15 @@ describe('draft-7 embedded-resource # chains (round 6)', () => {
       },
       properties: { x: { $ref: 'http://ex.com/a.json' } },
     };
-    expect(findSchemaDefinition('http://ex.com/a.json', root)).toEqual({
+    expect(() => findSchemaDefinition('http://ex.com/a.json', root)).toThrow(
+      'Could not find a definition for http://ex.com/a.json.',
+    );
+    // The chain resolves the `$ref` at the root scope (the inert `$id` re-bases nothing) and keeps the
+    // referrer's remaining keys, `$id` included, spread over the target - the same shape v7 gives
+    expect(findSchemaDefinition('#/definitions/a', root)).toEqual({
       $id: 'http://ex.com/a.json',
       definitions: { b: { title: 'A-B' } },
-      title: 'A-B',
+      title: 'ROOT-B',
     });
   });
   it('resolves the same shape on a 2020-12 root, merging siblings into allOf', () => {
@@ -1640,5 +1643,43 @@ describe('draft-7 embedded-resource # chains (round 6)', () => {
     };
     const out = makeAllReferencesAbsolute(schema, 'http://ext.example/root.json');
     expect((out.properties!.p as RJSFSchema).$ref).toEqual('#/definitions/x');
+  });
+});
+
+describe('lexicalScopeOfNode', () => {
+  it('returns the scope a nested resource establishes for a node inside it', () => {
+    const child = { $id: 'child.json', type: 'string' } as RJSFSchema;
+    const option = { $ref: 'child.json' } as RJSFSchema;
+    const root: RJSFSchema = {
+      $defs: {
+        parent: { $id: 'nested/parent.json', oneOf: [option, { type: 'number' }], $defs: { child } },
+      },
+    };
+    expect(lexicalScopeOfNode(root, option)).toEqual('nested/parent.json');
+    expect(lexicalScopeOfNode(root, child)).toEqual('nested/child.json');
+  });
+  it('applies the root own $id as the outermost scope', () => {
+    const option = { $ref: 'child.json' } as RJSFSchema;
+    const root: RJSFSchema = {
+      $id: 'schemas/root.json',
+      $defs: { parent: { oneOf: [option] } },
+    };
+    expect(lexicalScopeOfNode(root, option)).toEqual('schemas/root.json');
+  });
+  it('returns undefined for a node the root does not contain', () => {
+    const root: RJSFSchema = { properties: { a: { type: 'string' } } };
+    expect(lexicalScopeOfNode(root, { $ref: 'elsewhere.json' } as RJSFSchema)).toBeUndefined();
+  });
+  it('walks a subtree shared between positions once, at its first position', () => {
+    const shared: RJSFSchema = { $id: 'shared.json', properties: { x: { type: 'string' } } };
+    const target = { type: 'string' } as RJSFSchema;
+    const root: RJSFSchema = {
+      $defs: {
+        first: { $id: 'first/parent.json', allOf: [shared] },
+        second: { $id: 'second/parent.json', allOf: [shared] },
+      },
+      properties: { p: target },
+    };
+    expect(lexicalScopeOfNode(root, target)).toEqual('');
   });
 });

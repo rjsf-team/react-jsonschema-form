@@ -220,6 +220,19 @@ A `schema.propertyNames.enum` caps the object in the same way: once every name i
 
 - boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, is not at the maxProperties limit and has a name its `propertyNames.enum` allows left to take
 
+### carryOriginalRef&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns a copy of `schema` that carries the ref spelling `source` had before `normalizeRootReferences()` rewrote it, so readers of the copy (such as `resolveUiSchema()`, whose `ui:definitions` are keyed by the author's spelling) still see it. Intended for the internals of `@rjsf/core` and the validators; application code should not need it.
+
+#### Parameters
+
+- schema: S - The schema to copy
+- source: S - The schema whose pre-normalization `$ref` spelling the copy should carry
+
+#### Returns
+
+- S: The copy, or `schema` itself when `source` carries no original spelling
+
 ### createErrorHandler&lt;T = unknown>()
 
 Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
@@ -1978,6 +1991,18 @@ If `order` contains a '_' then any `properties` that are not mentioned explicity
 #### Throws
 
 - Error when the properties cannot be ordered correctly
+
+### normalizeRootReferences&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns `rootSchema` with every `$ref` inside it resolved against the root's own base (its `$id` when present, `#` otherwise), so refs carried by nested content keep the meaning they were written with no matter which scope later looks them up. `createSchemaUtils()` applies it at construction, so the root a `SchemaUtils` carries is always normalized; it is idempotent for its own output. Intended for the internals of `@rjsf/core` and the validators; application code should not need it.
+
+#### Parameters
+
+- rootSchema: S - The root schema to normalize
+
+#### Returns
+
+- S: The normalized root; the original object when normalization changed nothing
 
 ### pad()
 

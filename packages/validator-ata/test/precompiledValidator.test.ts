@@ -3,6 +3,7 @@ import {
   ErrorSchemaBuilder,
   JUNK_OPTION_ID,
   RJSF_REF_KEY,
+  createSchemaUtils,
   hashForSchema,
   mergeSchemas,
   noop,
@@ -511,5 +512,30 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
     expect(() => validator.rawValidation(resolvedRootSchema, formData)).toThrow(
       'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
     );
+  });
+});
+describe('ATAPrecompiledValidator handed the normalized root of a draft-7 schema that has an $id', () => {
+  // createSchemaUtils normalizes every draft at construction, so getRootSchema() returns
+  // refs resolved against the root's $id; the precompiled validator must accept that root alongside the raw
+  // one it was compiled from
+  const schema: RJSFSchema = {
+    $id: 'https://ex.com/r.json',
+    type: 'object',
+    definitions: {
+      A: { type: 'object', properties: { kind: { const: 'a' }, foo: { type: 'string' } } },
+      B: { type: 'object', properties: { kind: { const: 'b' }, bar: { type: 'number' } } },
+    },
+    properties: {
+      choice: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+      item: { $ref: '#/definitions/A' },
+    },
+  };
+  it('computes defaults through the normalized root without throwing', () => {
+    const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(schema)), schema);
+    const su = createSchemaUtils({ validator }, schema);
+    expect(su.getDefaultFormState(schema, { choice: { kind: 'b', bar: 1 } })).toEqual({
+      choice: { kind: 'b', bar: 1 },
+      item: { kind: 'a' },
+    });
   });
 });

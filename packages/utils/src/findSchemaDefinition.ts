@@ -173,10 +173,14 @@ function childScope<S extends StrictRJSFSchema = RJSFSchema>(node: S, parentURI:
     : parentURI;
 }
 
+/** Matches the scheme part of an absolute URI (`https:`, `urn:`), which no relative ref can carry
+ */
+const ABSOLUTE_URI_REGEX = /^[a-zA-Z][a-zA-Z0-9+.-]*:/;
+
 /** True when `rootSchema` predates draft 2019-09 (a root without `$schema` counts as draft-7): a `$ref` on
  * such a root ignores its sibling keywords, so an `$id` written beside a `$ref` must not re-base anything
  */
-function isPre2019Root<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): boolean {
+export function isPre2019Root<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): boolean {
   return rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2019_09 && rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2020_12;
 }
 
@@ -234,6 +238,43 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(
     walkEmbeddedSchemas<S>(schema, ref, baseURI, undefined, pre2019) ??
     (asWrittenRef !== undefined ? walkEmbeddedSchemas<S>(schema, ref, baseURI, asWrittenRef, pre2019) : undefined)
   );
+}
+
+/** Recovers the lexical scope a node sits in within `rootSchema`, computed the way the resolution walk computes
+ * it while descending from the root: each scope-establishing `$id` on the path re-bases the scope. A caller that
+ * hands `retrieveSchema` a node an earlier walk returned holds no base URI for it, yet the node's relative refs
+ * still mean the resource the node sits in. The match is by identity: a node the walk cannot find (a merged or
+ * rebuilt result) has no recoverable scope.
+ *
+ * @param rootSchema - The root schema to search
+ * @param target - The node whose lexical scope is wanted
+ * @returns - The scope `target`'s refs resolve against, or `undefined` when `target` is not in `rootSchema`
+ */
+export function lexicalScopeOfNode<S extends StrictRJSFSchema = RJSFSchema>(
+  rootSchema: S,
+  target: S,
+): string | undefined {
+  const pre2019 = isPre2019Root(rootSchema);
+  const seen = new Set<unknown>();
+  const walk = (node: S, parentScope: string): string | undefined => {
+    // A subtree shared between positions is walked once: its scope is the one its first position establishes
+    if (seen.has(node)) {
+      return undefined;
+    }
+    seen.add(node);
+    const scope = childScope(node, parentScope, pre2019);
+    if (node === target) {
+      return scope;
+    }
+    for (const subSchema of subschemas(node)) {
+      const found = walk(subSchema, scope);
+      if (found !== undefined) {
+        return found;
+      }
+    }
+    return undefined;
+  };
+  return walk(rootSchema, '');
 }
 
 /** Resolves an RFC 6901 JSON pointer against `node` while tracking the lexical scope: every `$id` on the path
@@ -433,8 +474,7 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
     // nested `$id` re-bases. Same-document refs keep the resolved spelling: it names the resource the pointer
     // belongs to, which cycle markers and `ui:definitions` keys read off the node. `rjsf`'s own lookups resolve
     // refs against the lexical scope either way.
-    const absoluteSpelling =
-      resolved !== undefined && (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(resolved) || resolved.startsWith('//'));
+    const absoluteSpelling = resolved !== undefined && (ABSOLUTE_URI_REGEX.test(resolved) || resolved.startsWith('//'));
     const relativeNested =
       typeof ref === 'string' && !absoluteSpelling && !ref.startsWith('#') && currentURI !== startURI;
     const refChange =
@@ -508,7 +548,7 @@ export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(
       originalRefs.get(node) === undefined &&
       typeof nodeRef === 'string' &&
       !nodeRef.startsWith('#') &&
-      !/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(nodeRef) &&
+      !ABSOLUTE_URI_REGEX.test(nodeRef) &&
       !nodeRef.startsWith('//')
         ? { [REF_KEY]: resolveUri(scope, nodeRef) }
         : undefined;

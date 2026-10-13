@@ -3270,10 +3270,10 @@ describe('validateFormData() with a transformErrors that clears every message', 
 });
 
 describe('AJV8Validator validating against a normalized draft-7 root without an $id', () => {
-  // Probe from review: a ref inside a nested resource keeps the author's spelling under a relative root
+  // a ref inside a nested resource keeps the author's spelling under a relative root
   // base, so the validator resolves it against the resource's own $id instead of doubling the path
   it('resolves nested relative $ids the way the raw root resolves them', () => {
-    const schema = {
+    const schema: RJSFSchema = {
       definitions: {
         parent: { $id: 'nested/parent.json', type: 'object', properties: { v: { $ref: 'child.json' } } },
         child: { $id: 'nested/child.json', type: 'string' },

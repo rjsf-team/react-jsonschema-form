@@ -19,17 +19,16 @@ import {
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   REF_KEY,
-  SCHEMA_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   RJSF_SOURCE_REF_KEY,
-  JSON_SCHEMA_DRAFT_2019_09,
-  JSON_SCHEMA_DRAFT_2020_12,
   THEN_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, {
   findSchemaDefinitionWithBaseURIOrUndefined,
+  isPre2019Root,
+  lexicalScopeOfNode,
   normalizeRootReferences,
   carryOriginalRef,
   originalRefOf,
@@ -612,10 +611,23 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   // normalization left as written then resolves against the resource it sits in. The `$ref` case stays with
   // the follow logic (a local `$id` beside a `$ref` is the override), and the root itself is already its
   // own scope.
-  const topSchema = schema === rootSchema ? normalizedRoot : schema;
+  // A caller handing back the raw root it gave `createSchemaUtils` holds a different object than the
+  // normalized root it carries, so identity cannot recognize it; its `$id` can. Without this the root's
+  // own relative `$id` would be resolved against itself, doubling its directory part. Only a first pass
+  // sees the raw root: a re-walk's partially resolved schema can carry the root's `$id` too, and swapping
+  // it for the normalized root would restart the walk, so the fixpoint loop never converges
+  const rootId = typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined;
+  const isOwnRoot =
+    schema === rootSchema ||
+    (passCount === 0 &&
+      rootId !== undefined &&
+      isObject(schema) &&
+      typeof schema[ID_KEY] === 'string' &&
+      uriEqual(schema[ID_KEY].replace(/#\/?$/, ''), rootId.replace(/#\/?$/, '')));
+  const topSchema = isOwnRoot ? normalizedRoot : schema;
   let topBaseURI = baseURI;
   if (
-    schema !== rootSchema &&
+    !isOwnRoot &&
     isObject(topSchema) &&
     !(REF_KEY in topSchema) &&
     typeof topSchema[ID_KEY] === 'string' &&
@@ -722,14 +734,29 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       originalRefOf(resolvedSchema) !== undefined,
       true,
     );
+    if (found === undefined && !$ref!.startsWith('#')) {
+      // A node a caller holds from an earlier walk carries no base URI of its own, so its relative ref was
+      // looked up against the root and missed; recover the scope the walk gave the node's resource - the
+      // way the first walk descending into it computed it - and try the ref against that scope once
+      const recoveredScope = lexicalScopeOfNode(rootSchema, resolvedSchema);
+      if (recoveredScope !== undefined && recoveredScope !== lookupBase) {
+        found = findSchemaDefinitionWithBaseURIOrUndefined<S>(
+          $ref,
+          rootSchema,
+          [],
+          recoveredScope,
+          originalRefOf(resolvedSchema) !== undefined,
+          true,
+        );
+      }
+    }
     if (found === undefined) {
       throw new Error(`Could not find a definition for ${$ref}.`);
     }
     let localOverride = false;
     // On a root before 2019-09 a `$ref` ignores its sibling keywords, `$id` included, so a `$ref`-holding
     // referrer has no `$id` of its own to override with
-    const pre2019 =
-      rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2019_09 && rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2020_12;
+    const pre2019 = isPre2019Root(rootSchema);
     if (
       ID_KEY in localSchema &&
       !(pre2019 && REF_KEY in localSchema) &&
@@ -865,6 +892,11 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     !Array.isArray(resolvedSchema.items) &&
     typeof resolvedSchema.items !== 'boolean'
   ) {
+    const descendedItem = descend(
+      resolvedSchema.items,
+      referrerKeys?.has(ITEMS_KEY) ? referrerBaseURI : currentBaseURI,
+      referrerKeys?.has(ITEMS_KEY) ? referrerPointerScope : pointerScope,
+    );
     resolvedSchema = {
       ...resolvedSchema,
       // Array items are only rendered when data exists, so a $ref cycle here does NOT cause an infinite render.
@@ -872,20 +904,12 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
         resolvedSchema.items as S,
         rootSchema,
         pathList,
-        descend(
-          resolvedSchema.items,
-          referrerKeys?.has(ITEMS_KEY) ? referrerBaseURI : currentBaseURI,
-          referrerKeys?.has(ITEMS_KEY) ? referrerPointerScope : pointerScope,
-        ).base,
+        descendedItem.base,
         resolveAnyOfOrOneOfRefs,
         false,
         expandedRefs,
         passCount,
-        descend(
-          resolvedSchema.items,
-          referrerKeys?.has(ITEMS_KEY) ? referrerBaseURI : currentBaseURI,
-          referrerKeys?.has(ITEMS_KEY) ? referrerPointerScope : pointerScope,
-        ).scope,
+        descendedItem.scope,
       ),
     };
   }

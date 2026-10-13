@@ -7,7 +7,15 @@ import type {
   UiSchema,
   UiSchemaDefinitions,
 } from '../src/index.ts';
-import { createSchemaUtils, RJSF_REF_KEY, RJSF_SOURCE_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
+import {
+  createSchemaUtils,
+  carryOriginalRef,
+  RJSF_REF_CYCLE_KEY,
+  RJSF_REF_KEY,
+  RJSF_SOURCE_REF_KEY,
+  noop,
+  resolveUiSchema,
+} from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 const testValidator = getTestValidator({});
@@ -36,10 +44,8 @@ function makeRegistry(rootSchema: RJSFSchema, uiSchemaDefinitions: UiSchemaDefin
 }
 
 describe('resolveUiSchema() - normalized options', () => {
-<<<<<<< HEAD
-=======
   it('finds options inside a nested $id resource (lookup uses the normalized spelling)', () => {
-    // Probe from review: `ref` prefers the author's spelling, which keys `ui:definitions` correctly
+    // `ref` prefers the author's spelling, which keys `ui:definitions` correctly
     // but is relative to the nested resource, so the lookup uses `declaredRef`'s normalized spelling
     const root: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -78,7 +84,28 @@ describe('resolveUiSchema() - normalized options', () => {
     });
     expect(result['ui:title']).toEqual('DEF');
   });
->>>>>>> 89bc0f288 (Fix the round-6 findings: normalize every draft once, resolve ui:definitions options under nested $ids, walk normalized raw roots, every-draft embedded # chains, tuple-items restore)
+  it('applies ui:definitions to an expanded cycle copy carrying the author spelling (pinned probe)', () => {
+    // `CyclicSchemaField` spreads the collapsed node with the cycle flag off when the user expands it;
+    // wrapped in `carryOriginalRef` the copy keeps the author's spelling, so the entry keyed by it hits
+    const rootSchema: RJSFSchema = {
+      $id: 'https://ex.com/r.json',
+      definitions: {
+        node: { type: 'object', properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } } },
+      },
+      properties: { tree: { $ref: '#/definitions/node' } },
+    };
+    const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
+    const retrieved = utils.retrieveSchema(rootSchema);
+    const child = (retrieved.properties!.tree as RJSFSchema).properties!.child as RJSFSchema;
+    const registry = {
+      rootSchema,
+      uiSchemaDefinitions: { '#/definitions/node': { 'ui:title': 'NODE' } },
+    };
+    expect(resolveUiSchema(child, undefined, registry as never)).toEqual({ 'ui:title': 'NODE' });
+    expect(
+      resolveUiSchema(carryOriginalRef({ ...child, [RJSF_REF_CYCLE_KEY]: false }, child), undefined, registry as never),
+    ).toEqual({ 'ui:title': 'NODE' });
+  });
   it('applies ui:definitions to unexpanded anyOf options keyed by the author spelling of their $ref', () => {
     // An unexpanded option carries no ref markers; its object comes from the normalized root with an absolute
     // `$ref`, so the author spelling a `ui:definitions` entry is keyed by is recovered through `originalRefOf`
