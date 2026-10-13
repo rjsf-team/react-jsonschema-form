@@ -304,22 +304,30 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.description).toEqual({ text: 'Describes the field', by: 'above', id: `${ID}__description` });
     });
 
-    it('keeps hidden a description the field above hides', () => {
+    it('shows a description the field above hides where its own showLabel allows it', () => {
       const hidden = resolve({ showLabel: false, description: 'Describes the field' });
-      const plan = resolve({ inherited: hidden, description: 'Describes the field' });
+      expect(resolve({ inherited: hidden, description: 'Describes the field' }).description).toEqual({
+        text: 'Describes the field',
+        by: 'template',
+        id: `${ID}__description`,
+      });
+      const plan = resolve({ inherited: hidden, showLabel: false, description: 'Describes the field' });
       expect(plan.description.by).toBe('none');
       expect(plan.describedBy).toEqual([]);
     });
 
-    it('keeps hidden a description a level hides beneath a field that shows another', () => {
+    it('hides a description only at the level whose showLabel hides it, beneath a field that shows another', () => {
       const hidden = resolve({ inherited: above, showLabel: false, description: 'Describes the option' });
       expect(hidden.description).toEqual({
         text: 'Describes the option',
         by: 'none',
         id: `${ID}__optionDescription`,
       });
-      const plan = resolve({ inherited: hidden, description: 'Describes the option' });
-      expect(plan.description).toEqual({ text: 'Describes the option', by: 'none', id: `${ID}__optionDescription` });
+      expect(resolve({ inherited: hidden, description: 'Describes the option' }).description).toEqual({
+        text: 'Describes the option',
+        by: 'template',
+        id: `${ID}__optionDescription`,
+      });
       expect(resolve({ inherited: hidden }).description).toEqual({
         text: 'Describes the field',
         by: 'above',
@@ -327,15 +335,15 @@ describe('resolveFieldPresentation()', () => {
       });
     });
 
-    it('carries the description a field above shows past a level that keeps a hidden one hidden', () => {
+    it('shows under an id of its own a description a field further up hides, beneath one showing another', () => {
       const hidden = resolve({ showLabel: false, description: 'Describes the field' });
       const shown = resolve({ inherited: hidden, description: 'Describes the option' });
-      const kept = resolve({ inherited: shown, description: 'Describes the field' });
-      expect(kept.description.by).toBe('none');
-      expect(resolve({ inherited: kept }).description).toEqual({
-        text: 'Describes the option',
+      const plan = resolve({ inherited: shown, description: 'Describes the field' });
+      expect(plan.description).toEqual({ text: 'Describes the field', by: 'template', id: `${ID}__optionDescription` });
+      expect(resolve({ inherited: plan }).description).toEqual({
+        text: 'Describes the field',
         by: 'above',
-        id: `${ID}__description`,
+        id: `${ID}__optionDescription`,
       });
     });
 
