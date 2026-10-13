@@ -20,7 +20,8 @@ export interface FieldPresentationInputs {
   /** Whether the `uiSchema` lets the field show its label, which `ui:label: false` turns off along with the
    * description. It is the resolved value, which the caller passes down: the field's own `ui:label`, else the one the
    * field above rendering this same id resolved to, since an option's `uiSchema` given per option doesn't carry the
-   * field's. Defaults to true
+   * field's. It is the only way a level is hidden: a description a field above hides doesn't hide the same text here.
+   * Defaults to true
    */
   showLabel?: boolean;
   description?: string;
@@ -63,35 +64,36 @@ function rendersHere(by: PartPlacement) {
   return by === 'template' || by === 'self';
 }
 
-/** Places a description or help: above when a field above rendering this id shows it, whether as the same text or,
- * for the nearest of them that shows text, as the only text, so a level with none of its own carries the one above on
- * to the levels beneath it; nowhere when it has no text, or when a field above hides the same text, which a level
- * hiding its own keeps in its plan for the levels beneath it; and otherwise by its owner, or nowhere when it is hidden
- * here. Either way it takes `ownId` unless a field above already shows text under that id, in which case it takes the
- * option id numbered by how many of them show text of their own, so a hidden part's id names no element drawn above
+/** Places a description or help:
  *
+ * - With no text, `above` under the nearest field above that shows one, which it carries on to the levels beneath it,
+ *   or else nowhere.
+ * - With the text a field above shows, `above`.
+ * - Otherwise by its owner, which is `none` when it is hidden here. It takes `ownId`, or, when a field above already
+ *   shows text under that id, the option id numbered by how many fields above show text of their own, so even a
+ *   hidden part's id names no element drawn above.
+ *
+ * @param owner - What draws the part here, or `none` when it is hidden here
  * @param above - The part in the plans of the fields above rendering this id, nearest first
- * @param hidden - Whether this level hides its own text
  */
 function placeText<Text>(
   text: Text | undefined,
-  owner: ResolvedPresentationDeclaration['description'],
+  owner: ResolvedPresentationDeclaration['description'] | 'none',
   ownId: string,
   optionId: (depth: number) => string,
   above: readonly (PartPresentation & { text?: Text })[],
-  hidden = false,
 ): PartPresentation & { text?: Text } {
   if (!text) {
     const nearest = above.find((part) => part.by !== 'none');
     return nearest ? { by: 'above', id: nearest.id, text: nearest.text } : { by: 'none', id: ownId };
   }
-  const shown = above.find((part) => part.text === text);
+  const shown = above.find((part) => part.by !== 'none' && part.text === text);
   if (shown) {
-    return { by: shown.by === 'none' ? 'none' : 'above', id: shown.id };
+    return { by: 'above', id: shown.id };
   }
   const shownAbove = above.filter((part) => rendersHere(part.by));
   return {
-    by: hidden ? 'none' : owner,
+    by: owner,
     id: shownAbove.some((part) => part.id === ownId) ? optionId(shownAbove.length) : ownId,
   };
 }
@@ -109,10 +111,9 @@ function placeText<Text>(
  *   control above was pointed at that label too, since its template may then draw it with no `for`, or when its id
  *   isn't the one that label's `for` names, such as a selector's.
  * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
- *   field above already shows is `above`, as is a part with no text under a field above that shows one, and text a
- *   field above hides stays hidden, even under a field further up that shows other text; text of its own takes
- *   `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the id it would take, numbered by
- *   how many fields above show text of their own, so each level's own text has an id of its own.
+ *   field above already shows is `above`, as is a part with no text under a field above that shows one; text of its
+ *   own takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the id it would take,
+ *   numbered by how many fields above show text of their own, so each level's own text has an id of its own.
  * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
  * - The control is described by the parts that render, here or above, then by its own `controlDescribedBy`, and is
  *   `aria-invalid` whenever errors show.
@@ -148,7 +149,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     hasControl || declaration.label === 'template'
       ? plansAbove.find((plan) => plan.label.by === 'template')
       : plansAbove.find((plan) => rendersHere(plan.label.by) && plan.label.text === labelText);
-  const labelId = labelAbove?.label.id ?? fieldLabelId(id);
+  const { text: shownLabel, id: labelId } = labelAbove?.label ?? { text: labelText, id: fieldLabelId(id) };
   let labelBy: PartPlacement = declaration.label;
   if (labelAbove) {
     labelBy = 'above';
@@ -158,11 +159,10 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
 
   const descriptionPlacement = placeText(
     description,
-    declaration.description,
+    showLabel ? declaration.description : 'none',
     descriptionId(id),
     (depth) => optionDescriptionId(id, depth),
     plansAbove.map((plan) => plan.description),
-    !showLabel,
   );
   const helpPlacement = placeText(
     help,
@@ -215,7 +215,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   }
 
   return {
-    label: { text: labelAbove?.label.text ?? labelText, by: labelBy, id: labelId },
+    label: { text: shownLabel, by: labelBy, id: labelId },
     description: { text: description, ...descriptionPlacement },
     help: { text: help, ...helpPlacement },
     errors: errorsPlan,
