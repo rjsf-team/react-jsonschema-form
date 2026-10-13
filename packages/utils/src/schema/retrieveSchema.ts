@@ -572,7 +572,6 @@ class ReferenceTally {
   }
 }
 
-
 /** Whether an `if` schema is one empty data satisfies, so the `then` beside it renders without any data. An empty
  * schema (or `true`) holds for every value; anything with keys is assumed to withhold the branch until data matches,
  * which bounds the recursion by the data the way array items are bounded.
@@ -809,7 +808,14 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     pathList.length > 0 &&
     (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_CYCLE_KEY] !== true &&
     (ALL_OF_KEY in resolvedSchema || THEN_KEY in resolvedSchema || ELSE_KEY in resolvedSchema) &&
-    branchClosesOnPath<S>(resolvedSchema, new Set(pathList), rootSchema, currentBaseURI, undefined, resolvedFromRef<S>(resolvedSchema))
+    branchClosesOnPath<S>(
+      resolvedSchema,
+      new Set(pathList),
+      rootSchema,
+      currentBaseURI,
+      undefined,
+      resolvedFromRef<S>(resolvedSchema),
+    )
   ) {
     // Counted when newly set, so the levels above hand the flagged copy back rather than the schema they were
     // given, on any pass: a branch of a definition reached through a `$ref` is only ever resolved on a re-walk,
