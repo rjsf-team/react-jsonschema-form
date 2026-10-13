@@ -366,21 +366,24 @@ describe('antd DisabledContext', () => {
     },
   ])('$name stay disabled under the context and change no data', async ({ schema, uiSchema, formData, buttons }) => {
     const onChange = vi.fn();
-    const { container } = render(
+    render(
       <ConfigProvider componentDisabled>
         <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} onChange={onChange} />
       </ConfigProvider>,
     );
-    const found: Element[] = [];
+    const allButtons = screen.getAllByRole('button');
+    const found: HTMLElement[] = [];
     for (const name of buttons) {
-      const named = Array.from(container.querySelectorAll(`button[title="${name}"]`));
+      const named = allButtons.filter((button) => button.getAttribute('title') === name);
       expect(named.length).toBeGreaterThan(0);
       found.push(...named);
     }
     for (const button of found) {
       expect(button).toBeDisabled();
     }
-    await Promise.all(found.map((button) => user.click(button as HTMLElement)));
+    for (const button of found) {
+      await user.click(button);
+    }
     expect(onChange).not.toHaveBeenCalled();
   });
 });
