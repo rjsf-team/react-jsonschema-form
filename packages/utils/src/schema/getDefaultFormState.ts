@@ -316,12 +316,14 @@ export function computeDefaults<
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
   let contextToCompute = context;
-  // Seed the path with the reference this schema was itself resolved from, so a `$ref` back to it from anywhere in
-  // what the definition holds reads as a recursion however deep the branch that carries it sits (#5493). Branches
-  // that stood beside the `$ref` re-derive their own path with the keyword they are entered through, since a `$ref`
-  // back to the same definition from one of those is a second use, not a recursion.
-  let updatedRecurseList = enclosingRefPath<S>(schema, _recurseList);
-  // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
+  // Seed the path with the reference this schema was itself resolved from, so a `$ref` back to it met through a
+  // branch that re-resolves it (a `dependencies` entry, a retrieved merge) reads as the recursion. The reference
+  // does not flow into the schema's own content: the type-based call below starts from the caller's list, and a
+  // `$ref` joins the path at the point a branch crosses into what it names (the `$ref` branch, a `oneOf`/`anyOf`
+  // option, an `allOf` merge). Branches that stood beside the `$ref` re-derive their own path with the keyword they
+  // are entered through, since a `$ref` back to the same definition from one of those is a second use, not a
+  // recursion.
+  let updatedRecurseList = enclosingRefPath<S>(schema, _recurseList);  // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
   let branchUiSchema = uiSchema;
@@ -381,15 +383,24 @@ export function computeDefaults<
         : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
+    // The dependencies a definition resolves are part of its own content, so the reference it was resolved from
+    // stays on the path the resolution and the recursion carry: two definitions whose dependencies point at each
+    // other meet the ref already on the path and stop, instead of resolving one another forever.
+    const dependencyPath = enclosingRefPath<S>(schema, _recurseList, DEPENDENCIES_KEY);
     const resolvedSchema = resolveDependencies<T, S, F>(
       context,
       schema,
       rootSchema,
       false,
-      enclosingRefPath<S>(schema, _recurseList, DEPENDENCIES_KEY),
+      dependencyPath,
       defaultFormData,
     );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
+    // A dependency that applied nothing leaves the node's own content as it was, so the recursion carries the
+    // caller's path unchanged; only a dependency that merged new content (which may resolve through a `$ref`) keeps
+    // the seeded path, so two definitions whose dependencies point at each other still stop.
+    const { [DEPENDENCIES_KEY]: _dependencies, ...schemaWithoutDependencies } = schema;
+    updatedRecurseList = deepEquals(schemaToCompute, schemaWithoutDependencies) ? _recurseList : dependencyPath;
   } else if (isFixedItems(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
@@ -454,6 +465,9 @@ export function computeDefaults<
         defaults = toConstant<S>(options[optionIndex]) as T;
       }
     } else {
+      // Merging the selected option is not a crossing into another definition, so the merge recursion starts from
+      // the caller's path; the option's own `$ref` below joins the path when it is followed.
+      updatedRecurseList = _recurseList;
       const option = options[optionIndex];
       // An object's defaults are those of its own properties as well as the option's, so the option is merged with the
       // whole object. Any other field renders only the option, so its defaults are those of the option as rendered,
@@ -541,11 +555,11 @@ export function computeDefaults<
   const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(
     context,
     schema,
-    // The reference this schema was itself resolved from stays on the path of everything it holds, so a `$ref`
-    // back to it met at any depth below reads as the recursion. The outermost call is exempt: it is handed the
-    // already-retrieved root, and counting the root's own expansion would stop a plain recursive schema one
-    // level earlier than it does today.
-    { ...computeDefaultsProps, _recurseList: '_recurseList' in inputProps ? updatedRecurseList : _recurseList },
+    // The same starting list the `dependencies` branch's throwaway walk above gets: the caller's own, so the
+    // conditions there are judged against the defaults this call can actually produce. A `$ref` joins it at the
+    // point a branch crosses into what it names, so a definition's own reference never blocks its first
+    // self-reference below.
+    { ...computeDefaultsProps, _recurseList },
     defaults,
     isWholeValue,
   );
