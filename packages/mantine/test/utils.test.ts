@@ -24,6 +24,13 @@ describe('cleanupOptions()', () => {
     },
   );
 
+  it.each(['accept', 'expandable', 'format', 'hideClearButton', 'hideNowButton', 'shape', 'stars', 'yearsRange'])(
+    'removes %s, an option rjsf reads that no type declares',
+    (name) => {
+      expect(cleanupOptions({ [name]: 'value', radius: 'md' })).toEqual({ radius: 'md' });
+    },
+  );
+
   it('also removes the extra keys it is given', () => {
     expect(cleanupOptions({ min: 1, radius: 'md' }, ['min'])).toEqual({ radius: 'md' });
   });

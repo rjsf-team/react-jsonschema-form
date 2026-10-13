@@ -1,5 +1,6 @@
 import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
+import type { ColorInputProps } from '@mantine/core';
 import { ColorInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue } from '@rjsf/utils';
@@ -68,6 +69,7 @@ export default function ColorWidget<
       name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
+      format={options.format as ColorInputProps['format']}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}

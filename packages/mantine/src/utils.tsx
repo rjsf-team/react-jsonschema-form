@@ -112,7 +112,31 @@ const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
 // They can't be derived like the rest, since `UiSchema`'s `ui:${string}` key, which every option takes, absorbs them.
 const uiSchemaOptionNames = ['definitions', 'fieldReplacesAnyOrOneOf', 'globalOptions'] as const;
 
-const uiOptionsKeys = new Set<string>([...Object.keys(rjsfOptionNameRecord), ...uiSchemaOptionNames]);
+// The options rjsf's widgets and fields read that no type declares, so they can't be derived either: the alt-date
+// widgets' `yearsRange`, `format`, `hideNowButton` and `hideClearButton`, the file widget's `accept`, the rating
+// widget's `stars` and `shape`, and an object's `expandable`. `ColorWidget` and `FileWidget` pass `format` and `accept`
+// on themselves, since their Mantine components take options of those names.
+const undeclaredOptionNames = [
+  'accept',
+  'expandable',
+  'format',
+  'hideClearButton',
+  'hideNowButton',
+  'shape',
+  'stars',
+  'yearsRange',
+] as const;
+
+type StrippedOptionName =
+  | RjsfOptionName
+  | (typeof uiSchemaOptionNames)[number]
+  | (typeof undeclaredOptionNames)[number];
+
+const uiOptionsKeys = new Set<string>([
+  ...Object.keys(rjsfOptionNameRecord),
+  ...uiSchemaOptionNames,
+  ...undeclaredOptionNames,
+]);
 
 /** Builds the `error` prop Mantine's inputs render from a list of errors. Mantine's error element doesn't keep line
  * breaks, so the messages are separated by `<br>`s, each after a space, since a `<br>` adds no text to the accessible
@@ -171,7 +195,7 @@ export function useContainerErrors(props: VisibleErrorsProps & { id: string }) {
 export function cleanupOptions<T extends object>(
   options: T,
   extraKeys: readonly string[] = [],
-): Omit<T, RjsfOptionName | (typeof uiSchemaOptionNames)[number]> {
+): Omit<T, StrippedOptionName> {
   const result = {} as T;
   for (const key in options) {
     if (!uiOptionsKeys.has(key) && !extraKeys.includes(key)) {

@@ -54,14 +54,32 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
   });
 
   it('does not pass ui:definitions on from the root field', () => {
-    const schema: RJSFSchema = { type: 'string' };
-    const { container } = render(<Form schema={schema} uiSchema={{ 'ui:definitions': {} }} validator={validator} />);
+    const { container } = render(
+      <Form schema={{ type: 'string' }} uiSchema={{ 'ui:definitions': {} }} validator={validator} />,
+    );
 
     expect(container.querySelector('[definitions]')).toBeNull();
     expect(consoleError.mock.calls.flat().join(' ')).not.toContain('definitions');
   });
 
-  it('still sets the rows of a textarea', () => {
+  it("does not pass the alt-date widgets' options on to Mantine's date input", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'date' }}
+        uiSchema={{
+          'ui:options': { yearsRange: [2000, 2030], format: 'MDY', hideNowButton: true, hideClearButton: true },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('[yearsrange], [format], [hidenowbutton], [hideclearbutton]')).toBeNull();
+    expect(consoleError.mock.calls.flat().join(' ')).not.toMatch(/yearsRange|hideNowButton|hideClearButton/);
+  });
+});
+
+describe('the options a Mantine component takes under the same name still reach it', () => {
+  it('sets the rows of a textarea', () => {
     render(
       <Form
         schema={{ type: 'string' }}
@@ -71,5 +89,32 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
     );
 
     expect(screen.getByRole('textbox')).toHaveAttribute('rows', '4');
+  });
+
+  it('sets the file types a file input accepts', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': { accept: '.pdf' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input[type="file"]')).toHaveAttribute('accept', '.pdf');
+  });
+
+  it("sets a color input's format, to which it converts the color when the format changes", () => {
+    const schema: RJSFSchema = { type: 'string', format: 'color' };
+    const { rerender } = render(<Form schema={schema} initialFormData='#ff0000' validator={validator} />);
+    rerender(
+      <Form
+        schema={schema}
+        uiSchema={{ 'ui:options': { format: 'rgba' } }}
+        initialFormData='#ff0000'
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveValue('rgba(255, 0, 0, 1)');
   });
 });
