@@ -224,18 +224,25 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Then we pick the one that matches the selected option index, if one exists otherwise default to the main uiSchema
   const optionUiSchema = selectOptionUiSchema<T, S, F>(optionsUiSchema, uiSchema, selectedOption);
 
+  const option = selectedOption >= 0 ? options[selectedOption] || null : null;
+  // A parent allowing several types passes all of them on: when the fallback UI is on, it pins one type on the schema
+  // it hands down, so such a union only reaches here with the fallback UI off
+  // Memoized, since the meet walks every subschema the two share. `SchemaField` retrieves the options afresh when the
+  // data changes, so this only spares a render that leaves the data as it was, and the switch away from the option
+  const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
+
   /** Callback handler to remember what the currently selected option is. In addition to that the `formData` is updated
    * to remove properties that are not part of the newly selected option schema, and then the updated data is passed to
    * the `onChange` handler.
    *
-   * @param option - The new option value being selected
+   * @param value - The new option value being selected
    */
   const onOptionChange = useCallback(
-    (option?: string) => {
+    (value?: string) => {
       if (disabled || readonly) {
         return;
       }
-      const intOption = option !== undefined ? parseInt(option, 10) : -1;
+      const intOption = value !== undefined ? parseInt(value, 10) : -1;
       if (intOption === selectedOption) {
         return;
       }
@@ -254,7 +261,13 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       setSelection((current) => ({ ...current, selectedOption: intOption, proposal: { formData: newFormData } }));
       sendOptionSwitch(
         schema,
-        { oldOption, newOption, oldUiSchema: optionUiSchema, newUiSchema: newOptionUiSchema },
+        {
+          oldOption,
+          oldRenderedOption: renderedOption ?? undefined,
+          newOption,
+          oldUiSchema: optionUiSchema,
+          newUiSchema: newOptionUiSchema,
+        },
         formData,
         newFormData,
         () => onChange(newFormData, fieldPath, undefined, fieldId),
@@ -274,6 +287,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
       sendOptionSwitch,
       optionsUiSchema,
       optionUiSchema,
+      renderedOption,
       uiSchema,
       uiSchemaDefinitions,
     ],
@@ -290,12 +304,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   delete fieldErrorSchema[ERRORS_KEY];
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
-  const option = selectedOption >= 0 ? options[selectedOption] || null : null;
-  // A parent allowing several types passes all of them on: when the fallback UI is on, it pins one type on the schema
-  // it hands down, so such a union only reaches here with the fallback UI off
-  // Memoized, since the meet walks every subschema the two share. `SchemaField` retrieves the options afresh when the
-  // data changes, so this only spares a render that leaves the data as it was
-  const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
   // The field's own title is the one the option's field renders in its place, since the selector already shows an
   // option's title. It shows no description, so an option's own is what explains the alternative chosen, and the
   // field's is the one rendered only for an option that declares none. An option without a uiSchema of its own is

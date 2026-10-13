@@ -261,7 +261,7 @@ export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJS
     if (parent.required) {
       inherited[REQUIRED_KEY] = parent.required;
     }
-    if (!('type' in option)) {
+    if (option.type === undefined) {
       inherited.type = parent.type ?? 'object';
     }
   } else {
@@ -276,6 +276,16 @@ export default function getRenderedOptionSchema<S extends StrictRJSFSchema = RJS
   if (Object.keys(inherited).length === 0) {
     return option;
   }
-  // An object parent passes on no bound, so there is none to tighten
-  return (rendersOwnField ? mergeSchemas(inherited, option) : meetSchemas(inherited, option)) as S;
+  if (!rendersOwnField) {
+    return meetSchemas(inherited, option) as S;
+  }
+  // An object parent passes on no bound, so there is none to tighten. An option key holding `undefined`, as one built
+  // in code can, declares nothing, as `meetSchemas()` reads it, but `mergeSchemas()` copies it over what was inherited
+  const merged = mergeSchemas(inherited, option);
+  for (const key of Object.keys(inherited)) {
+    if (merged[key] === undefined) {
+      merged[key] = inherited[key];
+    }
+  }
+  return merged as S;
 }

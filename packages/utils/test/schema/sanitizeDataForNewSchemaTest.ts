@@ -898,6 +898,12 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['x'])).toBeUndefined();
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['b'])).toEqual(['b']);
     });
+    it.each<[string, RJSFSchema]>([
+      ['const', { type: 'array', items: { type: 'string' }, const: ['a', 'b'] }],
+      ['enum of whole arrays', { type: 'array', items: { type: 'string' }, enum: [['a'], ['b']] }],
+    ])('keeps an array the old schema rejected by the same %s', (_, schema) => {
+      expect(schemaUtils.sanitizeDataForNewSchema(schema, { ...schema, title: 'Old' }, ['x'])).toEqual(['x']);
+    });
     it('keeps an array whose const is an ajv $data reference rather than a value', () => {
       const schema: RJSFSchema = {
         type: 'object',

@@ -131,8 +131,9 @@ function constraintMayHaveChanged<
  *   - Once all keys have been processed, return an object built as follows:
  *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
  * - If the old and new schema types, read through `getSchemaType()` so that a type list also allowing `null` counts,
- *   are both array, the `data` is an array, the new schema's `const` is not an array other than the `data`, and the
- *   `data` is one of the new schema's `enum` or constant options when it lists any, then:
+ *   are both array, the `data` is an array, the new schema's `const` is not an array other than the `data` unless the
+ *   old schema declares the same `const`, and the `data` is one of the new schema's `enum` or constant options when it
+ *   lists any the old schema did not list alike, then:
  *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
@@ -151,7 +152,7 @@ function constraintMayHaveChanged<
  *     either `items` is a tuple, as a tuple, a boolean `items` or an array declaring no `items` does, return the `data`,
  *     removing any values after the new `maxItems` if it is set
  * - Otherwise return `undefined`, which clears an array the new schema's array `const` differs from, or that its
- *   `enum` or constant options do not list
+ *   `enum` or constant options do not list, where the old schema declared a different `const` or list
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -458,10 +459,16 @@ function sanitizeDataForNewSchemaInternal<
     Array.isArray(data) &&
     // An array the new schema's `const` rejects is cleared, so that the `const` can take its place, as the defaults
     // computed for the new schema do. Only an array `const` is compared: an ajv `$data` reference is an object, and
-    // reading it as the value would clear the array on every sanitize pass
-    (!Array.isArray(newSchema.const) || deepEquals(newSchema.const, data)) &&
-    // A select over whole arrays holds one of its values, so an array it does not list is cleared as well
-    replacementForInvalidEnumValue<S>(newSchema, data) === NO_VALUE
+    // reading it as the value would clear the array on every sanitize pass. A `const` the old schema already declared
+    // was rejecting the array before, so `Form`'s sanitize pass, which runs whenever a conditional anywhere in the
+    // form flips, keeps it for validation to report rather than dropping data nothing refills
+    (!Array.isArray(newSchema.const) ||
+      deepEquals(newSchema.const, data) ||
+      deepEquals(oldSchema.const, newSchema.const)) &&
+    // A select over whole arrays holds one of its values, so an array it does not list is cleared as well, unless the
+    // old schema listed the same values, for the same reason
+    (replacementForInvalidEnumValue<S>(newSchema, data) === NO_VALUE ||
+      deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema)))
   ) {
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;

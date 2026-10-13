@@ -385,6 +385,15 @@ describe('getRenderedOptionSchema()', () => {
         required: ['a'],
       });
     });
+    test("reads an option's type or required list holding undefined as declaring nothing, passing on the parent's", () => {
+      const parent: RJSFSchema = { type: 'object', properties, required: ['a'] };
+      const option = { type: undefined, required: undefined, properties: { b: { minLength: 1 } } } as RJSFSchema;
+      expect(getRenderedOptionSchema(parent, option)).toStrictEqual({
+        type: 'object',
+        required: ['a'],
+        properties: { b: { minLength: 1 } },
+      });
+    });
     test('passes on the type list of a nullable object', () => {
       expect(getRenderedOptionSchema({ type: ['object', 'null'], properties }, { required: ['a'] })).toEqual({
         type: ['object', 'null'],

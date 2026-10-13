@@ -1135,4 +1135,28 @@ describe('settled snapshot sanitization', () => {
     expect(last?.[1]?.kind).toBe('x');
     expect(last?.[1]?.tags).toEqual([null, null]);
   });
+
+  it('keeps an array its unchanged const rejects when a conditional elsewhere flips', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        kind: { type: 'string', enum: ['a', 'b'] },
+        fixed: { type: 'array', items: { type: 'string' }, const: ['a', 'b'] },
+      },
+      if: { properties: { kind: { const: 'b' } } },
+      then: { properties: { note: { type: 'string' } } },
+    };
+    const events: IChangeEvent<{ kind?: string; fixed?: string[] }>[] = [];
+    const { container } = render(
+      <Form<{ kind?: string; fixed?: string[] }>
+        schema={schema}
+        validator={validator}
+        defaultFormStateBehavior={{ constAsDefaults: 'never' }}
+        initialFormData={{ kind: 'a', fixed: ['x'] }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    await user.selectOptions(container.querySelector('#root_kind')!, 'b');
+    expect(events[events.length - 1].formData).toEqual({ kind: 'b', fixed: ['x'] });
+  });
 });

@@ -14,6 +14,8 @@ import FormDataContext from '../components/FormDataContext.ts';
 interface OptionSwitch<T, S extends StrictRJSFSchema, F extends FormContextType> {
   /** The option switched away from */
   oldOption: S | undefined;
+  /** The option switched away from as `getRenderedOptionSchema()` renders it, when the field has already computed it */
+  oldRenderedOption?: S;
   /** The option switched to */
   newOption: S | undefined;
   /** The uiSchema the field of the option switched away from rendered with */
@@ -45,12 +47,12 @@ function rendersItemFields<S extends StrictRJSFSchema>(rendered: S): boolean {
  */
 function rendersItemsAlike<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schema: S,
-  { oldOption, newOption, oldUiSchema, newUiSchema }: OptionSwitch<T, S, F>,
+  { oldOption, oldRenderedOption, newOption, oldUiSchema, newUiSchema }: OptionSwitch<T, S, F>,
 ): boolean {
   if (!oldOption || !newOption || oldUiSchema !== newUiSchema) {
     return false;
   }
-  const oldRendered = getRenderedOptionSchema<S>(schema, oldOption);
+  const oldRendered = oldRenderedOption ?? getRenderedOptionSchema<S>(schema, oldOption);
   const newRendered = getRenderedOptionSchema<S>(schema, newOption);
   return (
     rendersItemFields<S>(oldRendered) &&
