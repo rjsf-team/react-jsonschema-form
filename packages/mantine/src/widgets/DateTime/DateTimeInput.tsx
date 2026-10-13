@@ -19,7 +19,7 @@ const dateParser = (input: string | undefined, format: string) => {
   return d.isValid() ? d.toDate() : null;
 };
 
-const dateFormat = (date?: DateStringValue | Date | null, format?: string) => {
+const dateFormat = (date?: DateStringValue | null, format?: string) => {
   if (!date || !dayjs(date).isValid()) {
     return '';
   }
