@@ -25,12 +25,12 @@ import {
   getAdditionalPropertySchema,
   getAdditionalPropertyType,
   getFreePropertyNames,
-  getDeprecatedHandling,
   getMatchingPatternProperties,
   getFieldTypeForWidget,
   getTemplates,
   getPropertySchema,
   getUiOptions,
+  isFieldHidden,
   getXxxOfOptions,
   isConstantSelect,
   isFormDataAvailable,
@@ -796,9 +796,7 @@ export default function ObjectField<
         addedByAdditionalProperties ? ADDITIONAL_PROPERTIES_KEY : propertyName,
       );
       const propertySchema = getPropertySchema<S>(schema, propertyName);
-      const fieldUiOptions = getUiOptions<T, S, F>(fieldUiSchema, registry.globalUiOptions);
-      const hidden =
-        fieldUiOptions.widget === 'hidden' || getDeprecatedHandling<T, S, F>(propertySchema, fieldUiOptions) === 'hide';
+      const hidden = isFieldHidden<T, S, F>(propertySchema, fieldUiSchema, registry, getByPath(formData, propertyName));
       const content = (
         <ObjectFieldProperty<T, S, F>
           key={getStableKey(propertyName)}

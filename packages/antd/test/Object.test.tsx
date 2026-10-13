@@ -11,7 +11,6 @@ it('omits the column for a deprecated property hidden by global options', () => 
     <Form
       schema={{ type: 'object', properties: { a: { type: 'string' }, b: { type: 'string', deprecated: true } } }}
       uiSchema={{ 'ui:globalOptions': { deprecatedHandling: 'hide' } }}
-      formContext={{ colSpan: {} }}
       validator={validator}
     />,
   );

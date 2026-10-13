@@ -118,6 +118,71 @@ describe('ObjectField', () => {
         { name: 'hidden widget stays hidden', uiSchema: { b: { 'ui:widget': 'hidden' } }, hidden: true },
       ];
 
+      describe('resolution before the visibility answer', () => {
+        const legacy = { type: 'string', deprecated: true };
+        const hiddenCases: { name: string; b: RJSFSchema; uiSchema: UiSchema; hidden: boolean }[] = [
+          {
+            name: 'a ui:definitions label override reaches the template',
+            b: { $ref: '#/definitions/legacy' },
+            uiSchema: {
+              'ui:globalOptions': { deprecatedHandling: 'hide' },
+              'ui:definitions': { '#/definitions/legacy': { 'ui:deprecatedHandling': 'label' } },
+            },
+            hidden: false,
+          },
+          {
+            name: 'a ui:definitions hide reaches the template',
+            b: { $ref: '#/definitions/legacy' },
+            uiSchema: { 'ui:definitions': { '#/definitions/legacy': { 'ui:deprecatedHandling': 'hide' } } },
+            hidden: true,
+          },
+          {
+            name: 'a ui:widget hidden in ui:definitions reaches the template',
+            b: { $ref: '#/definitions/legacy' },
+            uiSchema: { 'ui:definitions': { '#/definitions/legacy': { 'ui:widget': 'hidden' } } },
+            hidden: true,
+          },
+          {
+            name: 'a deprecated behind an allOf $ref reaches the template',
+            b: { title: 'B', allOf: [{ $ref: '#/definitions/legacy' }] },
+            uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' } },
+            hidden: true,
+          },
+          {
+            name: 'a deprecated merged from an allOf entry reaches the template',
+            b: { allOf: [{ type: 'string' }, { deprecated: true }] },
+            uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' } },
+            hidden: true,
+          },
+          {
+            name: 'a deprecated applied by a then branch reaches the template',
+            b: { type: 'string', if: {}, then: { deprecated: true } },
+            uiSchema: { 'ui:globalOptions': { deprecatedHandling: 'hide' } },
+            hidden: true,
+          },
+        ];
+
+        it.each(hiddenCases)('$name', ({ b, uiSchema, hidden }) => {
+          const template = vi.fn(({ properties }: ObjectFieldTemplateProps) => (
+            <div>{properties.map((property) => property.content)}</div>
+          ));
+          createFormComponent({
+            schema: {
+              definitions: { legacy },
+              type: 'object',
+              properties: { a: { type: 'string' }, b },
+            },
+            uiSchema,
+            templates: { ObjectFieldTemplate: template },
+          });
+
+          expect(template.mock.lastCall?.[0].properties).toEqual([
+            expect.objectContaining({ name: 'a', hidden: false }),
+            expect.objectContaining({ name: 'b', hidden }),
+          ]);
+        });
+      });
+
       it.each(cases)('passes $name to the object template', ({ uiSchema, deprecated = true, hidden }) => {
         const template = vi.fn(({ properties }: ObjectFieldTemplateProps) => (
           <div>{properties.map((property) => property.content)}</div>
