@@ -93,7 +93,6 @@ const INITIAL_LIVE_SETTINGS: LiveSettings = {
     arrayMinItems: { populate: 'all' },
     emptyObjectFields: 'populateAllDefaults',
   },
-  useFallbackUiForUnsupportedType: false,
 };
 
 type LoadData = Sample & {
