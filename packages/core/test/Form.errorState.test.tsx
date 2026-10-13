@@ -91,8 +91,7 @@ describe('Error state consistency when deriving from new props', () => {
   }
   const raisingUiSchema: UiSchema = { 'ui:field': RaisingRootField };
 
-  /** A parent that never follows `onChange`, so every edit the user makes is declined
-   */
+  /** A parent that never follows `onChange`, so it stores none of the edits the user makes */
   function IgnoringParent() {
     const [className, setClassName] = useState<string | undefined>(undefined);
     return (
@@ -759,7 +758,7 @@ describe('Error state consistency when deriving from new props', () => {
     });
   });
 
-  // Add, copy, move and remove all go through `moveItemErrors()`, so a move covers them
+  // Add, copy, move and remove all say where the items went through `moveOfItems()`
   describe('after an ArrayField remaps its items in a form seeded with initialFormData', () => {
     const items: RJSFSchema = { type: 'array', minItems: 4, items: { type: 'string', minLength: 3 } };
     it.each<[string, RJSFSchema, unknown, string]>([
@@ -780,6 +779,29 @@ describe('Error state consistency when deriving from new props', () => {
 
       expect(fieldErrorsById(container)).toEqual(ownErrors);
       expect(errorListMessages(container)).toHaveLength(1);
+    });
+
+    it.each([
+      ['adds an item that has a default', '.rjsf-array-item-add button'],
+      ['copies an item', '.rjsf-array-item-copy'],
+      ['removes an item', '.rjsf-array-item-remove'],
+    ])("keeps the array's own errors when it %s", async (_, button) => {
+      const defaulted: RJSFSchema = { type: 'array', minItems: 4, items: { type: 'string', default: 'dflt' } };
+      const { container } = render(
+        <Form
+          schema={defaulted}
+          uiSchema={{ 'ui:options': { copyable: true } }}
+          validator={validator}
+          initialFormData={['aaa', 'bbbb']}
+        />,
+      );
+      const ownErrors = { root: ['must NOT have fewer than 4 items'] };
+      await submitForm(container.querySelector('form')!, user);
+      expect(fieldErrorsById(container)).toEqual(ownErrors);
+
+      await user.click(container.querySelector(button)!);
+
+      expect(fieldErrorsById(container)).toEqual(ownErrors);
     });
   });
 

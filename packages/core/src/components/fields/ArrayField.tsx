@@ -1038,7 +1038,9 @@ const NO_ITEMS: never[] = [];
  */
 function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
-  const freshKeys = () => items.map(() => generateRowId());
+  // `Array.from()` rather than `map()`, which skips the holes a write past the end of an array leaves: every slot is
+  // an item with a row of its own
+  const freshKeys = () => Array.from(items, () => generateRowId());
   // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them
   const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[] }>(() => {
     const keys = freshKeys();
@@ -1106,7 +1108,7 @@ export default function ArrayField<
     if (!Array.isArray(items)) {
       return [];
     }
-    return items.map((item, index) => {
+    return Array.from(items, (item, index) => {
       const { key, order } = rows[index] ?? generateRowId();
       return { key, order, item };
     });

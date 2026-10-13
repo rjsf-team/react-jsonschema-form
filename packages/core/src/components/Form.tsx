@@ -48,10 +48,10 @@ export interface FormProps<
   /** The uiSchema for the form */
   uiSchema?: UiSchema<Uninferred<T>, S, F>;
   /** The form's data, like `value` on an `<input>`: the form takes it, filled in with the schema's defaults, on mount
-   * and again whenever it is passed a value it did not hand out itself. In between, it holds the user's edits and
-   * reports each through `onChange`; passing what `onChange` reported back in is free, since the form recognizes its
-   * own data. Pass `initialFormData` instead for a value written inline or kept while the user edits, so a re-render
-   * does not put it back.
+   * and again whenever it is passed a value it has not seen, which is one that is neither its current data nor the
+   * value of the render before. In between, it holds the user's edits and reports each through `onChange`; passing
+   * each value back in as `onChange` reports it is free, since the form recognizes its own data. Pass
+   * `initialFormData` instead for a value created anew on every render, so a re-render does not put it back.
    */
   formData?: T;
   /** The seed of the form's data, like `defaultValue` on an `<input>`: read when the form mounts and when `reset()` is
@@ -309,7 +309,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   props: FormProps<T, S, F>,
 ) {
   const { ref } = props;
-  // The model is created once and kept in the render cache, so it lives exactly as long as the mounted form
+  // The model is created once and kept in the render cache, so the form has the one model for as long as it is mounted
   const [cache, setCache] = useState(() => {
     const state = initialState(props);
     return { model: createFormModel(props, state), published: state, props, state };
@@ -335,6 +335,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   useInsertionEffect(() => {
     model.committed(props, state, published);
   });
+  useInsertionEffect(() => model.mounted(), [model]);
   useImperativeHandle(ref, () => model.handle, [model]);
 
   const {

@@ -70,6 +70,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
   // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
   let announced: AnnouncedMove | undefined;
+  // A change that reaches a form after it unmounted is dropped: a draft a widget flushes from an Effect cleanup, a
+  // timer or a file read that finishes late, or a call through a handle kept past the unmount. Reported through the
+  // `onChange` of the last render, it would be stored as the data of whichever form replaced this one
+  let isUnmounted = false;
 
   /** Stores the result of an operation, shared against the current state so an unchanged member keeps the reference
    * the fields hold, and publishes it when it changed. Returns what was stored.
@@ -86,11 +90,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     return committed;
   };
 
-  /** `formData` without the fields the schema does not describe, when `omitExtraData` asks for it: what a submit and
-   * `validateForm()` act on
+  /** The form's data without the fields the schema does not describe, when `omitExtraData` asks for it: what a submit
+   * and `validateForm()` act on
    */
-  const withExtraDataOmitted = (props: FormProps<T, S, F>, formData: T | undefined) =>
-    props.omitExtraData === true ? state.schemaUtils.omitExtraData(state.schema, formData) : formData;
+  const withExtraDataOmitted = (props: FormProps<T, S, F>) =>
+    props.omitExtraData === true ? state.schemaUtils.omitExtraData(state.schema, state.formData) : state.formData;
+
+  /** The window of the form element, whose classes the element and what it holds are instances of: a form rendered
+   * into another document, such as an iframe's, is no instance of this window's `HTMLFormElement`
+   */
+  const formWindow = () => formElement?.ownerDocument.defaultView;
 
   /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
    * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
@@ -106,15 +115,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     path.unshift(idPrefix);
 
     const elementId = path.join(idSeparator);
-    if (!formElement) {
+    const view = formWindow();
+    if (!formElement || !view) {
       return;
     }
-    const named = formElement instanceof HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
+    const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
     // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or
     // checkboxes); some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
     const found = named ?? formElement.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
-    const field = found instanceof RadioNodeList ? found.item(0) : found;
-    if (field instanceof HTMLElement) {
+    const field = found instanceof view.RadioNodeList ? found.item(0) : found;
+    if (field instanceof view.HTMLElement) {
       field.focus();
     }
   };
@@ -129,8 +139,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    */
   const runValidation = (props: FormProps<T, S, F>, formData: T | undefined): boolean => {
     const { hasError, next } = applyValidation(state, props, formData);
-    const { errors } = next;
-    commit(next);
+    const { errors } = commit(next);
     if (!hasError) {
       return true;
     }
@@ -167,6 +176,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     id?: string,
     deliver: Deliver = deliverToCaller,
   ) => {
+    if (isUnmounted) {
+      return;
+    }
     const props = committedProps;
     // Taken by the change it was announced for, so a second change at the path moves nothing again
     const move = announced?.fieldPath === fieldPath ? announced : undefined;
@@ -198,7 +210,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const blur = (id: string) => {
     const props = committedProps;
     const { omitExtraData, liveOmit } = props;
-    if (!((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
+    if (isUnmounted || !((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
     }
     const start = state;
@@ -218,7 +230,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const props = committedProps;
     // oxlint-disable-next-line typescript/no-deprecated
     const { noValidate } = props;
-    const formData = withExtraDataOmitted(props, state.formData);
+    const formData = withExtraDataOmitted(props);
     if (!noValidate && !runValidation(props, formData)) {
       return;
     }
@@ -234,7 +246,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * the submit event it dispatches reaches `handleSubmit()`, which submits the data the form holds
      */
     submit: () => {
-      if (formElement instanceof HTMLFormElement) {
+      const view = formWindow();
+      if (view && formElement instanceof view.HTMLFormElement) {
         formElement.requestSubmit();
       }
     },
@@ -243,6 +256,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * clears every error and tells `onChange`. `extraErrors` are the props' and stay.
      */
     reset: () => {
+      if (isUnmounted) {
+        return;
+      }
       const props = committedProps;
       const committed = commit(applyReset(state, props));
       props.onChange?.(toIChangeEvent(committed));
@@ -270,7 +286,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
 
     validateForm: () => {
       const props = committedProps;
-      return runValidation(props, withExtraDataOmitted(props, state.formData));
+      return runValidation(props, withExtraDataOmitted(props));
     },
 
     validateFormWithFormData: (formData?: T) => runValidation(committedProps, formData),
@@ -310,15 +326,37 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         listeners.delete(listener);
       };
     },
+    /** The setup of the insertion Effect that tells the model the form is mounted; what it returns is the cleanup.
+     * React runs that cleanup when the form unmounts and not when an `<Activity>` hides it, which destroys layout and
+     * passive Effects only, so a hidden form goes on taking changes. It runs before the cleanup of any Effect below
+     * the form, so a change a field makes as it unmounts with the form is already one made after the unmount.
+     */
+    mounted: () => {
+      isUnmounted = false;
+      return () => {
+        isUnmounted = true;
+      };
+    },
     /** Called from an insertion Effect of every commit of the form, with what React rendered. React runs those before
      * the setup of any layout Effect, so an Effect of the same commit that issues a command finds the props and the
      * state of this commit.
      */
     committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedPublished: FormState<T, S, F>) => {
       committedProps = nextProps;
+      if (published === renderedPublished) {
+        state = derived;
+        return;
+      }
       // An operation that committed after this render began is not in `derived`. A render for it is already
-      // scheduled; until it runs, operations start from its commit derived under the new props
-      state = published === renderedPublished ? derived : replaceEqualDeep(derived, deriveState(nextProps, state));
+      // scheduled; until it runs, operations start from its commit derived under the new props. A `formData` that was
+      // the form's own data as the render began is recorded as seen first: the operation has moved the data on, so
+      // the prop would otherwise read as a new value and replace the operation's edit
+      const { formData } = nextProps;
+      const isOwnData = Object.is(formData, renderedPublished.formData);
+      state = replaceEqualDeep(
+        derived,
+        deriveState(nextProps, isOwnData ? { ...state, formDataProp: formData } : state),
+      );
     },
     handle,
     handleSubmit,

@@ -4641,6 +4641,20 @@ describe('ArrayField', () => {
       expect(endKeys).toHaveLength(2);
       expect(endKeys).not.toContain(startKeys[0]);
     });
+
+    it('should render a row for every slot of an array a write past its end left holes in, and add to it', async () => {
+      const ref = createFormRef<(string | undefined)[]>();
+      const { node } = createFormComponent({ schema, initialFormData: ['foo'], ref });
+
+      act(() => handleOf(ref).setFieldValue([3], 'bar'));
+
+      expect(node.querySelectorAll('input[type=text]')).toHaveLength(4);
+
+      await user.click(node.querySelector('.rjsf-array-item-add button')!);
+
+      expect(handleOf(ref).getFormData()).toHaveLength(5);
+      expect(node.querySelectorAll('input[type=text]')).toHaveLength(5);
+    });
   });
   describe('Several edits in one event', () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };

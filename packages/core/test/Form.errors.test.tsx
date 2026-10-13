@@ -114,7 +114,6 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             required: ['foo', 'bar'],
           };
 
-          // Under a parent that stores each edit back, the setup this clearing was first written for
           const { container } = render(
             <AcceptingParent<Record<string, unknown>>
               schema={altSchema}

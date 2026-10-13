@@ -478,11 +478,11 @@ const [data, setData] = useState(record);
 <Form schema={schema} validator={validator} formData={data} onChange={(event) => setData(event.formData)} />;
 ```
 
-The value `onChange` reports is the form's own, so passing it back changes nothing; the form shows each edit as it is made, whether or not your handler stores it. To put another value in place of the form's, pass it as `formData`: a record that loads after mount, the next record, or the original one to discard the edits. A value is taken when it is neither the data the form reported nor the one you passed the render before, so a value you keep passing unchanged leaves the user's edits alone, while an object created anew on every render (`formData={{}}`) replaces them each time; pass such a value as [`initialFormData`](#initialformdata) instead.
+The value `onChange` reports is the form's own, so passing it back changes nothing while it is still the form's current value; the form shows each edit as it is made, whether or not your handler stores it. To put another value in place of the form's, pass it as `formData`: a record that loads after mount, the next record, or the original one to discard the edits. A value is taken when it is neither the form's current data nor the one you passed the render before, so a value you keep passing unchanged leaves the user's edits alone, while an object created anew on every render (`formData={{}}`) replaces them each time; pass such a value as [`initialFormData`](#initialformdata) instead. A value taken after mount is filled in with the schema's defaults except the ones the form applies on mount and `reset()` only, a [`ui:initialValue`](./uiSchema.md#initialvalue) and the defaults of additional properties; mount the form under a `key` for a record that should get them.
 
 Only `undefined` means "not passed", and a `formData` that becomes `undefined` leaves the data as it is. `null` seeds the schema's defaults the way `undefined` does on mount. `false`, `0` and `''` are values.
 
-`reset()` puts the `formData` you last passed back, with its defaults, clears the errors and reports the result through `onChange`. A `formData` you pass is taken while the form renders, with no `onChange`, so update your state from a plain handler; which value an edit is applied to when your update lands from a Transition, `useDeferredValue`, a timeout or after an `await` is the form's current one at that moment.
+`reset()` puts the `formData` you last passed back, with its defaults, clears the errors and reports the result through `onChange`; to put another value in place, pass it after the `reset()`, since a handler that stores every event stores what `reset()` reports. A `formData` you pass is taken while the form renders, with no `onChange`, so update your state from a plain handler, with the event it was last handed: a value `onChange` reported earlier is no longer the form's current one, so storing it, from a Transition, `useDeferredValue`, a timeout, after an `await`, or after a `setFieldValue()` the handler made itself, replaces the edits made since.
 
 ## id
 
@@ -623,7 +623,7 @@ Sometimes you may want to trigger events or modify external state when a field h
 
 ## onChange
 
-Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is never called on mount or when a prop changes. The edit has been applied by the time it is called: see [`formData`](#formdata) for how to keep a copy or undo it.
+Called with the same first argument as `onSubmit` for every edit: user input, `setFieldValue()`, `reset()`, and blur validation or omission. It is not called for what the form derives on mount or when a prop changes; a field that sets its own value as it mounts, as the field of a `null` type does, reports an edit like any other. The edit has been applied by the time it is called: see [`formData`](#formdata) for how to keep a copy or undo it.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
 In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.

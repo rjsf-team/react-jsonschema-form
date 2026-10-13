@@ -211,6 +211,23 @@ describe('form data ownership', () => {
       expect(input(container, 'root_a')).toHaveValue('recordx');
     });
 
+    it('keeps an edit under a parent that goes on passing a root NaN, which is the value it has seen', () => {
+      const ref = createFormRef<number>();
+      render(
+        <Form<number>
+          ref={ref}
+          schema={{ type: 'number' }}
+          validator={validator}
+          formData={Number.NaN}
+          onChange={noop}
+        />,
+      );
+
+      act(() => handleOf(ref).setFieldValue('', 5));
+
+      expect(handleOf(ref).getFormData()).toBe(5);
+    });
+
     it('takes the data it reported back as its own, not as a replacement', async () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
@@ -334,6 +351,33 @@ describe('form data ownership', () => {
 
       expect(container.querySelector('.error-detail li')).toHaveTextContent('from the server');
     });
+
+    it.each(['formData', 'initialFormData'] as const)(
+      'reports the extraErrors it keeps on display, for a form seeded with %s',
+      (seed) => {
+        const ref = createFormRef();
+        const onChange = vi.fn();
+        const extraErrors: ErrorSchema = { a: { __errors: ['from the server'] } };
+        render(
+          <Form
+            ref={ref}
+            schema={withDefault}
+            validator={validator}
+            {...{ [seed]: { a: 'x' } }}
+            extraErrors={extraErrors}
+            onChange={onChange}
+          />,
+        );
+
+        act(() => handleOf(ref).reset());
+
+        expect(onChange).toHaveBeenCalledTimes(1);
+        expect(onChange.mock.calls[0][0].errors).toEqual([
+          { property: '.a', message: 'from the server', stack: '.a from the server' },
+        ]);
+        expect(onChange.mock.calls[0][0].errorSchema).toEqual(extraErrors);
+      },
+    );
 
     it('a parent that stores edits replaces the data and clears the errors by resetting and then storing its value', async () => {
       const ref = createFormRef<Data>();
@@ -736,6 +780,34 @@ describe('form data ownership', () => {
       expect(handle.getFormData()).toEqual({ a: 'first', b: '' });
     });
 
+    it('a reset and a submit made while hidden by Activity are applied and reported at once', () => {
+      const ref = createFormRef<Data>();
+      const onChange = vi.fn();
+      const onSubmit = vi.fn();
+      const { hide } = renderInActivity(() => (
+        <Form<Data>
+          ref={ref}
+          schema={schema}
+          validator={validator}
+          initialFormData={{ a: 'seed' }}
+          onChange={onChange}
+          onSubmit={onSubmit}
+        />
+      ));
+      const handle = handleOf(ref);
+      act(() => handle.setFieldValue('a', 'edited'));
+      hide();
+      onChange.mockClear();
+
+      act(() => handle.reset());
+      act(() => handle.submit());
+
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange.mock.calls[0][0].formData).toEqual({ a: 'seed' });
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'seed' });
+    });
+
     /** A widget that sets its field to `to` from `useCommitEffect` */
     function settingWidget(useCommitEffect: typeof useEffect, to: string) {
       return function SettingWidget({ onChange, value }: WidgetProps) {
@@ -784,6 +856,52 @@ describe('form data ownership', () => {
         { a: 'layout', b: 'y' },
         { a: 'layout', b: 'passive' },
       ]);
+    });
+
+    it('keeps an edit a layout Effect cleanup makes in the commit that renders the echo of the edit before it', () => {
+      interface Flushed extends Data {
+        c?: string;
+      }
+      const ref = createFormRef<Flushed>();
+      const log = createParentLog<Flushed>();
+      const pending = { cleanup: false, setup: false };
+      // Writes `b` as React cleans its layout Effect up, which is before the form hears of the commit, the way a widget
+      // flushes a value it held back, and `c` once the same commit has set the Effect up again
+      function FlushingWidget({ value }: WidgetProps) {
+        useLayoutEffect(() => {
+          if (pending.setup) {
+            pending.setup = false;
+            handleOf(ref).setFieldValue('c', 'from setup');
+          }
+          return () => {
+            if (pending.cleanup) {
+              pending.cleanup = false;
+              handleOf(ref).setFieldValue('b', 'from cleanup');
+            }
+          };
+        });
+        return <span>{String(value)}</span>;
+      }
+      render(
+        <AcceptingParent<Flushed>
+          ref={ref}
+          schema={{
+            type: 'object',
+            properties: { a: { type: 'string' }, b: { type: 'string' }, c: { type: 'string' } },
+          }}
+          uiSchema={{ a: { 'ui:widget': FlushingWidget } }}
+          initialValue={{ a: '', b: '', c: '' }}
+          log={log}
+        />,
+      );
+
+      act(() => {
+        Object.assign(pending, { cleanup: true, setup: true });
+        handleOf(ref).setFieldValue('a', 'x');
+      });
+
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'x', b: 'from cleanup', c: 'from setup' });
+      expect(log.value).toEqual({ a: 'x', b: 'from cleanup', c: 'from setup' });
     });
 
     it('an edit made as a hidden form is shown builds on one made while it was hidden', () => {
@@ -1029,6 +1147,39 @@ describe('form data ownership', () => {
       expect(container.querySelector('#root_renamed')).toHaveValue('one');
       expect(container.querySelector('#root_second')).toHaveValue('two');
       expect(container.querySelector('#root_first')).toBeNull();
+    });
+
+    it('an additional property the parent set back and the user adds again renders once', async () => {
+      const objectSchema: RJSFSchema = { type: 'object', additionalProperties: { type: 'string' } };
+      const ref = createFormRef<Record<string, string>>();
+      let isStoring = false;
+      function SetBackOnceParent() {
+        const [data, setData] = useState<Record<string, string>>({});
+        return (
+          <Form<Record<string, string>>
+            ref={ref}
+            schema={objectSchema}
+            validator={validator}
+            formData={data}
+            onChange={(event) => {
+              if (isStoring) {
+                setData(event.formData);
+              } else if ('newKey' in event.formData) {
+                handleOf(ref).setFieldValue('', data);
+              }
+            }}
+          />
+        );
+      }
+      const { container } = render(<SetBackOnceParent />);
+      const addButton = () => container.querySelector('.rjsf-object-property-expand button')!;
+
+      await user.click(addButton());
+      expect(container.querySelectorAll('#root_newKey')).toHaveLength(0);
+      isStoring = true;
+      await user.click(addButton());
+
+      expect(container.querySelectorAll('#root_newKey')).toHaveLength(1);
     });
   });
 
@@ -1542,7 +1693,7 @@ describe('a throwing callback a field reports from an Effect', () => {
     expect(document.querySelector('form')).toBeInTheDocument();
   });
 
-  it("a widget's layout Effect change keeps a form mounted with data mounted", async () => {
+  it("a widget's layout Effect change keeps a form given formData mounted", async () => {
     function ChangeOnMountWidget({ onChange }: WidgetProps) {
       useLayoutEffect(() => {
         onChange('mounted');

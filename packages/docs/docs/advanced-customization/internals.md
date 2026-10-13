@@ -149,7 +149,7 @@ function Editor() {
 }
 ```
 
-`submit()` submits the form's current value through the form element, as a submit button does: the browser's constraint validation checks the inputs as they are rendered, then schema validation checks the value, and `onSubmit` or `onError` is called before `submit()` returns. A write followed by `submit()` in the same handler submits the new value, but the browser still sees the inputs as rendered before the write; see [the migration guide](../migration-guides/v7.x%20upgrade%20guide.md#submit-in-the-same-handler-as-an-edit). `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
+`submit()` submits the form's current value through the form element, as a submit button does: the browser's constraint validation checks the inputs as they are rendered and, when it passes, schema validation checks the value and `onSubmit` or `onError` is called before `submit()` returns. An input the browser rejects blocks the submit, and neither is called. A write followed by `submit()` in the same handler submits the new value, but the browser still sees the inputs as rendered before the write; see [the migration guide](../migration-guides/v7.x%20upgrade%20guide.md#submit-in-the-same-handler-as-an-edit). `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
 
 ## Change form data programmatically
 
@@ -180,10 +180,12 @@ useEffect(() => {
 
 A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, sees those props too: Form installs them into its store in an insertion Effect, which React runs before any of those, and also while an `<Activity>` hides the form. The cleanup of a layout Effect, a ref being detached or a `componentWillUnmount` in that commit may run earlier, depending on where it sits in the tree, and then sees Form's previous configuration. Those in the form's own subtree, in a sibling rendered before the form, and in anything removed from under one of the form's ancestors run earlier; those in a sibling rendered after the form, or in an ancestor that stays mounted, run later.
 
-Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render.
+Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render, and an edit made while a validation runs is overwritten by the operation that ran it.
 
 Under `liveValidate: 'onBlur'`, a blur in the same event as an edit validates the edit, and its `onChange` carries the errors found. A value your component stores in its place is validated at the next blur or submit.
 
 Inside `<Activity mode="hidden">`, the form works as it does when shown: `setFieldValue()`, `reset()`, a field's change and `submit()` are applied and reported at once, and the inputs show the result when the form is shown again.
+
+A form that has unmounted drops a change that reaches it late: `setFieldValue()` or `reset()` through a handle you kept, or a field's change, such as the value a debounced widget flushes as it unmounts or a file that finishes reading. It neither changes the data nor calls `onChange`, as in v6, so the late change of one record is never stored as the data of the form that replaced it. A form hidden by `<Activity>` is not unmounted and goes on taking changes.
 
 Form stores edits synchronously through `useSyncExternalStore`. Wrapping a handle call in `startTransition()` does not make it non-blocking. See the [migration guide](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change) for examples of timing-dependent code to update.

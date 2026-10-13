@@ -115,8 +115,7 @@ describe('parent harnesses', () => {
 
   it('a dependent field clearing itself from an effect when its sibling changes (#3367)', async () => {
     // The second field watches the first through formContext and clears itself from an effect, so its onChange(null)
-    // fires in the very commit that shows the sibling's change, and both must survive the trip through the parent
-    // (RFC, section 5).
+    // fires in the very commit that shows the sibling's change, and both must survive the trip through the parent.
     // The parent is written out rather than using the harness because formContext has to derive from its state.
     function ClearWhenSiblingChanges({
       formData,
@@ -230,7 +229,7 @@ describe('edits from outside React, the way a widget reports from a timer or a F
       await new Promise((resolve) => {
         setTimeout(resolve);
       });
-      // Nothing renders between the two: the parent's answer to the first is still to come
+      // Nothing renders between the two: the parent has yet to render the first
       change('root_name', 'a2');
       change('root_other', 'b2');
       await waitFor(() => expect(log.value).toEqual({ name: 'a2', other: 'b2' }));
@@ -360,7 +359,7 @@ describe('a blur in the same event as an edit, under onBlur validation, with a p
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The reset called off the validation the blur owed, and no blur has followed the change after it
+    // The reset cleared what the blur validated, and no blur has followed the change after it
     expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
     expect(fieldErrorsById(container)).toEqual({});
   });

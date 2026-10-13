@@ -19,6 +19,20 @@ function mountWithHandle(props: Parameters<typeof createFormComponent>[0]) {
 
 const user = userEvent.setup();
 
+/** A container in the document of an iframe, whose window has classes of its own, the way a form is rendered by a
+ * portal into a frame
+ */
+function frameContainer() {
+  const frame = document.createElement('iframe');
+  document.body.append(frame);
+  onTestFinished(() => frame.remove());
+  const frameDocument = frame.contentDocument;
+  if (!frameDocument) {
+    throw new Error('The iframe has no document');
+  }
+  return frameDocument.body.appendChild(frameDocument.createElement('div'));
+}
+
 describe('FormRef', () => {
   describe('getFormData()', () => {
     it('returns the seed', () => {
@@ -104,6 +118,19 @@ describe('FormRef', () => {
       expect(() => handle.submit()).not.toThrow();
       expect(onSubmit).not.toHaveBeenCalled();
     });
+
+    it('submits a form rendered into the document of an iframe', () => {
+      const ref = createFormRef();
+      const onSubmit = vi.fn();
+      render(
+        <Form ref={ref} schema={schema} validator={validator} initialFormData={{ name: 'a' }} onSubmit={onSubmit} />,
+        { container: frameContainer() },
+      );
+
+      act(() => handleOf(ref).submit());
+
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('focusOnError()', () => {
@@ -134,6 +161,16 @@ describe('FormRef', () => {
       act(() => handle.focusOnError(error('.choice')));
 
       expect(node.querySelector('#root_choice-0')).toHaveFocus();
+    });
+
+    it('focuses the input of a form rendered into the document of an iframe', () => {
+      const ref = createFormRef();
+      const container = frameContainer();
+      render(<Form ref={ref} schema={schema} validator={validator} />, { container });
+
+      act(() => handleOf(ref).focusOnError(error('.name')));
+
+      expect(container.ownerDocument.activeElement).toBe(container.querySelector('#root_name'));
     });
 
     it('treats a missing property as the root field', () => {

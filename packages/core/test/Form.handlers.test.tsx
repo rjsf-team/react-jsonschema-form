@@ -449,7 +449,6 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
     it('should allow switching to null option in oneOf', async () => {
       // This test verifies that switching to a null option in oneOf works correctly.
       // Without the fix, the form would revert back to the previous option.
-      // NOTE: This bug only manifested when a parent replaced the formData prop.
       const schema: RJSFSchema = {
         type: 'object',
         title: 'Configuration',
@@ -497,7 +496,6 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       // Switch to "No Configuration" (null option, index 2)
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '2');
 
-      // Re-render with new formData
       rerender({
         ref: createRef(),
         schema,

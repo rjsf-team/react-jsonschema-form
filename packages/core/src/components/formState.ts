@@ -644,14 +644,14 @@ function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends FormConte
  * @param current - The state the change applies to
  * @param change - The change
  * @param extraErrors - The `extraErrors` prop, which the displayed errors carry
- * @param [changed] - What the change replaced in the data, see `dataChange()`
+ * @param changed - What the change replaced in the data, see `dataChange()`
  * @returns - The error members of the state after the change, `current`'s own when the change left them as they were
  */
-export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
+function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   change: FieldChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
-  changed: DataChange = UNCHANGED,
+  changed: DataChange,
 ): ChangedErrorState<T> {
   const { fieldPath, newKeyOf } = change;
   const customErrors = ownErrorsAfterChange(current, change);
@@ -1178,9 +1178,12 @@ function withoutErrorsOfChanged<T>(validation: ValidationData<T>, changed: DataC
   );
 }
 
-/** `data` with what the array or object at `path` holds where `newKeyOf` put it, an array being as long as it is in
- * `changed`: diffed against `changed`, a moved value is no change and an added one is, so the errors that moved with a
- * key are kept and those of a value that is gone are not
+/** `data` with what the array or object at `path` holds where `newKeyOf` put it: diffed against `changed`, a moved
+ * value is no change, so the errors that moved with a key are kept and those of a value that is gone are not. An array
+ * also holds the items `changed` added, so an add or a copy is no change either: no error sits under an index that
+ * held nothing, and the array's own errors stay for the next validation as they do through a remove or a reorder,
+ * whether or not the new item has a value. A property an object gained is a change, since the validator may have
+ * reported it missing.
  */
 function withKeysMoved<T>(data: T, changed: T, path: FieldPathList, newKeyOf: KeyMove): T;
 function withKeysMoved(data: unknown, changed: unknown, path: FieldPathList, newKeyOf: KeyMove): unknown {
@@ -1188,8 +1191,7 @@ function withKeysMoved(data: unknown, changed: unknown, path: FieldPathList, new
   const newHeld = getAt<unknown>(changed, path);
   let moved: unknown;
   if (Array.isArray(held) && Array.isArray(newHeld)) {
-    const items: unknown[] = [];
-    items.length = newHeld.length;
+    const items: unknown[] = [...newHeld];
     held.forEach((item, index) => {
       // A removed item has no new key, which is no index
       const newIndex = Number(newKeyOf(String(index)));
@@ -1254,7 +1256,7 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
 
 /** Whether a pass validates its data: only under `liveValidate: 'onChange'`, and only when something the errors depend
  * on changed, so a parent re-render that touches neither the data nor the validation shows no error the user has not
- * earned yet. `'onBlur'` owns its validation pass in `onBlur()`.
+ * earned yet. `'onBlur'` owns its validation pass in `applyBlur()`.
  */
 function mustLiveValidate<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
@@ -1264,7 +1266,7 @@ function mustLiveValidate<T, S extends StrictRJSFSchema, F extends FormContextTy
 }
 
 /** Whether the form validates its data on every change */
-export function isLiveValidated<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>) {
+function isLiveValidated<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>) {
   // oxlint-disable-next-line typescript/no-deprecated
   return !props.noValidate && props.liveValidate === 'onChange';
 }
@@ -1760,8 +1762,8 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 /** The state after `reset()`: the data is re-derived from the props' seed the way an initial render does it, every
- * error, including the custom ones fields raised, is cleared, and the render context the derivation resolved with is
- * committed alongside the data.
+ * error the form holds, including the custom ones fields raised, is cleared, which leaves `extraErrors` as the only
+ * errors on display, and the render context the derivation resolved with is committed alongside the data.
  *
  * @param current - The state being reset
  * @param props - The current props
@@ -1771,6 +1773,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
+  const { extraErrors } = props;
   const { formData, context, formDataSchema, settledFormData, settledFormDataForPairing, settledRetrievedSchema } =
     deriveFormData(current, seedOf(props), { isReset: true }, props);
   return {
@@ -1781,8 +1784,8 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
-    errorSchema: {},
-    errors: [],
+    errors: extraErrors ? toErrorList(extraErrors) : [],
+    errorSchema: extraErrors ?? {},
     schemaValidationErrors: [],
     schemaValidationErrorSchema: {},
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and
@@ -1816,7 +1819,7 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
 }
 
 /** Validates `formData` for a submission or `validateForm()`: whether the errors block, the merged errors to report,
- * and the state that displays them, which is `current` itself when the displayed errors do not change.
+ * and the state that displays them.
  *
  * @param current - The state being validated
  * @param props - The current props
@@ -1853,9 +1856,7 @@ export function applyValidation<T, S extends StrictRJSFSchema, F extends FormCon
     // are gone; the validator's own results are empty for both
     next = { ...current, errors, errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
   }
-  // Unlike the other `apply*` functions this one shares here rather than leaving it to `commit()`, because the caller
-  // decides whether to commit at all by comparing the result to the state it started from
-  return { hasError, next: replaceEqualDeep(current, next) };
+  return { hasError, next };
 }
 
 /** The state after a valid submission: the submitted data, with `extraErrors` as the only errors on display
@@ -1879,16 +1880,14 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   };
 }
 
-/** The data the props hand the form: `formData`, which the form takes whenever it is passed a value it did not hand
- * out, or else `initialFormData`, which it reads on mount and on `reset()` only. A `null` seeds the same defaults an
- * `undefined` does.
+/** The data the props hand the form: `formData`, which the form takes whenever it is passed a value it has not seen,
+ * see `deriveState()`, or else `initialFormData`, which it reads on mount and on `reset()` only. A `null` seeds the
+ * same defaults an `undefined` does.
  *
  * @param props - The current props
  * @returns - The seed, or `undefined` when the props pass none
  */
-export function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  props: FormProps<T, S, F>,
-): T | undefined {
+function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>): T | undefined {
   return props.formData ?? props.initialFormData;
 }
 
@@ -1908,16 +1907,16 @@ function withFormDataProp<T, S extends StrictRJSFSchema, F extends FormContextTy
   state: FormState<T, S, F>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  return state.formDataProp === props.formData ? state : { ...state, formDataProp: props.formData };
+  return Object.is(state.formDataProp, props.formData) ? state : { ...state, formDataProp: props.formData };
 }
 
 /** Derives the state to render from the props and the committed `state`, so a `formData` is rendered the moment it
- * arrives, with no stale commit in between. Nothing is remembered about the previous props: every derived member is
- * shared against the committed state, so an unchanged input hands back the reference the fields already hold and a
- * changed one is recognized by the new reference; when nothing changed, `state` itself is handed back. The data is
- * re-derived for a `formData` the form did not hand out itself and for a schema, `ui:emptyValue` or
- * `defaultFormStateBehavior` change; any other prop change re-derives the render context alone, since an unrelated
- * re-render must not rerun value initialization.
+ * arrives, with no stale commit in between. Of the previous props only the `formData` is remembered, as
+ * `formDataProp`: every derived member is shared against the committed state, so an unchanged input hands back the
+ * reference the fields already hold and a changed one is recognized by the new reference; when nothing changed,
+ * `state` itself is handed back. The data is re-derived for a `formData` the form has not seen and for a schema,
+ * `ui:emptyValue` or `defaultFormStateBehavior` change; any other prop change re-derives the render context alone,
+ * since an unrelated re-render must not rerun value initialization.
  *
  * @param props - The current props
  * @param state - The committed state
@@ -1930,8 +1929,10 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   // A `formData` is taken as the form's value the way a controlled `<input>` takes a new `value`, unless the form has
   // seen it already: as its own data, which a parent storing what `onChange` reported passes back on every edit, or as
   // the prop of the render before, which a parent that has yet to render an edit, or stores none, passes again. The
-  // data pass derives the render context for the new data itself
-  if (props.formData !== undefined && props.formData !== state.formDataProp && props.formData !== state.formData) {
+  // data pass derives the render context for the new data itself. `Object.is`, since `NaN !== NaN` would have a root
+  // `NaN` taken again on every pass
+  const isFormDataSeen = Object.is(props.formData, state.formDataProp) || Object.is(props.formData, state.formData);
+  if (props.formData !== undefined && !isFormDataSeen) {
     return withFormDataProp(replaceEqualDeep(state, deriveDataState(state, props.formData, props)), props);
   }
   const context = deriveRenderContext(props, state.retrievedSchema, state, resolveSchemaUtils(props, state));

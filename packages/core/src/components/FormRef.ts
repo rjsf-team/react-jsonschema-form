@@ -15,9 +15,10 @@ export interface FormRef<T = unknown> {
    */
   getFormData(): EventFormData<T>;
   /** Submits the form through its element, as a submit button does: native constraint validation checks the inputs as
-   * they are rendered, then schema validation checks the stored value, and `onSubmit` or `onError` is called before
-   * this returns. An edit made in the same tick is submitted, while the native validation still sees the inputs as
-   * rendered before it. Does nothing when `tagName` renders something other than a `<form>`.
+   * they are rendered and, when it passes, schema validation checks the stored value and `onSubmit` or `onError` is
+   * called before this returns. An input the browser rejects blocks the submit, and neither is called. An edit made in
+   * the same tick is submitted, while the native validation still sees the inputs as rendered before it. Does nothing
+   * when `tagName` renders something other than a `<form>`.
    */
   submit(): void;
   /** Clears the validation errors and resets the data to the props' `formData`, or else `initialFormData`, and the

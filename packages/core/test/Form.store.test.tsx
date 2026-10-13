@@ -259,26 +259,36 @@ it('same-tick validation sees the custom errors a field raises with its edit', a
   expect(onError).toHaveBeenLastCalledWith(expect.arrayContaining([expect.objectContaining({ message: 'blocked' })]));
 });
 
-it('a handle retained past the unmount still applies and reports operations', () => {
+it('a handle retained past the unmount neither applies nor reports a change', () => {
   const ref = createFormRef();
   const { onChange, unmount } = createFormComponent({ ref, schema, initialFormData: { name: 'a' } });
   const handle = handleOf(ref);
+  act(() => handle.setFieldValue('name', 'before'));
+  expectToHaveBeenCalledWithFormData(onChange, { name: 'before' }, 'root_name');
   unmount();
   onChange.mockClear();
 
-  // A debounced widget or an autosave timer firing after a route change: the form is gone, its model is not
+  // A debounced widget or an autosave timer firing after a route change
   handle.setFieldValue('name', 'later');
+  handle.reset();
 
-  expect(handle.getFormData()).toEqual({ name: 'later' });
-  expectToHaveBeenCalledWithFormData(onChange, { name: 'later' }, 'root_name');
+  expect(handle.getFormData()).toEqual({ name: 'before' });
+  expect(onChange).not.toHaveBeenCalled();
 });
 
 it.each(['layout', 'passive'] as const)(
-  'a change a widget makes from its %s Effect cleanup as the form unmounts is applied and reported',
+  'a change a widget makes from its %s Effect cleanup as the form unmounts is dropped',
   (kind) => {
     const useCleanupEffect = kind === 'layout' ? useLayoutEffect : useEffect;
+    const flushed = vi.fn();
     function FlushOnUnmountWidget({ onChange, value }: WidgetProps) {
-      useCleanupEffect(() => () => onChange('flushed', undefined, 'root_name'), [onChange]);
+      useCleanupEffect(
+        () => () => {
+          flushed();
+          onChange('flushed', undefined, 'root_name');
+        },
+        [onChange],
+      );
       return <span>{String(value ?? '')}</span>;
     }
     const { onChange, unmount } = createFormComponent({
@@ -290,10 +300,41 @@ it.each(['layout', 'passive'] as const)(
 
     unmount();
 
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expectToHaveBeenCalledWithFormData(onChange, { name: 'flushed' }, 'root_name');
+    expect(flushed).toHaveBeenCalledTimes(1);
+    expect(onChange).not.toHaveBeenCalled();
   },
 );
+
+it('a draft a widget flushes as its form unmounts does not reach the form that replaces it', async () => {
+  function DraftWidget({ onChange, value }: WidgetProps) {
+    useEffect(() => () => onChange('draft of A', undefined, 'root_name'), [onChange]);
+    return <span>{String(value ?? '')}</span>;
+  }
+  function Records() {
+    const [record, setRecord] = useState<{ id: string; data: unknown }>({ id: 'A', data: { name: 'a' } });
+    return (
+      <>
+        <button type='button' onClick={() => setRecord({ id: 'B', data: { name: 'b' } })}>
+          Next record
+        </button>
+        <output>{JSON.stringify(record)}</output>
+        <Form
+          key={record.id}
+          schema={schema}
+          validator={validator}
+          formData={record.data}
+          uiSchema={{ name: { 'ui:widget': DraftWidget } }}
+          onChange={(event) => setRecord((current) => ({ ...current, data: event.formData }))}
+        />
+      </>
+    );
+  }
+  render(<Records />);
+
+  await user.click(screen.getByRole('button', { name: 'Next record' }));
+
+  expect(screen.getByRole('status')).toHaveTextContent('{"id":"B","data":{"name":"b"}}');
+});
 
 it('a form hidden by Activity applies a retained handle and a late field change, and reports them at once', () => {
   const { RetainingWidget, change } = createRetainingWidget();
