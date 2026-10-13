@@ -5699,11 +5699,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       const animalInfoArraySchema: RJSFSchema = { type: 'array', items: animalInfoSchema };
       const [animalCondition] = animalInfoSchema.allOf as RJSFSchema[];
       const fishFirstAnimalInfoSchema: RJSFSchema = {
-        ...animalInfoSchema,
+        properties: { animal: { type: 'string', default: 'Cat', enum: ['Cat', 'Fish', 'Dog'] } },
         allOf: [
           {
             if: { properties: { animal: { const: 'Fish' } } },
             then: { properties: { food: { type: 'string', default: 'grass' } } },
+          },
+          {
+            if: { properties: { animal: { const: 'Dog' } } },
+            then: { properties: { food: { type: 'string', default: 'fish' } } },
           },
           animalCondition,
         ],
@@ -5934,10 +5938,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('should drop the whole allOf when a custom merger throws on the conflicting then defaults', () => {
-          const conflict = new Error('conflicting default');
-          const throwingMergeAllOf: Experimental_CustomMergeAllOf = () => {
-            throw conflict;
+          const conflict = new Error('conflicting food defaults');
+          const mergeAllOfUnlessFoodDefaultsConflict: Experimental_CustomMergeAllOf = (schema) => {
+            const foodDefaults = new Set(
+              (schema.allOf as RJSFSchema[]).map(
+                (entry) => (entry.properties?.food as RJSFSchema | undefined)?.default,
+              ),
+            );
+            foodDefaults.delete(undefined);
+            if (foodDefaults.size > 1) {
+              throw conflict;
+            }
+            return shallowAllOfMerge(schema) as RJSFSchema;
           };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              animalInfoSchema,
+              { animal: 'Cat' },
+              animalInfoSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              mergeAllOfUnlessFoodDefaultsConflict,
+            ),
+          ).toEqual({ animal: 'Cat', food: 'meat' });
+          expect(consoleWarnSpy).not.toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
           expect(
             getDefaultFormState(
               testValidator,
@@ -5946,7 +5971,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               fishFirstAnimalInfoSchema,
               undefined,
               { allOf: 'skipDefaults' },
-              throwingMergeAllOf,
+              mergeAllOfUnlessFoodDefaultsConflict,
             ),
           ).toEqual({ animal: 'Cat' });
           expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
