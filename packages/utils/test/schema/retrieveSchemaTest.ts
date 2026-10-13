@@ -1179,6 +1179,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             expect(result.properties?.child).toEqual({ $ref: '#/definitions/node', [RJSF_REF_CYCLE_KEY]: true });
             expect(resolvedFromRef(result)).toBe('#/definitions/node');
           });
+          it.each<[string, RJSFSchema]>([
+            ['a then that is a $ref', { if: true, then: { $ref: '#/definitions/branch' } }],
+            ['a dependency that is a $ref', { dependencies: { a: { $ref: '#/definitions/branch' } } }],
+            [
+              'a dependency whose oneOf branch is a $ref',
+              { dependencies: { a: { oneOf: [{ $ref: '#/definitions/branch' }] } } },
+            ],
+          ])('leaves a recursion inside the definition of %s collapsed', (_, branchOf) => {
+            const branch: RJSFSchema = {
+              type: 'object',
+              properties: { a: { enum: ['1'] }, kid: { $ref: '#/definitions/branch' } },
+            };
+            const node: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } }, ...branchOf };
+            const schema: RJSFSchema = { definitions: { node, branch }, $ref: '#/definitions/node' };
+            const result = retrieveSchema({ validator: testValidator }, schema, schema, { a: '1' });
+            expect(result.properties?.kid).toEqual({ $ref: '#/definitions/branch', [RJSF_REF_CYCLE_KEY]: true });
+            expect(resolvedFromRef(result)).toBe('#/definitions/node');
+          });
           it('expands all branches of a conditional reached through a $ref follow-up pass', () => {
             testValidator.setReturnValues({ isValid: [true] });
             const rootSchema: RJSFSchema = {
