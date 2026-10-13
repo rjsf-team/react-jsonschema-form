@@ -32,6 +32,7 @@ import findSchemaDefinition, {
   normalizeRootReferences,
   carryOriginalRef,
   originalRefOf,
+  resourceName,
   restoreOriginalRefs,
   resolveUri,
   splitKeyElementFromObject,
@@ -614,8 +615,8 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   // A caller handing back the raw root it gave `createSchemaUtils` holds a different object than the
   // normalized root it carries, so identity cannot recognize it; its `$id` can. Without this the root's
   // own relative `$id` would be resolved against itself, doubling its directory part. Only the root itself
-  // is swapped: a caller's schema that merely carries the root's `$id` (a first pass's raw root aside, e.g. a
-  // property that is a copy of the root) keeps walking as itself with the root's base, so its own edits stand
+  // is swapped: a caller's schema that merely carries the root's `$id` (e.g. a property that is a
+  // copy of the root) keeps walking as itself with the root's base, so its own edits stand
   // and a self-reference flags its cycle instead of restarting the walk from the root
   const rootId = typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined;
   const isOwnRoot =
@@ -624,7 +625,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       rootId !== undefined &&
       isObject(schema) &&
       typeof schema[ID_KEY] === 'string' &&
-      uriEqual(schema[ID_KEY].replace(/#\/?$/, ''), rootId.replace(/#\/?$/, '')));
+      uriEqual(resourceName(schema[ID_KEY]), resourceName(rootId)));
   const topSchema = schema === rootSchema ? normalizedRoot : schema;
   let topBaseURI = isOwnRoot && schema !== rootSchema ? (baseURI ?? rootId) : baseURI;
   if (

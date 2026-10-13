@@ -1,5 +1,5 @@
 import { ANY_OF_KEY, ONE_OF_KEY, UI_OPTIONS_KEY } from './constants.ts';
-import { findSchemaDefinitionWithBaseURIOrUndefined, lexicalScopeOfNode } from './findSchemaDefinition.ts';
+import { findSchemaDefinitionWithBaseURI, lexicalScopeOfNode } from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
@@ -77,16 +77,12 @@ export default function resolveUiSchema<
         // keys `ui:definitions` correctly but is relative to a nested `$id` resource when one applies, and a
         // lookup against the root's base would miss it
         const scope = lexicalScopeOfNode<S>(registry.rootSchema, schema);
-        const found = findSchemaDefinitionWithBaseURIOrUndefined<S>(
+        resolvedSchema = findSchemaDefinitionWithBaseURI<S>(
           declaredRef<S>(schema),
           registry.rootSchema,
           [],
           scope,
-        );
-        if (found === undefined) {
-          throw new Error(`Could not find a definition for ${declaredRef<S>(schema)}.`);
-        }
-        resolvedSchema = found.schema;
+        ).schema;
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
         return result;

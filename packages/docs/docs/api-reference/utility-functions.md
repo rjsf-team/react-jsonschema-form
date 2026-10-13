@@ -222,16 +222,16 @@ A `schema.propertyNames.enum` caps the object in the same way: once every name i
 
 ### carryOriginalRef&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Returns a copy of `schema` that carries the ref spelling `source` had before `normalizeRootReferences()` rewrote it, so readers of the copy (such as `resolveUiSchema()`, whose `ui:definitions` are keyed by the author's spelling) still see it. Intended for the internals of `@rjsf/core` and the validators; application code should not need it.
+Records the ref spelling `source` had before `normalizeRootReferences()` rewrote it on `copy`, and returns that same `copy`, so readers of it (such as `resolveUiSchema()`, whose `ui:definitions` are keyed by the author's spelling) still see it. Intended for the internals of `@rjsf/core` and the validators; application code should not need it.
 
 #### Parameters
 
-- schema: S - The schema to copy
-- source: S - The schema whose pre-normalization `$ref` spelling the copy should carry
+- copy: S - The schema to record the spelling on, which is also the value returned
+- source: S - The schema whose pre-normalization `$ref` spelling `copy` should carry
 
 #### Returns
 
-- S: The copy, or `schema` itself when `source` carries no original spelling
+- S: The `copy` given, carrying the spelling, or `copy` unchanged when `source` carries no original spelling
 
 ### createErrorHandler&lt;T = unknown>()
 

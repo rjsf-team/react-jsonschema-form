@@ -72,6 +72,14 @@ export function uriEqual(a: string, b: string): boolean {
   return a === b || normalizeUri(a) === normalizeUri(b);
 }
 
+/** The name of the resource `uri` points at: a trailing empty fragment (`#` or `#/`) and then a trailing `/` are
+ * part of neither name, so two spellings of one resource compare equal (draft-4/6/7 roots are commonly written
+ * with a trailing `#`). Every `$id`-to-ref comparison goes through this so the spellings stay in step.
+ */
+export function resourceName(uri: string): string {
+  return uri.replace(/#\/?$/, '').replace(/\/$/, '');
+}
+
 /** The keywords through which a schema walk recurses, by the shape of the keyword's value: a single
  * subschema, an array of subschemas, or a map of names to subschemas (whose names are data, so a property
  * named `default` or `enum` is never mistaken for the keyword). Every other keyword - the data keywords
@@ -206,7 +214,7 @@ function walkEmbeddedSchemas<S extends StrictRJSFSchema = RJSFSchema>(
     // A fragment-only `$id` is an anchor: it leaves the scope unchanged, so it must not match the scope it
     // sits in, the same way `childScope` leaves it out of the scope
     !schema[ID_KEY].startsWith('#') &&
-    (uriEqual(currentURI.replace(/#\/?$/, ''), ref) || (asWrittenRef !== undefined && schema[ID_KEY] === asWrittenRef))
+    (uriEqual(resourceName(currentURI), ref) || (asWrittenRef !== undefined && schema[ID_KEY] === asWrittenRef))
   ) {
     return { schema, baseURI: currentURI };
   }
@@ -446,9 +454,9 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
     if (known !== undefined) {
       return known;
     }
-    const name = refId.replace(/\/$/, '');
+    const name = resourceName(refId);
     const exists =
-      (rootId !== undefined && uriEqual(name, rootId.replace(/#\/?$/, '').replace(/\/$/, ''))) ||
+      (rootId !== undefined && uriEqual(name, resourceName(rootId))) ||
       findEmbeddedSchemaRecursive(schema, name, '', undefined, pre2019) !== undefined;
     knownTargets.set(refId, exists);
     return exists;
@@ -732,7 +740,7 @@ function lookupSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
     const anchor = refAnchor.length > 0 ? decodeURIComponent(refAnchor.join('#')) : undefined;
     // A trailing slash or empty fragment is part of neither name: the ref and the root name the same resource
     // with or without them (draft-4/6/7 roots are commonly written with a trailing `#`)
-    if (rootId !== undefined && uriEqual(refId.replace(/\/$/, ''), rootId.replace(/#\/?$/, '').replace(/\/$/, ''))) {
+    if (rootId !== undefined && uriEqual(resourceName(refId), resourceName(rootId))) {
       // The ref names the root resource itself: what follows the `#` is a pointer into it, whatever the
       // draft. The root's `$id` is used as written for the scope: resolving a relative `$id` against
       // itself would double its directory part.

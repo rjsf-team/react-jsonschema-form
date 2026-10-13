@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import { findSchemaDefinitionWithBaseURI, normalizeRootReferences } from '../../src/findSchemaDefinition.ts';
-import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
+import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   GUESSED_TYPE_FLAG,
@@ -694,22 +694,27 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     it('keeps the cycle flag on a self-referencing root whose $ref is #', () => {
       // A `$ref: '#'` back to a root with an `$id` resolves against the normalized copy: the walk must still
-      // recognize the repeat and flag the placeholder instead of recursing forever
+      // recognize the repeat and flag the placeholder instead of recursing forever. The regression was the second
+      // step: `SchemaField` re-retrieves `properties.self`, and the copy carrying the root's `$id` restarted the
+      // walk, so the test re-retrieves level by level the way the consumer does
       const root: RJSFSchema = {
         $id: 'http://x/root.json',
         type: 'object',
         properties: { name: { type: 'string' }, self: { $ref: '#' } },
       };
       const su = createSchemaUtils({ validator: testValidator }, root);
-      const out = su.retrieveSchema(su.getRootSchema());
-      const flags: (unknown | boolean)[] = [];
-      let current: RJSFSchema | undefined = out;
+      let s = su.retrieveSchema(su.getRootSchema());
+      const flags: boolean[] = [];
       for (let level = 0; level < 5; level += 1) {
-        const nested = current?.properties?.self as RJSFSchema | undefined;
-        flags.push(nested ? ((nested as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY] ?? false) : undefined);
-        current = nested;
+        const self = s.properties!.self as RJSFSchema;
+        const flagged = (self as Record<symbol, unknown>)[RJSF_REF_CYCLE_KEY] === true;
+        flags.push(flagged);
+        if (flagged) {
+          break;
+        }
+        s = su.retrieveSchema(self);
       }
-      expect(flags).toEqual([false, true, undefined, undefined, undefined]);
+      expect(flags).toEqual([false, true]);
     });
     it('re-reads a shallow copy of the normalized root that carries an edit', () => {
       // `createSchemaUtils()` returns its marked normalized copy; a consumer that spreads it and adds a key
