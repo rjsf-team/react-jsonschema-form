@@ -15,7 +15,7 @@ import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, 
 import { ariaDescribedByIds, rangeSpec, titleId } from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
-import { cleanupOptions, useFieldWrapperProps, useShownSuccessId } from '../utils.tsx';
+import { cleanupOptions, useFieldWrapperProps, useHiddenTitle, useShownSuccessId } from '../utils.tsx';
 
 /** The Mantine input and `InputWrapper` props `Slider` doesn't take, such as a `ui:globalOptions` meant for the text
  * inputs, which it would pass on to its root element as unknown attributes
@@ -115,7 +115,9 @@ export default function RangeWidget<
 
   const themeProps = cleanupOptions(options, sliderExcludedKeys);
   const { min, max, step } = rangeSpec(schema);
-  const { wrapperProps, hiddenTitle, invalid, successId } = useFieldWrapperProps(props);
+  const { wrapperProps, inputWrapperOrder, invalid, successId } = useFieldWrapperProps(props);
+  // The slider is named by `titleId(id)`, so the title is kept, hidden, when Mantine doesn't render it
+  const hiddenTitle = useHiddenTitle(id, label, props.hideLabel, inputWrapperOrder);
   const { thumbProps, thumbLabel } = useProps<GenericObjectType>(
     'Slider',
     {},

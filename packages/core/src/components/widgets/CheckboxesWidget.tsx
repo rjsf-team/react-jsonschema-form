@@ -4,6 +4,7 @@ import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   getOptionValueFormat,
@@ -44,8 +45,7 @@ function CheckboxesWidget<
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
-          const itemDisabled =
-            Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
+          const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
           const disabledCls = disabled || itemDisabled || readonly ? 'disabled' : '';
 
           const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

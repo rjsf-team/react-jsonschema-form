@@ -822,6 +822,7 @@ exports[`array fields > has errors 1`] = `
                   >
                     <ul
                       class="list-disc list-inside"
+                      id="root_name__error"
                     >
                       <li>
                         Bad input

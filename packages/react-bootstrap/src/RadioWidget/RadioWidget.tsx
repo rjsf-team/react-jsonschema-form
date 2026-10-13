@@ -2,6 +2,7 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   enumOptionsIsSelected,
@@ -32,8 +33,7 @@ export default function RadioWidget<
     <Form.Group className='mb-0'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
-          const itemDisabled =
-            Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
+          const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
           const checked = enumOptionsIsSelected<S>(option.value, value, false);
 
           const radio = (

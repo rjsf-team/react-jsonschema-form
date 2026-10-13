@@ -103,12 +103,26 @@ export function getGroupProps({ id, label, name, hideLabel, role }: GetGroupProp
   return { id, role, 'aria-labelledby': fieldLabelId(id) };
 }
 
+/** Builds the classes of one option of a checkboxes or radio widget: its `label`, and the `text` beside the input.
+ *
+ * @param disabled - Whether the option is disabled, by the field or by `ui:enumDisabled`
+ * @returns - The `className` of the option's `label` element and of the text inside it
+ */
+export function getOptionClassNames(disabled: boolean) {
+  return {
+    label: `flex items-center ${disabled ? 'cursor-not-allowed' : 'cursor-pointer'} gap-2`,
+    text: disabled ? 'label-text opacity-50' : 'label-text',
+  };
+}
+
 interface GetTriggerDescribedBy {
   id: string;
   label?: string;
   name?: string;
   hideLabel?: boolean;
   hasValue: boolean;
+  named?: boolean;
+  describedBy?: string;
 }
 
 /** Builds the `aria-describedby` for a button that displays the field's value and opens a popup to change it — a
@@ -134,11 +148,22 @@ interface GetTriggerDescribedBy {
  * @param name - The field's property name, which the template's label falls back to
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
  * @param hasValue - Whether the button is displaying a value rather than falling back to the label
- * @returns - The button's `aria-describedby`, naming the value element only where the label names the button
+ * @param [named] - Whether the button is named by something other than that label, such as an `aria-label` its caller
+ *   passed, which replaces its contents the same way
+ * @param [describedBy=ariaDescribedByIds(id)] - The ids describing the field, which follow the value element
+ * @returns - The button's `aria-describedby`, naming the value element only where something names the button
  */
-export function getTriggerDescribedBy({ id, label, name, hideLabel, hasValue }: GetTriggerDescribedBy) {
-  if (!hasValue || !hasLabelToReference({ label, name, hideLabel })) {
-    return ariaDescribedByIds(id);
+export function getTriggerDescribedBy({
+  id,
+  label,
+  name,
+  hideLabel,
+  hasValue,
+  named = false,
+  describedBy = ariaDescribedByIds(id),
+}: GetTriggerDescribedBy) {
+  if (!hasValue || !(named || hasLabelToReference({ label, name, hideLabel }))) {
+    return describedBy;
   }
-  return `${triggerValueId(id)} ${ariaDescribedByIds(id)}`;
+  return `${triggerValueId(id)} ${describedBy}`;
 }

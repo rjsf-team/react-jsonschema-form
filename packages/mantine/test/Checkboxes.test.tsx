@@ -144,6 +144,13 @@ describe('Checkboxes', () => {
   );
 });
 
+describe('CheckboxesWidget', () => {
+  test.each(['disabled', 'readonly'] as const)('disables every option of a %s field', (state) => {
+    renderWidget({ [state]: true });
+    screen.getAllByRole('checkbox').forEach((checkbox) => expect(checkbox).toBeDisabled());
+  });
+});
+
 describe('CheckboxesWidget focus and blur', () => {
   it.each(['indexed', 'realValue'] as const)(
     'reports the focused option value in the %s format, apart from an option sharing its String() (#5315)',

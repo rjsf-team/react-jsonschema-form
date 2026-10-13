@@ -1954,13 +1954,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
         <div
-          aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-2"
           >
             <div
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
@@ -7357,13 +7357,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
         <div
-          aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-2"
           >
             <div
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
@@ -15922,7 +15922,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
         <div
-          aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
           <div
@@ -15936,6 +15935,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
             <div
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-labelledby="root-label"
@@ -19070,7 +19070,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
         <div
-          aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
           <div
@@ -19084,6 +19083,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
             <div
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-labelledby="root-label"
@@ -22218,7 +22218,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
         <div
-          aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
           <div
@@ -22232,6 +22231,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
             <div
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-labelledby="root-label"
@@ -25047,13 +25047,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
       >
         <div
-          aria-describedby="root__error root__description root__help"
           class="MuiFormControl-root MuiTextField-root emotion-1"
         >
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-2"
           >
             <div
+              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"

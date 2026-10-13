@@ -613,3 +613,69 @@ describe('single SelectWidget translated placeholder', () => {
     expect(trigger).toHaveTextContent(/^$/);
   });
 });
+
+describe('SelectWidget named and described by its caller', () => {
+  const enumOptions = [
+    { label: 'Red', value: 'red' },
+    { label: 'Blue', value: 'blue' },
+  ];
+
+  test('multi-select names its search input by the aria-label it is passed', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({ multiple: true, value: [], options: { enumOptions }, 'aria-label': 'When, year' })}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'When, year' })).toBeInTheDocument();
+  });
+
+  test('multi-select describes its search input by the ids it is passed', () => {
+    render(
+      <>
+        <p id='field-help'>Pick any.</p>
+        <SelectWidget
+          {...makeWidgetMockProps({
+            multiple: true,
+            value: [],
+            options: { enumOptions },
+            'aria-describedby': 'field-help',
+          })}
+        />
+      </>,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleDescription('Pick any.');
+  });
+});
+
+describe('SelectWidget whose button the field label names', () => {
+  const enumOptions = [
+    { label: 'Red', value: 'red' },
+    { label: 'Blue', value: 'blue' },
+  ];
+
+  function renderLabelled(props: Parameters<typeof makeWidgetMockProps>[0], labelText: string) {
+    render(
+      <>
+        <label htmlFor='root_color'>{labelText}</label>
+        <SelectWidget
+          {...makeWidgetMockProps({ id: 'root_color', value: 'red', options: { enumOptions }, ...props })}
+        />
+      </>,
+    );
+    return screen.getByRole('button', { expanded: false });
+  }
+
+  test('describes the button by its value when the label shows the property name of an untitled field', () => {
+    const button = renderLabelled({ label: '', name: 'color' }, 'color');
+
+    expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
+  });
+
+  test('describes the button by its value when the label shows only the required mark', () => {
+    const button = renderLabelled({ label: '', name: '', required: true }, '*');
+
+    expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
+  });
+});

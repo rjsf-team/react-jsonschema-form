@@ -2,6 +2,7 @@ import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema, Generi
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -34,6 +35,7 @@ export default function CheckboxesWidget<
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const fieldDisabled = disabled || (readonlyAsDisabled && readonly);
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -52,7 +54,6 @@ export default function CheckboxesWidget<
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
-      disabled={disabled || (readonlyAsDisabled && readonly)}
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
       value={selectValue}
@@ -67,9 +68,9 @@ export default function CheckboxesWidget<
               id={optionId(id, i)}
               name={htmlName || id}
               autoFocus={i === 0 ? autofocus : false}
-              disabled={
-                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)
-              }
+              // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
+              // the checkbox leaves `disabled` unset
+              disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}
               onFocus={!readonly ? focusHandlers[i] : undefined}
