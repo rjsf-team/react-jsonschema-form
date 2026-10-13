@@ -1,6 +1,7 @@
 import type { MouseEvent, ReactNode } from 'react';
 import { memo, useCallback, useMemo, useState } from 'react';
 import type {
+  ArrayFieldItemButtonProps,
   ArrayFieldTemplateProps,
   ErrorSchema,
   FieldPath,
@@ -13,6 +14,8 @@ import type {
   UIOptionsType,
 } from '@rjsf/utils';
 import {
+  getByPath,
+  toPath,
   allowAdditionalItems,
   getItemUiSchemaForItem,
   getStaticItemsUiSchema,
@@ -38,18 +41,23 @@ import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
-/** An item of the `formData` paired with its stable React key */
-interface KeyedFormDataType<T> {
+/** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
+interface RowId {
   key: string;
+  order: number;
+}
+
+/** An item of the `formData` paired with its row's identity */
+interface KeyedFormDataType<T> extends RowId {
   item: T;
 }
 
 /** Used to generate a unique ID for an element in a row */
 let rowIdCounter = 0;
 
-function generateRowId() {
+function generateRowId(): RowId {
   rowIdCounter += 1;
-  return `rjsf-array-item-${rowIdCounter}`;
+  return { key: `rjsf-array-item-${rowIdCounter}`, order: rowIdCounter };
 }
 
 /** Converts `KeyedFormDataType` data into the inner `formData`
@@ -107,6 +115,15 @@ function canAddItem<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     }
   }
   return addable;
+}
+
+/** `canAddItem()` for a tuple, which can only add an item that its `additionalItems` describes */
+function canAddTupleItem<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(registry: Registry<T[], S, F>, schema: S, formItems: T[], uiSchema?: UiSchema<T[], S, F>) {
+  return isObject(schema.additionalItems) && canAddItem<T, S, F>(registry, schema, formItems, uiSchema);
 }
 
 /** Returns the default form information for an item based on the schema for that item. Deals with the possibility
@@ -354,6 +371,164 @@ function asItemErrorSchema(errorSchema: unknown): unknown {
   return errorSchema;
 }
 
+/** The name `ui:options.itemLabel` gives an item from the value it points at: a non-empty string, or a number */
+function itemNameFrom(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    const name = value.trim();
+    return name || undefined;
+  }
+  return typeof value === 'number' && Number.isFinite(value) ? String(value) : undefined;
+}
+
+/** Numbers the names that more than one item has, `a (1)` and `a (2)`, in the order the items sharing each name were
+ * added to the array, given as each entry's `order`. A number then stays with its item when items are moved, copied or
+ * edited, and a copy takes the next one. A numbered name already in use, as another item's own name or an earlier
+ * numbered one, moves on to the next free number.
+ */
+function numberSharedNames(
+  entries: readonly (readonly [name: string | null, order: number])[],
+  translateString: Registry['translateString'],
+): (string | undefined)[] {
+  const counts = new Map<string, number>();
+  for (const [name] of entries) {
+    if (name !== null) {
+      counts.set(name, (counts.get(name) ?? 0) + 1);
+    }
+  }
+  const taken = new Set(counts.keys());
+  const nextNumbers = new Map<string, number>();
+  const names: (string | undefined)[] = entries.map(([name]) => name ?? undefined);
+  const shared = entries
+    .flatMap(([name, order], index) => (name !== null && (counts.get(name) ?? 0) > 1 ? [{ name, order, index }] : []))
+    .sort((a, b) => a.order - b.order || a.index - b.index);
+  for (const { name, index } of shared) {
+    const numberedAs = (number: number) =>
+      translateString(TranslatableString.ItemNameWithNumber, [name, String(number)]);
+    let number = nextNumbers.get(name) ?? 1;
+    let numbered = numberedAs(number);
+    // With a working format at most `taken.size` numbers are in use, so a free one is found within the bound. A format
+    // that leaves the number out translates the next number the same, and searching further can't help
+    for (let attempts = 0; taken.has(numbered) && attempts < taken.size; attempts++) {
+      const next = numberedAs(number + 1);
+      if (next === numbered) {
+        break;
+      }
+      number += 1;
+      numbered = next;
+    }
+    nextNumbers.set(name, number + 1);
+    if (numbered) {
+      taken.add(numbered);
+      names[index] = numbered;
+    }
+  }
+  return names;
+}
+
+/** The `ui:options` that decide which buttons an array item shows, with their defaults, read in one place so that the
+ * buttons and the names `itemLabel` gives the items agree
+ */
+function itemButtonOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiOptions: UIOptionsType<T[], S, F>,
+) {
+  const { orderable = true, removable = true, copyable = false } = uiOptions;
+  return { orderable, removable, copyable };
+}
+
+/** Whether Copy can ever show on an array's items, whatever their number. Copy shows only while an item can be added,
+ * so this asks the rule the array's own Add and Copy buttons follow, `canAddItem` or for a tuple `canAddTupleItem`,
+ * about the fewest items there can be with one to copy, `itemsBeforeCopy`
+ */
+function canEverCopy<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  registry: Registry<T[], S, F>,
+  schema: S,
+  uiSchema: UiSchema<T[], S, F> | undefined,
+  uiOptions: UIOptionsType<T[], S, F>,
+  itemsBeforeCopy: number,
+  isTuple: boolean,
+) {
+  const canAdd = isTuple ? canAddTupleItem : canAddItem;
+  return (
+    itemButtonOptions(uiOptions).copyable && canAdd<T, S, F>(registry, schema, new Array<T>(itemsBeforeCopy), uiSchema)
+  );
+}
+
+/** The title of one of an item's buttons, or undefined when the item has no name or the button can't show. Memoized per
+ * button, so that a change to whether one button shows doesn't re-translate the others.
+ */
+function useButtonTitle(
+  itemName: string | undefined,
+  shows: boolean,
+  key: TranslatableString,
+  translateString: Registry['translateString'],
+) {
+  return useMemo(
+    () => (itemName !== undefined && shows ? translateString(key, [itemName]) : undefined),
+    [itemName, shows, key, translateString],
+  );
+}
+
+/** The names `ui:options.itemLabel` gives the items of an array, read from each item's data at that path, or from the
+ * item itself for `'.'`. Items are named when their options give them buttons, not when a button shows right now, as a
+ * lone item can't move and an array at `maxItems` can't copy, so that reaching those limits doesn't renumber them. A
+ * tuple passes its `fixedItemCount`: its fixed items can only show Copy, so they're named only when Copy can ever show,
+ * which in a tuple also needs `additionalItems`.
+ */
+function useItemNames<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  keyedItems: readonly KeyedFormDataType<T>[],
+  registry: Registry<T[], S, F>,
+  schema: S,
+  uiSchema: UiSchema<T[], S, F> | undefined,
+  uiOptions: UIOptionsType<T[], S, F>,
+  fixedItemCount?: number,
+): (string | undefined)[] | undefined {
+  const { itemLabel } = uiOptions;
+  // A uiSchema from JSON isn't type-checked, so a value other than a path leaves the items unnamed rather than throwing
+  const labelled = typeof itemLabel === 'string' && itemLabel !== '';
+  const isTuple = fixedItemCount !== undefined;
+  const canCopy = useMemo(
+    () =>
+      labelled &&
+      canEverCopy<T, S, F>(registry, schema, uiSchema, uiOptions, Math.max(fixedItemCount ?? 0, 1), isTuple),
+    [labelled, isTuple, fixedItemCount, registry, schema, uiSchema, uiOptions],
+  );
+  const { orderable, removable } = itemButtonOptions(uiOptions);
+  const hasButtons = orderable || removable || canCopy;
+  const path = useMemo(() => {
+    if (!labelled || !hasButtons) {
+      return undefined;
+    }
+    if (itemLabel === '.') {
+      return [];
+    }
+    // Only `'.'` names an item by its own value, so a path of nothing but separators, such as `'[]'`, names nothing
+    const segments = toPath(itemLabel);
+    return segments.length > 0 ? segments : undefined;
+  }, [labelled, hasButtons, itemLabel]);
+  const firstNamedIndex = canCopy ? 0 : (fixedItemCount ?? 0);
+  // Serialized, so that the numbering below reruns only when a name or the items' order changes, not on every edit to
+  // another field
+  const namesKey = useMemo(
+    () =>
+      path &&
+      JSON.stringify(
+        keyedItems.map(({ order, item }, index) => [
+          index < firstNamedIndex ? null : (itemNameFrom(path.length === 0 ? item : getByPath(item, path)) ?? null),
+          order,
+        ]),
+      ),
+    [keyedItems, path, firstNamedIndex],
+  );
+  const { translateString } = registry;
+  return useMemo(
+    () =>
+      namesKey === undefined
+        ? undefined
+        : numberSharedNames(JSON.parse(namesKey) as [string | null, number][], translateString),
+    [namesKey, translateString],
+  );
+}
+
 /** Renders the individual array item using a `SchemaField` along with the additional properties that are needed to
  * render the whole of the `ArrayFieldItemTemplate`.
  */
@@ -373,6 +548,7 @@ function ArrayFieldItemInner<
   uiOptions: UIOptionsType<T[], S, F>;
   parentUiSchema: UiSchema<T[], S, F>;
   title: string | undefined;
+  itemName?: string;
   canAdd: boolean;
   canRemove?: boolean;
   canMoveUp: boolean;
@@ -419,6 +595,7 @@ function ArrayFieldItemInner<
     rawErrors,
     totalItems,
     title,
+    itemName,
     handleAddItem,
     handleCopyItem,
     handleRemoveItem,
@@ -442,7 +619,7 @@ function ArrayFieldItemInner<
   const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
-  const { orderable = true, removable = true, copyable = false } = uiOptions;
+  const { orderable, removable, copyable } = itemButtonOptions(uiOptions);
   const has: Record<string, boolean> = {
     moveUp: orderable && canMoveUp,
     moveDown: orderable && canMoveDown,
@@ -451,6 +628,33 @@ function ArrayFieldItemInner<
     toolbar: false,
   };
   has.toolbar = Object.keys(has).some((key: keyof typeof has) => has[key]);
+
+  const { translateString } = registry;
+  // Titles only for the buttons this item can show. Both move buttons show, one of them disabled, whenever the item can
+  // move either way, so their titles depend on whether it can move at all rather than on `has.moveUp` and
+  // `has.moveDown`, which change as other items are added, removed or moved
+  const movable = orderable && (canMoveUp || canMoveDown);
+  const copyTitle = useButtonTitle(itemName, has.copy, TranslatableString.CopyItemButton, translateString);
+  const moveDownTitle = useButtonTitle(itemName, movable, TranslatableString.MoveDownItemButton, translateString);
+  const moveUpTitle = useButtonTitle(itemName, movable, TranslatableString.MoveUpItemButton, translateString);
+  const removeTitle = useButtonTitle(itemName, has.remove, TranslatableString.RemoveItemButton, translateString);
+  const itemButtonProps = useMemo(() => {
+    // An empty title, as from a translator without these strings, is left out, since it would replace the default one
+    const buttonProps: ArrayFieldItemButtonProps = {};
+    if (copyTitle) {
+      buttonProps.copy = { title: copyTitle };
+    }
+    if (moveDownTitle) {
+      buttonProps.moveDown = { title: moveDownTitle };
+    }
+    if (moveUpTitle) {
+      buttonProps.moveUp = { title: moveUpTitle };
+    }
+    if (removeTitle) {
+      buttonProps.remove = { title: removeTitle };
+    }
+    return Object.keys(buttonProps).length > 0 ? buttonProps : undefined;
+  }, [copyTitle, moveDownTitle, moveUpTitle, removeTitle]);
 
   const onAddItem = useCallback(
     (event: MouseEvent) => {
@@ -525,6 +729,7 @@ function ArrayFieldItemInner<
       onRemoveItem,
       onMoveUpItem,
       onMoveDownItem,
+      itemButtonProps,
       registry,
       schema: itemSchema,
       uiSchema: itemUiSchema,
@@ -603,6 +808,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const schemaItems: S = useMemo(() => (isObject(schema.items) ? (schema.items as S) : ({} as S)), [schema.items]);
   const itemsSchema: S = useMemo(() => schemaUtils.retrieveSchema(schemaItems), [schemaUtils, schemaItems]);
   const formData = useMemo(() => keyedToPlainFormData<T>(keyedFormData), [keyedFormData]);
+  const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiSchema, uiOptions);
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formDataFromProps);
   const canAdd = useMemo(
@@ -635,6 +841,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
         disabled,
         required,
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
+        itemName: itemNames?.[index],
         canAdd,
         canMoveUp: index > 0,
         canMoveDown: index < formData.length - 1,
@@ -716,7 +923,6 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
   const hasFormData = isFormDataAvailable<T[]>(formData);
   const schemaItems = useMemo<S[]>(() => (Array.isArray(schema.items) ? (schema.items as S[]) : []), [schema.items]);
-  const hasAdditionalItems = isObject(schema.additionalItems);
 
   if (items.length < schemaItems.length) {
     // to make sure at least all fixed items are generated
@@ -727,10 +933,8 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
 
   // These are the props passed into the render function
-  const canAdd =
-    canAddItem<T, S, F>(registry, schema, items, uiSchema) &&
-    hasAdditionalItems &&
-    (!renderOptionalField || hasFormData);
+  const canAdd = canAddTupleItem<T, S, F>(registry, schema, items, uiSchema) && (!renderOptionalField || hasFormData);
+  const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiSchema, uiOptions, schemaItems.length);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
     className: `rjsf-field rjsf-field-array rjsf-field-array-fixed-items${extraClass}`,
@@ -771,6 +975,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         disabled,
         required,
         title: fieldTitle ? `${fieldTitle}-${index + 1}` : undefined,
+        itemName: itemNames?.[index],
         canAdd,
         canRemove: additional,
         canMoveUp: index >= schemaItems.length + 1,
@@ -822,25 +1027,49 @@ const NO_ITEMS: never[] = [];
 /** Pairs each item of the `formData` prop with a stable React key. Only the keys live in state: the items are read
  * from props on every render, so the rows always show the value the form actually holds, never a proposal the field
  * made and the form did not commit. The keys are UI metadata, kept so that React reuses row instances (and their DOM
- * focus) across accepted adds, removes and reorders. When the array's length changes outside the handlers, an external
- * replacement or a proposal the form transformed, there is no way to tell which rows survived, so every key is
- * regenerated.
+ * focus) across accepted adds, removes and reorders.
+ *
+ * Two sets of rows are kept: `keys`, the rows of the field's latest change, and `confirmed`, the rows of the last data
+ * whose length matched them. Data of the latest change's length uses `keys`, and becomes the confirmed rows. Data of
+ * the confirmed rows' length uses `confirmed`, as when a parent that applies `onChange` later still passes the data
+ * from before the change. Data whose length matches neither, an external replacement or a proposal the form
+ * transformed, gives no way to tell which rows survived, so every key is regenerated.
  */
 function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
-  const freshKeys = () => items.map(generateRowId);
-  const [keys, setKeys] = useState<string[]>(freshKeys);
+  const freshKeys = () => items.map(() => generateRowId());
+  // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them
+  const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[] }>(() => {
+    const keys = freshKeys();
+    return { keys, confirmed: keys };
+  });
 
-  let itemKeys = keys;
-  if (itemKeys.length !== items.length) {
+  let itemKeys: RowId[];
+  if (rows.keys.length === items.length) {
+    itemKeys = rows.keys;
+    if (rows.confirmed !== rows.keys) {
+      setRows({ keys: rows.keys, confirmed: rows.keys });
+    }
+  } else if (rows.confirmed.length === items.length) {
+    // A parent that applies `onChange` later, after an `await` or in a transition, still passes the data from before the
+    // field's change, which matches the confirmed rows; keeping those, and the change's rows for when its data arrives,
+    // stops the rows and the order they were added in from being regenerated in between. Only lengths are compared, so
+    // two changes inside one such delay that leave the data at neither length, as a copy and then a remove, regenerate
+    // the keys of the renders in between, until the last change's data arrives
+    itemKeys = rows.confirmed;
+  } else {
     itemKeys = freshKeys();
-    setKeys(itemKeys);
+    setRows({ keys: itemKeys, confirmed: itemKeys });
   }
 
-  const keyedFormData = useMemo(() => itemKeys.map((key, index) => ({ key, item: items[index] })), [itemKeys, items]);
+  const keyedFormData = useMemo(
+    () => itemKeys.map(({ key, order }, index) => ({ key, order, item: items[index] })),
+    [itemKeys, items],
+  );
 
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
-    setKeys(newData.map((keyedItem) => keyedItem.key));
+    const keys = newData.map(({ key, order }) => ({ key, order }));
+    setRows((current) => ({ keys, confirmed: current.confirmed }));
     return keyedToPlainFormData(newData);
   }, []);
 
@@ -870,7 +1099,10 @@ export default function ArrayField<
     if (!Array.isArray(current)) {
       return [];
     }
-    return current.map((item, index) => ({ key: rows[index]?.key ?? generateRowId(), item }));
+    return current.map((item, index) => {
+      const { key, order } = rows[index] ?? generateRowId();
+      return { key, order, item };
+    });
   }, [view]);
 
   /** Proposes the rows a handler built from `rows`, recording them first so a second handler in the same event starts
@@ -904,7 +1136,7 @@ export default function ArrayField<
 
       const rows = readRows();
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
+        ...generateRowId(),
         item: getNewFormDataRow<T, S, F>(registry, schema, index ?? rows.length, uiSchema),
       };
       const newKeyedFormData = [...rows];
@@ -936,7 +1168,7 @@ export default function ArrayField<
       }
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        key: generateRowId(),
+        ...generateRowId(),
         item: structuredClone(rows[index].item),
       };
       const newKeyedFormData = [...rows];

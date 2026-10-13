@@ -97,6 +97,13 @@ const arrays: Sample = {
           default: 'lorem ipsum',
         },
       },
+      namedItems: {
+        title: 'Items named in their button titles',
+        type: 'array',
+        items: {
+          $ref: '#/definitions/Thing',
+        },
+      },
       unremovable: {
         title: 'Unremovable items',
         type: 'array',
@@ -138,6 +145,9 @@ const arrays: Sample = {
   },
   uiSchema: {
     listOfStrings: {
+      'ui:options': {
+        itemLabel: '.',
+      },
       items: { 'ui:emptyValue': '' },
     },
     multipleChoicesList: {
@@ -157,6 +167,12 @@ const arrays: Sample = {
     copyable: {
       'ui:options': {
         copyable: true,
+      },
+    },
+    namedItems: {
+      'ui:options': {
+        copyable: true,
+        itemLabel: 'name',
       },
     },
     unremovable: {
@@ -186,6 +202,7 @@ const arrays: Sample = {
     nestedList: [['lorem', 'ipsum'], ['dolor']],
     unorderable: ['one', 'two'],
     copyable: ['one', 'two'],
+    namedItems: [{ name: 'report.pdf' }, { name: 'invoice.pdf' }],
     unremovable: ['one', 'two'],
     noToolbar: ['one', 'two'],
     fixedNoToolbar: [42, true, 'additional item one', 'additional item two'],
