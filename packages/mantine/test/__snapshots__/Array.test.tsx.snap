@@ -5091,6 +5091,560 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
 </DocumentFragment>
 `;
 
+exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
+<DocumentFragment>
+  <style
+    data-mantine-styles="true"
+  >
+    
+
+
+
+
+  </style>
+  <style
+    data-mantine-styles="classes"
+  >
+    @media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}
+  </style>
+  <form
+    class="rjsf"
+  >
+    <div
+      class="rjsf-field rjsf-field-array"
+    >
+      <fieldset
+        class="m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-object m_e9408a47 mantine-Fieldset-root"
+        data-variant="default"
+        id="root"
+      >
+        <div
+          class="row rjsf-array-item-list"
+        >
+          <div
+            class="rjsf-array-item"
+            style="margin-bottom: var(--mantine-spacing-xs);"
+          >
+            <div
+              class="m_8bffd616 mantine-Flex-root __m__-_r_ta_"
+              style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
+            >
+              <div
+                class=""
+                style="width: 100%;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
+                    data-strategy="block"
+                    id="root_0"
+                    style="padding: 0rem;"
+                  >
+                    <style
+                      data-mantine-styles="inline"
+                    >
+                      .__m__-_r_te_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                    </style>
+                    <div
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_te_"
+                      style="margin-bottom: var(--mantine-spacing-sm);"
+                    >
+                      <div
+                        class=""
+                      >
+                        <div
+                          class="rjsf-field rjsf-field-string"
+                        >
+                          <div
+                            class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                            data-size="sm"
+                          >
+                            <label
+                              class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
+                              data-size="sm"
+                              for="root_0_name"
+                              id="root_0_name-label"
+                              style="--input-label-size: var(--mantine-font-size-sm);"
+                            >
+                              name
+                            </label>
+                            <div
+                              class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                              data-size="sm"
+                              data-variant="default"
+                              style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                            >
+                              <input
+                                aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+                                data-variant="default"
+                                id="root_0_name"
+                                name="root_0_name"
+                                placeholder=""
+                                type="text"
+                                value="report.pdf"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="m_4081bf90 mantine-Group-root"
+                style="--group-gap: calc(0.125rem * var(--mantine-scale)); --group-align: center; --group-justify: flex-start; --group-wrap: nowrap; margin-bottom: calc(0.4375rem * var(--mantine-scale));"
+              >
+                <button
+                  class="mantine-focus-auto rjsf-array-item-move-up m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-disabled="true"
+                  data-size="sm"
+                  data-variant="subtle"
+                  disabled=""
+                  id="root_0__moveUp"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Move report.pdf up"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-up"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M6 15l6 -6l6 6"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-move-down m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_0__moveDown"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Move report.pdf down"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-down"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M6 9l6 6l6 -6"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-copy m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_0__copy"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Copy report.pdf"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-copy"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"
+                      />
+                      <path
+                        d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_0__remove"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Remove report.pdf"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M18 6l-12 12"
+                      />
+                      <path
+                        d="M6 6l12 12"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="rjsf-array-item"
+            style="margin-bottom: var(--mantine-spacing-xs);"
+          >
+            <div
+              class="m_8bffd616 mantine-Flex-root __m__-_r_u0_"
+              style="gap: var(--mantine-spacing-xs); align-items: end; justify-content: center;"
+            >
+              <div
+                class=""
+                style="width: 100%;"
+              >
+                <div
+                  class="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    class="m_7485cace mantine-Container-root"
+                    data-fluid="true"
+                    data-strategy="block"
+                    id="root_1"
+                    style="padding: 0rem;"
+                  >
+                    <style
+                      data-mantine-styles="inline"
+                    >
+                      .__m__-_r_u4_{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}
+                    </style>
+                    <div
+                      class="m_2415a157 mantine-SimpleGrid-root __m__-_r_u4_"
+                      style="margin-bottom: var(--mantine-spacing-sm);"
+                    >
+                      <div
+                        class=""
+                      >
+                        <div
+                          class="rjsf-field rjsf-field-string"
+                        >
+                          <div
+                            class="m_46b77525 mantine-InputWrapper-root mantine-TextInput-root"
+                            data-size="sm"
+                          >
+                            <label
+                              class="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label"
+                              data-size="sm"
+                              for="root_1_name"
+                              id="root_1_name-label"
+                              style="--input-label-size: var(--mantine-font-size-sm);"
+                            >
+                              name
+                            </label>
+                            <div
+                              class="m_6c018570 mantine-Input-wrapper mantine-TextInput-wrapper"
+                              data-size="sm"
+                              data-variant="default"
+                              style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+                            >
+                              <input
+                                aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                class="m_8fb7ebe7 mantine-Input-input mantine-TextInput-input"
+                                data-variant="default"
+                                id="root_1_name"
+                                name="root_1_name"
+                                placeholder=""
+                                type="text"
+                                value="invoice.pdf"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="m_4081bf90 mantine-Group-root"
+                style="--group-gap: calc(0.125rem * var(--mantine-scale)); --group-align: center; --group-justify: flex-start; --group-wrap: nowrap; margin-bottom: calc(0.4375rem * var(--mantine-scale));"
+              >
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-move-up m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_1__moveUp"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Move invoice.pdf up"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-up"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M6 15l6 -6l6 6"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto rjsf-array-item-move-down m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-disabled="true"
+                  data-size="sm"
+                  data-variant="subtle"
+                  disabled=""
+                  id="root_1__moveDown"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Move invoice.pdf down"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-down"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M6 9l6 6l6 -6"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-copy m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_1__copy"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Copy invoice.pdf"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-copy"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"
+                      />
+                      <path
+                        d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"
+                      />
+                    </svg>
+                  </span>
+                </button>
+                <button
+                  class="mantine-focus-auto mantine-active rjsf-array-item-remove m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+                  data-size="sm"
+                  data-variant="subtle"
+                  id="root_1__remove"
+                  style="--ai-size: var(--ai-size-sm); --ai-bg: transparent; --ai-hover: var(--mantine-color-red-light-hover); --ai-color: var(--mantine-color-red-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+                  title="Remove invoice.pdf"
+                  type="button"
+                >
+                  <span
+                    class="m_8d3afb97 mantine-ActionIcon-icon"
+                  >
+                    <svg
+                      class="icon icon-tabler icons-tabler-outline icon-tabler-x"
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M0 0h24v24H0z"
+                        fill="none"
+                        stroke="none"
+                      />
+                      <path
+                        d="M18 6l-12 12"
+                      />
+                      <path
+                        d="M6 6l12 12"
+                      />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="m_4081bf90 mantine-Group-root"
+          style="--group-gap: var(--mantine-spacing-md); --group-align: center; --group-justify: flex-end; --group-wrap: wrap;"
+        >
+          <button
+            class="mantine-focus-auto mantine-active rjsf-array-item-add m_8d3f4000 mantine-ActionIcon-root m_87cf2631 mantine-UnstyledButton-root"
+            data-size="md"
+            data-variant="subtle"
+            id="root__add"
+            style="--ai-size: var(--ai-size-md); --ai-bg: transparent; --ai-hover: var(--mantine-color-blue-light-hover); --ai-color: var(--mantine-color-blue-light-color); --ai-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+            title="Add Item"
+            type="button"
+          >
+            <span
+              class="m_8d3afb97 mantine-ActionIcon-icon"
+            >
+              <svg
+                class="icon icon-tabler icons-tabler-outline icon-tabler-plus"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                  stroke="none"
+                />
+                <path
+                  d="M12 5l0 14"
+                />
+                <path
+                  d="M5 12l14 0"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </fieldset>
+    </div>
+    <button
+      class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
+      data-variant="filled"
+      style="--button-bg: var(--mantine-color-blue-filled); --button-hover: var(--mantine-color-blue-filled-hover); --button-color: var(--mantine-color-white); --button-bd: calc(0.0625rem * var(--mantine-scale)) solid transparent;"
+      type="submit"
+    >
+      <span
+        class="m_80f1301b mantine-Button-inner"
+      >
+        <span
+          class="m_811560b9 mantine-Button-label"
+        >
+          Submit
+        </span>
+      </span>
+    </button>
+  </form>
+</DocumentFragment>
+`;
+
 exports[`with title and description > array 1`] = `
 <DocumentFragment>
   <style
