@@ -1668,7 +1668,7 @@ describe('lexicalScopeOfNode', () => {
   });
   it('returns undefined for a node the root does not contain', () => {
     const root: RJSFSchema = { properties: { a: { type: 'string' } } };
-    expect(lexicalScopeOfNode(root, { $ref: 'elsewhere.json' } as RJSFSchema)).toBeUndefined();
+    expect(lexicalScopeOfNode(root, { $ref: 'elsewhere.json' })).toBeUndefined();
   });
   it('walks a subtree shared between positions once, at its first position', () => {
     const shared: RJSFSchema = { $id: 'shared.json', properties: { x: { type: 'string' } } };
