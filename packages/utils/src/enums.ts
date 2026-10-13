@@ -72,7 +72,7 @@ export const TranslatableString = {
   SecondLabel: 'second',
   /** Aria date label, used by DateWidget */
   AriaDateLabel: 'Select a date',
-  /** Placeholder for a select input, and its accessible name when the field has no title, used by the shadcn SelectWidget */
+  /** Placeholder for a select input, and its accessible name when the field has no title, used by the shadcn and daisyui SelectWidgets */
   SelectPlaceholder: 'Select ...',
   /** Done button label, used by the daisyUI date pickers */
   DoneLabel: 'Done',

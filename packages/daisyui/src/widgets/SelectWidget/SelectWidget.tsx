@@ -9,6 +9,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
+  TranslatableString,
   enumOptionsDeselectValue,
   enumOptionValueLabel,
   enumOptionsIndexForValue,
@@ -214,7 +215,9 @@ export default function SelectWidget<
           })}
         >
           <span id={triggerValueId(id)} className='truncate'>
-            {hasValue ? selectedLabels.join(', ') : placeholder || label || 'Select...'}
+            {hasValue
+              ? selectedLabels.join(', ')
+              : placeholder || label || registry.translateString(TranslatableString.SelectPlaceholder)}
           </span>
           {/* Decoration, and hidden from the name the button's own contents give it where no label points at one —
               a root field, a `oneOf` option selector — which would otherwise end in the glyph's own spoken name */}

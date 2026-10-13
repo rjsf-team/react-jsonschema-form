@@ -272,6 +272,7 @@ should change the heading of the (upcoming) version to include a major version b
 - The date pickers' Done button and the `DateTimeWidget`'s time input label go through `translateString`, as `TranslatableString.DoneLabel` and `TranslatableString.TimeLabel`, so a translator reaches them ([#5482](https://github.com/rjsf-team/react-jsonschema-form/pull/5482))
 - `CheckboxesWidget` and `RadioWidget` now honor `ui:enumDisabled`, rendering the options it lists `disabled`. The label of a disabled option, whether `ui:enumDisabled` lists it or the field is `disabled` or `readonly`, no longer shows a pointer cursor, and its text is dimmed ([#5408](https://github.com/rjsf-team/react-jsonschema-form/issues/5408))
 - `ArrayFieldItemButtonsTemplate` spreads the new `itemButtonProps` onto its buttons, so an array with the `itemLabel` option names each item in its buttons' titles and aria-labels ([#5474](https://github.com/rjsf-team/react-jsonschema-form/pull/5474))
+- Fixed the `SelectWidget` trigger falling back to a hardcoded `'Select...'` with no value selected, no `ui:placeholder` and no label, fixing [#5498](https://github.com/rjsf-team/react-jsonschema-form/issues/5498). The fallback now reads `translateString(TranslatableString.SelectPlaceholder)`, the way the shadcn widget does, so a custom `translateString` localizes it (the default English text becomes `'Select ...'`)
 
 ## @rjsf/fluentui-rc
 
