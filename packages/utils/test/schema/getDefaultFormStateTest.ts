@@ -1468,6 +1468,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               ),
             ).toEqual({ b: { name: 'd', friend: { name: 'd' } } });
           });
+
+          it('getDefaultFormState fills in the items an allOf beside the $ref of an array declares', () => {
+            // The array's `allOf` is merged by `computeDefaults()` itself rather than by `getObjectDefaults()`, and
+            // the same schema written without the `$ref` beside the `allOf` gets these defaults
+            const L: RJSFSchema = { type: 'array', minItems: 1, items: {} };
+            const schema: RJSFSchema = {
+              definitions: { L },
+              type: 'object',
+              required: ['p'],
+              properties: { p: { $ref: '#/definitions/L', allOf: [{ items: { $ref: '#/definitions/L' } }] } },
+            };
+            expect(
+              getDefaultFormState(
+                { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+                { schema, rootSchema: schema },
+              ),
+            ).toEqual({ p: [[undefined]] });
+          });
         });
 
         describe('a recursive schema whose if has its properties resolved', () => {
