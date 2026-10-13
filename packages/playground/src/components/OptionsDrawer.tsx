@@ -308,16 +308,25 @@ export type LiveSettings = Pick<
   defaultFormStateBehavior?: DefaultFormStateBehavior;
 };
 
+type ArrayMinItems = NonNullable<DefaultFormStateBehavior['arrayMinItems']>;
+
+/** `arrayMinItems` as a shared link may carry it */
+export type LoadedArrayMinItems =
+  | 'populate'
+  | (Omit<ArrayMinItems, 'populate'> & { populate?: ArrayMinItems['populate'] | 'populate' });
+
 /** The settings as a shared link may carry them. A v5 or v6 link holds `liveValidate` and `liveOmit` as booleans. A link
  * shared from the initial settings the playground had through v6 holds an `arrayMinItems` of `'populate'`, which
  * `DefaultFormStateBehavior` never allowed, a `validate` of `false`, and `useFallbackField`, which names no `Form` prop.
+ * One shared after a change in the drawer can hold `'populate'` as its `arrayMinItems.populate`, the default the drawer
+ * filled in through v6, which is none of the values that takes either.
  * `validate` was the name of the live validation toggle in early v5, whose links hold it in place of `liveValidate`.
  */
 export type LoadedLiveSettings = Omit<LiveSettings, 'liveValidate' | 'liveOmit' | 'defaultFormStateBehavior'> & {
   liveValidate?: LiveFlag | boolean;
   liveOmit?: LiveFlag | boolean;
   defaultFormStateBehavior?: Omit<DefaultFormStateBehavior, 'arrayMinItems'> & {
-    arrayMinItems?: DefaultFormStateBehavior['arrayMinItems'] | 'populate';
+    arrayMinItems?: LoadedArrayMinItems;
   };
   validate?: boolean;
   useFallbackField?: boolean;

@@ -5,6 +5,10 @@ describe('normalizeLiveSettings', () => {
     expect(normalizeLiveSettings(undefined)).toStrictEqual({});
   });
 
+  it('defaults a null liveSettings, which a hand-edited link can hold, to {}', () => {
+    expect(normalizeLiveSettings(null)).toStrictEqual({});
+  });
+
   it('leaves an empty liveSettings object as-is', () => {
     expect(normalizeLiveSettings({})).toStrictEqual({});
   });
@@ -55,6 +59,14 @@ describe('normalizeLiveSettings', () => {
         defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
       }).defaultFormStateBehavior,
     ).toStrictEqual({ emptyObjectFields: 'populateAllDefaults' });
+  });
+
+  it('drops the `populate` an older link carries as arrayMinItems.populate, keeping the rest of arrayMinItems', () => {
+    expect(
+      normalizeLiveSettings({
+        defaultFormStateBehavior: { arrayMinItems: { populate: 'populate', mergeExtraDefaults: true } },
+      }).defaultFormStateBehavior,
+    ).toStrictEqual({ arrayMinItems: { mergeExtraDefaults: true } });
   });
 
   it('keeps a current arrayMinItems and the id settings', () => {

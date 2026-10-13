@@ -6,7 +6,14 @@ import Divider from '@mui/material/Divider';
 import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
-import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import type {
+  DefaultFormStateBehavior,
+  ErrorSchema,
+  RJSFSchema,
+  RJSFValidationError,
+  UiSchema,
+  ValidatorType,
+} from '@rjsf/utils';
 import { createSchemaUtils, resetLogOnce } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
@@ -16,7 +23,7 @@ import DemoFrame from './DemoFrame.tsx';
 import Editors from './Editors.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
 import GeoPosition from './GeoPosition.tsx';
-import type { LiveFlag, LiveSettings, LoadedLiveSettings } from './OptionsDrawer.tsx';
+import type { LiveFlag, LiveSettings, LoadedArrayMinItems, LoadedLiveSettings } from './OptionsDrawer.tsx';
 import OptionsDrawer from './OptionsDrawer.tsx';
 import SampleSelector from './SampleSelector.tsx';
 import SpecialInput from './SpecialInput.tsx';
@@ -47,14 +54,28 @@ function normalizeLiveFlag(value: LiveFlag | boolean | undefined): LiveFlag | un
   return value;
 }
 
+/** Leaves out the `'populate'` an older link carries where `arrayMinItems` or its `populate` goes: the first came from
+ * the initial settings the playground had through v6, the second from the default its drawer filled in. Neither is a
+ * value the form takes.
+ */
+function normalizeArrayMinItems(
+  loaded: LoadedArrayMinItems | undefined,
+): DefaultFormStateBehavior['arrayMinItems'] | undefined {
+  if (!loaded || loaded === 'populate') {
+    return undefined;
+  }
+  const { populate, ...arrayMinItems } = loaded;
+  return populate === 'populate' ? arrayMinItems : { ...arrayMinItems, populate };
+}
+
 /** Normalizes `liveSettings` decoded from a shared playground URL or sample: defaults a missing object to `{}` (a
  * shared URL predating `liveSettings` support omits it entirely) so callers never have to null-check it, converts any
  * legacy boolean `liveValidate`/`liveOmit` values to their current string equivalents, reads a `validate` of `true`, the
  * name the live validation toggle had in early v5, as `liveValidate` when the link holds none, and leaves out what an
- * older link carries that the form has no use for: `validate` itself, `useFallbackField` and an `arrayMinItems` of
- * `'populate'`.
+ * older link carries that the form has no use for: `validate` itself, `useFallbackField`, an `arrayMinItems` of
+ * `'populate'` and an `arrayMinItems.populate` of `'populate'`. A hand-edited link can hold `null` in its place.
  */
-export function normalizeLiveSettings(loadedLiveSettings: LoadedLiveSettings = {}): LiveSettings {
+export function normalizeLiveSettings(loadedLiveSettings?: LoadedLiveSettings | null): LiveSettings {
   const {
     validate,
     useFallbackField,
@@ -62,8 +83,9 @@ export function normalizeLiveSettings(loadedLiveSettings: LoadedLiveSettings = {
     liveValidate: loadedLiveValidate,
     liveOmit: loadedLiveOmit,
     ...settings
-  } = loadedLiveSettings;
-  const { arrayMinItems, ...behavior } = defaultFormStateBehavior ?? {};
+  } = loadedLiveSettings ?? {};
+  const { arrayMinItems: loadedArrayMinItems, ...behavior } = defaultFormStateBehavior ?? {};
+  const arrayMinItems = normalizeArrayMinItems(loadedArrayMinItems);
   const liveValidate = normalizeLiveFlag(loadedLiveValidate ?? (validate || undefined));
   const liveOmit = normalizeLiveFlag(loadedLiveOmit);
   return {
@@ -71,7 +93,7 @@ export function normalizeLiveSettings(loadedLiveSettings: LoadedLiveSettings = {
     ...(defaultFormStateBehavior && {
       defaultFormStateBehavior: {
         ...behavior,
-        ...(arrayMinItems && arrayMinItems !== 'populate' && { arrayMinItems }),
+        ...(arrayMinItems && { arrayMinItems }),
       },
     }),
     ...(liveValidate && { liveValidate }),
