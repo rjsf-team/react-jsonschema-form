@@ -165,7 +165,9 @@ interface FoundSchema<S extends StrictRJSFSchema = RJSFSchema> {
  */
 function childScope<S extends StrictRJSFSchema = RJSFSchema>(node: S, parentURI: string): string {
   const id = node[ID_KEY];
-  return typeof id === 'string' ? resolveUri(parentURI, id) : parentURI;
+  // A fragment-only `$id` (`#foo`, `#/properties/address`) anchors a location inside the current resource
+  // without changing its base URI, so the subtree keeps the parent scope
+  return typeof id === 'string' && !id.startsWith('#') ? resolveUri(parentURI, id) : parentURI;
 }
 
 /** One walk over the schema definitions embedded in a JSON Schema bundle, matching a node whose

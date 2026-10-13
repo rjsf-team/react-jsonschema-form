@@ -654,6 +654,11 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
   // relative refs, so a target's scope cannot leak into refs the normalization already resolved against the
   // root base.
   let pointerScope = parentPointerScope ?? currentBaseURI;
+  // When a `$ref` target's resource takes over the pointer scope below, the keywords written beside the
+  // `$ref` on the referring schema still belong to the referring scope; their keys and that scope are
+  // remembered here so the recursion can scope each keyword by the side it came from
+  let referrerKeys: Set<string> | undefined;
+  let referrerPointerScope: string | undefined;
   // The recurse list is a path stack: entries are added only for the refs being expanded on the current resolution
   // path and are never shared with sibling subtrees or back with the caller. A $ref is a cycle only when it already
   // appears on the current path.
@@ -701,6 +706,9 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     if (
       ID_KEY in localSchema &&
       typeof localSchema[ID_KEY] === 'string' &&
+      // A fragment-only `$id` anchors a location inside the current resource; it establishes no scope of
+      // its own, so it cannot override the referenced resource's scope either
+      !localSchema[ID_KEY].startsWith('#') &&
       localSchema[ID_KEY] !== found.schema[ID_KEY] &&
       // A local `$id` that resolves to the scope the walk is already in - the root's own `$id` beside a
       // top-level `$ref` is the common one - re-identifies nothing, so the target's content keeps the scope
@@ -745,6 +753,11 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       // A same-document ref alongside this one names a pointer inside the target's resource, so the scope the
       // lookup reported (with the target's own `$id` already applied) becomes the pointer scope. The referring
       // scope itself does not change: refs carried by root content are already resolved against the root base.
+      // The target scope covers the target's own content only: a keyword written on the referring schema
+      // itself keeps the referring scope, since its `#` refs name pointers in the resource the referring
+      // schema belongs to.
+      referrerKeys = new Set(Object.keys(localSchema));
+      referrerPointerScope = pointerScope;
       pointerScope = refBaseURI;
     }
     expandedRefs?.push($ref!);
@@ -786,7 +799,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
         !resolveAnyOfOrOneOfRefs,
         expandedRefs,
         passCount,
-        pointerScope,
+        referrerKeys?.has(PROPERTIES_KEY) ? referrerPointerScope : pointerScope,
       );
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
@@ -809,7 +822,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
         false,
         expandedRefs,
         passCount,
-        pointerScope,
+        referrerKeys?.has(ITEMS_KEY) ? referrerPointerScope : pointerScope,
       ),
     };
   }
@@ -837,7 +850,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
             false,
             expandedRefs,
             passCount,
-            pointerScope,
+            referrerKeys?.has(key) ? referrerPointerScope : pointerScope,
           );
           if (expandedRefs && expandedRefs.length > expandedBefore) {
             optionsPath = [...optionsPath, ...expandedRefs.slice(expandedBefore)];

@@ -1,6 +1,6 @@
 import type { MockInstance } from 'vitest';
 
-import { findSchemaDefinitionWithBaseURI } from '../../src/findSchemaDefinition.ts';
+import { findSchemaDefinitionWithBaseURI, normalizeRootReferences } from '../../src/findSchemaDefinition.ts';
 import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -5900,6 +5900,96 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       } as unknown as RJSFSchema;
       const resolved = resolveAllReferences(schema, root, [], root.$id);
       expect(resolved.properties!.p).toMatchObject({ title: 'B-OTHER' });
+    });
+
+    it('ignores a fragment-only $id when computing scope', () => {
+      const root: RJSFSchema = {
+        $id: 'http://example.com/root.json',
+        definitions: {
+          addr: { type: 'object', properties: { c: { $ref: '#/definitions/country' } } },
+          country: { type: 'string' },
+        },
+        properties: { address: { $id: '#/properties/address', $ref: '#/definitions/addr' } },
+      };
+      const n = normalizeRootReferences(root);
+      const resolved = retrieveSchema({ validator: testValidator }, n, n);
+      expect(resolved.properties!.address).toMatchObject({ properties: { c: { type: 'string' } } });
+    });
+
+    it('ignores a plain-name fragment $id when computing scope', () => {
+      const root: RJSFSchema = {
+        $id: 'http://example.com/root.json',
+        definitions: {
+          a: { $id: '#foo', properties: { x: { $ref: '#/definitions/b' } } },
+          b: { type: 'string' },
+        },
+        properties: { p: { $ref: '#/definitions/a' } },
+      };
+      const n = normalizeRootReferences(root);
+      const resolved = retrieveSchema({ validator: testValidator }, n, n);
+      expect(resolved.properties!.p).toMatchObject({ properties: { x: { type: 'string' } } });
+    });
+
+    it('keeps the referring scope for a sibling property beside a $ref on a root without an $id', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          res: { $id: 'nested/res.json', type: 'object', $defs: { x: { type: 'number' } } },
+          x: { type: 'string' },
+        },
+        properties: { p: { $ref: 'nested/res.json', properties: { extra: { $ref: '#/$defs/x' } } } },
+      };
+      const n = normalizeRootReferences(root);
+      const resolved = retrieveSchema({ validator: testValidator }, n, n);
+      expect((resolved.properties!.p as RJSFSchema).properties!.extra).toMatchObject({ type: 'string' });
+    });
+
+    it('keeps the referring scope for a sibling items keyword and the target scope for target content', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          res: {
+            $id: 'nested/res.json',
+            type: 'array',
+            properties: { y: { $ref: '#/$defs/x' } },
+            items: { $ref: '#/$defs/x' },
+            $defs: { x: { type: 'number' } },
+          },
+          x: { type: 'string' },
+        },
+        properties: {
+          p: { $ref: 'nested/res.json', items: { $ref: '#/$defs/x' } },
+          q: { $ref: 'nested/res.json' },
+        },
+      };
+      const n = normalizeRootReferences(root);
+      const resolved = retrieveSchema({ validator: testValidator }, n, n);
+      expect((resolved.properties!.p as RJSFSchema).items).toMatchObject({ type: 'string' });
+      expect((resolved.properties!.p as RJSFSchema).properties!.y).toMatchObject({ type: 'number' });
+      expect((resolved.properties!.q as RJSFSchema).items).toMatchObject({ type: 'number' });
+    });
+
+    it('keeps the referring scope for a sibling anyOf beside a $ref', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          res: {
+            $id: 'nested/res.json',
+            type: 'object',
+            anyOf: [{ $ref: '#/$defs/x' }],
+            $defs: { x: { type: 'number' } },
+          },
+          x: { type: 'string' },
+        },
+        properties: {
+          p: { $ref: 'nested/res.json', anyOf: [{ $ref: '#/$defs/x' }] },
+          q: { $ref: 'nested/res.json' },
+        },
+      };
+      const n = normalizeRootReferences(root);
+      const resolved = retrieveSchema({ validator: testValidator }, n, n, {}, true);
+      expect((resolved.properties!.p as RJSFSchema).anyOf![0]).toMatchObject({ type: 'string' });
+      expect((resolved.properties!.q as RJSFSchema).anyOf![0]).toMatchObject({ type: 'number' });
     });
 
     it('keeps the target scope for refs inside a pointer-reached target with no $id of its own', () => {

@@ -63,10 +63,8 @@ class SchemaUtils<
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    */
   constructor(context: SchemaContext<S, F>, rootSchema: S) {
-    // Every draft normalizes at construction, not just 2020-12: the per-call wrapper in `retrieveSchema`
-    // skips roots the normalization marker set recognizes, so a root stored raw would pay a full
-    // normalization walk on every field's `retrieveSchema` call. For a draft-7 root `getRootSchema()`
-    // therefore returns absolute refs, as it already did for 2020-12
+    // Normalized once here so the per-call wrapper in `retrieveSchema` recognizes the stored root and skips
+    // its normalization walk. `getRootSchema()` therefore returns absolute refs.
     this.rootSchema = rootSchema ? normalizeRootReferences(rootSchema) : rootSchema;
     this.rawRootSchema = rootSchema;
     // A v6 caller passing the validator here leaves `validator` undefined, which surfaces only as a `TypeError` from
