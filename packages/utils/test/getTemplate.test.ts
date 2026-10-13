@@ -1,5 +1,8 @@
+import { createElement, forwardRef, lazy, memo } from 'react';
+
 import type { Registry, UIOptionsType } from '../src/index.ts';
 import { createSchemaUtils, englishStringTranslator, getTemplate, getTemplates } from '../src/index.ts';
+import { resetLogOnce } from '../src/logOnce.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 import { GLOBAL_FORM_OPTIONS } from './testUtils/testData.ts';
 
@@ -76,6 +79,49 @@ const uiOptions: UIOptionsType = {
 const KEYS = Object.keys(registry.templates).filter((k) => k !== 'ButtonTemplates');
 
 describe('getTemplate', () => {
+  it('warns once for an invalid override and stays silent when no override is provided', () => {
+    resetLogOnce();
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+    try {
+      getTemplate('FieldTemplate', registry);
+      expect(warn).not.toHaveBeenCalled();
+      const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', createElement(FakeTemplate)]]);
+      getTemplate('FieldTemplate', registry, invalidOptions);
+      getTemplate('FieldTemplate', registry, invalidOptions);
+      expect(warn).toHaveBeenCalledExactlyOnceWith(
+        'Ignoring invalid FieldTemplate override: expected a component or a registered template name.',
+      );
+    } finally {
+      warn.mockRestore();
+      resetLogOnce();
+    }
+  });
+
+  it.each([createElement(FakeTemplate), { arbitrary: true }, 42, true])(
+    'falls back when the override is not a component: %s',
+    (override) => {
+      const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', override]]);
+      expect(getTemplate('FieldTemplate', registry, invalidOptions)).toBe(FakeTemplate);
+      expect(getTemplates(registry, invalidOptions).FieldTemplate).toBe(FakeTemplate);
+    },
+  );
+
+  it.each([memo(FakeTemplate), forwardRef(FakeTemplate), lazy(async () => ({ default: FakeTemplate }))])(
+    'accepts an object component override: %s',
+    (override) => {
+      const options: UIOptionsType = Object.fromEntries([['FieldTemplate', override]]);
+      expect(getTemplate('FieldTemplate', registry, options)).toBe(override);
+    },
+  );
+
+  it('falls back when a named registry override is not a component', () => {
+    const invalidRegistry: Registry = { ...registry, templates: { ...registry.templates } };
+    const customTemplates: Record<string, unknown> = invalidRegistry.templates;
+    customTemplates.Invalid = createElement(FakeTemplate);
+    const options: UIOptionsType = Object.fromEntries([['FieldTemplate', 'Invalid']]);
+    expect(getTemplate('FieldTemplate', invalidRegistry, options)).toBe(FakeTemplate);
+  });
+
   it('returns the ButtonTemplates from the registry', () => {
     expect(getTemplate<'ButtonTemplates'>('ButtonTemplates', registry)).toBe(registry.templates.ButtonTemplates);
   });
