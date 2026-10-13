@@ -6575,6 +6575,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual('x');
         expect(getDefaultFormState({ validator: testValidator }, { schema: { ...schema, anyOf: [{}] } })).toEqual('x');
       });
+      it("adds both options' defaults to an object whose type comes through its allOf, as to one declaring it", () => {
+        const field: RJSFSchema = {
+          allOf: [{ $ref: '#/definitions/Base' }],
+          anyOf: [{ properties: { a: { type: 'string', default: 'A' } } }],
+          oneOf: [{ properties: { b: { type: 'string', default: 'B' } } }],
+        };
+        const withField = (v: RJSFSchema): RJSFSchema => ({
+          definitions: { Base: { type: 'object', properties: { id: { type: 'string' } } } },
+          type: 'object',
+          properties: { v },
+        });
+        const expected = { v: { a: 'A', b: 'B' } };
+        expect(getDefaultFormState({ validator: testValidator }, { schema: withField(field) })).toEqual(expected);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema: withField({ ...field, type: 'object' }) }),
+        ).toEqual(expected);
+      });
       it('should not populate defaults for empty anyOf', () => {
         const schema: RJSFSchema = {
           type: 'object',

@@ -1,5 +1,10 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { ADDITIONAL_PROPERTY_FLAG, getRenderedOptionSchema, rendersOwnFieldBesideOption } from '../src/index.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  getRenderedOptionSchema,
+  rendersOwnFieldBesideOption,
+  RJSF_REF_KEY,
+} from '../src/index.ts';
 
 describe('getRenderedOptionSchema()', () => {
   describe('a non-object parent', () => {
@@ -313,6 +318,52 @@ describe('getRenderedOptionSchema()', () => {
     test('returns the option itself when the parent has nothing to pass on', () => {
       const option: RJSFSchema = { minLength: 1 };
       expect(getRenderedOptionSchema({ title: 'Parent', anyOf: [option] }, option)).toBe(option);
+    });
+    test("reads an option key holding undefined as declaring nothing, leaving the parent's keyword in place", () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string', maxLength: 3 }, maxItems: 3 };
+      const rendered = getRenderedOptionSchema(parent, {
+        title: 'A',
+        items: { maxLength: undefined },
+        maxItems: undefined,
+        minItems: undefined,
+      });
+      expect(rendered).toEqual({ type: 'array', items: { type: 'string', maxLength: 3 }, maxItems: 3, title: 'A' });
+      expect(rendered).not.toHaveProperty('minItems');
+    });
+    test("reads a property entry or tuple position holding undefined as declaring nothing, keeping the parent's", () => {
+      const parent: RJSFSchema = {
+        type: 'array',
+        items: [{ type: 'object', properties: { a: { type: 'string' } } }, { type: 'number' }],
+      };
+      expect(
+        getRenderedOptionSchema(parent, { items: [{ properties: { a: undefined } }, undefined] } as RJSFSchema),
+      ).toEqual(parent);
+    });
+    test("reads a parent subschema holding undefined as declaring nothing, keeping the option's true", () => {
+      const parent = {
+        type: 'array',
+        items: { type: 'object', properties: { a: undefined } },
+      } as unknown as RJSFSchema;
+      expect(getRenderedOptionSchema(parent, { items: { properties: { a: true } } })).toEqual({
+        type: 'array',
+        items: { type: 'object', properties: { a: true } },
+      });
+      expect(getRenderedOptionSchema({ type: 'array', items: undefined }, { items: true })).toEqual({
+        type: 'array',
+        items: true,
+      });
+    });
+    test('keeps the symbol markers of an option it reads undefined keys out of, at every level it meets', () => {
+      const parent: RJSFSchema = { type: 'array', items: { type: 'string' }, maxItems: 3 };
+      const items = { maxLength: 2, [RJSF_REF_KEY]: '#/definitions/item' };
+      const rendered = getRenderedOptionSchema(parent, {
+        items,
+        maxItems: undefined,
+        [RJSF_REF_KEY]: '#/definitions/option',
+      }) as Record<symbol, unknown> & RJSFSchema;
+      expect(rendered[RJSF_REF_KEY]).toBe('#/definitions/option');
+      expect((rendered.items as Record<symbol, unknown>)[RJSF_REF_KEY]).toBe('#/definitions/item');
+      expect(rendered.maxItems).toBe(3);
     });
   });
 

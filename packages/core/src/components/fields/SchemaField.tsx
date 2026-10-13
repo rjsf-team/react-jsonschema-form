@@ -696,9 +696,10 @@ function SchemaFieldRender<
     label = registry.translateString(TranslatableString.DeprecatedLabel, [label]);
   }
 
-  // The field of the selected option renders the description in that case, so the template, which may render the
-  // description of a field it leaves unlabelled, is handed none. Decided from the uiSchema the `XxxOfField` is handed,
-  // as it decides whether to render it, since a shadowed `ui:field` no longer turns its label off
+  // The field of the selected option renders a description in that case, its own or, where it declares none, this
+  // field's, so the template, which may render the description of a field it leaves unlabelled, is handed none. Decided
+  // from the uiSchema the `XxxOfField` is handed, as it decides whether to render it, since a shadowed `ui:field` no
+  // longer turns its label off
   const description =
     XxxOfField &&
     optionRendersFieldLabel<S>(

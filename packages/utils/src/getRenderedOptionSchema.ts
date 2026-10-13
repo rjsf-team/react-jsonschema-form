@@ -82,9 +82,16 @@ const POSITIONAL_KEYWORDS = new Set<string>([ITEMS_KEY, 'prefixItems']);
  */
 function meetSchemas(parent: GenericObjectType, option: GenericObjectType): GenericObjectType {
   const result: GenericObjectType = { ...parent, ...option };
-  const takesOptionConditional = CONDITIONAL_KEYWORDS.some((key) => key in option);
+  const takesOptionConditional = CONDITIONAL_KEYWORDS.some((key) => option[key] !== undefined);
   for (const [key, optionValue] of Object.entries(option)) {
-    if (Object.hasOwn(parent, key) && !CONDITIONAL_KEYWORDS.includes(key)) {
+    if (optionValue === undefined) {
+      // A key holding `undefined`, as one built in code does for a limit left unset, declares nothing
+      if (Object.hasOwn(parent, key)) {
+        result[key] = parent[key];
+      } else {
+        delete result[key];
+      }
+    } else if (Object.hasOwn(parent, key) && !CONDITIONAL_KEYWORDS.includes(key)) {
       result[key] = meetKeyword(key, parent[key], optionValue);
     }
   }
@@ -106,7 +113,7 @@ function meetSchemas(parent: GenericObjectType, option: GenericObjectType): Gene
   }
   if (takesOptionConditional) {
     for (const key of CONDITIONAL_KEYWORDS) {
-      if (!(key in option)) {
+      if (option[key] === undefined) {
         delete result[key];
       }
     }
@@ -183,8 +190,10 @@ function meetTuples(parent: unknown[], option: unknown[]): unknown[] {
 
 /** Returns the subschema that meets both `parent` and `option`. A parent's `false`, which nothing meets, stays in place
  * of the option's subschema, and an option's `true`, which adds nothing to meet, leaves the parent's in place: an
- * option's `items: true` would otherwise drop the parent's `items` and render each item as an unsupported field. Two
- * schemas are met by `meetSchemas()`, unless either holds a `$ref`, and any other pair is the option's.
+ * option's `items: true` would otherwise drop the parent's `items` and render each item as an unsupported field. So
+ * does an option's `undefined`, such as a property entry built in code, which declares nothing, as a key holding it
+ * does in `meetSchemas()`, and a parent's `undefined` leaves the option's in place. Two schemas are met by
+ * `meetSchemas()`, unless either holds a `$ref`, and any other pair is the option's.
  *
  * A `$ref` is resolved only where the subschema is rendered, which is where the root schema it points into is known,
  * and the keywords beside it are then layered over the ones it names, so a looser bound met in beside it would win.
@@ -195,7 +204,10 @@ function meetTuples(parent: unknown[], option: unknown[]): unknown[] {
  * @returns - The subschema the two meet in
  */
 function meetSubschema(parent: unknown, option: unknown): unknown {
-  if (parent === false || option === true) {
+  if (parent === undefined) {
+    return option;
+  }
+  if (parent === false || option === true || option === undefined) {
     return parent;
   }
   if (!isObject(parent) || !isObject(option)) {

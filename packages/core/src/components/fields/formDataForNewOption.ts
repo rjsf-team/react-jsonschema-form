@@ -1,12 +1,20 @@
 import type {
   FormContextType,
+  GenericObjectType,
   RJSFSchema,
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
   UiSchemaDefinitions,
 } from '@rjsf/utils';
-import { deepEquals, getPropertySchema, getRenderedOptionSchema, isPlainObject, mergeSchemas } from '@rjsf/utils';
+import {
+  deepEquals,
+  getPropertySchema,
+  getRenderedOptionSchema,
+  getXxxOfKey,
+  isPlainObject,
+  mergeSchemas,
+} from '@rjsf/utils';
 
 import { declaresOwnValue, declaresValueFor } from '../declaresValue.ts';
 
@@ -177,6 +185,38 @@ export default function formDataForNewOption<
       }
       return newDefaults;
     };
+    /** Reports whether the whole value still holds a default the form wrote for the old option. What the field itself
+     * declares can add to the option's own: `getDefaultFormState()` seeds the field from the option as it is rendered,
+     * with the field's own `default` beneath the option's and a `minItems` filled with the items' `default`, while a
+     * switch here writes the bare option's default, which `Form` then fills out with each item's own defaults. Neither
+     * is reached from the other, since filling out an array that is already there leaves its length alone, so the
+     * value is matched against each. Both are computed from the field with the old option as its only one, so they
+     * take the path the seed took rather than a copy of it. */
+    const holdsOldOptionDefault = () => {
+      const bareDefaults = defaultsForOldOption();
+      if (deepEquals(bareDefaults, formData)) {
+        return true;
+      }
+      const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
+      if (!xxxOfKey) {
+        return false;
+      }
+      const fieldWithOldOption = { ...parentSchema, [xxxOfKey]: [oldOption] } as S;
+      const fieldUiSchema: GenericObjectType | undefined = oldOptionUiSchema && { [xxxOfKey]: [oldOptionUiSchema] };
+      const defaultsAsSeeded = (value: unknown) =>
+        schemaUtils.getDefaultFormState(
+          fieldWithOldOption,
+          value as T,
+          'excludeObjectChildren',
+          undefined,
+          fieldUiSchema,
+          uiSchemaDefinitions,
+        );
+      return (
+        deepEquals(defaultsAsSeeded(undefined), formData) ||
+        (bareDefaults !== undefined && deepEquals(defaultsAsSeeded(bareDefaults), formData))
+      );
+    };
     if (isPlainObject(newFormData)) {
       const sanitizedData = newFormData;
       const oldData: Record<string, unknown> = isPlainObject(formData) ? formData : {};
@@ -221,7 +261,7 @@ export default function formDataForNewOption<
       oldOptionForDefaults &&
       declaresOwnValue<S>(newOptionForDefaults) &&
       declaresOwnValue<S>(oldOptionForDefaults) &&
-      deepEquals(defaultsForOldOption(), formData) &&
+      holdsOldOptionDefault() &&
       defaultsForNewOption() !== undefined
     ) {
       newFormData = undefined;

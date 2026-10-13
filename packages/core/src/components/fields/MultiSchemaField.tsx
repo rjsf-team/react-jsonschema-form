@@ -95,14 +95,14 @@ function optionForData<
   );
 }
 
-/** Returns `optionUiSchema` with the field's `title` and `description` in place of the option's own, each where the
- * field declares one. They go in `ui:options`, and the option's top-level `ui:title`/`ui:description` they replace are
+/** Returns `optionUiSchema` with the given `title` and `description` in place of the option's own, each where one is
+ * given. They go in `ui:options`, and the option's top-level `ui:title`/`ui:description` they replace are
  * dropped, since `getUiOptions()` lets whichever of the two keys comes later win.
  *
  * @param optionUiSchema - The uiSchema the option's field renders with
  * @param [title] - The field's title
- * @param [description] - The field's description
- * @returns - The uiSchema the option's field renders the field's title and description with
+ * @param [description] - The option's own description, or the field's when the option declares none
+ * @returns - The uiSchema the option's field renders the given title and description with
  */
 function withFieldLabel<T, S extends StrictRJSFSchema, F extends FormContextType>(
   optionUiSchema: UiSchema<T, S, F>,
@@ -296,9 +296,15 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   // Memoized, since the meet walks every subschema the two share. `SchemaField` retrieves the options afresh when the
   // data changes, so this only spares a render that leaves the data as it was
   const renderedOption = useMemo(() => (option ? getRenderedOptionSchema<S>(schema, option) : null), [schema, option]);
-  // The field's own title and description are the ones the option's field renders in their place, since the selector
-  // already shows an option's title, and the field's description belongs under the field's title
-  const description = uiOptions.description ?? schema.description;
+  // The field's own title is the one the option's field renders in its place, since the selector already shows an
+  // option's title. It shows no description, so an option's own is what explains the alternative chosen, and the
+  // field's is the one rendered only for an option that declares none. An option without a uiSchema of its own is
+  // handed the field's, whose `ui:description` is the field's rather than the option's
+  const description =
+    getUiOptions<T, S, F>(optionsUiSchema[selectedOption]).description ??
+    renderedOption?.description ??
+    uiOptions.description ??
+    schema.description;
   const rendersFieldLabel =
     renderedOption !== null && optionRendersFieldLabel<S>(schema, uiOptions.label, displayLabel);
   // Memoized as well, since the option's `SchemaField` keys its own memos on the schema it is handed
@@ -313,8 +319,9 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         : renderedOption,
     [rendersFieldLabel, renderedOption, title, description],
   );
-  // An option's own uiSchema would otherwise label its field with the option's `ui:title` and `ui:description`, which
-  // the selector already shows, over the field's own
+  // An option's own uiSchema would otherwise label its field with the option's `ui:title`, which the selector already
+  // shows, over the field's own, and the field's uiSchema, handed to an option without one, its `ui:description` over
+  // the option's
   const optionFieldUiSchema = useMemo(
     () =>
       rendersFieldLabel && optionUiSchema

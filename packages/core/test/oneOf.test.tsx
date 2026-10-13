@@ -3878,6 +3878,70 @@ describe('oneOf', () => {
       expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
     });
 
+    it.each<[string, RJSFSchema, number, unknown, unknown]>([
+      [
+        "the field's minItems filled with the items' default",
+        {
+          type: 'array',
+          minItems: 2,
+          items: { type: 'string', default: 'd' },
+          anyOf: [
+            { title: 'A', default: ['x'] },
+            { title: 'B', default: ['y'] },
+          ],
+        },
+        2,
+        ['y'],
+        ['x'],
+      ],
+      [
+        "the form filled with its items' property defaults",
+        {
+          type: 'array',
+          items: { type: 'object', properties: { a: { type: 'string', default: 'A' }, n: { type: 'string' } } },
+          anyOf: [
+            { title: 'A', default: [{ n: '1' }] },
+            { title: 'B', default: [{ n: '2' }] },
+          ],
+        },
+        2,
+        [{ n: '2', a: 'A' }],
+        [{ n: '1', a: 'A' }],
+      ],
+    ])('should replace an untouched default %s', async (_, opt, inputs, afterB, afterA) => {
+      const { node, onChange } = createFormComponent({ schema: wrap(opt) });
+      const select = node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!;
+      expect(node.querySelectorAll('input')).toHaveLength(inputs);
+
+      await user.selectOptions(select, 'B');
+      expect(onChange.mock.lastCall![0].formData).toEqual({ opt: afterB });
+
+      await user.selectOptions(select, 'A');
+      expect(onChange.mock.lastCall![0].formData).toEqual({ opt: afterA });
+    });
+
+    it('should replace an untouched default the old option took from the field, its own const not being one', async () => {
+      const schema = wrap({
+        type: 'array',
+        items: { type: 'string' },
+        default: ['p'],
+        anyOf: [
+          { title: 'A', const: ['a'] },
+          { title: 'B', minItems: 2, default: ['b', 'c'] },
+        ],
+      });
+      const { node, onChange } = createFormComponent({
+        schema,
+        defaultFormStateBehavior: { constAsDefaults: 'never' },
+      });
+      const select = node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!;
+      expect(getSelectedOptionValue(select)).toEqual('A');
+
+      await user.selectOptions(select, 'B');
+
+      expect(onChange.mock.lastCall![0].formData).toEqual({ opt: ['b', 'c'] });
+    });
+
     it("should keep a tuple's items across a switch between options that only limit its length", async () => {
       const schema = wrap({
         type: 'array',
@@ -4030,26 +4094,48 @@ describe('oneOf', () => {
       },
     );
 
-    it("should render an unlabelled field's own title and description over its option's, which the selector names", () => {
-      const schema = wrap({
-        type: 'array',
-        title: 'Parent title',
-        description: 'Parent description',
-        items: { type: 'string' },
-        anyOf: [
-          { title: 'Short list', description: 'Option description', maxItems: 3 },
-          { title: 'Long list', minItems: 1 },
-        ],
-      });
-      const { node } = createFormComponent({ schema });
+    it.each<[string, RJSFSchema]>([
+      [
+        'an array',
+        {
+          type: 'array',
+          items: { type: 'string' },
+          anyOf: [
+            { title: 'Short list', description: 'Option description', maxItems: 3 },
+            { title: 'Long list', minItems: 1 },
+          ],
+        },
+      ],
+      [
+        'a checkbox',
+        {
+          type: 'boolean',
+          anyOf: [
+            { title: 'Short list', description: 'Option description', type: 'boolean' },
+            { title: 'Long list', type: 'boolean' },
+          ],
+        },
+      ],
+    ])(
+      "should render %s's own title over its option's, which the selector names, and its description only under an option declaring none",
+      async (_, opt) => {
+        const { node } = createFormComponent({
+          schema: wrap({ ...opt, title: 'Parent title', description: 'Parent description' }),
+        });
 
-      expect(node.querySelector('legend')).toHaveTextContent('Parent title');
-      expect(screen.getAllByText('Parent description')).toHaveLength(1);
-      expect(screen.queryByText('Option description')).not.toBeInTheDocument();
-      expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
-    });
+        expect(screen.getAllByText('Parent title')).toHaveLength(1);
+        expect(screen.getAllByText('Option description')).toHaveLength(1);
+        expect(screen.queryByText('Parent description')).not.toBeInTheDocument();
+        expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
 
-    it("should render an unlabelled field's own title and description over its option's ui:title and ui:description", () => {
+        await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Long list');
+
+        expect(screen.getAllByText('Parent description')).toHaveLength(1);
+        expect(screen.queryByText('Option description')).not.toBeInTheDocument();
+      },
+    );
+
+    it("should render an unlabelled field's own title over its option's ui:title, and the option's own ui:description", () => {
       const schema = wrap({
         type: 'array',
         title: 'Parent title',
@@ -4067,9 +4153,45 @@ describe('oneOf', () => {
       });
 
       expect(node.querySelector('legend')).toHaveTextContent('Parent title');
-      expect(screen.getAllByText('Parent description')).toHaveLength(1);
-      expect(screen.queryByText('Option description')).not.toBeInTheDocument();
+      expect(screen.getAllByText('Option description')).toHaveLength(1);
+      expect(screen.queryByText('Parent description')).not.toBeInTheDocument();
       expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
+    });
+
+    it("should render an option's own description over the ui:description of a field whose uiSchema it is handed", async () => {
+      const schema = wrap({
+        type: 'array',
+        title: 'Parent title',
+        items: { type: 'string' },
+        anyOf: [
+          { title: 'Short list', description: 'Option description', maxItems: 3 },
+          { title: 'Long list', minItems: 1 },
+        ],
+      });
+      const { node } = createFormComponent({ schema, uiSchema: { opt: { 'ui:description': 'Field description' } } });
+
+      expect(screen.getAllByText('Option description')).toHaveLength(1);
+      expect(screen.queryByText('Field description')).not.toBeInTheDocument();
+
+      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Long list');
+
+      expect(screen.getAllByText('Field description')).toHaveLength(1);
+      expect(screen.queryByText('Option description')).not.toBeInTheDocument();
+    });
+
+    it("should render an option's own ui:description over its schema's description", () => {
+      const schema = wrap({
+        type: 'array',
+        items: { type: 'string' },
+        anyOf: [{ description: 'Option description', maxItems: 3 }, { minItems: 1 }],
+      });
+      createFormComponent({
+        schema,
+        uiSchema: { opt: { anyOf: [{ 'ui:description': 'Option UI description' }, {}] } },
+      });
+
+      expect(screen.getAllByText('Option UI description')).toHaveLength(1);
+      expect(screen.queryByText('Option description')).not.toBeInTheDocument();
     });
 
     it("should render a typeless object parent's typeless option as the object a typed parent's renders", () => {

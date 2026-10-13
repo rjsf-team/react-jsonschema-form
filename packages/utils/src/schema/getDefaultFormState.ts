@@ -449,8 +449,14 @@ export function computeDefaults<
       // that inherits something is met with it once the reference is followed, as `SchemaField` resolves it: met as it
       // is, the `$ref` would be followed alone below, dropping all it inherits. Only the reference is followed, so an
       // `allOf` within it is still left to the `allOf` defaults behavior. One that inherits nothing, or whose `$ref` is
-      // already being followed, is left to the `$ref` branch below, which also ends the cycle
-      if (rendersOwnFieldBesideOption<S>(remaining as S)) {
+      // already being followed, is left to the `$ref` branch below, which also ends the cycle. Which of the two the
+      // field is gets asked of it with its `allOf` merged, as the fields ask it, since its `type` can come through one.
+      // A field naming one type already has it, which an `allOf` can't change, so it is spared the merge
+      const fieldSchema =
+        ALL_OF_KEY in remaining && typeof getSchemaType<S>(remaining as S) !== 'string'
+          ? retrieveSchema<T, S, F>(context, remaining as S, rootSchema, rawFormData)
+          : remaining;
+      if (rendersOwnFieldBesideOption<S>(fieldSchema as S)) {
         schemaToCompute = mergeSchemas(remaining, option) as S;
       } else {
         const optionSchema = isObject(option) ? option : ({} as S);
