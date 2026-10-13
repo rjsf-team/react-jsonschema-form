@@ -35,7 +35,7 @@ import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
-import { enclosingRefPath, resolvedFromRef } from '../refOf.ts';
+import { enclosingRefPath, refSiblingBranches, resolvedFromRef } from '../refOf.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import toConstant from '../toConstant.ts';
 import type {
@@ -502,10 +502,6 @@ export function computeDefaults<
     );
     // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
     // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at.
-    // `getObjectDefaults()` leaves the schema's own ref off that path and this keeps it on, so a recursion under an
-    // `allOf` stops one level sooner here: followed once more, a `$ref` back to the schema leads to its definition
-    // with the `allOf` unmerged, where the entry already on the path collapses and the level takes the defaults of
-    // the other entries alone
     updatedRecurseList = enclosingRefPath<S>(schemaToCompute, pathWithOwnRef);
   }
 
@@ -545,7 +541,11 @@ export function computeDefaults<
   const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(
     context,
     schema,
-    computeDefaultsProps,
+    // The reference this schema was itself resolved from stays on the path of everything it holds, so a `$ref`
+    // back to it met at any depth below reads as the recursion. The outermost call is exempt: it is handed the
+    // already-retrieved root, and counting the root's own expansion would stop a plain recursive schema one
+    // level earlier than it does today.
+    { ...computeDefaultsProps, _recurseList: '_recurseList' in inputProps ? updatedRecurseList : _recurseList },
     defaults,
     isWholeValue,
   );
@@ -665,9 +665,11 @@ export function getObjectDefaults<
           rootSchema,
           formData,
           false,
-          // No branch keyword is named: the retrieve resolves the schema's `if` as well as its `allOf`, and it leaves
-          // a `$ref` under either's `properties` unexpanded, for `childRecurseList` below to decide
-          enclosingRefPath<S>(schema, _recurseList),
+          // The branches this retrieve resolves are not part of the definition when they stood beside the
+          // `$ref`, so the schema's own reference stays off the path their `$ref`s resolve against
+          refSiblingBranches(schema) !== undefined
+            ? _recurseList.filter((ref) => ref !== resolvedFromRef<S>(schema))
+            : enclosingRefPath<S>(schema, _recurseList),
         )
       : [schema];
     // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` of a schema that was not itself resolved from
