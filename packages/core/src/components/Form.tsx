@@ -454,6 +454,11 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       },
     };
   }, [uiSchema, disabled]);
+  // The element too, so a theme's plain function component is skipped for a keystroke rather than rendered again
+  const submitButton = useMemo(
+    () => <SubmitButton uiSchema={submitUiSchema} registry={registry} />,
+    [SubmitButton, submitUiSchema, registry],
+  );
 
   /** The errors in the `ErrorList`, unless disabled by `showErrorList` */
   const renderErrors = () => {
@@ -508,7 +513,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
           />
         </RawFormDataContext>
 
-        {children || <SubmitButton uiSchema={submitUiSchema} registry={registry} />}
+        {children || submitButton}
         {showErrorList === 'bottom' && renderErrors()}
       </FormTag>
     </FormDataContext>

@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const REQUIRED_FIELD_SYMBOL = '*';
 
 export interface LabelProps {
@@ -13,7 +15,7 @@ export interface LabelProps {
  *
  * @param props - The `LabelProps` for this component
  */
-export default function Label(props: LabelProps) {
+function Label(props: LabelProps) {
   const { label, required, id } = props;
   if (!label) {
     return null;
@@ -25,3 +27,5 @@ export default function Label(props: LabelProps) {
     </label>
   );
 }
+// Memoized so a keystroke in the field, or in another, is not a render of its label
+export default memo(Label);

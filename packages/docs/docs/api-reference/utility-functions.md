@@ -923,6 +923,7 @@ Returns the suggestions a text input offers for `schema`: its `examples` and `de
 Examples and a default that share a `String()` are one suggestion, e.g. `["5432", 5432]` with a default of `5432` is the single suggestion `'5432'`.
 A schema without `examples` has no suggestions, and neither has one whose examples and default are all `null`, `undefined`, objects or arrays.
 A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop so they are computed once.
+The same schema object gets the same array back each time, so treat it as read-only.
 
 #### Parameters
 

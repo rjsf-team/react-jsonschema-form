@@ -17,4 +17,8 @@ describe('getExampleSuggestions()', () => {
   it('returns no suggestions when no example or default can be suggested', () => {
     expect(getExampleSuggestions({ examples: [null, { a: 1 }] })).toEqual([]);
   });
+  it('returns the same array for the same schema object', () => {
+    const schema = { examples: ['a'] };
+    expect(getExampleSuggestions(schema)).toBe(getExampleSuggestions(schema));
+  });
 });
