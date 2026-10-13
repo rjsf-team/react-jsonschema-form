@@ -5925,6 +5925,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animal: 'Cat', food: 'grass' });
         });
 
+        it('should drop the whole allOf when a custom merger throws on the conflicting then defaults', () => {
+          const conflict = new Error('conflicting default');
+          const throwingMergeAllOf: Experimental_CustomMergeAllOf = () => {
+            throw conflict;
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              fishFirstAnimalInfoSchema,
+              undefined,
+              fishFirstAnimalInfoSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              throwingMergeAllOf,
+            ),
+          ).toEqual({ animal: 'Cat' });
+          expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
+        });
+
         it('should populate the conditional defaults of an if-then-else placed directly in array items', () => {
           expect(
             getDefaultFormState(

@@ -118,7 +118,8 @@ export interface Experimental_DefaultFormStateBehavior {
    * value. Only an `if-then-else` wrapped in a nested `allOf` is skipped: one placed directly in a nested object schema
    * is resolved, along with any `allOf` next to it, unless `emptyObjectFields` is `skipEmptyDefaults`. With one `allOf`
    * entry per `enum` value, the default `allOf` merger merges the `then` defaults of all the entries, and the first
-   * entry that defaults a property wins. An `experimental_customMergeAllOf` built on a deep merger also turns a
+   * entry that defaults a property wins, while an `experimental_customMergeAllOf` that throws on the conflicting
+   * `default`s drops the whole `allOf`. An `experimental_customMergeAllOf` built on a deep merger also turns a
    * property's `allOf: [{ if, then }]` into a direct `if-then-else` when it merges a root-level `allOf`, so that
    * property's `then` default is filled in under `skipDefaults` too.
    */

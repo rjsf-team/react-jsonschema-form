@@ -211,6 +211,7 @@ The branch of an `if-then-else` is picked from the form data, not from the compu
 So when the `if` lists a property in `required` and only a default provides that property, the `then` default is left out until the form data holds the value, for instance on the initial render.
 Without `required`, a missing property still satisfies the `if`'s `properties`, so such an `if` passes with no data, and its `then` default is filled in even when the `if` does not match the defaulted value.
 With one `allOf` entry per `enum` value, the default `allOf` merger merges the `then` defaults of all the entries, and the first entry that defaults a property wins.
+An `experimental_customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf` instead.
 The same `allOf` in an object property or in an array's `items` usually needs `populateDefaults` to provide its defaults.
 This is specific to `allOf`: an `if-then-else` placed directly in a nested object schema is resolved with either value, unless `emptyObjectFields` is `skipEmptyDefaults`.
 For example, under `skipDefaults`, `items: { if, then }` fills in the `then` default, while `items: { allOf: [{ if, then }] }` does not, unless the same `items` schema also has a direct `if`, which resolves its whole `allOf`.
