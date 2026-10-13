@@ -381,9 +381,7 @@ describe('antd DisabledContext', () => {
     for (const button of found) {
       expect(button).toBeDisabled();
     }
-    for (const button of found) {
-      await user.click(button);
-    }
+    await Promise.all(found.map((button) => user.click(button)));
     expect(onChange).not.toHaveBeenCalled();
   });
 });
