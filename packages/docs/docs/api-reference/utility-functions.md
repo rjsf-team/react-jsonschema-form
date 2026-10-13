@@ -1758,7 +1758,7 @@ Converts a local Date string into a UTC date string
 
 #### Returns
 
-- string | undefined: A UTC date string if `dateString` is truthy and names a valid date; `undefined` for an empty value, and `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date, though its type says `string`
+- string | undefined: A UTC date string if `dateString` is truthy and names a valid date; `undefined` for an empty value, and `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date, though its type says `string`. Years 1-9999 are the supported range, as in `getDateTimeLocalValue()`; a five or six digit year up to 275760, the last one `Date` holds, is read all the same, so the string it gives keeps that year and fails `date-time` validation instead of `null` wiping the value
 
 ### logOnce()
 

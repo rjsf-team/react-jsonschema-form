@@ -7,7 +7,10 @@ import pad from './pad.ts';
  *        `10000-07-01T00:01`, which `Date` reads only in the signed six-digit form, so it is expanded to
  *        `+010000-07-01T00:01` before parsing; any other text goes to `Date` as written
  * @returns - A UTC date string if `dateString` is truthy and names a valid date; `undefined` for an empty value, and
- *        `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date, though its type says `string`
+ *        `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date, though its type says `string`.
+ *        Years 1-9999 are the supported range, as in `getDateTimeLocalValue()`; a five or six digit year up to 275760, the last one `Date` holds, is read
+ *        all the same, so the string it gives keeps that year and fails `date-time` validation instead of `null`
+ *        wiping the value
  */
 export default function localToUTC(dateString: string) {
   if (!dateString) {
