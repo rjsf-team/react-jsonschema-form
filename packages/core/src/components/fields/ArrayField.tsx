@@ -821,7 +821,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
-    items: actualFormData.map((keyedItem, index: number) => {
+    items: actualFormData.flatMap((keyedItem, index: number) => {
       const { key, item } = keyedItem;
       // While we are actually dealing with a single item of type T, the types require a T[], so cast
       const itemCast = item as unknown as T[];
@@ -832,7 +832,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
 
       // An item the field will hide renders no row at all: the row would be an empty shell with working buttons
       if (isFieldHidden<T[], S, F>(schemaItems, itemUiSchema, registry, itemCast)) {
-        return null;
+        return [];
       }
 
       const itemProps = {
@@ -947,7 +947,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     disabled,
     id,
     formData,
-    items: actualFormData.map((keyedItem, index) => {
+    items: actualFormData.flatMap((keyedItem, index) => {
       const { key, item } = keyedItem;
       // While we are actually dealing with a single item of type T, the types require a T[], so cast
       const itemCast = item as unknown as T[];
@@ -971,7 +971,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
 
       // An item the field will hide renders no row at all: the row would be an empty shell with working buttons
       if (isFieldHidden<T[], S, F>(rawItemSchema, itemUiSchema, registry, itemCast)) {
-        return null;
+        return [];
       }
 
       const itemProps = {

@@ -39,7 +39,8 @@ export function isFieldHiddenDecision<
  * flagged as a ref cycle is decided raw, the way `SchemaField` renders it, and a schema with no keyword that could
  * contribute a `deprecated` keeps its own through retrieval, so neither pays for the resolution.
  *
- * @param schema - The schema of the child field
+ * @param schema - The schema of the child field; a boolean schema can never be deprecated, so only a `hidden`
+ *          widget in its uiSchema hides it
  * @param uiSchema - The uiSchema of the child field
  * @param registry - The form registry, read for `rootSchema`, `uiSchemaDefinitions`, `schemaUtils` and
  *          `globalUiOptions`
@@ -51,11 +52,15 @@ export default function isFieldHidden<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(
-  schema: S,
+  schema: S | boolean,
   uiSchema: UiSchema<T, S, F> | undefined,
   registry: Pick<Registry<T, S, F>, 'rootSchema' | 'uiSchemaDefinitions' | 'schemaUtils' | 'globalUiOptions'>,
   formData?: T,
 ): boolean {
+  if (typeof schema === 'boolean') {
+    // A boolean schema carries no `deprecated` and no `$ref` to resolve, so the uiSchema alone decides
+    return getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions).widget === 'hidden';
+  }
   const uiOptions = getUiOptions<T, S, F>(
     resolveUiSchema<T, S, F>(schema, uiSchema, registry),
     registry.globalUiOptions,

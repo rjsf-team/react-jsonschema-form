@@ -119,7 +119,7 @@ describe('ObjectField', () => {
       ];
 
       describe('resolution before the visibility answer', () => {
-        const legacy = { type: 'string', deprecated: true };
+        const legacy: RJSFSchema = { type: 'string', deprecated: true };
         const hiddenCases: { name: string; b: RJSFSchema; uiSchema: UiSchema; hidden: boolean }[] = [
           {
             name: 'a ui:definitions label override reaches the template',

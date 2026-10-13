@@ -5193,5 +5193,59 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema, uiSchema, formData: ['one', 'two'] });
       expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(1);
     });
+
+    it('keeps the visible tuple rows and their buttons working around a hidden item', async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: [{ type: 'string' }, { type: 'string', deprecated: true }, { type: 'string' }],
+        additionalItems: { type: 'string' },
+      };
+      const uiSchema: UiSchema = {
+        'ui:globalOptions': { deprecatedHandling: 'hide' },
+        'ui:options': { copyable: true },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema,
+        formData: ['one', 'two', 'three', 'four', 'five'],
+      });
+      // Rows 0, 2, 3 and 4 render; the deprecated index 1 renders no row
+      expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(4);
+      const buttonsByTitle = (title: string) =>
+        Array.from(node.querySelectorAll('button')).filter((button) => button.getAttribute('title') === title);
+      expect(buttonsByTitle('Copy')).toHaveLength(4);
+      // Only the additional rows (indexes 3 and 4) can be removed
+      expect(buttonsByTitle('Remove')).toHaveLength(2);
+      // Only the last additional row can move up, and its index still names the data it moves
+      const moveUp = buttonsByTitle('Move up').filter((button) => !button.disabled);
+      expect(moveUp).toHaveLength(1);
+      await user.click(moveUp[0]);
+      expectToHaveBeenCalledWithFormData(onChange, ['one', 'two', 'three', 'five', 'four'], 'root');
+    });
+
+    it("keeps a hidden tuple item's data when a visible neighbour is removed", async () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: [{ type: 'string' }, { type: 'string', deprecated: true }, { type: 'string' }],
+        additionalItems: { type: 'string' },
+      };
+      const uiSchema: UiSchema = {
+        'ui:globalOptions': { deprecatedHandling: 'hide' },
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema,
+        formData: ['one', 'two', 'three', 'four', 'five'],
+      });
+
+      const remove = Array.from(node.querySelectorAll('button')).filter(
+        (button) => button.getAttribute('title') === 'Remove',
+      );
+      expect(remove).toHaveLength(2);
+      // Removing the first additional row leaves the hidden item's data at its index
+      await user.click(remove[0]);
+      expectToHaveBeenCalledWithFormData(onChange, ['one', 'two', 'three', 'five'], 'root');
+    });
+
   });
 });

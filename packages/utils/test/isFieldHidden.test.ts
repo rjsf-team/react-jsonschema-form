@@ -1,15 +1,17 @@
-import type { Registry } from '../src/index.ts';
+import type { Registry, RJSFMarkedSchema, RJSFSchema } from '../src/index.ts';
 import { createSchemaUtils, isFieldHidden, RJSF_REF_CYCLE_KEY } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
-const rootSchema = {
+const rootSchema: RJSFSchema = {
   definitions: { legacy: { type: 'string', deprecated: true } },
   type: 'object',
 };
 
+type HiddenRegistry = Pick<Registry, 'rootSchema' | 'uiSchemaDefinitions' | 'schemaUtils' | 'globalUiOptions'>;
+
 const schemaUtils = createSchemaUtils({ validator: getTestValidator({}) }, rootSchema);
-const registry = { rootSchema, schemaUtils } as Registry;
-const hideRegistry = { ...registry, globalUiOptions: { deprecatedHandling: 'hide' } } as Registry;
+const registry: HiddenRegistry = { rootSchema, schemaUtils };
+const hideRegistry: HiddenRegistry = { ...registry, globalUiOptions: { deprecatedHandling: 'hide' } };
 
 describe('isFieldHidden()', () => {
   it('answers true for a hidden widget', () => {
@@ -69,7 +71,7 @@ describe('isFieldHidden()', () => {
   it('does not retrieve a schema flagged as a ref cycle', () => {
     const spy = vi.spyOn(schemaUtils, 'retrieveSchema');
     try {
-      const cycle = { type: 'object', [RJSF_REF_CYCLE_KEY]: true };
+      const cycle: RJSFMarkedSchema = { type: 'object', [RJSF_REF_CYCLE_KEY]: true };
       expect(isFieldHidden(cycle, {}, registry)).toBe(false);
       expect(spy).not.toHaveBeenCalled();
     } finally {
