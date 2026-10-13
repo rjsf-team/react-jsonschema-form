@@ -3,14 +3,6 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import { ariaDescribedByIds } from '@rjsf/utils';
 import { FormControl, InputGroup } from 'react-bootstrap';
 
-type CustomWidgetProps<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
-> = WidgetProps<T, S, F> & {
-  options: any;
-};
-
 export default function TextareaWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -28,7 +20,7 @@ export default function TextareaWidget<
   onFocus,
   onChange,
   options,
-}: CustomWidgetProps<T, S, F>) {
+}: WidgetProps<T, S, F>) {
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
   const handleBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target?.value);

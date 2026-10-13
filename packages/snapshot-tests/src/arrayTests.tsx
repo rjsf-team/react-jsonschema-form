@@ -95,7 +95,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           },
         },
       };
-      const errors: any[] = ['Bad input'];
+      const errors: string[] = ['Bad input'];
       const extraErrors = {
         name: { __errors: errors },
       };
@@ -123,7 +123,7 @@ export function arrayTests(Form: ComponentType<FormProps>) {
           },
         },
       };
-      const errors: any[] = [];
+      const errors: string[] = [];
       const extraErrors = {
         name: { __errors: errors },
       };
