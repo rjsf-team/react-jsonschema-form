@@ -11,6 +11,8 @@ import type { GenericObjectType, RJSFSchema } from '../src/index.ts';
 import { createSchemaUtils, findSchemaDefinition, ID_KEY } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
+const testValidator = getTestValidator({});
+
 const schema: RJSFSchema = {
   type: 'object',
   definitions: {
@@ -177,6 +179,37 @@ describe('restoreOriginalRefs()', () => {
     const restoredWithOptions = restoreOriginalRefs(c, true);
     expect((restoredWithOptions.anyOf![0] as RJSFSchema).$ref).toEqual('other.json');
     expect((restoredWithOptions.allOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
+  });
+  it('normalizes a shallow copy of a normalized root without re-resolving its refs', () => {
+    // Consumer code that spreads or clones `registry.rootSchema` hands the copy back in, and the copy's
+    // shared nodes must keep the refs their first normalization resolved
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        p: { $id: 'nested/parent.json', properties: { c: { $ref: 'child.json' } } },
+        c: { $id: 'nested/child.json', title: 'CHILD' },
+      },
+      properties: { x: { $ref: 'nested/parent.json' } },
+    };
+    const normalized = normalizeRootReferences(root);
+    const copy = { ...normalized } as RJSFSchema;
+    const utils = createSchemaUtils({ validator: testValidator }, copy);
+    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
+  });
+  it('reads a root edited in place after a no-op normalization as it now stands', () => {
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { a: { type: 'string', title: 'A' } },
+      properties: { x: { $ref: '#/$defs/a' } },
+    };
+    const utils = createSchemaUtils({ validator: testValidator }, root);
+    utils.retrieveSchema((root.properties as GenericObjectType).x as RJSFSchema);
+    (root.$defs as GenericObjectType).p = { $id: 'nested/parent.json', properties: { c: { $ref: 'child.json' } } };
+    (root.$defs as GenericObjectType).c = { $id: 'nested/child.json', title: 'CHILD' };
+    (root.properties as GenericObjectType).y = { $ref: 'nested/parent.json' };
+    const resolved = utils.retrieveSchema((root.properties as GenericObjectType).y as RJSFSchema) as RJSFSchema;
+    expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
   it('returns the same object when nothing in the walked keywords was rewritten', () => {
     const root: RJSFSchema = {
@@ -1350,8 +1383,8 @@ describe('structure-aware walk pins', () => {
       });
     });
 
-    // Characterization: root-relative nested $ids (v7 spelling) no longer resolve - the nested $id is
-    // now resolved against its parent scope, per spec. This is the documented breaking change.
+    // A nested `$id` resolves against its parent scope, so one written relative to the bundle root
+    // names a different resource.
     it('throws for nested $ids written relative to the bundle root (breaking change)', () => {
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',

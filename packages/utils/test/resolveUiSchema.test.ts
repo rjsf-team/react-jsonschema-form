@@ -46,6 +46,21 @@ describe('resolveUiSchema() - normalized options', () => {
     const result = resolveUiSchema(resolved, undefined, registry);
     expect(result.anyOf).toEqual([{ 'ui:title': 'from-def' }]);
   });
+  it('applies ui:definitions to expanded anyOf options keyed by the author spelling of their $ref', () => {
+    // An expanded option is a new object: `originalRefOf` misses it and `resolvedFromRef` returns the
+    // resolved spelling, so the author spelling a `ui:definitions` entry is keyed by comes from `sourceRefOf`
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://x.com/root.json',
+      $defs: { a: { type: 'string', title: 'A' } },
+      properties: { p: { anyOf: [{ $ref: '#/$defs/a' }] } },
+    };
+    const utils = createSchemaUtils({ validator: testValidator }, root);
+    const expanded = utils.retrieveSchema(root.properties!.p as RJSFSchema, undefined, true);
+    const registry = makeRegistry(root, { '#/$defs/a': { 'ui:title': 'from-def' } });
+    const result = resolveUiSchema(expanded, undefined, registry);
+    expect(result).toEqual({ anyOf: [{ 'ui:title': 'from-def' }] });
+  });
 });
 
 it('skips undefined options when matching anyOf ui:definitions', () => {

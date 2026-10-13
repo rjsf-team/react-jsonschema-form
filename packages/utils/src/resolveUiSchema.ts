@@ -91,11 +91,16 @@ export default function resolveUiSchema<
         for (let i = 0; i < schemaOptions.length; i++) {
           const option = schemaOptions[i] as S | undefined;
           // An unexpanded option carries no ref markers; when it comes from a normalized root its `$ref` is
-          // absolute, so the author spelling `ui:definitions` entries are keyed by comes from `originalRefOf`
+          // absolute, so the author spelling `ui:definitions` entries are keyed by comes from `originalRefOf`.
+          // An expanded option is a new object with no `originalRefOf` at all, so the author spelling comes
+          // from `sourceRefOf` first, the way the top-level chain above reads it
           const optionRef =
             option === undefined
               ? undefined
-              : (originalRefOf<S>(option) ?? resolvedFromRef<S>(option) ?? declaredRef<S>(option));
+              : (sourceRefOf<S>(option) ??
+                originalRefOf<S>(option) ??
+                resolvedFromRef<S>(option) ??
+                declaredRef<S>(option));
           if (optionRef && optionRef in definitions) {
             uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
             hasExpanded = true;

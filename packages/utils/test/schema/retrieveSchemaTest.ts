@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import { findSchemaDefinitionWithBaseURI } from '../../src/findSchemaDefinition.ts';
-import type { RJSFSchema } from '../../src/index.ts';
+import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   GUESSED_TYPE_FLAG,
@@ -525,6 +525,41 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         title: 'foo',
         [RJSF_REF_KEY]: '#/definitions/address',
       });
+    });
+    it('recursive ref reached through an allOf branch resolves once', () => {
+      // The allOf merge threads the recursion through `enclosingRefPath`, which keeps the enclosing ref on
+      // the path in both its spellings, so the branch's `$ref` back to the definition collapses the same way
+      // a recursion under a property does
+      const root: RJSFSchema = {
+        $id: 'https://x.com/root.json',
+        $ref: '#/definitions/node',
+        definitions: {
+          node: {
+            type: 'object',
+            properties: { v: { type: 'string' } },
+            allOf: [{ properties: { child: { $ref: '#/definitions/node' } } }],
+          },
+        },
+      };
+      const result = retrieveSchema({ validator: testValidator }, root, root) as RJSFSchema;
+      const child = (result.properties as GenericObjectType).child as RJSFSchema;
+      expect(child.properties).toBeUndefined();
+    });
+    it('a root $id beside a top-level $ref does not override its own scope, however the host is capitalized', () => {
+      // `$id` comparison goes through `uriEqual`: `resolveUri` normalizes the host case, so a root `$id`
+      // written with a capitalized host still re-identifies nothing
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://Example.com/root.json',
+        $ref: '#/$defs/a',
+        $defs: {
+          a: { $id: 'nested/a.json', properties: { b: { $ref: 'b.json' } } },
+          nb: { $id: 'nested/b.json', title: 'NESTED-B' },
+          rb: { $id: 'b.json', title: 'ROOT-B' },
+        },
+      };
+      const result = retrieveSchema({ validator: testValidator }, root, root) as RJSFSchema;
+      expect(((result.properties as GenericObjectType).b as RJSFSchema).title).toEqual('NESTED-B');
     });
     it('recursive ref should resolve once', () => {
       const result = retrieveSchema({ validator: testValidator }, RECURSIVE_REF, RECURSIVE_REF);
@@ -1070,8 +1105,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     it('#5467: resolves a properties-carrying $ref chain in a bundle whose root has no $id', () => {
       // Refs inside the nested resources are written relative to their resource. Normalization resolves them
-      // against the root's base, and the resolver must not resolve them a second time against the nested scope
-      // (which used to throw `Could not find a definition for nested/nested/child.json`).
+      // against the root's base, and the resolver must not resolve them a second time against the nested scope.
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
         $defs: {

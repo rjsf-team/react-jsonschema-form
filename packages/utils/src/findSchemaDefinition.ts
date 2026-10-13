@@ -68,7 +68,7 @@ function normalizeUri(uri: string): string {
   return resolveUri('', uri).replace(ENCODED_UNRESERVED, decodeURIComponent);
 }
 
-function uriEqual(a: string, b: string): boolean {
+export function uriEqual(a: string, b: string): boolean {
   return a === b || normalizeUri(a) === normalizeUri(b);
 }
 
@@ -351,7 +351,11 @@ export function originalRefOf<S extends StrictRJSFSchema>(schema: S): string | u
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
   const visit = (node: S, currentURI: string): S => {
     const ref = node[REF_KEY];
-    const refChange = typeof ref === 'string' ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
+    // A node this function already rewrote holds its resolved ref, with the author's spelling in
+    // `originalRefs`: resolving it again would re-base it against the nested `$id` a second time. Shallow
+    // copies of a normalized root share those nodes, so this is what makes the walk idempotent
+    const refChange =
+      typeof ref === 'string' && !originalRefs.has(node) ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
     const visited = mapSubschemas(node, (subSchema) => visit(subSchema, childScope(subSchema, currentURI)), refChange);
     if (typeof ref === 'string' && visited[REF_KEY] !== ref) {
       originalRefs.set(visited, ref);
@@ -416,10 +420,11 @@ export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(sch
   return Object.keys(changes).length > 0 ? { ...schema, ...changes } : schema;
 }
 
-/** Roots already returned by `normalizeRootReferences`. Normalization resolves every ref against the scope its
+/** Roots already produced by `normalizeRootReferences`. Normalization resolves every ref against the scope its
  * subtree sits in, so running it twice would resolve the already-resolved refs a second time and corrupt them;
- * the marker set is what makes the function idempotent. There is deliberately no memo per raw root: a root edited
- * in place after its first normalization must be read as it now stands.
+ * between this marker set and the per-node `originalRefs` check in `makeAllReferencesAbsolute`, the function is
+ * idempotent for its own output and for shallow copies of it. There is deliberately no memo per raw root: a root
+ * edited in place after its first normalization must be read as it now stands.
  */
 const normalizedRoots = new WeakSet<StrictRJSFSchema>();
 
@@ -440,7 +445,11 @@ export function normalizeRootReferences<S extends StrictRJSFSchema = RJSFSchema>
     rootSchema,
     typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : '#',
   );
-  normalizedRoots.add(normalized);
+  // Only a root this function produced is marked: marking the input when nothing changed would freeze it,
+  // and a root edited in place after a no-op normalization must be read as it now stands on the next call
+  if (normalized !== rootSchema) {
+    normalizedRoots.add(normalized);
+  }
   return normalized;
 }
 

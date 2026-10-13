@@ -32,6 +32,7 @@ import findSchemaDefinition, {
   restoreOriginalRefs,
   resolveUri,
   splitKeyElementFromObject,
+  uriEqual,
 } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
@@ -694,7 +695,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       // A local `$id` that resolves to the scope the walk is already in - the root's own `$id` beside a
       // top-level `$ref` is the common one - re-identifies nothing, so the target's content keeps the scope
       // the normalization gave it rather than being restored and re-resolved against that same scope
-      resolveUri(currentBaseURI ?? '', localSchema[ID_KEY]) !== currentBaseURI
+      !uriEqual(resolveUri(currentBaseURI ?? '', localSchema[ID_KEY]), currentBaseURI ?? '')
     ) {
       // A `$id` written on the referring schema itself, distinct from the target's, re-identifies the resource
       // the merged schema belongs to: the target's own content is then read as written, with the refs the
@@ -856,7 +857,25 @@ function enclosingRefPath<S extends StrictRJSFSchema>(schema: S, recurseList: st
     return recurseList;
   }
   const sourceRef = (schema as Record<symbol, unknown>)[RJSF_REF_KEY];
-  return typeof sourceRef === 'string' && !recurseList.includes(sourceRef) ? [...recurseList, sourceRef] : recurseList;
+  if (typeof sourceRef !== 'string') {
+    return recurseList;
+  }
+  // The branch about to be resolved carries its `$ref` from the normalized root in the resolved spelling,
+  // while this marker can hold either spelling, so the path holds both, the way the marker walk in
+  // `resolveAllReferences` pushes both. The resolved spelling of a `#` ref comes from the materialized
+  // schema's own `$id` - the scope of the resource the walk expanded - when it carries one
+  const authorRef = (schema as Record<symbol, unknown>)[RJSF_SOURCE_REF_KEY];
+  const candidates = typeof authorRef === 'string' && authorRef !== sourceRef ? [sourceRef, authorRef] : [sourceRef];
+  const scope = schema[ID_KEY];
+  const additions: string[] = [];
+  for (const ref of candidates) {
+    additions.push(ref);
+    if (ref.startsWith('#') && typeof scope === 'string') {
+      additions.push(resolveUri(scope, ref));
+    }
+  }
+  const missing = additions.filter((ref) => !recurseList.includes(ref));
+  return missing.length > 0 ? [...recurseList, ...missing] : recurseList;
 }
 
 /** The keywords that constrain a value of a given type without naming the type itself. A typeless `additionalProperties`
