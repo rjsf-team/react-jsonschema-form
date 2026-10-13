@@ -262,6 +262,10 @@ interface ComputeDefaultsProps<
    *  The formData should take precedence unless it's not valid. This is useful when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
    */
   shouldMergeDefaultsIntoFormData?: boolean;
+  /** Internal: set when the branch above resolved or merged content into the schema being recursed into, so a
+   *  property that resolution materialized from a `$ref` is treated as crossed here rather than arrived with.
+   */
+  _resolvedHere?: boolean;
 }
 
 /** Returns the option of a field that is not an object as `getRenderedOptionSchema()` renders it, carrying the
@@ -315,6 +319,7 @@ export function computeDefaults<
   const preferParentDefaults = defaults && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
+  let resolvedHere = false;
   let contextToCompute = context;
   // Seed the path with the reference this schema was itself resolved from, so a `$ref` back to it met through a
   // branch that re-resolves it (a `dependencies` entry, a retrieved merge) reads as the recursion. The reference
@@ -400,7 +405,13 @@ export function computeDefaults<
     // caller's path unchanged; only a dependency that merged new content (which may resolve through a `$ref`) keeps
     // the seeded path, so two definitions whose dependencies point at each other still stop.
     const { [DEPENDENCIES_KEY]: _dependencies, ...schemaWithoutDependencies } = schema;
-    updatedRecurseList = deepEquals(schemaToCompute, schemaWithoutDependencies) ? _recurseList : dependencyPath;
+    const dependenciesMerged = !deepEquals(schemaToCompute, schemaWithoutDependencies);
+    // The merge may itself be the resolution of a `$ref` the entry held, the way the `allOf` merge below resolves
+    // one among its subschemas: the ref it expanded joins the path, so a `$ref` back to it further down stops there
+    updatedRecurseList = dependenciesMerged ? enclosingRefPath<S>(schemaToCompute as S, dependencyPath) : _recurseList;
+    // A dependency that merged new content may have resolved a `$ref` doing so, the way this level's own retrieve
+    // does, so the recursion treats what it materialized as crossed here
+    resolvedHere = resolvedHere || dependenciesMerged;
   } else if (isFixedItems(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
@@ -517,6 +528,7 @@ export function computeDefaults<
     // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
     // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at.
     updatedRecurseList = enclosingRefPath<S>(schemaToCompute, pathWithOwnRef);
+    resolvedHere = true;
   }
 
   if (schemaToCompute) {
@@ -524,6 +536,7 @@ export function computeDefaults<
       rootSchema,
       includeUndefinedValues,
       _recurseList: updatedRecurseList,
+      _resolvedHere: resolvedHere,
       parentDefaults: defaults as T | undefined,
       // The value as it was passed in, not the `{}` that stands in for no value above: a `type` list naming `object`
       // would read that `{}` as an object it holds, and skip the defaults of the type the list resolves to
@@ -658,6 +671,7 @@ export function getObjectDefaults<
     initialDefaultsGenerated,
     uiSchema,
     uiSchemaDefinitions,
+    _resolvedHere = false,
   }: ComputeDefaultsProps<T, S, F> = {},
   defaults?: T | T[],
 ): T {
@@ -719,7 +733,7 @@ export function getObjectDefaults<
         // schema arrived with (resolved on the way in) keeps the caller's path, so its first use below stays
         // allowed; sibling branches of its ref re-derive their own path.
         const propertyPath =
-          didRetrieve && refSiblingBranches(propertySchema) === undefined
+          (didRetrieve || _resolvedHere) && refSiblingBranches(propertySchema) === undefined
             ? enclosingRefPath<S>(propertySchema, childRecurseList)
             : childRecurseList;
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
