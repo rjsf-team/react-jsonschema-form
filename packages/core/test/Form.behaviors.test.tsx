@@ -1166,6 +1166,32 @@ describe('Deriving state from changed props', () => {
     expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
   });
 
+  it('does not validate a form that was never handed data when a prop that takes part in validation changes', async () => {
+    function Unseeded() {
+      const [step, setStep] = useState(0);
+      return (
+        <>
+          <button type='button' onClick={() => setStep(step + 1)}>
+            next
+          </button>
+          <Form
+            schema={{ type: 'object', required: ['name'], properties: { name: { type: 'string' } } }}
+            validator={validator}
+            liveValidate='onChange'
+            transformErrors={step === 0 ? identity : alsoIdentity}
+          />
+          <output>{step}</output>
+        </>
+      );
+    }
+    const { container } = render(<Unseeded />);
+
+    await user.click(container.querySelector('button')!);
+
+    expect(container.querySelector('output')).toHaveTextContent('1');
+    expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
+  });
+
   it('clears extraErrors the parent drops after a re-validation of unchanged data', async () => {
     const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
     const { container } = render(

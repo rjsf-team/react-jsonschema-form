@@ -16,7 +16,14 @@ import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
-import { createFormComponent, getSelectedOptionValue, setupConsoleWarnSuppression, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  getSelectedOptionValue,
+  handleOf,
+  setupConsoleWarnSuppression,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -4370,5 +4377,40 @@ describe('oneOf', () => {
     await user.click(screen.getByRole('button', { name: 'Clear' }));
 
     expect(onChange.mock.lastCall![0].errorSchema).toEqual({});
+  });
+
+  it('puts the selector back on the option the data fits when onChange answers a switch by setting the field back', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        status: {
+          oneOf: [
+            { title: 'Approved', type: 'object', properties: { by: { type: 'string' } }, required: ['by'] },
+            { title: 'Rejected', type: 'object', properties: { reason: { type: 'string' } }, required: ['reason'] },
+          ],
+        },
+      },
+    };
+    const ref = createFormRef();
+    let refuses = false;
+    const { node } = createFormComponent({
+      ref,
+      schema,
+      initialFormData: { status: { by: 'me' } },
+      onChange: () => {
+        if (refuses) {
+          refuses = false;
+          handleOf(ref).setFieldValue('status', { by: 'me' });
+        }
+      },
+    });
+    refuses = true;
+
+    await user.selectOptions(node.querySelector('select')!, 'Rejected');
+
+    expect(handleOf(ref).getFormData()).toEqual({ status: { by: 'me' } });
+    expect(node.querySelector('select')).toHaveValue('0');
+    expect(node.querySelector('#root_status_by')).toBeInTheDocument();
+    expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
   });
 });

@@ -180,7 +180,7 @@ useEffect(() => {
 
 A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, sees those props too: Form installs them into its store in an insertion Effect, which React runs before any of those, and also while an `<Activity>` hides the form. The cleanup of a layout Effect, a ref being detached or a `componentWillUnmount` in that commit may run earlier, depending on where it sits in the tree, and then sees Form's previous configuration. Those in the form's own subtree, in a sibling rendered before the form, and in anything removed from under one of the form's ancestors run earlier; those in a sibling rendered after the form, or in an ancestor that stays mounted, run later.
 
-Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render, and an edit made while a validation runs is overwritten by the operation that ran it.
+Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render, and an edit made while a validation runs has the operation that ran it validate a second time, on the edited data.
 
 Under `liveValidate: 'onBlur'`, a blur in the same event as an edit validates the edit, and its `onChange` carries the errors found. A value your component stores in its place is validated at the next blur or submit.
 

@@ -259,6 +259,31 @@ it('same-tick validation sees the custom errors a field raises with its edit', a
   expect(onError).toHaveBeenLastCalledWith(expect.arrayContaining([expect.objectContaining({ message: 'blocked' })]));
 });
 
+it('an edit customValidate makes through the handle while validateForm() runs is kept', () => {
+  const ref = createFormRef();
+  let isFirstRun = true;
+  const customValidate: NoValFormProps['customValidate'] = (_formData, errors) => {
+    if (isFirstRun) {
+      isFirstRun = false;
+      handleOf(ref).setFieldValue('b', 'derived');
+    }
+    return errors;
+  };
+  const { onChange } = createFormComponent({
+    ref,
+    schema: { type: 'object', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+    initialFormData: { a: 'x' },
+    customValidate,
+  });
+
+  act(() => {
+    handleOf(ref).validateForm();
+  });
+
+  expectToHaveBeenCalledWithFormData(onChange, { a: 'x', b: 'derived' }, 'root_b');
+  expect(handleOf(ref).getFormData()).toEqual({ a: 'x', b: 'derived' });
+});
+
 it('a handle retained past the unmount neither applies nor reports a change', () => {
   const ref = createFormRef();
   const { onChange, unmount } = createFormComponent({ ref, schema, initialFormData: { name: 'a' } });

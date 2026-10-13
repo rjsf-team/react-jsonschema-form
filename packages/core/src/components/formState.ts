@@ -1254,15 +1254,16 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
   };
 }
 
-/** Whether a pass validates its data: only under `liveValidate: 'onChange'`, and only when something the errors depend
- * on changed, so a parent re-render that touches neither the data nor the validation shows no error the user has not
- * earned yet. `'onBlur'` owns its validation pass in `applyBlur()`.
+/** Whether a pass validates its data: only under `liveValidate: 'onChange'`, only for data that is there, and only when
+ * something the errors depend on changed, so a parent re-render that touches neither the data nor the validation
+ * shows no error the user has not earned yet. `'onBlur'` owns its validation pass in `applyBlur()`.
  */
 function mustLiveValidate<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
+  edit: boolean,
   isInputChanged: boolean,
 ): boolean {
-  return isLiveValidated(props) && isInputChanged;
+  return edit && isLiveValidated(props) && isInputChanged;
 }
 
 /** Whether the form validates its data on every change */
@@ -1304,12 +1305,14 @@ function detectContextChanges<T, S extends StrictRJSFSchema, F extends FormConte
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The data to derive from
  * @param props - The current props
+ * @param isSeeded - Whether the props handed `inputFormData` over, rather than `current` holding it
  * @returns - The new state, sharing every unchanged subtree with `current`
  */
 function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F> | undefined,
   inputFormData: T | undefined,
   props: FormProps<T, S, F>,
+  isSeeded = current === undefined,
 ): FormState<T, S, F> {
   const {
     formData,
@@ -1323,9 +1326,10 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
   const isDataChanged = current !== undefined && formData !== current.formData;
+  const edit = isSeeded || !current ? inputFormData !== undefined : current.edit;
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
-    mustValidate: mustLiveValidate(props, isDataChanged || isValidationPropChanged),
+    mustValidate: mustLiveValidate(props, edit, isDataChanged || isValidationPropChanged),
     validationSchema: areSchemaUtilsReused ? context.retrievedSchema : undefined,
     // Without a validation pass, the errors of the fields the data changed at describe values that are gone. The
     // data is shared against the committed data, so unchanged subtrees are skipped by identity
@@ -1339,6 +1343,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
+    edit,
     ...errors,
     initialDefaultsGenerated: true,
   };
@@ -1933,7 +1938,7 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   // `NaN` taken again on every pass
   const isFormDataSeen = Object.is(props.formData, state.formDataProp) || Object.is(props.formData, state.formData);
   if (props.formData !== undefined && !isFormDataSeen) {
-    return withFormDataProp(replaceEqualDeep(state, deriveDataState(state, props.formData, props)), props);
+    return withFormDataProp(replaceEqualDeep(state, deriveDataState(state, props.formData, props, true)), props);
   }
   const context = deriveRenderContext(props, state.retrievedSchema, state, resolveSchemaUtils(props, state));
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(state, context);
@@ -1953,7 +1958,7 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
     retrievedSchema: resolveRetrievedSchema(state, context.schemaUtils, state.formData),
   };
   const errors = reconcileErrors(state, props, resolvedContext, state.formData, {
-    mustValidate: mustLiveValidate(props, isValidationPropChanged),
+    mustValidate: mustLiveValidate(props, state.edit, isValidationPropChanged),
     validationSchema: context.schemaUtils === state.schemaUtils ? resolvedContext.retrievedSchema : undefined,
   });
   return withFormDataProp(replaceEqualDeep(state, { ...state, ...resolvedContext, ...errors }), props);

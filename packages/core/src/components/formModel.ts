@@ -90,6 +90,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     return committed;
   };
 
+  /** Runs `apply` on the current state and returns its result. A function of the consumer's that `apply` calls, such as
+   * `customValidate`, may issue an operation of its own, which commits before `apply` returns; `apply` then runs once
+   * more on top of that, so the result does not put back the data from before the nested operation.
+   */
+  const settled = <R>(apply: (base: FormState<T, S, F>) => R): R => {
+    const start = state;
+    const result = apply(start);
+    return state === start ? result : apply(state);
+  };
+
   /** The form's data without the fields the schema does not describe, when `omitExtraData` asks for it: what a submit
    * and `validateForm()` act on
    */
@@ -129,16 +139,16 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
   };
 
-  /** Validates `formData` for a submission or a programmatic validation, committing the errors it reports and calling
-   * `onError` with them, or focusing the first one when `focusOnFirstError` asks for it. The data itself is never
-   * installed.
+  /** Validates the data `readFormData` returns for a submission or a programmatic validation, committing the errors it
+   * reports and calling `onError` with them, or focusing the first one when `focusOnFirstError` asks for it. The data
+   * itself is never installed.
    *
    * @param props - The props the operation started with
-   * @param formData - The form data to validate
+   * @param readFormData - Returns the form data to validate; read again when the validation runs again, see `settled()`
    * @returns - True if the form is valid, false otherwise.
    */
-  const runValidation = (props: FormProps<T, S, F>, formData: T | undefined): boolean => {
-    const { hasError, next } = applyValidation(state, props, formData);
+  const runValidation = (props: FormProps<T, S, F>, readFormData: () => T | undefined): boolean => {
+    const { hasError, next } = settled((base) => applyValidation(base, props, readFormData()));
     const { errors } = commit(next);
     if (!hasError) {
       return true;
@@ -186,17 +196,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       announced = undefined;
     }
     const committed = commit(
-      applyChange(
-        state,
-        {
-          newValue,
-          fieldPath,
-          newErrorSchema,
-          newKeyOf: move?.newKeyOf,
-          newOwnKeyOf: move?.newOwnKeyOf,
-          dropsOwnErrors: move?.dropsOwnErrors,
-        },
-        props,
+      settled((base) =>
+        applyChange(
+          base,
+          {
+            newValue,
+            fieldPath,
+            newErrorSchema,
+            newKeyOf: move?.newKeyOf,
+            newOwnKeyOf: move?.newOwnKeyOf,
+            dropsOwnErrors: move?.dropsOwnErrors,
+          },
+          props,
+        ),
       ),
     );
     deliver(() => props.onChange?.(toIChangeEvent(committed), id));
@@ -214,7 +226,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       return;
     }
     const start = state;
-    const committed = commit(applyBlur(start, props));
+    const committed = commit(settled((base) => applyBlur(base, props)));
     // Only the `IChangeEvent` members count; the validator's own results are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
       callWithDeferredThrow(() => props.onChange?.(toIChangeEvent(committed), id));
@@ -230,12 +242,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const props = committedProps;
     // oxlint-disable-next-line typescript/no-deprecated
     const { noValidate } = props;
-    const formData = withExtraDataOmitted(props);
-    if (!noValidate && !runValidation(props, formData)) {
+    if (!noValidate && !runValidation(props, () => withExtraDataOmitted(props))) {
       return;
     }
     // There are no errors generated through schema validation, so only the user-provided ones are shown
-    const committed = commit(applySubmit(state, props, formData));
+    const committed = commit(settled((base) => applySubmit(base, props, withExtraDataOmitted(props))));
     props.onSubmit?.(toIChangeEvent(committed, 'submitted'), event);
   };
 
@@ -260,7 +271,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       const props = committedProps;
-      const committed = commit(applyReset(state, props));
+      const committed = commit(settled((base) => applyReset(base, props)));
       props.onChange?.(toIChangeEvent(committed));
     },
 
@@ -286,10 +297,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
 
     validateForm: () => {
       const props = committedProps;
-      return runValidation(props, withExtraDataOmitted(props));
+      return runValidation(props, () => withExtraDataOmitted(props));
     },
 
-    validateFormWithFormData: (formData?: T) => runValidation(committedProps, formData),
+    validateFormWithFormData: (formData?: T) => runValidation(committedProps, () => formData),
 
     validate: (formData: T | undefined) => validateFormData(committedProps, state, formData),
 
