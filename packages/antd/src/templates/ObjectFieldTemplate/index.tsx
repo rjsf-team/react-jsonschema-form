@@ -1,7 +1,6 @@
 import { useContext } from 'react';
 import type {
   FormContextType,
-  GenericObjectType,
   ObjectFieldTemplateProps,
   ObjectFieldTemplatePropertyType,
   Registry,
@@ -17,7 +16,6 @@ import {
   getTemplates,
   getUiOptions,
   isComponentType,
-  isObject,
   resolveUiSchema,
   titleId,
   buttonId,
@@ -105,7 +103,7 @@ export default function ObjectFieldTemplate<
     // Resolved the way `SchemaField` resolves them before it picks the field, so that a `$ref` with a
     // `ui:definitions` entry, or an `allOf`, is keyed by what is rendered
     const { schema: rawSchema, uiSchema: rawUiSchema } = element.content.props;
-    const propertyFormData = isObject(formData) ? (formData as GenericObjectType)[element.name] : undefined;
+    const propertyFormData = getByPath<T>(formData, element.name);
     const propertySchema: S = registry.schemaUtils.retrieveSchema(rawSchema, propertyFormData);
     const propertyUiSchema: UiSchema<T, S, F> = resolveUiSchema<T, S, F>(rawSchema, rawUiSchema, registry);
     const ownUiOptions = getUiOptions<T, S, F>(propertyUiSchema);

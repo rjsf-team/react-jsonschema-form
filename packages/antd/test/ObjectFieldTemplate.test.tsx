@@ -380,4 +380,39 @@ describe('ObjectFieldTemplate colSpan map', () => {
     expect(classes).toHaveLength(2);
     classes.forEach((c) => expect(c).toContain('ant-col-8'));
   });
+
+  describe('a property whose type depends on its form data', () => {
+    const textOrNumber: RJSFSchema = { if: { const: 'text' }, then: { type: 'string' }, else: { type: 'number' } };
+    const getSpan = (formSchema: RJSFSchema, formData: unknown) => {
+      const { container } = render(
+        <Form
+          schema={formSchema}
+          validator={validator}
+          formData={formData}
+          formContext={{ colSpan: { string: 8, number: 4 } }}
+        />,
+      );
+      return container.querySelector('fieldset > .ant-row > .ant-col')!.className;
+    };
+
+    it('is keyed by the type its form data selects', () => {
+      const formSchema: RJSFSchema = { type: 'object', properties: { pet: textOrNumber, other: { type: 'boolean' } } };
+      expect(getSpan(formSchema, { pet: 'text' })).toContain('ant-col-8');
+    });
+
+    it('does not read an inherited member as the form data of a property named after it', () => {
+      // A function is none of the JSON types, so `Object.prototype.constructor` read as the form data selects `then`
+      const notJson: RJSFSchema = {
+        if: { not: { type: ['string', 'number', 'boolean', 'null', 'array', 'object'] } },
+        then: { type: 'string' },
+        else: { type: 'number' },
+      };
+      const formSchema: RJSFSchema = {
+        type: 'object',
+        properties: { constructor: notJson, other: { type: 'boolean' } },
+      };
+      expect(getSpan(formSchema, {})).toContain('ant-col-4');
+      expect(document.querySelector('#root_constructor')).toHaveAttribute('role', 'spinbutton');
+    });
+  });
 });
