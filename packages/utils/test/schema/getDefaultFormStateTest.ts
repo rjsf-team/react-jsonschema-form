@@ -5698,6 +5698,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       };
       const animalInfoArraySchema: RJSFSchema = { type: 'array', items: animalInfoSchema };
       const [animalCondition] = animalInfoSchema.allOf as RJSFSchema[];
+      const fishFirstAnimalInfoSchema: RJSFSchema = {
+        ...animalInfoSchema,
+        allOf: [
+          {
+            if: { properties: { animal: { const: 'Fish' } } },
+            then: { properties: { food: { type: 'string', default: 'grass' } } },
+          },
+          animalCondition,
+        ],
+      };
 
       afterEach(() => {
         // Reset the testValidator
@@ -5842,6 +5852,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ),
           ).toEqual([{ animal: 'Cat', food: 'meat' }]);
         });
+
+        it('should fill in the then default of every if without required in array items with no data, so the first entry wins even when its if does not match the defaulted value', () => {
+          const fishFirstArraySchema: RJSFSchema = { type: 'array', items: fishFirstAnimalInfoSchema };
+          expect(
+            getDefaultFormState(testValidator, fishFirstArraySchema, [{}], fishFirstArraySchema, undefined, {
+              allOf: 'populateDefaults',
+            }),
+          ).toEqual([{ animal: 'Cat', food: 'grass' }]);
+        });
       });
 
       describe('default form state behaviour: allOf = "skipDefaults"', () => {
@@ -5894,20 +5913,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('should fill in the then default of every if without required on empty data, so the first entry wins even when its if does not match the defaulted value', () => {
-          const fishFirstSchema: RJSFSchema = {
-            ...animalInfoSchema,
-            allOf: [
-              {
-                if: { properties: { animal: { const: 'Fish' } } },
-                then: { properties: { food: { type: 'string', default: 'grass' } } },
-              },
-              animalCondition,
-            ],
-          };
           expect(
-            getDefaultFormState(testValidator, fishFirstSchema, undefined, fishFirstSchema, undefined, {
-              allOf: 'skipDefaults',
-            }),
+            getDefaultFormState(
+              testValidator,
+              fishFirstAnimalInfoSchema,
+              undefined,
+              fishFirstAnimalInfoSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+            ),
           ).toEqual({ animal: 'Cat', food: 'grass' });
         });
 
