@@ -197,6 +197,58 @@ describe('restoreOriginalRefs()', () => {
     const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
+  it('normalizes a structuredClone of a normalized root without re-resolving its refs', () => {
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        p: { $id: 'nested/parent.json', properties: { c: { $ref: 'child.json' } } },
+        c: { $id: 'nested/child.json', title: 'CHILD' },
+      },
+      properties: { x: { $ref: 'nested/parent.json' } },
+    };
+    const normalized = normalizeRootReferences(root);
+    const copy = structuredClone(normalized);
+    const utils = createSchemaUtils({ validator: testValidator }, copy);
+    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
+  });
+  it('normalizes a JSON round-trip copy of a normalized root without re-resolving its refs', () => {
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        p: { $id: 'nested/parent.json', properties: { c: { $ref: 'child.json' } } },
+        c: { $id: 'nested/child.json', title: 'CHILD' },
+      },
+      properties: { x: { $ref: 'nested/parent.json' } },
+    };
+    const normalized = normalizeRootReferences(root);
+    const copy = JSON.parse(JSON.stringify(normalized)) as RJSFSchema;
+    const utils = createSchemaUtils({ validator: testValidator }, copy);
+    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
+  });
+  it('normalizes a copy of the node holding the $ref without re-resolving it', () => {
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        p: { $id: 'nested/parent.json', properties: { c: { $ref: 'child.json' } } },
+        c: { $id: 'nested/child.json', title: 'CHILD' },
+      },
+      properties: { x: { $ref: 'nested/parent.json' } },
+    };
+    const normalized = normalizeRootReferences(root);
+    const defs = normalized.$defs as GenericObjectType;
+    const copy = {
+      ...normalized,
+      $defs: {
+        ...defs,
+        p: { ...(defs.p as GenericObjectType), properties: { ...((defs.p as RJSFSchema).properties as object) } },
+      },
+    } as RJSFSchema;
+    const utils = createSchemaUtils({ validator: testValidator }, copy);
+    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
+  });
   it('reads a root edited in place after a no-op normalization as it now stands', () => {
     const root: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',

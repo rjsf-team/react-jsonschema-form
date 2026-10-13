@@ -349,13 +349,46 @@ export function originalRefOf<S extends StrictRJSFSchema>(schema: S): string | u
  * @param baseURI - The base URI to be used for resolving relative references
  */
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
+  const rootId = typeof schema[ID_KEY] === 'string' ? schema[ID_KEY] : undefined;
+  // One existence answer per distinct resource name, so the walk asks once no matter how many refs share a target
+  const knownTargets = new Map<string, boolean>();
+  const targetExists = (candidate: string): boolean => {
+    const [refId] = candidate.replace(/#\/?$/, '').split('#');
+    if (refId === '') {
+      return true;
+    }
+    const known = knownTargets.get(refId);
+    if (known !== undefined) {
+      return known;
+    }
+    const name = refId.replace(/\/$/, '');
+    const exists =
+      (rootId !== undefined && uriEqual(name, rootId.replace(/\/$/, ''))) ||
+      findEmbeddedSchemaRecursive(schema, name) !== undefined;
+    knownTargets.set(refId, exists);
+    return exists;
+  };
   const visit = (node: S, currentURI: string): S => {
     const ref = node[REF_KEY];
     // A node this function already rewrote holds its resolved ref, with the author's spelling in
-    // `originalRefs`: resolving it again would re-base it against the nested `$id` a second time. Shallow
-    // copies of a normalized root share those nodes, so this is what makes the walk idempotent
+    // `originalRefs`: resolving it again would re-base it against the nested `$id` a second time. The
+    // `alreadyNamesTarget` check is what makes the walk idempotent beyond object identity: a deep copy of
+    // a normalized root carries refs that already name their resource root-relatively, and resolving such
+    // a ref against the nested `$id` a second time names a resource that does not exist, so the spelling
+    // is kept instead of corrupting toward a doubled path. When the scope-resolved target does exist the
+    // rewrite still happens: the scoped reading is the one the author meant, and relative external refs
+    // (whose target never lives in this root) are still absolutized.
+    const resolved = typeof ref === 'string' ? resolveUri(currentURI, ref) : undefined;
+    const alreadyNamesTarget =
+      typeof ref === 'string' &&
+      resolved !== undefined &&
+      resolved !== ref &&
+      !targetExists(resolved) &&
+      targetExists(ref);
     const refChange =
-      typeof ref === 'string' && !originalRefs.has(node) ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
+      typeof ref === 'string' && !originalRefs.has(node) && resolved !== ref && !alreadyNamesTarget
+        ? { [REF_KEY]: resolved }
+        : undefined;
     const visited = mapSubschemas(node, (subSchema) => visit(subSchema, childScope(subSchema, currentURI)), refChange);
     if (typeof ref === 'string' && visited[REF_KEY] !== ref) {
       originalRefs.set(visited, ref);
