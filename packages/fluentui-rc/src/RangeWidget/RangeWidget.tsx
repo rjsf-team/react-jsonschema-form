@@ -14,13 +14,10 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, required, label, hideLabel, id } =
-    props;
+  const { value, readonly, disabled, onBlur, onFocus, schema, onChange, required, label, hideLabel, id } = props;
   const sliderProps = { value, label, id, name: id, ...rangeSpec<S>(schema) };
 
-  const handleChange: NonNullable<SliderProps['onChange']> = (_, data) => {
-    onChange(data.value ?? options.emptyValue);
-  };
+  const handleChange: NonNullable<SliderProps['onChange']> = (_, data) => onChange(data.value);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
