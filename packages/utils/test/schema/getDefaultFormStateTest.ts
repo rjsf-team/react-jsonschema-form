@@ -4527,6 +4527,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       it.each<[string, RJSFSchema, GenericObjectType, (string | number)[]]>([
         ['a string const schema', { type: 'string', const: 'x', default: { a: 1 } }, { b: 2 }, ['0']],
         ['an array default', { type: 'array', default: [1, 2] }, { b: 2 }, ['0']],
+        ['the tail of an array default', { type: 'array', default: [1, 2] }, { b: 2 }, ['1']],
         ['a string default inside allOf', { allOf: [{ type: 'string', default: 'x' }] }, { b: 2 }, ['0']],
         [
           'a nested string property default',

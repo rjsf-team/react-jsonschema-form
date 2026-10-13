@@ -1805,7 +1805,8 @@ When merging defaults and form data, we want to merge in this specific way:
 - arrays are merged in such a way that:
   - when the array is set in form data, only array entries set in form data are deeply merged; additional entries from the defaults are ignored unless `mergeExtraArrayDefaults` is true, in which case the extras are appended onto the end of the form data
   - when the array is not set in form data, the default is copied over
-- scalars are overwritten/set by form data
+- scalars are overwritten/set by form data unless undefined and there is a default AND `defaultSupercedesUndefined` is true
+- a non-object default is ignored when form data is an object, whatever the flags, so `mergeDefaultsWithFormData('x', { b: 2 })` returns `{ b: 2 }`
 
 #### Parameters
 
@@ -1813,6 +1814,7 @@ When merging defaults and form data, we want to merge in this specific way:
 - [formData]: T | undefined - The form data into which the defaults will be merged
 - [mergeExtraArrayDefaults=false]: boolean - If true, any additional default array entries are appended onto the formData
 - [defaultSupercedesUndefined=false]: boolean - If true, an explicit undefined value will be overwritten by the default value
+- [overrideFormDataWithDefaults=false]: boolean - If true, the default value will overwrite the form data value. If the value doesn't exist in the default, we take it from formData and in the case where the value is set to undefined in formData. This is useful when we have already merged formData with defaults and want to add an additional field from formData that does not exist in defaults.
 
 #### Returns
 
