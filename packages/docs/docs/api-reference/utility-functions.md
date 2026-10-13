@@ -1132,6 +1132,33 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 - S: The sub-schema for `property`, or an empty schema when it is not declared
 
+### getRenderedOptionSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
+Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
+It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
+The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
+A bound both declare (`minItems`, `maxItems`, `minLength`, `maxLength`, `minProperties`, `maxProperties`, `minimum`, `maximum`, `exclusiveMinimum` or `exclusiveMaximum`) keeps the stricter of the two, since a value has to meet both.
+It does so within each subschema keyword both declare, such as `items` or a property, and position by position within a tuple, but not within a keyword holding a value rather than a schema, such as a `const`, or one JSON Schema does not define.
+`uniqueItems` holds when either asks for it, and two `required` lists ask for every name either does.
+An option's `true` subschema, such as `items: true`, adds nothing to meet, so it leaves the parent's subschema in place, a tuple included, rather than replacing it.
+A parent's `false` subschema, which nothing meets, likewise stays in place of the option's.
+An option's `items` schema beside the parent's tuple applies to each of its positions, and to the items past it where the tuple declares `additionalItems`, as the parent's beside the option's tuple does; a tuple declaring none stays at its length, as `ArrayField` offers it no Add.
+A `not`, or a conditional (`if`, `then` and `else` together), that the option declares replaces the parent's as a whole: `not: true` rejects every value, and one schema's `if` with the other's `then` is a condition neither declared.
+Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf`, an `enum` or a `const` or `default` object, is the option's. An `enum` is the option's list as it stands, since its `ui:enumNames` are read by position against it, so a value the parent doesn't list stays, for validation to reject.
+A pair of subschemas either of which holds a `$ref` is returned as an `allOf` of the two, since the `$ref` is resolved only where the subschema is rendered, against the root schema, and the keywords met in beside it would be layered over the ones it names; the field's `allOf` merge meets them once it is resolved.
+An option naming no `type` takes the parent's, every type of a type list included, and an object parent that names none, such as one with only `properties`, passes on `object`.
+
+#### Parameters
+
+- parent: S - The schema holding the `anyOf`/`oneOf`, with its `$ref`s and `allOf` resolved
+- option: S - The option, with its own `$ref` resolved
+
+#### Returns
+
+- S: The option as it is rendered, or `option` itself when the parent has nothing to pass on
+
 ### getSchemaOwnTypes()
 
 Gets the JSON Schema types a `schema` says its value has, or `undefined` for one that says nothing about it.
@@ -2026,6 +2053,20 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 #### Returns
 
 - RangeSpecType: A range specification from the schema
+
+### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+Such a field shows its own properties and other keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option as [getRenderedOptionSchema()](#getrenderedoptionschema) renders it.
+`getRenderedOptionSchema()`, the defaults `getDefaultFormState()` computes, the `getUiRequiredErrorSchema()` walk and `MultiSchemaField` all read it to choose between the two, so none of them renders one option and seeds or walks another.
+
+#### Parameters
+
+- schema: S - The schema holding the options
+
+#### Returns
+
+- boolean: True when the field renders a field of its own beside the option
 
 ### replaceEqualDeep&lt;T>()
 

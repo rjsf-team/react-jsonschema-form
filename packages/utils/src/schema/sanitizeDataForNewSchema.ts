@@ -1,14 +1,20 @@
 import { CONST_KEY, DEFAULT_KEY, GUESSED_TYPE_FLAG, ITEMS_KEY, PROPERTIES_KEY } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import getPropertySchema from '../getPropertySchema.ts';
+import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import isObject from '../isObject.ts';
+import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
+
+/** The keywords that describe an array's items by position, or that leave them undescribed when none is declared */
+const TUPLE_KEYWORDS = ['items', 'prefixItems', 'additionalItems'] as const;
+const ITEMS_KEYWORDS = ['items', 'prefixItems'] as const;
 
 function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S): unknown[] | undefined {
   // An empty `enum` lists no value to check against, which is how the `anyOf`/`oneOf` below and `isConstantSelect()`
@@ -31,6 +37,22 @@ function enumValuesForSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S)
   const values = (options as S[]).flatMap((option) => (CONST_KEY in option ? [option[CONST_KEY]] : option.enum!));
 
   return values.length > 0 ? values : undefined;
+}
+
+/** Whether two schemas' `type`s name the same types. A list is compared by what it names rather than by identity or
+ * order, since the two schemas declaring it are usually separate objects and `['null', 'string']` allows what
+ * `['string', 'null']` does
+ */
+function isSameType(oldType: unknown, newType: unknown): boolean {
+  if (oldType === newType) {
+    return true;
+  }
+  if (!Array.isArray(oldType) || !Array.isArray(newType)) {
+    return false;
+  }
+  const newTypes = new Set<unknown>(newType);
+  const oldTypes = new Set<unknown>(oldType);
+  return oldTypes.size === newTypes.size && oldType.every((type) => newTypes.has(type));
 }
 
 function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: any) {
@@ -108,21 +130,29 @@ function constraintMayHaveChanged<
  *           introduced array, which is always replaced
  *   - Once all keys have been processed, return an object built as follows:
  *     - `{ ...data, ...removeOldSchemaData, ...nestedData }`
- * - If the new and old schema types are array and the `data` is an array then:
- *   - If the type of the old and new schema `items` are a non-array objects:
+ * - If the old and new schema types, read through `getSchemaType()` so that a type list also allowing `null` counts,
+ *   are both array, the `data` is an array, the new schema's `const` is not an array other than the `data` unless the
+ *   old schema declares the same `const`, and the `data` is one of the new schema's `enum` or constant options when it
+ *   lists any the old schema did not list alike, then:
+ *   - If the old and new schema `items` are both a single schema rather than a tuple or a boolean:
  *     - Retrieve the schema for any refs within each `oldKeySchema.items` and/or `newKeySchema.items`
  *     - If the `type`s of both items are the same (or the old does not have a type):
- *       - If the type is "object" and the items aren't a select over object constants (see `isWholeValueSelect()`),
- *         then:
- *         - For each element in the `data` recursively sanitize the data, stopping at `maxItems` if specified
+ *       - If the new items' type, read through `getSchemaType()`, is "object" and the items aren't a select over object
+ *         constants (see `isWholeValueSelect()`), then:
+ *         - For each element in the `data`, recursively sanitize it against the items schemas retrieved for that
+ *           element, stopping at `maxItems` if specified. Under a type list, only an element that is an object is
+ *           sanitized, and any other, such as a `null` the list allows, is kept as it is
  *       - Otherwise, return the `data` without the items that are none of the new `enum` or constant options, removing
  *         any values after `maxItems` if it is set. When the previous form data is passed (the way `Form` calls it),
  *         the filter is skipped where the old and new `items` schemas, each resolved against its own array, agree;
  *         without it the filter always runs. The same comparison decides whether a scalar value outside the new
  *         `enum` or constant options is replaced. A select over object or array constants is always filtered, since
  *         it holds each item as a whole
- *   - If the type of the old and new schema `items` are booleans of the same value, return `data` as is
- * - Otherwise return `undefined`
+ *   - Otherwise, if both schemas declare the same `items` and `prefixItems`, and the same `additionalItems` where
+ *     either `items` is a tuple, as a tuple, a boolean `items` or an array declaring no `items` does, return the `data`,
+ *     removing any values after the new `maxItems` if it is set
+ * - Otherwise return `undefined`, which clears an array the new schema's array `const` differs from, or that its
+ *   `enum` or constant options do not list, where the old schema declared a different `const` or list
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
@@ -293,23 +323,29 @@ function sanitizeDataForNewSchemaInternal<
       const oldSchemaTypeForKey = isUnconstrainedOnBothSides ? undefined : oldKeyedSchema.type;
       const newSchemaTypeForKey = newKeyedSchema.type;
       // Check if the old option has the same key with the same type
-      if (!oldSchemaTypeForKey || oldSchemaTypeForKey === newSchemaTypeForKey) {
+      if (!oldSchemaTypeForKey || isSameType(oldSchemaTypeForKey, newSchemaTypeForKey)) {
         if (key in removeOldSchemaData) {
           // SIDE-EFFECT: remove the undefined value for a key that has the same type between the old and new schemas
           delete removeOldSchemaData[key];
         }
         // If it is an object, we'll recurse and store the resulting sanitized data for the key. A select over object or
         // array constants holds one of them as a whole, so it's checked against its options like any other select
-        const isContainer =
-          (newSchemaTypeForKey === 'object' || (newSchemaTypeForKey === 'array' && Array.isArray(formValue))) &&
-          !isWholeValueSelect<S>(newKeyedSchema);
+        // A container is read through `getSchemaType()`, as the array branch below reads it, so one whose type list also
+        // allows `null` is sanitized as a plain array or object is, when it holds one: a `null` it allows stays as it
+        // is. Only a declared type counts: `getSchemaType()` guesses `array` from a typeless `const` array, which has no
+        // `items` to sanitize its value against and would be cleared
+        const containerType = newSchemaTypeForKey === undefined ? undefined : getSchemaType<S>(newKeyedSchema);
+        const isArrayValue = containerType === 'array' && Array.isArray(formValue);
+        const isObjectValue =
+          newSchemaTypeForKey === 'object' || (containerType === 'object' && isPlainObject(formValue));
+        const isContainer = (isObjectValue || isArrayValue) && !isWholeValueSelect<S>(newKeyedSchema);
         if (isContainer) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. A position the
           // old schema does not cover borrows the new schema as its old side (an array property the new schema
           // introduces), so its data is filtered against the new schema without manufacturing a fake
           // difference. A borrowed position gets no filter-chain getter, which is how it always filters: its
           // enum checks then behave as if no previous data was passed
-          const borrowOld = isNewProperty && newSchemaTypeForKey === 'array';
+          const borrowOld = isNewProperty && isArrayValue;
           const itemData = sanitizeDataForNewSchemaInternal<T, S, F>(
             context,
             rootSchema,
@@ -325,7 +361,7 @@ function sanitizeDataForNewSchemaInternal<
             // `oldData`, which would pair by index what the view declined to describe
             pairingData?.[key] === undefined ? NO_PREVIOUS_VALUE : pairingData[key],
           );
-          if (itemData !== undefined || newSchemaTypeForKey === 'array') {
+          if (itemData !== undefined || isArrayValue) {
             // only put undefined values for the array type and not the object type
             nestedData[key] = itemData;
           }
@@ -413,11 +449,31 @@ function sanitizeDataForNewSchemaInternal<
       ...nestedData,
     };
     // First apply removing the old schema data, then apply the nested data, then apply the old data keys to keep
-  } else if (oldSchema?.type === 'array' && newSchema?.type === 'array' && Array.isArray(data)) {
+  } else if (
+    // Read through `getSchemaType()`, as the field rendering each schema is picked, so an array whose type list also
+    // allows `null` keeps its items as a plain array does
+    oldSchema &&
+    newSchema &&
+    getSchemaType<S>(oldSchema) === 'array' &&
+    getSchemaType<S>(newSchema) === 'array' &&
+    Array.isArray(data) &&
+    // An array the new schema's `const` rejects is cleared, so that the `const` can take its place, as the defaults
+    // computed for the new schema do. Only an array `const` is compared: an ajv `$data` reference is an object, and
+    // reading it as the value would clear the array on every sanitize pass. A `const` the old schema already declared
+    // was rejecting the array before, so `Form`'s sanitize pass, which runs whenever a conditional anywhere in the
+    // form flips, keeps it for validation to report rather than dropping data nothing refills
+    (!Array.isArray(newSchema.const) ||
+      deepEquals(newSchema.const, data) ||
+      deepEquals(oldSchema.const, newSchema.const)) &&
+    // A select over whole arrays holds one of its values, so an array it does not list is cleared as well, unless the
+    // old schema listed the same values, for the same reason
+    (replacementForInvalidEnumValue<S>(newSchema, data) === NO_VALUE ||
+      deepEquals(enumValuesForSchema<S>(oldSchema), enumValuesForSchema<S>(newSchema)))
+  ) {
     let oldSchemaItems = oldSchema.items;
     let newSchemaItems = newSchema.items;
-    // If any of the array types `items` are arrays (remember arrays are objects) then we'll just drop the data
-    // Eventually, we may want to deal with when either of the `items` are arrays since those tuple validations
+    // Items described by a single schema are sanitized against it below. A tuple is kept only when both schemas
+    // describe it alike, since its items are not sanitized position by position
     if (
       typeof oldSchemaItems === 'object' &&
       typeof newSchemaItems === 'object' &&
@@ -447,35 +503,41 @@ function sanitizeDataForNewSchemaInternal<
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
       // Check if the old option has the same key with the same type
-      if (!oldSchemaType || oldSchemaType === newSchemaType) {
+      if (!oldSchemaType || isSameType(oldSchemaType, newSchemaType)) {
         const maxItems = newSchema.maxItems ?? -1;
+        // Items whose type list also allows `null` are read through `getSchemaType()`, as a property is above, so an
+        // object one holds is sanitized as an object item is and a `null` it allows stays as it is
+        const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newSchemaItems as S);
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
-        if (newSchemaType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
+        if (itemsType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
           newFormData = data.reduce<unknown[]>((newValue, aValue: T, index: number) => {
-            // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
-            // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
-            const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
-            const newItemSchema = sameRawItemsSchema
-              ? oldItemSchema
-              : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
-            const itemValue = sanitizeDataForNewSchemaInternal<T, S, F>(
-              context,
-              rootSchema,
-              newItemSchema,
-              oldItemSchema,
-              aValue,
-              // Pairing by index is the only rule that needs no identity of its own, and it is only
-              // offered a pair at all while the lengths match. The pairing view is the settled array as
-              // the announced container writes moved it, so a survivor stays paired with its own previous value
-              // across an insert, remove or reorder: a row follows its item, an inserted row pairs with
-              // its own starting value, and only a change no container write announced - a pushed parent
-              // value, a reset - can still leave the lengths apart. A row with no pair is filtered with no
-              // previous value, against the schema as this element resolves it alone: a stale value is
-              // never kept, though placeholders the flipped branch rejects are lost with it (#5451)
-              Array.isArray(pairingData) && pairingData.length === data.length ? pairingData[index] : undefined,
-              oldSchemaPrevRawForFrame === undefined ? undefined : resolveOldSchemaItemsPrevRaw,
-            );
+            let itemValue: unknown = aValue;
+            if (newSchemaType === 'object' || isPlainObject(aValue)) {
+              // Resolve refs, dependencies, if/then/else and allOf against this item's own value, so a conditional
+              // nested inside `items` picks the branch that matches this element rather than the whole array (#5250)
+              const oldItemSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, aValue);
+              const newItemSchema = sameRawItemsSchema
+                ? oldItemSchema
+                : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, aValue);
+              itemValue = sanitizeDataForNewSchemaInternal<T, S, F>(
+                context,
+                rootSchema,
+                newItemSchema,
+                oldItemSchema,
+                aValue,
+                // Pairing by index is the only rule that needs no identity of its own, and it is only
+                // offered a pair at all while the lengths match. The pairing view is the settled array as
+                // the announced container writes moved it, so a survivor stays paired with its own previous value
+                // across an insert, remove or reorder: a row follows its item, an inserted row pairs with
+                // its own starting value, and only a change no container write announced - a pushed parent
+                // value, a reset - can still leave the lengths apart. A row with no pair is filtered with no
+                // previous value, against the schema as this element resolves it alone: a stale value is
+                // never kept, though placeholders the flipped branch rejects are lost with it (#5451)
+                Array.isArray(pairingData) && pairingData.length === data.length ? pairingData[index] : undefined,
+                oldSchemaPrevRawForFrame === undefined ? undefined : resolveOldSchemaItemsPrevRaw,
+              );
+            }
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);
             }
@@ -523,14 +585,16 @@ function sanitizeDataForNewSchemaInternal<
         }
       }
     } else if (
-      typeof oldSchemaItems === 'boolean' &&
-      typeof newSchemaItems === 'boolean' &&
-      oldSchemaItems === newSchemaItems
+      // `additionalItems` describes nothing beside an `items` that is not a tuple, so it only counts beside one
+      (Array.isArray(oldSchemaItems) || Array.isArray(newSchemaItems) ? TUPLE_KEYWORDS : ITEMS_KEYWORDS).every((key) =>
+        deepEquals((oldSchema as GenericObjectType)[key], (newSchema as GenericObjectType)[key]),
+      )
     ) {
-      // If they are both booleans and have the same value just return the data as is otherwise fall-thru to undefined
-      newFormData = data;
+      // A tuple, a boolean `items`, or an array declaring no `items`, that both schemas describe alike holds what it
+      // held, up to the new schema's `maxItems` as items described by a single schema are
+      const { maxItems } = newSchema;
+      newFormData = maxItems !== undefined && data.length > maxItems ? data.slice(0, maxItems) : data;
     }
-    // Also probably want to deal with `prefixItems` as tuples with the latest 2020 draft
   }
   return newFormData as T;
 }
