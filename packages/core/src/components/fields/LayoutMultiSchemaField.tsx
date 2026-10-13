@@ -29,6 +29,7 @@ import {
   getUiOptions,
   getXxxOfKey,
   getVisibleErrors,
+  isFieldHiddenDecision,
   noop,
   omitConsumedStyling,
   TranslatableString,
@@ -285,7 +286,7 @@ export default function LayoutMultiSchemaField<
       classNames={getFieldClassNames<S>(schema, hasErrors, uiClassNames)}
       style={style}
       // `widget` carries the resolved value, so a `ui:widget` of `hidden` is what this matches, not its default
-      hidden={widget === 'hidden' || deprecatedHandling === 'hide'}
+      hidden={isFieldHiddenDecision<T, S, F>({ ...uiOptions, widget }, schema)}
       formData={formData}
       description={descriptionComponent}
       rawDescription={description}

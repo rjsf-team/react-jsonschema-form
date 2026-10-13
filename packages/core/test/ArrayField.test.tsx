@@ -5163,4 +5163,35 @@ describe('ArrayField', () => {
       expect(log.events.at(-1)?.errorSchema).toEqual({ 0: { __errors: ['must NOT have fewer than 2 characters'] } });
     });
   });
+
+  describe('deprecated items with a handling of hide', () => {
+    it('renders no item rows or buttons around the hidden item fields', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: { type: 'string', deprecated: true },
+      };
+      const uiSchema: UiSchema = {
+        'ui:globalOptions': { deprecatedHandling: 'hide' },
+        'ui:options': { copyable: true },
+      };
+      const { node } = createFormComponent({ schema, uiSchema, formData: ['one', 'two'] });
+      expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(0);
+      const rowButtons = Array.from(node.querySelectorAll('button')).filter((button) =>
+        ['Copy', 'Remove', 'Move up', 'Move down'].includes(button.getAttribute('title') ?? ''),
+      );
+      expect(rowButtons).toHaveLength(0);
+    });
+
+    it('renders no row for a hidden fixed item either', () => {
+      const schema: RJSFSchema = {
+        type: 'array',
+        items: [{ type: 'string' }, { type: 'string', deprecated: true }],
+      };
+      const uiSchema: UiSchema = {
+        'ui:globalOptions': { deprecatedHandling: 'hide' },
+      };
+      const { node } = createFormComponent({ schema, uiSchema, formData: ['one', 'two'] });
+      expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(1);
+    });
+  });
 });

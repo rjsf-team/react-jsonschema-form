@@ -24,6 +24,7 @@ import {
   isCustomWidget,
   isFixedItems,
   isFormDataAvailable,
+  isFieldHidden,
   isObject,
   optionsList,
   resolveWidget,
@@ -829,6 +830,11 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       // Compute the item UI schema using the helper method
       const itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext, fieldPath);
 
+      // An item the field will hide renders no row at all: the row would be an empty shell with working buttons
+      if (isFieldHidden<T[], S, F>(schemaItems, itemUiSchema, registry, itemCast)) {
+        return null;
+      }
+
       const itemProps = {
         itemKey: key,
         index,
@@ -962,6 +968,11 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         itemUiSchema = getItemUiSchemaForItem<T[], S, F>(uiSchema, itemCast, index, formContext, fieldPath);
       }
       const itemErrorSchema = errorSchema?.[index];
+
+      // An item the field will hide renders no row at all: the row would be an empty shell with working buttons
+      if (isFieldHidden<T[], S, F>(rawItemSchema, itemUiSchema, registry, itemCast)) {
+        return null;
+      }
 
       const itemProps = {
         index,

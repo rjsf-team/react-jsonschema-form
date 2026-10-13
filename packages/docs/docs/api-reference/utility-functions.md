@@ -1611,6 +1611,25 @@ It checks both that `options` is an array and that no numeric `index` is present
 
 - boolean: True if `item` is an `EnumOptionsGroupType`, false otherwise
 
+### isFieldHidden&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Answers whether `SchemaField` will hide a field: its `ui:widget` is `hidden`, or the schema is deprecated and the handling resolves to `hide`.
+The inputs are resolved the way `SchemaField` resolves them before it decides: the `uiSchema` through `resolveUiSchema()`, so a `ui:definitions` entry for the schema's `$ref` applies, and the schema through `retrieveSchema()`, so a `deprecated` that only an `allOf` merge or an `if`/`then` branch contributes is seen.
+A container asking the question for a child it is about to render gets the same answer the child will give itself.
+The retrieval runs only when the raw schema cannot answer on its own: a schema flagged as a ref cycle is decided raw, the way `SchemaField` renders it, and a schema with no keyword that could contribute a `deprecated` keeps its own through retrieval, so neither pays for the resolution.
+`SchemaField` and `LayoutMultiSchemaField` decide through the same code (`isFieldHiddenDecision()`), so the match holds by construction.
+
+#### Parameters
+
+- schema: S - The schema of the child field
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema of the child field
+- registry: Pick&lt;Registry&lt;T, S, F>, 'rootSchema' | 'uiSchemaDefinitions' | 'schemaUtils' | 'globalUiOptions'> - The form registry, read for `rootSchema`, `uiSchemaDefinitions`, `schemaUtils` and `globalUiOptions`
+- formData?: T - The child field's current formData, for the retrieval
+
+#### Returns
+
+- boolean: True when the child field will render hidden
+
 ### isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Detects whether the given `schema` contains fixed items.

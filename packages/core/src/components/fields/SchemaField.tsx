@@ -42,8 +42,9 @@ import {
   omitConsumedStyling,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
-  shouldRenderOptionalField,
+  isFieldHiddenDecision,
   isObject,
+  shouldRenderOptionalField,
   toConstant,
   toFieldPath,
   TranslatableString,
@@ -696,7 +697,7 @@ function SchemaFieldRender<
 
   const description = uiOptions.description || props.schema.description || schema.description || '';
   const { help } = uiOptions;
-  const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
+  const hidden = isFieldHiddenDecision<T, S, F>(uiOptions, schema);
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
 
