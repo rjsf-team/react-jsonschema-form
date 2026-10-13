@@ -55,16 +55,27 @@ function normalizeLiveFlag(value: LiveFlag | boolean | undefined): LiveFlag | un
  * `'populate'`.
  */
 export function normalizeLiveSettings(loadedLiveSettings: LoadedLiveSettings = {}): LiveSettings {
-  const { validate, useFallbackField, defaultFormStateBehavior, ...settings } = loadedLiveSettings;
+  const {
+    validate,
+    useFallbackField,
+    defaultFormStateBehavior,
+    liveValidate: loadedLiveValidate,
+    liveOmit: loadedLiveOmit,
+    ...settings
+  } = loadedLiveSettings;
   const { arrayMinItems, ...behavior } = defaultFormStateBehavior ?? {};
+  const liveValidate = normalizeLiveFlag(loadedLiveValidate ?? (validate || undefined));
+  const liveOmit = normalizeLiveFlag(loadedLiveOmit);
   return {
     ...settings,
-    defaultFormStateBehavior: defaultFormStateBehavior && {
-      ...behavior,
-      arrayMinItems: arrayMinItems === 'populate' ? undefined : arrayMinItems,
-    },
-    liveValidate: normalizeLiveFlag(settings.liveValidate ?? (validate || undefined)),
-    liveOmit: normalizeLiveFlag(settings.liveOmit),
+    ...(defaultFormStateBehavior && {
+      defaultFormStateBehavior: {
+        ...behavior,
+        ...(arrayMinItems && arrayMinItems !== 'populate' && { arrayMinItems }),
+      },
+    }),
+    ...(liveValidate && { liveValidate }),
+    ...(liveOmit && { liveOmit }),
   };
 }
 

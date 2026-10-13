@@ -2,31 +2,31 @@ import { normalizeLiveSettings, toLiveSetting } from '../../src/components/Playg
 
 describe('normalizeLiveSettings', () => {
   it('defaults a missing liveSettings object to {}, matching a shared URL that predates liveSettings support', () => {
-    expect(normalizeLiveSettings(undefined)).toEqual({});
+    expect(normalizeLiveSettings(undefined)).toStrictEqual({});
   });
 
   it('leaves an empty liveSettings object as-is', () => {
-    expect(normalizeLiveSettings({})).toEqual({});
+    expect(normalizeLiveSettings({})).toStrictEqual({});
   });
 
   it('converts a legacy v5 `true` liveValidate value to `onChange`', () => {
-    expect(normalizeLiveSettings({ liveValidate: true })).toEqual({ liveValidate: 'onChange' });
+    expect(normalizeLiveSettings({ liveValidate: true })).toStrictEqual({ liveValidate: 'onChange' });
   });
 
   it('converts a legacy v5/v6 `false` liveValidate value to `off`', () => {
-    expect(normalizeLiveSettings({ liveValidate: false })).toEqual({ liveValidate: 'off' });
+    expect(normalizeLiveSettings({ liveValidate: false })).toStrictEqual({ liveValidate: 'off' });
   });
 
   it('converts a legacy v5 `true` liveOmit value to `onChange`', () => {
-    expect(normalizeLiveSettings({ liveOmit: true })).toEqual({ liveOmit: 'onChange' });
+    expect(normalizeLiveSettings({ liveOmit: true })).toStrictEqual({ liveOmit: 'onChange' });
   });
 
   it('converts a legacy v5/v6 `false` liveOmit value to `off`', () => {
-    expect(normalizeLiveSettings({ liveOmit: false })).toEqual({ liveOmit: 'off' });
+    expect(normalizeLiveSettings({ liveOmit: false })).toStrictEqual({ liveOmit: 'off' });
   });
 
   it('leaves current string liveValidate/liveOmit values unchanged', () => {
-    expect(normalizeLiveSettings({ liveValidate: 'onBlur', liveOmit: 'onChange' })).toEqual({
+    expect(normalizeLiveSettings({ liveValidate: 'onBlur', liveOmit: 'onChange' })).toStrictEqual({
       liveValidate: 'onBlur',
       liveOmit: 'onChange',
     });
@@ -35,18 +35,18 @@ describe('normalizeLiveSettings', () => {
   it('leaves out the keys of an older link that name no Form prop', () => {
     const settings = normalizeLiveSettings({ validate: false, useFallbackField: false, disabled: true });
 
-    expect(settings).toEqual({ disabled: true });
+    expect(settings).toStrictEqual({ disabled: true });
     expect(settings).not.toHaveProperty('validate');
     expect(settings).not.toHaveProperty('useFallbackField');
   });
 
   it('reads the `validate` of an early v5 link as liveValidate', () => {
-    expect(normalizeLiveSettings({ validate: true })).toEqual({ liveValidate: 'onChange' });
+    expect(normalizeLiveSettings({ validate: true })).toStrictEqual({ liveValidate: 'onChange' });
   });
 
   it('prefers the liveValidate a link holds over its `validate`', () => {
-    expect(normalizeLiveSettings({ validate: true, liveValidate: 'off' })).toEqual({ liveValidate: 'off' });
-    expect(normalizeLiveSettings({ validate: true, liveValidate: false })).toEqual({ liveValidate: 'off' });
+    expect(normalizeLiveSettings({ validate: true, liveValidate: 'off' })).toStrictEqual({ liveValidate: 'off' });
+    expect(normalizeLiveSettings({ validate: true, liveValidate: false })).toStrictEqual({ liveValidate: 'off' });
   });
 
   it('drops the `populate` an older link carries as arrayMinItems, keeping the rest of the behavior', () => {
@@ -54,19 +54,19 @@ describe('normalizeLiveSettings', () => {
       normalizeLiveSettings({
         defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
       }).defaultFormStateBehavior,
-    ).toEqual({ emptyObjectFields: 'populateAllDefaults' });
+    ).toStrictEqual({ emptyObjectFields: 'populateAllDefaults' });
   });
 
   it('keeps a current arrayMinItems and the id settings', () => {
     const settings = { defaultFormStateBehavior: { arrayMinItems: { populate: 'never' as const } }, idPrefix: 'foo' };
 
-    expect(normalizeLiveSettings(settings)).toEqual(settings);
+    expect(normalizeLiveSettings(settings)).toStrictEqual(settings);
   });
 
   it('preserves other settings while normalizing liveValidate/liveOmit', () => {
     expect(
       normalizeLiveSettings({ liveValidate: true, liveOmit: false, showErrorList: 'top', disabled: true }),
-    ).toEqual({
+    ).toStrictEqual({
       liveValidate: 'onChange',
       liveOmit: 'off',
       showErrorList: 'top',
