@@ -5868,6 +5868,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           type: 'array',
           items: { properties: animalInfoSchema.properties, ...animalCondition },
         };
+        const directIfArraySchema: RJSFSchema = {
+          type: 'array',
+          items: {
+            ...animalInfoSchema,
+            properties: { ...animalInfoSchema.properties, x: {} },
+            if: { properties: { x: { const: 1 } } },
+          },
+        };
 
         it('should populate default values correctly', () => {
           expect(
@@ -6002,10 +6010,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('should populate the conditional defaults of an allOf in array items whose schema also has a direct if', () => {
-          const directIfArraySchema: RJSFSchema = {
-            type: 'array',
-            items: { ...animalInfoSchema, if: { properties: { x: { const: 1 } } } },
-          };
           expect(
             getDefaultFormState(
               testValidator,
@@ -6016,6 +6020,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { allOf: 'skipDefaults' },
             ),
           ).toEqual([{ animal: 'Cat', food: 'meat' }]);
+        });
+
+        it('should not populate the conditional defaults of an allOf next to a direct if in array items when emptyObjectFields is skipEmptyDefaults', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              directIfArraySchema,
+              [{ animal: 'Cat' }],
+              directIfArraySchema,
+              undefined,
+              { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat' }]);
         });
       });
     });
