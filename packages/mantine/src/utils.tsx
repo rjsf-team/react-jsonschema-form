@@ -15,7 +15,7 @@ import type {
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
-  UIOptionsType,
+  TemplatesType,
   VisibleErrorsProps,
   WidgetProps,
 } from '@rjsf/utils';
@@ -30,61 +30,89 @@ import {
   titleId,
 } from '@rjsf/utils';
 
-const uiOptionsKeys: (keyof UIOptionsType)[] = [
-  'emptyValue',
-  'classNames',
-  'style',
-  'title',
-  'description',
-  'label',
-  'help',
-  'autofocus',
-  'autocomplete',
-  'autocapitalize',
-  'disabled',
-  'enumDisabled',
-  'enumNames',
-  'enumOrder',
-  'optgroups',
-  'hideError',
-  'readonly',
-  'order',
-  'filePreview',
-  'inline',
-  'inputType',
-  'submitButtonOptions',
-  'widget',
-  'field',
-  'addable',
-  'copyable',
-  'itemLabel',
-  'orderable',
-  'removable',
-  'duplicateKeySuffixSeparator',
-  'enumOptions',
-  'enableMarkdownInDescription',
-  'enableMarkdownInHelp',
-  'enableOptionalDataFieldForType',
-  'globalOptions',
-  'allowClearTextInputs',
-  'optionValueFormat',
-  'optionsSchemaSelector',
-  'deprecatedHandling',
-  'ArrayFieldDescriptionTemplate',
-  'ArrayFieldItemTemplate',
-  'ArrayFieldTemplate',
-  'ArrayFieldTitleTemplate',
-  'BaseInputTemplate',
-  'DescriptionFieldTemplate',
-  'ErrorListTemplate',
-  'FieldErrorTemplate',
-  'FieldHelpTemplate',
-  'FieldTemplate',
-  'ObjectFieldTemplate',
-  'TitleFieldTemplate',
-  'UnsupportedFieldTemplate',
-  'WrapIfAdditionalTemplate',
-];
+/** The keys `T` declares. `keyof T` is `string` for a type with an index signature, as `UIOptionsType` and
+ * `TemplatesType` have, so it would accept any name and require none.
+ */
+type DeclaredKeys<T> = keyof { [K in keyof T as string extends K ? never : K]: T[K] };
+
+/** The options rjsf reads from a widget's `options`: those `WidgetProps` declares, and a per-field override of any
+ * template but the button templates, which `getTemplates()` resolves from `ui:options`
+ */
+type RjsfOptionName = DeclaredKeys<WidgetProps['options']> | Exclude<DeclaredKeys<TemplatesType>, 'ButtonTemplates'>;
+
+// A record, not a list, so that an option or template a later release declares fails typecheck until it is listed here
+const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
+  emptyValue: true,
+  initialValue: true,
+  classNames: true,
+  style: true,
+  title: true,
+  description: true,
+  placeholder: true,
+  label: true,
+  help: true,
+  autofocus: true,
+  autocomplete: true,
+  autocapitalize: true,
+  disabled: true,
+  readonly: true,
+  required: true,
+  enumDisabled: true,
+  enumNames: true,
+  enumOrder: true,
+  optgroups: true,
+  hideError: true,
+  order: true,
+  filePreview: true,
+  inline: true,
+  inputType: true,
+  rows: true,
+  submitButtonOptions: true,
+  widget: true,
+  field: true,
+  addable: true,
+  copyable: true,
+  itemLabel: true,
+  orderable: true,
+  removable: true,
+  duplicateKeySuffixSeparator: true,
+  enumOptions: true,
+  enableMarkdownInDescription: true,
+  enableMarkdownInHelp: true,
+  enableOptionalDataFieldForType: true,
+  allowClearTextInputs: true,
+  optionValueFormat: true,
+  optionsSchemaSelector: true,
+  deprecatedHandling: true,
+  ArrayFieldDescriptionTemplate: true,
+  ArrayFieldItemButtonsTemplate: true,
+  ArrayFieldItemTemplate: true,
+  ArrayFieldTemplate: true,
+  ArrayFieldTitleTemplate: true,
+  BaseInputTemplate: true,
+  CyclicSchemaExpandTemplate: true,
+  DescriptionFieldTemplate: true,
+  ErrorListTemplate: true,
+  FallbackFieldTemplate: true,
+  FieldErrorTemplate: true,
+  FieldHelpTemplate: true,
+  FieldTemplate: true,
+  GridTemplate: true,
+  MarkdownTemplate: true,
+  MultiSchemaFieldTemplate: true,
+  ObjectFieldTemplate: true,
+  OptionalDataControlsTemplate: true,
+  TitleFieldTemplate: true,
+  UnsupportedFieldTemplate: true,
+  WrapIfAdditionalTemplate: true,
+};
+
+// The uiSchema's own `ui:` keys, which `getUiOptions()` also gives a field as options: the root's `ui:definitions` and
+// `ui:globalOptions`, which `LayoutGridField` also copies to each field it renders, and `ui:fieldReplacesAnyOrOneOf`.
+// They can't be derived like the rest, since `UiSchema`'s `ui:${string}` key, which every option takes, absorbs them.
+const uiSchemaOptionNames = ['definitions', 'fieldReplacesAnyOrOneOf', 'globalOptions'] as const;
+
+const uiOptionsKeys = new Set<string>([...Object.keys(rjsfOptionNameRecord), ...uiSchemaOptionNames]);
 
 /** Builds the `error` prop Mantine's inputs render from a list of errors. Mantine's error element doesn't keep line
  * breaks, so the messages are separated by `<br>`s, each after a space, since a `<br>` adds no text to the accessible
@@ -143,10 +171,10 @@ export function useContainerErrors(props: VisibleErrorsProps & { id: string }) {
 export function cleanupOptions<T extends object>(
   options: T,
   extraKeys: readonly string[] = [],
-): Omit<T, keyof UIOptionsType> {
+): Omit<T, RjsfOptionName | (typeof uiSchemaOptionNames)[number]> {
   const result = {} as T;
   for (const key in options) {
-    if (!uiOptionsKeys.includes(key) && !extraKeys.includes(key)) {
+    if (!uiOptionsKeys.has(key) && !extraKeys.includes(key)) {
       result[key] = options[key];
     }
   }
