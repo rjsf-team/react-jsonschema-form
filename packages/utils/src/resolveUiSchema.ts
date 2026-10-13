@@ -47,7 +47,8 @@ export default function resolveUiSchema<
   // wrote, which is the name a `ui:definitions` entry is keyed by, where a `$ref` it still holds is one nothing
   // has followed yet. `refOf()` in `retrieveSchema.ts` reads the same two the other way about, for the opposite
   // reason
-  const ref = sourceRefOf<S>(schema) ?? resolvedFromRef<S>(schema) ?? declaredRef<S>(schema);
+  const ref =
+    sourceRefOf<S>(schema) ?? originalRefOf<S>(schema) ?? resolvedFromRef<S>(schema) ?? declaredRef<S>(schema);
   const definitions = registry.uiSchemaDefinitions;
   const definitionUiSchema = ref && definitions ? definitions[ref] : undefined;
 

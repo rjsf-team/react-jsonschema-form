@@ -44,8 +44,8 @@ class SchemaUtils<
 > implements SchemaUtilsType<T, S, F> {
   private readonly context: SchemaContext<S, F>;
   rootSchema: S;
-  /** The `rootSchema` exactly as the caller passed it. A draft 2020-12 root is stored above with every relative `$ref`
-   * rewritten against its `$id`, so comparing that rewritten copy with what a caller passes back would never match and
+  /** The `rootSchema` exactly as the caller passed it. Every root is stored above normalized (see
+   * `normalizeRootReferences`), so comparing that copy with what a caller passes back would never match and
    * `doesSchemaUtilsDiffer()` would report a difference on every render
    */
   private readonly rawRootSchema: S;

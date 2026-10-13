@@ -1277,7 +1277,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     it('collapses a nested-$id cycle whose refs were rewritten (both marker spellings on the path)', () => {
       // Covers `enclosingRefPath` carrying the author's spelling beside the resolved one
+      // 2020-12: on a root before 2019-09 an `$id` beside a `$ref` is inert, so the resource names
+      // this cycle is built from only exist from draft 2019-09 on
       const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
         $id: 'http://x.com/root.json',
         definitions: {
           a: { $id: 'a.json', $ref: 'b.json' },
@@ -1286,7 +1289,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         properties: { p: { $ref: 'a.json' } },
       };
       const out = retrieveSchema({ validator: testValidator }, root.properties!.p as RJSFSchema, root);
-      expect(out).toMatchObject({ $id: 'b.json', title: 'B', $ref: 'http://x.com/a.json' });
+      expect(out).toMatchObject({ $id: 'a.json', title: 'B', $ref: 'http://x.com/a.json' });
     });
     it('collapses an absolute-ref cycle whose marker is the only spelling', () => {
       const root: RJSFSchema = {
@@ -1298,6 +1301,55 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       };
       const out = retrieveSchema({ validator: testValidator }, root.properties!.p as RJSFSchema, root);
       expect(out).toMatchObject({ title: 'A', $ref: 'http://x.com/root.json#/definitions/a' });
+    });
+    it('ignores an $id beside a $ref on a draft-7 root (pinned probe)', () => {
+      // Before 2019-09 a `$ref` ignores every sibling keyword, `$id` included, so the node's `$ref`
+      // resolves at the root scope and its `$id` stays on the result as inert data
+      const root: RJSFSchema = {
+        definitions: { x: { type: 'string' } },
+        properties: { a: { $id: 'foo.json', $ref: '#/definitions/x' } },
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, root);
+      expect(utils.retrieveSchema(utils.getRootSchema()).properties!.a).toMatchObject({
+        type: 'string',
+        $id: 'foo.json',
+      });
+      // A root `$id` does not change the rule
+      const rooted: RJSFSchema = { $id: 'https://ex.com/r.json', ...root };
+      const rootedUtils = createSchemaUtils({ validator: testValidator }, rooted);
+      expect(rootedUtils.retrieveSchema(rootedUtils.getRootSchema()).properties!.a).toMatchObject({
+        type: 'string',
+        $id: 'foo.json',
+      });
+      // Nor does starting the walk from the field itself
+      expect(utils.retrieveSchema(root.properties!.a as RJSFSchema, root)).toMatchObject({
+        type: 'string',
+        $id: 'foo.json',
+      });
+    });
+    it('resolves refs inside a fragment-only $id resource on a root without an $id (pinned probe)', () => {
+      // A `#foo` or `#/properties/address` `$id` anchors a location, never a scope: the pointer walk skips
+      // it, so the `#` refs below resolve inside the root resource
+      const root: RJSFSchema = {
+        definitions: {
+          a: { $id: '#foo', type: 'object', properties: { x: { $ref: '#/definitions/b' } } },
+          b: { title: 'B' },
+        },
+        properties: { q: { $ref: '#/definitions/a' } },
+      };
+      const utils = createSchemaUtils({ validator: testValidator }, root);
+      const resolved = utils.retrieveSchema(utils.getRootSchema());
+      expect((resolved.properties!.q as RJSFSchema).properties!.x).toMatchObject({ title: 'B' });
+      const pointerRoot: RJSFSchema = {
+        definitions: {
+          a: { $id: '#/properties/address', type: 'object', properties: { x: { $ref: '#/definitions/b' } } },
+          b: { title: 'B' },
+        },
+        properties: { q: { $ref: '#/definitions/a' } },
+      };
+      const pointerUtils = createSchemaUtils({ validator: testValidator }, pointerRoot);
+      const pointerResolved = pointerUtils.retrieveSchema(pointerUtils.getRootSchema());
+      expect((pointerResolved.properties!.q as RJSFSchema).properties!.x).toMatchObject({ title: 'B' });
     });
     it('#5467: resolves a properties-carrying $ref chain in a bundle whose root has no $id', () => {
       // Refs inside the nested resources are written relative to their resource. The root has no `$id`, so
