@@ -146,6 +146,11 @@ describe('resolveFieldPresentation()', () => {
       expect(resolve({ inherited: widgetLabelled }).label.by).toBe('above');
     });
 
+    it('takes the text of the template label above along with its id', () => {
+      const plan = resolve({ inherited: above, declaration: WIDGET_LABEL, label: 'Subscribe to the newsletter' });
+      expect(plan.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label` });
+    });
+
     it('keeps the heading a container draws itself beneath a template label above when it says something else', () => {
       const container = resolve({ inherited: above, declaration: WIDGET_LABEL, label: 'Dog', hasControl: false });
       expect(container.label).toEqual({ text: 'Dog', by: 'self', id: `${ID}__label` });
@@ -188,6 +193,21 @@ describe('resolveFieldPresentation()', () => {
       });
       expect(selector.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label` });
       expect(selector.control?.attributes['aria-labelledby']).toBe(`${ID}__label`);
+    });
+
+    it('draws the description of a control with another id under its own id', () => {
+      const selector = resolveFieldPresentation({
+        id: `${ID}__oneof_select`,
+        declaration: TEMPLATE,
+        label: 'Foo',
+        description: 'Pick one',
+        inherited: above,
+      });
+      expect(selector.description).toEqual({
+        text: 'Pick one',
+        by: 'template',
+        id: `${ID}__oneof_select__description`,
+      });
     });
 
     it('chains a template label through a level that drew none', () => {
@@ -289,6 +309,22 @@ describe('resolveFieldPresentation()', () => {
       const plan = resolve({ inherited: hidden, description: 'Describes the field' });
       expect(plan.description.by).toBe('none');
       expect(plan.describedBy).toEqual([]);
+    });
+
+    it('keeps hidden a description a level hides beneath a field that shows another', () => {
+      const hidden = resolve({ inherited: above, showLabel: false, description: 'Describes the option' });
+      expect(hidden.description).toEqual({
+        text: 'Describes the option',
+        by: 'none',
+        id: `${ID}__optionDescription`,
+      });
+      const plan = resolve({ inherited: hidden, description: 'Describes the option' });
+      expect(plan.description).toEqual({ text: 'Describes the option', by: 'none', id: `${ID}__optionDescription` });
+      expect(resolve({ inherited: hidden }).description).toEqual({
+        text: 'Describes the field',
+        by: 'above',
+        id: `${ID}__description`,
+      });
     });
 
     it('carries the description a field above shows past a level that keeps a hidden one hidden', () => {
