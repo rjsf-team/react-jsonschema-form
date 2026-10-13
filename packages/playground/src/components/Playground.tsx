@@ -327,7 +327,15 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         <Divider variant='fullWidth' sx={{ my: 1 }} />
         <ErrorBoundary>
           <DemoFrame
-            head={<link rel='stylesheet' id='theme' href={stylesheet || ''} />}
+            head={
+              <>
+                <style>
+                  {/* Theme-specific backgrounds also cover unused space beneath the form inside the iframe. */}
+                  {'html { background-color: var(--surface-ground, #fff); } .daisy-ui-theme { min-height: 100vh; }'}
+                </style>
+                <link rel='stylesheet' id='theme' href={stylesheet || ''} />
+              </>
+            }
             style={{
               width: '100%',
               height: 1000,

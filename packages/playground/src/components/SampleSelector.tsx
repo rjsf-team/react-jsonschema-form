@@ -2,6 +2,7 @@ import type { SyntheticEvent } from 'react';
 import { useState } from 'react';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Divider from '@mui/material/Divider';
 import MuiDrawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import type { Theme, CSSObject } from '@mui/material/styles';
@@ -11,6 +12,7 @@ import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
 
 import { samples } from '../samples/index.ts';
+import AppearanceControl from './AppearanceControl.tsx';
 
 const drawerWidth = 200;
 
@@ -63,7 +65,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     },
   ],
   '& .MuiTab-root.Mui-selected': {
-    backgroundColor: 'lightgray',
+    backgroundColor: theme.palette.action.selected,
   },
 }));
 
@@ -121,6 +123,7 @@ export default function SampleSelector({ onSelected, selectedSample }: SampleSel
           value={selectedSample}
           scrollButtons={false}
           onChange={onLabelClick}
+          sx={{ flex: 1, minHeight: 0 }}
         >
           {Object.keys(samples).map((label) => (
             <Tab key={label} label={label} title={label} value={label} wrapped />
@@ -130,6 +133,12 @@ export default function SampleSelector({ onSelected, selectedSample }: SampleSel
         <Typography component='div' style={{ transform: 'rotate(90deg)', textTransform: 'uppercase' }}>
           {selectedSample}
         </Typography>
+      )}
+      {open && (
+        <>
+          <Divider />
+          <AppearanceControl />
+        </>
       )}
     </Drawer>
   );
