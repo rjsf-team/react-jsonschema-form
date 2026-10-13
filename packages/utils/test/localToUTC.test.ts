@@ -59,6 +59,8 @@ describe('localToUTC()', () => {
   it.each([
     ['text that is not a date', 'not-a-date'],
     ['a year of seven digits, which no datetime-local input writes and Date cannot read', '1234567-01-01T00:00'],
+    ['a five-digit year 0, which no datetime-local input writes', '00000-01-01T00:00'],
+    ['a four-digit year padded to five digits, which no datetime-local input writes', '01999-01-01T00:00'],
   ])('returns null, what toJSON() gives an invalid date, for %s', (_, value) => {
     expect(new Date(value).getTime()).toBeNaN();
     expect(localToUTC(value)).toBeNull();

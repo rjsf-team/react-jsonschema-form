@@ -1,4 +1,4 @@
-const FIVE_OR_SIX_DIGIT_YEAR_REGEX = /^\d{5,6}(?=-\d{2}-\d{2}T)/;
+const FIVE_OR_SIX_DIGIT_YEAR_REGEX = /^[1-9]\d{4,5}(?=-\d{2}-\d{2}T)/;
 
 /** Converts a local Date string into a UTC date string
  *
