@@ -111,12 +111,16 @@ export interface Experimental_DefaultFormStateBehavior {
   /**
    * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults`.
    * NOTE: `skipDefaults` only skips the `allOf` schemas nested inside the schema that `getDefaultFormState()` computes
-   * defaults from, so the defaults of that schema's own `allOf` are still populated. The `if-then-else` branch is picked
-   * from `formData`, not from the computed defaults, so when the `if` lists in `required` a property that only a default
-   * provides, the `then` default is left out until `formData` holds that value. Without `required`, such an `if` passes
-   * with no `formData`, so its `then` default is filled in even when the `if` does not match the defaulted value. Only
-   * an `if-then-else` wrapped in a nested `allOf` is skipped: one placed directly in a nested object schema is resolved,
-   * along with any `allOf` next to it, unless `emptyObjectFields` is `skipEmptyDefaults`.
+   * defaults from, so the defaults of that schema's own `allOf` are still populated. The `if-then-else` branch is
+   * picked from `formData`, not from the computed defaults, so when the `if` lists in `required` a property that only a
+   * default provides, the `then` default is left out until `formData` holds that value. Without `required`, such an
+   * `if` passes with no `formData`, so its `then` default is filled in even when the `if` does not match the defaulted
+   * value. Only an `if-then-else` wrapped in a nested `allOf` is skipped: one placed directly in a nested object schema
+   * is resolved, along with any `allOf` next to it, unless `emptyObjectFields` is `skipEmptyDefaults`. With one `allOf`
+   * entry per `enum` value, the default `allOf` merger merges the `then` defaults of all the entries, and the first
+   * entry that defaults a property wins. An `experimental_customMergeAllOf` built on a deep merger also turns a
+   * property's `allOf: [{ if, then }]` into a direct `if-then-else` when it merges a root-level `allOf`, so that
+   * property's `then` default is filled in under `skipDefaults` too.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
   /** Optional enumerated flag controlling how the defaults are merged into the form data when dealing with undefined
