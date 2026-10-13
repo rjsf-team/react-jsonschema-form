@@ -3,6 +3,7 @@ import {
   ErrorSchemaBuilder,
   JUNK_OPTION_ID,
   RJSF_REF_KEY,
+  createSchemaUtils,
   hashForSchema,
   mergeSchemas,
   noop,
@@ -11,6 +12,7 @@ import {
 import type { Mock } from 'vitest';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
+import createPrecompiledValidator from '../src/createPrecompiledValidator.ts';
 import type { Localizer, ValidatorFunctions } from '../src/index.ts';
 import AJV8PrecompiledValidator from '../src/precompiledValidator.ts';
 import {
@@ -553,5 +555,31 @@ describe('AJV8PrecompiledValidator with a customMergeAllOf', () => {
     expect(() => validator.rawValidation(resolvedRootSchema, formData)).toThrow(
       'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
     );
+  });
+});
+
+describe('AJV8PrecompiledValidator handed the normalized root of a draft-7 schema that has an $id', () => {
+  // Probe from review: createSchemaUtils normalizes every draft at construction, so getRootSchema() returns
+  // refs resolved against the root's $id; the precompiled validator must accept that root alongside the raw
+  // one it was compiled from
+  const schema: RJSFSchema = {
+    $id: 'https://ex.com/r.json',
+    type: 'object',
+    definitions: {
+      A: { type: 'object', properties: { kind: { const: 'a' }, foo: { type: 'string' } } },
+      B: { type: 'object', properties: { kind: { const: 'b' }, bar: { type: 'number' } } },
+    },
+    properties: {
+      choice: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+      item: { $ref: '#/definitions/A' },
+    },
+  };
+  it('computes defaults through the normalized root without throwing', () => {
+    const validator = createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(schema)), schema);
+    const su = createSchemaUtils({ validator }, schema);
+    expect(su.getDefaultFormState(schema, { choice: { kind: 'b', bar: 1 } })).toEqual({
+      choice: { kind: 'b', bar: 1 },
+      item: { kind: 'a' },
+    });
   });
 });

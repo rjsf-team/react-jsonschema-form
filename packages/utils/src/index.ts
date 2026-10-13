@@ -36,7 +36,7 @@ import {
   fieldPathToName,
   toFieldPath,
 } from './fieldPath.ts';
-import findSchemaDefinition from './findSchemaDefinition.ts';
+import findSchemaDefinition, { carryOriginalRef, normalizeRootReferences } from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getChangedFields from './getChangedFields.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
@@ -228,6 +228,7 @@ export {
   expandButtonId,
   ErrorSchemaBuilder,
   fieldLabelId,
+  carryOriginalRef,
   findSchemaDefinition,
   flattenGroupedOptions,
   getAdditionalPropertySchema,
@@ -301,6 +302,7 @@ export {
   mergeObjects,
   mergeSchemas,
   noop,
+  normalizeRootReferences,
   offsetTimeToLocalTime,
   omitConsumedStyling,
   optionalControlsId,

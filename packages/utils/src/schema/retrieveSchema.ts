@@ -19,15 +19,19 @@ import {
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   REF_KEY,
+  SCHEMA_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   RJSF_SOURCE_REF_KEY,
+  JSON_SCHEMA_DRAFT_2019_09,
+  JSON_SCHEMA_DRAFT_2020_12,
   THEN_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, {
   findSchemaDefinitionWithBaseURIOrUndefined,
   normalizeRootReferences,
+  carryOriginalRef,
   originalRefOf,
   restoreOriginalRefs,
   resolveUri,
@@ -161,7 +165,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
+          enclosingRefPath(schema, recurseList, passCount, rootSchema),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -177,7 +181,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
+          enclosingRefPath(schema, recurseList, passCount, rootSchema),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -195,7 +199,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
+          enclosingRefPath(schema, recurseList, passCount, rootSchema),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -478,7 +482,7 @@ export function resolveSchema<
         rootSchema,
         formData,
         expandAllBranches,
-        enclosingRefPath(schema, recurseList, passCount),
+        enclosingRefPath(schema, recurseList, passCount, rootSchema),
         undefined,
         preserveDependencies,
         passCount > 0 ? 1 : 0,
@@ -530,7 +534,7 @@ export function resolveReference<
     // Backstop: termination is structural (see below), so reaching this many passes means a regression broke the
     // fixpoint. Collapse to the schema resolved so far, flagged as a cycle, instead of throwing during render:
     // `SchemaField` renders a cycle indicator for it, the way it does for other detected cycles.
-    return [{ ...schema, [RJSF_REF_CYCLE_KEY]: true }];
+    return [carryOriginalRef({ ...schema, [RJSF_REF_CYCLE_KEY]: true }, schema)];
   }
   // Termination of the resolveReference -> retrieveSchemaInternal loop is structural: every expanded $ref leaves
   // its source ref on the materialized subtree as RJSF_REF_KEY, and on a follow-up pass (passCount > 0) that
@@ -599,28 +603,39 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   passCount = 0,
 ): S {
   // Normalize here, once per top-level walk: the worker re-enters itself for every property, item and option,
-<<<<<<< HEAD
-  // and normalizing on each entry would walk the whole root at every node. The worker's own normalization of
-  // this already-normalized root comes back unchanged, and a root edited in place is still read as it now
-  // stands on the next top-level call
-=======
   // and normalizing on each entry would walk the whole root at every node. The worker therefore reads the
   // already-normalized root as-is, and a root edited in place is still read as it now stands on the next
   // top-level call
   const normalizedRoot = normalizeRootReferences(rootSchema);
->>>>>>> 89bc0f288 (Fix the round-6 findings: normalize every draft once, resolve ui:definitions options under nested $ids, walk normalized raw roots, every-draft embedded # chains, tuple-items restore)
+  // A direct caller passing a subschema (`retrieveSchema(root.properties.foo, root)`) gets the scope that
+  // subschema's own `$id` establishes, the way the walk's descend gives it below: a relative ref the
+  // normalization left as written then resolves against the resource it sits in. The `$ref` case stays with
+  // the follow logic (a local `$id` beside a `$ref` is the override), and the root itself is already its
+  // own scope.
+  const topSchema = schema === rootSchema ? normalizedRoot : schema;
+  let topBaseURI = baseURI;
+  if (
+    schema !== rootSchema &&
+    isObject(topSchema) &&
+    !(REF_KEY in topSchema) &&
+    typeof topSchema[ID_KEY] === 'string' &&
+    !topSchema[ID_KEY].startsWith('#')
+  ) {
+    topBaseURI = resolveUri(
+      baseURI ?? (typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : ''),
+      topSchema[ID_KEY],
+    );
+  }
   return resolveAllReferencesInternal<S>(
-    // A direct `retrieveSchema(schema, root)` call that passes the raw root as the schema walks the
-    // normalized root instead: the raw root's property walk never applies a nested `$id` to the base,
-    // so a relative ref inside such a property would resolve against the root and miss its resource
-    schema === rootSchema ? normalizedRoot : schema,
+    topSchema,
     normalizedRoot,
     recurseList,
-    baseURI,
+    topBaseURI,
     resolveAnyOfOrOneOfRefs,
     markCycleOnDetection,
     expandedRefs,
     passCount,
+    topBaseURI,
   );
 }
 
@@ -643,9 +658,9 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     return schema;
   }
   let resolvedSchema: S = schema;
-  // The root the lookups below run against: every ref inside it is already resolved against the
-  // root's own base, so nested content keeps the meaning it was written with (see `normalizeRootReferences`).
-  const normalizedRoot = normalizeRootReferences(rootSchema);
+  // The root the lookups below run against: the public wrapper normalized it already, so every ref inside it
+  // is resolved against the root's own base (see `normalizeRootReferences`). Normalizing again here would
+  // walk the whole root on every recursive call.
   // The lookup treats an undefined base as the root's own `$id` (its parameter default); keeping the
   // same effective base here means a local `$id` below resolves against the scope the lookup used.
   let currentBaseURI = baseURI ?? (typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined);
@@ -659,6 +674,10 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
   // remembered here so the recursion can scope each keyword by the side it came from
   let referrerKeys: Set<string> | undefined;
   let referrerPointerScope: string | undefined;
+  // The referring scope's base, remembered for the same reason: refs in keywords written beside the `$ref`
+  // resolve against the referrer's scope, not the target's. Only matters for refs normalization left as
+  // written (a relative root's nested resources); resolved refs match the lookup as given under any base.
+  let referrerBaseURI: string | undefined;
   // The recurse list is a path stack: entries are added only for the refs being expanded on the current resolution
   // path and are never shared with sibling subtrees or back with the caller. A $ref is a cycle only when it already
   // appears on the current path.
@@ -679,7 +698,11 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       pathList.includes(resolvedRef) ||
       (passCount > 0 && (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY] === $ref)
     ) {
-      return markCycleOnDetection ? { ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true } : resolvedSchema;
+      // The cycle-flag copy spreads the normalized node, which would drop its `originalRefs` association
+      // (keyed by identity); carry it over so readers of the collapsed node still see the author's spelling
+      return markCycleOnDetection
+        ? carryOriginalRef({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true }, resolvedSchema)
+        : resolvedSchema;
     }
     pathList = resolvedRef !== $ref ? [...pathList, $ref!, resolvedRef] : [...pathList, $ref];
     // Look the ref up against the normalized root: its refs are already resolved against the root's own base,
@@ -693,7 +716,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     // spelling) resolves against the current scope first, and the refs inside the normalized root are resolved
     let found = findSchemaDefinitionWithBaseURIOrUndefined<S>(
       $ref,
-      normalizedRoot,
+      rootSchema,
       [],
       lookupBase,
       originalRefOf(resolvedSchema) !== undefined,
@@ -703,8 +726,13 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       throw new Error(`Could not find a definition for ${$ref}.`);
     }
     let localOverride = false;
+    // On a root before 2019-09 a `$ref` ignores its sibling keywords, `$id` included, so a `$ref`-holding
+    // referrer has no `$id` of its own to override with
+    const pre2019 =
+      rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2019_09 && rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2020_12;
     if (
       ID_KEY in localSchema &&
+      !(pre2019 && REF_KEY in localSchema) &&
       typeof localSchema[ID_KEY] === 'string' &&
       // A fragment-only `$id` anchors a location inside the current resource; it establishes no scope of
       // its own, so it cannot override the referenced resource's scope either
@@ -721,7 +749,10 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       // overriding scope rather than the scope the normalization baked in. That is the documented meaning of
       // a local `$id` overriding the referenced resource scope.
       localOverride = true;
-      found = { schema: restoreOriginalRefs<S>(found.schema, resolveAnyOfOrOneOfRefs), baseURI: found.baseURI };
+      found = {
+        schema: restoreOriginalRefs<S>(found.schema, resolveAnyOfOrOneOfRefs, found.baseURI),
+        baseURI: found.baseURI,
+      };
     }
     const { schema: refSchema, baseURI: refBaseURI } = found;
     // The marker is the ref as this walk carries it, which is what `pathList`, `expandedRefs` and the cycle
@@ -758,7 +789,11 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       // schema belongs to.
       referrerKeys = new Set(Object.keys(localSchema));
       referrerPointerScope = pointerScope;
+      referrerBaseURI = currentBaseURI;
       pointerScope = refBaseURI;
+      // A ref the normalization left as written (relative root, nested resource) resolves against the scope
+      // of the resource that holds it, which after this follow is the target's
+      currentBaseURI = refBaseURI;
     }
     expandedRefs?.push($ref!);
   } else if (passCount > 0) {
@@ -783,6 +818,21 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     }
   }
 
+  // A node carrying its own non-fragment `$id` scopes its subtree: refs the normalization left as written
+  // resolve against that scope. Nodes that also carry a `$ref` are scoped by the follow logic above instead
+  // (a local `$id` beside a `$ref` is the override), so they are not re-based on descend.
+  const descend = (child: unknown, base: string | undefined, scope: string | undefined) => {
+    if (!isObject(child) || REF_KEY in (child as S)) {
+      return { base, scope };
+    }
+    const id = (child as S)[ID_KEY];
+    if (typeof id === 'string' && !id.startsWith('#')) {
+      const rebased = resolveUri(base ?? '', id);
+      return { base: rebased, scope: rebased };
+    }
+    return { base, scope };
+  };
+
   if (PROPERTIES_KEY in resolvedSchema) {
     const updatedProps: RJSFSchema = {};
     for (const [key, value] of Object.entries(resolvedSchema[PROPERTIES_KEY] ?? {})) {
@@ -790,16 +840,21 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       // in an object property always causes an infinite render loop and must be caught; in anyOf/oneOf mode a $ref
       // already expanded by an earlier option is collapsed on purpose (see the optionsPath handling below), so it
       // must not be marked.
+      const descended = descend(
+        value,
+        referrerKeys?.has(PROPERTIES_KEY) ? referrerBaseURI : currentBaseURI,
+        referrerKeys?.has(PROPERTIES_KEY) ? referrerPointerScope : pointerScope,
+      );
       updatedProps[key] = resolveAllReferencesInternal(
         value as S,
         rootSchema,
         pathList,
-        currentBaseURI,
+        descended.base,
         resolveAnyOfOrOneOfRefs,
         !resolveAnyOfOrOneOfRefs,
         expandedRefs,
         passCount,
-        referrerKeys?.has(PROPERTIES_KEY) ? referrerPointerScope : pointerScope,
+        descended.scope,
       );
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
@@ -817,12 +872,20 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
         resolvedSchema.items as S,
         rootSchema,
         pathList,
-        currentBaseURI,
+        descend(
+          resolvedSchema.items,
+          referrerKeys?.has(ITEMS_KEY) ? referrerBaseURI : currentBaseURI,
+          referrerKeys?.has(ITEMS_KEY) ? referrerPointerScope : pointerScope,
+        ).base,
         resolveAnyOfOrOneOfRefs,
         false,
         expandedRefs,
         passCount,
-        referrerKeys?.has(ITEMS_KEY) ? referrerPointerScope : pointerScope,
+        descend(
+          resolvedSchema.items,
+          referrerKeys?.has(ITEMS_KEY) ? referrerBaseURI : currentBaseURI,
+          referrerKeys?.has(ITEMS_KEY) ? referrerPointerScope : pointerScope,
+        ).scope,
       ),
     };
   }
@@ -841,16 +904,21 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
         ...resolvedSchema,
         [key]: (resolvedSchema[key] as S[]).map((s: S) => {
           const expandedBefore = expandedRefs?.length ?? 0;
+          const descended = descend(
+            s,
+            referrerKeys?.has(key) ? referrerBaseURI : currentBaseURI,
+            referrerKeys?.has(key) ? referrerPointerScope : pointerScope,
+          );
           const option = resolveAllReferencesInternal(
             s,
             rootSchema,
             optionsPath,
-            currentBaseURI,
+            descended.base,
             resolveAnyOfOrOneOfRefs,
             false,
             expandedRefs,
             passCount,
-            referrerKeys?.has(key) ? referrerPointerScope : pointerScope,
+            descended.scope,
           );
           if (expandedRefs && expandedRefs.length > expandedBefore) {
             optionsPath = [...optionsPath, ...expandedRefs.slice(expandedBefore)];
@@ -875,7 +943,12 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
  * @param passCount - The pass of the `resolveReference` fixpoint loop this resolution belongs to
  * @returns - `recurseList` plus the schema's source ref when it carries one on a re-walk, else `recurseList`
  */
-function enclosingRefPath<S extends StrictRJSFSchema>(schema: S, recurseList: string[], passCount: number): string[] {
+function enclosingRefPath<S extends StrictRJSFSchema>(
+  schema: S,
+  recurseList: string[],
+  passCount: number,
+  rootSchema?: S,
+): string[] {
   if (passCount === 0) {
     return recurseList;
   }
@@ -886,15 +959,19 @@ function enclosingRefPath<S extends StrictRJSFSchema>(schema: S, recurseList: st
   // The branch about to be resolved carries its `$ref` from the normalized root in the resolved spelling,
   // while this marker can hold either spelling, so the path holds both, the way the marker walk in
   // `resolveAllReferences` pushes both. The resolved spelling of a `#` ref comes from the materialized
-  // schema's own `$id` - the scope of the resource the walk expanded - when it carries one
+  // schema's own `$id` - the scope of the resource the walk expanded - when it carries one. A relative
+  // `$id` is resolved against the root's base first, the same resolution the normalization walk applied,
+  // so the addition spells the scope the way the normalized `$ref` does
   const authorRef = (schema as Record<symbol, unknown>)[RJSF_SOURCE_REF_KEY];
   const candidates = typeof authorRef === 'string' && authorRef !== sourceRef ? [sourceRef, authorRef] : [sourceRef];
   const scope = schema[ID_KEY];
+  const rootId = rootSchema !== undefined && typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined;
+  const resolvedScope = typeof scope === 'string' && rootId !== undefined ? resolveUri(rootId, scope) : scope;
   const additions: string[] = [];
   for (const ref of candidates) {
     additions.push(ref);
-    if (ref.startsWith('#') && typeof scope === 'string') {
-      additions.push(resolveUri(scope, ref));
+    if (ref.startsWith('#') && typeof resolvedScope === 'string') {
+      additions.push(resolveUri(resolvedScope, ref));
     }
   }
   // Nothing downstream compares path identity, so an unchanged path may come back as a fresh copy
@@ -2151,7 +2228,7 @@ export function withDependentSchema<
     rootSchema,
     formData,
     expandAllBranches,
-    enclosingRefPath(schema, recurseList, passCount),
+    enclosingRefPath(schema, recurseList, passCount, rootSchema),
     undefined,
     undefined,
     passCount > 0 ? 1 : 0,
@@ -2174,7 +2251,7 @@ export function withDependentSchema<
         subschema as S,
         rootSchema,
         expandAllBranches,
-        enclosingRefPath(schema, recurseList, passCount),
+        enclosingRefPath(schema, recurseList, passCount, rootSchema),
         formData,
         undefined,
         undefined,
@@ -2265,7 +2342,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      enclosingRefPath(schema, recurseList, passCount),
+      enclosingRefPath(schema, recurseList, passCount, rootSchema),
       undefined,
       undefined,
       passCount > 0 ? 1 : 0,

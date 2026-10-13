@@ -156,8 +156,11 @@ const EXTRA_EXPECTED = { type: 'string', title: 'foo' };
 
 describe('restoreOriginalRefs()', () => {
   it('restores only the refs the walk resolves, and anyOf/oneOf options only when asked', () => {
+    // An absolute root `$id`: on a relative base the normalization would keep the author's spelling inside
+    // the nested resource, leaving nothing for the restore to undo
     const root: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
       $defs: {
         c: {
           $id: 'a/child.json',
@@ -174,11 +177,11 @@ describe('restoreOriginalRefs()', () => {
     const restored = restoreOriginalRefs(c);
     expect((restored.properties!.p as RJSFSchema).$ref).toEqual('other.json');
     expect((restored.items as RJSFSchema).$ref).toEqual('other.json');
-    expect((restored.anyOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
-    expect((restored.allOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
+    expect((restored.anyOf![0] as RJSFSchema).$ref).toEqual('https://example.com/a/other.json');
+    expect((restored.allOf![0] as RJSFSchema).$ref).toEqual('https://example.com/a/other.json');
     const restoredWithOptions = restoreOriginalRefs(c, true);
     expect((restoredWithOptions.anyOf![0] as RJSFSchema).$ref).toEqual('other.json');
-    expect((restoredWithOptions.allOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
+    expect((restoredWithOptions.allOf![0] as RJSFSchema).$ref).toEqual('https://example.com/a/other.json');
   });
   it('normalizes a shallow copy of a normalized root without re-resolving its refs', () => {
     // Consumer code that spreads or clones `registry.rootSchema` hands the copy back in, and the copy's
@@ -607,8 +610,10 @@ describe('findSchemaDefinition()', () => {
       const prefix = $id.slice(0, $id.lastIndexOf('/') + 1);
       expect(findSchemaDefinition(`${prefix}leaf.json`, root, '')).toBe(leaf);
       const absolute = makeAllReferencesAbsolute(root, $id);
+      // Under a relative root the nested ref keeps the author's spelling: a validator resolves it against
+      // the resource's own `$id`, and a root-relative spelling would be re-based against that `$id` again
       expect((absolute.$defs!.parent as RJSFSchema).properties!.value).toEqual({
-        $ref: `${prefix}leaf.json`,
+        $ref: $id.includes('://') ? `${prefix}leaf.json` : '../leaf.json',
       });
       expect((absolute.$defs!.parent as RJSFSchema).$id).toBe('nested/parent.json');
     },
@@ -707,8 +712,11 @@ describe('findSchemaDefinition()', () => {
     });
     // An absolute-path reference stays rooted, so it must not collide with the relative `embedded.json`
     expect(findSchemaDefinition('#/properties/rooted', resolved)).toBe(resolved.$defs!.rooted);
+    // Inside the nested `sub/a.json` resource the author's spelling stays: it resolves against that
+    // resource's `$id` to `sub/b.json`, which a root-relative spelling would not survive a validator's
+    // second resolution against the `$id`
     expect((resolved.$defs!.a as RJSFSchema).properties).toStrictEqual({
-      b: { $ref: 'sub/b.json' },
+      b: { $ref: 'b.json' },
     });
     expect(findSchemaDefinition('#/properties/dot', resolved)).toBe(resolved.$defs!.embedded);
     expect(findSchemaDefinition('#/$defs/a/properties/b', resolved)).toBe(resolved.$defs!.b);

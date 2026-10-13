@@ -163,11 +163,21 @@ interface FoundSchema<S extends StrictRJSFSchema = RJSFSchema> {
 /** The scope a schema node gives its own subtree: its `$id` resolved against the parent scope, or the parent
  * scope unchanged when it has no `$id`
  */
-function childScope<S extends StrictRJSFSchema = RJSFSchema>(node: S, parentURI: string): string {
+function childScope<S extends StrictRJSFSchema = RJSFSchema>(node: S, parentURI: string, pre2019 = false): string {
   const id = node[ID_KEY];
   // A fragment-only `$id` (`#foo`, `#/properties/address`) anchors a location inside the current resource
-  // without changing its base URI, so the subtree keeps the parent scope
-  return typeof id === 'string' && !id.startsWith('#') ? resolveUri(parentURI, id) : parentURI;
+  // without changing its base URI, so the subtree keeps the parent scope. On a root before 2019-09 a `$ref`
+  // ignores every sibling keyword, `$id` included, so a `$ref`-holding node's `$id` establishes no scope
+  return typeof id === 'string' && !id.startsWith('#') && !(pre2019 && REF_KEY in node)
+    ? resolveUri(parentURI, id)
+    : parentURI;
+}
+
+/** True when `rootSchema` predates draft 2019-09 (a root without `$schema` counts as draft-7): a `$ref` on
+ * such a root ignores its sibling keywords, so an `$id` written beside a `$ref` must not re-base anything
+ */
+function isPre2019Root<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): boolean {
+  return rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2019_09 && rootSchema[SCHEMA_KEY] !== JSON_SCHEMA_DRAFT_2020_12;
 }
 
 /** One walk over the schema definitions embedded in a JSON Schema bundle, matching a node whose
@@ -184,8 +194,9 @@ function walkEmbeddedSchemas<S extends StrictRJSFSchema = RJSFSchema>(
   ref: string,
   baseURI = '',
   asWrittenRef?: string,
+  pre2019 = false,
 ): FoundSchema<S> | undefined {
-  const currentURI = childScope(schema, baseURI);
+  const currentURI = childScope(schema, baseURI, pre2019);
   if (
     typeof schema[ID_KEY] === 'string' &&
     (uriEqual(currentURI, ref) || (asWrittenRef !== undefined && schema[ID_KEY] === asWrittenRef))
@@ -193,7 +204,7 @@ function walkEmbeddedSchemas<S extends StrictRJSFSchema = RJSFSchema>(
     return { schema, baseURI: currentURI };
   }
   for (const subSchema of subschemas(schema)) {
-    const result = walkEmbeddedSchemas<S>(subSchema, ref, currentURI, asWrittenRef);
+    const result = walkEmbeddedSchemas<S>(subSchema, ref, currentURI, asWrittenRef, pre2019);
     if (result !== undefined) {
       return result;
     }
@@ -217,10 +228,11 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(
   ref: string,
   baseURI = '',
   asWrittenRef?: string,
+  pre2019 = false,
 ): FoundSchema<S> | undefined {
   return (
-    walkEmbeddedSchemas<S>(schema, ref, baseURI) ??
-    (asWrittenRef !== undefined ? walkEmbeddedSchemas<S>(schema, ref, baseURI, asWrittenRef) : undefined)
+    walkEmbeddedSchemas<S>(schema, ref, baseURI, undefined, pre2019) ??
+    (asWrittenRef !== undefined ? walkEmbeddedSchemas<S>(schema, ref, baseURI, asWrittenRef, pre2019) : undefined)
   );
 }
 
@@ -232,6 +244,7 @@ function getByPointerWithScope<S extends StrictRJSFSchema = RJSFSchema>(
   node: S,
   pointer: string,
   baseURI: string | undefined,
+  pre2019 = false,
 ): FoundSchema<S> | undefined {
   if (pointer === '') {
     return { schema: node, baseURI };
@@ -269,7 +282,13 @@ function getByPointerWithScope<S extends StrictRJSFSchema = RJSFSchema>(
       currentIsSchema = false;
     }
     current = next;
-    if (currentIsSchema && isObject(current) && typeof current[ID_KEY] === 'string') {
+    if (
+      currentIsSchema &&
+      isObject(current) &&
+      typeof current[ID_KEY] === 'string' &&
+      !current[ID_KEY].startsWith('#') &&
+      !(pre2019 && REF_KEY in current)
+    ) {
       currentScope = resolveUri(currentScope ?? '', current[ID_KEY]);
     }
   }
@@ -347,6 +366,18 @@ export function originalRefOf<S extends StrictRJSFSchema>(schema: S): string | u
   return originalRefs.get(schema);
 }
 
+/** Copies the pre-normalization ref association from `source` onto `copy`: a rebuild that spreads a normalized
+ * node (the cycle-flag copy in `retrieveSchema`) would otherwise lose the author's spelling, which `originalRefOf`
+ * readers (`resolveUiSchema`) key on.
+ */
+export function carryOriginalRef<S extends StrictRJSFSchema = RJSFSchema>(copy: S, source: S): S {
+  const original = originalRefs.get(source);
+  if (original !== undefined) {
+    originalRefs.set(copy, original);
+  }
+  return copy;
+}
+
 /** Parses a JSONSchema and makes all references absolute with respect to
  * the `baseURI` argument. The walk follows the schema-valued keywords (see the keyword sets above): only a
  * string `$ref` is a reference to resolve, and only a string `$id` re-bases its subtree.
@@ -354,7 +385,11 @@ export function originalRefOf<S extends StrictRJSFSchema>(schema: S): string | u
  * @param schema - The schema to be processed
  * @param baseURI - The base URI to be used for resolving relative references
  */
-export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
+export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  baseURI: string,
+  pre2019 = false,
+): S {
   const rootId = typeof schema[ID_KEY] === 'string' ? schema[ID_KEY] : undefined;
   // One existence answer per distinct resource name, so the walk asks once no matter how many refs share a target
   const knownTargets = new Map<string, boolean>();
@@ -369,8 +404,8 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
     }
     const name = refId.replace(/\/$/, '');
     const exists =
-      (rootId !== undefined && uriEqual(name, rootId.replace(/\/$/, ''))) ||
-      findEmbeddedSchemaRecursive(schema, name) !== undefined;
+      (rootId !== undefined && uriEqual(name, rootId.replace(/#\/?$/, '').replace(/\/$/, ''))) ||
+      findEmbeddedSchemaRecursive(schema, name, '', undefined, pre2019) !== undefined;
     knownTargets.set(refId, exists);
     return exists;
   };
@@ -391,17 +426,33 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
       resolved !== ref &&
       !targetExists(resolved) &&
       targetExists(ref);
+    // A ref rewritten against an absolute base names its resource outright, but a ref rewritten against a relative
+    // base stays relative - and inside a nested `$id` resource a JSON Schema validator resolves it against that
+    // resource's `$id` a second time. Such a node keeps the author's spelling, which resolves against the same
+    // `$id` to the resource the author meant; a root-scope ref still gets the root-relative spelling, which no
+    // nested `$id` re-bases. Same-document refs keep the resolved spelling: it names the resource the pointer
+    // belongs to, which cycle markers and `ui:definitions` keys read off the node. `rjsf`'s own lookups resolve
+    // refs against the lexical scope either way.
+    const absoluteSpelling =
+      resolved !== undefined && (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(resolved) || resolved.startsWith('//'));
+    const relativeNested =
+      typeof ref === 'string' && !absoluteSpelling && !ref.startsWith('#') && currentURI !== startURI;
     const refChange =
-      typeof ref === 'string' && !originalRefs.has(node) && resolved !== ref && !alreadyNamesTarget
+      typeof ref === 'string' && !originalRefs.has(node) && resolved !== ref && !alreadyNamesTarget && !relativeNested
         ? { [REF_KEY]: resolved }
         : undefined;
-    const visited = mapSubschemas(node, (subSchema) => visit(subSchema, childScope(subSchema, currentURI)), refChange);
+    const visited = mapSubschemas(
+      node,
+      (subSchema) => visit(subSchema, childScope(subSchema, currentURI, pre2019)),
+      refChange,
+    );
     if (typeof ref === 'string' && visited[REF_KEY] !== ref) {
       originalRefs.set(visited, ref);
     }
     return visited;
   };
-  return visit(schema, typeof schema[ID_KEY] === 'string' ? schema[ID_KEY] : baseURI);
+  const startURI = typeof schema[ID_KEY] === 'string' ? schema[ID_KEY] : baseURI;
+  return visit(schema, startURI);
 }
 
 /** The keywords `restoreOriginalRefs` rebuilds, matching the keywords whose refs the resolution walk resolves
@@ -419,8 +470,17 @@ const RESTORE_KEYS_WITH_OPTIONS: ReadonlySet<string> = new Set([PROPERTIES_KEY, 
  *
  * @param schema - The schema whose restored subtree is needed
  * @param [restoreOptions=false] - When true, refs under `anyOf`/`oneOf` are restored too (the caller walks them)
+ * @param [fallbackScope] - The scope the restored schema's content was written in (the resource root's own
+ *        `$id`, as the lookup reported it). Passed by a caller that re-identifies the resource (a local `$id`
+ *        beside a `$ref`): refs the normalization left as written under keywords the resolution walk does not
+ *        visit would otherwise resolve against the overriding scope on a later pass, so they are resolved
+ *        against this scope instead. Restored refs are untouched: the override re-reads those as written.
  */
-export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(schema: S, restoreOptions = false): S {
+export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  restoreOptions = false,
+  fallbackScope?: string,
+): S {
   const original = originalRefs.get(schema);
   const keys = restoreOptions ? RESTORE_KEYS_WITH_OPTIONS : RESTORE_KEYS;
   // The resolution walk skips array-valued `items` (`!Array.isArray(resolvedSchema.items)` in
@@ -428,11 +488,41 @@ export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(sch
   // would send a later `retrieveSchema` looking for the resource relative to the root. Array-valued `items`
   // keeps the resolved spelling the normalization walk left.
   const restoreKey = (key: string, value: unknown) => keys.has(key) && !(key === ITEMS_KEY && Array.isArray(value));
-  return mapSubschemas<S>(
+  const restored = mapSubschemas<S>(
     schema,
-    (subSchema) => restoreOriginalRefs(subSchema, restoreOptions),
+    (subSchema) => restoreOriginalRefs(subSchema, restoreOptions, fallbackScope),
     original !== undefined ? { [REF_KEY]: original } : undefined,
     restoreKey,
+  );
+  if (fallbackScope === undefined) {
+    return restored;
+  }
+  // A second pass over the keywords the restore skipped (its whole subtrees are unvisited by the resolution
+  // walk): a ref the normalization left as written there would resolve against the caller's overriding scope
+  // on a later pass, so it is resolved against the scope it was written in. Refs the normalization rewrote
+  // (marked in `originalRefs`) keep their resolved spelling, and restored refs outside these subtrees were
+  // the override's to re-read as written.
+  const resolveUnvisited = (node: S, scope: string): S => {
+    const nodeRef = node[REF_KEY];
+    const resolveChange =
+      originalRefs.get(node) === undefined &&
+      typeof nodeRef === 'string' &&
+      !nodeRef.startsWith('#') &&
+      !/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(nodeRef) &&
+      !nodeRef.startsWith('//')
+        ? { [REF_KEY]: resolveUri(scope, nodeRef) }
+        : undefined;
+    return mapSubschemas<S>(
+      node,
+      (subSchema) => resolveUnvisited(subSchema, childScope(subSchema, scope)),
+      resolveChange,
+    );
+  };
+  return mapSubschemas<S>(
+    restored,
+    (subSchema) => resolveUnvisited(subSchema, childScope(subSchema, fallbackScope)),
+    undefined,
+    (key, value) => !restoreKey(key, value),
   );
 }
 
@@ -460,6 +550,7 @@ export function normalizeRootReferences<S extends StrictRJSFSchema = RJSFSchema>
   const normalized = makeAllReferencesAbsolute<S>(
     rootSchema,
     typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : '#',
+    isPre2019Root(rootSchema),
   );
   if (normalized !== rootSchema) {
     // Only a root this function produced is marked: marking the input when something changed would freeze it,
@@ -560,6 +651,7 @@ function lookupSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   baseURI: string | undefined,
   refIsResolved = false,
 ): FoundSchema<S> | undefined {
+  const pre2019 = isPre2019Root(rootSchema);
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.
     const decodedRef = decodeURIComponent(ref.substring(1));
@@ -567,13 +659,13 @@ function lookupSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
       // The branch condition already guarantees the root's `$id` IS the base, so it is used as
       // written: resolving it against itself would double the directory part of a relative `$id`.
       const rootScope = ID_KEY in rootSchema && typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : baseURI;
-      return getByPointerWithScope<S>(rootSchema, decodedRef, rootScope);
+      return getByPointerWithScope<S>(rootSchema, decodedRef, rootScope, pre2019);
     }
     // The non-`#` branch below finds embedded resources on every draft: a `#` ref chained from one resolves
     // inside it the same way, whatever the root's `$schema` says
-    const resource = findEmbeddedSchemaRecursive<S>(rootSchema, baseURI.replace(/\/$/, ''), '', baseURI);
+    const resource = findEmbeddedSchemaRecursive<S>(rootSchema, baseURI.replace(/\/$/, ''), '', baseURI, pre2019);
     if (resource !== undefined) {
-      return getByPointerWithScope<S>(resource.schema, decodedRef, resource.baseURI);
+      return getByPointerWithScope<S>(resource.schema, decodedRef, resource.baseURI, pre2019);
     }
     return undefined;
   }
@@ -591,20 +683,25 @@ function lookupSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   for (const candidate of candidates) {
     const [refId, ...refAnchor] = candidate.replace(/#\/?$/, '').split('#');
     const anchor = refAnchor.length > 0 ? decodeURIComponent(refAnchor.join('#')) : undefined;
-    // A trailing slash is part of neither name: the ref and the root name the same resource with or without it
-    if (rootId !== undefined && uriEqual(refId.replace(/\/$/, ''), rootId.replace(/\/$/, ''))) {
+    // A trailing slash or empty fragment is part of neither name: the ref and the root name the same resource
+    // with or without them (draft-4/6/7 roots are commonly written with a trailing `#`)
+    if (rootId !== undefined && uriEqual(refId.replace(/\/$/, ''), rootId.replace(/#\/?$/, '').replace(/\/$/, ''))) {
       // The ref names the root resource itself: what follows the `#` is a pointer into it, whatever the
       // draft. The root's `$id` is used as written for the scope: resolving a relative `$id` against
       // itself would double its directory part.
-      const found = getByPointerWithScope<S>(rootSchema, anchor ?? '', rootId);
+      const found = getByPointerWithScope<S>(rootSchema, anchor ?? '', rootId, pre2019);
       if (found !== undefined) {
         return found;
       }
-    } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      const resource = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
+    } else {
+      // `$id` marks an embedded resource from draft-6 on, and the normalization walk rewrites refs inside one
+      // on every draft, so the lookup runs on every draft too; a root without `$id` resources simply finds none
+      const resource = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''), '', undefined, pre2019);
       if (resource !== undefined) {
         const found =
-          anchor !== undefined ? getByPointerWithScope<S>(resource.schema, anchor, resource.baseURI) : resource;
+          anchor !== undefined
+            ? getByPointerWithScope<S>(resource.schema, anchor, resource.baseURI, pre2019)
+            : resource;
         if (found !== undefined) {
           return found;
         }

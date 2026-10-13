@@ -1006,14 +1006,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     });
     it('keeps refs the walk does not visit resolved under a local $id override', () => {
       // Refs under `allOf`, `if`/`then`, `dependencies` and unexpanded `anyOf`/`oneOf` are not resolved by the
-      // walk, so restoring their author spelling would leave them relative to the root; they keep the resolved
-      // spelling so later passes (the allOf merge, the options the form renders) still find their resource
+      // walk, so restoring their author spelling would leave them relative to the root; they keep a spelling
+      // resolved against the resource's own scope so later passes (the allOf merge, the options the form
+      // renders) still find their resource
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
         $defs: {
           c: {
             $id: 'a/child.json',
-            allOf: [{ $ref: 'other.json' }],
+            allOf: [{ $ref: 'other.json', properties: { deep: { $ref: 'other.json' } } }],
             anyOf: [{ $ref: 'other.json' }],
           },
           ao: { $id: 'a/other.json', title: 'AO' },
@@ -1023,6 +1024,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const resolved = schemaUtils.retrieveSchema({ $id: 'b/local.json', $ref: 'a/child.json' }, root);
       expect(resolved.title).toEqual('AO');
       expect((resolved.anyOf![0] as RJSFSchema).$ref).toEqual('a/other.json');
+      expect((resolved.properties!.deep as RJSFSchema).$ref).toEqual('a/other.json');
     });
     it('resolves a restored override ref against the overriding scope, not an $id that repeats it', () => {
       // The restored `other.json` is the author's spelling, not a resolved one: in a root without `$id` it
@@ -1173,6 +1175,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect.objectContaining({ $id: 'child.json', title: 'CHILD' }),
       );
     });
+    it('applies a nested $id when called with a raw subschema of the raw root', () => {
+      // Probe from review: a direct `retrieveSchema(root.properties.foo, root)` gets the scope `foo`'s own
+      // `$id` establishes, so the relative ref inside it finds its resource
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        properties: {
+          foo: {
+            $id: 'nested/parent.json',
+            properties: { bar: { $ref: 'child.json' } },
+            $defs: { child: { $id: 'child.json', title: 'CHILD' } },
+          },
+        },
+      };
+      const out = retrieveSchema({ validator: testValidator }, root.properties!.foo as RJSFSchema, root);
+      expect((out.properties as GenericObjectType).bar).toEqual(
+        expect.objectContaining({ $id: 'child.json', title: 'CHILD' }),
+      );
+    });
     it('collapses a nested-$id cycle whose refs were rewritten (both marker spellings on the path)', () => {
       // Covers `enclosingRefPath` carrying the author's spelling beside the resolved one
       const root: RJSFSchema = {
@@ -1198,8 +1218,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(out).toMatchObject({ title: 'A', $ref: 'http://x.com/root.json#/definitions/a' });
     });
     it('#5467: resolves a properties-carrying $ref chain in a bundle whose root has no $id', () => {
-      // Refs inside the nested resources are written relative to their resource. Normalization resolves them
-      // against the root's base, and the resolver must not resolve them a second time against the nested scope.
+      // Refs inside the nested resources are written relative to their resource. The root has no `$id`, so
+      // normalization keeps the author's spelling inside each resource (a root-relative rewrite would double
+      // under a validator's own `$id` resolution), and the resolver resolves each once against the scope of
+      // the resource the walk is in.
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
         $defs: {
@@ -1225,9 +1247,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(c.allOf).toHaveLength(2);
       const [childPart, leafPart] = c.allOf as RJSFSchema[];
       expect(childPart.properties).toHaveProperty('extra', { type: 'string' });
-      // The ref the leaf carries resolves against the root scope, exactly as written.
+      // The ref the leaf carries is the author's spelling; looked up against the leaf's scope it names
+      // the same resource
       const leafRef = (leafPart.properties as Record<string, RJSFSchema>).y.$ref as string;
-      expect(findSchemaDefinitionWithBaseURI(leafRef, root, [], undefined).schema).toEqual(
+      expect(findSchemaDefinitionWithBaseURI(leafRef, root, [], 'nested/leaf.json').schema).toEqual(
         expect.objectContaining({ type: 'boolean' }),
       );
     });

@@ -8,7 +8,7 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, getFirstMatchingOption, noop, retrieveSchema } from '@rjsf/utils';
+import { ErrorSchemaBuilder, createSchemaUtils, getFirstMatchingOption, noop, retrieveSchema } from '@rjsf/utils';
 import type { Ajv } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
@@ -17,6 +17,7 @@ import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { typ
 import type { Mock } from 'vitest';
 
 import type { Localizer } from '../src/index.ts';
+import { customizeValidator } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
 
@@ -3225,7 +3226,7 @@ describe('AJV8Validator', () => {
 
 describe('validateFormData() and the data handed to customValidate', () => {
   it('hands customValidate the formData whose defaults the caller computed', () => {
-    const validator = new AJV8Validator({});
+    const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
     const customValidate = vi.fn<CustomValidator>((_formData, errors) => errors);
     // `Form` computes these with its own `SchemaUtils`, so they honor the `customMergeAllOf` and
@@ -3235,7 +3236,7 @@ describe('validateFormData() and the data handed to customValidate', () => {
   });
 
   it('hands customValidate an undefined the caller computed, rather than recomputing its own defaults', () => {
-    const validator = new AJV8Validator({});
+    const validator = customizeValidator();
     // A root whose defaults legitimately come out `undefined` for the form: read rather than called, the parameter
     // could not say that, and the validator would recompute `[]` here with neither of the form's settings
     const schema: RJSFSchema = { type: 'array', items: { type: 'object', properties: { a: { type: 'string' } } } };
@@ -3245,7 +3246,7 @@ describe('validateFormData() and the data handed to customValidate', () => {
   });
 
   it('computes them itself, with the default allOf merge, when the caller supplies none', () => {
-    const validator = new AJV8Validator({});
+    const validator = customizeValidator();
     const schema: RJSFSchema = {
       type: 'object',
       allOf: [{ properties: { merged: { type: 'string', default: 'fromAllOf' } } }],
@@ -3258,12 +3259,33 @@ describe('validateFormData() and the data handed to customValidate', () => {
 
 describe('validateFormData() with a transformErrors that clears every message', () => {
   it('lists the errors whether or not a customValidate is passed', () => {
-    const validator = new AJV8Validator({});
+    const validator = customizeValidator();
     const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string', minLength: 8 } } };
     const transformErrors: ErrorTransformer = (errors) => errors.map((error) => ({ ...error, message: undefined }));
     const customValidate: CustomValidator = (_formData, errors) => errors;
     const { errors } = validator.validateFormData({ a: 'short' }, schema, undefined, transformErrors);
     expect(errors).not.toEqual([]);
     expect(validator.validateFormData({ a: 'short' }, schema, customValidate, transformErrors).errors).toEqual(errors);
+  });
+});
+
+describe('AJV8Validator validating against a normalized draft-7 root without an $id', () => {
+  // Probe from review: a ref inside a nested resource keeps the author's spelling under a relative root
+  // base, so the validator resolves it against the resource's own $id instead of doubling the path
+  it('resolves nested relative $ids the way the raw root resolves them', () => {
+    const schema = {
+      definitions: {
+        parent: { $id: 'nested/parent.json', type: 'object', properties: { v: { $ref: 'child.json' } } },
+        child: { $id: 'nested/child.json', type: 'string' },
+      },
+    };
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, schema);
+    expect(su.getRootSchema().definitions!.parent).toEqual({
+      $id: 'nested/parent.json',
+      type: 'object',
+      properties: { v: { $ref: 'child.json' } },
+    });
+    expect(validator.isValid({ $ref: '#/definitions/parent' }, { v: 'x' }, su.getRootSchema())).toBe(true);
   });
 });
