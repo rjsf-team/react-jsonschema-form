@@ -1,4 +1,3 @@
-import { createDeepAllOfMerge } from '@x0k/json-schema-merge';
 import type { MockInstance } from 'vitest';
 
 import type {
@@ -6004,7 +6003,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it("should populate a property's allOf conditional defaults once a deep custom merger merges the root's allOf", () => {
-          const deepAllOfMerge = createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf;
+          const deepAllOfMerge: Experimental_CustomMergeAllOf = (schema) => {
+            const merged = shallowAllOfMerge(schema) as RJSFSchema;
+            const properties = Object.fromEntries(
+              Object.entries(merged.properties ?? {}).map(([key, property]) => [
+                key,
+                typeof property === 'object' && 'allOf' in property ? shallowAllOfMerge(property) : property,
+              ]),
+            );
+            return { ...merged, properties } as RJSFSchema;
+          };
           const rootAllOfSchema: RJSFSchema = {
             ...animalInfoObjectSchema,
             allOf: [{ properties: { name: { type: 'string' } } }],
