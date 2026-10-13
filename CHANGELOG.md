@@ -169,7 +169,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/daisyui
 
-- Fixed the `SelectWidget` trigger falling back to a hardcoded `'Select...'` with no value selected, no `ui:placeholder` and no label, fixing [#5498](https://github.com/rjsf-team/react-jsonschema-form/issues/5498). The fallback now reads `translateString(TranslatableString.SelectPlaceholder)`, the way the shadcn widget does, so a custom `translateString` localizes it (the default English text becomes `'Select ...'`)
 - Updated `CheckboxWidget` to append a `*` onto the end of the label when the field is required AND the schema value is hardcoded to `true`, fixing [#4136](https://github.com/rjsf-team/react-jsonschema-form/issues/4136)
 - Declared `"sideEffects": false` in `package.json`, allowing bundlers to tree-shake unused exports
 - Removed the module-level Font Awesome `library.add()` call from `AddButton`; every icon is passed to `FontAwesomeIcon` as an imported icon object, so the global registry was never consulted
