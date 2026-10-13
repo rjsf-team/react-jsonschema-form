@@ -484,8 +484,10 @@ export function computeDefaults<
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
     // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
-    // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
-    const pathWithOwnRef = enclosingRefPath<S>(schema, _recurseList);
+    // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well. An `allOf` that stood beside the
+    // schema's own `$ref` is not part of the definition, so the ref stays off the path the merge is seeded with, as
+    // the resolver leaves it off
+    const pathWithOwnRef = enclosingRefPath<S>(schema, _recurseList, ALL_OF_KEY);
     [schemaToCompute] = retrieveSchemaInternal<T, S, F>(
       context,
       schema,
@@ -659,6 +661,8 @@ export function getObjectDefaults<
           rootSchema,
           formData,
           false,
+          // No branch keyword is named: the retrieve resolves the schema's `if` as well as its `allOf`, and it leaves
+          // a `$ref` under either's `properties` unexpanded, for `childRecurseList` below to decide
           enclosingRefPath<S>(schema, _recurseList),
         )
       : [schema];
