@@ -1,3 +1,5 @@
+import isComponentType from './isComponentType.ts';
+import logOnce from './logOnce.ts';
 import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types.ts';
 
 /** Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
@@ -27,7 +29,10 @@ export default function getTemplate<
   if (typeof override === 'string') {
     template = Object.hasOwn(customTemplates, override) ? customTemplates[override] : undefined;
   }
-  if (!template) {
+  if (!isComponentType(template)) {
+    if (override) {
+      logOnce(`Ignoring invalid ${name} override: expected a component or a registered template name.`);
+    }
     return templates[name];
   }
   // Indexing templates or uiOptions by a generic key results in TS2590: Expression produces a union type that is too
