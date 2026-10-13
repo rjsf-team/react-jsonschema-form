@@ -1425,6 +1425,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        describe('a schema resolved from a $ref whose then branch is a $ref to a recursive definition', () => {
+          const kid: RJSFSchema = {
+            type: 'object',
+            properties: { tag: { type: 'string', default: 't' }, kid: { $ref: '#/definitions/kid' } },
+          };
+          const parent: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            if: {},
+            then: { $ref: '#/definitions/kid' },
+          };
+          const schema: RJSFSchema = {
+            definitions: { parent, kid },
+            type: 'object',
+            properties: { p: { $ref: '#/definitions/parent' } },
+          };
+
+          test('getDefaultFormState fills one level of the recursion, as it does for a $ref property', () => {
+            expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({
+              p: { tag: 't', kid: { tag: 't' } },
+            });
+          });
+        });
+
         describe('a recursive schema whose dependencies entry refers back to it', () => {
           const node: RJSFSchema = {
             type: 'object',

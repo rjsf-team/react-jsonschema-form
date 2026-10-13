@@ -20,7 +20,6 @@ import {
   PROPERTIES_KEY,
   REF_KEY,
   RJSF_REF_CYCLE_KEY,
-  RJSF_REF_KEY,
   THEN_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
@@ -141,7 +140,8 @@ export function resolveCondition<
   // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
   // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
   const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
-  let resolvedSchemas = [resolvedSchemaLessConditional as S];
+  const schemaLessConditional = resolvedSchemaLessConditional as S;
+  let resolvedSchemas = [schemaLessConditional];
   let schemas: S[] = [];
   if (expandAllBranches) {
     if (then && typeof then !== 'boolean') {
@@ -196,7 +196,6 @@ export function resolveCondition<
     }
   }
   if (schemas.length) {
-    const [schemaLessConditional] = resolvedSchemas;
     resolvedSchemas = schemas.map((s) => mergeBranch<S>(schemaLessConditional, s));
   }
   // As with `dependencies`, the merged result is re-walked as a follow-up pass so refs that were already expanded
@@ -623,10 +622,12 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     // Check for a recursive reference and stop the loop. On a re-walk (passCount > 0), a schema whose
     // RJSF_REF_KEY marker equals its $ref was materialized from that ref by an earlier pass and had the
     // collapsed $ref merged back onto it (e.g. by a dependencies or if/then merge): expanding it again would
-    // repeat the earlier pass forever, so it stays collapsed too.
+    // repeat the earlier pass forever, so it stays collapsed too. So does a $ref an earlier pass flagged as a
+    // cycle: a branch that was itself a $ref is merged without the marker of its definition, so the path
+    // rebuilt here no longer holds the ref a recursion inside that definition was stopped by.
     if (
       pathList.includes($ref!) ||
-      (passCount > 0 && (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY] === $ref)
+      (passCount > 0 && (resolvedFromRef<S>(resolvedSchema) === $ref || RJSF_REF_CYCLE_KEY in resolvedSchema))
     ) {
       if (markCycleOnDetection && !(RJSF_REF_CYCLE_KEY in resolvedSchema)) {
         // Counted when newly set, so the levels above hand the flagged copy back rather than the schema they were
@@ -653,8 +654,8 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     // `CyclicSchemaField` reveal the next level of a cycle. The marker joins `expandedRefs` at most once per
     // walk: re-collecting it on every re-walk would grow the walk-wide list (and the anyOf/oneOf options path
     // built from it) with duplicates.
-    const sourceRef = (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY];
-    if (typeof sourceRef === 'string') {
+    const sourceRef = resolvedFromRef<S>(resolvedSchema);
+    if (sourceRef !== undefined) {
       pathList = [...pathList, sourceRef];
       if (expandedRefs && !expandedRefs.includes(sourceRef)) {
         expandedRefs.push(sourceRef);
@@ -1991,13 +1992,14 @@ export function withDependentSchema<
   formData?: T,
   passCount = 0,
 ): S[] {
+  const dependencyPath = enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY);
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
     context,
     dependencyValue,
     rootSchema,
     formData,
     expandAllBranches,
-    enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY),
+    dependencyPath,
     undefined,
     undefined,
     passCount > 0 ? 1 : 0,
@@ -2020,7 +2022,7 @@ export function withDependentSchema<
         subschema as S,
         rootSchema,
         expandAllBranches,
-        enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY),
+        dependencyPath,
         formData,
         undefined,
         undefined,
@@ -2101,6 +2103,7 @@ export function withExactlyOneSubschema<
     );
     return [schema];
   }
+  const dependencyPath = enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY);
   return validSubschemas.flatMap((s) => {
     const subschema: S = s as S;
     const [dependentSubschema] = splitKeyElementFromObject(dependencyKey, subschema.properties as GenericObjectType);
@@ -2111,7 +2114,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY),
+      dependencyPath,
       undefined,
       undefined,
       passCount > 0 ? 1 : 0,

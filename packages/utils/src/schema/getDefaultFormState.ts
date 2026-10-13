@@ -666,9 +666,11 @@ export function getObjectDefaults<
           enclosingRefPath<S>(schema, _recurseList),
         )
       : [schema];
-    // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` joins the path of everything below, the way
-    // one the `$ref` branch of `computeDefaults()` expands does. The ref `schema` was itself resolved from does not:
-    // it seeds the retrieve above, but one more `$ref` back to it is still followed, as it is without the retrieve
+    // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` of a schema that was not itself resolved from
+    // one joins the path of everything below, the way one the `$ref` branch of `computeDefaults()` expands does. The
+    // ref `schema` was itself resolved from does not: it seeds the retrieve above, but one more `$ref` back to it is
+    // still followed, as it is without the retrieve. Such a schema keeps its own ref through the merge of a branch,
+    // so a recursion inside a branch that was a `$ref` is stopped by the cycle flag the retrieve left on it instead
     const childRecurseList =
       resolvedFromRef<S>(retrievedSchema) === resolvedFromRef<S>(schema)
         ? _recurseList
