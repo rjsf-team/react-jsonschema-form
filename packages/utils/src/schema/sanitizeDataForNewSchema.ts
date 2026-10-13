@@ -566,7 +566,7 @@ function sanitizeDataForNewSchemaInternal<
               // The committed side, as the scalar path compares it: a push or reset can cross a
               // conditional branch without settling, leaving the chain on the new side's branch while
               // the committed items schema still holds the branch the data came from (#5250). Where the
-              // raw items schemas agree the resolved ones are the same object, so this costs nothing
+              // raw items schemas are the same object the resolved ones are too, so this costs nothing
               // and the filter still skips (#5451)
               !deepEquals(oldSchemaItems, newSchemaItems) ||
               constraintMayHaveChanged<T, S, F>(
