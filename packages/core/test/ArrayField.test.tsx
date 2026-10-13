@@ -5246,6 +5246,5 @@ describe('ArrayField', () => {
       await user.click(remove[0]);
       expectToHaveBeenCalledWithFormData(onChange, ['one', 'two', 'three', 'five'], 'root');
     });
-
   });
 });
