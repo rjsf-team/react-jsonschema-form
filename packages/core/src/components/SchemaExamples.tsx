@@ -8,7 +8,7 @@ export interface SchemaExamplesProps<S extends StrictRJSFSchema = RJSFSchema> {
   /** The JSON schema object containing examples and default value */
   schema: S;
   /** The suggestions to render, when the caller already has them from `getExampleSuggestions(schema)` */
-  suggestions?: string[];
+  suggestions?: readonly string[];
 }
 
 /** Renders a `<datalist>` element containing options from schema examples and default value, as

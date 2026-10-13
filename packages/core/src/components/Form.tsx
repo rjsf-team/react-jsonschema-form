@@ -454,10 +454,11 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       },
     };
   }, [uiSchema, disabled]);
-  // The element too, so a theme's plain function component is skipped for a keystroke rather than rendered again
+  // The element too: no theme memoizes its `SubmitButton`, so an element that is kept is what skips it for a keystroke.
+  // `children` replace the button, so there is none to build then
   const submitButton = useMemo(
-    () => <SubmitButton uiSchema={submitUiSchema} registry={registry} />,
-    [SubmitButton, submitUiSchema, registry],
+    () => (children ? null : <SubmitButton uiSchema={submitUiSchema} registry={registry} />),
+    [children, SubmitButton, submitUiSchema, registry],
   );
 
   /** The errors in the `ErrorList`, unless disabled by `showErrorList` */

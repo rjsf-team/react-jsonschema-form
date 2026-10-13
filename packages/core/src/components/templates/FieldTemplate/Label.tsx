@@ -27,5 +27,6 @@ function Label(props: LabelProps) {
     </label>
   );
 }
-// Memoized so a keystroke in the field, or in another, is not a render of its label
+// Memoized so a keystroke in its own field is not a render of its label. A keystroke in another field renders neither:
+// `SchemaField` is what keeps the fields apart, not this
 export default memo(Label);

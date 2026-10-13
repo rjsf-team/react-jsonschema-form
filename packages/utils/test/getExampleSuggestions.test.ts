@@ -1,3 +1,4 @@
+import type { RJSFSchema } from '../src/index.ts';
 import { getExampleSuggestions } from '../src/index.ts';
 
 describe('getExampleSuggestions()', () => {
@@ -20,5 +21,14 @@ describe('getExampleSuggestions()', () => {
   it('returns the same array for the same schema object', () => {
     const schema = { examples: ['a'] };
     expect(getExampleSuggestions(schema)).toBe(getExampleSuggestions(schema));
+  });
+  it('returns one shared array for every schema without examples', () => {
+    expect(getExampleSuggestions({ type: 'string' })).toBe(getExampleSuggestions({ type: 'number' }));
+  });
+  it.each<[string, RJSFSchema]>([
+    ['with examples', { examples: ['a'] }],
+    ['without examples', { type: 'string' }],
+  ])('returns a frozen array for a schema %s, since every caller shares it', (_, schema) => {
+    expect(Object.isFrozen(getExampleSuggestions(schema))).toBe(true);
   });
 });
