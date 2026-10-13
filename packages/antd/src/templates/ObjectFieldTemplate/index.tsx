@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import type {
   FormContextType,
+  GenericObjectType,
   ObjectFieldTemplateProps,
   ObjectFieldTemplatePropertyType,
   Registry,
@@ -16,7 +17,8 @@ import {
   getTemplates,
   getUiOptions,
   isComponentType,
-  isFixedItems,
+  isObject,
+  resolveUiSchema,
   titleId,
   buttonId,
 } from '@rjsf/utils';
@@ -97,20 +99,27 @@ export default function ObjectFieldTemplate<
   const visibleProperties = properties.filter((e) => !e.hidden);
 
   const calculateColSpan = (element: ObjectFieldTemplatePropertyType<T, S, F>) => {
-    const propertySchema: S = element.content.props.schema;
-    const propertyUiSchema: UiSchema<T, S, F> | undefined = element.content.props.uiSchema;
+    if (isColSpan(colSpan)) {
+      return colSpan;
+    }
+    // Resolved the way `SchemaField` resolves them before it picks the field, so that a `$ref` with a
+    // `ui:definitions` entry, or an `allOf`, is keyed by what is rendered
+    const { schema: rawSchema, uiSchema: rawUiSchema } = element.content.props;
+    const propertyFormData = isObject(formData) ? (formData as GenericObjectType)[element.name] : undefined;
+    const propertySchema: S = registry.schemaUtils.retrieveSchema(rawSchema, propertyFormData);
+    const propertyUiSchema: UiSchema<T, S, F> = resolveUiSchema<T, S, F>(rawSchema, rawUiSchema, registry);
     const ownUiOptions = getUiOptions<T, S, F>(propertyUiSchema);
     const type = getFieldTypeForWidget<S>(propertySchema, ownUiOptions.widget);
     const field = getRenderedUiField<T, S, F>(ownUiOptions, registry);
     // `BooleanField`, and `ArrayField` for a multi-select or a files array, render a widget from `ui:globalOptions`
-    // when the property names none, while `StringField` and `NumberField` only render the property's own
+    // when the property names none, while `StringField` and `NumberField` only render the property's own. The
+    // select `SchemaField` infers for a boolean with labelled options is not modelled here (see #5516)
     const readsGlobalWidget =
       !field &&
       (type === 'boolean' ||
         (type === 'array' &&
           (registry.schemaUtils.isMultiSelect(propertySchema) ||
-            (!isFixedItems<S>(propertySchema) &&
-              registry.schemaUtils.isFilesArray(propertySchema, propertyUiSchema)))));
+            registry.schemaUtils.isFilesArray(propertySchema, propertyUiSchema))));
     const { widget } = readsGlobalWidget ? { ...registry.globalUiOptions, ...ownUiOptions } : ownUiOptions;
 
     const defaultColSpan =
@@ -127,9 +136,6 @@ export default function ObjectFieldTemplate<
           return colSpan[key];
         }
       }
-    }
-    if (isColSpan(colSpan)) {
-      return colSpan;
     }
     return defaultColSpan;
   };

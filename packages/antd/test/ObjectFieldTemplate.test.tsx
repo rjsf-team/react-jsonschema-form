@@ -354,4 +354,30 @@ describe('ObjectFieldTemplate colSpan map', () => {
     expect(classes).toHaveLength(1);
     expect(classes[0]).toContain('ant-col-24');
   });
+
+  it('keys a $ref property by the widget from its ui:definitions entry', () => {
+    const refSchema: RJSFSchema = {
+      type: 'object',
+      definitions: { longText: { type: 'string' } },
+      properties: { bio: { $ref: '#/definitions/longText' }, name: { type: 'string' } },
+    };
+    const classes = getColClasses(
+      { 'ui:definitions': { '#/definitions/longText': { 'ui:widget': 'textarea' } } },
+      { textarea: 24, string: 8 },
+      refSchema,
+    );
+    expect(classes).toHaveLength(2);
+    expect(classes[0]).toContain('ant-col-24');
+    expect(classes[1]).toContain('ant-col-8');
+  });
+
+  it('keys an allOf property by its merged type', () => {
+    const allOfSchema: RJSFSchema = {
+      type: 'object',
+      properties: { name: { allOf: [{ type: 'string' }, { minLength: 1 }] }, other: { type: 'string' } },
+    };
+    const classes = getColClasses({}, { string: 8 }, allOfSchema);
+    expect(classes).toHaveLength(2);
+    classes.forEach((c) => expect(c).toContain('ant-col-8'));
+  });
 });
