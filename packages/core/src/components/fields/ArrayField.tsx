@@ -1027,9 +1027,13 @@ const NO_ITEMS: never[] = [];
 /** Pairs each item of the `formData` prop with a stable React key. Only the keys live in state: the items are read
  * from props on every render, so the rows always show the value the form actually holds, never a proposal the field
  * made and the form did not commit. The keys are UI metadata, kept so that React reuses row instances (and their DOM
- * focus) across accepted adds, removes and reorders. When the array's length changes outside the handlers, an external
- * replacement or a proposal the form transformed, there is no way to tell which rows survived, so every key is
- * regenerated.
+ * focus) across accepted adds, removes and reorders.
+ *
+ * Two sets of rows are kept: `keys`, the rows of the field's latest change, and `confirmed`, the rows of the last data
+ * whose length matched them. Data of the latest change's length uses `keys`, and becomes the confirmed rows. Data of
+ * the confirmed rows' length uses `confirmed`, as when a parent that applies `onChange` later still passes the data
+ * from before the change. Data whose length matches neither, an external replacement or a proposal the form
+ * transformed, gives no way to tell which rows survived, so every key is regenerated.
  */
 function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
@@ -1049,7 +1053,9 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
   } else if (rows.confirmed.length === items.length) {
     // A parent that applies `onChange` later, after an `await` or in a transition, still passes the data from before the
     // field's change, which matches the confirmed rows; keeping those, and the change's rows for when its data arrives,
-    // stops the rows and the order they were added in from being regenerated in between
+    // stops the rows and the order they were added in from being regenerated in between. Only lengths are compared, so
+    // two changes inside one such delay that leave the data at neither length, as a copy and then a remove, regenerate
+    // the keys of the renders in between, until the last change's data arrives
     itemKeys = rows.confirmed;
   } else {
     itemKeys = freshKeys();
