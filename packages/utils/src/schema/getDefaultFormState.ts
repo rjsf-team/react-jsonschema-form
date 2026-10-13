@@ -2,6 +2,7 @@ import type { JSONSchema7Object } from 'json-schema';
 
 import {
   ADDITIONAL_PROPERTIES_KEY,
+  PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   CONST_KEY,
@@ -10,7 +11,9 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
-  RJSF_REF_KEY,
+  THEN_KEY,
+  ELSE_KEY,
+  RJSF_REF_CYCLE_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
@@ -35,6 +38,7 @@ import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
+import { enclosingRefPath, REF_SIBLING_BRANCHES, resolvedFromRef } from '../refOf.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import toConstant from '../toConstant.ts';
 import type {
@@ -294,49 +298,52 @@ export function computeDefaults<
   const uiSchema = uiSchemaDefinitions
     ? resolveUiSchema<T, S, F>(rawSchema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
-  const computeDefaultsProps = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
+  let computeDefaultsProps = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
-  let schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
+  const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   let defaults: T | T[] | null | undefined = parentDefaults;
   const preferParentDefaults = defaults && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
-  // Set by the `dependencies` branch: its resolved schema is the definition merged with the dependency branch, not
-  // the ref's plain materialization, so a materialization marker on it would make the guard above read the round
-  // trip as the recursion the marker annotates and collapse the branch's own defaults (#5349)
-  let stripRefMarker = false;
   let contextToCompute = context;
+  // The path starts as the caller handed it down: the reference this schema was itself resolved from is NOT added
+  // here. The caller's retrieve is what expanded that `$ref` (the way the `$ref` branch below expands one), so it
+  // already sits on the handed-down path when the expansion happened on this descent -- and when the caller's
+  // retrieve ran ahead of the whole computation (the root retrieve of `getDefaultFormState()`), counting it here
+  // would stop a plain recursive schema a level earlier than it did before the path tracking existed, and would
+  // make the stopping depth depend on where the definition is referenced from. What joins the path below is what
+  // THIS descent expands: the `$ref` branch, the `allOf` merge, and the retrieves `getObjectDefaults()` performs.
   let updatedRecurseList = _recurseList;
-  // `RJSF_REF_KEY` marks a schema that `retrieveSchema()` materialized by expanding a `$ref`, which is how a `$ref`
-  // nested inside a keyword (`allOf`, `if`/`then`, `dependencies`) arrives here: already resolved in place, so the
-  // plain `$ref` branch below never sees it. When that ref is already on the recurse list, this node is a recursive
-  // reference reached through the keyword, and descending into the materialized definition would rebuild it level
-  // by level without end. Collapse the node back to the unexpanded `$ref` so the defaults stop at the recursion,
-  // exactly as they do for `child: { $ref: ... }`. A materialized ref not yet on the list is counted once, the way
-  // the plain `$ref` branch counts one expansion, so a recursive definition stops at the same depth through any
-  // keyword. The outermost call is exempt: `getDefaultFormState()` hands its already-retrieved root here, and
-  // counting the root's own expansion would stop a plain recursive schema one level earlier than it does today. The
-  // `dependencies` branch below drops the marker from its merged result, since the merge is the definition plus the
-  // branch rather than the ref's plain materialization, so the round trip through it is never read as the recursion.
-  if (!(REF_KEY in schema)) {
-    const materializedRef = (schema as RJSFMarkedSchema)[RJSF_REF_KEY];
-    if (typeof materializedRef === 'string') {
-      if (_recurseList.includes(materializedRef)) {
-        schema = { [REF_KEY]: materializedRef } as S;
-      } else if ('_recurseList' in inputProps) {
-        updatedRecurseList = _recurseList.concat(materializedRef);
-      }
-    }
-  }
+  // A schema the resolution flagged as a cycle closes the loop: computing below it is what never terminated. The
+  // recursion stops expanding here, but form data reaching this level still gets the level's defaults, computed
+  // with the list as it stands, so the loop cannot grow past the data it fills.
   // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
   let branchUiSchema = uiSchema;
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
+  // A schema the resolution flagged as a cycle closes the loop: computing below it is what never terminated. The
+  // flagged level still expands once, the way a plain `$ref` to the definition does: the reference its own
+  // branches close on seeds the path, so the level below reads it as already expanded and stops there. A flagged
+  // schema whose closing reference is already on the path IS the level below, and stops without expanding.
+  const cycleRefs: string[] =
+    (schema as Record<symbol, unknown>)[RJSF_REF_CYCLE_KEY] === true ? closingRefsOf<S>(schema) : [];
+  // Form data reaching the flagged level still gets the level's defaults, the way the `$ref` branch computes an
+  // in-list reference when data is present: the list is already seeded, so the loop cannot grow past the data.
+  const isCycle = cycleRefs.some((ref) => _recurseList.includes(ref)) && isEmptyFormData(rawFormData);
+  if (cycleRefs.length > 0 && !isCycle) {
+    updatedRecurseList = _recurseList.concat(cycleRefs.filter((ref) => !_recurseList.includes(ref)));
+    // The seeded path is this node's path from here on: the fall-through computes below (object properties,
+    // array items) hand it down, the way the expansion branches above hand theirs down. `getObjectDefaults()`
+    // takes the seeds back off for the one retrieve of this level still due; they stay on for the children.
+    computeDefaultsProps = { ...computeDefaultsProps, _recurseList: updatedRecurseList };
+  }
   const xxxOf = getXxxOfOptions<S>(schema);
-  if (
+  if (isCycle) {
+    // Expansion branches skipped
+  } else if (
     schema[CONST_KEY] !== undefined &&
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
     !constIsAjvDataReference(schema)
@@ -367,8 +374,16 @@ export function computeDefaults<
   } else if (REF_KEY in schema) {
     const refName = schema[REF_KEY];
     // Use referenced schema defaults for this node.
+    // Checked against the list as handed in, not the cycle-seeded one: the first expansion of a flagged schema's
+    // own `$ref` is the level that still happens; the seed is what stops the level below.
     if (!_recurseList.includes(refName!)) {
-      updatedRecurseList = _recurseList.concat(refName!);
+      updatedRecurseList = updatedRecurseList.includes(refName!)
+        ? updatedRecurseList
+        : updatedRecurseList.concat(refName!);
+      schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
+    } else if (!isEmptyFormData(rawFormData)) {
+      // The recursion stops expanding here, but form data reaching this level still gets the level's defaults:
+      // the definition is computed with the list as it stands, so the loop cannot grow past the data it fills.
       schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
     }
 
@@ -389,16 +404,53 @@ export function computeDefaults<
         : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
+    // The path an entry resolves against is the path its merged schema computes against: the entry's content
+    // is the definition's own, so the reference that materialized this schema stays on it, and a `$ref` the
+    // entry holds back to that definition reads as the recursion it is rather than expanding one more level.
+    const dependenciesPath = enclosingRefPath<S>(schema, updatedRecurseList, DEPENDENCIES_KEY);
+    // A dependency entry that is a plain `$ref` already expanded on this path materializes the very definition
+    // this frame is computing. Expanding it again hands the same form data to the same reference, so the data
+    // never shrinks and the `$ref` branch's stop never fires: leave the entry out. The frame's own schema is
+    // the content the entry would merge in, so nothing it described is lost.
+    let schemaToResolve = schema;
+    // Read without a fallback: reaching this branch means the key is present, and a non-object value fails
+    // validation long before defaults are computed, so there is no empty side for a test to take
+    const dependencyEntries = Object.entries(schema[DEPENDENCIES_KEY] as Record<string, unknown>);
+    const liveEntries = dependencyEntries.filter(
+      ([, entry]) =>
+        !(isObject(entry) && REF_KEY in entry && updatedRecurseList.includes((entry as S)[REF_KEY] as string)),
+    );
+    if (liveEntries.length !== dependencyEntries.length) {
+      schemaToResolve = { ...schema, [DEPENDENCIES_KEY]: Object.fromEntries(liveEntries) };
+    }
     const resolvedSchema = resolveDependencies<T, S, F>(
       context,
-      schema,
+      schemaToResolve,
       rootSchema,
       false,
-      updatedRecurseList,
+      dependenciesPath,
       defaultFormData,
     );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
-    stripRefMarker = true;
+    // An entry that is itself a `$ref` materializes the definition into the merged schema: that expansion joins
+    // the path, so the definition's own content below does not resolve the same entry back in.
+    const entryRef = resolvedFromRef<S>(schemaToCompute);
+    if (entryRef && !updatedRecurseList.includes(entryRef)) {
+      updatedRecurseList = updatedRecurseList.concat(entryRef);
+    }
+    // An entry holding a `$ref` among its properties has it expanded by the resolve: the reference each
+    // materialized property came from joins the path, so the definition's own content below reads its
+    // reappearance in the entry as the recursion it is.
+    for (const value of Object.values(schemaToCompute?.[PROPERTIES_KEY] ?? {})) {
+      const propertyRef = resolvedFromRef<S>(value as S);
+      if (propertyRef && !updatedRecurseList.includes(propertyRef)) {
+        updatedRecurseList = updatedRecurseList.concat(propertyRef);
+      }
+    }
+    updatedRecurseList = dependenciesPath.reduce(
+      (list: string[], ref: string) => (list.includes(ref) ? list : list.concat(ref)),
+      updatedRecurseList,
+    );
   } else if (isFixedItems(schema) && !preferParentDefaults) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items.
@@ -406,7 +458,7 @@ export function computeDefaults<
       computeDefaults<T, S, F>(context, itemSchema, {
         rootSchema,
         includeUndefinedValues,
-        _recurseList,
+        _recurseList: updatedRecurseList,
         parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         rawFormData: formData,
         required,
@@ -470,22 +522,33 @@ export function computeDefaults<
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
     // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
     // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
-    schemaToCompute = retrieveSchema<T, S, F>(context, schema, rootSchema, rawFormData);
+    // The retrieve is seeded off the path as handed in - the cycle seeds come back off for it, the way
+    // `getObjectDefaults()` takes them off for its own retrieve: this retrieve is the one expansion still due.
+    const pathWithOwnRef = enclosingRefPath<S>(schema, _recurseList);
+    [schemaToCompute] = retrieveSchemaInternal<T, S, F>(
+      context,
+      schema,
+      rootSchema,
+      rawFormData,
+      false,
+      pathWithOwnRef,
+    );
+    // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
+    // expanded joins the path the nested compute runs against - built on the cycle-seeded path, so the seeds a
+    // flagged schema arrived with stay on for the content below. The schema's own arrival reference joins it
+    // only when the `allOf` itself declares a `$ref`: then the merged content's references back to the arrival
+    // reference are the recursion to stop. An `allOf` that declares none merges configuration, not content -
+    // the arrival expansion the caller's retrieve already ran is not counted a second time, the same reason a
+    // materialized property is not counted at the top of this function.
+    const mergeDeclaresRef =
+      Array.isArray(schema[ALL_OF_KEY]) &&
+      (schema[ALL_OF_KEY] as S[]).some((entry) => isObject(entry) && REF_KEY in entry);
+    updatedRecurseList = mergeDeclaresRef
+      ? enclosingRefPath<S>(schemaToCompute, enclosingRefPath<S>(schema, updatedRecurseList))
+      : updatedRecurseList;
   }
 
   if (schemaToCompute) {
-    if (stripRefMarker) {
-      // Drop the materialization marker before the recursion (see the declaration), moving the ref onto the recurse
-      // list instead so the nested resolutions stay seeded and a branch that refers back still terminates
-      const strippedRef = (schemaToCompute as RJSFMarkedSchema)[RJSF_REF_KEY];
-      if (typeof strippedRef === 'string') {
-        const withoutMarker = { ...schemaToCompute };
-        delete (withoutMarker as RJSFMarkedSchema)[RJSF_REF_KEY];
-        schemaToCompute = withoutMarker;
-        // A repeat only makes the list hold the ref twice, which the `includes()` reads do not mind
-        updatedRecurseList = updatedRecurseList.concat(strippedRef);
-      }
-    }
     return computeDefaults<T, S, F>(contextToCompute, schemaToCompute, {
       rootSchema,
       includeUndefinedValues,
@@ -518,13 +581,18 @@ export function computeDefaults<
     }
   }
 
-  const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(
-    context,
-    schema,
-    { ...computeDefaultsProps, _recurseList: updatedRecurseList },
-    defaults,
-    isWholeValue,
-  );
+  const defaultBasedOnSchemaType = isCycle
+    ? undefined
+    : getDefaultBasedOnSchemaType(
+        context,
+        schema,
+        // The path the type-based computation descends with: what this call expanded joins it, while the reference
+        // the schema arrived resolved from stays off it, so a recursion stops at the depth it always stopped at,
+        // wherever the definition was referenced from.
+        { ...computeDefaultsProps, _recurseList: updatedRecurseList },
+        defaults,
+        isWholeValue,
+      );
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
   // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
@@ -595,6 +663,41 @@ export function ensureFormDataMatchingSchema<
   return validFormData;
 }
 
+/** Collects the `$ref`s a flagged-cycle schema's own branches hold: its top-level `$ref`, its `allOf` entries,
+ * and its `then`/`else` branches. These are the references the resolution found closing on the current path when it
+ * set `RJSF_REF_CYCLE_KEY`, and seeding the path with them is what stops the descent one level below the flagged
+ * schema, at the depth a plain `$ref` to the same definition stops.
+ *
+ * @param schema - The flagged schema whose branch references are collected
+ * @returns - The deduplicated list of references its branches declare
+ */
+function closingRefsOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S): string[] {
+  const refs = new Set<string>();
+  // Every `$ref` the schema's own content declares counts, including the ones a keyword holds a level or more
+  // down (`then.properties.x.$ref`): `branchClosesOnPath()` searches that same content when it flags the schema,
+  // and the seeds are what let the level below read the closing reference as already expanded. Only the
+  // declaration is collected here; whether the ref actually closes on the path is decided by the callers, who
+  // check the seeds against the path they were handed.
+  const collect = (node: unknown): void => {
+    if (Array.isArray(node)) {
+      node.forEach(collect);
+      return;
+    }
+    if (!isObject(node)) {
+      return;
+    }
+    for (const [key, value] of Object.entries(node)) {
+      if (key === REF_KEY && typeof value === 'string') {
+        refs.add(value);
+      } else {
+        collect(value);
+      }
+    }
+  };
+  collect(schema);
+  return [...refs];
+}
+
 /** Computes the default value for objects.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -634,32 +737,58 @@ export function getObjectDefaults<
     const shouldRetrieveSchema =
       shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) ||
       (defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in schema);
-    // A condition's `then`/`else` is resolved through `retrieveSchemaInternal()` with the defaults recursion path
-    // threaded through: a branch that refers back to a definition this descent already expanded collapses there
-    // instead of materializing the definition again, which is what looped the defaults of a recursion reached
-    // through `if`/`then` without end. The `allOf` branch keeps the plain retrieve: its marker handling is what
-    // the materialization guard in `computeDefaults()` reads.
-    let retrievedSchema = schema;
-    if (shouldRetrieveSchema) {
-      retrievedSchema =
-        IF_KEY in schema
-          ? retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, formData, undefined, _recurseList)[0]
-          : retrieveSchema<T, S, F>(context, schema, rootSchema, formData);
-    }
-    // A retrieved schema materialized by expanding a `$ref` carries that ref as `RJSF_REF_KEY`. Counting it on the
-    // descent is what stops a recursion reached through a keyword: the next level's retrieve or `$ref` branch
-    // reads the ref on the path and collapses, the way a plain `child: { $ref }` stops. Without the count the
-    // descent re-expands the definition at every level and the defaults never terminate. Reaching this node with
-    // the ref already counted means the expansion looped back to a definition this descent already built, so the
-    // defaults stop here, exactly as `computeDefaults()` collapses the materialization to the bare `$ref`.
-    let descendList = _recurseList;
-    const retrievedRef = (retrievedSchema as RJSFMarkedSchema)[RJSF_REF_KEY];
-    if (typeof retrievedRef === 'string' && retrievedSchema !== schema) {
-      if (_recurseList.includes(retrievedRef)) {
-        return (defaults ?? {}) as T;
-      }
-      descendList = _recurseList.concat(retrievedRef);
-    }
+    // A flagged-cycle schema was given the references its branches close on as seeds on the path, so the level
+    // below stops. The retrieve of THIS level is the one expansion still due, so the seeds come back off for it;
+    // they stay on for the children computed below.
+    const cycleSeed = (schema as Record<symbol, unknown>)[RJSF_REF_CYCLE_KEY] === true ? closingRefsOf<S>(schema) : [];
+    const retrieveList = cycleSeed.length > 0 ? _recurseList.filter((ref) => !cycleSeed.includes(ref)) : _recurseList;
+    const [retrievedSchema] = shouldRetrieveSchema
+      ? retrieveSchemaInternal<T, S, F>(
+          context,
+          schema,
+          rootSchema,
+          formData,
+          false,
+          // The branches this retrieve resolves are not part of the definition when they stood beside the
+          // `$ref`, so the schema's own reference stays off the path their `$ref`s resolve against
+          Reflect.get(schema, REF_SIBLING_BRANCHES) !== undefined
+            ? retrieveList.filter((ref) => ref !== resolvedFromRef<S>(schema))
+            : enclosingRefPath<S>(schema, retrieveList),
+        )
+      : [schema];
+    // The properties compute against the path as it was handed in: a `$ref` the retrieve expanded out of an `allOf`
+    // or a `then`/`else` does NOT join it. Counting that ref reads any other use of the same definition below this
+    // object as a recursion (the shared-ref false cycle of #5434 on the defaults side), and the genuine recursion -
+    // a definition whose own content leads back to it - already arrives flagged by the retrieve as
+    // `RJSF_REF_CYCLE_KEY`, which `computeDefaults()` stops at.
+    // A property the retrieve materialized from a `$ref` (a `then`/`else` branch holding one) carries its
+    // source reference: it joins the path the properties compute against, so the definition's own content
+    // below reads its reappearance inside the branch as the recursion it is.
+    // The retrieve's own `allOf` merge materializes the schema itself from a reference: that expansion joins
+    // the path too. A schema the retrieve left untouched keeps its arrival reference off the path, the way
+    // `computeDefaults()` hands it down.
+    const mergedRef =
+      shouldRetrieveSchema && Reflect.get(retrievedSchema, REF_SIBLING_BRANCHES) === undefined
+        ? resolvedFromRef<S>(retrievedSchema)
+        : undefined;
+    // A property THIS frame's own retrieve materialized from a `$ref` joins the path its compute runs against:
+    // the expansion happened on this descent, and the recursion it leads into is not always flagged -
+    // `resolveAllReferences()` deliberately leaves array items unflagged, so the path is the only thing the
+    // level below stops at. A property that arrived already materialized - the root retrieve of
+    // `getDefaultFormState()` ran ahead of the whole computation - does NOT join it: counting that expansion
+    // stops a plain recursive schema a level earlier than it has ever stopped (the depth a root-level `$ref`
+    // produces is two levels of defaults, not one). That recursion arrives flagged `RJSF_REF_CYCLE_KEY`, and
+    // `computeDefaults()` seeds the path from the flagged schema's own closing references.
+    const materializedRefs = shouldRetrieveSchema
+      ? Object.values(retrievedSchema.properties ?? {})
+          .filter((value) => isObject(value) && Reflect.get(value, REF_SIBLING_BRANCHES) === undefined)
+          .map((value) => resolvedFromRef<S>(value as S))
+          .filter((ref): ref is string => ref !== undefined)
+      : [];
+    const seededRefs = (mergedRef ? [mergedRef] : [])
+      .concat(materializedRefs)
+      .filter((ref, idx, all) => all.indexOf(ref) === idx && !_recurseList.includes(ref));
+    const childRecurseList = _recurseList.concat(seededRefs);
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties ?? {}).reduce(
       (acc: GenericObjectType, key: string) => {
@@ -679,7 +808,7 @@ export function getObjectDefaults<
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
           rootSchema,
-          _recurseList: descendList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
@@ -734,7 +863,7 @@ export function getObjectDefaults<
       keys.forEach((key) => {
         const computedDefault = computeDefaults(context, additionalPropertiesSchema as S, {
           rootSchema,
-          _recurseList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
@@ -814,6 +943,15 @@ export function getArrayDefaults<
   const { defaultFormStateBehavior } = context;
   let defaults = initialDefaults;
   const schema: S = rawSchema;
+  // Items materialized from a `$ref` (an `allOf` entry holding one) carry its source reference: it joins the
+  // path the items compute against, the way the retrieve-materialized properties join it in
+  // `getObjectDefaults()`, so the definition's own content below reads its reappearance as the recursion it is.
+  const itemsSchema = getInnerSchemaForArrayItem<S>(schema);
+  const itemsRef =
+    isObject(itemsSchema) && Reflect.get(itemsSchema, REF_SIBLING_BRANCHES) === undefined
+      ? resolvedFromRef<S>(itemsSchema)
+      : undefined;
+  const itemRecurseList = itemsRef && !_recurseList.includes(itemsRef) ? _recurseList.concat(itemsRef) : _recurseList;
 
   const arrayMinItemsStateBehavior = defaultFormStateBehavior?.arrayMinItems ?? {};
   const { populate: arrayMinItemsPopulate, mergeExtraDefaults: arrayMergeExtraDefaults } = arrayMinItemsStateBehavior;
@@ -833,7 +971,7 @@ export function getArrayDefaults<
       const itemFormData = Array.isArray(rawFormData) ? rawFormData[idx] : undefined;
       return computeDefaults<T, S, F>(context, schemaItem, {
         rootSchema,
-        _recurseList,
+        _recurseList: itemRecurseList,
         parentDefaults: item,
         rawFormData: itemFormData,
         required,
@@ -854,7 +992,7 @@ export function getArrayDefaults<
       const itemDefaults = rawFormData.map((item: T, idx: number) =>
         computeDefaults<T, S, F>(context, schemaItem, {
           rootSchema,
-          _recurseList,
+          _recurseList: itemRecurseList,
           rawFormData: item,
           parentDefaults: getByPath<T>(defaults, idx),
           required,
@@ -910,7 +1048,7 @@ export function getArrayDefaults<
       computeDefaults<unknown, S, F>(context, fillerSchema, {
         parentDefaults: fillerDefault,
         rootSchema,
-        _recurseList,
+        _recurseList: itemRecurseList,
         required,
         shouldMergeDefaultsIntoFormData,
         initialDefaultsGenerated,

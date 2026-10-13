@@ -13,6 +13,7 @@ import {
   RJSF_REF_KEY,
   noop,
 } from '../../src/index.ts';
+import { REF_SIBLING_BRANCHES } from '../../src/refOf.ts';
 import {
   getAdditionalPropertyType,
   getAllPermutationsOfXxxOf,
@@ -1050,6 +1051,53 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               },
             });
           });
+          it('flags a cycle that closes through a second definition in a branch', () => {
+            const inner: RJSFSchema = {
+              type: 'object',
+              properties: { child: { $ref: '#/definitions/outer' } },
+            };
+            const shape: RJSFSchema = {
+              type: 'object',
+              properties: { name: { type: 'string' }, extra: false as unknown as RJSFSchema },
+              if: {},
+              then: {
+                allOf: [
+                  { if: { required: ['x'] } },
+                  { $ref: '#/definitions/missing' },
+                  { $ref: '#/definitions/inner' },
+                ],
+              },
+              else: { properties: { e: { type: 'string' } } },
+            };
+            const outer: RJSFSchema = {
+              type: 'object',
+              properties: { p: { $ref: '#/definitions/shape' } },
+            };
+            const schema: RJSFSchema = {
+              definitions: { inner, shape, outer },
+              $ref: '#/definitions/outer',
+            };
+            const result = retrieveSchema({ validator: testValidator }, schema, schema, {});
+            // The branch search follows a ref into the definition it names, so the cycle closing back on the path
+            // through `inner` flags the property the branch belongs to. A ref that does not resolve is skipped by
+            // the search and throws where it is actually expanded, and a boolean subschema or a branch that is
+            // not there does not close
+            expect(result.properties!.p).toEqual({
+              type: 'object',
+              properties: { name: { type: 'string' }, extra: false },
+              if: {},
+              then: {
+                allOf: [
+                  { if: { required: ['x'] } },
+                  { $ref: '#/definitions/missing' },
+                  { $ref: '#/definitions/inner' },
+                ],
+              },
+              else: { properties: { e: { type: 'string' } } },
+              [RJSF_REF_KEY]: '#/definitions/shape',
+              [RJSF_REF_CYCLE_KEY]: true,
+            });
+          });
           it('collapses a self-referencing property after one level', () => {
             const node: RJSFSchema = {
               type: 'object',
@@ -1284,7 +1332,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               [RJSF_REF_KEY]: '#/definitions/node',
             });
           });
-          it('collapses a dependent property that points back at its enclosing definition', () => {
+          it('flags a dependent property that points back at its enclosing definition as a cycle', () => {
             const node: RJSFSchema = {
               type: 'object',
               properties: { k: { type: 'string' } },
@@ -1296,8 +1344,60 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             });
             expect(result).toEqual({
               type: 'object',
-              properties: { k: { type: 'string' }, child: { $ref: '#/definitions/node' } },
+              properties: { k: { type: 'string' }, child: { $ref: '#/definitions/node', [RJSF_REF_CYCLE_KEY]: true } },
               [RJSF_REF_KEY]: '#/definitions/node',
+            });
+          });
+          it.each<[string, RJSFSchema]>([
+            ['an allOf entry', { allOf: [{ properties: { child: { $ref: '#/definitions/node' } } }] }],
+            ['a then branch', { if: {}, then: { properties: { child: { $ref: '#/definitions/node' } } } }],
+          ])(
+            'flags a property %s declares that points back at the definition the schema was resolved from',
+            (_, branch) => {
+              // The schema a field is handed once its parent's walk has expanded its `$ref` in place: the definition
+              // under its marker, with the branch still to resolve
+              const node: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, ...branch };
+              const resolvedInPlace = { ...node, [RJSF_REF_KEY]: '#/definitions/node' };
+              const result = retrieveSchema({ validator: testValidator }, resolvedInPlace, { definitions: { node } });
+              expect(result).toEqual({
+                type: 'object',
+                properties: {
+                  name: { type: 'string' },
+                  child: { $ref: '#/definitions/node', [RJSF_REF_CYCLE_KEY]: true },
+                },
+                [RJSF_REF_KEY]: '#/definitions/node',
+              });
+            },
+          );
+          describe('a branch beside a $ref that uses the definition a second time', () => {
+            const Q: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
+            const friend: RJSFSchema = { properties: { friend: { $ref: '#/definitions/Q' } } };
+            const expanded = { ...Q, [RJSF_REF_KEY]: '#/definitions/Q' };
+            const formData = { name: 'n' };
+            const siblings: [string, RJSFSchema][] = [
+              ['an allOf entry', { allOf: [friend] }],
+              ['a then branch', { if: {}, then: friend }],
+              ['a dependencies entry', { dependencies: { name: friend } }],
+            ];
+
+            it.each(siblings)('expands the property %s declares, with the $ref at the root', (_, sibling) => {
+              // The branch stands beside the `$ref` rather than in the definition, so it is not inside what the
+              // `$ref` expanded to
+              const schema: RJSFSchema = { definitions: { Q }, $ref: '#/definitions/Q', ...sibling };
+              const result = retrieveSchema({ validator: testValidator }, schema, schema, formData);
+              expect(result.properties?.friend).toEqual(expanded);
+            });
+
+            it.each(siblings)('expands the property %s declares, with the $ref in a property', (_, sibling) => {
+              const schema: RJSFSchema = {
+                definitions: { Q },
+                type: 'object',
+                properties: { b: { $ref: '#/definitions/Q', ...sibling } },
+              };
+              // The schema the field of `b` is handed: its `$ref` expanded in place, with the branch still to resolve
+              const b = retrieveSchema({ validator: testValidator }, schema, schema, { b: formData }).properties?.b;
+              const result = retrieveSchema({ validator: testValidator }, isObject(b) ? b : {}, schema, formData);
+              expect(result.properties?.friend).toEqual(expanded);
             });
           });
           it('collapses an OpenAPI-style discriminator pair that loops through if/then and allOf', () => {
@@ -3916,6 +4016,25 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ]);
       });
     });
+    it('resolveAllReferences() returns the schema it was given when there is no reference to resolve', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' }, list: { type: 'array', items: { type: 'string' } } },
+        oneOf: [{ title: 'A' }, { title: 'B' }],
+      };
+      expect(resolveAllReferences(schema, schema, [], undefined, true)).toBe(schema);
+    });
+    it('resolveAllReferences() keeps the subschemas beside the one it resolves', () => {
+      const untouched: RJSFSchema = { type: 'object', properties: { x: { type: 'string' } } };
+      const schema: RJSFSchema = {
+        definitions: { d: { type: 'string' } },
+        type: 'object',
+        properties: { a: untouched, b: { $ref: '#/definitions/d' } },
+      };
+      const result = resolveAllReferences(schema, schema, []);
+      expect(result.properties?.a).toBe(untouched);
+      expect(result.properties?.b).toEqual({ type: 'string', [RJSF_REF_KEY]: '#/definitions/d' });
+    });
     it('resolveAllReferences() resolves the references of a oneOf beside an empty anyOf', () => {
       const schema: RJSFSchema = {
         definitions: { name: { type: 'string' } },
@@ -4391,6 +4510,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
           allOf: undefined,
           [RJSF_REF_KEY]: '#/definitions/baseSchema',
+          [REF_SIBLING_BRANCHES]: ['dependencies'],
         });
       });
       it('should handle customMergeAllOf with nested $ref resolution', () => {
@@ -4472,6 +4592,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             base: { type: 'string' },
           },
           [RJSF_REF_KEY]: '#/definitions/testRef',
+          [REF_SIBLING_BRANCHES]: ['dependencies'],
         });
       });
       it('should handle customMergeAllOf that throws an error', () => {

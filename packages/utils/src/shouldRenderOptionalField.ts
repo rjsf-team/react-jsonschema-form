@@ -1,9 +1,10 @@
+import { ROOT_FIELD_PATH } from './fieldPath.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUiOptions from './getUiOptions.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
 import isObject from './isObject.ts';
-import isRootSchema from './isRootSchema.ts';
 import type {
+  FieldPath,
   FormContextType,
   GlobalUISchemaOptions,
   Registry,
@@ -66,22 +67,30 @@ export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F exte
 
 /** Determines whether the field information from the combination of `schema` and `required` along with the
  * `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
- * should be rendered with the Optional Data Controls UI.
+ * should be rendered with the Optional Data Controls UI. The root field never is: it is the form itself, which has no
+ * parent to leave it out of.
  *
  * @param registry - The `registry` object
  * @param schema - The schema for the field
  * @param required - Flag indicating whether the field is required
- * @param [uiSchema] - The uiSchema for the field
+ * @param uiSchema - The uiSchema for the field, if any
+ * @param fieldPath - The `FieldPath` of the field, which is `ROOT_FIELD_PATH` for the root field
  * @return - True if the field should be rendered with the optional field UI, otherwise false
  */
 export default function shouldRenderOptionalField<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(registry: Registry<T, S, F>, schema: S, required: boolean, uiSchema?: UiSchema<T, S, F>): boolean {
+>(
+  registry: Registry<T, S, F>,
+  schema: S,
+  required: boolean,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  fieldPath: FieldPath,
+): boolean {
   return (
+    fieldPath !== ROOT_FIELD_PATH &&
     !required &&
-    isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions) &&
-    !isRootSchema<T, S, F>(registry, schema)
+    isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions)
   );
 }
