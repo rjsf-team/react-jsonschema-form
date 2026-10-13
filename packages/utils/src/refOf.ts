@@ -45,13 +45,35 @@ export function resolvedSchemaOf<S extends StrictRJSFSchema = RJSFSchema>(
   definition: S,
   siblings: object,
 ): S {
-  const siblingBranches = BRANCH_KEYWORDS.filter((keyword) => keyword in siblings);
-  return {
-    ...definition,
-    ...siblings,
-    [RJSF_REF_KEY]: ref,
-    ...(siblingBranches.length > 0 && { [REF_SIBLING_BRANCHES]: siblingBranches }),
-  };
+  let siblingBranches: string[] | undefined;
+  for (const keyword of BRANCH_KEYWORDS) {
+    if (keyword in siblings) {
+      (siblingBranches ??= []).push(keyword);
+    }
+  }
+  if (siblingBranches) {
+    return { ...definition, ...siblings, [RJSF_REF_KEY]: ref, [REF_SIBLING_BRANCHES]: siblingBranches };
+  }
+  const resolved = { ...definition, ...siblings, [RJSF_REF_KEY]: ref };
+  // A list the definition or the siblings carry from an earlier resolution is not this reference's
+  if (REF_SIBLING_BRANCHES in resolved) {
+    Reflect.deleteProperty(resolved, REF_SIBLING_BRANCHES);
+  }
+  return resolved;
+}
+
+/** Returns the branch keywords that stood beside the `$ref` the given `schema` was resolved from, which
+ * `resolvedSchemaOf()` marks it with.
+ *
+ * @param schema - The schema to read the marker off, if it is one that can carry it at all
+ * @returns - The branch keywords from beside the `$ref`, or undefined when there were none
+ */
+export function refSiblingBranches(schema: unknown): unknown[] | undefined {
+  if (typeof schema !== 'object' || schema === null || !(REF_SIBLING_BRANCHES in schema)) {
+    return undefined;
+  }
+  const siblingBranches = schema[REF_SIBLING_BRANCHES];
+  return Array.isArray(siblingBranches) ? siblingBranches : undefined;
 }
 
 /** Returns the resolution path for what a `schema` holds, which is the path `schema` was reached by plus the reference
@@ -76,8 +98,5 @@ export function enclosingRefPath<S extends StrictRJSFSchema = RJSFSchema>(
   if (sourceRef === undefined || recurseList.includes(sourceRef)) {
     return recurseList;
   }
-  const siblingBranches: unknown = Reflect.get(schema, REF_SIBLING_BRANCHES);
-  return Array.isArray(siblingBranches) && siblingBranches.includes(keyword)
-    ? recurseList
-    : [...recurseList, sourceRef];
+  return refSiblingBranches(schema)?.includes(keyword) ? recurseList : [...recurseList, sourceRef];
 }
