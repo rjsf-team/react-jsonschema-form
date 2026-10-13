@@ -4,6 +4,7 @@ import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import type { MockInstance } from 'vitest';
 
 import Templates from '../src/templates/index.ts';
 import CheckboxesWidget from '../src/widgets/CheckboxesWidget.tsx';
@@ -52,6 +53,29 @@ function renderWidget(props: Partial<WidgetProps> = {}) {
     </MantineProvider>,
   );
 }
+
+describe('CheckboxesWidget with the itemLabel array option', () => {
+  let consoleError: MockInstance<typeof console.error>;
+  beforeEach(() => {
+    consoleError = vi.spyOn(console, 'error');
+  });
+  afterEach(() => {
+    consoleError.mockRestore();
+  });
+
+  it('does not pass itemLabel on to the Mantine checkbox group', () => {
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ 'ui:widget': 'CheckboxesWidget', 'ui:options': { itemLabel: 'name' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('[itemlabel], [itemLabel]')).toBeNull();
+    expect(consoleError.mock.calls.flat().join(' ')).not.toContain('itemLabel');
+  });
+});
 
 describe('Checkboxes', () => {
   test('renders with description from options', () => {
@@ -118,6 +142,13 @@ describe('Checkboxes', () => {
       screen.getAllByRole('checkbox').forEach((checkbox) => expect(checkbox).not.toBeChecked());
     },
   );
+});
+
+describe('CheckboxesWidget', () => {
+  test.each(['disabled', 'readonly'] as const)('disables every option of a %s field', (state) => {
+    renderWidget({ [state]: true });
+    screen.getAllByRole('checkbox').forEach((checkbox) => expect(checkbox).toBeDisabled());
+  });
 });
 
 describe('CheckboxesWidget focus and blur', () => {

@@ -308,4 +308,19 @@ describe('DateTimeWidget', () => {
 
     expect(container.querySelector('button[aria-haspopup]')).toHaveAccessibleDescription(/Apr 5, 2016/);
   });
+
+  test("translates the Done button and the time input's label", async () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'date-time' }}
+        validator={validator}
+        translateString={(key) => `translated ${key}`}
+      />,
+    );
+
+    await openPicker(container);
+
+    expect(screen.getByRole('button', { name: 'translated Done' })).toBeInTheDocument();
+    expect(screen.getByLabelText('translated Time')).toBeInTheDocument();
+  });
 });

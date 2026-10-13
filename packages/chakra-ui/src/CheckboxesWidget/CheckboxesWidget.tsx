@@ -3,6 +3,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -49,8 +50,7 @@ export default function CheckboxesWidget<
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const itemDisabled =
-                Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value);
+              const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
               return (
                 <Checkbox
                   // oxlint-disable-next-line react/no-array-index-key

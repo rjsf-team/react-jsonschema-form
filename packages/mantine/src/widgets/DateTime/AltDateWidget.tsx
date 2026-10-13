@@ -5,11 +5,20 @@ import type {
   DateObject,
   FormContextType,
   GenericObjectType,
+  Registry,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { dateRangeOptions, isObject, titleId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import {
+  dateElementAriaLabel,
+  dateElementId,
+  dateElementLabel,
+  dateRangeOptions,
+  isObject,
+  TranslatableString,
+  useAltDateWidgetProps,
+} from '@rjsf/utils';
 
 import { useAriaDescribedByProps, useFieldWrapperProps, useShownSuccessId } from '../../utils.tsx';
 
@@ -22,15 +31,16 @@ interface AltDatePartProps {
   required?: boolean;
   invalid: boolean;
   success: boolean;
-  labelled: boolean;
+  label?: string;
+  translateString: Registry['translateString'];
   onChange: (property: keyof DateObject, value?: string) => void;
   onBlur: (id: string, value: unknown) => void;
   onFocus: (id: string, value: unknown) => void;
 }
 
-/** One part of the date, such as the year, as a `Select` with its own id. The part is named by the field's title
- * followed by its own `aria-label`, which a self-reference in `aria-labelledby` resolves to, and which Mantine also
- * gives the part's listbox.
+/** One part of the date, such as the year, as a `Select` with its own id. The part is named by the same
+ * `aria-label` every theme's `DateElement` gives its selects, such as `When, year`, which Mantine also gives the
+ * part's listbox.
  */
 function AltDatePart({
   id,
@@ -41,14 +51,16 @@ function AltDatePart({
   required,
   invalid,
   success,
-  labelled,
+  label,
+  translateString,
   onChange,
   onBlur,
   onFocus,
 }: AltDatePartProps) {
-  const partId = `${id}_${part.type}`;
   // The widget's state holds -1 for an unset part
   const partValue = part.value === undefined || part.value < 0 ? undefined : part.value;
+  const partId = dateElementId(id, part.type);
+  const partLabel = dateElementLabel(part.type, translateString);
   const [start, end] = part.range;
   const data = useMemo(() => dateRangeOptions(start, end).map((item) => item.value.toString()), [start, end]);
   const handleChange = useCallback(
@@ -62,9 +74,8 @@ function AltDatePart({
       <Select
         id={partId}
         name={partId}
-        placeholder={part.type}
-        aria-label={part.type}
-        aria-labelledby={labelled ? `${titleId(id)} ${partId}` : undefined}
+        placeholder={partLabel}
+        aria-label={dateElementAriaLabel(partLabel, translateString, label)}
         disabled={disabled}
         autoFocus={autofocus}
         // The parts are read-only while `searchable` is false, so this adds no constraint validation
@@ -135,7 +146,7 @@ export default function AltDateWidget<
   const { id, disabled, readonly, autofocus, required, label, options, registry, onBlur, onFocus } = props;
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
-  const { wrapperProps, hiddenTitle, invalid, successId } = useFieldWrapperProps(props, true);
+  const { wrapperProps, invalid, successId } = useFieldWrapperProps(props, true);
   const { inputContainer, wrapperProps: fieldWrapperProps } = options;
   // Each part renders the field's `inputContainer` in its own wrapper, rather than the field's wrapper around them all,
   // resolved as for any input. The field's own wrapper applies the rest of its `wrapperProps`, so only their
@@ -150,39 +161,37 @@ export default function AltDateWidget<
     [fieldWrapperProps],
   );
   return (
-    <>
-      {hiddenTitle}
-      <Input.Wrapper {...wrapperProps}>
-        <Flex gap='xs' align='center' wrap='nowrap'>
-          <AltDateParts
-            id={id}
-            elements={elements}
-            inputContainer={inputContainer}
-            wrapperOverrides={wrapperOverrides}
-            disabled={disabled || readonly}
-            autofocus={autofocus}
-            required={required}
-            invalid={invalid}
-            labelled={!!label}
-            fieldSuccessId={successId}
-            onChange={handleChange}
-            onBlur={onBlur}
-            onFocus={onFocus}
-          />
-          <Group wrap='nowrap' gap={3}>
-            {!options.hideNowButton && (
-              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>
-                {translateString(TranslatableString.NowLabel)}
-              </Button>
-            )}
-            {!options.hideClearButton && (
-              <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleClear}>
-                {translateString(TranslatableString.ClearLabel)}
-              </Button>
-            )}
-          </Group>
-        </Flex>
-      </Input.Wrapper>
-    </>
+    <Input.Wrapper {...wrapperProps}>
+      <Flex gap='xs' align='center' wrap='nowrap'>
+        <AltDateParts
+          id={id}
+          elements={elements}
+          inputContainer={inputContainer}
+          wrapperOverrides={wrapperOverrides}
+          disabled={disabled || readonly}
+          autofocus={autofocus}
+          required={required}
+          invalid={invalid}
+          label={label}
+          translateString={translateString}
+          fieldSuccessId={successId}
+          onChange={handleChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+        />
+        <Group wrap='nowrap' gap={3}>
+          {!options.hideNowButton && (
+            <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleSetNow}>
+              {translateString(TranslatableString.NowLabel)}
+            </Button>
+          )}
+          {!options.hideClearButton && (
+            <Button variant='subtle' size='xs' disabled={disabled || readonly} onClick={handleClear}>
+              {translateString(TranslatableString.ClearLabel)}
+            </Button>
+          )}
+        </Group>
+      </Flex>
+    </Input.Wrapper>
   );
 }

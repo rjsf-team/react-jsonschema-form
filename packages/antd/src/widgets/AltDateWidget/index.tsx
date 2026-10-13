@@ -1,5 +1,5 @@
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, dateElementId, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 import { Row, Col, Button } from 'antd';
 
 export default function AltDateWidget<
@@ -7,7 +7,17 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { autofocus = false, disabled = false, id, name, onBlur, onFocus, options, readonly = false, registry } = props;
+  const {
+    autofocus = false,
+    disabled = false,
+    id,
+    label,
+    onBlur,
+    onFocus,
+    options,
+    readonly = false,
+    registry,
+  } = props;
   const { formContext, translateString } = registry;
   const { rowGutter = 24 } = formContext as GenericObjectType;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
@@ -15,12 +25,12 @@ export default function AltDateWidget<
   return (
     <Row gutter={[Math.floor(rowGutter / 2), Math.floor(rowGutter / 2)]}>
       {elements.map((elemProps, i) => {
-        const elemId = `${id}_${elemProps.type}`;
+        const elemId = dateElementId(id, elemProps.type);
         return (
           <Col flex='88px' key={elemId}>
             <DateElement
               rootId={id}
-              name={name}
+              label={label}
               select={handleChange}
               {...elemProps}
               disabled={disabled}

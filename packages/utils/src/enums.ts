@@ -36,12 +36,48 @@ export const TranslatableString = {
   MoveUpButton: 'Move up',
   /** Remove button title, used by IconButton */
   RemoveButton: 'Remove',
+  /** Copy button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by ArrayField */
+  CopyItemButton: 'Copy %1',
+  /** Move down button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
+   * ArrayField
+   */
+  MoveDownItemButton: 'Move %1 down',
+  /** Move up button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
+   * ArrayField
+   */
+  MoveUpItemButton: 'Move %1 up',
+  /** Remove button title for an array item named through `ui:options.itemLabel`, where %1 is its name; used by
+   * ArrayField
+   */
+  RemoveItemButton: 'Remove %1',
+  /** The name of an array item named through `ui:options.itemLabel` when another item has the same name, where %1 is
+   * the name and %2 a number that tells the items with that name apart; used by ArrayField
+   */
+  ItemNameWithNumber: '%1 (%2)',
   /** Now label, used by AltDateWidget */
   NowLabel: 'Now',
   /** Clear label, used by AltDateWidget */
   ClearLabel: 'Clear',
+  /** Year element label, used by AltDateWidget */
+  YearLabel: 'year',
+  /** Month element label, used by AltDateWidget */
+  MonthLabel: 'month',
+  /** Day element label, used by AltDateWidget */
+  DayLabel: 'day',
+  /** Hour element label, used by AltDateTimeWidget */
+  HourLabel: 'hour',
+  /** Minute element label, used by AltDateTimeWidget */
+  MinuteLabel: 'minute',
+  /** Second element label, used by AltDateTimeWidget */
+  SecondLabel: 'second',
   /** Aria date label, used by DateWidget */
   AriaDateLabel: 'Select a date',
+  /** Placeholder for a select input, and its accessible name when the field has no title, used by the shadcn SelectWidget */
+  SelectPlaceholder: 'Select ...',
+  /** Done button label, used by the daisyUI date pickers */
+  DoneLabel: 'Done',
+  /** Time input label, used by the daisyUI DateTimeWidget */
+  TimeLabel: 'Time',
   /** File preview label, used by FileWidget */
   PreviewLabel: 'Preview',
   /** Decrement button aria label, used by UpDownWidget */
@@ -77,6 +113,10 @@ export const TranslatableString = {
   KeyLabel: '%1 Key',
   /** Deprecated label, where %1 will be replaced by the label as provided by SchemaField */
   DeprecatedLabel: '%1 (deprecated)',
+  /** Accessible name of one of the selects an AltDateWidget renders, where %1 will be replaced by the field's label
+   * and %2 by the translated name of the date element, such as `YearLabel`, as provided by DateElement
+   */
+  DateElementAriaLabel: '%1, %2',
   /** Cyclic schema message */
   CycleDetected:
     'Circular reference ($ref cycle) detected for field "%1". You may choose to expand to the next cycle break',

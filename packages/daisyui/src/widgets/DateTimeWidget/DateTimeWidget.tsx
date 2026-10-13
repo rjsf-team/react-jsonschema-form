@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { memo, useCallback, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue } from '@rjsf/utils';
+import { getDateTimeLocalValue, TranslatableString } from '@rjsf/utils';
 import { format, isValid } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
@@ -14,6 +14,8 @@ import DatePickerTrigger from '../DatePickerTrigger.tsx';
 interface DateTimePickerProps extends DatePickerCalendarProps {
   /** The id of the time input, which its own label names */
   id: string;
+  /** The translated label of the time input */
+  timeLabel: string;
   /** Handler for time input changes */
   onTimeChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -25,7 +27,15 @@ interface DateTimePickerProps extends DatePickerCalendarProps {
  *
  * @param props - The DateTimePickerProps for this component
  */
-function DateTimePickerPopup({ id, selectedDate, month, onMonthChange, onSelect, onTimeChange }: DateTimePickerProps) {
+function DateTimePickerPopup({
+  id,
+  selectedDate,
+  month,
+  timeLabel,
+  onMonthChange,
+  onSelect,
+  onTimeChange,
+}: DateTimePickerProps) {
   return (
     <div className='p-3'>
       <DatePickerCalendar selectedDate={selectedDate} month={month} onMonthChange={onMonthChange} onSelect={onSelect} />
@@ -33,7 +43,7 @@ function DateTimePickerPopup({ id, selectedDate, month, onMonthChange, onSelect,
       <div className='mt-3 border-t border-base-300 pt-3'>
         <div className='form-control w-full'>
           <label htmlFor={id} className='label'>
-            <span className='label-text'>Time</span>
+            <span className='label-text'>{timeLabel}</span>
           </label>
           <input
             id={id}
@@ -172,13 +182,14 @@ export default function DateTimeWidget<
               id={`${id}-picker`}
               selectedDate={displayedDate}
               month={month}
+              timeLabel={registry.translateString(TranslatableString.TimeLabel)}
               onMonthChange={handleMonthChange}
               onSelect={handleSelect}
               onTimeChange={handleTimeChange}
             />
             <div className='p-3 flex justify-end border-t border-base-300'>
               <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
-                Done
+                {registry.translateString(TranslatableString.DoneLabel)}
               </button>
             </div>
           </div>

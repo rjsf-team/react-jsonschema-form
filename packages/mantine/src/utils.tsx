@@ -57,6 +57,7 @@ const uiOptionsKeys: (keyof UIOptionsType)[] = [
   'field',
   'addable',
   'copyable',
+  'itemLabel',
   'orderable',
   'removable',
   'duplicateKeySuffixSeparator',
@@ -410,7 +411,12 @@ function withOwnRootProps(
 /** Renders the field's title `hidden` when Mantine won't render it, because it is hidden or left out of
  * `inputWrapperOrder`, so that the elements labelled by `titleId(id)` keep an accessible name
  */
-function useHiddenTitle(id: string, label: ReactNode, hideLabel: boolean | undefined, inputWrapperOrder: unknown) {
+export function useHiddenTitle(
+  id: string,
+  label: ReactNode,
+  hideLabel: boolean | undefined,
+  inputWrapperOrder: unknown,
+) {
   const titleRendered =
     !hideLabel && !!label && (!Array.isArray(inputWrapperOrder) || inputWrapperOrder.includes('label'));
   return useMemo(
@@ -470,10 +476,10 @@ function renderChildren(children: ReactNode): ReactNode {
 /**
  * A props hook for the `Input.Wrapper` a widget renders around inputs that don't render their own wrapper, such as a
  * `Slider` or the parts of a date, so that Mantine lays out and styles the field's title, description and errors as
- * it does an input's. The title gets the id `titleId(id)`, and a title Mantine doesn't render, because it is hidden
- * or left out of `inputWrapperOrder`, is still rendered with it, `hidden`, so that the widget's inputs can keep it as
- * their accessible name. The hidden title goes beside the wrapper rather than in it, since a custom `inputContainer`,
- * like Mantine's `Tooltip`, may only accept the single element Mantine's own inputs pass it. The wrapper options are
+ * it does an input's. The title gets the id `titleId(id)`. A widget whose inputs are named by that id renders the
+ * title itself, `hidden`, with `useHiddenTitle()` and the `inputWrapperOrder` returned here, for when Mantine doesn't
+ * render it; it goes beside the wrapper rather than in it, since a custom `inputContainer`, like Mantine's `Tooltip`,
+ * may only accept the single element Mantine's own inputs pass it. The wrapper options are
  * resolved as Mantine's inputs resolve them, from the widget's options and `Input`'s and `InputWrapper`'s theme
  * `defaultProps`; the widget's own component's theme `defaultProps` aren't read, since Mantine would spread them on its
  * root element. The wrapper gets no `id`, which Mantine would put on its root element and point the title's `for` at,
@@ -482,8 +488,8 @@ function renderChildren(children: ReactNode): ReactNode {
  * @param widgetProps - The props of the widget, from which the label, description, errors and options are derived
  * @param [containerOnInputs=false] - Whether the widget's inputs render the `inputContainer` themselves, each in its
  *   own wrapper, so that the field's wrapper mustn't render it again
- * @returns - The `wrapperProps` to spread on `Input.Wrapper`, the `hiddenTitle` to render before it, if any, whether
- *   the field is `invalid`, for its inputs to say so too, and the `successId` of the wrapper's success message, for its
+ * @returns - The `wrapperProps` to spread on `Input.Wrapper`, the `inputWrapperOrder` they resolve to, whether the
+ *   field is `invalid`, for its inputs to say so too, and the `successId` of the wrapper's success message, for its
  *   inputs to be described by through `useShownSuccessId()` while it is shown
  */
 export function useFieldWrapperProps<
@@ -509,7 +515,6 @@ export function useFieldWrapperProps<
   const wrapperProps = containerOnInputs
     ? withOwnRootProps(resolved, wrapperDefaults, asObject(options.wrapperProps))
     : resolved;
-  const hiddenTitle = useHiddenTitle(id, label, hideLabel, resolved.inputWrapperOrder);
   const error = useVisibleErrors(widgetProps);
   const ownSuccessProps = asObject(resolved.successProps);
   const successId = successIdOf(id, ownSuccessProps);
@@ -526,7 +531,7 @@ export function useFieldWrapperProps<
       errorProps: { ...asObject(resolved.errorProps), id: errorId(id) },
       successProps: { ...ownSuccessProps, id: successId },
     },
-    hiddenTitle,
+    inputWrapperOrder: resolved.inputWrapperOrder as unknown,
     invalid: !!error,
     successId,
   };
@@ -545,6 +550,7 @@ export function useFieldWrapperProps<
  * @param id - The id of the field the input belongs to
  * @param [options={}] - The widget's options, whose own `inputContainer`, if any, is still applied inside the override
  * @param [settings={}] - `includeExamples`, whether to also describe the input by the field's examples list,
+ *   `describedBy`, the ids to describe the input by in place of the field's, for an input its caller describes,
  *   `alsoDescribedBy`, further ids to describe the input by, and `wrapperOverrides`, set over the `wrapperProps` the
  *   input would otherwise take, rather than replacing them
  * @returns - An object to spread on the props of the Mantine input, after the theme props
@@ -555,10 +561,12 @@ export function useAriaDescribedByProps(
   options: GenericObjectType = {},
   {
     includeExamples = false,
+    describedBy = ariaDescribedByIds(id, includeExamples),
     alsoDescribedBy,
     wrapperOverrides,
   }: {
     includeExamples?: boolean;
+    describedBy?: string;
     alsoDescribedBy?: string;
     wrapperOverrides?: GenericObjectType;
   } = {},
@@ -581,7 +589,7 @@ export function useAriaDescribedByProps(
   return useAriaContainerProps({
     id,
     successId: successIdOf(id, ownSuccessProps),
-    describedBy: [ariaDescribedByIds(id, includeExamples), alsoDescribedBy].filter(Boolean).join(' '),
+    describedBy: [describedBy, alsoDescribedBy].filter(Boolean).join(' '),
     ownDescriptionProps: resolved.descriptionProps,
     ownErrorProps: asObject(resolved.errorProps),
     ownSuccessProps,

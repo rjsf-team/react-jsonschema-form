@@ -3,6 +3,7 @@ import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from 
 import {
   enumOptionsDeselectValue,
   enumOptionsDomValues,
+  enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   getOptionValueFormat,
@@ -10,7 +11,7 @@ import {
   useOptionFocusHandlers,
 } from '@rjsf/utils';
 
-import { getGroupProps } from '../../utils.ts';
+import { getGroupProps, getOptionClassNames } from '../../utils.ts';
 
 /** The `CheckboxesWidget` component renders a set of checkboxes for multiple choice selection
  * with DaisyUI styling.
@@ -44,7 +45,7 @@ export default function CheckboxesWidget<
   onFocus,
   onBlur,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions } = options;
+  const { enumOptions, enumDisabled } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
   const selected = useMemo((): unknown[] => (Array.isArray(value) ? value : []), [value]);
@@ -74,25 +75,32 @@ export default function CheckboxesWidget<
     <div className='form-control'>
       {/* Use a vertical layout with proper spacing */}
       <div className='flex flex-col gap-2 mt-1' {...getGroupProps({ id, label, name, hideLabel, role: 'group' })}>
-        {enumOptions?.map((option, index) => (
-          // oxlint-disable-next-line react/no-array-index-key
-          <label key={index} className='flex items-center cursor-pointer gap-2'>
-            <input
-              type='checkbox'
-              id={optionId(id, index)}
-              className='checkbox'
-              name={htmlName || id}
-              value={domValues[index]}
-              checked={enumOptionsIsSelected<S>(option.value, selected)}
-              disabled={disabled || readonly}
-              data-index={index}
-              onChange={handleChange}
-              onFocus={focusHandlers[index]}
-              onBlur={blurHandlers[index]}
-            />
-            <span className='label-text'>{option.label}</span>
-          </label>
-        ))}
+        {enumOptions?.map((option, index) => {
+          const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
+          const classNames = getOptionClassNames(optionDisabled);
+          return (
+            <label
+              // oxlint-disable-next-line react/no-array-index-key
+              key={index}
+              className={classNames.label}
+            >
+              <input
+                type='checkbox'
+                id={optionId(id, index)}
+                className='checkbox'
+                name={htmlName || id}
+                value={domValues[index]}
+                checked={enumOptionsIsSelected<S>(option.value, selected)}
+                disabled={optionDisabled}
+                data-index={index}
+                onChange={handleChange}
+                onFocus={focusHandlers[index]}
+                onBlur={blurHandlers[index]}
+              />
+              <span className={classNames.text}>{option.label}</span>
+            </label>
+          );
+        })}
       </div>
     </div>
   );

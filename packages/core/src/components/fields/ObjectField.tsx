@@ -14,6 +14,7 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
+  enumOptionsIsDisabled,
   getByPath,
   hasByPath,
   setByPath,
@@ -587,13 +588,11 @@ export default function ObjectField<
         ? getFieldTypeForWidget(resolvedKeySchema, widget)
         : getSeedType<S>(resolvedKeySchema, rootSchema);
       // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
-      // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled. The
-      // `ui:enumDisabled` values match strictly, and one that isn't a list disables nothing, as the widgets read it
+      // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled
       let firstOption: EnumOptionsType<S> | undefined;
       if (isConstantSelect<S>(resolvedKeySchema)) {
         const enabledOptions = (optionsList<T, S, F>(resolvedKeySchema, resolvedKeyUiSchema) ?? []).filter(
-          (option) =>
-            !(Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value)),
+          (option) => !enumOptionsIsDisabled(option.value, enumDisabled),
         );
         const zeroValue = getDefaultValue<T, S, F>(translateString, type);
         firstOption = enabledOptions.some((option) => deepEquals(option.value, zeroValue))
