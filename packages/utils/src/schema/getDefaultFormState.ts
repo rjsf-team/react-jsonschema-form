@@ -686,6 +686,7 @@ export function getObjectDefaults<
             : enclosingRefPath<S>(schema, _recurseList),
         )
       : [schema];
+    const didRetrieve = retrievedSchema !== schema;
     // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` of a schema that was not itself resolved from
     // one joins the path of everything below, the way one the `$ref` branch of `computeDefaults()` expands does. The
     // ref `schema` was itself resolved from does not: it seeds the retrieve above, but one more `$ref` back to it is
@@ -712,14 +713,18 @@ export function getObjectDefaults<
         const addedByAdditionalProperty = Boolean((propertySchema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
-        // A property the retrieve above resolved from a `$ref` crossed into its definition here, the way the
-        // `$ref` branch of `computeDefaults()` crosses one it expands itself: the reference joins the path its
-        // content is computed with, so a `$ref` back to the same definition below it stops there.
+        // A property THIS retrieve resolved from a `$ref` crossed into its definition here, the way the `$ref`
+        // branch of `computeDefaults()` crosses one it expands itself: the reference joins the path its content
+        // is computed with, so a `$ref` back to the same definition below it stops there. A property the
+        // schema arrived with (resolved on the way in) keeps the caller's path, so its first use below stays
+        // allowed; sibling branches of its ref re-derive their own path.
+        const propertyPath =
+          didRetrieve && refSiblingBranches(propertySchema) === undefined
+            ? enclosingRefPath<S>(propertySchema, childRecurseList)
+            : childRecurseList;
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
           rootSchema,
-          _recurseList: refSiblingBranches(propertySchema) === undefined
-            ? enclosingRefPath<S>(propertySchema, childRecurseList)
-            : childRecurseList,
+          _recurseList: propertyPath,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
@@ -772,13 +777,9 @@ export function getObjectDefaults<
           .forEach((key) => keys.add(key));
       }
       keys.forEach((key) => {
-        // Same crossing as the properties above: a materialized entry resolved from a `$ref` carries the
-        // reference it crossed into the path its content is computed with
         const computedDefault = computeDefaults(context, additionalPropertiesSchema as S, {
           rootSchema,
-          _recurseList: refSiblingBranches(additionalPropertiesSchema) === undefined
-            ? enclosingRefPath<S>(additionalPropertiesSchema as S, childRecurseList)
-            : childRecurseList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
@@ -877,10 +878,7 @@ export function getArrayDefaults<
       const itemFormData = Array.isArray(rawFormData) ? rawFormData[idx] : undefined;
       return computeDefaults<T, S, F>(context, schemaItem, {
         rootSchema,
-        // Same crossing as object properties: an item schema resolved from a `$ref` carries the reference
-        _recurseList: refSiblingBranches(schemaItem) === undefined
-          ? enclosingRefPath<S>(schemaItem, _recurseList)
-          : _recurseList,
+        _recurseList,
         parentDefaults: item,
         rawFormData: itemFormData,
         required,
@@ -901,10 +899,7 @@ export function getArrayDefaults<
       const itemDefaults = rawFormData.map((item: T, idx: number) =>
         computeDefaults<T, S, F>(context, schemaItem, {
           rootSchema,
-          // Same crossing as object properties: an item schema resolved from a `$ref` carries the reference
-          _recurseList: refSiblingBranches(schemaItem) === undefined
-          ? enclosingRefPath<S>(schemaItem, _recurseList)
-          : _recurseList,
+          _recurseList,
           rawFormData: item,
           parentDefaults: getByPath<T>(defaults, idx),
           required,
