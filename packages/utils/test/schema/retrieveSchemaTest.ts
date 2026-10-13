@@ -541,7 +541,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         },
       };
-      const result = retrieveSchema({ validator: testValidator }, root, root) as RJSFSchema;
+      const result = retrieveSchema({ validator: testValidator }, root, root);
       const child = (result.properties as GenericObjectType).child as RJSFSchema;
       expect(child.properties).toBeUndefined();
     });
@@ -558,7 +558,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           rb: { $id: 'b.json', title: 'ROOT-B' },
         },
       };
-      const result = retrieveSchema({ validator: testValidator }, root, root) as RJSFSchema;
+      const result = retrieveSchema({ validator: testValidator }, root, root);
       expect(((result.properties as GenericObjectType).b as RJSFSchema).title).toEqual('NESTED-B');
     });
     it('recursive ref should resolve once', () => {
@@ -1166,8 +1166,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             $defs: { child: { $id: 'child.json', title: 'CHILD' } },
           },
         },
-      } as RJSFSchema;
-      const out = retrieveSchema({ validator: testValidator }, root, root) as RJSFSchema;
+      };
+      const out = retrieveSchema({ validator: testValidator }, root, root);
       const foo = (out.properties as GenericObjectType).foo as RJSFSchema;
       expect((foo.properties as GenericObjectType).bar).toEqual(
         expect.objectContaining({ $id: 'child.json', title: 'CHILD' }),

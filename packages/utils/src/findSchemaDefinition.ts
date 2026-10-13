@@ -296,10 +296,8 @@ function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(
       anyChanged = true;
     }
   };
-  for (const [key, value] of Object.entries(schema)) {
-    if (onlyKeys !== undefined && !onlyKeys(key, value)) {
-      continue;
-    }
+  const entries = Object.entries(schema).filter(([key, value]) => onlyKeys === undefined || onlyKeys(key, value));
+  for (const [key, value] of entries) {
     const shape = keywordShape(key, value);
     if (shape === 'map') {
       let mapped: GenericObjectType | undefined;

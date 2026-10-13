@@ -70,7 +70,8 @@ describe('resolveUiSchema() - normalized options', () => {
       properties: { n: { $ref: '#/definitions/node' } },
     };
     const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
-    const child = (utils.retrieveSchema(rootSchema) as RJSFSchema).properties!.n.properties!.child as RJSFSchema;
+    const retrieved = utils.retrieveSchema(rootSchema);
+    const child = (retrieved.properties!.n as RJSFSchema).properties!.child as RJSFSchema;
     const result = resolveUiSchema(child, undefined, {
       rootSchema,
       uiSchemaDefinitions: { '#/definitions/node': { 'ui:title': 'DEF' } },

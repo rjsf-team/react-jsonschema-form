@@ -194,7 +194,7 @@ describe('restoreOriginalRefs()', () => {
     const normalized = normalizeRootReferences(root);
     const copy = { ...normalized } as RJSFSchema;
     const utils = createSchemaUtils({ validator: testValidator }, copy);
-    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema);
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
   it('normalizes a structuredClone of a normalized root without re-resolving its refs', () => {
@@ -209,7 +209,7 @@ describe('restoreOriginalRefs()', () => {
     const normalized = normalizeRootReferences(root);
     const copy = structuredClone(normalized);
     const utils = createSchemaUtils({ validator: testValidator }, copy);
-    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema);
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
   it('normalizes a JSON round-trip copy of a normalized root without re-resolving its refs', () => {
@@ -224,7 +224,7 @@ describe('restoreOriginalRefs()', () => {
     const normalized = normalizeRootReferences(root);
     const copy = JSON.parse(JSON.stringify(normalized)) as RJSFSchema;
     const utils = createSchemaUtils({ validator: testValidator }, copy);
-    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema);
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
   it('normalizes a copy of the node holding the $ref without re-resolving it', () => {
@@ -246,7 +246,7 @@ describe('restoreOriginalRefs()', () => {
       },
     } as RJSFSchema;
     const utils = createSchemaUtils({ validator: testValidator }, copy);
-    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema);
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
 <<<<<<< HEAD
@@ -259,7 +259,7 @@ describe('restoreOriginalRefs()', () => {
       properties: { x: { $ref: '#/definitions/a' } },
     };
     const utils = createSchemaUtils({ validator: testValidator }, root);
-    const resolved = utils.retrieveSchema(root) as RJSFSchema;
+    const resolved = utils.retrieveSchema(root);
     expect(
       (((resolved.properties as GenericObjectType).x as RJSFSchema).properties as GenericObjectType).b,
     ).toMatchObject({ type: 'string' });
@@ -272,7 +272,7 @@ describe('restoreOriginalRefs()', () => {
       properties: { x: { $ref: '#/$defs/a' } },
     };
     const utils = createSchemaUtils({ validator: testValidator }, root);
-    const resolved = utils.retrieveSchema(root) as RJSFSchema;
+    const resolved = utils.retrieveSchema(root);
     expect(
       (((resolved.properties as GenericObjectType).x as RJSFSchema).properties as GenericObjectType).b,
     ).toMatchObject({ type: 'string' });
@@ -289,7 +289,7 @@ describe('restoreOriginalRefs()', () => {
       properties: { x: { $ref: '#/definitions/a' } },
     };
     const utils = createSchemaUtils({ validator: testValidator }, root);
-    const resolved = utils.retrieveSchema((root.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    const resolved = utils.retrieveSchema((root.properties as GenericObjectType).x as RJSFSchema);
     expect(resolved.$id).toEqual('http://ex.com/a.json');
     expect((resolved.properties as GenericObjectType).bb).toEqual({ type: 'string' });
   });
@@ -313,7 +313,7 @@ describe('restoreOriginalRefs()', () => {
     // cannot see the replacement
     expect(() => utils.retrieveSchema(y)).toThrow('Could not find a definition for nested/parent.json');
     // The standalone API normalizes the root it is passed on each call, so it reads the edit
-    const resolved = retrieveSchema({ validator: testValidator }, y, root) as RJSFSchema;
+    const resolved = retrieveSchema({ validator: testValidator }, y, root);
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
   it('returns the same object when nothing in the walked keywords was rewritten', () => {
