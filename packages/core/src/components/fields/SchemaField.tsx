@@ -56,6 +56,7 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** The map of component type to FieldName */
@@ -628,7 +629,8 @@ function SchemaFieldRender<
     );
   }
 
-  let displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const isLabelled = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  let displayLabel = isLabelled;
 
   let XxxOfField: Field<T, S, F> | undefined;
   // An option that declares no `uiSchema` of its own is rendered against this one, so a `ui:field` the options are
@@ -694,7 +696,19 @@ function SchemaFieldRender<
     label = registry.translateString(TranslatableString.DeprecatedLabel, [label]);
   }
 
-  const description = uiOptions.description || props.schema.description || schema.description || '';
+  // The field of the selected option renders a description in that case, its own or, where it declares none, this
+  // field's, so the template, which may render the description of a field it leaves unlabelled, is handed none. Decided
+  // from the uiSchema the `XxxOfField` is handed, as it decides whether to render it, since a shadowed `ui:field` no
+  // longer turns its label off
+  const description =
+    XxxOfField &&
+    optionRendersFieldLabel<S>(
+      schema,
+      uiOptions.label,
+      XxxOfUiSchema === uiSchema ? isLabelled : schemaUtils.getDisplayLabel(schema, XxxOfUiSchema, globalUiOptions),
+    )
+      ? ''
+      : uiOptions.description || props.schema.description || schema.description || '';
   const { help } = uiOptions;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 

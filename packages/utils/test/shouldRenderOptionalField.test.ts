@@ -150,6 +150,13 @@ describe('isOptionalDataControlsType()', () => {
   test('no enabled types returns false', () => {
     expect(isOptionalDataControlsType({ type: 'array' }, {}, {})).toBe(false);
   });
+  test('builds the schema from a function only when some type is enabled', () => {
+    const buildSchema = vi.fn((): RJSFSchema => ({ type: 'array' }));
+    expect(isOptionalDataControlsType(buildSchema, {}, {})).toBe(false);
+    expect(buildSchema).not.toHaveBeenCalled();
+    expect(isOptionalDataControlsType(buildSchema, {}, globalUiOptions)).toBe(true);
+    expect(buildSchema).toHaveBeenCalledTimes(1);
+  });
   test('no type returns false', () => {
     expect(isOptionalDataControlsType({}, {}, globalUiOptions)).toBe(false);
   });
