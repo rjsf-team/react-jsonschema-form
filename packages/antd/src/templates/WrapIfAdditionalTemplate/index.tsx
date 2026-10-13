@@ -14,6 +14,8 @@ import {
 } from '@rjsf/utils';
 import { Col, Row, Form, Input } from 'antd';
 
+import { fieldDisabled } from '../../utils/index.ts';
+
 const VERTICAL_LABEL_COL = { span: 24 };
 const VERTICAL_WRAPPER_COL = { span: 24 };
 
@@ -53,7 +55,6 @@ export default function WrapIfAdditionalTemplate<
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
-    readonlyAsDisabled = true,
     rowGutter = 24,
     toolbarAlign = 'top',
     wrapperCol = VERTICAL_WRAPPER_COL,
@@ -105,7 +106,7 @@ export default function WrapIfAdditionalTemplate<
                   propertyNamesEnum={propertyNamesEnum}
                   onKeyRename={onKeyRename}
                   // Leave enabled controls unset so antd can inherit its DisabledContext.
-                  disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+                  disabled={fieldDisabled(disabled, readonly, registry.formContext)}
                   readonly={readonly}
                   required={required}
                   registry={registry}
@@ -116,7 +117,7 @@ export default function WrapIfAdditionalTemplate<
                   className='form-control'
                   defaultValue={keyName}
                   // Leave enabled controls unset so antd can inherit its DisabledContext.
-                  disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+                  disabled={fieldDisabled(disabled, readonly, registry.formContext)}
                   id={`${id}-key`}
                   name={`${id}-key`}
                   onBlur={!readonly ? onKeyRenameBlur : undefined}

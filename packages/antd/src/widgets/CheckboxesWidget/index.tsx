@@ -11,6 +11,8 @@ import {
 } from '@rjsf/utils';
 import { Checkbox } from 'antd';
 
+import { fieldDisabled } from '../../utils/index.ts';
+
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
  *
@@ -34,8 +36,7 @@ export default function CheckboxesWidget<
   value,
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
-  const fieldDisabled = disabled || (readonlyAsDisabled && readonly);
+  const contextDisabled = fieldDisabled(disabled, readonly, formContext);
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -70,7 +71,7 @@ export default function CheckboxesWidget<
               autoFocus={i === 0 ? autofocus : false}
               // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
               // the checkbox leaves `disabled` unset
-              disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
+              disabled={contextDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}
               onFocus={!readonly ? focusHandlers[i] : undefined}

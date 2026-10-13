@@ -4,6 +4,8 @@ import { ariaDescribedByIds, schemaRequiresTrueValue } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
 import { Checkbox, theme } from 'antd';
 
+import { fieldDisabled } from '../../utils/index.ts';
+
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
  *
@@ -31,7 +33,6 @@ export default function CheckboxWidget<
     schema,
   } = props;
   const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { token } = theme.useToken();
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
 
@@ -52,7 +53,7 @@ export default function CheckboxWidget<
       autoFocus={autofocus}
       checked={typeof value === 'undefined' ? false : value}
       // Leave enabled controls unset so antd can inherit its DisabledContext.
-      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+      disabled={fieldDisabled(disabled, readonly, formContext)}
       id={id}
       name={htmlName || id}
       required={required}

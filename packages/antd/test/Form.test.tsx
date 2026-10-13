@@ -278,6 +278,13 @@ describe('antd DisabledContext', () => {
     { name: 'checkbox', schema: { type: 'boolean' }, selector: 'input#root' },
     { name: 'textarea', schema: { type: 'string' }, uiSchema: { 'ui:widget': 'textarea' }, selector: 'textarea#root' },
     { name: 'date', schema: { type: 'string', format: 'date' }, selector: 'input#root' },
+    {
+      name: 'alt-date',
+      schema: { type: 'string', format: 'date' },
+      uiSchema: { 'ui:widget': 'alt-date' },
+      selector: 'input#root_year',
+    },
+    { name: 'date-time', schema: { type: 'string', format: 'date-time' }, selector: 'input#root' },
     { name: 'password', schema: { type: 'string' }, uiSchema: { 'ui:widget': 'password' }, selector: 'input#root' },
     { name: 'range', schema: { type: 'number' }, uiSchema: { 'ui:widget': 'range' }, selector: '.ant-slider' },
     {
@@ -329,5 +336,51 @@ describe('antd DisabledContext', () => {
         expect(control).not.toBeDisabled();
       }
     });
+  });
+
+  test('a context-disabled field does not call onChange when used', async () => {
+    const onChange = vi.fn();
+    render(
+      <ConfigProvider componentDisabled>
+        <Form schema={{ type: 'string' }} formData='x' validator={validator} onChange={onChange} />
+      </ConfigProvider>,
+    );
+    await user.type(screen.getByRole('textbox'), 'y');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    {
+      name: 'array item buttons',
+      schema: { type: 'array', items: { type: 'string' } } as RJSFSchema,
+      uiSchema: { 'ui:options': { copyable: true } } as UiSchema,
+      formData: ['one', 'two'],
+      buttons: ['Add Item', 'Copy', 'Remove', 'Move up', 'Move down'],
+    },
+    {
+      name: 'additional property buttons',
+      schema: { type: 'object', additionalProperties: { type: 'string' } } as RJSFSchema,
+      uiSchema: undefined,
+      formData: { extra: 'value' },
+      buttons: ['Add Item', 'Remove'],
+    },
+  ])('$name stay disabled under the context and change no data', async ({ schema, uiSchema, formData, buttons }) => {
+    const onChange = vi.fn();
+    const { container } = render(
+      <ConfigProvider componentDisabled>
+        <Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} onChange={onChange} />
+      </ConfigProvider>,
+    );
+    const found: Element[] = [];
+    for (const name of buttons) {
+      const named = Array.from(container.querySelectorAll(`button[title="${name}"]`));
+      expect(named.length).toBeGreaterThan(0);
+      found.push(...named);
+    }
+    for (const button of found) {
+      expect(button).toBeDisabled();
+    }
+    await Promise.all(found.map((button) => user.click(button as HTMLElement)));
+    expect(onChange).not.toHaveBeenCalled();
   });
 });

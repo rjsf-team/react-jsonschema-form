@@ -1,12 +1,5 @@
 import { useMemo, useState } from 'react';
-import type {
-  FormContextType,
-  GenericObjectType,
-  IndexedEnumOptionType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  WidgetProps,
-} from '@rjsf/utils';
+import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
@@ -22,6 +15,8 @@ import {
 import type { SelectProps } from 'antd';
 import { Select } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select/index.js';
+
+import { fieldDisabled } from '../../utils/index.ts';
 
 const SELECT_STYLE = {
   width: '100%',
@@ -56,7 +51,6 @@ export default function SelectWidget<
   } = props;
   const [open, setOpen] = useState(false);
   const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -125,7 +119,7 @@ export default function SelectWidget<
         open={open}
         autoFocus={autofocus}
         // Leave enabled controls unset so antd can inherit its DisabledContext.
-        disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+        disabled={fieldDisabled(disabled, readonly, formContext)}
         getPopupContainer={getPopupContainer}
         id={id}
         mode={multiple ? 'multiple' : undefined}

@@ -1,15 +1,11 @@
 import type { ChangeEvent, FocusEvent, MouseEvent } from 'react';
 import { useCallback } from 'react';
 import { SchemaExamples } from '@rjsf/core';
-import type {
-  BaseInputTemplateProps,
-  FormContextType,
-  GenericObjectType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from '@rjsf/utils';
+import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { ariaDescribedByIds, examplesId, getExampleSuggestions, getInputProps } from '@rjsf/utils';
 import { Input, InputNumber } from 'antd';
+
+import { fieldDisabled } from '../../utils/index.ts';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -47,7 +43,6 @@ export default function BaseInputTemplate<
   // InputNumber doesn't use a native <input type="number"> directly - it wraps it and controls the stepping behavior
   // through its own props. The step prop in Ant Design expects a number, not the string "any"
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const handleNumberChange = (nextValue: number | null) => onChange(nextValue ?? options.emptyValue);
@@ -80,7 +75,7 @@ export default function BaseInputTemplate<
   const input = isNumeric ? (
     <InputNumber
       // Leave enabled controls unset so antd can inherit its DisabledContext.
-      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+      disabled={fieldDisabled(disabled, readonly, formContext)}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
@@ -101,7 +96,7 @@ export default function BaseInputTemplate<
   ) : (
     <Input
       // Leave enabled controls unset so antd can inherit its DisabledContext.
-      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+      disabled={fieldDisabled(disabled, readonly, formContext)}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}

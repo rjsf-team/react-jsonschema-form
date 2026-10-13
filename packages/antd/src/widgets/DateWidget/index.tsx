@@ -4,6 +4,8 @@ import { DatePicker } from 'antd';
 import dayjs from 'dayjs';
 import type { Dayjs } from 'dayjs';
 
+import { fieldDisabled } from '../../utils/index.ts';
+
 const DATE_PICKER_STYLE = {
   width: '100%',
 };
@@ -39,7 +41,6 @@ export default function DateWidget<
   schema,
 }: DateWidgetProps<T, S, F>) {
   const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
   const { isIsoDateTime, localValue } = getDateTimeLocalValue(schema, value);
 
   const handleChange = (nextValue: Dayjs | null) => {
@@ -63,7 +64,7 @@ export default function DateWidget<
   return (
     <DatePicker
       // Leave enabled controls unset so antd can inherit its DisabledContext.
-      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+      disabled={fieldDisabled(disabled, readonly, formContext)}
       getPopupContainer={getPopupContainer}
       id={id}
       name={id}

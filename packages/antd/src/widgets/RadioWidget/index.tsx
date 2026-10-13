@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
@@ -11,6 +11,8 @@ import {
 } from '@rjsf/utils';
 import type { RadioChangeEvent } from 'antd';
 import { Radio } from 'antd';
+
+import { fieldDisabled } from '../../utils/index.ts';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
  *  It is typically used with a string property constrained with enum options.
@@ -35,8 +37,7 @@ export default function RadioWidget<
   value,
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
-  const fieldDisabled = disabled || (readonlyAsDisabled && readonly);
+  const contextDisabled = fieldDisabled(disabled, readonly, formContext);
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -71,7 +72,7 @@ export default function RadioWidget<
             autoFocus={i === 0 ? autofocus : false}
             // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
             // the radio leaves `disabled` unset
-            disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
+            disabled={contextDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
             value={domValues[i]}

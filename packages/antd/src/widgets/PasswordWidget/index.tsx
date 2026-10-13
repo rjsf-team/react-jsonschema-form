@@ -3,6 +3,8 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, Generi
 import { ariaDescribedByIds } from '@rjsf/utils';
 import { Input } from 'antd';
 
+import { fieldDisabled } from '../../utils/index.ts';
+
 /** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.
  *
  * @param props - The `WidgetProps` for this component
@@ -14,7 +16,6 @@ export default function PasswordWidget<
 >(props: WidgetProps<T, S, F>) {
   const { disabled, registry, id, onBlur, onChange, onFocus, options, placeholder, readonly, value } = props;
   const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const emptyValue = options.emptyValue || '';
 
@@ -28,7 +29,7 @@ export default function PasswordWidget<
   return (
     <Input.Password
       // Leave enabled controls unset so antd can inherit its DisabledContext.
-      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+      disabled={fieldDisabled(disabled, readonly, formContext)}
       id={id}
       name={id}
       onBlur={!readonly ? handleBlur : undefined}

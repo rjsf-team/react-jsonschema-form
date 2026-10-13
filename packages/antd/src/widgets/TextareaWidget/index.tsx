@@ -1,7 +1,9 @@
 import type { ChangeEvent, FocusEvent } from 'react';
-import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { ariaDescribedByIds } from '@rjsf/utils';
 import { Input } from 'antd';
+
+import { fieldDisabled } from '../../utils/index.ts';
 
 const INPUT_STYLE = {
   width: '100%',
@@ -29,7 +31,6 @@ export default function TextareaWidget<
   value,
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const handleChange = ({ target }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(target.value === '' ? options.emptyValue : target.value);
@@ -47,7 +48,7 @@ export default function TextareaWidget<
   return (
     <Input.TextArea
       // Leave enabled controls unset so antd can inherit its DisabledContext.
-      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+      disabled={fieldDisabled(disabled, readonly, formContext)}
       id={id}
       name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}

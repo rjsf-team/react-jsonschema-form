@@ -32,6 +32,9 @@ export default function IconButton<
       color={color as ButtonProps['color']}
       style={{ paddingTop: '4px' /* Center the button */ }}
       {...otherProps}
+      // Leave the button enabled state unset so antd can inherit its DisabledContext: callers computing `disabled`
+      // from their own props pass a literal `false`, which antd would otherwise honor over the context
+      disabled={otherProps.disabled || undefined}
     />
   );
 }

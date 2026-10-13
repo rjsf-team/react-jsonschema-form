@@ -2,6 +2,8 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, Generi
 import { ariaDescribedByIds, rangeSpec } from '@rjsf/utils';
 import { Slider } from 'antd';
 
+import { fieldDisabled } from '../../utils/index.ts';
+
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
  *
@@ -27,7 +29,6 @@ export default function RangeWidget<
     value,
   } = props;
   const { formContext } = registry;
-  const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { min, max, step } = rangeSpec(schema);
 
@@ -51,7 +52,7 @@ export default function RangeWidget<
     <Slider
       autoFocus={autofocus}
       // Leave enabled controls unset so antd can inherit its DisabledContext.
-      disabled={disabled || (readonlyAsDisabled && readonly) || undefined}
+      disabled={fieldDisabled(disabled, readonly, formContext)}
       id={id}
       max={max}
       min={min}
