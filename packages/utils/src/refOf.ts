@@ -1,5 +1,6 @@
 import { ALL_OF_KEY, DEPENDENCIES_KEY, ELSE_KEY, REF_KEY, RJSF_REF_KEY, THEN_KEY } from './constants.ts';
-import type { RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
+import mergeSchemas from './mergeSchemas.ts';
+import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Returns the `$ref` the given `schema` still holds, which is one that has yet to be resolved.
  *
@@ -47,19 +48,42 @@ export function resolvedSchemaOf<S extends StrictRJSFSchema = RJSFSchema>(
 ): S {
   let siblingBranches: string[] | undefined;
   for (const keyword of BRANCH_KEYWORDS) {
-    if (keyword in siblings) {
+    if (Reflect.get(siblings, keyword) !== undefined) {
       (siblingBranches ??= []).push(keyword);
     }
   }
-  if (siblingBranches) {
-    return { ...definition, ...siblings, [RJSF_REF_KEY]: ref, [REF_SIBLING_BRANCHES]: siblingBranches };
-  }
   const resolved = { ...definition, ...siblings, [RJSF_REF_KEY]: ref };
   // A list the definition or the siblings carry from an earlier resolution is not this reference's
-  if (REF_SIBLING_BRANCHES in resolved) {
-    Reflect.deleteProperty(resolved, REF_SIBLING_BRANCHES);
-  }
+  setOrDelete(resolved, REF_SIBLING_BRANCHES, siblingBranches);
   return resolved;
+}
+
+function setOrDelete(target: object, marker: symbol, value: unknown) {
+  if (value === undefined) {
+    Reflect.deleteProperty(target, marker);
+  } else {
+    Reflect.set(target, marker, value);
+  }
+}
+
+/** Merges a resolved `branch` of a `schema` into it, keeping the markers that say where `schema` itself was resolved
+ * from. `mergeSchemas()` copies the branch's markers over them, and a branch that was a `$ref` would leave the merged
+ * schema named after the branch's definition: the next branch would then be resolved on that definition's path
+ * rather than on the schema's own. A schema that was not resolved from a reference takes the branch's markers, since
+ * a branch that is the `$ref` back to an enclosing definition is how such a schema is known to be inside it.
+ *
+ * @param schema - The schema the branch belongs to
+ * @param branch - The resolved branch to merge into it
+ * @returns - The merged schema, marked as `schema` is when it is marked at all
+ */
+export function mergeBranch<S extends StrictRJSFSchema = RJSFSchema>(schema: S, branch: GenericObjectType): S {
+  const merged = mergeSchemas(schema, branch) as S;
+  const ownRef = resolvedFromRef<S>(schema);
+  if (ownRef !== undefined) {
+    Reflect.set(merged, RJSF_REF_KEY, ownRef);
+    setOrDelete(merged, REF_SIBLING_BRANCHES, refSiblingBranches(schema));
+  }
+  return merged;
 }
 
 /** Returns the branch keywords that stood beside the `$ref` the given `schema` was resolved from, which
