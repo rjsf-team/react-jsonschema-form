@@ -1,6 +1,11 @@
+import { createDeepAllOfMerge } from '@x0k/json-schema-merge';
 import type { MockInstance } from 'vitest';
 
-import type { Experimental_DefaultFormStateBehavior, RJSFSchema } from '../../src/index.ts';
+import type {
+  Experimental_CustomMergeAllOf,
+  Experimental_DefaultFormStateBehavior,
+  RJSFSchema,
+} from '../../src/index.ts';
 import { createSchemaUtils, getDefaultFormState, noop } from '../../src/index.ts';
 import {
   AdditionalItemsHandling,
@@ -13,6 +18,7 @@ import {
   ensureFormDataMatchingSchema,
 } from '../../src/schema/getDefaultFormState.ts';
 import { resolveDependencies } from '../../src/schema/retrieveSchema.ts';
+import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
@@ -5887,16 +5893,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animal: 'Cat' });
         });
 
-        it('should fill in the then default of an if without required on empty data, even when the if does not match the defaulted value', () => {
-          const fishConditionSchema: RJSFSchema = {
+        it('should fill in the then default of every if without required on empty data, so the first entry wins even when its if does not match the defaulted value', () => {
+          const fishFirstSchema: RJSFSchema = {
             ...animalInfoSchema,
-            allOf: [{ ...animalCondition, if: { properties: { animal: { const: 'Fish' } } } }],
+            allOf: [
+              {
+                if: { properties: { animal: { const: 'Fish' } } },
+                then: { properties: { food: { type: 'string', default: 'grass' } } },
+              },
+              animalCondition,
+            ],
           };
           expect(
-            getDefaultFormState(testValidator, fishConditionSchema, undefined, fishConditionSchema, undefined, {
+            getDefaultFormState(testValidator, fishFirstSchema, undefined, fishFirstSchema, undefined, {
               allOf: 'skipDefaults',
             }),
-          ).toEqual({ animal: 'Cat', food: 'meat' });
+          ).toEqual({ animal: 'Cat', food: 'grass' });
         });
 
         it('should populate the conditional defaults of an if-then-else placed directly in array items', () => {
@@ -5923,6 +5935,37 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' },
             ),
           ).toEqual([{ animal: 'Cat' }]);
+        });
+
+        it("should populate a property's allOf conditional defaults once a deep custom merger merges the root's allOf", () => {
+          const deepAllOfMerge = createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf;
+          const rootAllOfSchema: RJSFSchema = {
+            ...animalInfoObjectSchema,
+            allOf: [{ properties: { name: { type: 'string' } } }],
+          };
+          const formData = { animalInfo: { animal: 'Cat' } };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              rootAllOfSchema,
+              formData,
+              rootAllOfSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              deepAllOfMerge,
+            ),
+          ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
+          expect(
+            getDefaultFormState(
+              testValidator,
+              animalInfoObjectSchema,
+              formData,
+              animalInfoObjectSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              deepAllOfMerge,
+            ),
+          ).toEqual(formData);
         });
 
         it('should populate the conditional defaults of an allOf in array items whose schema also has a direct if', () => {

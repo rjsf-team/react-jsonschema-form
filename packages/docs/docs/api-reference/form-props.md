@@ -214,7 +214,7 @@ With one `allOf` entry per `enum` value, the `then` defaults of all the entries 
 The same `allOf` in an object property or in an array's `items` usually needs `populateDefaults` to provide its defaults.
 This is specific to `allOf`: an `if-then-else` placed directly in a nested object schema is resolved with either value, unless `emptyObjectFields` is `skipEmptyDefaults`.
 For example, under `skipDefaults`, `items: { if, then }` fills in the `then` default, while `items: { allOf: [{ if, then }] }` does not, unless the same `items` schema also has a direct `if`, which resolves its whole `allOf`.
-With an `experimental_customMergeAllOf` built on a deep merger, such as `json-schema-merge-allof` with its default `deep: true`, merging a root-level `allOf` also turns a property's `allOf: [{ if, then }]` into a direct `if-then-else`, so that property's `then` default is filled in under `skipDefaults` as long as the root has an `allOf`.
+With an `experimental_customMergeAllOf` built on a deep merger, such as `json-schema-merge-allof` with its default `deep: true` or `createDeepAllOfMerge` from `@x0k/json-schema-merge`, merging a root-level `allOf` also turns a property's `allOf: [{ if, then }]` into a direct `if-then-else`, so that property's `then` default is filled in under `skipDefaults` as long as the root has an `allOf`.
 Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value.
 
 ```tsx
