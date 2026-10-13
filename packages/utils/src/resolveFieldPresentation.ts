@@ -18,7 +18,9 @@ export interface FieldPresentationInputs {
   /** The label, from `getFieldLabel()` */
   label: string;
   /** Whether the `uiSchema` lets the field show its label, which `ui:label: false` turns off along with the
-   * description. Defaults to true
+   * description. It is the resolved value, which the caller passes down: the field's own `ui:label`, else the one the
+   * field above rendering this same id resolved to, since an option's `uiSchema` given per option doesn't carry the
+   * field's. Defaults to true
    */
   showLabel?: boolean;
   description?: string;
@@ -63,11 +65,13 @@ function rendersHere(by: PartPlacement) {
 
 /** Places a description or help: above when a field above rendering this id shows it, whether as the same text or,
  * for the nearest of them that shows text, as the only text, so a level with none of its own carries the one above on
- * to the levels beneath it; nowhere when it has no text, or when a field above hides the same text; and otherwise by
- * its owner, under `ownId` unless a field above already shows text under that id, in which case it takes the option id
- * numbered by how many of them show text of their own
+ * to the levels beneath it; nowhere when it has no text, or when a field above hides the same text, which a level
+ * hiding its own keeps in its plan for the levels beneath it; and otherwise by its owner, or nowhere when it is hidden
+ * here. Either way it takes `ownId` unless a field above already shows text under that id, in which case it takes the
+ * option id numbered by how many of them show text of their own, so a hidden part's id names no element drawn above
  *
  * @param above - The part in the plans of the fields above rendering this id, nearest first
+ * @param hidden - Whether this level hides its own text
  */
 function placeText<Text>(
   text: Text | undefined,
@@ -75,6 +79,7 @@ function placeText<Text>(
   ownId: string,
   optionId: (depth: number) => string,
   above: readonly (PartPresentation & { text?: Text })[],
+  hidden = false,
 ): PartPresentation & { text?: Text } {
   if (!text) {
     const nearest = above.find((part) => part.by !== 'none');
@@ -84,8 +89,11 @@ function placeText<Text>(
   if (shown) {
     return { by: shown.by === 'none' ? 'none' : 'above', id: shown.id };
   }
-  const shownAbove = above.filter((part) => rendersHere(part.by)).length;
-  return { by: owner, id: shownAbove > 0 ? optionId(shownAbove) : ownId };
+  const shownAbove = above.filter((part) => rendersHere(part.by));
+  return {
+    by: hidden ? 'none' : owner,
+    id: shownAbove.some((part) => part.id === ownId) ? optionId(shownAbove.length) : ownId,
+  };
 }
 
 /** Builds a field's plan of what draws its label, description, help and errors, and the attributes its control
@@ -93,18 +101,18 @@ function placeText<Text>(
  * shows is decided from the decisions in `inputs`, so a template and a widget reading the plan agree on it.
  *
  * - The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name.
- *   It is `above`, under the id of the label drawn there, when the template of a field above rendering the same id
- *   already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a
- *   second time. A level with no control, such as a container whose label is its own heading, keeps its label only
+ *   It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the
+ *   same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control
+ *   a second time. A level with no control, such as a container whose label is its own heading, keeps its label only
  *   when no field above already draws its text, or else is `above` under the id of the label that does. The control
  *   points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the
  *   control above was pointed at that label too, since its template may then draw it with no `for`, or when its id
  *   isn't the one that label's `for` names, such as a selector's.
  * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
  *   field above already shows is `above`, as is a part with no text under a field above that shows one, and text a
- *   field above hides stays hidden; text of its own takes `optionDescriptionId()` or `optionHelpId()` when a field
- *   above shows text under the usual id, numbered by how many fields above show text of their own, so each level's own
- *   text has an id of its own.
+ *   field above hides stays hidden, even under a field further up that shows other text; text of its own takes
+ *   `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the id it would take, numbered by
+ *   how many fields above show text of their own, so each level's own text has an id of its own.
  * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
  * - The control is described by the parts that render, here or above, then by its own `controlDescribedBy`, and is
  *   `aria-invalid` whenever errors show.
@@ -149,11 +157,12 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   }
 
   const descriptionPlacement = placeText(
-    showLabel ? description : '',
+    description,
     declaration.description,
     descriptionId(id),
     (depth) => optionDescriptionId(id, depth),
     plansAbove.map((plan) => plan.description),
+    !showLabel,
   );
   const helpPlacement = placeText(
     help,
@@ -206,7 +215,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   }
 
   return {
-    label: { text: labelText, by: labelBy, id: labelId },
+    label: { text: labelAbove?.label.text ?? labelText, by: labelBy, id: labelId },
     description: { text: description, ...descriptionPlacement },
     help: { text: help, ...helpPlacement },
     errors: errorsPlan,

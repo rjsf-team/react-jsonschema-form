@@ -25,7 +25,7 @@ describe('getFieldLabel()', () => {
   });
 
   it('labels an additionalProperties entry by its key rather than its schema title', () => {
-    const schema = { type: 'string', title: 'Entry', [ADDITIONAL_PROPERTY_FLAG]: true } as RJSFSchema;
+    const schema: RJSFSchema = { type: 'string', title: 'Entry', [ADDITIONAL_PROPERTY_FLAG]: true };
     expect(getFieldLabel(schema, { title: 'Ui' }, translateString, { name: 'key' })).toBe('key');
   });
 

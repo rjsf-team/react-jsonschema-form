@@ -867,7 +867,9 @@ export interface ControlAttributes {
  * Resolved once by `resolveFieldPresentation()`
  */
 export interface FieldPresentation {
-  /** The label text, decorated for a deprecated field, or `''` when there is none */
+  /** The label text, decorated for a deprecated field, or `''` when there is none. An `above` label carries the text
+   * of the label drawn above
+   */
   label: PartPresentation & { text: string };
   description: PartPresentation & { text: string };
   help: PartPresentation & { text?: string | ReactElement };
