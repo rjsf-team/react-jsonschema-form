@@ -15,12 +15,16 @@ export default function utcToLocal(jsonDate: unknown) {
   // `Date` reads `null` and `false` as the epoch, `true` as the millisecond after it and a `Boolean` object, from any
   // realm, as the boolean it wraps, so they have to mean no value here. Anything else names a date, parses to an
   // invalid one, or throws in `ToPrimitive`
-  if (
-    jsonDate == null ||
-    typeof jsonDate === 'boolean' ||
-    Object.prototype.toString.call(jsonDate) === '[object Boolean]'
-  ) {
+  if (jsonDate == null || typeof jsonDate === 'boolean') {
     return '';
+  }
+  try {
+    // Throws for anything but a `Boolean` object, from any realm. Unlike `Object.prototype.toString` it reads no
+    // property, so a `Symbol.toStringTag` can neither fake a `Boolean` nor throw
+    Boolean.prototype.valueOf.call(jsonDate);
+    return '';
+  } catch {
+    // Not a `Boolean` object
   }
 
   let date: Date;

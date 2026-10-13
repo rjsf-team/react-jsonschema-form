@@ -54,6 +54,21 @@ describe('utcToLocal()', () => {
     expect(foreignBoolean).not.toBeInstanceOf(Boolean);
     expect(utcToLocal(foreignBoolean)).toEqual('');
   });
+  it('converts an object that only names itself a Boolean through Symbol.toStringTag', () => {
+    const tagged = { [Symbol.toStringTag]: 'Boolean', valueOf: () => EPOCH };
+    expect(utcToLocal(tagged)).toEqual(utcToLocal(EPOCH));
+  });
+  it('returns empty string for an object whose property reads throw', () => {
+    const strict = new Proxy(
+      {},
+      {
+        get() {
+          throw new TypeError('no such property');
+        },
+      },
+    );
+    expect(utcToLocal(strict)).toEqual('');
+  });
   it.each([
     ['the bigint 0n', 0n],
     ['a symbol', Symbol('epoch')],

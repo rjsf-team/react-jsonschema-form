@@ -6,7 +6,7 @@ describe('localToUTC()', () => {
     ['undefined, the emptyValue a cleared BaseInputTemplate hands over', undefined],
     ['null, an emptyValue that is set to null', null],
   ])('returns undefined when passed %s', (_, value) => {
-    expect(localToUTC(value as string)).toBeUndefined();
+    expect(localToUTC(value)).toBeUndefined();
   });
   it('returns UTC version of date when passed date', () => {
     expect(localToUTC('2016-04-05')).toEqual('2016-04-05T00:00:00.000Z');
@@ -45,14 +45,13 @@ describe('localToUTC()', () => {
     ['a number', 1e15],
     ['a Date', new Date(2016, 3, 5, 10, 20)],
   ])('passes %s to Date as it is', (_, value) => {
-    // A number or a Date isn't a `string`, though the parameter says so
-    expect(localToUTC(value as unknown as string)).toEqual(new Date(value).toJSON());
+    expect(localToUTC(value)).toEqual(new Date(value).toJSON());
   });
   it.each([
     ['a Date that is invalid', new Date(NaN)],
     ['an object that is not a date', {}],
   ])('returns null for %s', (_, value) => {
-    expect(localToUTC(value as unknown as string)).toBeNull();
+    expect(localToUTC(value)).toBeNull();
   });
   it.each([
     ['text that is not a date', 'not-a-date'],
