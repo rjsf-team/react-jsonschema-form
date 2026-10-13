@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import { findSchemaDefinitionWithBaseURI, normalizeRootReferences } from '../../src/findSchemaDefinition.ts';
-import type { GenericObjectType, RJSFSchema } from '../../src/index.ts';
+import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   GUESSED_TYPE_FLAG,
@@ -706,7 +706,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       let current: RJSFSchema | undefined = out;
       for (let level = 0; level < 5; level += 1) {
         const nested = current?.properties?.self as RJSFSchema | undefined;
-        flags.push(nested ? ((nested as GenericObjectType)[RJSF_REF_CYCLE_KEY] ?? false) : undefined);
+        flags.push(nested ? ((nested as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY] ?? false) : undefined);
         current = nested;
       }
       expect(flags).toEqual([false, true, undefined, undefined, undefined]);

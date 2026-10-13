@@ -20,8 +20,9 @@ import getTestValidator from './testUtils/getTestValidator.ts';
 
 const testValidator = getTestValidator({});
 
+let warnSpy: ReturnType<typeof vi.spyOn>;
 beforeEach(() => {
-  vi.spyOn(console, 'warn').mockImplementation(noop);
+  warnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
 });
 afterEach(() => {
   vi.restoreAllMocks();
@@ -129,7 +130,7 @@ describe('resolveUiSchema() - normalized options', () => {
       rootSchema: utils.getRootSchema(),
       uiSchemaDefinitions: { 'child.json': { 'ui:widget': 'textarea' } },
     });
-    expect(console.warn).not.toHaveBeenCalled();
+    expect(warnSpy).not.toHaveBeenCalled();
     expect(result['ui:widget']).toEqual('textarea');
   });
   it('applies ui:definitions to unexpanded anyOf options keyed by the author spelling of their $ref', () => {
