@@ -13,7 +13,7 @@ import {
   RJSF_REF_KEY,
   noop,
 } from '../../src/index.ts';
-import { REF_SIBLING_BRANCHES } from '../../src/refOf.ts';
+import { REF_SIBLING_BRANCHES, resolvedFromRef } from '../../src/refOf.ts';
 import {
   getAdditionalPropertyType,
   getAllPermutationsOfXxxOf,
@@ -1148,6 +1148,36 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
               },
               [RJSF_REF_KEY]: '#/definitions/node',
             });
+          });
+          it.each<[string, RJSFSchema]>([
+            ['a dependency that is a $ref', { dependencies: { a: { $ref: '#/definitions/extra' } } }],
+            [
+              'a dependency whose oneOf branch is a $ref',
+              { dependencies: { a: { oneOf: [{ $ref: '#/definitions/branch' }] } } },
+            ],
+            ['a then that is a $ref', { if: true, then: { $ref: '#/definitions/extra' } }],
+          ])('flags a dependent property that points back at its definition after %s was merged', (_, ahead) => {
+            const node: RJSFSchema = {
+              type: 'object',
+              properties: { a: { type: 'string' }, b: { type: 'string' } },
+              ...ahead,
+              dependencies: {
+                ...ahead.dependencies,
+                b: { properties: { child: { $ref: '#/definitions/node' } } },
+              },
+            };
+            const schema: RJSFSchema = {
+              definitions: {
+                node,
+                extra: { properties: { x: { type: 'string' } } },
+                branch: { properties: { a: { enum: ['1'] }, x: { type: 'string' } } },
+              },
+              $ref: '#/definitions/node',
+            };
+            const result = retrieveSchema({ validator: testValidator }, schema, schema, { a: '1', b: '1' });
+            expect(result.properties).toHaveProperty('x');
+            expect(result.properties?.child).toEqual({ $ref: '#/definitions/node', [RJSF_REF_CYCLE_KEY]: true });
+            expect(resolvedFromRef(result)).toBe('#/definitions/node');
           });
           it('expands all branches of a conditional reached through a $ref follow-up pass', () => {
             testValidator.setReturnValues({ isValid: [true] });

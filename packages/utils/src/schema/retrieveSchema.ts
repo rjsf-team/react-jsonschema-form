@@ -35,7 +35,7 @@ import isPlainObject from '../isPlainObject.ts';
 import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
-import { declaredRef, enclosingRefPath, resolvedFromRef, resolvedSchemaOf } from '../refOf.ts';
+import { declaredRef, enclosingRefPath, mergeBranch, resolvedFromRef, resolvedSchemaOf } from '../refOf.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -196,7 +196,8 @@ export function resolveCondition<
     }
   }
   if (schemas.length) {
-    resolvedSchemas = schemas.map((s) => mergeSchemas(resolvedSchemaLessConditional, s) as S);
+    const [schemaLessConditional] = resolvedSchemas;
+    resolvedSchemas = schemas.map((s) => mergeBranch<S>(schemaLessConditional, s));
   }
   // As with `dependencies`, the merged result is re-walked as a follow-up pass so refs that were already expanded
   // keep their fixpoint depth and a $ref already flagged as a cycle stays collapsed.
@@ -2003,7 +2004,7 @@ export function withDependentSchema<
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
-    const mergedSchema = mergeSchemas(schema, dependentSchema) as S;
+    const mergedSchema = mergeBranch<S>(schema, dependentSchema);
     // Since it does not contain oneOf, we return the original schema.
     if (oneOf === undefined) {
       return mergedSchema;
@@ -2115,6 +2116,6 @@ export function withExactlyOneSubschema<
       undefined,
       passCount > 0 ? 1 : 0,
     );
-    return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
+    return schemas.map((resolvedSubschema) => mergeBranch<S>(schema, resolvedSubschema));
   });
 }

@@ -1,5 +1,13 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { enclosingRefPath, REF_SIBLING_BRANCHES, refSiblingBranches, resolvedSchemaOf } from '../src/refOf.ts';
+import { RJSF_REF_KEY } from '../src/index.ts';
+import {
+  enclosingRefPath,
+  mergeBranch,
+  REF_SIBLING_BRANCHES,
+  refSiblingBranches,
+  resolvedFromRef,
+  resolvedSchemaOf,
+} from '../src/refOf.ts';
 
 describe('resolvedSchemaOf()', () => {
   const definition: RJSFSchema = { type: 'object', allOf: [{ title: 'from the definition' }] };
@@ -15,6 +23,37 @@ describe('resolvedSchemaOf()', () => {
     expect(refSiblingBranches(fromDefinition)).toBeUndefined();
     expect(enclosingRefPath(fromDefinition, [], 'allOf')).toEqual(['#/definitions/B']);
     expect(refSiblingBranches(fromSiblings)).toEqual(['allOf']);
+  });
+
+  it('does not count a sibling keyword that is present but undefined as a branch beside the $ref', () => {
+    const resolved = resolvedSchemaOf('#/definitions/A', definition, { allOf: undefined, then: { title: 'beside' } });
+
+    expect(refSiblingBranches(resolved)).toEqual(['then']);
+  });
+});
+
+describe('mergeBranch()', () => {
+  const branch = resolvedSchemaOf('#/definitions/branch', { title: 'branch' }, { then: {} });
+
+  it('keeps the reference the schema was resolved from, and none of the sibling branches of the branch', () => {
+    const schema = resolvedSchemaOf('#/definitions/own', { type: 'object' }, {});
+
+    const merged = mergeBranch(schema, branch);
+
+    expect(merged).toEqual({ type: 'object', title: 'branch', then: {}, [RJSF_REF_KEY]: '#/definitions/own' });
+  });
+
+  it('keeps the sibling branches of the schema', () => {
+    const schema = resolvedSchemaOf('#/definitions/own', { type: 'object' }, { allOf: [] });
+
+    expect(refSiblingBranches(mergeBranch(schema, branch))).toEqual(['allOf']);
+  });
+
+  it('takes the markers of the branch for a schema that was not resolved from a reference', () => {
+    const merged = mergeBranch({ type: 'object' }, branch);
+
+    expect(resolvedFromRef(merged)).toBe('#/definitions/branch');
+    expect(refSiblingBranches(merged)).toEqual(['then']);
   });
 });
 
