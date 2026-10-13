@@ -1,6 +1,57 @@
 import { mergeDefaultsWithFormData } from '../src/index.ts';
 
 describe('mergeDefaultsWithFormData()', () => {
+  it.each(['toString', 'constructor', 'valueOf', 'hasOwnProperty'])(
+    'keeps form data under the inherited default name %s',
+    (key) => {
+      const formData = { [key]: 'user value' };
+      expect(mergeDefaultsWithFormData<Record<string, unknown>>({ a: 1 }, formData, true, false, true)).toEqual({
+        a: 1,
+        [key]: 'user value',
+      });
+    },
+  );
+
+  it.each([false, true])('preserves a JSON __proto__ key with override=%s', (override) => {
+    const formData = JSON.parse('{"__proto__":{"marker":1},"b":2}');
+    const result = mergeDefaultsWithFormData({ a: 1 }, formData, false, false, override);
+    expect(Object.hasOwn(result, '__proto__')).toBe(true);
+    expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toEqual({ marker: 1 });
+    expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+    expect(result.marker).toBeUndefined();
+    expect(Object.getOwnPropertyDescriptor(formData, '__proto__')?.value).toEqual({ marker: 1 });
+  });
+
+  it('safely copies and merges an own __proto__ default', () => {
+    const defaults = JSON.parse('{"__proto__":{"left":1}}');
+    const formData = JSON.parse('{"__proto__":{"right":2}}');
+    const result = mergeDefaultsWithFormData(defaults, formData);
+    expect(Object.hasOwn(result, '__proto__')).toBe(true);
+    expect(Object.getOwnPropertyDescriptor(result, '__proto__')?.value).toEqual({ left: 1, right: 2 });
+    expect(Object.getPrototypeOf(result)).toBe(Object.prototype);
+    expect(Object.getOwnPropertyDescriptor(defaults, '__proto__')?.value).toEqual({ left: 1 });
+    const copied = mergeDefaultsWithFormData(defaults, {});
+    expect(Object.hasOwn(copied, '__proto__')).toBe(true);
+    expect(Object.getPrototypeOf(copied)).toBe(Object.prototype);
+  });
+
+  it('ignores inherited defaults but honors own prototype-named defaults', () => {
+    const inherited = Object.create({ constructor: 'inherited' });
+    expect(mergeDefaultsWithFormData(inherited, { constructor: 'user' }, false, false, true)).toEqual({
+      constructor: 'user',
+    });
+    expect(mergeDefaultsWithFormData({ constructor: 'own' }, { constructor: 'user' }, false, false, true)).toEqual({
+      constructor: 'own',
+    });
+  });
+
+  it('preserves a nested __proto__ form value', () => {
+    const formData = JSON.parse('{"nested":{"__proto__":{"marker":1}}}');
+    const result = mergeDefaultsWithFormData({ nested: {} }, formData);
+    expect(Object.hasOwn(result?.nested, '__proto__')).toBe(true);
+    expect(Object.getPrototypeOf(result?.nested)).toBe(Object.prototype);
+  });
+
   it('shouldn`t mutate the provided objects', () => {
     const obj1 = { a: 1 };
     mergeDefaultsWithFormData<any>(obj1, { b: 2 });
