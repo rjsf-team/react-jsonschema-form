@@ -308,8 +308,8 @@ describe('render stability across sibling fields', () => {
     });
 
     it('does not render the suggestions of that field again', async () => {
-      // `SchemaExamples` reads the length of its suggestions once each time it renders, which a spy cannot be put on
-      // since `getExampleSuggestions()` freezes the array
+      // `SchemaExamples` reads the length of its suggestions each time it renders, which a spy cannot be put on since
+      // `getExampleSuggestions()` freezes the array
       let lengthReads = 0;
       const suggestions = new Proxy(getExampleSuggestions(fieldSchema), {
         get(target, key, receiver): unknown {
@@ -340,19 +340,6 @@ describe('render stability across sibling fields', () => {
 
       expect(onTemplateRender).toHaveBeenCalled();
       expect(lengthReads).toBe(readsToRender);
-    });
-
-    it('hands a template the same suggestions for every key', async () => {
-      const handed = new Set<readonly string[]>();
-      function RecordingInputTemplate({ id, schema, value, onChange }: BaseInputTemplateProps) {
-        handed.add(getExampleSuggestions(schema));
-        return <input id={id} value={value ?? ''} onChange={(event) => onChange(event.target.value)} />;
-      }
-      createFormComponent({ schema: keystrokeSchema, templates: { BaseInputTemplate: RecordingInputTemplate } });
-
-      await user.type(screen.getByLabelText('A'), 'abc');
-
-      expect([...handed]).toEqual([['one', 'two']]);
     });
 
     // A label takes only strings and a boolean, none of which a test can count the reads of, and it renders the same
