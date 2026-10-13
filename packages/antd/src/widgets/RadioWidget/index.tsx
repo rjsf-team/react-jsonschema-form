@@ -3,6 +3,7 @@ import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, 
 import {
   ariaDescribedByIds,
   enumOptionSelectedValue,
+  enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   getOptionValueFormat,
@@ -35,6 +36,7 @@ export default function RadioWidget<
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
+  const fieldDisabled = disabled || (readonlyAsDisabled && readonly);
 
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -53,7 +55,6 @@ export default function RadioWidget<
 
   return (
     <Radio.Group
-      disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
@@ -68,10 +69,9 @@ export default function RadioWidget<
             id={optionId(id, i)}
             name={htmlName || id}
             autoFocus={i === 0 ? autofocus : false}
-            disabled={
-              disabled ||
-              (Array.isArray(enumDisabled) && enumDisabled.some((disabledValue) => disabledValue === option.value))
-            }
+            // `undefined` rather than `false` for an enabled option, since antd reads its `DisabledContext` only when
+            // the radio leaves `disabled` unset
+            disabled={fieldDisabled || enumOptionsIsDisabled(option.value, enumDisabled) || undefined}
             // oxlint-disable-next-line react/no-array-index-key
             key={i}
             value={domValues[i]}

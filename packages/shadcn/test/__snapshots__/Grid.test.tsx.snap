@@ -514,7 +514,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="p-0.5"
                             >
                               <div
-                                aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                 aria-disabled="false"
                                 class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                                 cmdk-root=""
@@ -528,6 +527,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
+                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -536,7 +536,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
-                                  />
+                                  >
+                                    Select ...
+                                  </span>
                                   <svg
                                     aria-hidden="true"
                                     class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -873,7 +875,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="p-0.5"
                   >
                     <div
-                      aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                       aria-disabled="false"
                       class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                       cmdk-root=""
@@ -887,6 +888,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -895,7 +897,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
-                        />
+                        >
+                          Select ...
+                        </span>
                         <svg
                           aria-hidden="true"
                           class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -1453,7 +1457,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="p-0.5"
                             >
                               <div
-                                aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                 aria-disabled="false"
                                 class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                                 cmdk-root=""
@@ -1467,6 +1470,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
+                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -1475,7 +1479,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
-                                  />
+                                  >
+                                    Select ...
+                                  </span>
                                   <svg
                                     aria-hidden="true"
                                     class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -1844,7 +1850,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="p-0.5"
                   >
                     <div
-                      aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                       aria-disabled="false"
                       class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                       cmdk-root=""
@@ -1858,6 +1863,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -1866,7 +1872,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
-                        />
+                        >
+                          Select ...
+                        </span>
                         <svg
                           aria-hidden="true"
                           class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -2424,7 +2432,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="p-0.5"
                             >
                               <div
-                                aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                 aria-disabled="false"
                                 class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                                 cmdk-root=""
@@ -2438,6 +2445,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
+                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -2446,7 +2454,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
-                                  />
+                                  >
+                                    Select ...
+                                  </span>
                                   <svg
                                     aria-hidden="true"
                                     class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -3229,7 +3239,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               class="p-0.5"
                             >
                               <div
-                                aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                 aria-disabled="false"
                                 class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                                 cmdk-root=""
@@ -3243,6 +3252,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                   style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                                 />
                                 <button
+                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3251,7 +3261,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <span
                                     class="flex-1 line-clamp-1 text-muted-foreground"
-                                  />
+                                  >
+                                    Select ...
+                                  </span>
                                   <svg
                                     aria-hidden="true"
                                     class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -3588,7 +3600,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     class="p-0.5"
                   >
                     <div
-                      aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                       aria-disabled="false"
                       class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                       cmdk-root=""
@@ -3602,6 +3613,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
+                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3610,7 +3622,9 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       >
                         <span
                           class="flex-1 line-clamp-1 text-muted-foreground"
-                        />
+                        >
+                          Select ...
+                        </span>
                         <svg
                           aria-hidden="true"
                           class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -4138,7 +4152,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                   class="p-0.5"
                 >
                   <div
-                    aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                     aria-disabled="false"
                     class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                     cmdk-root=""
@@ -4152,6 +4165,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
+                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -4160,7 +4174,9 @@ exports[`Three even column grid > renders person and address in three columns, n
                     >
                       <span
                         class="flex-1 line-clamp-1 text-muted-foreground"
-                      />
+                      >
+                        Select ...
+                      </span>
                       <svg
                         aria-hidden="true"
                         class="lucide lucide-chevron-down h-4 w-4 opacity-50"
@@ -4690,7 +4706,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   class="p-0.5"
                 >
                   <div
-                    aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                     aria-disabled="false"
                     class="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
                     cmdk-root=""
@@ -4704,6 +4719,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                     />
                     <button
+                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -4712,7 +4728,9 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     >
                       <span
                         class="flex-1 line-clamp-1 text-muted-foreground"
-                      />
+                      >
+                        Select ...
+                      </span>
                       <svg
                         aria-hidden="true"
                         class="lucide lucide-chevron-down h-4 w-4 opacity-50"

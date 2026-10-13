@@ -364,11 +364,36 @@ class SchemaUtils<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+   * @param [oldData] - The previous form data, used only to decide whether the enum filter runs; `Form`
+   *      passes the data as it last settled under the current root schema. When omitted, the filter always
+   *      runs. `$ref`s on both sides resolve against the one root schema, so pass `oldData` only when the
+   *      root schema is unchanged
+   * @param [resolvedOldSchema] - `oldSchema` already resolved for `oldData` at the root: the root frame's
+   *      filter chain uses it directly instead of resolving `oldSchema` again
+   * @param [oldDataForPairing] - `oldData` as the container writes since the settle moved it, used only to
+   *      pair an array's rows with their previous values; the old-schema side keeps reading `oldData`.
+   *      Defaults to `oldData`
    * @returns - The new form data, with all the fields uniquely associated with the old schema set
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
-  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
-    return sanitizeDataForNewSchema(this.context, this.rootSchema, newSchema, oldSchema, data);
+  sanitizeDataForNewSchema(
+    newSchema?: S,
+    oldSchema?: S,
+    data?: any,
+    oldData?: any,
+    resolvedOldSchema?: S,
+    oldDataForPairing?: any,
+  ): T {
+    return sanitizeDataForNewSchema(
+      this.context,
+      this.rootSchema,
+      newSchema,
+      oldSchema,
+      data,
+      oldData,
+      resolvedOldSchema,
+      oldDataForPairing,
+    );
   }
 }
 
