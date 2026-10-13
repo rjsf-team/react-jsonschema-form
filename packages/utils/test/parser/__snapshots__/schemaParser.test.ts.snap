@@ -1108,7 +1108,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
     },
     "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/foo",
+    Symbol(__rjsf_ref): "super-schema#/definitions/foo",
+    Symbol(__rjsf_source_ref): "#/definitions/foo",
   },
   "-1e3c57ec": {
     "$id": "-1e3c57ec",
@@ -1134,7 +1135,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
     },
     "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/choice2",
+    Symbol(__rjsf_ref): "super-schema#/definitions/choice2",
+    Symbol(__rjsf_source_ref): "#/definitions/choice2",
   },
   "-365ff3a7": {
     "$id": "-365ff3a7",
@@ -1148,7 +1150,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
     },
     "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/choice2",
+    Symbol(__rjsf_ref): "super-schema#/definitions/choice2",
+    Symbol(__rjsf_source_ref): "#/definitions/choice2",
   },
   "-3c1db7d0": {
     "$id": "-3c1db7d0",
@@ -1158,14 +1161,16 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
     },
     "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/foo",
+    Symbol(__rjsf_ref): "super-schema#/definitions/foo",
+    Symbol(__rjsf_source_ref): "#/definitions/foo",
   },
   "-40dd246a": {
     "$id": "-40dd246a",
     "properties": {
       "idCode": {
         "type": "string",
-        Symbol(__rjsf_ref): "#/definitions/test",
+        Symbol(__rjsf_ref): "super-schema#/definitions/test",
+        Symbol(__rjsf_source_ref): "#/definitions/test",
       },
     },
     "title": "Second method of identification",
@@ -1194,7 +1199,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
     },
     "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/choice1",
+    Symbol(__rjsf_ref): "super-schema#/definitions/choice1",
+    Symbol(__rjsf_source_ref): "#/definitions/choice1",
   },
   "-4887b48c": {
     "$id": "-4887b48c",
@@ -1205,7 +1211,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
       "lastName": {
         "type": "string",
-        Symbol(__rjsf_ref): "#/definitions/test",
+        Symbol(__rjsf_ref): "super-schema#/definitions/test",
+        Symbol(__rjsf_source_ref): "#/definitions/test",
       },
     },
     "title": "First method of identification",
@@ -1231,7 +1238,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       },
       "lastName": {
         "type": "string",
-        Symbol(__rjsf_ref): "#/definitions/test",
+        Symbol(__rjsf_ref): "super-schema#/definitions/test",
+        Symbol(__rjsf_source_ref): "#/definitions/test",
       },
     },
     "title": "First method of identification",
@@ -1251,7 +1259,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
       "more",
     ],
     "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/choice1",
+    Symbol(__rjsf_ref): "super-schema#/definitions/choice1",
+    Symbol(__rjsf_source_ref): "#/definitions/choice1",
   },
   "587c7f18": {
     "$id": "587c7f18",
@@ -1265,7 +1274,8 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     "properties": {
       "idCode": {
         "type": "string",
-        Symbol(__rjsf_ref): "#/definitions/test",
+        Symbol(__rjsf_ref): "super-schema#/definitions/test",
+        Symbol(__rjsf_source_ref): "#/definitions/test",
       },
     },
     "title": "Second method of identification",

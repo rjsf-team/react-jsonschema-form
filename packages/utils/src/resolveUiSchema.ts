@@ -74,7 +74,10 @@ export default function resolveUiSchema<
     let resolvedSchema: S = schema;
     if (ref && declaredRef<S>(schema) && !resolvedFromRef<S>(schema)) {
       try {
-        resolvedSchema = findSchemaDefinition<S>(ref, registry.rootSchema);
+        // The lookup uses the normalized spelling: `ref` prefers the author's spelling, which keys
+        // `ui:definitions` correctly but is relative to a nested `$id` resource when one applies, and
+        // `findSchemaDefinition` would resolve it against the root's base and miss
+        resolvedSchema = findSchemaDefinition<S>(declaredRef<S>(schema)!, registry.rootSchema);
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
         return result;

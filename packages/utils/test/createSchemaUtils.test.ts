@@ -148,6 +148,10 @@ describe('createSchemaUtils()', () => {
       it('returns false when passing a falsy context, rather than throwing from a destructure', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(undefined as unknown as SchemaContext, rootSchema)).toBe(false);
       });
+      it('tolerates an undefined rootSchema at construction, storing it as-is', () => {
+        const utils = createSchemaUtils({ validator: testValidator }, undefined as unknown as RJSFSchema);
+        expect(utils.getRootSchema()).toBeUndefined();
+      });
       it('returns false when passing falsy rootSchema', () => {
         expect(
           schemaUtils.doesSchemaUtilsDiffer(

@@ -910,7 +910,9 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         anyOf: [{ $ref: '#/$defs/big' }, { $ref: '#/$defs/big' }],
       };
       const resolved = resolveAllReferences(root, root, []);
-      expect(resolved.anyOf![1]).toStrictEqual({ $ref: '#/$defs/big' });
+      // The walk reads the normalized root when the schema IS the root, so the collapsed option keeps the
+      // resolved spelling the walk carried
+      expect(resolved.anyOf![1]).toStrictEqual({ $ref: 'https://example.com/r.json#/$defs/big' });
     });
     it('marks a pointer into a nested resource distinctly from the same pointer into the root', () => {
       // The root's `#/$defs/x` and the nested resource's `#/$defs/x` are different schemas: the marker each
@@ -1097,11 +1099,103 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(retrieveSchema({ validator: testValidator }, schema, schema)).toEqual({
         $id: 'https://jsonschema.dev/schemas/examples/non-negative-integer-bundle',
         $schema: 'https://json-schema.org/draft/2020-12/schema',
-        $defs: definitions,
+        // The walk reads the normalized root when the schema IS the root, so the carried `$defs` hold the
+        // refs in their resolved spelling
+        $defs: {
+          ...definitions,
+          'https://jsonschema.dev/schemas/mixins/non-negative-integer': {
+            ...definitions['https://jsonschema.dev/schemas/mixins/non-negative-integer'],
+            $ref: 'https://jsonschema.dev/schemas/mixins/integer',
+          },
+        },
         minimum: 0,
         type: 'integer',
         [RJSF_REF_KEY]: 'https://jsonschema.dev/schemas/mixins/non-negative-integer',
       });
+    });
+    it('keeps tuple items refs resolved under a local $id override', () => {
+      // Probe from review: the resolution walk skips array-valued `items`, so `restoreOriginalRefs`
+      // skipping them too keeps a tuple item's ref in the spelling the normalization left; restoring
+      // the author's spelling would make a later lookup read it against the root and find ROOT-X
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://x.com/root.json',
+        definitions: {
+          t: {
+            $id: 'https://x.com/t.json',
+            type: 'array',
+            items: [{ $ref: '#/definitions/x' }],
+            definitions: { x: { title: 'T-X' } },
+          },
+          x: { title: 'ROOT-X' },
+        },
+        properties: { q: { $id: 'https://x.com/other.json', $ref: 'https://x.com/t.json' } },
+      };
+      const q = retrieveSchema({ validator: testValidator }, root.properties!.q as RJSFSchema, root);
+      const resolvedItem = retrieveSchema({ validator: testValidator }, (q.items as RJSFSchema[])[0], root);
+      expect(resolvedItem.title).toEqual('T-X');
+    });
+    it('keeps tuple items refs resolved without a local $id as well', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://x.com/root.json',
+        definitions: {
+          t: {
+            $id: 'https://x.com/t.json',
+            type: 'array',
+            items: [{ $ref: '#/definitions/x' }],
+            definitions: { x: { title: 'T-X' } },
+          },
+          x: { title: 'ROOT-X' },
+        },
+        properties: { q: { $ref: 'https://x.com/t.json' } },
+      };
+      const q = retrieveSchema({ validator: testValidator }, root.properties!.q as RJSFSchema, root);
+      const resolvedItem = retrieveSchema({ validator: testValidator }, (q.items as RJSFSchema[])[0], root);
+      expect(resolvedItem.title).toEqual('T-X');
+    });
+    it('applies a nested $id under properties when called with the raw root as the schema', () => {
+      // Probe from review: a direct `retrieveSchema(root, root)` walks the normalized root, so a
+      // relative ref inside a property carrying its own `$id` resolves against that resource
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        properties: {
+          foo: {
+            $id: 'nested/parent.json',
+            properties: { bar: { $ref: 'child.json' } },
+            $defs: { child: { $id: 'child.json', title: 'CHILD' } },
+          },
+        },
+      } as RJSFSchema;
+      const out = retrieveSchema({ validator: testValidator }, root, root) as RJSFSchema;
+      const foo = (out.properties as GenericObjectType).foo as RJSFSchema;
+      expect((foo.properties as GenericObjectType).bar).toEqual(
+        expect.objectContaining({ $id: 'child.json', title: 'CHILD' }),
+      );
+    });
+    it('collapses a nested-$id cycle whose refs were rewritten (both marker spellings on the path)', () => {
+      // Covers `enclosingRefPath` carrying the author's spelling beside the resolved one
+      const root: RJSFSchema = {
+        $id: 'http://x.com/root.json',
+        definitions: {
+          a: { $id: 'a.json', $ref: 'b.json' },
+          b: { $id: 'b.json', allOf: [{ $ref: 'a.json' }], title: 'B' },
+        },
+        properties: { p: { $ref: 'a.json' } },
+      };
+      const out = retrieveSchema({ validator: testValidator }, root.properties!.p as RJSFSchema, root);
+      expect(out).toMatchObject({ $id: 'b.json', title: 'B', $ref: 'http://x.com/a.json' });
+    });
+    it('collapses an absolute-ref cycle whose marker is the only spelling', () => {
+      const root: RJSFSchema = {
+        $id: 'http://x.com/root.json',
+        definitions: {
+          a: { allOf: [{ $ref: 'http://x.com/root.json#/definitions/a' }], title: 'A' },
+        },
+        properties: { p: { $ref: 'http://x.com/root.json#/definitions/a' } },
+      };
+      const out = retrieveSchema({ validator: testValidator }, root.properties!.p as RJSFSchema, root);
+      expect(out).toMatchObject({ title: 'A', $ref: 'http://x.com/root.json#/definitions/a' });
     });
     it('#5467: resolves a properties-carrying $ref chain in a bundle whose root has no $id', () => {
       // Refs inside the nested resources are written relative to their resource. Normalization resolves them

@@ -1,4 +1,3 @@
-import { JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
 import { normalizeRootReferences } from './findSchemaDefinition.ts';
 import logOnce from './logOnce.ts';
@@ -64,11 +63,11 @@ class SchemaUtils<
    * @param rootSchema - The root schema that will be forwarded to all the APIs
    */
   constructor(context: SchemaContext<S, F>, rootSchema: S) {
-    if (rootSchema?.[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-      this.rootSchema = normalizeRootReferences(rootSchema);
-    } else {
-      this.rootSchema = rootSchema;
-    }
+    // Every draft normalizes at construction, not just 2020-12: the per-call wrapper in `retrieveSchema`
+    // skips roots the normalization marker set recognizes, so a root stored raw would pay a full
+    // normalization walk on every field's `retrieveSchema` call. For a draft-7 root `getRootSchema()`
+    // therefore returns absolute refs, as it already did for 2020-12
+    this.rootSchema = rootSchema ? normalizeRootReferences(rootSchema) : rootSchema;
     this.rawRootSchema = rootSchema;
     // A v6 caller passing the validator here leaves `validator` undefined, which surfaces only as a `TypeError` from
     // inside `retrieveSchema()` that names nothing. Warned rather than thrown, since TypeScript already rejects it

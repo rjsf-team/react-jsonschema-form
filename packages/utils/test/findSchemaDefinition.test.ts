@@ -8,7 +8,7 @@ import {
   findSchemaDefinitionWithBaseURIOrUndefined,
 } from '../src/findSchemaDefinition.ts';
 import type { GenericObjectType, RJSFSchema } from '../src/index.ts';
-import { createSchemaUtils, findSchemaDefinition, ID_KEY } from '../src/index.ts';
+import { createSchemaUtils, findSchemaDefinition, ID_KEY, retrieveSchema } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 const testValidator = getTestValidator({});
@@ -249,7 +249,52 @@ describe('restoreOriginalRefs()', () => {
     const resolved = utils.retrieveSchema((copy.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
+<<<<<<< HEAD
   it('reads a root edited in place after a no-op normalization as it now stands', () => {
+=======
+  it('matches a root $id written with a trailing # against itself (draft-7)', () => {
+    const root: RJSFSchema = {
+      $id: 'http://ex.com/r.json#',
+      definitions: { a: { properties: { b: { $ref: '#/definitions/b' } } }, b: { type: 'string' } },
+      properties: { x: { $ref: '#/definitions/a' } },
+    };
+    const utils = createSchemaUtils({ validator: testValidator }, root);
+    const resolved = utils.retrieveSchema(root) as RJSFSchema;
+    expect(
+      (((resolved.properties as GenericObjectType).x as RJSFSchema).properties as GenericObjectType).b,
+    ).toMatchObject({ type: 'string' });
+  });
+  it('matches a root $id written with a trailing # against itself (2020-12)', () => {
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'http://ex.com/r.json#',
+      $defs: { a: { properties: { b: { $ref: '#/$defs/b' } } }, b: { type: 'string' } },
+      properties: { x: { $ref: '#/$defs/a' } },
+    };
+    const utils = createSchemaUtils({ validator: testValidator }, root);
+    const resolved = utils.retrieveSchema(root) as RJSFSchema;
+    expect(
+      (((resolved.properties as GenericObjectType).x as RJSFSchema).properties as GenericObjectType).b,
+    ).toMatchObject({ type: 'string' });
+  });
+  it('resolves a draft-7 ref migrated into its nested $id resource (embedded lookup runs on every draft)', () => {
+    const root: RJSFSchema = {
+      definitions: {
+        a: {
+          $id: 'http://ex.com/a.json',
+          definitions: { b: { type: 'object', properties: { bb: { type: 'string' } } } },
+          allOf: [{ $ref: '#/definitions/b' }],
+        },
+      },
+      properties: { x: { $ref: '#/definitions/a' } },
+    };
+    const utils = createSchemaUtils({ validator: testValidator }, root);
+    const resolved = utils.retrieveSchema((root.properties as GenericObjectType).x as RJSFSchema) as RJSFSchema;
+    expect(resolved.$id).toEqual('http://ex.com/a.json');
+    expect((resolved.properties as GenericObjectType).bb).toEqual({ type: 'string' });
+  });
+  it('snapshots the root at construction on every draft, while the standalone API re-reads an edited root', () => {
+>>>>>>> 89bc0f288 (Fix the round-6 findings: normalize every draft once, resolve ui:definitions options under nested $ids, walk normalized raw roots, every-draft embedded # chains, tuple-items restore)
     const root: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
       $defs: { a: { type: 'string', title: 'A' } },
@@ -257,10 +302,18 @@ describe('restoreOriginalRefs()', () => {
     };
     const utils = createSchemaUtils({ validator: testValidator }, root);
     utils.retrieveSchema((root.properties as GenericObjectType).x as RJSFSchema);
-    (root.$defs as GenericObjectType).p = { $id: 'nested/parent.json', properties: { c: { $ref: 'child.json' } } };
-    (root.$defs as GenericObjectType).c = { $id: 'nested/child.json', title: 'CHILD' };
-    (root.properties as GenericObjectType).y = { $ref: 'nested/parent.json' };
-    const resolved = utils.retrieveSchema((root.properties as GenericObjectType).y as RJSFSchema) as RJSFSchema;
+    // Replacing `$defs` detaches the edit from the construction-time snapshot the instance holds
+    root.$defs = {
+      a: { type: 'string', title: 'A' },
+      p: { $id: 'nested/parent.json', properties: { c: { $ref: 'child.json' } } },
+      c: { $id: 'nested/child.json', title: 'CHILD' },
+    };
+    const y: RJSFSchema = { $ref: 'nested/parent.json' };
+    // The stored root is a snapshot, the way a 2020-12 root with an `$id` already was: the instance
+    // cannot see the replacement
+    expect(() => utils.retrieveSchema(y)).toThrow('Could not find a definition for nested/parent.json');
+    // The standalone API normalizes the root it is passed on each call, so it reads the edit
+    const resolved = retrieveSchema({ validator: testValidator }, y, root) as RJSFSchema;
     expect(((resolved.properties as GenericObjectType).c as RJSFSchema).title).toEqual('CHILD');
   });
   it('returns the same object when nothing in the walked keywords was rewritten', () => {
@@ -332,10 +385,11 @@ describe('findSchemaDefinition()', () => {
       'Could not find a definition for /bundled.ref.json',
     );
   });
-  it('throws error when bundled ref with explicit baseURI are not part of JSON Schema Draft 2020-12', () => {
-    expect(() => findSchemaDefinition('#/properties/num', schema, 'https://example.com/bundled.ref.json')).toThrow(
-      'Could not find a definition for #/properties/num',
-    );
+  it('resolves a bundled ref with an explicit baseURI on any draft', () => {
+    // The embedded-resource lookup runs on every draft, the way the non-`#` branch already did
+    expect(findSchemaDefinition('#/properties/num', schema, 'https://example.com/bundled.ref.json')).toEqual({
+      type: 'integer',
+    });
   });
   it.each(['https://example.com/child.json', 'child.json'])('resolves the absolute URI of a nested $id %s', ($id) => {
     const child: RJSFSchema = { $id, type: 'string' };
@@ -877,10 +931,10 @@ describe('findSchemaDefinitionRecursive()', () => {
       'Could not find a definition for /bundled.ref.json',
     );
   });
-  it('throws error when bundled ref with explicit baseURI are not part of JSON Schema Draft 2020-12', () => {
-    expect(() =>
+  it('resolves a bundled ref with an explicit baseURI on any draft', () => {
+    expect(
       findSchemaDefinitionRecursive('#/properties/num', schema, [], 'https://example.com/bundled.ref.json'),
-    ).toThrow('Could not find a definition for #/properties/num');
+    ).toEqual({ type: 'integer' });
   });
   it('correctly resolves absolute bundled refs within a JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinitionRecursive('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(internalSchema);
@@ -1536,5 +1590,47 @@ describe('pointer scope walk pins', () => {
     expect(
       findSchemaDefinitionWithBaseURIOrUndefined('#/definitions/a', { definitions: { a: { type: 'string' } } }),
     ).toEqual({ schema: { type: 'string' }, baseURI: undefined });
+  });
+});
+
+describe('draft-7 embedded-resource # chains (round 6)', () => {
+  it('resolves a # chain inside an embedded resource on a draft-7 root', () => {
+    // Probe from review: the embedded-resource lookup runs on every draft, so the `#` ref a resource
+    // chains to resolves inside it on draft-7 the way it already did on 2020-12
+    const root: RJSFSchema = {
+      definitions: {
+        a: { $id: 'http://ex.com/a.json', $ref: '#/definitions/b', definitions: { b: { title: 'A-B' } } },
+        b: { title: 'ROOT-B' },
+      },
+      properties: { x: { $ref: 'http://ex.com/a.json' } },
+    };
+    expect(findSchemaDefinition('http://ex.com/a.json', root)).toEqual({
+      $id: 'http://ex.com/a.json',
+      definitions: { b: { title: 'A-B' } },
+      title: 'A-B',
+    });
+  });
+  it('resolves the same shape on a 2020-12 root, merging siblings into allOf', () => {
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: {
+        a: { $id: 'http://ex.com/a.json', $ref: '#/$defs/b', $defs: { b: { title: 'A-B' } } },
+        b: { title: 'ROOT-B' },
+      },
+      properties: { x: { $ref: 'http://ex.com/a.json' } },
+    };
+    expect(findSchemaDefinition('http://ex.com/a.json', root)).toEqual({
+      allOf: [{ $id: 'http://ex.com/a.json', $defs: { b: { title: 'A-B' } } }, { title: 'A-B' }],
+    });
+  });
+  it('keeps a root-relative ref as written against an external baseURI', () => {
+    // A `#/...` ref names the root itself: rewriting it against a base the document does not live at
+    // would point it at a resource that does not exist, so the spelling is kept
+    const schema: RJSFSchema = {
+      definitions: { x: { type: 'string' } },
+      properties: { p: { $ref: '#/definitions/x' } },
+    };
+    const out = makeAllReferencesAbsolute(schema, 'http://ext.example/root.json');
+    expect((out.properties!.p as RJSFSchema).$ref).toEqual('#/definitions/x');
   });
 });

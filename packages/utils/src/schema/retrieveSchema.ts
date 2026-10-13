@@ -599,12 +599,22 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   passCount = 0,
 ): S {
   // Normalize here, once per top-level walk: the worker re-enters itself for every property, item and option,
+<<<<<<< HEAD
   // and normalizing on each entry would walk the whole root at every node. The worker's own normalization of
   // this already-normalized root comes back unchanged, and a root edited in place is still read as it now
   // stands on the next top-level call
+=======
+  // and normalizing on each entry would walk the whole root at every node. The worker therefore reads the
+  // already-normalized root as-is, and a root edited in place is still read as it now stands on the next
+  // top-level call
+  const normalizedRoot = normalizeRootReferences(rootSchema);
+>>>>>>> 89bc0f288 (Fix the round-6 findings: normalize every draft once, resolve ui:definitions options under nested $ids, walk normalized raw roots, every-draft embedded # chains, tuple-items restore)
   return resolveAllReferencesInternal<S>(
-    schema,
-    normalizeRootReferences(rootSchema),
+    // A direct `retrieveSchema(schema, root)` call that passes the raw root as the schema walks the
+    // normalized root instead: the raw root's property walk never applies a nested `$id` to the base,
+    // so a relative ref inside such a property would resolve against the root and miss its resource
+    schema === rootSchema ? normalizedRoot : schema,
+    normalizedRoot,
     recurseList,
     baseURI,
     resolveAnyOfOrOneOfRefs,
@@ -874,8 +884,9 @@ function enclosingRefPath<S extends StrictRJSFSchema>(schema: S, recurseList: st
       additions.push(resolveUri(scope, ref));
     }
   }
+  // Nothing downstream compares path identity, so an unchanged path may come back as a fresh copy
   const missing = additions.filter((ref) => !recurseList.includes(ref));
-  return missing.length > 0 ? [...recurseList, ...missing] : recurseList;
+  return [...recurseList, ...missing];
 }
 
 /** The keywords that constrain a value of a given type without naming the type itself. A typeless `additionalProperties`

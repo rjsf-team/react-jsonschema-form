@@ -1,4 +1,12 @@
-import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src/index.ts';
+import { normalizeRootReferences } from '../src/findSchemaDefinition.ts';
+import type {
+  GenericObjectType,
+  Registry,
+  RJSFSchema,
+  TemplatesType,
+  UiSchema,
+  UiSchemaDefinitions,
+} from '../src/index.ts';
 import { createSchemaUtils, RJSF_REF_KEY, RJSF_SOURCE_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -28,6 +36,48 @@ function makeRegistry(rootSchema: RJSFSchema, uiSchemaDefinitions: UiSchemaDefin
 }
 
 describe('resolveUiSchema() - normalized options', () => {
+<<<<<<< HEAD
+=======
+  it('finds options inside a nested $id resource (lookup uses the normalized spelling)', () => {
+    // Probe from review: `ref` prefers the author's spelling, which keys `ui:definitions` correctly
+    // but is relative to the nested resource, so the lookup uses `declaredRef`'s normalized spelling
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      $defs: {
+        parent: { $id: 'nested/parent.json', type: 'object', properties: { opt: { $ref: 'choice.json' } } },
+        choice: { $id: 'nested/choice.json', oneOf: [{ $ref: 'a.json' }, { type: 'number' }] },
+        a: { $id: 'nested/a.json', type: 'string' },
+      },
+      properties: { p: { $ref: 'nested/parent.json' } },
+    };
+    const n = normalizeRootReferences(root);
+    const parent = (n as GenericObjectType).$defs as GenericObjectType;
+    const opt = ((parent.parent as RJSFSchema).properties as GenericObjectType).opt as RJSFSchema;
+    expect(
+      resolveUiSchema(
+        opt,
+        undefined,
+        makeRegistry(n, { 'a.json': { 'ui:title': 'A' }, 'choice.json': { 'ui:title': 'CHOICE' } }),
+      ),
+    ).toEqual({ 'ui:title': 'CHOICE', oneOf: [{ 'ui:title': 'A' }] });
+  });
+
+  it('applies ui:definitions to a collapsed recursive ref keyed by the author spelling (draft-7 root with $id)', () => {
+    const rootSchema: RJSFSchema = {
+      $id: 'https://ex.com/r.json',
+      definitions: { node: { type: 'object', properties: { child: { $ref: '#/definitions/node' } } } },
+      properties: { n: { $ref: '#/definitions/node' } },
+    };
+    const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
+    const child = (utils.retrieveSchema(rootSchema) as RJSFSchema).properties!.n.properties!.child as RJSFSchema;
+    const result = resolveUiSchema(child, undefined, {
+      rootSchema,
+      uiSchemaDefinitions: { '#/definitions/node': { 'ui:title': 'DEF' } },
+    });
+    expect(result['ui:title']).toEqual('DEF');
+  });
+>>>>>>> 89bc0f288 (Fix the round-6 findings: normalize every draft once, resolve ui:definitions options under nested $ids, walk normalized raw roots, every-draft embedded # chains, tuple-items restore)
   it('applies ui:definitions to unexpanded anyOf options keyed by the author spelling of their $ref', () => {
     // An unexpanded option carries no ref markers; its object comes from the normalized root with an absolute
     // `$ref`, so the author spelling a `ui:definitions` entry is keyed by is recovered through `originalRefOf`
