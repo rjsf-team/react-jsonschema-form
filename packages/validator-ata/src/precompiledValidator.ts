@@ -111,15 +111,16 @@ export default class ATAPrecompiledValidator<
   }
 
   /** Ensures that the validator is using the same schema as the root schema used to construct the precompiled
-   * validator. It first compares the given `schema` against the root schema and the normalized root schema, and if
-   * they aren't the same, then it checks against the resolved root schema, on the chance that a resolved version of
+   * validator. It first compares the given `schema` against the normalized root schema, which is the root
+   * `SchemaUtils` hands validators, then against the raw root schema, and if they aren't the same it checks
+   * against the resolved root schema, on the chance that a resolved version of
    * the root schema was passed in instead of the raw root schema.
    *
    * @param schema - The schema against which to validate the form data
    * @param [formData] - The form data to validate if any
    */
   ensureSameRootSchema(schema: S, formData?: unknown) {
-    if (!deepEquals(schema, this.rootSchema) && !deepEquals(schema, this.normalizedRootSchema)) {
+    if (!deepEquals(schema, this.normalizedRootSchema) && !deepEquals(schema, this.rootSchema)) {
       // Resolved with this validator and the merge its schemas were compiled with: only its own precompiled functions
       // can answer for the `oneOf`/`anyOf` options and conditions of its root schema, and only that merge builds the
       // sub-schemas the precompiled map holds. The form data is passed since it can affect the resolution

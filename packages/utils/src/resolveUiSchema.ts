@@ -1,9 +1,9 @@
 import { ANY_OF_KEY, ONE_OF_KEY, UI_OPTIONS_KEY } from './constants.ts';
-import findSchemaDefinition, { originalRefOf } from './findSchemaDefinition.ts';
+import { findSchemaDefinitionWithBaseURIOrUndefined, lexicalScopeOfNode } from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
-import { declaredRef, resolvedFromRef, sourceRefOf } from './refOf.ts';
+import { authorRefOf, declaredRef, resolvedFromRef } from './refOf.ts';
 import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Merges a `ui:definitions` entry under the local uiSchema of a field whose schema `$ref`s it. A definition is typed
@@ -45,10 +45,8 @@ export default function resolveUiSchema<
 ): UiSchema<T, S, F> {
   // The author's spelling comes first: a schema resolved from a definition is named by the definition the author
   // wrote, which is the name a `ui:definitions` entry is keyed by, where a `$ref` it still holds is one nothing
-  // has followed yet. `refOf()` in `retrieveSchema.ts` reads the same two the other way about, for the opposite
-  // reason
-  const ref =
-    sourceRefOf<S>(schema) ?? originalRefOf<S>(schema) ?? resolvedFromRef<S>(schema) ?? declaredRef<S>(schema);
+  // has followed yet. `authorRefOf()` reads that chain
+  const ref = authorRefOf<S>(schema);
   const definitions = registry.uiSchemaDefinitions;
   const definitionUiSchema = ref && definitions ? definitions[ref] : undefined;
 
@@ -75,10 +73,20 @@ export default function resolveUiSchema<
     let resolvedSchema: S = schema;
     if (ref && declaredRef<S>(schema) && !resolvedFromRef<S>(schema)) {
       try {
-        // The lookup uses the normalized spelling: `ref` prefers the author's spelling, which keys
-        // `ui:definitions` correctly but is relative to a nested `$id` resource when one applies, and
-        // `findSchemaDefinition` would resolve it against the root's base and miss
-        resolvedSchema = findSchemaDefinition<S>(declaredRef<S>(schema), registry.rootSchema);
+        // The lookup goes against the scope the schema sits in: `ref` prefers the author's spelling, which
+        // keys `ui:definitions` correctly but is relative to a nested `$id` resource when one applies, and a
+        // lookup against the root's base would miss it
+        const scope = lexicalScopeOfNode<S>(registry.rootSchema, schema);
+        const found = findSchemaDefinitionWithBaseURIOrUndefined<S>(
+          declaredRef<S>(schema),
+          registry.rootSchema,
+          [],
+          scope,
+        );
+        if (found === undefined) {
+          throw new Error(`Could not find a definition for ${declaredRef<S>(schema)}.`);
+        }
+        resolvedSchema = found.schema;
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
         return result;
@@ -94,17 +102,9 @@ export default function resolveUiSchema<
         let hasExpanded = false;
         for (let i = 0; i < schemaOptions.length; i++) {
           const option = schemaOptions[i] as S | undefined;
-          // An unexpanded option carries no ref markers; when it comes from a normalized root its `$ref` is
-          // absolute, so the author spelling `ui:definitions` entries are keyed by comes from `originalRefOf`.
-          // An expanded option is a new object with no `originalRefOf` at all, so the author spelling comes
-          // from `sourceRefOf` first, the way the top-level chain above reads it
-          const optionRef =
-            option === undefined
-              ? undefined
-              : (sourceRefOf<S>(option) ??
-                originalRefOf<S>(option) ??
-                resolvedFromRef<S>(option) ??
-                declaredRef<S>(option));
+          // The author spelling `ui:definitions` entries are keyed by, read the same way as the top-level
+          // `ref` above
+          const optionRef = authorRefOf<S>(option);
           if (optionRef && optionRef in definitions) {
             uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
             hasExpanded = true;

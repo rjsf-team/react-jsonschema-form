@@ -203,7 +203,10 @@ function walkEmbeddedSchemas<S extends StrictRJSFSchema = RJSFSchema>(
   const currentURI = childScope(schema, baseURI, pre2019);
   if (
     typeof schema[ID_KEY] === 'string' &&
-    (uriEqual(currentURI, ref) || (asWrittenRef !== undefined && schema[ID_KEY] === asWrittenRef))
+    // A fragment-only `$id` is an anchor: it leaves the scope unchanged, so it must not match the scope it
+    // sits in, the same way `childScope` leaves it out of the scope
+    !schema[ID_KEY].startsWith('#') &&
+    (uriEqual(currentURI.replace(/#\/?$/, ''), ref) || (asWrittenRef !== undefined && schema[ID_KEY] === asWrittenRef))
   ) {
     return { schema, baseURI: currentURI };
   }
@@ -581,7 +584,11 @@ const normalizedRoots = new WeakSet<StrictRJSFSchema>();
  * onto the first.
  *
  * @param rootSchema - The root schema to normalize
- * @returns - The normalized root; the original object when normalization changed nothing
+ * @returns - The normalized root. When normalization changed nothing, a marked shallow copy of it, not the
+ *      original object: the mark is what lets a caller that stores the result (`createSchemaUtils`) skip a fresh
+ *      walk on later calls, while the caller's unmarked original is still re-read as it stands when passed in
+ *      again. A side effect of the copy is that `retrieveSchema(validator, root, root)` on such a root returns a
+ *      new object rather than `root` itself
  */
 export function normalizeRootReferences<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): S {
   if (normalizedRoots.has(rootSchema)) {
@@ -780,10 +787,7 @@ function resolveFoundChain<S extends StrictRJSFSchema = RJSFSchema>(
     }
     const sub = resolveFoundChain<S>(subFound, nextRef, rootSchema, [...recurseList, ref], chainRefsResolved);
     if (Object.keys(remaining).length > 0) {
-      if (
-        rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2019_09 ||
-        rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12
-      ) {
+      if (!isPre2019Root(rootSchema)) {
         return {
           schema: { [ALL_OF_KEY]: [remaining, sub.schema] } as S,
           baseURI: sub.baseURI,

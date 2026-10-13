@@ -1,4 +1,5 @@
 import { REF_KEY, RJSF_REF_KEY, RJSF_SOURCE_REF_KEY } from './constants.ts';
+import { originalRefOf } from './findSchemaDefinition.ts';
 import type { RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Returns the `$ref` the given `schema` still holds, which is one that has yet to be resolved.
@@ -29,4 +30,16 @@ export function resolvedFromRef<S extends StrictRJSFSchema = RJSFSchema>(schema:
  */
 export function sourceRefOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S | undefined): string | undefined {
   return (schema as RJSFMarkedSchema | undefined)?.[RJSF_SOURCE_REF_KEY] as string | undefined;
+}
+
+/** Returns the ref the document author wrote for the given `schema`, read across every marker a resolution can
+ * leave: the preserved pre-normalization spelling, the spelling kept when a copy was made before normalization,
+ * the canonical resolved-from ref, and finally a `$ref` still sitting on the schema. This is the spelling a
+ * `ui:definitions` entry is keyed by, so it is the one readers of author intent should use.
+ *
+ * @param schema - The schema to read the author-written reference off, if there is one
+ * @returns - The author-written `$ref`, or undefined when the schema carries no reference at all
+ */
+export function authorRefOf<S extends StrictRJSFSchema = RJSFSchema>(schema: S | undefined): string | undefined {
+  return sourceRefOf(schema) ?? originalRefOf(schema as S) ?? resolvedFromRef(schema) ?? declaredRef(schema);
 }

@@ -106,6 +106,32 @@ describe('resolveUiSchema() - normalized options', () => {
       resolveUiSchema(carryOriginalRef({ ...child, [RJSF_REF_CYCLE_KEY]: false }, child), undefined, registry as never),
     ).toEqual({ 'ui:title': 'NODE' });
   });
+  it('applies ui:definitions to a ref written relative to a nested $id (scope recovered from the root)', () => {
+    // The author's spelling keys `ui:definitions` but is relative to the nested resource that holds it; the
+    // lookup recovers that scope from the schema's position in the root instead of resolving against the
+    // root's own base and missing
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      properties: { p: { $ref: 'nested/parent.json' } },
+      definitions: {
+        parent: {
+          $id: 'nested/parent.json',
+          oneOf: [{ $ref: 'child.json' }, { type: 'number' }],
+          definitions: { child: { $id: 'child.json', type: 'string', title: 'CHILD' } },
+        },
+      },
+    };
+    const utils = createSchemaUtils({ validator: testValidator }, rootSchema);
+    const p = utils.retrieveSchema(utils.retrieveSchema(utils.getRootSchema()).properties!.p as RJSFSchema);
+    const option = (p.oneOf as RJSFSchema[])[0];
+    const result = resolveUiSchema(option, undefined, {
+      rootSchema: utils.getRootSchema(),
+      uiSchemaDefinitions: { 'child.json': { 'ui:widget': 'textarea' } },
+    });
+    expect(console.warn).not.toHaveBeenCalled();
+    expect(result['ui:widget']).toEqual('textarea');
+  });
   it('applies ui:definitions to unexpanded anyOf options keyed by the author spelling of their $ref', () => {
     // An unexpanded option carries no ref markers; its object comes from the normalized root with an absolute
     // `$ref`, so the author spelling a `ui:definitions` entry is keyed by is recovered through `originalRefOf`

@@ -692,6 +692,41 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         [RJSF_REF_KEY]: $ref,
       });
     });
+    it('keeps the cycle flag on a self-referencing root whose $ref is #', () => {
+      // A `$ref: '#'` back to a root with an `$id` resolves against the normalized copy: the walk must still
+      // recognize the repeat and flag the placeholder instead of recursing forever
+      const root: RJSFSchema = {
+        $id: 'http://x/root.json',
+        type: 'object',
+        properties: { name: { type: 'string' }, self: { $ref: '#' } },
+      };
+      const su = createSchemaUtils({ validator: testValidator }, root);
+      const out = su.retrieveSchema(su.getRootSchema());
+      const flags: (unknown | boolean)[] = [];
+      let current: RJSFSchema | undefined = out;
+      for (let level = 0; level < 5; level += 1) {
+        const nested = current?.properties?.self as RJSFSchema | undefined;
+        flags.push(nested ? ((nested as GenericObjectType)[RJSF_REF_CYCLE_KEY] ?? false) : undefined);
+        current = nested;
+      }
+      expect(flags).toEqual([false, true, undefined, undefined, undefined]);
+    });
+    it('re-reads a shallow copy of the normalized root that carries an edit', () => {
+      // `createSchemaUtils()` returns its marked normalized copy; a consumer that spreads it and adds a key
+      // must see the edit on retrieval, and both walks must stay identical
+      const root: RJSFSchema = {
+        $id: 'http://x/root.json',
+        type: 'object',
+        properties: { name: { type: 'string' } },
+      };
+      const su = createSchemaUtils({ validator: testValidator }, root);
+      const copy = { ...su.getRootSchema(), description: 'extra' };
+      const out = su.retrieveSchema(copy);
+      expect(out.description).toEqual('extra');
+      const walk = (node: RJSFSchema | undefined): string[] =>
+        node === undefined ? [] : ['root', ...walk(node?.properties?.name as RJSFSchema | undefined)];
+      expect(walk(su.retrieveSchema(su.getRootSchema()))).toEqual(walk(su.retrieveSchema(copy)));
+    });
     it.each(['https://example.com/root.json#/$defs/y', 'root.json#/$defs/y'])(
       'resolves a reference back to the parent from a relative nested $id: %s',
       ($ref) => {

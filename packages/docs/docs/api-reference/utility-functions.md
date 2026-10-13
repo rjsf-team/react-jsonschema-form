@@ -2002,7 +2002,7 @@ Returns `rootSchema` with every `$ref` inside it resolved against the root's own
 
 #### Returns
 
-- S: The normalized root; the original object when normalization changed nothing
+- S: The normalized root. When normalization changed nothing, a marked shallow copy of it, not the original object: the mark lets a caller that stores the result (`createSchemaUtils()`) skip a fresh walk on later calls, while the caller's unmarked original is still re-read as it stands when passed in again. A side effect of the copy is that `retrieveSchema(validator, root, root)` on such a root returns a new object rather than `root` itself
 
 ### pad()
 

@@ -356,6 +356,19 @@ describe('findSchemaDefinition()', () => {
       'Could not find a definition for definitions/missing',
     );
   });
+  it('throws error when ref is empty even with an anchor $id in the tree', () => {
+    // An `$id` that is only a fragment (`#a`) declares an anchor, not a resource base: the empty ref must
+    // not match it and silently return the root
+    const root: RJSFSchema = { definitions: { a: { $id: '#a', type: 'string' } } };
+    expect(() => findSchemaDefinition('', root)).toThrow('Could not find a definition for .');
+  });
+  it('matches an $id whose spelling ends with the empty fragment', () => {
+    const root: RJSFSchema = {
+      $id: 'http://x/root.json',
+      definitions: { address: { $id: 'http://x/address.json#', title: 'Address' } },
+    };
+    expect(findSchemaDefinition('http://x/address.json#', root).title).toEqual('Address');
+  });
   it('throws error when ref does not exist', () => {
     expect(() => findSchemaDefinition('#/definitions/missing', schema)).toThrow(
       'Could not find a definition for #/definitions/missing',

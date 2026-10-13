@@ -613,9 +613,10 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   // own scope.
   // A caller handing back the raw root it gave `createSchemaUtils` holds a different object than the
   // normalized root it carries, so identity cannot recognize it; its `$id` can. Without this the root's
-  // own relative `$id` would be resolved against itself, doubling its directory part. Only a first pass
-  // sees the raw root: a re-walk's partially resolved schema can carry the root's `$id` too, and swapping
-  // it for the normalized root would restart the walk, so the fixpoint loop never converges
+  // own relative `$id` would be resolved against itself, doubling its directory part. Only the root itself
+  // is swapped: a caller's schema that merely carries the root's `$id` (a first pass's raw root aside, e.g. a
+  // property that is a copy of the root) keeps walking as itself with the root's base, so its own edits stand
+  // and a self-reference flags its cycle instead of restarting the walk from the root
   const rootId = typeof rootSchema[ID_KEY] === 'string' ? rootSchema[ID_KEY] : undefined;
   const isOwnRoot =
     schema === rootSchema ||
@@ -624,8 +625,8 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       isObject(schema) &&
       typeof schema[ID_KEY] === 'string' &&
       uriEqual(schema[ID_KEY].replace(/#\/?$/, ''), rootId.replace(/#\/?$/, '')));
-  const topSchema = isOwnRoot ? normalizedRoot : schema;
-  let topBaseURI = baseURI;
+  const topSchema = schema === rootSchema ? normalizedRoot : schema;
+  let topBaseURI = isOwnRoot && schema !== rootSchema ? (baseURI ?? rootId) : baseURI;
   if (
     !isOwnRoot &&
     isObject(topSchema) &&
