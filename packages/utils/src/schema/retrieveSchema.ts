@@ -601,7 +601,7 @@ function branchClosesOnPath<S extends StrictRJSFSchema = RJSFSchema>(
   targets: ReadonlySet<string>,
   rootSchema: S,
   baseURI?: string,
-  visited: Set<string> = new Set(),
+  visited: Set<string> = new Set<string>(),
   ownRef?: string,
 ): boolean {
   if (!isObject(schema)) {
@@ -651,7 +651,7 @@ function branchClosesOnPath<S extends StrictRJSFSchema = RJSFSchema>(
       | S
       | boolean
       | undefined;
-    if (isObject(branch) && branchClosesOnPath<S>(branch as S, targets, rootSchema, baseURI, visited, ownRef)) {
+    if (isObject(branch) && branchClosesOnPath<S>(branch, targets, rootSchema, baseURI, visited, ownRef)) {
       return true;
     }
   }

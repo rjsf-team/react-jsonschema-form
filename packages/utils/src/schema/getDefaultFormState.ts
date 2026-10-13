@@ -11,8 +11,6 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
-  THEN_KEY,
-  ELSE_KEY,
   RJSF_REF_CYCLE_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
