@@ -18,13 +18,17 @@ export default function utcToLocal(jsonDate: unknown) {
   if (jsonDate == null || typeof jsonDate === 'boolean') {
     return '';
   }
-  try {
-    // Throws for anything but a `Boolean` object, from any realm. Unlike `Object.prototype.toString` it reads no
-    // property, so a `Symbol.toStringTag` can neither fake a `Boolean` nor throw
-    Boolean.prototype.valueOf.call(jsonDate);
-    return '';
-  } catch {
-    // Not a `Boolean` object
+  // Only an object can be a `Boolean` object. The probe throws for anything else, so the strings and `Date`s a render
+  // passes skip it rather than raising an exception each time
+  if (typeof jsonDate === 'object' && !(jsonDate instanceof Date)) {
+    try {
+      // Throws for anything but a `Boolean` object, from any realm. Unlike `Object.prototype.toString` it reads no
+      // property, so a `Symbol.toStringTag` can neither fake a `Boolean` nor throw
+      Boolean.prototype.valueOf.call(jsonDate);
+      return '';
+    } catch {
+      // Not a `Boolean` object
+    }
   }
 
   let date: Date;

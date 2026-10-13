@@ -1,3 +1,5 @@
+const FIVE_OR_SIX_DIGIT_YEAR_REGEX = /^\d{5,6}(?=-\d{2}-\d{2}T)/;
+
 /** Converts a local Date string into a UTC date string
  *
  * @param dateString - The string representation of a date as accepted by the `Date()` constructor, or a
@@ -18,7 +20,12 @@ export default function localToUTC(dateString: unknown): string | null | undefin
   // isn't a string goes to `Date` as it is
   const expanded =
     typeof dateString === 'string'
-      ? dateString.replace(/^\d{5,6}(?=-\d{2}-\d{2}T)/, (year) => `+${year.padStart(6, '0')}`)
+      ? dateString.replace(FIVE_OR_SIX_DIGIT_YEAR_REGEX, (year) => `+${year.padStart(6, '0')}`)
       : (dateString as number | Date);
-  return new Date(expanded).toJSON();
+  try {
+    return new Date(expanded).toJSON();
+  } catch {
+    // `Date` throws for a bigint or a symbol, wrapped or not, and for an object with no primitive value
+    return null;
+  }
 }

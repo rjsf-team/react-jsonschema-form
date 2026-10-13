@@ -50,6 +50,9 @@ describe('localToUTC()', () => {
   it.each([
     ['a Date that is invalid', new Date(NaN)],
     ['an object that is not a date', {}],
+    ['a bigint, which Date throws for', 1n],
+    ['a symbol, which Date throws for', Symbol('epoch')],
+    ['an object with no primitive value, which Date throws for', Object.create(null)],
   ])('returns null for %s', (_, value) => {
     expect(localToUTC(value)).toBeNull();
   });
