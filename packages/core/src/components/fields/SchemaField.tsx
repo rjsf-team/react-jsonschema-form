@@ -663,8 +663,9 @@ function SchemaFieldRender<
   const inheritedPresentation = useInheritedPresentation(fieldId);
   // The property name and the title a parent hands down label the field above, which a selected option or the fallback
   // UI's value renders the value of, so a field below with no title of its own isn't labelled by them a second time
-  // where the template's label above names its control. A label the field above draws itself, such as a selector's,
-  // names another control, so the field below keeps them
+  // where a label outside the field above already shows them: its template's, or one drawn above it, a container's
+  // heading included. A label the field above draws itself, such as a selector's, names another control, so the field
+  // below keeps them
   const labelledAbove = inheritedPresentation !== undefined && isLabelledByTemplate(inheritedPresentation.plan);
   const labelSources = {
     name: labelledAbove ? undefined : name,
