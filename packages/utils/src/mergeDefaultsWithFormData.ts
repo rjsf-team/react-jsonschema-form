@@ -60,14 +60,13 @@ export default function mergeDefaultsWithFormData<T = unknown>(
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
-    const acc = { ...defaults } as { [key in keyof T]: any }; // Prevent mutation of source object.
+    const acc: GenericObjectType = { ...defaults }; // Prevent mutation of source object.
     const formDataObj: GenericObjectType = formData;
     const defaultsObj: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
     return Object.keys(formDataObj).reduce((accumulator, key) => {
       const keyValue = formDataObj[key];
       const keyExistsInDefaults = defaultsObj !== undefined && Object.hasOwn(defaultsObj, key);
-      const keyExistsInFormData = Object.hasOwn(formDataObj, key);
-      const ownDefault = keyExistsInDefaults ? defaultsObj?.[key] : undefined;
+      const ownDefault = keyExistsInDefaults ? defaultsObj[key] : undefined;
       const keyDefault = ownDefault ?? {};
       // If any direct child of this key's default is itself an object or array,
       // the shallow spread below would bypass its merge rules. Route those cases
@@ -78,15 +77,20 @@ export default function mergeDefaultsWithFormData<T = unknown>(
         Object.values(keyDefault).some((v) => isObject(v) || Array.isArray(v));
 
       const keyDefaultIsObject = keyExistsInDefaults && isObject(ownDefault);
-      const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
+      const keyHasFormDataObject = isObject(keyValue);
 
       if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueNeedsDeepMerge) {
-        Object.defineProperty(accumulator, key, {
-          value: { ...ownDefault, ...keyValue },
-          enumerable: true,
-          writable: true,
-          configurable: true,
-        });
+        const merged = { ...ownDefault, ...keyValue };
+        if (key === '__proto__') {
+          Object.defineProperty(accumulator, key, {
+            value: merged,
+            enumerable: true,
+            writable: true,
+            configurable: true,
+          });
+        } else {
+          accumulator[key] = merged;
+        }
         return accumulator;
       }
 
@@ -96,12 +100,20 @@ export default function mergeDefaultsWithFormData<T = unknown>(
         mergeExtraArrayDefaults,
         defaultSupercedesUndefined,
         // overrideFormDataWithDefaults can be true only when the key value exists in defaults
-        // Or if the key value doesn't exist in formData
-        overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData),
+        overrideFormDataWithDefaults && keyExistsInDefaults,
       );
-      Object.defineProperty(accumulator, key, { value: merged, enumerable: true, writable: true, configurable: true });
+      if (key === '__proto__') {
+        Object.defineProperty(accumulator, key, {
+          value: merged,
+          enumerable: true,
+          writable: true,
+          configurable: true,
+        });
+      } else {
+        accumulator[key] = merged;
+      }
       return accumulator;
-    }, acc);
+    }, acc) as T;
   }
 
   /**
