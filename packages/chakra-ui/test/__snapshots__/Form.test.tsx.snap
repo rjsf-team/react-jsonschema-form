@@ -43500,7 +43500,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
           >
             <sup
               class="emotion-3"
-              id="root__description"
+              id="root__selectedOptionDescription"
             >
               Foo description
             </sup>
@@ -43549,7 +43549,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__description"
+                    aria-describedby="root__selectedOptionDescription"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"

@@ -11976,7 +11976,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             class="dropdown w-full"
           >
             <button
-              aria-describedby="root__description"
+              aria-describedby="root__selectedOptionDescription"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
               tabindex="0"
@@ -12033,7 +12033,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
           </div>
           <div
             class="description-field my-4"
-            id="root__description"
+            id="root__selectedOptionDescription"
           >
             <div
               class="text-sm text-base-content/80"

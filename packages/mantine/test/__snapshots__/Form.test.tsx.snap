@@ -18226,7 +18226,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
       <p
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         data-inherit="true"
-        id="root__description"
+        id="root__selectedOptionDescription"
         style="margin-top: calc(0.1875rem * var(--mantine-scale)); margin-bottom: var(--mantine-spacing-sm);"
       >
         Foo description
@@ -18243,7 +18243,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
           style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
         >
           <input
-            aria-describedby="root__description"
+            aria-describedby="root__selectedOptionDescription"
             aria-expanded="false"
             aria-haspopup="listbox"
             autocomplete="off"

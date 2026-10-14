@@ -17090,7 +17090,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                     Foo
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__description"
+                      aria-describedby="root__selectedOptionDescription"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -17126,7 +17126,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                   </div>
                 </div>
                 <span
-                  id="root__description"
+                  id="root__selectedOptionDescription"
                 >
                   Foo description
                 </span>

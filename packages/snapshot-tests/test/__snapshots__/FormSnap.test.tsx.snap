@@ -6891,12 +6891,12 @@ exports[`single fields > select widget with selected oneOf option description 1`
     >
       <div
         class="field-description"
-        id="root__description"
+        id="root__selectedOptionDescription"
       >
         Foo description
       </div>
       <select
-        aria-describedby="root__description"
+        aria-describedby="root__selectedOptionDescription"
         class="form-control"
         id="root"
         name="root"
