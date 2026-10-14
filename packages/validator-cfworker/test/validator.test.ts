@@ -7,7 +7,7 @@ import type {
   RJSFValidationError,
   UiSchema,
 } from '@rjsf/utils';
-import { ROOT_SCHEMA_PREFIX, createSchemaUtils, withVariantId } from '@rjsf/utils';
+import { ROOT_SCHEMA_PREFIX, createSchemaUtils, getFirstMatchingOption, withVariantId } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
@@ -334,10 +334,65 @@ describe('validating against a normalized root (#5477)', () => {
     expect(validator.validateFormData({ r: { s: 'x' } }, su.getRootSchema()).errors).toEqual([]);
   });
 
+  it('resolves a nested-resource # ref against its own $defs, not the root decoy (#5477 review probe)', () => {
+    // heath's 2020-12 probe: the root carries a decoy `$defs.str` (number) while the nested resource's
+    // `$defs.str` is a string; a `#` ref written inside the nested resource names its own document
+    const validator = customizeValidator();
+    const decoyRoot: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      $defs: {
+        str: { type: 'number' },
+        p: {
+          $id: 'nested/parent.json',
+          type: 'object',
+          properties: { s: {} },
+          if: { properties: { s: { $ref: '#/$defs/str' } }, required: ['s'] },
+          then: { required: ['t'] },
+          else: { required: ['e'] },
+          $defs: { str: { type: 'string' } },
+        },
+      },
+      properties: { r: { $ref: 'nested/parent.json' } },
+    };
+    const su = createSchemaUtils({ validator }, decoyRoot);
+    expect(validator.validateFormData({ r: { s: 'x', t: 'y' } }, su.getRootSchema()).errors).toEqual([]);
+  });
+
+  it('matches a oneOf option through the nested resource # spelling, not the root decoy (#5477 review probe)', () => {
+    const validator = customizeValidator();
+    const oneOfRoot: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      type: 'object',
+      $defs: {
+        str: { type: 'number' },
+        p: {
+          $id: 'nested/parent.json',
+          type: 'object',
+          properties: {
+            m: {
+              oneOf: [
+                { type: 'object', properties: { s: { $ref: '#/$defs/str' } } },
+                { type: 'object', properties: { s: { type: 'number' } } },
+              ],
+            },
+          },
+          $defs: { str: { type: 'string' } },
+        },
+      },
+      properties: { r: { $ref: 'nested/parent.json' } },
+    };
+    const su = createSchemaUtils({ validator }, oneOfRoot);
+    const normalizedRoot = su.getRootSchema();
+    const parent = (normalizedRoot.$defs as Record<string, RJSFSchema>).p;
+    const options = ((parent.properties as Record<string, RJSFSchema>).m.oneOf ?? []) as RJSFSchema[];
+    expect(getFirstMatchingOption({ validator }, { s: 5 }, options, normalizedRoot)).toEqual(1);
+  });
+
   it('compiles a normalized option spelling through isValid', () => {
     const validator = customizeValidator();
     const su = createSchemaUtils({ validator }, relativeRoot);
-    const normalizedRoot = su.getRootSchema() as RJSFSchema;
+    const normalizedRoot = su.getRootSchema();
     const option = (normalizedRoot.properties as Record<string, RJSFSchema>).a;
     expect(option).toEqual({ $ref: '#/definitions/s' });
     expect(validator.isValid(withVariantId(option), 'x', normalizedRoot)).toBe(true);

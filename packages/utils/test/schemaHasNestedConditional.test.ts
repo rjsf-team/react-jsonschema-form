@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { schemaHasNestedConditional } from '../src/index.ts';
+import { normalizeRootReferences, schemaHasNestedConditional } from '../src/index.ts';
 
 describe('schemaHasNestedConditional()', () => {
   it('returns false for a non-object schema', () => {
@@ -273,5 +273,25 @@ describe('schemaHasNestedConditional()', () => {
       dependencies: { foo: ['bar'] },
     };
     expect(schemaHasNestedConditional(schema, schema)).toBe(false);
+  });
+  it('follows a root-relative nested-resource ref with no lexical scope (#5477 review probe)', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      $defs: {
+        parent: {
+          $id: 'nested/parent.json',
+          type: 'object',
+          properties: { d: { $ref: 'cond.json' } },
+        },
+        cond: {
+          $id: 'nested/cond.json',
+          if: { properties: { flag: { const: 1 } } },
+          then: { properties: { extra: { type: 'string' } } },
+        },
+      },
+      properties: { p: { $ref: 'nested/parent.json' } },
+    };
+    const normalized = normalizeRootReferences(schema);
+    expect(schemaHasNestedConditional(normalized, normalized)).toBe(true);
   });
 });

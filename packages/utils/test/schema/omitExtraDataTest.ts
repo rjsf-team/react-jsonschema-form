@@ -1825,5 +1825,23 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(formData.route.mux.p2s).toHaveLength(1);
       });
     });
+    it('omits extra data through root-relative nested refs with no lexical scope (#5477 review probe)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        $defs: {
+          parent: {
+            $id: 'nested/parent.json',
+            type: 'object',
+            properties: { c: { $ref: 'child.json' } },
+          },
+          child: { $id: 'nested/child.json', type: 'string' },
+        },
+        properties: { p: { $ref: 'nested/parent.json' } },
+      };
+      const formData = { p: { c: 'x', junk: true }, junkTop: 1 };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+      const normalizedRoot = schemaUtils.getRootSchema();
+      expect(schemaUtils.omitExtraData(normalizedRoot, formData)).toEqual({ p: { c: 'x' } });
+    });
   });
 }

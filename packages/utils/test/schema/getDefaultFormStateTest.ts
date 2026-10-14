@@ -8461,5 +8461,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ home: { country: 'US' } });
       });
     });
+    it('computes defaults through root-relative nested refs with no lexical scope (#5477 review probe)', () => {
+      // heath's no-scope probe: readers that look a ref up against the root without a lexical scope resolve
+      // the root-relative spellings in one step
+      const schema: RJSFSchema = {
+        type: 'object',
+        $defs: {
+          parent: {
+            $id: 'nested/parent.json',
+            type: 'object',
+            properties: {
+              o: { oneOf: [{ $ref: 'child.json' }, { type: 'number' }] },
+              c: { $ref: 'child.json' },
+            },
+          },
+          child: { $id: 'nested/child.json', type: 'string', default: 'D' },
+        },
+        properties: { p: { $ref: 'nested/parent.json' } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+      const normalizedRoot = schemaUtils.getRootSchema();
+      expect(schemaUtils.getDefaultFormState(normalizedRoot)).toEqual({ p: { o: 'D', c: 'D' } });
+    });
   });
 }

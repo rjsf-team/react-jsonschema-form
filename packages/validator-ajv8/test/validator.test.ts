@@ -3387,6 +3387,31 @@ describe('AJV8Validator validating against a normalized draft-7 root without an 
     expect(validator.validateFormData({ r: { s: 'x' } }, su.getRootSchema()).errors).toEqual([]);
   });
 
+  it('keeps # refs resolvable on an absolute root $id through validateFormData and option matching (#5477 review probe)', () => {
+    // heath's draft-7 probe: with an absolute root `$id` the validator registers the root under that `$id`,
+    // so a `#/...` spelling must still reach it
+    const validator = customizeValidator();
+    const absRoot: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      $id: 'http://x/schemas/root.json',
+      type: 'object',
+      definitions: {
+        a: { const: 'a' },
+        s: { type: 'string' },
+        n: { type: 'number' },
+      },
+      properties: { k: { type: 'string' } },
+      if: { properties: { k: { $ref: '#/definitions/a' } } },
+      then: { required: ['extra'] },
+      else: { required: ['other'] },
+    };
+    const su = createSchemaUtils({ validator }, absRoot);
+    expect(validator.validateFormData({ k: 'a', extra: 'yes' }, su.getRootSchema()).errors).toEqual([]);
+    const normalizedRoot = su.getRootSchema();
+    const options: RJSFSchema[] = [{ $ref: '#/definitions/s' }, { $ref: '#/definitions/n' }];
+    expect(getFirstMatchingOption({ validator }, 5, options, normalizedRoot)).toEqual(1);
+  });
+
   it('compiles a normalized option spelling through isValid (#5477 review)', () => {
     // MultiSchemaField hands isValid an option carrying the walk's normalized ref and the normalized root
     const root: RJSFSchema = {
@@ -3398,7 +3423,7 @@ describe('AJV8Validator validating against a normalized draft-7 root without an 
     };
     const validator = customizeValidator();
     const su = createSchemaUtils({ validator }, root);
-    const normalizedRoot = su.getRootSchema() as RJSFSchema;
+    const normalizedRoot = su.getRootSchema();
     const option = (normalizedRoot.properties as Record<string, RJSFSchema>).a;
     expect(option).toEqual({ $ref: '#/definitions/s' });
     expect(validator.isValid(withVariantId(option), 'x', normalizedRoot)).toBe(true);
