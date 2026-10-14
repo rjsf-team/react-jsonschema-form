@@ -804,8 +804,9 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
   label?: Owner;
   /** Who draws the field's description */
   description?: Owner;
-  /** Who draws the field's errors. A component drawing them itself promises one element carrying `errorId(id)`
-   * whenever there are messages to show, and none when there are not
+  /** Who draws the field's errors. A component drawing them itself promises one element carrying the id its plan's
+   * `errors` gives, `errorId()` of the id the component renders under, whenever there are messages to show, and none
+   * when there are not
    */
   errors?: Owner;
   /** Who draws the field's `ui:help` */

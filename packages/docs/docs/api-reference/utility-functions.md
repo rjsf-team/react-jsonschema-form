@@ -1837,7 +1837,8 @@ Determines whether the given `formData` represents valid form data, such as a pr
 
 ### isLabelledByTemplate()
 
-Whether a label a `FieldTemplate` draws names the field's control: the template's own, or one the template of a field above rendering the same id draws, as for a selected `anyOf`/`oneOf` option.
+Whether the field's label is drawn outside its component: by its template, or `above` it by a field above rendering the same id, as the template of an `anyOf`/`oneOf` field draws the label of its selected option.
+An `above` label counts whoever draws it, so a container's heading above a level with no control counts too.
 A widget whose contents would otherwise name it, such as a button displaying its value, reads this to know its name comes from outside.
 
 #### Parameters
@@ -1846,7 +1847,7 @@ A widget whose contents would otherwise name it, such as a button displaying its
 
 #### Returns
 
-- boolean: True when a template's label names the control
+- boolean: True when the label is drawn by the template or above
 
 ### isObject()
 
