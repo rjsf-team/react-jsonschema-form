@@ -1,3 +1,4 @@
+import { createDeepAllOfMerge } from '@x0k/json-schema-merge';
 import type { MockInstance } from 'vitest';
 
 import type {
@@ -6040,6 +6041,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               deepAllOfMerge,
             ),
           ).toEqual(formData);
+        });
+
+        it("should populate a property's allOf conditional defaults with @x0k/json-schema-merge's createDeepAllOfMerge", () => {
+          const rootAllOfSchema: RJSFSchema = {
+            ...animalInfoObjectSchema,
+            allOf: [{ properties: { name: { type: 'string' } } }],
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              rootAllOfSchema,
+              { animalInfo: { animal: 'Cat' } },
+              rootAllOfSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf,
+            ),
+          ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
         });
 
         it('should populate the conditional defaults of an allOf in array items whose schema also has a direct if', () => {
