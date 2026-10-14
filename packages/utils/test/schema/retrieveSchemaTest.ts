@@ -4325,88 +4325,134 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         if: { required: [`if_${key}`] },
         [branch]: { properties: { [key]: { type: 'string' } } },
       });
-      it('expands the one-sided conditions of an allOf into every subset of them, once each', () => {
-        const schema: RJSFSchema = { type: 'object', allOf: [oneSided('x', 'then'), oneSided('y', 'else')] };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
-        expect(forms(all)).toEqual(['x', 'y', 'x+y', '-']);
+      /** The forms of `forms()`, sorted, for the expansions whose order says nothing */
+      const formSet = (schemas: RJSFSchema[]) => forms(schemas).sort();
+      const expand = (schema: RJSFSchema, rootSchema = schema) =>
+        retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true);
+      it('expands the one-sided conditions of an allOf into every combination of them, once each', () => {
+        const all = expand({ type: 'object', allOf: [oneSided('x', 'then'), oneSided('y', 'else')] });
+        expect(formSet(all)).toEqual(['-', 'x', 'x+y', 'y']);
         expect(all.every((s) => !('if' in s) && !('allOf' in s))).toBe(true);
       });
-      it('counts the schema’s own one-sided condition with those of its allOf', () => {
-        const schema: RJSFSchema = { type: 'object', ...oneSided('x', 'then'), allOf: [oneSided('y', 'then')] };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
-        expect(forms(all)).toEqual(['x+y', 'y', 'x', '-']);
+      it('combines the schema’s own one-sided condition with those of its allOf', () => {
+        const all = expand({ type: 'object', ...oneSided('x', 'then'), allOf: [oneSided('y', 'then')] });
+        expect(formSet(all)).toEqual(['-', 'x', 'x+y', 'y']);
         expect(all.every((s) => !('if' in s))).toBe(true);
       });
       it('keeps what an allOf entry holds besides its condition whether or not the branch is applied', () => {
-        const schema: RJSFSchema = {
+        const all = expand({
           type: 'object',
           allOf: [{ properties: { kept: { type: 'number' } }, ...oneSided('x', 'then') }, { properties: { z: {} } }],
-        };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
+        });
         expect(forms(all)).toEqual(['kept+x+z', 'kept+z']);
       });
-      it('leaves the conditions with both branches to expand as before', () => {
+      it('combines one-sided conditions with those that have both branches', () => {
         const twoSided: RJSFSchema = {
           if: { required: ['if_t'] },
           then: { properties: { t: {} } },
           else: { properties: { e: {} } },
         };
-        const schema: RJSFSchema = { type: 'object', allOf: [twoSided, oneSided('x', 'then')] };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
-        expect(forms(all)).toEqual(['t+x', 'e+x', 't', 'e']);
+        expect(formSet(expand({ type: 'object', allOf: [twoSided, oneSided('x', 'then')] }))).toEqual([
+          'e',
+          'e+x',
+          't',
+          't+x',
+        ]);
       });
       it('expands the conditions of an allOf reached through a $ref', () => {
         const rootSchema: RJSFSchema = {
-          definitions: {
-            conditional: { type: 'object', allOf: [oneSided('x', 'then'), oneSided('y', 'then')] },
-          },
+          definitions: { conditional: { type: 'object', allOf: [oneSided('x', 'then'), oneSided('y', 'then')] } },
         };
-        const schema: RJSFSchema = { $ref: '#/definitions/conditional' };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, rootSchema, undefined, true);
-        expect(forms(all)).toEqual(['x', 'y', 'x+y', '-']);
+        expect(formSet(expand({ $ref: '#/definitions/conditional' }, rootSchema))).toEqual(['-', 'x', 'x+y', 'y']);
       });
-      it('expands only each condition alone, all and none of them past the limit, and warns', () => {
-        const keys = Array.from({ length: 9 }, (_, i) => `k${i}`);
-        const schema: RJSFSchema = { type: 'object', allOf: keys.map((key) => oneSided(key, 'then')) };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
-        expect(forms(all)).toEqual([...keys, keys.join('+'), '-']);
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringMatching(/An allOf has 9 conditions with only one of `then` and `else`, more than the 8/),
-        );
-      });
-      it('counts the schema’s own condition towards the limit', () => {
-        const keys = Array.from({ length: 8 }, (_, i) => `k${i}`);
+      it('resolves the $ref beside an allOf entry’s condition before applying its branch', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { X: { type: 'object', properties: { a: { type: 'string' } } } },
+        };
         const schema: RJSFSchema = {
           type: 'object',
-          ...oneSided('own', 'then'),
-          allOf: keys.map((key) => oneSided(key, 'then')),
+          allOf: [{ $ref: '#/definitions/X', ...oneSided('x', 'then') }],
         };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
-        expect(all).toHaveLength(2 * (keys.length + 2));
-        expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringMatching(/An allOf has 9 conditions .* the 8 /));
+        expect(formSet(expand(schema, { ...rootSchema, ...schema }))).toEqual(['a', 'a+x']);
       });
-      it('shares the limit with the allOfs nested in it, naming the conditions of the one past it', () => {
-        const inner = Array.from({ length: 7 }, (_, i) => `i${i}`);
+      it('applies the dependencies beside an allOf entry’s condition before its branch', () => {
         const schema: RJSFSchema = {
           type: 'object',
           allOf: [
-            oneSided('x', 'then'),
-            { ...oneSided('y', 'then'), allOf: inner.map((key) => oneSided(key, 'then')) },
+            {
+              title: 'base',
+              properties: { p: { type: 'string' } },
+              dependencies: { p: { title: 'fromDep', required: ['r'] } },
+              if: { required: ['p'] },
+              then: { title: 'fromThen', required: ['q'] },
+            },
           ],
         };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
-        // Each of the 4 subsets of the outer conditions holds the inner allOf, which has 6 left: each alone, all, none
-        expect(all).toHaveLength(4 * (inner.length + 2));
-        expect(consoleWarnSpy).toHaveBeenCalledWith(
-          expect.stringMatching(/An allOf has 7 conditions .* the 6 .*"required":\["if_i0"\]/),
-        );
+        // With `p` filled in and the `if` holding, the form applies the dependency and then `then` over it
+        expect(expand(schema).map(({ title, required }) => ({ title, required }))).toContainEqual({
+          title: 'fromThen',
+          required: ['r', 'q'],
+        });
+      });
+      describe('past the limit on combined forms', () => {
+        const keys = Array.from({ length: 9 }, (_, i) => `k${i}`);
+        it('expands only all of the conditions, each alone and none, and warns naming the allOf', () => {
+          const all = expand({ type: 'object', allOf: keys.map((key) => oneSided(key, 'then')) });
+          expect(formSet(all)).toEqual(['-', ...keys, keys.join('+')].sort());
+          expect(consoleWarnSpy).toHaveBeenCalledWith(
+            expect.stringMatching(
+              /the allOf \[\{"if":\{"required":\["if_k0"\]\}.* gives 512 combinations, more than the 256/,
+            ),
+          );
+        });
+        it('bounds conditions reached through $refs and nested allOfs too, without duplicates', () => {
+          const definitions = Object.fromEntries(keys.map((key) => [key, oneSided(key, 'then')]));
+          const viaRef = expand(
+            { type: 'object', allOf: keys.map((key) => ({ $ref: `#/definitions/${key}` })) },
+            {
+              definitions,
+            },
+          );
+          const nested = expand({ type: 'object', allOf: keys.map((key) => ({ allOf: [oneSided(key, 'then')] })) });
+          for (const all of [viaRef, nested]) {
+            expect(formSet(all)).toEqual(['-', ...keys, keys.join('+')].sort());
+          }
+        });
+        it('bounds the forms the dependencies multiply into and warns naming them', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: Object.fromEntries(keys.map((key) => [key, {}])),
+            dependencies: Object.fromEntries(keys.map((key) => [key, oneSided(key, 'then')])),
+          };
+          const all = expand(schema);
+          expect(all.length).toBeLessThanOrEqual(258);
+          expect(consoleWarnSpy).toHaveBeenCalledWith(
+            expect.stringMatching(/the dependencies on k0, k1, .*k8 gives more than the 256/),
+          );
+        });
+      });
+      it('re-checks a dependency skipped before another one declared its key', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: {} },
+          dependencies: { b: ['c'], a: { if: { required: ['a'] }, then: { properties: { b: {} } } } },
+        };
+        expect(expand(schema).map(({ properties, required }) => [Object.keys(properties!), required])).toEqual([
+          [['a', 'b'], ['c']],
+          [['a'], undefined],
+        ]);
+      });
+      it('returns two `false` branches as the one form', () => {
+        const schema: RJSFSchema = { type: 'object', if: { required: ['a'] }, then: false, else: false };
+        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([
+          { type: 'object', not: {} },
+        ]);
       });
       it('keeps the Symbol keys of an entry holding nothing else beside its condition', () => {
         const marker = Symbol('marker');
         const entry = { ...oneSided('x', 'then'), [marker]: true } as RJSFSchema;
-        const schema: RJSFSchema = { type: 'object', allOf: [entry, oneSided('y', 'then')] };
-        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
-        expect(forms(all)).toEqual(['x', 'y', 'x+y', '-']);
+        const all = expand({ type: 'object', allOf: [entry, oneSided('y', 'then')] });
+        expect(formSet(all)).toEqual(['-', 'x', 'x+y', 'y']);
         expect(all.map((s) => (s as Record<symbol, unknown>)[marker])).toEqual([true, true, true, true]);
       });
     });

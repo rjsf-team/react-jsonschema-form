@@ -335,6 +335,25 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       },
       [{ a: 'x' }, { a: 'q' }],
     ],
+    [
+      'a one-sided `if` next to `dependencies` in an `allOf` entry',
+      {
+        type: 'object',
+        allOf: [
+          {
+            title: 'base',
+            properties: { p: { type: 'string' }, q: { type: 'string' }, r: { type: 'string' } },
+            dependencies: { p: { title: 'fromDep', required: ['r'] } },
+            if: { properties: { p: { const: 'x' } }, required: ['p'] },
+            then: { title: 'fromThen', required: ['q'] },
+          },
+        ],
+      },
+      [
+        { p: 'x', q: 'a', r: 'b' },
+        { p: 'y', r: 'b' },
+      ],
+    ],
   ] as [string, RJSFSchema, object[]][])('an option with %s', (_, option, formDatas) => {
     const schema: RJSFSchema = {
       type: 'object',
