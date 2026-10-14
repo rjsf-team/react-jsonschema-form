@@ -519,6 +519,54 @@ describe('getUiRequiredErrorSchema()', () => {
     expect(errors[0].property).toBe('.thing.aField');
   });
 
+  it('walks an object whose selected anyOf option is the boolean schema true', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: { type: 'object', properties: { aField: { type: 'string' } }, anyOf: [true, { required: ['aField'] }] },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { aField: { 'ui:required': true } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, {});
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.thing.aField');
+  });
+
+  it("walks the parent's items where the selected option of an array declares items: true, as MultiSchemaField renders them", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        list: {
+          type: 'array',
+          items: { type: 'object', properties: { a: { type: 'string' } } },
+          anyOf: [{ items: true }, { maxItems: 3 }],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { list: { items: { a: { 'ui:required': true } } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { list: [{}] });
+    const errors = toErrorList(errorSchema);
+    expect(errors).toHaveLength(1);
+    expect(errors[0].property).toBe('.list.0.a');
+  });
+
+  it("does not walk a property the selected option of an array declares where the parent's items forbid it", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        list: {
+          type: 'array',
+          items: { type: 'object', properties: { a: false } },
+          anyOf: [{ items: { properties: { a: { type: 'string' } } } }],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { list: { items: { a: { 'ui:required': true } } } };
+    const errorSchema = getUiRequiredErrorSchema({ validator: testValidator }, schema, uiSchema, { list: [{}] });
+    expect(toErrorList(errorSchema)).toEqual([]);
+  });
+
   it('enforces a ui:required field declared inside uiSchema.oneOf[i] for the branch matching formData', () => {
     // MultiSchemaField renders `uiSchema.oneOf[selectedOption]` in place of the parent uiSchema for that branch's own
     // fields (see AnyOfField's `optionsUiSchema`/`optionUiSchema`) rather than merging it with a per-key entry on the

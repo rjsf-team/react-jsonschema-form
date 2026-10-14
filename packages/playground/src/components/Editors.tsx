@@ -9,6 +9,7 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import type { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { isObject } from '@rjsf/utils';
 import { Panel, Group, Separator } from 'react-resizable-panels';
 
 import type { SubthemeType } from './SubthemeSelector.tsx';
@@ -33,13 +34,29 @@ const AccordionSummary = styled(MuiAccordionSummary)({
   },
 });
 
-interface EditorProps {
-  title: string;
-  code: string;
-  onChange: (data: any) => void;
+/** Parses what an editor holds, giving `undefined` for text that is not JSON or holds a value `accepts` rejects, such
+ * as a number where a schema belongs.
+ */
+export function parseEdited<T>(code: string, accepts: (data: unknown) => data is T): T | undefined {
+  try {
+    const parsedCode: unknown = JSON.parse(code);
+    return accepts(parsedCode) ? parsedCode : undefined;
+  } catch {
+    return undefined;
+  }
 }
 
-function Editor({ title, code, onChange }: EditorProps) {
+const anyJson = (_data: unknown): _data is unknown => true;
+
+interface EditorProps<T> {
+  title: string;
+  code: string;
+  /** Narrows the parsed JSON to what `onChange` takes; the editor marks anything else invalid and keeps it to itself */
+  accepts: (data: unknown) => data is T;
+  onChange: (data: T) => void;
+}
+
+function Editor<T>({ title, code, accepts, onChange }: EditorProps<T>) {
   const [valid, setValid] = useState(true);
 
   const onCodeChange = useCallback(
@@ -48,15 +65,13 @@ function Editor({ title, code, onChange }: EditorProps) {
         return;
       }
 
-      try {
-        const parsedCode = JSON.parse(newCode);
-        setValid(true);
+      const parsedCode = parseEdited(newCode, accepts);
+      setValid(parsedCode !== undefined);
+      if (parsedCode !== undefined) {
         onChange(parsedCode);
-      } catch {
-        setValid(false);
       }
     },
-    [setValid, onChange],
+    [setValid, accepts, onChange],
   );
 
   const icon = valid ? 'ok' : 'remove';
@@ -89,8 +104,8 @@ interface EditorsProps {
   setSchema: React.Dispatch<React.SetStateAction<RJSFSchema>>;
   uiSchema: UiSchema;
   setUiSchema: React.Dispatch<React.SetStateAction<UiSchema>>;
-  formData: any;
-  setFormData: React.Dispatch<React.SetStateAction<any>>;
+  formData: unknown;
+  setFormData: React.Dispatch<React.SetStateAction<unknown>>;
   extraErrors: ErrorSchema | undefined;
   setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
   setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
@@ -122,14 +137,14 @@ export default function Editors({
   setStylesheet,
 }: EditorsProps) {
   const onSubthemeSelected = useCallback(
-    (newSubtheme: any, { stylesheet }: SubthemeType) => {
+    (newSubtheme: string, { stylesheet }: SubthemeType) => {
       setSubtheme(newSubtheme);
       setStylesheet(stylesheet || null);
     },
     [setSubtheme, setStylesheet],
   );
   const onSchemaEdited = useCallback(
-    (newSchema: any) => {
+    (newSchema: RJSFSchema) => {
       setSchema(newSchema);
       setShareURL(null);
     },
@@ -137,7 +152,7 @@ export default function Editors({
   );
 
   const onUISchemaEdited = useCallback(
-    (newUiSchema: any) => {
+    (newUiSchema: UiSchema) => {
       setUiSchema(newUiSchema);
       setShareURL(null);
     },
@@ -145,7 +160,7 @@ export default function Editors({
   );
 
   const onFormDataEdited = useCallback(
-    (newFormData: any) => {
+    (newFormData: unknown) => {
       // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
       // using JSON.stringify to see if the trimmed formData is the same as the untrimmed state
       // Sometimes passing the trimmed value back into the Form causes the defaults to be improperly assigned
@@ -158,7 +173,7 @@ export default function Editors({
   );
 
   const onExtraErrorsEdited = useCallback(
-    (newExtraErrors: any) => {
+    (newExtraErrors: ErrorSchema) => {
       setExtraErrors(newExtraErrors);
       setShareURL(null);
     },
@@ -188,21 +203,26 @@ export default function Editors({
       <AccordionDetails sx={{ p: 0 }}>
         <Group orientation='horizontal'>
           <Panel defaultSize={extraErrors ? '34%' : '25%'} minSize='10%'>
-            <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
+            <Editor title='JSONSchema' code={toJson(schema)} accepts={isObject} onChange={onSchemaEdited} />
           </Panel>
           <Separator style={{ width: '4px', cursor: 'col-resize' }} />
           <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
-            <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
+            <Editor title={uiSchemaTitle} code={toJson(uiSchema)} accepts={isObject} onChange={onUISchemaEdited} />
           </Panel>
           <Separator style={{ width: '4px', cursor: 'col-resize' }} />
           <Panel defaultSize={extraErrors ? '33%' : '25%'} minSize='10%'>
-            <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
+            <Editor title='formData' code={toJson(formData)} accepts={anyJson} onChange={onFormDataEdited} />
           </Panel>
           {extraErrors && (
             <>
               <Separator style={{ width: '4px', cursor: 'col-resize' }} />
               <Panel defaultSize='25%' minSize='10%'>
-                <Editor title='extraErrors' code={toJson(extraErrors)} onChange={onExtraErrorsEdited} />
+                <Editor
+                  title='extraErrors'
+                  code={toJson(extraErrors)}
+                  accepts={isObject}
+                  onChange={onExtraErrorsEdited}
+                />
               </Panel>
             </>
           )}

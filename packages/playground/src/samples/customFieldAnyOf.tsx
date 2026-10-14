@@ -1,5 +1,5 @@
 import type { FieldPath, FieldProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
-import { getTemplates, isObject, noop, toFieldPath } from '@rjsf/utils';
+import { getTemplates, isObject, isSchemaObject, noop, toFieldPath } from '@rjsf/utils';
 
 import type { Sample } from './Sample.ts';
 
@@ -8,14 +8,15 @@ function UiField(props: FieldProps) {
   // The form data is unknown to the `Form` this sample renders, so narrow it before reading the branch fields
   const location = isObject(formData) ? formData : {};
   const { fields, schemaUtils } = registry;
-  const changeHandlerFactory = (childPath: FieldPath) => (value: any) => {
+  const changeHandlerFactory = (childPath: FieldPath) => (value: unknown) => {
     onChange(value, childPath);
   };
 
   const { StringField, NumberField } = fields;
   const { FieldTemplate } = getTemplates(registry);
-  const schema1 = (schema.anyOf?.[0] || {}) as RJSFSchema;
-  const schema2 = (schema.anyOf?.[1] || {}) as RJSFSchema;
+  const [firstBranch, secondBranch] = schema.anyOf ?? [];
+  const schema1: RJSFSchema = isSchemaObject(firstBranch) ? firstBranch : {};
+  const schema2: RJSFSchema = isSchemaObject(secondBranch) ? secondBranch : {};
   const cityLabel = 'City';
   const latLabel = 'Latitude';
   const lonLabel = 'Longitude';

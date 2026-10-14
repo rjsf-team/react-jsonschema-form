@@ -4,11 +4,11 @@ import type { ValidatorType, RJSFSchema } from '@rjsf/utils';
 interface RawValidatorTestProps {
   validator: ValidatorType;
   schema: RJSFSchema;
-  formData: object;
+  formData: unknown;
 }
 
 export default function RawValidatorTest({ validator, schema, formData }: RawValidatorTestProps) {
-  const [rawValidation, setRawValidation] = useState<{ errors?: any[]; validationError?: Error } | undefined>();
+  const [rawValidation, setRawValidation] = useState<ReturnType<ValidatorType['rawValidation']>>();
   const handleClearClick = () => setRawValidation(undefined);
   const handleRawClick = () => setRawValidation(validator.rawValidation(schema, formData));
 
