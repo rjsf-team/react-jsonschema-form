@@ -1,0 +1,622 @@
+import { patternRegExp } from '../../additionalPropertiesUtils.ts';
+import {
+  ADDITIONAL_PROPERTIES_KEY,
+  ALL_OF_KEY,
+  ANY_OF_KEY,
+  DEPENDENCIES_KEY,
+  ELSE_KEY,
+  IF_KEY,
+  ITEMS_KEY,
+  ONE_OF_KEY,
+  PATTERN_PROPERTIES_KEY,
+  PROPERTIES_KEY,
+  REF_KEY,
+  RJSF_REF_KEY,
+  THEN_KEY,
+} from '../../constants.ts';
+import isObject from '../../isObject.ts';
+import logOnce from '../../logOnce.ts';
+import mergeSchemas from '../../mergeSchemas.ts';
+import { getByPath } from '../../pathUtils.ts';
+import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
+import shallowAllOfMerge from '../shallowAllOfMerge.ts';
+import KeyedMemo from './keyedMemo.ts';
+import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
+
+/** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
+export type RefPath = readonly NodeId[];
+
+/** A containment node a field is reached through, with the ref path of the plan entry that declares it */
+export interface Seed {
+  readonly node: NodeId;
+  readonly refPath: RefPath;
+}
+
+/** How a plan entry joined the plan */
+export type PlanEdge = 'seed' | 'ref' | 'allOf' | 'then' | 'else' | 'dependency' | 'option';
+
+/** One node merged at a field. A `ref` entry's `refPath` ends with the entry's own node. */
+export interface PlanEntry {
+  readonly node: NodeId;
+  readonly edge: PlanEdge;
+  readonly refPath: RefPath;
+}
+
+/** A `patternProperties` entry of the merged schema: the keys matching `pattern` are seeded by `seeds` */
+export interface PatternSeeds {
+  readonly pattern: string;
+  readonly seeds: readonly Seed[];
+}
+
+/** The seeds of a field's children, by the containment keyword declaring them, merged the way the field's schema is:
+ * a conjunction lists its members' seeds after the field's own, a branch lists its seeds first, so the first seed
+ * of a child is the one whose keywords win
+ */
+export interface PlanChildren {
+  readonly properties: ReadonlyMap<string, readonly Seed[]>;
+  readonly patternProperties: readonly PatternSeeds[];
+  readonly additionalProperties: readonly Seed[];
+  readonly items: readonly Seed[];
+  readonly prefixItems: readonly (readonly Seed[])[];
+  readonly additionalItems: readonly Seed[];
+}
+
+/** An `anyOf`/`oneOf` a plan met, and the option `PlanPolicy.selectOption` chose from it, if it chose one */
+export interface OptionChoice {
+  readonly keyword: 'anyOf' | 'oneOf';
+  /** The node holding the options */
+  readonly provider: NodeId;
+  readonly options: readonly NodeId[];
+  readonly selected?: number;
+}
+
+/** What `PlanPolicy.selectOption` is asked to choose an option from */
+export interface OptionRequest<S extends StrictRJSFSchema = RJSFSchema> extends Omit<OptionChoice, 'selected'> {
+  readonly graph: SchemaGraph<S>;
+  readonly data: unknown;
+}
+
+/** The policies a view of the plan sets, which are not part of the recursion rule */
+export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
+  /** Which `allOf`s are merged: all of them (`true`, as the form renders them); none but the seeds' conjunction
+   * (`false`); or, for the defaults view, those of a field whose seed resolves to a schema with an `if` (`'if'`), the
+   * case where `computeDefaults()` retrieves the whole schema
+   */
+  readonly allOf: boolean | 'if';
+  /** Chooses the option merged into the field for each `anyOf`/`oneOf` met; none is merged when this is absent or it
+   * returns undefined. The chosen option's ref path restarts, as the option `MultiSchemaField` renders does.
+   */
+  readonly selectOption?: (request: OptionRequest<S>) => number | undefined;
+}
+
+/** A field's merge plan: its ordered entries, their set, and the merged schema with its children's seeds */
+export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
+  readonly graph: SchemaGraph<S>;
+  readonly seeds: readonly Seed[];
+  readonly entries: readonly PlanEntry[];
+  readonly set: ReadonlySet<NodeId>;
+  /** The set as a string, equal for equal sets, which the set-equality guard compares */
+  readonly setKey: string;
+  /** The merged schema, with `RJSF_REF_KEY` naming the `$ref` the field's own node was resolved from */
+  readonly schema: S;
+  readonly children: PlanChildren;
+  readonly choices: readonly OptionChoice[];
+}
+
+/** What `buildPlan()` plans a field from */
+export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType> {
+  readonly context: SchemaContext<S, F>;
+  readonly graph: SchemaGraph<S>;
+  readonly seeds: readonly Seed[];
+  /** The field's data, which an `if` and option choice read */
+  readonly data?: unknown;
+  /** The data `dependencies` qualify against, the field's data unless given: the defaults view passes the defaults
+   * accumulated so far under the data
+   */
+  readonly depData?: unknown;
+  readonly policy?: PlanPolicy<S>;
+}
+
+/** An `if` is checked against `{}` when the field has no data, as `resolveCondition()` checks it */
+const NO_DATA = {};
+
+const conditionMemo = new KeyedMemo<boolean>();
+const planMemo = new KeyedMemo<object>();
+
+/** Returns the keywords of `source` on a schema of the plan's type. A literal or a merge result is not known to be an
+ * `S`, so the copy starts as `template`, which is one, with every keyword removed. A `source` that is not an object,
+ * which only an `allOf` merge with a `false` member returns, has no keywords to copy.
+ */
+function schemaFrom<S extends StrictRJSFSchema, U>(template: S, source: U): S {
+  const schema = { ...template };
+  for (const key of Reflect.ownKeys(schema)) {
+    Reflect.deleteProperty(schema, key);
+  }
+  return Object.assign(schema, source);
+}
+
+function seedsKey(seeds: readonly Seed[]): string {
+  return seeds.map(({ node, refPath }) => `${node}:${refPath.join('.')}`).join(';');
+}
+
+interface MutableChildren {
+  properties: Map<string, Seed[]>;
+  patternProperties: { pattern: string; seeds: Seed[] }[];
+  additionalProperties: Seed[];
+  items: Seed[];
+  prefixItems: Seed[][];
+  additionalItems: Seed[];
+}
+
+function emptyChildren(): MutableChildren {
+  return {
+    properties: new Map(),
+    patternProperties: [],
+    additionalProperties: [],
+    items: [],
+    prefixItems: [],
+    additionalItems: [],
+  };
+}
+
+/** Lists `first`'s seeds of each child before `second`'s */
+function concatChildren(first: MutableChildren, second: MutableChildren): MutableChildren {
+  const properties = new Map(first.properties);
+  for (const [name, seeds] of second.properties) {
+    properties.set(name, [...(properties.get(name) ?? []), ...seeds]);
+  }
+  const length = Math.max(first.prefixItems.length, second.prefixItems.length);
+  return {
+    properties,
+    patternProperties: [...first.patternProperties, ...second.patternProperties],
+    additionalProperties: [...first.additionalProperties, ...second.additionalProperties],
+    items: [...first.items, ...second.items],
+    prefixItems: Array.from({ length }, (_, index) => [
+      ...(first.prefixItems[index] ?? []),
+      ...(second.prefixItems[index] ?? []),
+    ]),
+    additionalItems: [...first.additionalItems, ...second.additionalItems],
+  };
+}
+
+/** A node's merged schema so far and the seeds of its children */
+interface Part<S extends StrictRJSFSchema> {
+  schema: S;
+  children: MutableChildren;
+}
+
+/** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
+interface Provider<S extends StrictRJSFSchema> {
+  readonly node: ObjectNode<S>;
+  readonly refPath: RefPath;
+}
+
+function withoutKeys<S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]): S {
+  const copy = { ...schema };
+  for (const key of keys) {
+    Reflect.deleteProperty(copy, key);
+  }
+  return copy;
+}
+
+function symbolsOf(schemas: readonly object[]): Map<symbol, unknown> {
+  const symbols = new Map<symbol, unknown>();
+  for (const schema of schemas) {
+    for (const symbol of Object.getOwnPropertySymbols(schema)) {
+      if (!symbols.has(symbol)) {
+        symbols.set(symbol, Reflect.get(schema, symbol));
+      }
+    }
+  }
+  return symbols;
+}
+
+/** The schema a boolean subschema reads as, as `normalizeBooleanSchema()` reads it */
+function booleanSchema<S extends StrictRJSFSchema>(node: SchemaNode<S>, template: S): S {
+  return schemaFrom(template, node.kind === 'boolean' && !node.value ? { not: {} } : {});
+}
+
+/** Merges `branch` into `part` as `mergeSchemas()` merges a branch, the branch's keywords winning, keeping the
+ * `RJSF_REF_KEY` of `part` when it has one, as `mergeBranch()` does
+ */
+function mergeBranch<S extends StrictRJSFSchema>(part: Part<S>, branch: Part<S>): Part<S> {
+  const schema = schemaFrom(part.schema, mergeSchemas(part.schema, branch.schema));
+  const ownRef: unknown = Reflect.get(part.schema, RJSF_REF_KEY);
+  if (ownRef !== undefined) {
+    Reflect.set(schema, RJSF_REF_KEY, ownRef);
+  }
+  return { schema, children: concatChildren(branch.children, part.children) };
+}
+
+function seedsFrom<S extends StrictRJSFSchema>(
+  provider: Provider<S> | undefined,
+  pick: (node: ObjectNode<S>) => NodeId | undefined,
+): Seed[] {
+  const child = provider === undefined ? undefined : pick(provider.node);
+  return provider === undefined || child === undefined ? [] : [{ node: child, refPath: provider.refPath }];
+}
+
+function childrenOf<S extends StrictRJSFSchema>(keywords: ReadonlyMap<string | symbol, Provider<S>>): MutableChildren {
+  const properties = keywords.get(PROPERTIES_KEY);
+  const patterns = keywords.get(PATTERN_PROPERTIES_KEY);
+  const tuple = [keywords.get('prefixItems'), keywords.get(ITEMS_KEY)].find((provider) => provider?.node.prefixItems);
+  return {
+    properties: new Map(
+      [...(properties?.node.properties ?? [])].map(([name, node]) => [name, seedsFrom(properties, () => node)]),
+    ),
+    patternProperties: (patterns?.node.patternProperties ?? []).map(({ pattern, node }) => ({
+      pattern,
+      seeds: seedsFrom(patterns, () => node),
+    })),
+    additionalProperties: seedsFrom(keywords.get(ADDITIONAL_PROPERTIES_KEY), (node) => node.additionalProperties),
+    items: seedsFrom(keywords.get(ITEMS_KEY), (node) => node.items),
+    prefixItems: (tuple?.node.prefixItems ?? []).map((node) => seedsFrom(tuple, () => node)),
+    additionalItems: seedsFrom(keywords.get('additionalItems'), (node) => node.additionalItems),
+  };
+}
+
+function withRequired<S extends StrictRJSFSchema>(schema: S, required: readonly string[]): S {
+  const existing = schema.required;
+  return { ...schema, required: Array.isArray(existing) ? [...new Set([...existing, ...required])] : [...required] };
+}
+
+/** Builds one field's plan. Entries are added in v7's order: the `$ref` override, the `allOf` entries, the `then` or
+ * `else`, the `dependencies` and the chosen option. A node already in the plan is not added again and adds nothing to
+ * the schema, so `X AND X` is `X`.
+ */
+class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
+  private readonly entries: PlanEntry[] = [];
+  private readonly seen = new Set<NodeId>();
+  private readonly choices: OptionChoice[] = [];
+  private readonly context: SchemaContext<S, F>;
+  private readonly graph: SchemaGraph<S>;
+  private readonly data: unknown;
+  private readonly depData: unknown;
+  private readonly allOf: boolean | 'if';
+  private readonly selectOption: PlanPolicy<S>['selectOption'];
+  private mergeAllOf: boolean;
+
+  constructor(
+    context: SchemaContext<S, F>,
+    graph: SchemaGraph<S>,
+    data: unknown,
+    depData: unknown,
+    allOf: boolean | 'if',
+    selectOption: PlanPolicy<S>['selectOption'],
+  ) {
+    this.context = context;
+    this.graph = graph;
+    this.data = data;
+    this.depData = depData;
+    this.allOf = allOf;
+    this.selectOption = selectOption;
+    this.mergeAllOf = allOf === true;
+  }
+
+  build(seeds: readonly Seed[]): MergePlan<S> {
+    const empty = { schema: schemaFrom(this.graph.rawRoot, {}), children: emptyChildren() };
+    const [first = empty, ...rest] = seeds.flatMap((seed) => this.expand(seed.node, seed.refPath, 'seed', true) ?? []);
+    const merged = this.conjoin(first, rest);
+    const set = new Set(this.entries.map(({ node }) => node));
+    return {
+      graph: this.graph,
+      seeds,
+      entries: this.entries,
+      set,
+      setKey: [...set].sort((a, b) => a - b).join(','),
+      schema: merged.schema,
+      children: merged.children,
+      choices: this.choices,
+    };
+  }
+
+  private enter(node: NodeId, edge: PlanEdge, refPath: RefPath): boolean {
+    if (this.seen.has(node)) {
+      return false;
+    }
+    this.seen.add(node);
+    this.entries.push({ node, edge, refPath });
+    return true;
+  }
+
+  /** Returns the keywords of `node` with the node providing each: the target's, overridden by the siblings beside its
+   * `$ref`, along the whole alias chain. Entering a target adds it to the plan with the ref path extended by it, and a
+   * target already in the plan adds nothing.
+   */
+  private flatten(node: ObjectNode<S>, refPath: RefPath): Map<string | symbol, Provider<S>> {
+    const keywords = new Map<string | symbol, Provider<S>>();
+    const target = node.ref === undefined ? undefined : this.graph.node(node.ref);
+    if (target?.kind === 'invalid') {
+      throw new Error(target.message);
+    }
+    if (target !== undefined && this.enter(target.id, 'ref', [...refPath, target.id]) && target.kind === 'schema') {
+      for (const [key, provider] of this.flatten(target, [...refPath, target.id])) {
+        keywords.set(key, provider);
+      }
+    }
+    for (const key of Reflect.ownKeys(node.raw)) {
+      if (key !== REF_KEY) {
+        keywords.set(key, { node, refPath });
+      }
+    }
+    return keywords;
+  }
+
+  private expand(
+    id: NodeId,
+    refPath: RefPath,
+    edge: PlanEdge,
+    top: boolean,
+    dependencyKey?: string,
+  ): Part<S> | undefined {
+    if (!this.enter(id, edge, refPath)) {
+      return undefined;
+    }
+    const node = this.graph.node(id);
+    if (node.kind !== 'schema') {
+      return { schema: booleanSchema(node, this.graph.rawRoot), children: emptyChildren() };
+    }
+    const keywords = this.flatten(node, refPath);
+    if (top && this.allOf === 'if' && keywords.has(IF_KEY)) {
+      this.mergeAllOf = true;
+    }
+    const schema = schemaFrom(
+      node.raw,
+      Object.fromEntries([...keywords].map(([key, provider]) => [key, Reflect.get(provider.node.raw, key)])),
+    );
+    const ref: unknown = Reflect.get(node.raw, REF_KEY);
+    if (typeof ref === 'string') {
+      Reflect.set(schema, RJSF_REF_KEY, ref);
+    }
+    let part: Part<S> = { schema, children: childrenOf(keywords) };
+    part = this.applyAllOf(part, keywords.get(ALL_OF_KEY));
+    part = this.applyCondition(part, keywords);
+    part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY));
+    if (dependencyKey !== undefined) {
+      return this.applyExactlyOne(part, dependencyKey, keywords.get(ONE_OF_KEY));
+    }
+    part = this.applyOption(part, ANY_OF_KEY, keywords.get(ANY_OF_KEY));
+    return this.applyOption(part, ONE_OF_KEY, keywords.get(ONE_OF_KEY));
+  }
+
+  private applyAllOf(part: Part<S>, provider: Provider<S> | undefined): Part<S> {
+    if (provider === undefined || !this.mergeAllOf) {
+      return part;
+    }
+    const members = (provider.node.allOf ?? []).flatMap(
+      (member) => this.expand(member, provider.refPath, 'allOf', false) ?? [],
+    );
+    return this.conjoin({ ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) }, members);
+  }
+
+  /** Merges `members` into `part` as `allOf` merges them, first wins, and re-applies the symbols the merge drops, the
+   * part's own before its members'
+   */
+  private conjoin(part: Part<S>, members: readonly Part<S>[]): Part<S> {
+    if (members.length === 0) {
+      return part;
+    }
+    const schemas = [part.schema, ...members.map((member) => member.schema)];
+    const merged = this.mergeAll({ ...part.schema, [ALL_OF_KEY]: schemas.slice(1) });
+    for (const [symbol, value] of symbolsOf(schemas)) {
+      Reflect.set(merged, symbol, value);
+    }
+    return {
+      schema: merged,
+      children: members.reduce((children, member) => concatChildren(children, member.children), part.children),
+    };
+  }
+
+  private mergeAll(schema: S): S {
+    try {
+      return this.context.customMergeAllOf
+        ? this.context.customMergeAllOf(schema)
+        : schemaFrom(schema, shallowAllOfMerge(schema));
+    } catch (error) {
+      logOnce('could not merge subschemas in allOf:\n', 'warn', error);
+      return withoutKeys(schema, ALL_OF_KEY);
+    }
+  }
+
+  private holds(key: string, condition: S, data: unknown): boolean {
+    return conditionMemo.get([this.context.validator, this.graph, key, data], () =>
+      this.context.validator.isValid(condition, data, this.graph.rawRoot),
+    );
+  }
+
+  /** Applies the `then` or `else` the `if` chooses on the field's own data, `{}` standing in for none */
+  private applyCondition(part: Part<S>, keywords: ReadonlyMap<string | symbol, Provider<S>>): Part<S> {
+    const condition = keywords.get(IF_KEY)?.node.if;
+    if (!keywords.has(IF_KEY)) {
+      return part;
+    }
+    const without = { ...part, schema: withoutKeys(part.schema, IF_KEY, THEN_KEY, ELSE_KEY) };
+    if (condition === undefined) {
+      return without;
+    }
+    const conditionNode = this.graph.node(condition);
+    const conditionSchema =
+      conditionNode.kind === 'schema' ? conditionNode.raw : booleanSchema(conditionNode, this.graph.rawRoot);
+    const branchKey = this.holds(`if:${condition}`, conditionSchema, this.data ?? NO_DATA) ? THEN_KEY : ELSE_KEY;
+    const branchPart = this.branch(keywords.get(branchKey), branchKey);
+    return branchPart === undefined ? without : mergeBranch(without, branchPart);
+  }
+
+  private branch(provider: Provider<S> | undefined, key: 'then' | 'else'): Part<S> | undefined {
+    if (provider === undefined) {
+      return undefined;
+    }
+    const branch = provider.node[key];
+    return branch === undefined ? undefined : this.expand(branch, provider.refPath, key, false);
+  }
+
+  /** Applies each dependency whose key the dependency data has, which its declaring node declares as a property or
+   * declares no properties at all. Judging the declaring node rather than the merged schema keeps a dependency from
+   * being disqualified by a property a later merge adds.
+   */
+  private applyDependencies(part: Part<S>, provider: Provider<S> | undefined): Part<S> {
+    if (provider === undefined) {
+      return part;
+    }
+    let next: Part<S> = { ...part, schema: withoutKeys(part.schema, DEPENDENCIES_KEY) };
+    const declared: unknown = Reflect.get(provider.node.raw, PROPERTIES_KEY);
+    const qualified = [...(provider.node.dependencies ?? [])].filter(
+      ([key]) => getByPath(this.depData, key) !== undefined && (!isObject(declared) || key in declared),
+    );
+    for (const [key, dependency] of qualified) {
+      if ('required' in dependency) {
+        next = { ...next, schema: withRequired(next.schema, dependency.required) };
+      } else {
+        const dependent = this.expand(dependency.schema, provider.refPath, 'dependency', false, key);
+        if (dependent !== undefined) {
+          next = mergeBranch(next, { ...dependent, schema: withoutKeys(dependent.schema, ONE_OF_KEY) });
+        }
+      }
+    }
+    return next;
+  }
+
+  /** The node providing `keyword` to the subschema `id` resolves to, following its `$ref`s */
+  private keywordProvider(id: NodeId, keyword: string): ObjectNode<S> | undefined {
+    for (let node = this.graph.node(id); node.kind === 'schema'; node = this.graph.node(node.ref)) {
+      if (Object.hasOwn(node.raw, keyword) || node.ref === undefined) {
+        return Object.hasOwn(node.raw, keyword) ? node : undefined;
+      }
+    }
+    return undefined;
+  }
+
+  /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property,
+   * as `withExactlyOneSubschema()` does; with no such option or several, none is applied
+   */
+  private applyExactlyOne(part: Part<S>, key: string, provider: Provider<S> | undefined): Part<S> {
+    if (provider === undefined) {
+      return part;
+    }
+    const valid = (provider.node.oneOf ?? []).filter((option) => {
+      const conditionNode = this.keywordProvider(option, PROPERTIES_KEY)?.properties?.get(key);
+      if (conditionNode === undefined) {
+        return false;
+      }
+      const node = this.graph.node(conditionNode);
+      const conditionSchema = schemaFrom(this.graph.rawRoot, {
+        type: 'object',
+        properties: { [key]: node.kind === 'schema' ? node.raw : booleanSchema(node, this.graph.rawRoot) },
+      });
+      return this.holds(`dependency:${conditionNode}:${key}`, conditionSchema, this.depData);
+    });
+    if (valid.length !== 1) {
+      logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
+      return part;
+    }
+    const chosen = this.expand(valid[0], provider.refPath, 'dependency', false);
+    if (chosen === undefined) {
+      return part;
+    }
+    const properties = { ...chosen.schema.properties };
+    Reflect.deleteProperty(properties, key);
+    const schema = { ...chosen.schema };
+    Reflect.set(schema, PROPERTIES_KEY, properties);
+    chosen.children.properties.delete(key);
+    return mergeBranch(part, { schema, children: chosen.children });
+  }
+
+  private applyOption(part: Part<S>, keyword: 'anyOf' | 'oneOf', provider: Provider<S> | undefined): Part<S> {
+    const options = provider?.node[keyword];
+    if (provider === undefined || options === undefined) {
+      return part;
+    }
+    const request = { keyword, provider: provider.node.id, options };
+    const chosen = this.selectOption?.({ ...request, graph: this.graph, data: this.data });
+    const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
+    this.choices.push({ ...request, selected });
+    // The chosen option is rendered as a schema of its own, so its ref path restarts
+    const option = selected === undefined ? undefined : this.expand(options[selected], [], 'option', false);
+    return option === undefined ? part : mergeBranch(part, option);
+  }
+}
+
+/** The graph each plan was built in, which is how a plan read back from the memo is known to be one of its graph */
+const planGraphs = new WeakMap<object, SchemaGraph<StrictRJSFSchema>>();
+
+function isPlanOf<S extends StrictRJSFSchema>(value: unknown, graph: SchemaGraph<S>): value is MergePlan<S> {
+  return typeof value === 'object' && value !== null && planGraphs.get(value) === graph;
+}
+
+/** Builds the merge plan of the field `input.seeds` seed, memoized per seeds, data, policy and context: the same
+ * inputs give the same plan object. Checks of an `if` or a dependency condition are memoized per (node, data), so a
+ * parent's lookahead and the child's own build do not check the same condition twice.
+ *
+ * @param input - The graph, seeds, data, policy and context of the field
+ * @returns - The field's merge plan
+ * @throws - The error `findSchemaDefinition()` throws for a `$ref` the plan enters that resolves to nothing
+ */
+export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
+  input: PlanInput<S, F>,
+): MergePlan<S> {
+  const { context, graph, seeds, data, policy } = input;
+  const depData = input.depData === undefined ? data : input.depData;
+  const allOf = policy?.allOf ?? true;
+  const selectOption = policy?.selectOption;
+  const keys = [
+    context.validator,
+    context.customMergeAllOf,
+    graph,
+    seedsKey(seeds),
+    allOf,
+    selectOption,
+    data,
+    depData,
+  ];
+  const memoized = planMemo.peek(keys);
+  if (isPlanOf(memoized, graph)) {
+    return memoized;
+  }
+  const plan = new PlanBuilder(context, graph, data, depData, allOf, selectOption).build(seeds);
+  planGraphs.set(plan, graph);
+  planMemo.set(keys, plan);
+  return plan;
+}
+
+/** Returns the seeds of the child of an object field at `key`, and the containment edge it is reached through: a
+ * declared property, merged with each pattern matching its name; else the patterns its name matches; else the
+ * additional properties
+ *
+ * @param plan - The object field's plan
+ * @param key - The child's key
+ * @returns - The child's seeds, in merge order, and its edge
+ */
+export function childSeeds<S extends StrictRJSFSchema = RJSFSchema>(
+  plan: MergePlan<S>,
+  key: string,
+): { seeds: readonly Seed[]; edge: 'property' | 'patternKey' | 'additionalKey' } {
+  const patterns = plan.children.patternProperties
+    .filter(({ pattern }) => patternRegExp(pattern).test(key))
+    .flatMap(({ seeds }) => seeds);
+  const declared = plan.children.properties.get(key);
+  if (declared !== undefined) {
+    return { seeds: [...declared, ...patterns], edge: 'property' };
+  }
+  return patterns.length > 0
+    ? { seeds: patterns, edge: 'patternKey' }
+    : { seeds: plan.children.additionalProperties, edge: 'additionalKey' };
+}
+
+/** Returns the seeds of the row of an array field at `index`, and the containment edge it is reached through: the
+ * tuple entry at that index, else the schema every further row has
+ *
+ * @param plan - The array field's plan
+ * @param index - The row's index
+ * @returns - The row's seeds and its edge
+ */
+export function itemSeeds<S extends StrictRJSFSchema = RJSFSchema>(
+  plan: MergePlan<S>,
+  index: number,
+): { seeds: readonly Seed[]; edge: 'item' | 'tupleItem' } {
+  const tuple = plan.children.prefixItems[index];
+  if (tuple !== undefined) {
+    return { seeds: tuple, edge: 'tupleItem' };
+  }
+  const { items, additionalItems } = plan.children;
+  return { seeds: items.length > 0 ? items : additionalItems, edge: 'item' };
+}

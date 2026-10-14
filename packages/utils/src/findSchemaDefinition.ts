@@ -90,7 +90,7 @@ function decodeUnreserved(uri: string): string {
  * base or the ref was a network-path reference, which keeps its `//host` and loses only the scheme; the synthetic host
  * means both were paths, which stay rooted when either started with `/` and relative otherwise
  */
-function resolveUri(base: string, ref: string): string {
+export function resolveUri(base: string, ref: string): string {
   try {
     const resolved = new URL(ref, new URL(base, SYNTHETIC_BASE));
     if (resolved.protocol !== SYNTHETIC_PROTOCOL) {
@@ -114,7 +114,7 @@ function resolveUri(base: string, ref: string): string {
 /** Normalizes a URI for comparison: scheme and host case, default port, dot segments and percent-encoded unreserved
  * characters
  */
-function normalizeUri(uri: string): string {
+export function normalizeUri(uri: string): string {
   return decodeUnreserved(resolveUri('', uri));
 }
 
