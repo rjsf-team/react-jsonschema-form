@@ -1305,6 +1305,38 @@ describe('ObjectField', () => {
       expect(readData()).toEqual({ num1: 0 });
     });
 
+    it('should re-seed an untouched new property after transformChange refused a change to it', async () => {
+      // The refused change never reaches the data, so the property still holds what the add button wrote
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          patternProperties: { '^num': { type: 'number' } },
+        },
+        transformChange: (next, previous) =>
+          isPlainObject(next) &&
+          isPlainObject(previous) &&
+          'newKey' in next &&
+          'newKey' in previous &&
+          next.newKey !== previous.newKey
+            ? previous
+            : next,
+      });
+
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      await user.type(input(node, 'root_newKey'), 'typed');
+      expect(handleOf(ref).getFormData()).toEqual({ newKey: 'New Value' });
+
+      const keyInput = elementOf(node, '#root_newKey-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'num1');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ num1: 0 });
+    });
+
     it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
       // The field the declared name brings up reads `uiSchema.count`, so seeding through `uiSchema.additionalProperties`
       // would hand that number field the `ui:initialValue` written for the string the other keys hold
