@@ -25,6 +25,7 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import { getBooleanFieldWidget } from './fieldWidgetUtils.ts';
 
 /** Whether `ui:enumOrder` would reorder or drop any of the constant `options` if it applied to them
  *
@@ -70,6 +71,7 @@ function BooleanField<
     onFocus,
     onBlur,
     rawErrors,
+    presentation,
   } = props;
   const { title: schemaTitle } = schema;
   const { widgets, translateString, globalUiOptions } = registry;
@@ -83,7 +85,7 @@ function BooleanField<
     placeholder,
     ...options
   } = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-  const { Widget } = resolveWidget<T, S, F>(schema, widget ?? 'checkbox', widgets);
+  const { Widget } = resolveWidget<T, S, F>(schema, getBooleanFieldWidget<T, S, F>(uiSchema, registry), widgets);
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
@@ -201,6 +203,7 @@ function BooleanField<
       autofocus={autofocus}
       placeholder={placeholder}
       rawErrors={rawErrors}
+      presentation={presentation}
       htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />
   );

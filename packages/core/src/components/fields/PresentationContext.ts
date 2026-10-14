@@ -1,0 +1,33 @@
+import { createContext, use } from 'react';
+import type { FieldPresentation } from '@rjsf/utils';
+
+/** What a field hands the field below it that renders the same id: the selected `anyOf`/`oneOf` option, or the value
+ * field of the fallback UI */
+export interface InheritedPresentation {
+  /** The id of the field that built the plan */
+  id: string;
+  /** The plan it built */
+  plan: FieldPresentation;
+  /** Whether its `ui:label` lets it show its label, which a field below declaring none takes, as an option given a
+   * `uiSchema` of its own doesn't carry the field's (#5490 decision 24)
+   */
+  showLabel: boolean;
+}
+
+/** Carries a field's plan to the field below it rendering the same id. `SchemaField` provides it around the field it
+ * renders and reads it by id, so a field with an id of its own, such as an array item or a type selector, builds its
+ * plan from scratch, and a replaced `AnyOfField`, `OneOfField` or `FallbackField` has nothing to forward
+ */
+const PresentationContext = createContext<InheritedPresentation | undefined>(undefined);
+
+/** Gets what the field above handed down, when that field renders the same `id`
+ *
+ * @param id - The id of the field asking
+ * @returns - The plan and `showLabel` of the field above rendering `id`, if there is one
+ */
+export function useInheritedPresentation(id: string): InheritedPresentation | undefined {
+  const inherited = use(PresentationContext);
+  return inherited?.id === id ? inherited : undefined;
+}
+
+export default PresentationContext;

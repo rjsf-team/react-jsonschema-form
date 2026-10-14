@@ -21,7 +21,6 @@ import {
   getStaticItemsUiSchema,
   getTemplates,
   getUiOptions,
-  isCustomWidget,
   isFixedItems,
   isFormDataAvailable,
   isObject,
@@ -39,6 +38,7 @@ import {
 import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
+import { ARRAY_MODE_DEFAULT_WIDGETS, getArrayFieldMode } from './fieldWidgetUtils.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
@@ -194,6 +194,7 @@ function ArrayAsMultiSelect<
     onFocus,
     registry,
     rawErrors,
+    presentation,
     hideError,
     name,
     onSelectChange,
@@ -209,7 +210,7 @@ function ArrayAsMultiSelect<
   const itemsUiSchema = (uiSchema?.items ?? uiSchema) as UiSchema<T[], S, F>;
   const enumOptions = optionsList<T[], S, F>(itemsSchema, itemsUiSchema);
   const {
-    widget = 'select',
+    widget = ARRAY_MODE_DEFAULT_WIDGETS.multiSelect,
     title: uiTitle,
     placeholder,
     ...options
@@ -239,6 +240,7 @@ function ArrayAsMultiSelect<
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      presentation={presentation}
       htmlName={htmlName}
     />
   );
@@ -265,6 +267,7 @@ function ArrayAsCustomWidget<
     formData: items = [],
     registry,
     rawErrors,
+    presentation,
     name,
     onSelectChange,
     htmlName,
@@ -296,6 +299,7 @@ function ArrayAsCustomWidget<
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      presentation={presentation}
       htmlName={htmlName}
     />
   );
@@ -322,13 +326,14 @@ function ArrayAsFiles<
     registry,
     formData: items = [],
     rawErrors,
+    presentation,
     hideError,
     onSelectChange,
     htmlName,
   } = props;
   const { widgets, schemaUtils, globalUiOptions } = registry;
   const {
-    widget = 'files',
+    widget = ARRAY_MODE_DEFAULT_WIDGETS.files,
     title: uiTitle,
     placeholder,
     ...options
@@ -355,6 +360,7 @@ function ArrayAsFiles<
       registry={registry}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      presentation={presentation}
       label={label}
       hideLabel={!displayLabel}
       placeholder={placeholder}
@@ -1085,7 +1091,7 @@ export default function ArrayField<
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T[], S, F>) {
   const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
-  const { globalFormOptions, schemaUtils, translateString } = registry;
+  const { globalFormOptions, translateString } = registry;
   const { keyedFormData, updateKeyedFormData } = useKeyedFormData<T>(formData);
   const view = useFieldView(fieldPath, keyedFormData, ArrayField);
   /** Every return renders through this, so a template or widget below never inherits what was said of this field */
@@ -1264,8 +1270,8 @@ export default function ArrayField<
     [onChange, fieldPath, fieldId],
   );
 
-  const isMissingItems = !(ITEMS_KEY in schema);
-  if (isMissingItems && !globalFormOptions.useFallbackUiForUnsupportedType) {
+  const mode = getArrayFieldMode<T[], S, F>(schema, uiSchema, registry);
+  if (mode === 'unsupported') {
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { UnsupportedFieldTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
 
@@ -1280,7 +1286,7 @@ export default function ArrayField<
     );
   }
   // An items schema with type as undefined triggers FallbackField later on
-  const arraySchema = isMissingItems ? { ...schema, [ITEMS_KEY]: { type: undefined } } : schema;
+  const arraySchema = ITEMS_KEY in schema ? schema : { ...schema, [ITEMS_KEY]: { type: undefined } };
   const arrayAsMultiProps: ArrayAsFieldProps<T[], S, F> = {
     ...props,
     schema: arraySchema,
@@ -1299,18 +1305,17 @@ export default function ArrayField<
     keyedFormData,
     onChange: handleChange,
   };
-  if (schemaUtils.isMultiSelect(arrayAsMultiProps.schema)) {
-    // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
-    return vouchForItems(<ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />);
+  switch (mode) {
+    case 'multiSelect':
+      // If array has enum or uniqueItems set to true, call renderMultiSelect() to render the default multiselect widget or a custom widget, if specified.
+      return vouchForItems(<ArrayAsMultiSelect<T, S, F> {...arrayAsMultiProps} />);
+    case 'customWidget':
+      return vouchForItems(<ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />);
+    case 'fixed':
+      return vouchForItems(<FixedArray<T, S, F> {...arrayProps} />);
+    case 'files':
+      return vouchForItems(<ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />);
+    default:
+      return vouchForItems(<NormalArray<T, S, F> {...arrayProps} />);
   }
-  if (isCustomWidget<T[], S, F>(uiSchema)) {
-    return vouchForItems(<ArrayAsCustomWidget<T, S, F> {...arrayAsMultiProps} />);
-  }
-  if (isFixedItems(arrayAsMultiProps.schema)) {
-    return vouchForItems(<FixedArray<T, S, F> {...arrayProps} />);
-  }
-  if (schemaUtils.isFilesArray(arrayAsMultiProps.schema, uiSchema)) {
-    return vouchForItems(<ArrayAsFiles<T, S, F> {...arrayAsMultiProps} />);
-  }
-  return vouchForItems(<NormalArray<T, S, F> {...arrayProps} />);
 }

@@ -43,6 +43,7 @@ export default function BaseInputTemplate<
     type,
     hideLabel, // remove this from ...rest
     hideError, // remove this from ...rest
+    presentation, // remove this from ...rest
     ...rest
   } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
