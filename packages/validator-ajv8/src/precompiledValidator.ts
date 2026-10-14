@@ -123,7 +123,14 @@ export default class AJV8PrecompiledValidator<
       // Resolved with this validator and the merge its schemas were compiled with: only its own precompiled functions
       // can answer for the `oneOf`/`anyOf` options and conditions of its root schema, and only that merge builds the
       // sub-schemas the precompiled map holds. The form data is passed since it can affect the resolution
-      const resolvedRootSchema = retrieveSchema(this.schemaContext, this.rootSchema, this.rootSchema, formData);
+      // The constructor already normalized the raw root: resolving from the marked copy skips the
+      // fresh `normalizeRootReferences` walk every raw-root call would pay for since the memo went away
+      const resolvedRootSchema = retrieveSchema(
+        this.schemaContext,
+        this.normalizedRootSchema,
+        this.normalizedRootSchema,
+        formData,
+      );
       if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
           'The schema associated with the precompiled validator differs from the rootSchema provided for validation',

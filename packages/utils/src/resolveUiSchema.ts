@@ -1,5 +1,5 @@
 import { ANY_OF_KEY, ONE_OF_KEY, UI_OPTIONS_KEY } from './constants.ts';
-import { findSchemaDefinitionWithBaseURI, lexicalScopeOfNode } from './findSchemaDefinition.ts';
+import { findSchemaDefinitionWithBaseURIOrUndefined, lexicalScopeOfNode } from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
@@ -77,22 +77,18 @@ export default function resolveUiSchema<
         // keys `ui:definitions` correctly but is relative to a nested `$id` resource when one applies, and a
         // lookup against the root's base would miss it. The root's own base answers for every schema that
         // isn't inside a nested resource, so it goes first, and the identity walk only pays for the miss
-        try {
-          resolvedSchema = findSchemaDefinitionWithBaseURI<S>(
+        const found =
+          findSchemaDefinitionWithBaseURIOrUndefined<S>(declaredRef<S>(schema), registry.rootSchema, [], undefined) ??
+          findSchemaDefinitionWithBaseURIOrUndefined<S>(
             declaredRef<S>(schema),
             registry.rootSchema,
             [],
-            undefined,
-          ).schema;
-        } catch {
-          const scope = lexicalScopeOfNode<S>(registry.rootSchema, schema);
-          resolvedSchema = findSchemaDefinitionWithBaseURI<S>(
-            declaredRef<S>(schema),
-            registry.rootSchema,
-            [],
-            scope,
-          ).schema;
+            lexicalScopeOfNode<S>(registry.rootSchema, schema),
+          );
+        if (found === undefined) {
+          throw new Error(`Could not find a definition for ${declaredRef<S>(schema)}.`);
         }
+        resolvedSchema = found.schema;
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
         return result;
