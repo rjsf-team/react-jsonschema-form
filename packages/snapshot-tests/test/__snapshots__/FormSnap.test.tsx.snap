@@ -1883,7 +1883,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
               class="form-group"
             >
               <select
-                aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                aria-labelledby="root_region__label"
                 class="form-control"
                 id="root_region__oneof_select"
                 name="root_region__oneof_select"
@@ -3670,7 +3670,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="form-group"
             >
               <select
-                aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                aria-labelledby="root_optionalObjectWithOneofs__label"
                 class="form-control"
                 id="root_optionalObjectWithOneofs__oneof_select"
                 name="root_optionalObjectWithOneofs__oneof_select"
@@ -3740,7 +3740,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="form-group"
             >
               <select
-                aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                aria-labelledby="root_optionalArrayWithAnyofs__label"
                 class="form-control"
                 id="root_optionalArrayWithAnyofs__anyof_select"
                 name="root_optionalArrayWithAnyofs__anyof_select"
@@ -4177,7 +4177,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="form-group"
             >
               <select
-                aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                aria-labelledby="root_optionalObjectWithOneofs__label"
                 class="form-control"
                 disabled=""
                 id="root_optionalObjectWithOneofs__oneof_select"
@@ -4248,7 +4248,7 @@ exports[`single fields > optional data controls > does not show optional control
               class="form-group"
             >
               <select
-                aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                aria-labelledby="root_optionalArrayWithAnyofs__label"
                 class="form-control"
                 disabled=""
                 id="root_optionalArrayWithAnyofs__anyof_select"

@@ -722,10 +722,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <label
                 class="control-label"
                 for="root_employment"
+                id="root_employment__label"
               >
                 Employment
               </label>
               <div
+                aria-labelledby="root_employment__label"
                 class="field-radio-group"
                 id="root_employment"
                 role="radiogroup"
@@ -735,7 +737,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       checked=""
                       id="root_employment-0"
                       name="root_employment"
@@ -752,7 +753,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       id="root_employment-1"
                       name="root_employment"
                       type="radio"
@@ -768,7 +768,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       id="root_employment-2"
                       name="root_employment"
                       type="radio"
@@ -1913,10 +1912,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <label
                 class="control-label"
                 for="root_employment"
+                id="root_employment__label"
               >
                 Employment
               </label>
               <div
+                aria-labelledby="root_employment__label"
                 class="field-radio-group"
                 id="root_employment"
                 role="radiogroup"
@@ -1926,7 +1927,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       id="root_employment-0"
                       name="root_employment"
                       type="radio"
@@ -1942,7 +1942,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       checked=""
                       id="root_employment-1"
                       name="root_employment"
@@ -1959,7 +1958,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       id="root_employment-2"
                       name="root_employment"
                       type="radio"
@@ -3128,10 +3126,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <label
                 class="control-label"
                 for="root_employment"
+                id="root_employment__label"
               >
                 Employment
               </label>
               <div
+                aria-labelledby="root_employment__label"
                 class="field-radio-group"
                 id="root_employment"
                 role="radiogroup"
@@ -3141,7 +3141,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       id="root_employment-0"
                       name="root_employment"
                       type="radio"
@@ -3157,7 +3156,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       id="root_employment-1"
                       name="root_employment"
                       type="radio"
@@ -3173,7 +3171,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       checked=""
                       id="root_employment-2"
                       name="root_employment"
@@ -3953,10 +3950,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
               <label
                 class="control-label"
                 for="root_employment"
+                id="root_employment__label"
               >
                 Employment
               </label>
               <div
+                aria-labelledby="root_employment__label"
                 class="field-radio-group"
                 id="root_employment"
                 role="radiogroup"
@@ -3966,7 +3965,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       checked=""
                       id="root_employment-0"
                       name="root_employment"
@@ -3983,7 +3981,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       id="root_employment-1"
                       name="root_employment"
                       type="radio"
@@ -3999,7 +3996,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <span>
                     <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
                       id="root_employment-2"
                       name="root_employment"
                       type="radio"

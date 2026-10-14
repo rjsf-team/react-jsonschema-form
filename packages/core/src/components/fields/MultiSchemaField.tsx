@@ -14,6 +14,7 @@ import {
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
+  getSelectorPresentation,
   getTemplates,
   getUiOptions,
   getXxxOfKey,
@@ -30,6 +31,7 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
+import { getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
@@ -299,7 +301,6 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
   delete fieldErrorSchema[ERRORS_KEY];
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   const translateEnum: TranslatableString = title
     ? TranslatableString.TitleOptionPrefix
@@ -313,14 +314,15 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     };
   });
 
-  // Where the field's plan has this field draw its own label and description, as a theme whose template draws neither
-  // declares, the selector is what draws them
-  const drawsLabel = presentation?.label.by === 'self';
-  const selectorOptions = {
-    enumOptions,
-    ...uiOptions,
-    ...(presentation?.description.by === 'self' && { description: presentation.description.text }),
-  };
+  const selectorPresentation = useMemo(
+    () => presentation && getSelectorPresentation(presentation, fieldId),
+    [presentation, fieldId],
+  );
+  const { label: selectorLabel, hideLabel: hidesSelectorLabel } = getWidgetLabelProps(
+    selectorPresentation,
+    title ?? name,
+    () => schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+  );
 
   const selector =
     !isOptionalRender || hasFormData ? (
@@ -337,13 +339,14 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         rawErrors={rawErrors}
         errorSchema={fieldErrorSchema}
         value={selectedOption >= 0 ? selectedOption : undefined}
-        options={selectorOptions}
+        options={{ enumOptions, ...uiOptions }}
         registry={registry}
         placeholder={placeholder}
         autocomplete={autocomplete}
         autofocus={autofocus}
-        label={title ?? name}
-        hideLabel={!drawsLabel && !displayLabel}
+        label={selectorLabel}
+        hideLabel={hidesSelectorLabel}
+        presentation={selectorPresentation}
         readonly={readonly}
       />
     ) : undefined;

@@ -21,22 +21,24 @@ import {
   ONE_OF_KEY,
   optionsList,
   PROPERTIES_KEY,
-  descriptionId,
   getDeprecatedHandling,
+  getPresentationDeclaration,
   getTemplates,
   getFieldClassNames,
   getPropertySchema,
   getUiOptions,
   getXxxOfKey,
-  getVisibleErrors,
+  hasVisibleErrors,
   noop,
   omitConsumedStyling,
   TranslatableString,
+  resolveFieldPresentation,
   resolveWidget,
   uiBooleanOption,
 } from '@rjsf/utils';
 
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
+import { hidesWidgetLabel } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 
 /** Gets the index of the selected option in the list of `options`, the way `getSelectedOption()` finds the option
@@ -139,7 +141,7 @@ export default function LayoutMultiSchemaField<
     errorSchema,
     hideError = false,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
+  const { fields, widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const enumOptions = useMemo(
@@ -167,18 +169,14 @@ export default function LayoutMultiSchemaField<
   // select from is this field's own reason to be disabled, which no other field has
   const isDisabled =
     uiBooleanOption(uiOptions.disabled ?? disabled) || deprecatedHandling === 'disable' || enumOptions.length === 0;
-  const widgetLabel = (title || schema.title) ?? '';
-  // Only the template's label carries the deprecation marker, as in `SchemaField`: the widget's own label names its
-  // control, and decorating it would make a group pointing at it announce the decoration twice.
-  //
-  // A label that is empty is left empty, which is the one place this deliberately parts from `SchemaField`: that
-  // falls back to the property name, so it reaches a marker-only `' (deprecated)'` for a root field alone, while a
-  // discriminated cell has no such fallback and a typeless one -- the usual shape, and one `getDisplayLabel()` does
-  // not suppress -- is commonly titleless, so decorating it would render a `<label>` naming nothing as the norm
+  const ownLabel = (title || schema.title) ?? '';
+  // A label that is empty is left empty, which is the one place this deliberately parts from `getFieldLabel()`: that
+  // falls back to the property name, while a discriminated cell has no such fallback and a typeless one -- the usual
+  // shape -- is commonly titleless, so decorating it would render a `<label>` naming nothing as the norm
   const label =
-    deprecatedHandling === 'label' && widgetLabel
-      ? registry.translateString(TranslatableString.DeprecatedLabel, [widgetLabel])
-      : widgetLabel;
+    deprecatedHandling === 'label' && ownLabel
+      ? registry.translateString(TranslatableString.DeprecatedLabel, [ownLabel])
+      : ownLabel;
   // These must be resolved from the UI options, not from `options` (the anyOf/oneOf option schemas), or a
   // `ui:FieldTemplate`/`ui:FieldErrorTemplate` override on this field is silently ignored
   const { DescriptionFieldTemplate, FieldErrorTemplate, FieldHelpTemplate, FieldTemplate } = getTemplates<T, S, F>(
@@ -202,7 +200,6 @@ export default function LayoutMultiSchemaField<
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
   delete fieldErrorSchema[ERRORS_KEY];
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   /** Callback function that updates the selected option and adjusts the form data based on the structure of the new
    * option, calling the `onChange` callback with the adjusted formData.
@@ -250,24 +247,45 @@ export default function LayoutMultiSchemaField<
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };
-  const visibleErrors = getVisibleErrors({ rawErrors, hideError: hideFieldError });
-  const hasErrors = visibleErrors.length > 0;
-  const errors = hasErrors ? (
-    <FieldErrorTemplate id={id} schema={schema} errors={visibleErrors} registry={registry} />
-  ) : undefined;
-  const { help, description: uiDescription } = uiOptions;
-  // A template renders the description it is handed, so it is handed none where `ui:label: false` turns the label off
-  // along with the description
-  const description = uiBooleanOption(uiOptions.label) === false ? '' : uiDescription || schema.description || '';
-  const descriptionComponent = (
+  const hasErrors = hasVisibleErrors({ rawErrors, hideError: hideFieldError });
+  const { help: ownHelp, description: uiDescription } = uiOptions;
+  const hidden = widget === 'hidden' || deprecatedHandling === 'hide';
+  // Not rendered by a `SchemaField`, so it plans itself with the same resolvers, as a field rendering its selector
+  // widget, with no field above it rendering the same id
+  const presentation = resolveFieldPresentation({
+    id,
+    declaration: getPresentationDeclaration<T, S, F>(registry, {
+      schema: optionSchema,
+      field: fields.LayoutMultiSchemaField,
+      fieldKey: 'LayoutMultiSchemaField',
+      widget,
+    }),
+    label,
+    showLabel: uiBooleanOption(uiOptions.label) ?? true,
+    description: uiDescription || schema.description || '',
+    help: ownHelp,
+    errors: rawErrors,
+    hideError: hideFieldError,
+    hasControl: !hidden,
+    required,
+  });
+  // A template that doesn't read `presentation` renders from these deprecated props, each derived from the plan
+  const templateDescription = presentation.description.by === 'template' ? presentation.description : undefined;
+  const description = templateDescription?.text ?? '';
+  const help = presentation.help.by === 'template' ? presentation.help.text : undefined;
+  const templateErrors = presentation.errors.by === 'template' ? presentation.errors.messages : undefined;
+  const errors = templateErrors && (
+    <FieldErrorTemplate id={id} schema={schema} errors={[...templateErrors]} registry={registry} />
+  );
+  const descriptionComponent = templateDescription?.text ? (
     <DescriptionFieldTemplate
-      id={descriptionId(id)}
-      description={description}
+      id={templateDescription.id}
+      description={templateDescription.text}
       schema={schema}
       uiSchema={uiSchema}
       registry={registry}
     />
-  );
+  ) : undefined;
   const helpComponent = (
     <FieldHelpTemplate
       help={help}
@@ -276,6 +294,7 @@ export default function LayoutMultiSchemaField<
       uiSchema={uiSchema}
       hasErrors={hasErrors}
       registry={registry}
+      presentation={presentation}
     />
   );
 
@@ -291,11 +310,12 @@ export default function LayoutMultiSchemaField<
       required={required}
       readonly={!!readonly}
       registry={registry}
-      displayLabel={displayLabel}
+      displayLabel={presentation.label.by === 'template'}
+      presentation={presentation}
       classNames={getFieldClassNames<S>(schema, hasErrors, uiClassNames)}
       style={style}
       // `widget` carries the resolved value, so a `ui:widget` of `hidden` is what this matches, not its default
-      hidden={widget === 'hidden' || deprecatedHandling === 'hide'}
+      hidden={hidden}
       formData={formData}
       description={descriptionComponent}
       rawDescription={description}
@@ -314,7 +334,7 @@ export default function LayoutMultiSchemaField<
         id={id}
         name={name}
         schema={schema}
-        label={widgetLabel}
+        label={presentation.label.text}
         disabled={isDisabled}
         uiSchema={widgetUiSchema}
         autofocus={autofocus}
@@ -324,7 +344,8 @@ export default function LayoutMultiSchemaField<
         multiple={false}
         rawErrors={rawErrors}
         hideError={hideFieldError}
-        hideLabel={!displayLabel}
+        hideLabel={hidesWidgetLabel(presentation)}
+        presentation={presentation}
         errorSchema={fieldErrorSchema}
         placeholder={placeholder}
         onChange={onOptionChange}

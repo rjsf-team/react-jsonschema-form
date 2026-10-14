@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { RJSFSchema } from '@rjsf/utils';
 import { TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -677,5 +678,25 @@ describe('SelectWidget whose button the field label names', () => {
     const button = renderLabelled({ label: '', name: '', required: true }, '*');
 
     expect(button).toHaveAccessibleDescription(expect.stringContaining('Red'));
+  });
+});
+
+describe('an anyOf option selector', () => {
+  test("is named by the label its field's template draws", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: {
+          title: 'Foo',
+          anyOf: [
+            { title: 'Text', type: 'string' },
+            { title: 'Number', type: 'number' },
+          ],
+        },
+      },
+    };
+    const { container } = render(<Form schema={schema} validator={validator} />);
+
+    expect(container.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
   });
 });

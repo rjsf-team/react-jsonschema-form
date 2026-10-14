@@ -5,6 +5,7 @@ import type {
   FieldTemplateProps,
   GenericObjectType,
   RJSFSchema,
+  ThemePresentation,
   WidgetProps,
 } from '@rjsf/utils';
 import {
@@ -238,7 +239,7 @@ describe('LayoutMultiSchemaField', () => {
   /** Renders the field with a `FieldTemplate` and a selector widget that record the props they were handed, which is
    * how the props this field builds for itself -- rather than receiving through `SchemaField` -- are asserted on
    */
-  function renderRecording(overrideProps: Partial<FieldProps> = {}) {
+  function renderRecording(overrideProps: Partial<FieldProps> = {}, presentation?: ThemePresentation) {
     const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
     const recordWidgetProps = vi.fn<(props: WidgetProps) => void>();
     function RecordingFieldTemplate(props: FieldTemplateProps) {
@@ -259,6 +260,9 @@ describe('LayoutMultiSchemaField', () => {
           {},
           { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
           { SelectWidget: WrappedSelectWidget, RadioWidget: RecordingRadioWidget },
+          undefined,
+          undefined,
+          presentation,
         )}
       />,
     );
@@ -864,6 +868,24 @@ describe('LayoutMultiSchemaField', () => {
       );
     });
   });
+  describe('the plan it builds for itself', () => {
+    test('hands its template and its widget one plan, whose template label names the widget', () => {
+      const { templateProps, widgetProps } = renderRecording();
+
+      expect(templateProps?.presentation).toBeDefined();
+      expect(widgetProps?.presentation).toBe(templateProps?.presentation);
+      expect(templateProps?.displayLabel).toBe(true);
+      expect(widgetProps?.hideLabel).toBe(true);
+    });
+    test('has a widget a theme declares as drawing its label draw it, with the template drawing none', () => {
+      const { templateProps, widgetProps } = renderRecording({}, { widgets: { RadioWidget: { label: 'self' } } });
+
+      expect(templateProps?.displayLabel).toBe(false);
+      expect(widgetProps?.hideLabel).toBe(false);
+      expect(widgetProps?.presentation?.label.by).toBe('self');
+    });
+  });
+
   // `SchemaField` sets all of these, and this field renders the same `FieldTemplate`, which has no other source for
   // them: whatever it leaves unset is a prop a template is told nothing about for this one field
   describe('the remaining FieldTemplate props', () => {
@@ -923,8 +945,8 @@ describe('LayoutMultiSchemaField', () => {
       expect(templateProps?.label).toBe('Simple (deprecated)');
       expect(templateProps?.hidden).toBe(false);
       expect(templateProps?.disabled).toBe(false);
-      // Only the template's label is decorated, as in `SchemaField`: the widget's label names its own control
-      expect(widgetProps?.label).toBe('Simple');
+      // The widget's label is the plan's, marker included, as in `SchemaField`
+      expect(widgetProps?.label).toBe('Simple (deprecated)');
     });
     // There is no label for the marker to decorate, and a template rendering the decorated one would show a label
     // reading only "(deprecated)" naming nothing

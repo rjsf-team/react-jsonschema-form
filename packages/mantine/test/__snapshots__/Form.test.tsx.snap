@@ -4647,7 +4647,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                     style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                   >
                     <input
-                      aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="off"
@@ -9618,7 +9617,6 @@ exports[`single fields > optional data controls > does not show optional control
                     style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                   >
                     <input
-                      aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="off"
@@ -9864,7 +9862,6 @@ exports[`single fields > optional data controls > does not show optional control
                     style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                   >
                     <input
-                      aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="off"
@@ -10846,7 +10843,6 @@ exports[`single fields > optional data controls > does not show optional control
                     style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                   >
                     <input
-                      aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="off"
@@ -11097,7 +11093,6 @@ exports[`single fields > optional data controls > does not show optional control
                     style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm); --input-right-section-pointer-events: none;"
                   >
                     <input
-                      aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="off"
@@ -18638,7 +18633,6 @@ exports[`single fields > slider field 1`] = `
                 style="--slider-bar-width: calc(56.896551724137936% + 2 * var(--slider-size)); --slider-bar-offset: calc(0% - var(--slider-size));"
               />
               <div
-                aria-describedby="root__error root__description root__help"
                 aria-disabled="false"
                 aria-label=""
                 aria-orientation="horizontal"

@@ -281,4 +281,102 @@ describe('antd specific tests', () => {
     await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  test('describes a selected option once, under the id its control is described by', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { region: { oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] } },
+          $defs: {
+            europe: {
+              title: 'Europe',
+              description: 'A country in Europe',
+              oneOf: [
+                { const: 'FR', title: 'France' },
+                { const: 'DE', title: 'Germany' },
+              ],
+            },
+          },
+        }}
+        formData={{ region: 'DE' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+    expect(container.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
+  });
+
+  test("renders an option's inherited ui:description once, as the field's", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                { title: 'Text', type: 'string' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ region: { 'ui:description': 'Where you live' } }}
+        formData={{ region: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByText('Where you live')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_region__description')).toHaveLength(1);
+  });
+
+  test('renders no second description under the field description id for a fallback value described apart', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              description: 'Field desc',
+              type: ['string', 'number'],
+              if: { type: 'string' },
+              then: { description: 'Value desc' },
+            },
+          },
+        }}
+        formData={{ x: 'a' }}
+        validator={validator}
+        useFallbackUiForUnsupportedType
+      />,
+    );
+
+    expect(container.querySelectorAll('#root_x__description')).toHaveLength(1);
+    expect(container.querySelector('#root_x__description')).toHaveTextContent('Field desc');
+  });
+
+  test("names an anyOf option selector by its field's label, which keeps antd's colon handling", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            foo: {
+              title: 'Foo:',
+              anyOf: [
+                { title: 'Text', type: 'string' },
+                { title: 'Number', type: 'number' },
+              ],
+            },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
+    expect(container.querySelector('label[for="root_foo"]')).toHaveAttribute('title', 'Foo:');
+  });
 });

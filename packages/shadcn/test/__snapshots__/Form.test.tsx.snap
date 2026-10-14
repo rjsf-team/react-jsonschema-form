@@ -179,6 +179,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               <label
                                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                 for="root_tasks_0_title"
+                                                id="root_tasks_0_title__label"
                                               >
                                                 title
                                               </label>
@@ -400,6 +401,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               <label
                                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                 for="root_tasks_1_title"
+                                                id="root_tasks_1_title__label"
                                               >
                                                 title
                                               </label>
@@ -731,6 +733,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_tags_0"
+                                      id="root_tags_0__label"
                                     >
                                       tags-1*
                                     </label>
@@ -867,6 +870,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_tags_1"
+                                      id="root_tags_1__label"
                                     >
                                       tags-2*
                                     </label>
@@ -1081,6 +1085,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_choices"
+                    id="root_choices__label"
                   >
                     choices
                   </label>
@@ -1261,6 +1266,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_firstName"
+                              id="root_person_firstName__label"
                             >
                               firstName
                             </label>
@@ -1297,6 +1303,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_lastName"
+                              id="root_person_lastName__label"
                             >
                               lastName
                             </label>
@@ -1364,6 +1371,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__label"
                                       >
                                         street
                                       </label>
@@ -1400,6 +1408,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__label"
                                       >
                                         city
                                       </label>
@@ -1476,6 +1485,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_option"
+                    id="root_option__label"
                   >
                     option
                   </label>
@@ -1607,6 +1617,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_color"
+                    id="root_color__label"
                   >
                     color
                   </label>
@@ -1710,6 +1721,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_firstName"
+                    id="root_firstName__label"
                   >
                     firstName
                   </label>
@@ -1746,6 +1758,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_age"
+                    id="root_age__label"
                   >
                     age
                   </label>
@@ -1865,6 +1878,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_description"
+                    id="root_description__label"
                   >
                     description
                   </label>
@@ -2000,6 +2014,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               <label
                                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                 for="root_tasks_0_title"
+                                                id="root_tasks_0_title__label"
                                               >
                                                 title
                                               </label>
@@ -2221,6 +2236,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               <label
                                                 class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                 for="root_tasks_1_title"
+                                                id="root_tasks_1_title__label"
                                               >
                                                 title
                                               </label>
@@ -2552,6 +2568,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_tags_0"
+                                      id="root_tags_0__label"
                                     >
                                       tags-1*
                                     </label>
@@ -2688,6 +2705,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_tags_1"
+                                      id="root_tags_1__label"
                                     >
                                       tags-2*
                                     </label>
@@ -2933,6 +2951,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_firstName"
+                              id="root_person_firstName__label"
                             >
                               firstName
                             </label>
@@ -2969,6 +2988,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_person_lastName"
+                              id="root_person_lastName__label"
                             >
                               lastName
                             </label>
@@ -3036,6 +3056,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_street"
+                                        id="root_person_address_street__label"
                                       >
                                         street
                                       </label>
@@ -3072,6 +3093,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_person_address_city"
+                                        id="root_person_address_city__label"
                                       >
                                         city
                                       </label>
@@ -3148,6 +3170,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_color"
+                    id="root_color__label"
                   >
                     color
                   </label>
@@ -3251,6 +3274,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_firstName"
+                    id="root_firstName__label"
                   >
                     firstName
                   </label>
@@ -3287,6 +3311,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_age"
+                    id="root_age__label"
                   >
                     age
                   </label>
@@ -3538,6 +3563,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_region"
+                    id="root_region__label"
                   >
                     region
                   </label>
@@ -3564,9 +3590,10 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_region__oneof_select__value root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                            aria-describedby="root_region__oneof_select__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
+                            aria-labelledby="root_region__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_region__oneof_select"
                             type="button"
@@ -4648,6 +4675,7 @@ exports[`single fields > checkboxes field 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           An enum list rendered as checkboxes
         </label>
@@ -4808,6 +4836,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           Checkbox Group
         </label>
@@ -4979,6 +5008,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           Required Checkbox Group
         </label>
@@ -5135,6 +5165,7 @@ exports[`single fields > field with description 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_my-field"
+                    id="root_my-field__label"
                   >
                     my-field
                   </label>
@@ -5213,6 +5244,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_my-field"
+                    id="root_my-field__label"
                   >
                     my-field
                   </label>
@@ -5291,6 +5323,7 @@ exports[`single fields > field with markdown description 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_my-field"
+                    id="root_my-field__label"
                   >
                     my-field
                   </label>
@@ -5375,6 +5408,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_my-field"
+                    id="root_my-field__label"
                   >
                     my-field
                   </label>
@@ -5966,6 +6000,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__label"
                             >
                               test
                             </label>
@@ -6033,6 +6068,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                       >
                                         deepTest
                                       </label>
@@ -6105,6 +6141,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         deepTest
                                       </label>
@@ -6530,6 +6567,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               test
                             </label>
@@ -6658,6 +6696,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_optionalObjectWithOneofs"
+                    id="root_optionalObjectWithOneofs__label"
                   >
                     optionalObjectWithOneofs
                   </label>
@@ -6684,9 +6723,10 @@ exports[`single fields > optional data controls > does not show optional control
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
+                            aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_optionalObjectWithOneofs__oneof_select"
                             type="button"
@@ -6745,6 +6785,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <label
                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                     for="root_optionalObjectWithOneofs_name"
+                                    id="root_optionalObjectWithOneofs_name__label"
                                   >
                                     name
                                   </label>
@@ -6790,6 +6831,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_optionalArrayWithAnyofs"
+                    id="root_optionalArrayWithAnyofs__label"
                   >
                     optionalArrayWithAnyofs
                   </label>
@@ -6816,9 +6858,10 @@ exports[`single fields > optional data controls > does not show optional control
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
+                            aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             type="button"
@@ -7013,6 +7056,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__label"
                             >
                               test
                             </label>
@@ -7081,6 +7125,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                        id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                       >
                                         deepTest
                                       </label>
@@ -7154,6 +7199,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         deepTest
                                       </label>
@@ -7584,6 +7630,7 @@ exports[`single fields > optional data controls > does not show optional control
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               test
                             </label>
@@ -7714,6 +7761,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_optionalObjectWithOneofs"
+                    id="root_optionalObjectWithOneofs__label"
                   >
                     optionalObjectWithOneofs
                   </label>
@@ -7740,9 +7788,10 @@ exports[`single fields > optional data controls > does not show optional control
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
+                            aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
                             disabled=""
                             id="root_optionalObjectWithOneofs__oneof_select"
@@ -7802,6 +7851,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   <label
                                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                     for="root_optionalObjectWithOneofs_name"
+                                    id="root_optionalObjectWithOneofs_name__label"
                                   >
                                     name
                                   </label>
@@ -7847,6 +7897,7 @@ exports[`single fields > optional data controls > does not show optional control
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_optionalArrayWithAnyofs"
+                    id="root_optionalArrayWithAnyofs__label"
                   >
                     optionalArrayWithAnyofs
                   </label>
@@ -7873,9 +7924,10 @@ exports[`single fields > optional data controls > does not show optional control
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
+                            aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 opacity-50 cursor-not-allowed"
                             disabled=""
                             id="root_optionalArrayWithAnyofs__anyof_select"
@@ -8121,6 +8173,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__label"
                             >
                               test
                             </label>
@@ -8268,6 +8321,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         deepTest
                                       </label>
@@ -8666,6 +8720,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_nestedArrayOptional_0"
+                                      id="root_nestedArrayOptional_0__label"
                                     >
                                       nestedArrayOptional-1*
                                     </label>
@@ -8830,6 +8885,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               test
                             </label>
@@ -9235,6 +9291,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObjectOptional_test"
+                              id="root_nestedObjectOptional_test__label"
                             >
                               test
                             </label>
@@ -9344,6 +9401,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       <label
                                         class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                         for="root_nestedObjectOptional_deepObject_deepTest"
+                                        id="root_nestedObjectOptional_deepObject_deepTest__label"
                                       >
                                         deepTest
                                       </label>
@@ -9657,6 +9715,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_nestedArrayOptional_0"
+                                      id="root_nestedArrayOptional_0__label"
                                     >
                                       nestedArrayOptional-1*
                                     </label>
@@ -9824,6 +9883,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               test
                             </label>
@@ -10323,6 +10383,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               test
                             </label>
@@ -10820,6 +10881,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             <label
                               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                               for="root_nestedObject_test"
+                              id="root_nestedObject_test__label"
                             >
                               test
                             </label>
@@ -11233,6 +11295,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           test
         </label>
@@ -12876,6 +12939,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           test
         </label>
@@ -13206,6 +13270,7 @@ exports[`single fields > string field > field with markdown help and description
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           Markdown Help and Description
         </label>
@@ -13290,6 +13355,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           Markdown Help Test
         </label>
@@ -13365,6 +13431,7 @@ exports[`single fields > string field > field with markdown help text without a 
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           Raw Help Test
         </label>
@@ -13591,6 +13658,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           Required Field with Markdown Help
         </label>
@@ -13879,6 +13947,7 @@ exports[`single fields > title field 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_title"
+                    id="root_title__label"
                   >
                     Titre 2
                   </label>
@@ -14103,6 +14172,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_answer"
+                    id="root_answer__label"
                   >
                     My Answer
                   </label>

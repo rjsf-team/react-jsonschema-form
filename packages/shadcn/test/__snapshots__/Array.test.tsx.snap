@@ -587,6 +587,7 @@ exports[`array fields > empty errors array 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -819,6 +820,7 @@ exports[`array fields > has errors 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-destructive"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -895,6 +897,7 @@ exports[`array fields > no errors 1`] = `
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     for="root_name"
+                    id="root_name__label"
                   >
                     name
                   </label>
@@ -984,6 +987,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -1020,6 +1024,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_value"
+                                      id="root_0_value__label"
                                     >
                                       value
                                     </label>
@@ -1178,6 +1183,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -1214,6 +1220,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_value"
+                                      id="root_1_value__label"
                                     >
                                       value
                                     </label>
@@ -2998,6 +3005,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -3034,6 +3042,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_value"
+                                      id="root_0_value__label"
                                     >
                                       value
                                     </label>
@@ -3192,6 +3201,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -3228,6 +3238,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_value"
+                                      id="root_1_value__label"
                                     >
                                       value
                                     </label>
@@ -3808,6 +3819,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_0_name"
+                                      id="root_0_name__label"
                                     >
                                       name
                                     </label>
@@ -3996,6 +4008,7 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                     <label
                                       class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                       for="root_1_name"
+                                      id="root_1_name__label"
                                     >
                                       name
                                     </label>
@@ -4379,6 +4392,7 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             Test item*
                           </label>
@@ -4560,6 +4574,7 @@ exports[`with title and description > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             Test item*
                           </label>
@@ -4799,6 +4814,7 @@ exports[`with title and description > checkboxes 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           Test field
         </label>
@@ -4935,6 +4951,7 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             Test item*
                           </label>
@@ -4989,6 +5006,7 @@ exports[`with title and description > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             Test item*
                           </label>
@@ -5215,6 +5233,7 @@ exports[`with title and description from both > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -5396,6 +5415,7 @@ exports[`with title and description from both > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -5635,6 +5655,7 @@ exports[`with title and description from both > checkboxes 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           My Field
         </label>
@@ -5771,6 +5792,7 @@ exports[`with title and description from both > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -5825,6 +5847,7 @@ exports[`with title and description from both > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -6051,6 +6074,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -6232,6 +6256,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
@@ -6471,6 +6496,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           for="root"
+          id="root__label"
         >
           My Field
         </label>
@@ -6607,6 +6633,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_0"
+                            id="root_0__label"
                           >
                             My Item*
                           </label>
@@ -6661,6 +6688,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                           <label
                             class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                             for="root_1"
+                            id="root_1__label"
                           >
                             My Item*
                           </label>
