@@ -11,7 +11,9 @@ export type SelectedOptionDescriptionProps<
   'id' | 'multiple' | 'options' | 'registry' | 'uiSchema' | 'value' | 'hideLabel' | 'presentation'
 >;
 
-/** Renders the description associated with the selected oneOf or anyOf option in a single-select widget. */
+/** Renders the description associated with the selected oneOf or anyOf option in a single-select widget. Give it the
+ * same `presentation` and `hideLabel` as `widgetAriaProps()`, which describes the select by the element this renders
+ */
 export default function SelectedOptionDescription<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,

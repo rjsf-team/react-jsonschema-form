@@ -100,7 +100,7 @@ export default ThemeObject;
 ### Presentation
 
 A theme's **presentation** is a `ThemePresentation` declaring which parts of a field its fields and widgets draw themselves: the `label`, `description`, `errors` and `help`, each owned by the `'template'` (the `FieldTemplate`) or by the component itself (`'self'`), and `labelledBy`, how a label the template draws reaches the control.
-A widget whose control holds `false` left alone, as a checkbox or a switch does, declares `uncheckedIsFalse: true`, so a required boolean the schema lets be `false` isn't given a native `required` that would stop the browser submitting it ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)); `@rjsf/core` declares it for its `CheckboxWidget`.
+A widget whose control holds `false` left alone, as a checkbox or a switch does, declares `uncheckedIsFalse: true`, so a required boolean the schema lets be `false` isn't given a native `required` that would stop the browser submitting it ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)); `@rjsf/core` declares it for its `CheckboxWidget`. It describes one control, so it is declared under that widget's key: `default` and `fieldDefault` don't take it, since a blanket would also mark the `select` or `radio` a boolean can render.
 Declarations are keyed by the name a field or widget is registered under, so a wrapper registered under the same name keeps them.
 A `default` covers every part the theme's own entry for a widget leaves out, for every widget, custom ones included, so it also overrides what `@rjsf/core` declares for those parts; a `fieldDefault` covers every part a field's merged entry leaves out.
 

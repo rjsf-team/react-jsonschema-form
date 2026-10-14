@@ -1,4 +1,10 @@
-import type { MergedThemePresentation, PartOwner, PresentationDeclaration, ThemePresentation } from './types.ts';
+import type {
+  MergedThemePresentation,
+  PartOwner,
+  PresentationDeclaration,
+  ThemePresentation,
+  WidgetPresentationDeclaration,
+} from './types.ts';
 
 /** Everything a declaration declares, each layered on its own */
 const DECLARED = ['label', 'description', 'errors', 'help', 'labelledBy', 'uncheckedIsFalse'] as const;
@@ -23,6 +29,22 @@ export function layerDeclarations<Owner extends PartOwner>(
       layered[part] = value;
     }
   }
+  return layered;
+}
+
+/** Layers blanket declarations, a `ThemePresentation`'s `default`s or `fieldDefault`s, leaving out `uncheckedIsFalse`:
+ * it describes one control, and a blanket would also mark the `select` or `radio` a boolean can render. Their type
+ * already leaves it out, but a theme written in JavaScript, or a declaration typed wider and passed through a variable,
+ * can still carry it
+ *
+ * @param declarations - The blankets to layer, from the bottom; `undefined` entries are skipped
+ * @returns - The layered blanket
+ */
+export function layerBlankets(
+  ...declarations: readonly (WidgetPresentationDeclaration | undefined)[]
+): Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'> {
+  const layered = layerDeclarations(...declarations);
+  delete layered.uncheckedIsFalse;
   return layered;
 }
 
@@ -73,7 +95,7 @@ function layerRecords<Owner extends PartOwner>(
 export default function mergeThemePresentation(
   ...layers: readonly (ThemePresentation | undefined)[]
 ): MergedThemePresentation {
-  const defaults = layers.map((layer) => layer?.default);
+  const defaults = layers.map((layer) => layerBlankets(layer?.default));
   return {
     default: layerDeclarations<Exclude<PartOwner, 'widget'>>(...defaults),
     widgets: layerRecords(
@@ -81,6 +103,6 @@ export default function mergeThemePresentation(
       defaults,
     ),
     fields: layerRecords(layers.map((layer) => layer?.fields)),
-    fieldDefault: layerDeclarations<Exclude<PartOwner, 'widget'>>(...layers.map((layer) => layer?.fieldDefault)),
+    fieldDefault: layerBlankets(...layers.map((layer) => layer?.fieldDefault)),
   };
 }

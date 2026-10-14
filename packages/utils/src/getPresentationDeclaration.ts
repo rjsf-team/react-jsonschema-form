@@ -1,5 +1,5 @@
 import { getWidgetKey } from './getWidget.tsx';
-import { getOwnDeclaration, layerDeclarations } from './mergeThemePresentation.ts';
+import { getOwnDeclaration, layerBlankets, layerDeclarations } from './mergeThemePresentation.ts';
 import type {
   Field,
   FormContextType,
@@ -41,8 +41,10 @@ export interface PresentationSubject<
    */
   fieldKey?: string;
   /** The single widget the field renders its value with, as an alias, a registry key or a component, after the field's
-   * own defaulting: a `BooleanField` given no widget or a `null` one renders `'checkbox'`. Left out for a field that
-   * renders no single widget, such as an object's or an array's
+   * own defaulting: a `BooleanField` given no widget or a `null` one renders `'checkbox'`. The caller knows it by how
+   * the field picks it: `@rjsf/core` takes a component registered under one of its widget-rendering field keys to pick
+   * it as its own does, so a replacement that picks another, such as a `BooleanField` defaulting to radios, declares
+   * its parts under that key. Left out for a field that renders no single widget, such as an object's or an array's
    */
   widget?: Widget<T, S, F> | string;
 }
@@ -123,14 +125,14 @@ function getWidgetDeclaration<
   }
   // Merged entries already hold the `default`s beneath them, so this only matters for a single unmerged layer
   return layerDeclarations(
-    presentation?.default,
+    layerBlankets(presentation?.default),
     getComponentDeclaration(presentation?.widgets, widgets, component, key),
   );
 }
 
 /** Gets which parts of a field its template draws and which the components rendering it draw themselves, from the
- * declarations the theme registered for the keys of those components. Read from the components `SchemaField` already
- * resolved, never by predicting one, and never throwing where `getWidget()` would.
+ * declarations the theme registered for the keys of those components. Read from the field component `SchemaField`
+ * resolved and the widget its caller says that field renders, never throwing where `getWidget()` would.
  *
  * A field component's declaration is the merged declaration for its key over the field default: the theme's
  * `fieldDefault` over drawing its own label and description. So a component gets the same answer however `SchemaField`

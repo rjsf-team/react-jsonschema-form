@@ -1,3 +1,4 @@
+import type { WidgetPresentationDeclaration } from '../src/index.ts';
 import { mergeThemePresentation } from '../src/index.ts';
 
 const EMPTY = { default: {}, widgets: {}, fields: {}, fieldDefault: {} };
@@ -29,6 +30,18 @@ describe('mergeThemePresentation()', () => {
       },
       fields: { ObjectField: { label: 'self', description: 'self', errors: 'self' } },
       fieldDefault: {},
+    });
+  });
+
+  it('takes no uncheckedIsFalse from a default or a fieldDefault', () => {
+    const blanket: WidgetPresentationDeclaration = { label: 'self', uncheckedIsFalse: true };
+    expect(
+      mergeThemePresentation({ default: blanket, widgets: { SelectWidget: {} }, fieldDefault: blanket }),
+    ).toStrictEqual({
+      default: { label: 'self' },
+      widgets: { SelectWidget: { label: 'self' } },
+      fields: {},
+      fieldDefault: { label: 'self' },
     });
   });
 

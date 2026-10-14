@@ -3,6 +3,7 @@ import getUiOptions from './getUiOptions.ts';
 import { descriptionId, selectedOptionDescriptionId } from './idGenerators.ts';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from './types.ts';
+import uiBooleanOption from './uiBooleanOption.ts';
 
 /** Return the description a single-select widget shows for the option it has selected, along with that option's
  * schema and the id it renders under, or undefined when it shows none: for a `multiple` select, for a label `ui:label`
@@ -32,9 +33,13 @@ export default function getSelectedOptionDescription<
   value,
   presentation,
 }: SelectedOptionDescriptionProps<T, S, F>) {
-  const { label = true } = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
-  const hidden = presentation ? !presentation.showLabel : hideLabel || !label;
-  if (multiple || hidden) {
+  if (multiple) {
+    return undefined;
+  }
+  const hidden = presentation
+    ? !presentation.showLabel
+    : hideLabel || !(uiBooleanOption(getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions).label) ?? true);
+  if (hidden) {
     return undefined;
   }
 
