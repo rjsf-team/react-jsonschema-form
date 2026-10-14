@@ -742,12 +742,15 @@ function SchemaFieldRender<
   );
   const renderedComponent = fieldToRender?.FieldComponent;
   const isContainer = renderedComponent === fields.ObjectField || renderedComponent === fields.ArrayField;
+  // Keyed on whether the options render rather than on their array, which is retrieved afresh with every change of the
+  // data, so a keystroke beside the options hands the selector the same plan
+  const rendersOptions = xxxOfOptions !== undefined;
   const optionsPresentation = useMemo(
     () =>
-      xxxOfOptions && !plannedAsOptions && presentation
+      rendersOptions && !plannedAsOptions && presentation
         ? getOptionsPresentation(presentation, fieldId, isContainer)
         : presentation,
-    [xxxOfOptions, plannedAsOptions, presentation, fieldId, isContainer],
+    [rendersOptions, plannedAsOptions, presentation, fieldId, isContainer],
   );
   // The option below a custom field inherits the plan its options are handed, which describes it by none of the ids the
   // custom field may not render; below a container it inherits the field's own, whose heading it compares its own with

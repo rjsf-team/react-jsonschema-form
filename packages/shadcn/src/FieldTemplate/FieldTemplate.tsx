@@ -45,7 +45,9 @@ export default function FieldTemplate<
   if (hidden) {
     return <div className='hidden'>{children}</div>;
   }
-  const isCheckbox = uiOptions.widget === 'checkbox';
+  // The plan's `displayLabel` and description already say what a checkbox draws itself; the guess by the `checkbox`
+  // alias is left for a template rendered without one, so a part the plan gives the template isn't dropped
+  const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate
       classNames={classNames}
@@ -68,7 +70,7 @@ export default function FieldTemplate<
       registry={registry}
     >
       <div className='flex flex-col gap-2'>
-        {displayLabel && !isCheckbox && (
+        {displayLabel && !leavesPartsToCheckbox && (
           <label
             className={cn(
               'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
@@ -82,7 +84,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
-        {rawDescription && !isCheckbox && (
+        {rawDescription && !leavesPartsToCheckbox && (
           <span className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': hasError })}>
             {description}
           </span>
