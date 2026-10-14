@@ -136,8 +136,8 @@ describe('Error state consistency when deriving from new props', () => {
     const { container } = render(<IgnoringParent />);
 
     // The parent keeps handing back `shortName`, which the form took already, so the edit and its errors stay
-    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'x');
-    await user.click(container.querySelector('button')!);
+    await user.type(input(container, 'root_name'), 'x');
+    await user.click(elementOf(container, 'button'));
 
     expect(input(container, 'root_name').value).toBe('shortx');
     expect(fieldErrorsById(container)).toEqual({
@@ -174,7 +174,7 @@ describe('Error state consistency when deriving from new props', () => {
     const { container } = render(<SchemaSwappingParent />);
     const buttons = container.querySelectorAll('button');
 
-    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.click(input(container, 'root_name'));
     await user.tab();
     expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
 
@@ -203,11 +203,11 @@ describe('Error state consistency when deriving from new props', () => {
     }
     const { container, rerender } = render(<RestylingParent />);
 
-    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.click(input(container, 'root_name'));
     await user.tab();
     expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
 
-    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+    await user.type(input(container, 'root_name'), 'y');
     // The raise is the field's say over its path, the validator's error there included, so the `ErrorList` says the
     // same as the field does, and a re-derivation merges the raise onto the validator's result again
     rerender(<RestylingParent className='x' />);
@@ -336,7 +336,7 @@ describe('Error state consistency when deriving from new props', () => {
     await raise((field) => field.onChange(shortName, field.fieldPath, { __errors: ['root level problem'] }));
     expect(fieldErrorsById(container)).toEqual({ root: ['root level problem'] });
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     expect(fieldErrorsById(container)).toEqual({ root: ['root level problem'] });
     expect(errorListMessages(container)).toEqual(['. root level problem']);
@@ -513,7 +513,7 @@ describe('Error state consistency when deriving from new props', () => {
     await raise((field) => field.onChange('a', toFieldPath('street', toFieldPath('addr')), {}));
     // With no validator error left at `addr`, this is a custom error, which a later validation pass keeps
     await raise((field) => field.onChange({ street: 'a' }, toFieldPath('addr'), { __errors: ['addr problem'] }));
-    await user.click(container.querySelector<HTMLInputElement>('#root_other')!);
+    await user.click(input(container, 'root_other'));
     await user.tab();
 
     expect(fieldErrorsById(container)).toEqual(expect.objectContaining({ root_addr: ['addr problem'] }));
@@ -876,7 +876,7 @@ describe('Error state consistency when deriving from new props', () => {
       await submitForm(elementOf(container, 'form'), user);
       expect(errorListMessages(container)).toEqual(listed);
 
-      await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
+      await user.click(elementOf(container, `#${optionalControlsId('root_addr', 'Remove')}`));
       rerender(<Parent />);
       rerender(<Parent className='x' />);
 
@@ -1235,11 +1235,11 @@ describe('Error state consistency when deriving from new props', () => {
   it('clears the errors of a changed field in both the field and the error list while typing under onBlur', async () => {
     const { container } = render(<EchoingParent liveValidate='onBlur' />);
 
-    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.click(input(container, 'root_name'));
     await user.tab();
     expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
 
-    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+    await user.type(input(container, 'root_name'), 'y');
 
     expect(fieldErrorsById(container)).toEqual({});
     expect(errorListMessages(container)).toEqual([]);
@@ -1248,13 +1248,13 @@ describe('Error state consistency when deriving from new props', () => {
   it('drops the errors of data the parent replaced under onBlur', async () => {
     const { container } = render(<EchoingParent liveValidate='onBlur' />);
 
-    await user.click(container.querySelector<HTMLInputElement>('#root_name')!);
+    await user.click(input(container, 'root_name'));
     await user.tab();
     expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
-    expect(container.querySelector<HTMLInputElement>('#root_name')!).toHaveValue('longenoughvalue');
+    expect(input(container, 'root_name')).toHaveValue('longenoughvalue');
     expect(fieldErrorsById(container)).toEqual({});
     expect(errorListMessages(container)).toEqual([]);
   });
@@ -1274,7 +1274,7 @@ describe('Error state consistency when deriving from new props', () => {
     await submitForm(elementOf(container, 'form'), user);
     expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
 
-    await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
+    await user.type(input(container, 'root_name'), 'y');
 
     expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
   });
@@ -1562,7 +1562,7 @@ describe('Error state consistency when deriving from new props', () => {
 
       // The echo of an edit below `foo` clears the validator's errors at `foo`, so a raise kept there as the
       // validator's would go with them
-      await user.type(container.querySelector<HTMLInputElement>('#root_foo_baz')!, 'x');
+      await user.type(input(container, 'root_foo_baz'), 'x');
 
       expect(fieldErrorsById(container)).toEqual({ root_foo: ['own'] });
     });

@@ -44,7 +44,7 @@ describe('settled snapshot sanitization', () => {
     );
     // The array write runs no sanitize, but it flips the conditional: the settled snapshot must remember the
     // schema the settled data was resolved under, not the committed data's schema with the `then` merged in
-    await user.click(container.querySelector(`#${buttonId('root_list', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_list', 'add')}`));
     await user.type(input(container, 'root_name'), 'a');
     const last = events[events.length - 1].formData;
     expect(last?.color).toBe('r');
@@ -76,9 +76,9 @@ describe('settled snapshot sanitization', () => {
     const { container } = render(
       <AcceptingParent<PetData> schema={schema} initialValue={{ pet: { mode: 'strict', color: 'r' } }} log={log} />,
     );
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
@@ -109,12 +109,12 @@ describe('settled snapshot sanitization', () => {
       />,
     );
     // Flip to the else branch: 'a' is outside its enum and clears, and the snapshot settles there
-    await user.selectOptions(container.querySelector('#root_cond')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_cond'), ['1']);
     // The reset restores the initial data; the snapshot must settle on it, or the next flip is judged against
     // the else branch the first flip left behind
-    act(() => ref.current!.reset());
+    act(() => handleOf(ref).reset());
     // Flip again: judged against the restored data on the then branch, 'a' is a real difference and clears
-    await user.selectOptions(container.querySelector('#root_cond')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_cond'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.pick).toBeUndefined();
   });
@@ -151,9 +151,9 @@ describe('settled snapshot sanitization', () => {
         transform={(reported) => (reported === undefined ? reported : structuredClone(reported))}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
@@ -219,9 +219,9 @@ describe('settled snapshot sanitization', () => {
       );
     }
     const { container } = render(<SwappingOnceParent />);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_pet_color')!, ['1']);
-    await user.selectOptions(container.querySelector('#root_pet_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_pet_color'), ['1']);
+    await user.selectOptions(elementOf(container, '#root_pet_mode'), ['1']);
     expect(log.value?.pet.color).toBe('r');
   });
 
@@ -266,7 +266,7 @@ describe('settled snapshot sanitization', () => {
     // A parent that passes a value of its own, which the form takes without settling it
     const { container, rerender } = render(<Form<ModeData> {...props} formData={{ mode: 'basic', colors: [] }} />);
     rerender(<Form<ModeData> {...props} formData={{ mode: 'advanced', color: 'c', colors: ['c'] }} />);
-    await user.selectOptions(container.querySelector('#root_mode')!, ['0']);
+    await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
     const last = events[events.length - 1].formData;
     expect(last?.color).toBeUndefined();
     expect(last?.colors).toEqual([]);
@@ -324,7 +324,7 @@ describe('settled snapshot sanitization', () => {
     // The remove runs no sanitize, but the pairing view's rows move with the data's, so the surviving row
     // still pairs with its own previous value: the sibling edit's sanitize finds no schema change for it and
     // keeps the placeholders its branch offers
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
@@ -378,7 +378,7 @@ describe('settled snapshot sanitization', () => {
         log={log}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     expect(log.value?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
   });
@@ -458,7 +458,7 @@ describe('settled snapshot sanitization', () => {
         ],
       }),
     );
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     // The desynced length drops only the rows array from the view, so each row pairs with no previous value
     // and is filtered against its own branch: a stale value is never kept, though the placeholders go with it
@@ -513,7 +513,7 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([{ kind: 'x', tags: [null, null] }, { tags: [undefined, undefined] }]);
@@ -602,10 +602,10 @@ describe('settled snapshot sanitization', () => {
         liveValidate='onChange'
       />,
     );
-    await user.selectOptions(container.querySelector('#root_mode')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_color')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_color'), ['1']);
     // The flip back narrows color against the snapshot the edits settled: 'g' cannot stand
-    await user.selectOptions(container.querySelector('#root_mode')!, ['1']);
+    await user.selectOptions(elementOf(container, '#root_mode'), ['1']);
     expect(log.value?.color).toBe('r');
   });
 
@@ -732,8 +732,8 @@ describe('settled snapshot sanitization', () => {
     // The add is an array write, so no sanitize runs and the snapshot keeps its one row; the kind flip then
     // faces two committed rows against one settled one, so the flipped row is filtered against its own
     // value alone and the 'a' the y-branch rejects goes, the way v7 and 99229b1 removed it
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['1']);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]).toEqual({ kind: 'y', tags: [] });
   });
@@ -790,7 +790,7 @@ describe('settled snapshot sanitization', () => {
     // The reorder runs no sanitize, but the pairing view's rows move with the data's, so each row still pairs
     // with its own previous value: the sibling edit's sanitize finds no schema change for either and keeps the
     // placeholders their branches offer
-    await user.click(container.querySelector(`#${buttonId('root_rows_1', 'moveUp')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_1', 'moveUp')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows).toEqual([
@@ -846,7 +846,7 @@ describe('settled snapshot sanitization', () => {
     // The add runs no sanitize, but the pairing view's rows move with the data's: the first row still pairs with
     // its own previous value, so the sibling edit's sanitize keeps its placeholders, and the added row has no
     // previous value of its own
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
     await user.type(input(container, 'root_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]).toEqual({ kind: 'x', tags: [null, null] });
@@ -896,12 +896,12 @@ describe('settled snapshot sanitization', () => {
     // row's: the flip into the y-branch is a real difference and the 'a' it rejects goes. Resolving the old
     // side against `undefined` instead would satisfy both `if`s vacuously, read the merge as agreement, and
     // keep the stale value
-    await user.click(container.querySelector(`#${buttonId('root_rows', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['0']);
+    await user.click(elementOf(container, `#${buttonId('root_rows', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['0']);
     // The narrowed branch filters the placeholder items, so the 'a' goes in through an explicit add
-    await user.click(container.querySelector(`#${buttonId('root_rows_0_tags', 'add')}`)!);
-    await user.selectOptions(container.querySelector('#root_rows_0_tags_0')!, ['0']);
-    await user.selectOptions(container.querySelector('#root_rows_0_kind')!, ['1']);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0_tags', 'add')}`));
+    await user.selectOptions(elementOf(container, '#root_rows_0_tags_0'), ['0']);
+    await user.selectOptions(elementOf(container, '#root_rows_0_kind'), ['1']);
     const last = events[events.length - 1].formData;
     expect(last?.rows?.[0]?.tags).toEqual([]);
   });
@@ -960,7 +960,7 @@ describe('settled snapshot sanitization', () => {
     );
     // The value set back is not the form's data, so the moved pairing view goes with the reorder: the sibling edit
     // pairs each row with its own previous value, and both rows keep the placeholders their branches offer
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'moveDown')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
     await user.type(input(container, 'root_note'), 'n');
     expect(log.value?.rows).toEqual([
       { kind: 'x', tags: [null, null] },
@@ -1090,7 +1090,7 @@ describe('settled snapshot sanitization', () => {
       />,
     );
     await user.type(input(container, 'root_note'), 'n');
-    await user.click(container.querySelector(`#${buttonId('root_rows_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     const rows = log.value?.rows;
     // The desynced length drops only the rows array from the view, so the added row pairs with no
@@ -1146,7 +1146,7 @@ describe('settled snapshot sanitization', () => {
       />,
     );
     await user.type(input(container, 'root_0_note'), 'n');
-    await user.click(container.querySelector(`#${buttonId('root_0', 'remove')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_0', 'remove')}`));
     await user.type(input(container, 'root_0_note'), 'n');
     const rows = log.value;
     // The dropped root view reads as no settled data at all, so the added row pairs with no previous
@@ -1193,7 +1193,7 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.click(container.querySelector(`#${buttonId('root_0', 'moveDown')}`)!);
+    await user.click(elementOf(container, `#${buttonId('root_0', 'moveDown')}`));
     await user.type(input(container, 'root_0_note'), 'n');
     const last = events[events.length - 1].formData;
     expect(last?.[0]?.kind).toBe('y');
@@ -1222,7 +1222,7 @@ describe('settled snapshot sanitization', () => {
         onChange={(event) => events.push(event)}
       />,
     );
-    await user.selectOptions(container.querySelector('#root_kind')!, 'b');
+    await user.selectOptions(elementOf(container, '#root_kind'), 'b');
     expect(events[events.length - 1].formData).toEqual({ kind: 'b', fixed: ['x'] });
   });
 });

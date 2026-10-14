@@ -13,7 +13,9 @@ import type { ParentLog } from './testUtils.tsx';
 import {
   AcceptingParent,
   createFormComponent,
+  createFormRef,
   createParentLog,
+  elementOf,
   fieldErrorsById,
   handleOf,
   input,
@@ -22,7 +24,6 @@ import {
   reportedBy,
   submitForm,
   TransformingParent,
-  createFormRef,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -91,7 +92,7 @@ describe('form data ownership', () => {
     it('a spy handler sees each edit, and the form keeps showing it', async () => {
       const { node, onChange } = createFormComponent({ schema, formData: { a: 'a' } });
 
-      await user.click(node.querySelector('#root_a')!);
+      await user.click(elementOf(node, '#root_a'));
       await user.paste('b');
 
       expect(onChange).toHaveBeenCalledTimes(1);
@@ -414,7 +415,7 @@ describe('form data ownership', () => {
       });
       expect(container.querySelectorAll('.error-detail li')).toHaveLength(1);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(input(container, 'root_a')).toHaveValue('replaced');
       expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
@@ -1043,7 +1044,7 @@ describe('form data ownership', () => {
         />,
       );
 
-      await user.click(document.querySelector('#root_a')!);
+      await user.click(elementOf(document, '#root_a'));
       await user.paste('x');
 
       expect(Object.isFrozen(seen!.formData)).toBe(true);
@@ -1056,7 +1057,7 @@ describe('form data ownership', () => {
       const ref = createFormRef();
       const { node } = createFormComponent({ ref, schema, initialFormData: { a: '' } });
 
-      await user.click(node.querySelector('#root_a')!);
+      await user.click(elementOf(node, '#root_a'));
       await user.paste('x');
 
       expect(Object.isFrozen(handleOf(ref).getFormData())).toBe(true);
@@ -1082,7 +1083,7 @@ describe('form data ownership', () => {
       const { container } = render(
         <ListeningParent schema={oneOfSchema} initialValue={{ status: { by: 'me' } }} log={log} />,
       );
-      const select = container.querySelector<HTMLSelectElement>('#root_status__oneof_select')!;
+      const select = elementOf(container, '#root_status__oneof_select');
 
       await user.selectOptions(select, '1');
 
@@ -1107,7 +1108,7 @@ describe('form data ownership', () => {
       const { container } = render(
         <Form schema={rangeSchema} validator={validator} initialFormData={{ size: { n: 5 } }} />,
       );
-      const select = container.querySelector<HTMLSelectElement>('#root_size__oneof_select')!;
+      const select = elementOf(container, '#root_size__oneof_select');
 
       await user.selectOptions(select, '1');
 
@@ -1119,11 +1120,11 @@ describe('form data ownership', () => {
       const log = createParentLog<string[]>();
       const { container } = render(<ListeningParent schema={arraySchema} initialValue={['one', 'two']} log={log} />);
 
-      await user.click(container.querySelector('.rjsf-array-item-add button')!);
+      await user.click(elementOf(container, '.rjsf-array-item-add button'));
       expect(log.reported).toEqual([['one', 'two', undefined]]);
       expect(container.querySelectorAll('input[type=text]')).toHaveLength(3);
 
-      await user.click(container.querySelector('.rjsf-array-item-remove')!);
+      await user.click(elementOf(container, '.rjsf-array-item-remove'));
       expect(log.reported.at(-1)).toEqual(['two', undefined]);
       expect([...container.querySelectorAll<HTMLInputElement>('input[type=text]')].map((el) => el.value)).toEqual([
         'two',
@@ -1137,7 +1138,7 @@ describe('form data ownership', () => {
       const { container } = render(
         <ListeningParent schema={objectSchema} initialValue={{ first: 'one', second: 'two' }} log={log} />,
       );
-      const keyInput = container.querySelector<HTMLInputElement>('#root_first-key')!;
+      const keyInput = input(container, 'root_first-key');
 
       await user.clear(keyInput);
       await user.type(keyInput, 'renamed');
@@ -1172,7 +1173,7 @@ describe('form data ownership', () => {
         );
       }
       const { container } = render(<SetBackOnceParent />);
-      const addButton = () => container.querySelector('.rjsf-object-property-expand button')!;
+      const addButton = () => elementOf(container, '.rjsf-object-property-expand button');
 
       await user.click(addButton());
       expect(container.querySelectorAll('#root_newKey')).toHaveLength(0);
@@ -1194,7 +1195,7 @@ describe('form data ownership', () => {
       const { node } = createFormComponent({ ref: owned, schema, initialFormData: { a: 'seed' } });
       await user.clear(input(node, 'root_a'));
       await user.paste('edited');
-      expect(owned.current!.getFormData()).toEqual({ a: 'edited' });
+      expect(handleOf(owned).getFormData()).toEqual({ a: 'edited' });
     });
 
     it('a submit with omitExtraData submits the omitted copy and keeps it, without calling onChange', async () => {
@@ -1276,10 +1277,10 @@ describe('form data ownership', () => {
           initialValue={{ foo: 'a' }}
         />,
       );
-      await user.click(container.querySelector('button[type=submit]')!);
+      await user.click(elementOf(container, 'button[type=submit]'));
       expect(fieldErrorsById(container).root_foo).toEqual(['must NOT have fewer than 5 characters']);
 
-      await user.click(container.querySelector('#root_foo-raise')!);
+      await user.click(elementOf(container, '#root_foo-raise'));
 
       expect(fieldErrorsById(container).root_foo).toEqual(['custom!']);
     });
@@ -1294,9 +1295,9 @@ describe('form data ownership', () => {
         uiSchema: { foo: { 'ui:widget': CustomErrorWidget } },
         initialFormData: { foo: 'a', bar: 'b' },
       });
-      await user.click(container.querySelector('button[type=submit]')!);
+      await user.click(elementOf(container, 'button[type=submit]'));
 
-      await user.click(container.querySelector('#root_foo-raise')!);
+      await user.click(elementOf(container, '#root_foo-raise'));
 
       const { errors } = onChange.mock.lastCall![0] as IChangeEvent;
       expect(errors.map(({ name, property, message }) => ({ name, property, message }))).toEqual([
@@ -1318,8 +1319,8 @@ describe('form data ownership', () => {
         />,
       );
 
-      await user.click(container.querySelector('#raise-root')!);
-      await user.click(container.querySelector('button[type=submit]')!);
+      await user.click(elementOf(container, '#raise-root'));
+      await user.click(elementOf(container, 'button[type=submit]'));
 
       expect(onSubmit).not.toHaveBeenCalled();
       expect(onError).toHaveBeenCalledTimes(1);
@@ -1506,7 +1507,7 @@ describe('operations in one tick', () => {
       initialFormData: { foo: 'abcdef' },
     });
 
-    await user.click(node.querySelector('#root_foo-commit')!);
+    await user.click(elementOf(node, '#root_foo-commit'));
 
     expect(fieldErrorsById(node)).toEqual({ root_foo: ['must NOT have fewer than 5 characters'] });
   });
