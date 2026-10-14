@@ -8,6 +8,7 @@ import type {
   RJSFSchema,
   ThemePresentation,
   Widget,
+  WidgetPresentationDeclaration,
 } from '../src/index.ts';
 import { getPresentationDeclaration, mergeThemePresentation, WIDGET_FIELD_PRESENTATION } from '../src/index.ts';
 
@@ -424,6 +425,16 @@ describe('getPresentationDeclaration()', () => {
           fieldKey: 'BooleanField',
           widget: 'RadioWidget',
         }),
+      ).not.toHaveProperty('uncheckedIsFalse');
+    });
+
+    it("takes none from an unmerged layer's default", () => {
+      const blanket: WidgetPresentationDeclaration = { uncheckedIsFalse: true };
+      expect(
+        getPresentationDeclaration(
+          { ...source, presentation: { ...presentation, default: blanket } },
+          { schema: { type: 'boolean' }, field: StringField, fieldKey: 'BooleanField', widget: 'select' },
+        ),
       ).not.toHaveProperty('uncheckedIsFalse');
     });
 

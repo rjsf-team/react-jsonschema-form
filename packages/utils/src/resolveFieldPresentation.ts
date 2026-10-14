@@ -50,8 +50,8 @@ export interface FieldPresentationInputs {
    */
   required?: boolean;
   /** The plan of the field above that renders this same id: the field whose selected `anyOf`/`oneOf` option this is,
-   * or the fallback UI's field this is the value field of. A selector, whose id is its own, takes the plan of the field
-   * it picks the option of
+   * or the fallback UI's field this is the value field of. A selector, whose id is its own, isn't planned here but by
+   * `getSelectorPresentation()`, from the plan of the field it picks the option of
    */
   inherited?: FieldPresentation;
   /** The id the field's own component renders under, when it differs from `id`: a field rendered beside its
@@ -115,7 +115,9 @@ function placeText<Text>(
  *   when no field above already draws its text, or else is `above` under the id of the label that does. The control
  *   points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the
  *   control above was pointed at that label too, since its template may then draw it with no `for`, or when its id
- *   isn't the one that label's `for` names, such as a selector's.
+ *   isn't the one that label's `for` names. Its `requiredMarker` follows `required` whether or not there is a control,
+ *   so a container's heading is marked too, and an `above` label carries the marker of the label drawn above, so the
+ *   plan describes that one label as it is drawn; the control's own `required` stays this level's.
  * - The description and help show where they have text, the description only where `showLabel` allows it. Text any
  *   field above already shows is `above`, as is a part with no text under a field above that shows one; text of its
  *   own takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the id it would take,
@@ -160,9 +162,14 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
       : plansAbove.find((plan) => rendersHere(plan.label.by) && plan.label.text === labelText);
   // A level with a control is named by a label; one with none, such as a container, draws its label as the heading every
   // title template renders under `titleId()`
-  const { text: shownLabel, id: labelId } = labelAbove?.label ?? {
+  const {
+    text: shownLabel,
+    id: labelId,
+    requiredMarker,
+  } = labelAbove?.label ?? {
     text: labelText,
     id: (hasControl ? fieldLabelId : titleId)(partId(declaration.label)),
+    requiredMarker: required,
   };
   let labelBy: PartPlacement = declaration.label;
   if (labelAbove) {
@@ -221,11 +228,11 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     if (required) {
       attributes.required = true;
     }
-    control = { id, attributes, requiredMarker: required };
+    control = { id, attributes };
   }
 
   return {
-    label: { text: shownLabel, by: labelBy, id: labelId },
+    label: { text: shownLabel, by: labelBy, id: labelId, requiredMarker },
     description: { text: description, ...descriptionPlacement },
     help: { text: help, ...helpPlacement },
     errors: errorsPlan,

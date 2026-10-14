@@ -23,7 +23,7 @@ describe('resolveFieldPresentation()', () => {
     expect(
       resolve({ description: 'Describes foo', help: 'Helps with foo', errors: ['is required'], required: true }),
     ).toEqual({
-      label: { text: 'Foo', by: 'template', id: `${ID}__label` },
+      label: { text: 'Foo', by: 'template', id: `${ID}__label`, requiredMarker: true },
       description: { text: 'Describes foo', by: 'template', id: `${ID}__description` },
       help: { text: 'Helps with foo', by: 'template', id: `${ID}__help` },
       errors: { messages: ['is required'], by: 'template', id: `${ID}__error` },
@@ -36,20 +36,19 @@ describe('resolveFieldPresentation()', () => {
           'aria-invalid': true,
           required: true,
         },
-        requiredMarker: true,
       },
     });
   });
 
   it('plans a field with nothing to show', () => {
     expect(resolve({ label: '' })).toEqual({
-      label: { text: '', by: 'none', id: `${ID}__label` },
+      label: { text: '', by: 'none', id: `${ID}__label`, requiredMarker: false },
       description: { text: '', by: 'none', id: `${ID}__description` },
       help: { text: undefined, by: 'none', id: `${ID}__help` },
       errors: { messages: [], by: 'none', id: `${ID}__error` },
       describedBy: [],
       showLabel: true,
-      control: { id: ID, attributes: {}, requiredMarker: false },
+      control: { id: ID, attributes: {} },
     });
   });
 
@@ -90,6 +89,12 @@ describe('resolveFieldPresentation()', () => {
 
     it("keeps a container's own heading with no control", () => {
       expect(resolve({ declaration: WIDGET_LABEL, hasControl: false }).label.by).toBe('self');
+    });
+
+    it('marks the heading of a required field with no control', () => {
+      const plan = resolve({ declaration: WIDGET_LABEL, hasControl: false, required: true });
+      expect(plan.label).toMatchObject({ by: 'self', requiredMarker: true });
+      expect(plan.control).toBeUndefined();
     });
 
     it('points a group of controls at the label the template draws', () => {
@@ -152,12 +157,21 @@ describe('resolveFieldPresentation()', () => {
 
     it('takes the text of the template label above along with its id', () => {
       const plan = resolve({ inherited: above, declaration: WIDGET_LABEL, label: 'Subscribe to the newsletter' });
-      expect(plan.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label` });
+      expect(plan.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label`, requiredMarker: false });
+    });
+
+    it("takes the marker of the label above, and keeps its control's required its own", () => {
+      const optional = resolve({ inherited: resolve({ required: true }) });
+      expect(optional.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label`, requiredMarker: true });
+      expect(optional.control?.attributes.required).toBeUndefined();
+      const required = resolve({ inherited: above, required: true });
+      expect(required.label.requiredMarker).toBe(false);
+      expect(required.control?.attributes.required).toBe(true);
     });
 
     it('keeps the heading a container draws itself beneath a template label above when it says something else, under an id of its own', () => {
       const container = resolve({ inherited: above, declaration: WIDGET_LABEL, label: 'Dog', hasControl: false });
-      expect(container.label).toEqual({ text: 'Dog', by: 'self', id: `${ID}__title` });
+      expect(container.label).toEqual({ text: 'Dog', by: 'self', id: `${ID}__title`, requiredMarker: false });
       expect(container.control).toBeUndefined();
     });
 
@@ -166,6 +180,7 @@ describe('resolveFieldPresentation()', () => {
         text: 'Foo',
         by: 'above',
         id: `${ID}__label`,
+        requiredMarker: false,
       });
     });
 
@@ -178,7 +193,7 @@ describe('resolveFieldPresentation()', () => {
         inherited: above,
       });
       const nested = resolve({ inherited: container, declaration: WIDGET_LABEL, label: 'Dog', hasControl: false });
-      expect(nested.label).toEqual({ text: 'Dog', by: 'above', id: container.label.id });
+      expect(nested.label).toEqual({ text: 'Dog', by: 'above', id: container.label.id, requiredMarker: false });
     });
 
     it('points the control at a template label above that the control above was pointed at', () => {
@@ -195,7 +210,7 @@ describe('resolveFieldPresentation()', () => {
         label: 'Foo',
         inherited: above,
       });
-      expect(selector.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label` });
+      expect(selector.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label`, requiredMarker: false });
       expect(selector.control?.attributes['aria-labelledby']).toBe(`${ID}__label`);
     });
 
