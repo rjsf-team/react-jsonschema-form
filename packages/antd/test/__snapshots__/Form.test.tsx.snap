@@ -58,6 +58,7 @@ exports[`antd specific tests > descriptionLocation tooltip in formContext 1`] = 
                                   tabindex="-1"
                                 >
                                   <span
+                                    aria-hidden="true"
                                     aria-label="question-circle"
                                     class="anticon anticon-question-circle"
                                     role="img"

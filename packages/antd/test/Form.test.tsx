@@ -261,6 +261,38 @@ describe('antd specific tests', () => {
     expect(asFragment()).toMatchSnapshot();
   });
 
+  // antd renders a tooltip only beside a label, and its popup only while open
+  test.each([
+    ['a field whose template draws its label, from its closed tooltip', { type: 'string', title: 'Name' }],
+    ['a checkbox, which draws its own label, from below it', { type: 'boolean', title: 'Name' }],
+  ] as const)('descriptionLocation tooltip describes %s', (_, field) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { name: { ...field, description: 'Your name' } } }}
+        validator={validator}
+        formContext={{ descriptionLocation: 'tooltip' }}
+      />,
+    );
+
+    expect(container.querySelector('#root_name')).toHaveAccessibleDescription('Your name');
+  });
+
+  test("names a radio group by its label's text, without the icon of the tooltip it describes it by", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { color: { type: 'string', title: 'Color', description: 'Pick one', enum: ['red', 'blue'] } },
+        }}
+        uiSchema={{ color: { 'ui:widget': 'radio' } }}
+        formContext={{ descriptionLocation: 'tooltip' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Color');
+  });
+
   test('alt-datetime renders the time selects and its Now button emits a date-time', async () => {
     const onChange = vi.fn();
     const { container } = render(
@@ -426,6 +458,25 @@ describe('antd specific tests', () => {
 
     expect(screen.getAllByText('Bee')).toHaveLength(1);
     expect(screen.getByRole('checkbox')).toHaveAccessibleName('Bee');
+  });
+  test.each([
+    ['declares it holds false unchecked', { uncheckedIsFalse: true }, false],
+    ['declares nothing', {}, true],
+  ])("marks the template's label for a switch that %s only where its plan says", (_, declaration, marked) => {
+    const SwitchWidget = () => null;
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { foo: { type: 'boolean', title: 'Foo' } }, required: ['foo'] }}
+        uiSchema={{ foo: { 'ui:widget': 'SwitchWidget' } }}
+        widgets={{ SwitchWidget }}
+        presentation={{ widgets: { SwitchWidget: { ...declaration, label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    const label = container.querySelector('label[for="root_foo"]');
+    expect(label).toHaveTextContent('Foo');
+    expect(label?.classList.contains('ant-form-item-required')).toBe(marked);
   });
 });
 
