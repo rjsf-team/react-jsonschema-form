@@ -19,6 +19,6 @@ export default function getControlDescribedBy<
   if (!presentation) {
     return [ariaDescribedByIds(id), ...ownDescribedBy].join(' ');
   }
-  const planned = presentation.control?.attributes['aria-describedby'];
-  return [...new Set([planned, ...ownDescribedBy])].filter(Boolean).join(' ') || undefined;
+  const planned = presentation.control?.attributes['aria-describedby']?.split(' ') ?? [];
+  return [...new Set([...planned, ...ownDescribedBy])].filter(Boolean).join(' ') || undefined;
 }

@@ -1,3 +1,4 @@
+import getDescribedControlAttributes from './getDescribedControlAttributes.ts';
 import isLabelledByTemplate from './isLabelledByTemplate.ts';
 import type { FieldPresentation, PartPresentation } from './types.ts';
 
@@ -23,7 +24,8 @@ function asSelectorPart<P extends PartPresentation>(part: P): P {
 export default function getSelectorPresentation(field: FieldPresentation, selectorId: string): FieldPresentation {
   let control: FieldPresentation['control'];
   if (field.control) {
-    const { required: _required, 'aria-labelledby': _labelledBy, ...attributes } = field.control.attributes;
+    // From the field's parts alone: its control's own describers, such as its examples list, describe that control
+    const attributes = getDescribedControlAttributes(field.describedBy, field.errors.messages);
     control = {
       id: selectorId,
       attributes: isLabelledByTemplate(field) ? { ...attributes, 'aria-labelledby': field.label.id } : attributes,

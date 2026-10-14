@@ -50,6 +50,18 @@ describe('getSelectorPresentation()', () => {
     expect(selector.control?.attributes['aria-labelledby']).toBeUndefined();
   });
 
+  it("leaves out the describers its field's control renders for itself alone", () => {
+    const field = resolveFieldPresentation({
+      id: ID,
+      declaration: TEMPLATE,
+      label: 'Foo',
+      description: 'Describes foo',
+      controlDescribedBy: [`${ID}__examples`],
+    });
+    expect(field.control?.attributes['aria-describedby']).toBe(`${ID}__description ${ID}__examples`);
+    expect(getSelectorPresentation(field, SELECTOR).control?.attributes['aria-describedby']).toBe(`${ID}__description`);
+  });
+
   it('has no control when its field has none on screen', () => {
     const field = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', hasControl: false });
     expect(getSelectorPresentation(field, SELECTOR).control).toBeUndefined();
