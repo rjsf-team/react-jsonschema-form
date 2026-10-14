@@ -897,6 +897,15 @@ describe('LayoutMultiSchemaField', () => {
       expect(screen.getByText('from the uiSchema')).toBeInTheDocument();
       expect(screen.queryByText('from the schema')).not.toBeInTheDocument();
     });
+    test('hands its FieldTemplate no description where ui:label false turns the label off', () => {
+      const { templateProps } = renderRecording({
+        schema: { ...SIMPLE_ONEOF, description: 'from the schema' },
+        uiSchema: { 'ui:label': false },
+      });
+
+      expect(templateProps?.rawDescription).toBe('');
+      expect(screen.queryByText('from the schema')).not.toBeInTheDocument();
+    });
     test('tells its FieldTemplate the field is hidden for a ui:widget of hidden', () => {
       const { templateProps } = renderRecording({ uiSchema: { [UI_WIDGET_KEY]: 'hidden' } });
 

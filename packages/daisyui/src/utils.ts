@@ -1,5 +1,12 @@
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
-import { ariaDescribedByIds, fieldLabelId, isObject, triggerValueId } from '@rjsf/utils';
+import type { FieldPresentation, FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema } from '@rjsf/utils';
+import {
+  fieldLabelId,
+  getControlAttributes,
+  getControlDescribedBy,
+  isLabelledByTemplate,
+  isObject,
+  triggerValueId,
+} from '@rjsf/utils';
 
 import type { DaisyProps } from './types/DaisyProps.ts';
 
@@ -43,6 +50,7 @@ interface GetGroupProps {
   label?: string;
   name?: string;
   hideLabel?: boolean;
+  presentation?: FieldPresentation;
   role: GroupProps['role'];
 }
 
@@ -67,12 +75,29 @@ interface GetGroupProps {
  * `FieldTemplate` renders, and the group is left unnamed rather than misnamed. Naming it would mean rebuilding that
  * suffix here, which is the theme guessing at an id `@rjsf/core` owns.
  *
+ * Under the field's plan the answer is the plan's: a label the template draws, here or for a field above rendering the
+ * same id, is one to point at.
+ *
  * @param label - The field's label, empty when it has no title
  * @param name - The field's property name, which the template's label falls back to
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
+ * @param presentation - The field's plan, when its `SchemaField` built one
  * @returns - True if there is a label for `fieldLabelId()` to point at
  */
-function hasLabelToReference({ label, name, hideLabel }: { label?: string; name?: string; hideLabel?: boolean }) {
+function hasLabelToReference({
+  label,
+  name,
+  hideLabel,
+  presentation,
+}: {
+  label?: string;
+  name?: string;
+  hideLabel?: boolean;
+  presentation?: FieldPresentation;
+}) {
+  if (presentation) {
+    return isLabelledByTemplate(presentation);
+  }
   return !hideLabel && !!(label || name);
 }
 
@@ -93,10 +118,16 @@ function hasLabelToReference({ label, name, hideLabel }: { label?: string; name?
  * @param label - The field's label, empty when it has no title
  * @param name - The field's property name, which the template's label falls back to
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
+ * @param presentation - The field's plan, whose `aria-labelledby` for the control the group takes when there is one
  * @param role - The group role for the controls, `radiogroup` for radios and `group` for anything else
  * @returns - The `id`, `role` and, when there is a label to point at, `aria-labelledby` props for the group's wrapper
  */
-export function getGroupProps({ id, label, name, hideLabel, role }: GetGroupProps): GroupProps {
+export function getGroupProps({ id, label, name, hideLabel, presentation, role }: GetGroupProps): GroupProps {
+  // The plan already points a group declared as labelled by reference at the label that names it
+  if (presentation) {
+    const { 'aria-labelledby': labelledBy } = getControlAttributes({ id, presentation });
+    return labelledBy ? { id, role, 'aria-labelledby': labelledBy } : { id, role };
+  }
   if (!hasLabelToReference({ label, name, hideLabel })) {
     return { id, role };
   }
@@ -120,6 +151,7 @@ interface GetTriggerDescribedBy {
   label?: string;
   name?: string;
   hideLabel?: boolean;
+  presentation?: FieldPresentation;
   hasValue: boolean;
   named?: boolean;
   describedBy?: string;
@@ -147,22 +179,25 @@ interface GetTriggerDescribedBy {
  * @param label - The field's label, empty when it has no title
  * @param name - The field's property name, which the template's label falls back to
  * @param hideLabel - Whether the label is hidden, in which case the template renders none
+ * @param presentation - The field's plan, when its `SchemaField` built one
  * @param hasValue - Whether the button is displaying a value rather than falling back to the label
  * @param [named] - Whether the button is named by something other than that label, such as an `aria-label` its caller
  *   passed, which replaces its contents the same way
- * @param [describedBy=ariaDescribedByIds(id)] - The ids describing the field, which follow the value element; an empty
- *   string describes it by none
- * @returns - The button's `aria-describedby`, naming the value element only where something names the button
+ * @param [describedBy] - The ids describing the field, which follow the value element: those its plan gives the control,
+ *   or `ariaDescribedByIds(id)` without a plan; an empty string describes it by none
+ * @returns - The button's `aria-describedby`, naming the value element only where something names the button, or
+ *   undefined when nothing describes it
  */
 export function getTriggerDescribedBy({
   id,
   label,
   name,
   hideLabel,
+  presentation,
   hasValue,
   named = false,
-  describedBy = ariaDescribedByIds(id),
+  describedBy = getControlDescribedBy({ id, presentation }),
 }: GetTriggerDescribedBy) {
-  const describesValue = hasValue && (named || hasLabelToReference({ label, name, hideLabel }));
+  const describesValue = hasValue && (named || hasLabelToReference({ label, name, hideLabel, presentation }));
   return [describesValue ? triggerValueId(id) : '', describedBy].filter(Boolean).join(' ') || undefined;
 }

@@ -550,9 +550,9 @@ describe('multiple SelectWidget accessible name', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
   });
 
-  test('falls back to a fixed translated name for an explicit blank ui:title', () => {
+  test('is named by the label the template shows, which an explicit blank ui:title falls through to the title', () => {
     render(<Form schema={colorsSchema} uiSchema={{ colors: { 'ui:title': '' } }} validator={validator} />);
-    expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Colors');
   });
 
   test('prefers ui:placeholder for the name and the visible placeholder of an untitled root field', () => {

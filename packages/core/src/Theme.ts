@@ -25,8 +25,9 @@ import { generateWidgets } from './components/widgets/index.ts';
 /** Which parts of a field `@rjsf/core`'s fields and widgets draw themselves. The fields that render one widget leave
  * every part to it, and a widget draws only what its entry says, so the `FieldTemplate` draws the rest. The template
  * labels a field whose value a field below renders under the same id, the selected option or the fallback UI's value,
- * so that field's control is named once (#5358); an object draws its own heading. Built fresh on every call, as the
- * rest of the theme is, since a caller may mutate it
+ * so that field's control is named once (#5358). `NullField`, which has no control for a label to name, draws its own
+ * title and description, as an object does through the field default. Built fresh on every call, as the rest of the
+ * theme is, since a caller may mutate it
  */
 function generatePresentation(): ThemePresentation {
   return {
@@ -40,9 +41,8 @@ function generatePresentation(): ThemePresentation {
       ArrayField: { ...WIDGET_FIELD_PRESENTATION },
       BooleanField: { ...WIDGET_FIELD_PRESENTATION },
       FallbackField: { label: 'template', description: 'template' },
-      NullField: { label: 'template', description: 'template' },
+      NullField: { label: 'self', description: 'self' },
       NumberField: { ...WIDGET_FIELD_PRESENTATION },
-      ObjectField: { label: 'self', description: 'self' },
       OneOfField: { label: 'template', description: 'template' },
       StringField: { ...WIDGET_FIELD_PRESENTATION },
     },

@@ -511,7 +511,8 @@ describe('DateWidget', () => {
 
       const trigger = container.querySelector('button[aria-haspopup]')!;
       expect(trigger).toHaveAccessibleName('May 3, 2020');
-      expect(trigger.getAttribute('aria-describedby')).not.toContain('__value');
+      // Nothing else describes it either, so it carries no `aria-describedby` at all
+      expect(trigger).not.toHaveAttribute('aria-describedby');
     });
 
     test('shows the label rather than the schema title, which ui:title overrides', () => {

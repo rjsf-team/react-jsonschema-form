@@ -1516,7 +1516,6 @@ exports[`array fields > checkboxes 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -5329,7 +5328,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -5962,7 +5960,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                             role="group"
                           >
                             <label
-                              aria-describedby="root_2__error root_2__description root_2__help"
                               class="chakra-checkbox__root emotion-20"
                               data-part="root"
                               data-required=""
@@ -10634,7 +10631,7 @@ exports[`with title and description > array icons 1`] = `
                               for="_r_12_"
                               id="field::_r_12_::label"
                             >
-                              Test field-1
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="chakra-field__requiredIndicator emotion-15"
@@ -10834,7 +10831,7 @@ exports[`with title and description > array icons 1`] = `
                               for="_r_14_"
                               id="field::_r_14_::label"
                             >
-                              Test field-2
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="chakra-field__requiredIndicator emotion-15"
@@ -11634,7 +11631,7 @@ exports[`with title and description > checkboxes 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -12195,7 +12192,7 @@ exports[`with title and description > fixed array 1`] = `
                               for="_r_q_"
                               id="field::_r_q_::label"
                             >
-                              Test field-1
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="chakra-field__requiredIndicator emotion-15"
@@ -12268,7 +12265,7 @@ exports[`with title and description > fixed array 1`] = `
                               for="_r_s_"
                               id="field::_r_s_::label"
                             >
-                              Test field-2
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="chakra-field__requiredIndicator emotion-15"
@@ -14112,7 +14109,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -16590,7 +16587,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -18793,7 +18790,6 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"

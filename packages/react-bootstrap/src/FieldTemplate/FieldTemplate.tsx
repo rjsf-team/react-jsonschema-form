@@ -10,6 +10,7 @@ export default function FieldTemplate<
   id,
   children,
   displayLabel,
+  presentation,
   rawErrors,
   hideError,
   errors,
@@ -49,6 +50,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -68,7 +70,7 @@ export default function FieldTemplate<
           </Form.Label>
         )}
         {children}
-        {displayLabel && rawDescription && !isCheckbox && (
+        {rawDescription && !isCheckbox && (
           <Form.Text className={hasError ? 'text-danger' : 'text-muted'}>{description}</Form.Text>
         )}
         {errors}

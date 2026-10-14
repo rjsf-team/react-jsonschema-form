@@ -11,10 +11,6 @@ exports[`format iso-date-time 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -55,10 +51,6 @@ exports[`format iso-time 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -221,7 +213,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               class="flex flex-col gap-2"
                                             >
                                               <div
-                                                aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                 class="relative "
                                               >
                                                 <div
@@ -443,7 +434,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                               class="flex flex-col gap-2"
                                             >
                                               <div
-                                                aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                 class="relative "
                                               >
                                                 <div
@@ -1637,7 +1627,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
-                        aria-describedby="root_color__error root_color__description root_color__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -1794,7 +1783,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                   class="flex flex-col gap-2"
                 >
                   <div
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     class="relative "
                   >
                     <div
@@ -2046,7 +2034,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               class="flex flex-col gap-2"
                                             >
                                               <div
-                                                aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                 class="relative "
                                               >
                                                 <div
@@ -2268,7 +2255,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                               class="flex flex-col gap-2"
                                             >
                                               <div
-                                                aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                 class="relative "
                                               >
                                                 <div
@@ -3182,7 +3168,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
-                        aria-describedby="root_color__error root_color__description root_color__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3339,7 +3324,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                   class="flex flex-col gap-2"
                 >
                   <div
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     class="relative "
                   >
                     <div
@@ -3404,10 +3388,6 @@ exports[`radio widget with options sharing a String() in the realValue format (#
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="mb-0"
         >
@@ -3627,12 +3607,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                       <div
                         class="flex flex-col gap-2"
                       >
-                        <label
-                          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          for="root_region"
-                        >
-                          Europe
-                        </label>
                         <div
                           class="p-0.5"
                         >
@@ -3650,7 +3624,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                             />
                             <button
-                              aria-describedby="root_region__value root_region__error root_region__description root_region__help"
+                              aria-describedby="root_region__value"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3720,10 +3694,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -3741,7 +3711,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3802,10 +3771,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -3823,7 +3788,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3884,10 +3848,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -3905,7 +3865,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3966,10 +3925,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -3987,7 +3942,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -4048,10 +4002,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -4069,7 +4019,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -4130,10 +4079,6 @@ exports[`select widget with options sharing a String() in the realValue format (
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -4151,7 +4096,6 @@ exports[`select widget with options sharing a String() in the realValue format (
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -4374,7 +4318,6 @@ exports[`single fields > checkbox field 1`] = `
         class="flex flex-col gap-2"
       >
         <div
-          aria-describedby="root__error root__description root__help"
           class="relative "
         >
           <div
@@ -4432,7 +4375,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
         class="flex flex-col gap-2"
       >
         <div
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description"
           class="relative "
         >
           <div>
@@ -4500,7 +4443,6 @@ exports[`single fields > checkbox field with label 1`] = `
         class="flex flex-col gap-2"
       >
         <div
-          aria-describedby="root__error root__description root__help"
           class="relative "
         >
           <div
@@ -4560,7 +4502,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
         class="flex flex-col gap-2"
       >
         <div
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description"
           class="relative "
         >
           <div>
@@ -4628,7 +4570,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
         class="flex flex-col gap-2"
       >
         <div
-          aria-describedby="root__error root__description root__help"
+          aria-describedby="root__description"
           class="relative "
         >
           <div>
@@ -5493,10 +5435,6 @@ exports[`single fields > format color 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -5537,10 +5475,6 @@ exports[`single fields > format date 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -5581,10 +5515,6 @@ exports[`single fields > format datetime 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -5625,10 +5555,6 @@ exports[`single fields > format time 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -5720,10 +5646,6 @@ exports[`single fields > help and error display 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-destructive"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -5867,12 +5789,7 @@ exports[`single fields > null field 1`] = `
     >
       <div
         class="flex flex-col gap-2"
-      >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
-      </div>
+      />
     </div>
     <div>
       <button
@@ -5898,10 +5815,6 @@ exports[`single fields > number field 0 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -5945,10 +5858,6 @@ exports[`single fields > number field 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -6819,22 +6728,6 @@ exports[`single fields > optional data controls > does not show optional control
                         class="flex flex-col gap-2"
                       >
                         <div
-                          class="my-1 flex flex-col gap-0.5"
-                          id="root_optionalObjectWithOneofs__title"
-                        >
-                          <h5>
-                            optionalObjectWithOneofs
-                          </h5>
-                          <div
-                            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-                            data-orientation="horizontal"
-                            data-slot="separator"
-                            dir="horizontal"
-                            role="none"
-                            style="height: 1px;"
-                          />
-                        </div>
-                        <div
                           class="flex flex-col gap-2"
                         >
                           <div
@@ -6973,22 +6866,6 @@ exports[`single fields > optional data controls > does not show optional control
                             <div
                               class="m-0 w-full p-0"
                             >
-                              <div
-                                class="my-1 flex flex-col gap-0.5"
-                                id="root_optionalArrayWithAnyofs__title"
-                              >
-                                <h5>
-                                  optionalArrayWithAnyofs
-                                </h5>
-                                <div
-                                  class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-                                  data-orientation="horizontal"
-                                  data-slot="separator"
-                                  dir="horizontal"
-                                  role="none"
-                                  style="height: 1px;"
-                                />
-                              </div>
                               <div
                                 class="p-0 m-0 w-full mb-2"
                               >
@@ -7908,22 +7785,6 @@ exports[`single fields > optional data controls > does not show optional control
                         class="flex flex-col gap-2"
                       >
                         <div
-                          class="my-1 flex flex-col gap-0.5"
-                          id="root_optionalObjectWithOneofs__title"
-                        >
-                          <h5>
-                            optionalObjectWithOneofs
-                          </h5>
-                          <div
-                            class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-                            data-orientation="horizontal"
-                            data-slot="separator"
-                            dir="horizontal"
-                            role="none"
-                            style="height: 1px;"
-                          />
-                        </div>
-                        <div
                           class="flex flex-col gap-2"
                         >
                           <div
@@ -8063,22 +7924,6 @@ exports[`single fields > optional data controls > does not show optional control
                             <div
                               class="m-0 w-full p-0"
                             >
-                              <div
-                                class="my-1 flex flex-col gap-0.5"
-                                id="root_optionalArrayWithAnyofs__title"
-                              >
-                                <h5>
-                                  optionalArrayWithAnyofs
-                                </h5>
-                                <div
-                                  class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
-                                  data-orientation="horizontal"
-                                  data-slot="separator"
-                                  dir="horizontal"
-                                  role="none"
-                                  style="height: 1px;"
-                                />
-                              </div>
                               <div
                                 class="p-0 m-0 w-full mb-2"
                               >
@@ -11240,10 +11085,6 @@ exports[`single fields > password field 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -11284,10 +11125,6 @@ exports[`single fields > radio field 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="mb-0"
         >
@@ -11532,7 +11369,6 @@ exports[`single fields > required checkbox field 1`] = `
                   class="flex flex-col gap-2"
                 >
                   <div
-                    aria-describedby="root_agree__error root_agree__description root_agree__help"
                     class="relative "
                   >
                     <div
@@ -11614,7 +11450,6 @@ exports[`single fields > required checkbox field, default true 1`] = `
                   class="flex flex-col gap-2"
                 >
                   <div
-                    aria-describedby="root_agree__error root_agree__description root_agree__help"
                     class="relative "
                   >
                     <div
@@ -11704,10 +11539,6 @@ exports[`single fields > schema examples 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -11768,10 +11599,6 @@ exports[`single fields > schema examples with mixed types (string examples and n
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -11829,10 +11656,6 @@ exports[`single fields > select field 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -11850,7 +11673,6 @@ exports[`single fields > select field 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -11911,10 +11733,6 @@ exports[`single fields > select field multiple choice 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -11942,7 +11760,6 @@ exports[`single fields > select field multiple choice 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_3_"
-                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_4_"
                   autocomplete="off"
@@ -11986,10 +11803,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -12017,7 +11830,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_i_"
-                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_j_"
                   autocomplete="off"
@@ -12061,10 +11873,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="flex flex-col gap-2"
         >
@@ -12222,10 +12030,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -12315,7 +12119,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_u_"
-                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_v_"
                   autocomplete="off"
@@ -12359,10 +12162,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -12390,7 +12189,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 <input
                   aria-autocomplete="list"
                   aria-controls="radix-_r_6_"
-                  aria-describedby="root__error root__description root__help"
                   aria-expanded="true"
                   aria-labelledby="radix-_r_7_"
                   autocomplete="off"
@@ -12434,10 +12232,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -12455,7 +12249,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -12516,10 +12309,6 @@ exports[`single fields > select field single choice enumDisabled using radio wid
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="mb-0"
         >
@@ -12628,10 +12417,6 @@ exports[`single fields > select field single choice form disabled using radio wi
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="mb-0"
         >
@@ -12745,10 +12530,6 @@ exports[`single fields > select field single choice formData 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -12766,7 +12547,6 @@ exports[`single fields > select field single choice formData 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -12827,10 +12607,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -12848,7 +12624,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -12909,10 +12684,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -12930,7 +12701,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -12991,10 +12761,6 @@ exports[`single fields > select field single choice uiSchema disabled using radi
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="mb-0"
         >
@@ -13130,7 +12896,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -13203,10 +12969,6 @@ exports[`single fields > select widget with selected oneOf option description 1`
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -13224,7 +12986,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -13310,7 +13072,6 @@ exports[`single fields > select widget with selected oneOf option description an
               style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
             />
             <button
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -13371,10 +13132,6 @@ exports[`single fields > slider field 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <span
           aria-describedby="root__error root__description root__help"
           aria-disabled="false"
@@ -13669,10 +13426,6 @@ exports[`single fields > string field > format data-url 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div>
           <div
             class="p-0.5"
@@ -13715,10 +13468,6 @@ exports[`single fields > string field > format email 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -13759,10 +13508,6 @@ exports[`single fields > string field > format uri 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -13803,10 +13548,6 @@ exports[`single fields > string field > regular 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -13917,10 +13658,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -13962,10 +13699,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -14033,10 +13766,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -14077,10 +13806,6 @@ exports[`single fields > textarea field 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="flex p-0.5"
         >
@@ -14202,10 +13927,6 @@ exports[`single fields > unsupported field 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="unsupported-field"
         >
@@ -14242,10 +13963,6 @@ exports[`single fields > up/down field 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -14287,10 +14004,6 @@ exports[`single fields > using custom tagName 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -14331,10 +14044,6 @@ exports[`string field with autocapitalize 1`] = `
       <div
         class="flex flex-col gap-2"
       >
-        <label
-          class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
-        />
         <div
           class="p-0.5"
         >
@@ -14414,7 +14123,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                         style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                       />
                       <button
-                        aria-describedby="root_answer__value root_answer__error root_answer__description root_answer__help"
+                        aria-describedby="root_answer__value"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"

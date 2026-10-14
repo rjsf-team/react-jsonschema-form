@@ -1,11 +1,19 @@
-import type { FieldPresentation, FieldTemplateProps, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type {
+  ArrayFieldTemplateProps,
+  FieldPresentation,
+  FieldTemplateProps,
+  RJSFSchema,
+  UiSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { fieldLabelId } from '@rjsf/utils';
 
 import { generateTemplates, generateWidgets } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
 
 const { FieldTemplate: CoreFieldTemplate } = generateTemplates();
-const { TextWidget: CoreTextWidget } = generateWidgets();
+const { TextWidget: CoreTextWidget, SelectWidget: CoreSelectWidget } = generateWidgets();
+const { ArrayFieldTemplate: CoreArrayFieldTemplate } = generateTemplates();
 
 /** Renders the form with a `FieldTemplate` and a `TextWidget` that record the plans they are handed, by id. Several
  * templates render the same id under a `oneOf`, so `outerTemplatePlans` keeps the plan of the outermost, which inherits
@@ -98,6 +106,17 @@ describe('the plan SchemaField builds', () => {
     expect(plan?.label).toEqual({ text: 'Foo', by: 'above', id: fieldLabelId('root_foo') });
   });
 
+  it("keeps the option's name for its own label, under an option id, where the selector draws the field's", () => {
+    const { widgetPlans } = renderPlans(
+      { type: 'object', properties: { foo: { title: 'Foo', anyOf: [{ type: 'string' }, { type: 'number' }] } } },
+      {
+        formData: { foo: 'a' },
+        presentation: { default: { label: 'self' }, fields: { AnyOfField: { label: 'self' } } },
+      },
+    );
+    expect(widgetPlans.get('root_foo')?.label).toEqual({ text: 'foo', by: 'self', id: 'root_foo__optionLabel' });
+  });
+
   it("carries the field's ui:label false to an option given a uiSchema of its own", () => {
     const { widgetPlans } = renderPlans(
       {
@@ -145,5 +164,65 @@ describe('the plan SchemaField builds', () => {
 
     expect(screen.getByText('second')).toBeInTheDocument();
     expect(renders.get('root_foo')).toBe(before);
+  });
+
+  describe('an anyOf field whose own component draws its label and description', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        opt: {
+          type: 'array',
+          title: 'Parent title',
+          description: 'Parent description',
+          items: { type: 'string' },
+          anyOf: [
+            { title: 'Short list', maxItems: 3 },
+            { title: 'Long list', minItems: 1 },
+          ],
+        },
+      },
+    };
+
+    it("has its option selector draw the field's label and description, as a theme whose template draws neither declares", () => {
+      const selectorProps: WidgetProps[] = [];
+      function SelectWidget(props: WidgetProps) {
+        selectorProps.push(props);
+        return <CoreSelectWidget {...props} />;
+      }
+      createFormComponent({
+        schema,
+        widgets: { SelectWidget },
+        presentation: { fields: { AnyOfField: { label: 'self', description: 'self' } } },
+      });
+
+      const selector = selectorProps.find((props) => props.id === 'root_opt__anyof_select')!;
+      expect(selector.hideLabel).toBe(false);
+      expect(selector.label).toBe('Parent title');
+      expect(selector.options.description).toBe('Parent description');
+    });
+  });
+
+  it("hands a theme's array template no heading for an option repeating nothing of its own", () => {
+    const titles: string[] = [];
+    function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
+      titles.push(props.title);
+      return <CoreArrayFieldTemplate {...props} />;
+    }
+    createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          opt: {
+            type: 'array',
+            title: 'Parent title',
+            items: { type: 'object', properties: { a: { type: 'string' } } },
+            anyOf: [{ maxItems: 3 }, { minItems: 1 }],
+          },
+        },
+      },
+      templates: { ArrayFieldTemplate },
+    });
+
+    expect(titles).toEqual(['']);
   });
 });

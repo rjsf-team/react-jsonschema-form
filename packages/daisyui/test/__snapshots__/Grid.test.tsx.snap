@@ -40,13 +40,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="divider divider-primary my-0"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -98,13 +91,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -145,13 +131,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         value=""
                       />
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -200,13 +179,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -247,7 +219,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="w-full"
                     >
                       <button
-                        aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                         aria-expanded="false"
                         aria-haspopup="true"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -275,13 +246,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </svg>
                       </button>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -418,13 +382,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       (Check all that apply)
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -489,13 +446,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               />
                             </div>
                           </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -536,13 +486,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 value=""
                               />
                             </div>
-                          </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
                           </div>
                         </div>
                       </div>
@@ -591,13 +534,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               />
                             </div>
                           </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -637,7 +573,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
-                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
                                   tabindex="0"
@@ -1503,13 +1438,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </ul>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -1557,24 +1485,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -1660,13 +1574,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -1722,13 +1629,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="divider divider-primary my-0"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1780,13 +1680,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1827,13 +1720,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         value=""
                       />
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -1882,13 +1768,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -1929,7 +1808,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="w-full"
                     >
                       <button
-                        aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                         aria-expanded="false"
                         aria-haspopup="true"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -1957,13 +1835,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </svg>
                       </button>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -2100,13 +1971,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       (Check all that apply)
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -2171,13 +2035,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               />
                             </div>
                           </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -2218,13 +2075,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 value=""
                               />
                             </div>
-                          </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
                           </div>
                         </div>
                       </div>
@@ -2273,13 +2123,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               />
                             </div>
                           </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -2319,7 +2162,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
-                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
                                   tabindex="0"
@@ -3185,13 +3027,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </ul>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -3239,24 +3074,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -3342,13 +3163,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -3404,13 +3218,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="divider divider-primary my-0"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3462,13 +3269,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3509,13 +3309,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         value=""
                       />
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -3564,13 +3357,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3611,7 +3397,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="w-full"
                     >
                       <button
-                        aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                         aria-expanded="false"
                         aria-haspopup="true"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -3639,13 +3424,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </svg>
                       </button>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -3782,13 +3560,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       (Check all that apply)
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -3853,13 +3624,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               />
                             </div>
                           </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -3900,13 +3664,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 value=""
                               />
                             </div>
-                          </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
                           </div>
                         </div>
                       </div>
@@ -3955,13 +3712,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               />
                             </div>
                           </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -4001,7 +3751,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
-                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
                                   tabindex="0"
@@ -4867,13 +4616,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </ul>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -4921,24 +4663,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -5024,13 +4752,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
               </div>
             </div>
           </div>
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
         </div>
       </div>
     </div>
@@ -5086,13 +4807,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="divider divider-primary my-0"
                     />
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -5144,13 +4858,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -5191,13 +4898,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         value=""
                       />
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -5246,13 +4946,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       />
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -5293,7 +4986,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="w-full"
                     >
                       <button
-                        aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                         aria-expanded="false"
                         aria-haspopup="true"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -5321,13 +5013,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         </svg>
                       </button>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -5464,13 +5149,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       (Check all that apply)
                     </div>
                   </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -5535,13 +5213,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               />
                             </div>
                           </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -5582,13 +5253,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 value=""
                               />
                             </div>
-                          </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
                           </div>
                         </div>
                       </div>
@@ -5637,13 +5301,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               />
                             </div>
                           </div>
-                          <div
-                            class="rjsf-field-error-template text-red-600"
-                          >
-                            <ul
-                              class="list-disc list-inside"
-                            />
-                          </div>
                         </div>
                       </div>
                     </div>
@@ -5683,7 +5340,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
-                                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
                                   tabindex="0"
@@ -6549,13 +6205,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </ul>
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -6603,24 +6252,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 />
                               </div>
                             </div>
-                            <div
-                              class="rjsf-field-error-template text-red-600"
-                            >
-                              <ul
-                                class="list-disc list-inside"
-                              />
-                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="rjsf-field-error-template text-red-600"
-                  >
-                    <ul
-                      class="list-disc list-inside"
-                    />
                   </div>
                 </div>
               </div>
@@ -6707,13 +6342,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             </div>
           </div>
         </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
-          />
-        </div>
       </div>
     </div>
     <div>
@@ -6765,13 +6393,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="divider divider-primary my-0"
                   />
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -6819,13 +6440,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -6866,13 +6480,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                       value=""
                     />
                   </div>
-                </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
                 </div>
               </div>
             </div>
@@ -6921,13 +6528,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -6964,7 +6564,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="w-full"
                   >
                     <button
-                      aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                       aria-expanded="false"
                       aria-haspopup="true"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -6992,13 +6591,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                       </svg>
                     </button>
                   </div>
-                </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
                 </div>
               </div>
             </div>
@@ -7135,13 +6727,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     (Check all that apply)
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -7189,13 +6774,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -7236,13 +6814,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                       value=""
                     />
                   </div>
-                </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
                 </div>
               </div>
             </div>
@@ -7291,13 +6862,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     />
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -7334,7 +6898,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="dropdown w-full"
                   >
                     <button
-                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                       class="btn btn-outline w-full text-left flex justify-between items-center "
                       id="root_person_address_state"
                       tabindex="0"
@@ -8200,26 +7763,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </ul>
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
           <div
             class="flex-grow"
             xs="8"
-          />
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
           />
         </div>
       </div>
@@ -8273,13 +7822,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="divider divider-primary my-0"
                   />
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -8326,13 +7868,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       value=""
                     />
                   </div>
-                </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
                 </div>
               </div>
             </div>
@@ -8375,13 +7910,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -8429,13 +7957,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -8472,7 +7993,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="w-full"
                   >
                     <button
-                      aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                       aria-expanded="false"
                       aria-haspopup="true"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
@@ -8500,13 +8020,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       </svg>
                     </button>
                   </div>
-                </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
                 </div>
               </div>
             </div>
@@ -8643,13 +8156,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     (Check all that apply)
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -8697,13 +8203,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -8744,13 +8243,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       value=""
                     />
                   </div>
-                </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
                 </div>
               </div>
             </div>
@@ -8799,13 +8291,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     />
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
@@ -8842,7 +8327,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="dropdown w-full"
                   >
                     <button
-                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                       class="btn btn-outline w-full text-left flex justify-between items-center "
                       id="root_person_address_state"
                       tabindex="0"
@@ -9708,26 +9192,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </ul>
                   </div>
                 </div>
-                <div
-                  class="rjsf-field-error-template text-red-600"
-                >
-                  <ul
-                    class="list-disc list-inside"
-                  />
-                </div>
               </div>
             </div>
           </div>
           <div
             class="flex-grow"
             xs="24"
-          />
-        </div>
-        <div
-          class="rjsf-field-error-template text-red-600"
-        >
-          <ul
-            class="list-disc list-inside"
           />
         </div>
       </div>

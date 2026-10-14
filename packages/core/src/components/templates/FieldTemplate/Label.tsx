@@ -9,6 +9,8 @@ export interface LabelProps {
   required?: boolean;
   /** The id of the input field being labeled */
   id?: string;
+  /** The id of the label element itself, which a control labelled through `aria-labelledby` points at */
+  labelId?: string;
 }
 
 /** Renders a label for a field
@@ -16,12 +18,12 @@ export interface LabelProps {
  * @param props - The `LabelProps` for this component
  */
 function Label(props: LabelProps) {
-  const { label, required, id } = props;
+  const { label, required, id, labelId } = props;
   if (!label) {
     return null;
   }
   return (
-    <label className='control-label' htmlFor={id}>
+    <label className='control-label' htmlFor={id} id={labelId}>
       {label}
       {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
     </label>

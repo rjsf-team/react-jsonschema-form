@@ -66,6 +66,8 @@ describe('oneOf', () => {
     expect(node.querySelector('select')).toHaveAttribute('id', 'root__oneof_select');
     expect(node.querySelectorAll('span.required')).toHaveLength(1);
     expect(node.querySelectorAll('#root_XxxOf__description')).toHaveLength(1);
+    // The object renders beside the selected option under an id of its own, so nothing else claims the field's
+    expect(node.querySelectorAll('#root__description')).toHaveLength(0);
     expect(node.querySelectorAll('#root_baz')).toHaveLength(1);
   });
 
@@ -1902,11 +1904,11 @@ describe('oneOf', () => {
 
       const $select = node.querySelector('select');
 
-      // Also verify the base uiSchema was passed down to the underlying widget by confirming the label (in the legend)
-      // matches the selected option's title
+      // The base uiSchema's title labels the field, through its template, and the selected option keeps its own heading,
+      // which says something else
       expect($select).toHaveValue('0');
-      const inputLabel = node.querySelector('legend#root__title');
-      expect(inputLabel?.innerHTML).toEqual('My Title');
+      expect(node.querySelector('label#root__label')).toHaveTextContent('My Title');
+      expect(node.querySelector('legend#root__title')).toHaveTextContent('Foo');
       consoleWarnSpy.mockRestore();
     });
 
@@ -3315,7 +3317,12 @@ describe('oneOf', () => {
           { const: false, title: 'Disabled' },
         ],
       };
-      const { node, onChange } = createFormComponent({ schema, uiSchema: { 'ui:options': { field: MyField } } });
+      // A custom field draws its own label unless declared otherwise; this one leaves it to the template
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:options': { field: MyField } },
+        presentation: { fieldDefault: { label: 'template' } },
+      });
 
       const select = node.querySelector<HTMLSelectElement>('select#root');
       expect(select).toBeInTheDocument();
@@ -3391,7 +3398,12 @@ describe('oneOf', () => {
           { const: false, title: 'Off' },
         ],
       };
-      const { node } = createFormComponent({ schema, fields: { MyToggle } });
+      // A custom field draws its own label unless declared otherwise; this one leaves it to the template
+      const { node } = createFormComponent({
+        schema,
+        fields: { MyToggle },
+        presentation: { fields: { MyToggle: { label: 'template' } } },
+      });
 
       expect(uiWidgets.length).toBeGreaterThan(0);
       expect(uiWidgets.every((widget) => widget === 'select')).toBe(true);
@@ -4117,15 +4129,15 @@ describe('oneOf', () => {
         },
       ],
     ])(
-      "should render %s's own title over its option's, which the selector names, and its description only under an option declaring none",
+      "should render %s's own title and description through the field's template, and its option's description beneath them",
       async (_, opt) => {
         const { node } = createFormComponent({
           schema: wrap({ ...opt, title: 'Parent title', description: 'Parent description' }),
         });
 
         expect(screen.getAllByText('Parent title')).toHaveLength(1);
-        expect(screen.getAllByText('Option description')).toHaveLength(1);
-        expect(screen.queryByText('Parent description')).not.toBeInTheDocument();
+        expect(screen.getAllByText('Parent description')).toHaveLength(1);
+        expect(node.querySelector('#root_opt__optionDescription')).toHaveTextContent('Option description');
         expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
 
         await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Long list');
@@ -4135,7 +4147,7 @@ describe('oneOf', () => {
       },
     );
 
-    it("should render an unlabelled field's own title over its option's ui:title, and the option's own ui:description", () => {
+    it("should render an unlabelled field's own title through its template, and its option's ui:title and ui:description beneath it", () => {
       const schema = wrap({
         type: 'array',
         title: 'Parent title',
@@ -4152,13 +4164,13 @@ describe('oneOf', () => {
         },
       });
 
-      expect(node.querySelector('legend')).toHaveTextContent('Parent title');
-      expect(screen.getAllByText('Option description')).toHaveLength(1);
-      expect(screen.queryByText('Parent description')).not.toBeInTheDocument();
-      expect(screen.getByRole('option', { name: 'Short list' })).toBeInTheDocument();
+      expect(node.querySelector('label#root_opt__label')).toHaveTextContent('Parent title');
+      expect(node.querySelector('legend')).toHaveTextContent('Short list');
+      expect(screen.getAllByText('Parent description')).toHaveLength(1);
+      expect(node.querySelector('#root_opt__optionDescription')).toHaveTextContent('Option description');
     });
 
-    it("should render an option's own description over the ui:description of a field whose uiSchema it is handed", async () => {
+    it("should render an option's own description beneath the ui:description of a field whose uiSchema it is handed", async () => {
       const schema = wrap({
         type: 'array',
         title: 'Parent title',
@@ -4170,8 +4182,8 @@ describe('oneOf', () => {
       });
       const { node } = createFormComponent({ schema, uiSchema: { opt: { 'ui:description': 'Field description' } } });
 
-      expect(screen.getAllByText('Option description')).toHaveLength(1);
-      expect(screen.queryByText('Field description')).not.toBeInTheDocument();
+      expect(screen.getAllByText('Field description')).toHaveLength(1);
+      expect(node.querySelector('#root_opt__optionDescription')).toHaveTextContent('Option description');
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_opt__anyof_select')!, 'Long list');
 

@@ -2,11 +2,11 @@ import type { ChangeEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
-  descriptionId,
+  getControlDescribedBy,
   getFieldTypeForWidget,
   getTemplates,
   getUiOptions,
+  getWidgetDescription,
   schemaRequiresTrueValue,
 } from '@rjsf/utils';
 
@@ -39,6 +39,7 @@ export default function BooleanInput<
   value,
   label,
   hideLabel,
+  presentation,
   required,
   disabled,
   readonly,
@@ -54,7 +55,7 @@ export default function BooleanInput<
   labelClassName,
 }: BooleanInputProps<T, S, F>) {
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
-  const description = options.description || schema.description;
+  const description = getWidgetDescription<T, S, F>({ id, options, schema, hideLabel, presentation });
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
   // A checkbox already answers a boolean whose schema accepts `false`, so a required one of those is marked no more
   // than a field the user has already filled in. That is any field `BooleanField` renders, which seeds it with that
@@ -108,16 +109,16 @@ export default function BooleanInput<
       onFocus={handleFocus}
       onBlur={handleBlur}
       className={inputClassName}
-      aria-describedby={ariaDescribedByIds(id)}
+      aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
     />
   );
 
   return (
     <div className='form-control'>
-      {!hideLabel && description && (
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

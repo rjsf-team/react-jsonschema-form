@@ -1960,7 +1960,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-2"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
@@ -7363,7 +7362,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-2"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"
@@ -8192,7 +8190,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-31"
                           >
                             <span
-                              aria-describedby="root_2__error root_2__description root_2__help"
                               class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-checked MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-32"
                             >
                               <input
@@ -15052,7 +15049,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                               for="root_0"
                               id="root_0-label"
                             >
-                              Test field-1
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-15"
@@ -15081,7 +15078,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                                   class="emotion-19"
                                 >
                                   <span>
-                                    Test field-1 *
+                                    Test item *
                                   </span>
                                 </legend>
                               </fieldset>
@@ -15217,7 +15214,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                               for="root_1"
                               id="root_1-label"
                             >
-                              Test field-2
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-15"
@@ -15246,7 +15243,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                                   class="emotion-19"
                                 >
                                   <span>
-                                    Test field-2 *
+                                    Test item *
                                   </span>
                                 </legend>
                               </fieldset>
@@ -15935,7 +15932,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
             <div
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-labelledby="root-label"
@@ -16639,7 +16636,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                               for="root_0"
                               id="root_0-label"
                             >
-                              Test field-1
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-15"
@@ -16668,7 +16665,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                                   class="emotion-19"
                                 >
                                   <span>
-                                    Test field-1 *
+                                    Test item *
                                   </span>
                                 </legend>
                               </fieldset>
@@ -16723,7 +16720,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                               for="root_1"
                               id="root_1-label"
                             >
-                              Test field-2
+                              Test item
                               <span
                                 aria-hidden="true"
                                 class="MuiFormLabel-asterisk MuiInputLabel-asterisk emotion-15"
@@ -16755,7 +16752,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                                   class="emotion-19"
                                 >
                                   <span>
-                                    Test field-2 *
+                                    Test item *
                                   </span>
                                 </legend>
                               </fieldset>
@@ -19083,7 +19080,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
             <div
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-labelledby="root-label"
@@ -22231,7 +22228,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-3"
           >
             <div
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               aria-expanded="false"
               aria-haspopup="listbox"
               aria-labelledby="root-label"
@@ -25053,7 +25050,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-2"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-outlined MuiSelect-multiple MuiInputBase-input MuiOutlinedInput-input emotion-3"

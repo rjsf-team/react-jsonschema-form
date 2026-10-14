@@ -319,23 +319,25 @@ describe('aria-describedby', () => {
       expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} ${successId}`]);
     });
 
-    test.each<[string, RJSFSchema, UiSchema?]>([
-      ['text', { type: 'string' }],
-      ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
-      ['password', { type: 'string' }, { 'ui:widget': 'password' }],
-      ['select', enumSchema],
-      ['color', { type: 'string', format: 'color' }],
-      ['file', { type: 'string', format: 'data-url' }],
-      ['time', { type: 'string', format: 'time' }],
-      ['date', { type: 'string', format: 'date' }],
-    ])('still describes the %s widget when wrapperProps has an id', (_, schema, uiSchema = {}) => {
+    // The select takes its describers from the field's plan, which lists only the parts that render: the description
+    // every schema here is given
+    test.each<[string, RJSFSchema, UiSchema, string]>([
+      ['text', { type: 'string' }, {}, ariaDescribedByIds('root')],
+      ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, ariaDescribedByIds('root')],
+      ['password', { type: 'string' }, { 'ui:widget': 'password' }, ariaDescribedByIds('root')],
+      ['select', enumSchema, {}, 'root__description'],
+      ['color', { type: 'string', format: 'color' }, {}, ariaDescribedByIds('root')],
+      ['file', { type: 'string', format: 'data-url' }, {}, ariaDescribedByIds('root')],
+      ['time', { type: 'string', format: 'time' }, {}, ariaDescribedByIds('root')],
+      ['date', { type: 'string', format: 'date' }, {}, ariaDescribedByIds('root')],
+    ])('still describes the %s widget when wrapperProps has an id', (_, schema, uiSchema, describedBy) => {
       const { container } = renderThemed({}, schema, {
         ...uiSchema,
         'ui:options': { success: 'Looks good', wrapperProps: { id: 'wrapped' } },
       });
 
       expect(container.querySelector('[id="root-success"]')).toHaveTextContent('Looks good');
-      expect(describedByValues(container)).toEqual([`${ariaDescribedByIds('root')} root-success`]);
+      expect(describedByValues(container)).toEqual([`${describedBy} root-success`]);
     });
 
     test.each([

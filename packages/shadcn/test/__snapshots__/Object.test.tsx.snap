@@ -570,7 +570,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="flex flex-col gap-2"
                 >
                   <div
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     class="relative "
                   >
                     <div
@@ -2204,6 +2203,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -2212,6 +2212,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_foo-key__value"
                             >
                               foo
                             </span>
@@ -2454,12 +2455,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   <div
                     class="flex flex-col gap-2"
                   >
-                    <label
-                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
                     <div>
                       <div
                         class="m-0 flex p-0"
@@ -3090,12 +3085,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   <div
                     class="flex flex-col gap-2"
                   >
-                    <label
-                      class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
                     <div
                       class="my-1 flex flex-col gap-0.5"
                       id="root_foo__title"
@@ -3318,6 +3307,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3326,6 +3316,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_foo-key__value"
                             >
                               foo
                             </span>
@@ -3547,6 +3538,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                             style="position: absolute; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; border-width: 0px;"
                           />
                           <button
+                            aria-describedby="root_foo-key__value"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             class="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
@@ -3555,6 +3547,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           >
                             <span
                               class="flex-1 line-clamp-1"
+                              id="root_foo-key__value"
                             >
                               foo
                             </span>

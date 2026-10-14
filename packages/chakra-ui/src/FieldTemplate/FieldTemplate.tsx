@@ -14,6 +14,7 @@ export default function FieldTemplate<
     style,
     disabled,
     displayLabel,
+    presentation,
     hidden,
     label,
     keyName,
@@ -50,6 +51,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -62,7 +64,7 @@ export default function FieldTemplate<
       registry={registry}
     >
       <Fieldset.Root disabled={disabled} invalid={hasError}>
-        {displayLabel && rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
+        {rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
         {help}
         <Fieldset.Content>{children}</Fieldset.Content>
         {errors}

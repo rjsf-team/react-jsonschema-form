@@ -1180,7 +1180,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 role="group"
                                               >
                                                 <label
-                                                  aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                   class="chakra-checkbox__root emotion-25"
                                                   data-part="root"
                                                   data-scope="checkbox"
@@ -1433,7 +1432,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 role="group"
                                               >
                                                 <label
-                                                  aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                   class="chakra-checkbox__root emotion-25"
                                                   data-part="root"
                                                   data-scope="checkbox"
@@ -4609,7 +4607,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                           >
                             <button
                               aria-controls="select:root_color:content"
-                              aria-describedby="root_color__error root_color__description root_color__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
@@ -5265,7 +5262,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       role="group"
                     >
                       <label
-                        aria-describedby="root_active__error root_active__description root_active__help"
                         class="chakra-checkbox__root emotion-16"
                         data-part="root"
                         data-scope="checkbox"
@@ -6332,7 +6328,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 role="group"
                                               >
                                                 <label
-                                                  aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                   class="chakra-checkbox__root emotion-25"
                                                   data-part="root"
                                                   data-scope="checkbox"
@@ -6585,7 +6580,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 role="group"
                                               >
                                                 <label
-                                                  aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                   class="chakra-checkbox__root emotion-25"
                                                   data-part="root"
                                                   data-scope="checkbox"
@@ -8767,7 +8761,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                           >
                             <button
                               aria-controls="select:root_color:content"
-                              aria-describedby="root_color__error root_color__description root_color__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"
@@ -9423,7 +9416,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       role="group"
                     >
                       <label
-                        aria-describedby="root_active__error root_active__description root_active__help"
                         class="chakra-checkbox__root emotion-16"
                         data-part="root"
                         data-scope="checkbox"
@@ -10739,7 +10731,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                     >
                                       <button
                                         aria-controls="select:root_region:content"
-                                        aria-describedby="root_region__error root_region__description root_region__help"
                                         aria-expanded="false"
                                         aria-haspopup="listbox"
                                         aria-invalid="false"
@@ -11405,7 +11396,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -12041,7 +12031,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -12737,7 +12726,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -13428,7 +13416,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -14089,7 +14076,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -14750,7 +14736,6 @@ exports[`select widget with options sharing a String() in the realValue format (
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -15642,7 +15627,6 @@ exports[`single fields > checkbox field 1`] = `
             role="group"
           >
             <label
-              aria-describedby="root__error root__description root__help"
               class="chakra-checkbox__root emotion-3"
               data-part="root"
               data-scope="checkbox"
@@ -15718,29 +15702,8 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
   }
 }
 
-.emotion-1 {
-  margin-top: var(--chakra-spacing-2);
-}
-
 @layer recipes {
   .emotion-1 {
-    color: var(--chakra-colors-fg);
-    font-weight: var(--chakra-font-weights-medium);
-    font-size: var(--chakra-font-sizes-sm);
-    line-height: 1.25rem;
-  }
-
-  .emotion-1:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
-    opacity: 0.5;
-  }
-}
-
-.emotion-2 {
-  font-size: var(--chakra-font-sizes-md);
-}
-
-@layer recipes {
-  .emotion-3 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -15753,12 +15716,12 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
   }
 }
 
-.emotion-4 {
+.emotion-2 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-4 {
+  .emotion-2 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -15776,8 +15739,12 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
   }
 }
 
+.emotion-3 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
 @layer recipes {
-  .emotion-5 {
+  .emotion-4 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -15793,7 +15760,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-5 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -15820,19 +15787,19 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     padding: var(--chakra-spacing-0\\.5);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-5:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-6 :where(svg) {
+  .emotion-5 :where(svg) {
     width: var(--chakra-sizes-full);
     height: var(--chakra-sizes-full);
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --chakra-colors-color-palette-50: var(--chakra-colors-red-50);
     --chakra-colors-color-palette-100: var(--chakra-colors-red-100);
     --chakra-colors-color-palette-200: var(--chakra-colors-red-200);
@@ -15855,12 +15822,12 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: var(--chakra-cursor-disabled);
   }
 
-  .emotion-6:is([data-state=checked], [data-state=indeterminate]) {
+  .emotion-5:is([data-state=checked], [data-state=indeterminate]) {
     background: var(--chakra-colors-color-palette-solid);
     --bg-currentcolor: var(--chakra-colors-color-palette-solid);
     color: var(--chakra-colors-color-palette-contrast);
@@ -15868,7 +15835,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
   }
 }
 
-.emotion-7 {
+.emotion-6 {
   fill: none;
   stroke: currentColor;
   stroke-width: 3px;
@@ -15877,7 +15844,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-7 {
     font-weight: var(--chakra-font-weights-medium);
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -15887,17 +15854,17 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     line-height: 1.25rem;
   }
 
-  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
-.emotion-9 {
+.emotion-8 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-9 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -15945,19 +15912,19 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+  .emotion-9:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-10 :where(svg) {
+  .emotion-9 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -15965,14 +15932,14 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-10:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-10:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-9:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -15992,32 +15959,25 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
         data-part="root"
         data-scope="fieldset"
       >
-        <legend
-          class="fieldset__legend emotion-1"
-          data-part="legend"
-          data-scope="fieldset"
-          id="fieldset::_r_3n_::legend"
-        >
-          <sup
-            class="emotion-2"
-            id="root__description"
-          >
-            This is a checkbox description
-          </sup>
-        </legend>
         <div
-          class="fieldset__content emotion-3"
+          class="fieldset__content emotion-1"
         >
           <div
-            class="chakra-field__root emotion-4"
+            class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
             id="field::_r_3o_"
             role="group"
           >
+            <sup
+              class="emotion-3"
+              id="root__description"
+            >
+              This is a checkbox description
+            </sup>
             <label
-              aria-describedby="root__error root__description root__help"
-              class="chakra-checkbox__root emotion-5"
+              aria-describedby="root__description"
+              class="chakra-checkbox__root emotion-4"
               data-part="root"
               data-scope="checkbox"
               data-state="unchecked"
@@ -16036,7 +15996,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
               />
               <div
                 aria-hidden="true"
-                class="chakra-checkbox__control emotion-6"
+                class="chakra-checkbox__control emotion-5"
                 data-part="control"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -16044,13 +16004,13 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
                 id="checkbox:root:control"
               >
                 <svg
-                  class="emotion-7"
+                  class="emotion-6"
                   data-state="unchecked"
                   viewBox="0 0 24 24"
                 />
               </div>
               <span
-                class="chakra-checkbox__label emotion-8"
+                class="chakra-checkbox__label emotion-7"
                 data-part="label"
                 data-scope="checkbox"
                 data-state="unchecked"
@@ -16067,10 +16027,10 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
       </fieldset>
     </div>
     <div
-      class="emotion-9"
+      class="emotion-8"
     >
       <button
-        class="chakra-button emotion-10"
+        class="chakra-button emotion-9"
         type="submit"
       >
         Submit
@@ -16368,7 +16328,6 @@ exports[`single fields > checkbox field with label 1`] = `
             role="group"
           >
             <label
-              aria-describedby="root__error root__description root__help"
               class="chakra-checkbox__root emotion-3"
               data-part="root"
               data-scope="checkbox"
@@ -16730,7 +16689,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
               test description
             </sup>
             <label
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               class="chakra-checkbox__root emotion-4"
               data-part="root"
               data-scope="checkbox"
@@ -17100,7 +17059,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               </span>
             </sup>
             <label
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description"
               class="chakra-checkbox__root emotion-4"
               data-part="root"
               data-scope="checkbox"
@@ -23317,7 +23276,7 @@ exports[`single fields > optional data controls > does not show optional control
   }
 }
 
-.emotion-167 {
+.emotion-161 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -24310,21 +24269,6 @@ exports[`single fields > optional data controls > does not show optional control
                               class="fieldset__content emotion-1"
                             >
                               <div
-                                class="emotion-2"
-                                id="root_optionalObjectWithOneofs__title"
-                              >
-                                <h5
-                                  class="chakra-heading emotion-3"
-                                >
-                                  optionalObjectWithOneofs
-                                </h5>
-                                <span
-                                  aria-orientation="horizontal"
-                                  class="chakra-separator emotion-4"
-                                  role="separator"
-                                />
-                              </div>
-                              <div
                                 class="emotion-5"
                               >
                                 <div>
@@ -24652,21 +24596,6 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div>
                                 <div
-                                  class="emotion-2"
-                                  id="root_optionalArrayWithAnyofs__title"
-                                >
-                                  <h5
-                                    class="chakra-heading emotion-3"
-                                  >
-                                    optionalArrayWithAnyofs
-                                  </h5>
-                                  <span
-                                    aria-orientation="horizontal"
-                                    class="chakra-separator emotion-4"
-                                    role="separator"
-                                  />
-                                </div>
-                                <div
                                   class="emotion-44"
                                 >
                                   <div />
@@ -24721,7 +24650,7 @@ exports[`single fields > optional data controls > does not show optional control
       </fieldset>
     </div>
     <div
-      class="emotion-167"
+      class="emotion-161"
     >
       <button
         class="chakra-button emotion-47"
@@ -25364,7 +25293,7 @@ exports[`single fields > optional data controls > does not show optional control
   }
 }
 
-.emotion-167 {
+.emotion-161 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -26415,21 +26344,6 @@ exports[`single fields > optional data controls > does not show optional control
                               class="fieldset__content emotion-1"
                             >
                               <div
-                                class="emotion-2"
-                                id="root_optionalObjectWithOneofs__title"
-                              >
-                                <h5
-                                  class="chakra-heading emotion-3"
-                                >
-                                  optionalObjectWithOneofs
-                                </h5>
-                                <span
-                                  aria-orientation="horizontal"
-                                  class="chakra-separator emotion-4"
-                                  role="separator"
-                                />
-                              </div>
-                              <div
                                 class="emotion-5"
                               >
                                 <div />
@@ -26778,21 +26692,6 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div>
                                 <div
-                                  class="emotion-2"
-                                  id="root_optionalArrayWithAnyofs__title"
-                                >
-                                  <h5
-                                    class="chakra-heading emotion-3"
-                                  >
-                                    optionalArrayWithAnyofs
-                                  </h5>
-                                  <span
-                                    aria-orientation="horizontal"
-                                    class="chakra-separator emotion-4"
-                                    role="separator"
-                                  />
-                                </div>
-                                <div
                                   class="emotion-44"
                                 >
                                   <div />
@@ -26848,7 +26747,7 @@ exports[`single fields > optional data controls > does not show optional control
       </fieldset>
     </div>
     <div
-      class="emotion-167"
+      class="emotion-161"
     >
       <button
         class="chakra-button emotion-47"
@@ -33171,7 +33070,6 @@ exports[`single fields > required checkbox field 1`] = `
                       role="group"
                     >
                       <label
-                        aria-describedby="root_agree__error root_agree__description root_agree__help"
                         class="chakra-checkbox__root emotion-6"
                         data-part="root"
                         data-required=""
@@ -33554,7 +33452,6 @@ exports[`single fields > required checkbox field, default true 1`] = `
                       role="group"
                     >
                       <label
-                        aria-describedby="root_agree__error root_agree__description root_agree__help"
                         class="chakra-checkbox__root emotion-6"
                         data-part="root"
                         data-required=""
@@ -34675,7 +34572,6 @@ exports[`single fields > select field 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -35349,7 +35245,6 @@ exports[`single fields > select field multiple choice 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -36085,7 +35980,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -37350,7 +37244,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -38079,7 +37972,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -38774,7 +38666,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -40267,7 +40158,6 @@ exports[`single fields > select field single choice formData 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -40958,7 +40848,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -41750,7 +41639,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -43003,7 +42891,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -43674,7 +43562,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -44335,7 +44223,6 @@ exports[`single fields > select widget with selected oneOf option description an
                 >
                   <button
                     aria-controls="select:root:content"
-                    aria-describedby="root__error root__description root__help"
                     aria-expanded="false"
                     aria-haspopup="listbox"
                     aria-invalid="false"
@@ -50303,7 +50190,6 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                           >
                             <button
                               aria-controls="select:root_answer:content"
-                              aria-describedby="root_answer__error root_answer__description root_answer__help"
                               aria-expanded="false"
                               aria-haspopup="listbox"
                               aria-invalid="false"

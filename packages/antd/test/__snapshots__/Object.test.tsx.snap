@@ -3645,17 +3645,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                               >
                                 <div
-                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                >
-                                  <label
-                                    class=""
-                                    for="root_foo"
-                                    title="foo"
-                                  >
-                                    foo
-                                  </label>
-                                </div>
-                                <div
                                   class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
                                 >
                                   <div
@@ -4488,17 +4477,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                               <div
                                 class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                               >
-                                <div
-                                  class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                >
-                                  <label
-                                    class=""
-                                    for="root_foo"
-                                    title="foo"
-                                  >
-                                    foo
-                                  </label>
-                                </div>
                                 <div
                                   class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
                                 >
@@ -8246,19 +8224,6 @@ exports[`object fields > with title and description with global label off > addi
                 </fieldset>
               </div>
             </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -8343,19 +8308,6 @@ exports[`object fields > with title and description with global label off > obje
                                     <span
                                       class="ant-input-suffix"
                                     />
-                                  </span>
-                                </div>
-                              </div>
-                              <div
-                                class="ant-form-item-additional"
-                              >
-                                <div
-                                  class="ant-form-item-extra"
-                                >
-                                  <span
-                                    id="root_a__description"
-                                  >
-                                    A description
                                   </span>
                                 </div>
                               </div>
@@ -8465,19 +8417,6 @@ exports[`object fields > with title and description with global label off > obje
                                   </div>
                                 </div>
                               </div>
-                              <div
-                                class="ant-form-item-additional"
-                              >
-                                <div
-                                  class="ant-form-item-extra"
-                                >
-                                  <span
-                                    id="root_b__description"
-                                  >
-                                    B description
-                                  </span>
-                                </div>
-                              </div>
                             </div>
                           </div>
                         </div>
@@ -8485,19 +8424,6 @@ exports[`object fields > with title and description with global label off > obje
                     </div>
                   </div>
                 </fieldset>
-              </div>
-            </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
               </div>
             </div>
           </div>
@@ -8732,19 +8658,6 @@ exports[`object fields > with title and description with global label off > show
                     </div>
                   </div>
                 </fieldset>
-              </div>
-            </div>
-            <div
-              class="ant-form-item-additional"
-            >
-              <div
-                class="ant-form-item-extra"
-              >
-                <span
-                  id="root__description"
-                >
-                  a test description
-                </span>
               </div>
             </div>
           </div>

@@ -478,7 +478,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
               >
                 <div>
                   <div
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     class=""
                   >
                     <div
@@ -1971,12 +1970,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   class="col-6"
                 >
                   <div>
-                    <label
-                      class="form-label"
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
                     <div>
                       <div
                         class="p-0 m-0 row"
@@ -2469,12 +2462,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   class="col-6"
                 >
                   <div>
-                    <label
-                      class="form-label"
-                      for="root_foo"
-                    >
-                      foo
-                    </label>
                     <div
                       class="my-1"
                       id="root_foo__title"
