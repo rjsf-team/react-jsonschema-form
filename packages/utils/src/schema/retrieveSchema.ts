@@ -30,6 +30,7 @@ import findSchemaDefinition, {
   isPre2019Root,
   lexicalScopeOfNode,
   normalizeRootReferences,
+  normalizationRewroteNothing,
   forValidation,
   carryOriginalRef,
   originalRefOf,
@@ -45,10 +46,11 @@ import getXxxOfKey from '../getXxxOfKey.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isObject from '../isObject.ts';
+import isPlainObject from '../isPlainObject.ts';
 import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
-import { declaredRef, resolvedFromRef } from '../refOf.ts';
+import { declaredRef, mergeBranch, refSiblingBranches, resolvedFromRef, resolvedSchemaOf } from '../refOf.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -155,7 +157,8 @@ export function resolveCondition<
   // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
   const [condition, conditionRoot] = forValidation<S>(expression as S, rootSchema);
   const conditionValue = context.validator.isValid(condition, formData ?? {}, conditionRoot);
-  let resolvedSchemas = [resolvedSchemaLessConditional as S];
+  const schemaLessConditional = resolvedSchemaLessConditional as S;
+  let resolvedSchemas = [schemaLessConditional];
   let schemas: S[] = [];
   if (expandAllBranches) {
     if (then && typeof then !== 'boolean') {
@@ -167,7 +170,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount, rootSchema),
+          enclosingRefPath<S>(schema, recurseList, THEN_KEY, rootSchema),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -183,7 +186,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount, rootSchema),
+          enclosingRefPath<S>(schema, recurseList, ELSE_KEY, rootSchema),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -201,7 +204,7 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount, rootSchema),
+          enclosingRefPath<S>(schema, recurseList, conditionValue ? THEN_KEY : ELSE_KEY, rootSchema),
           undefined,
           preserveDependencies,
           passCount > 0 ? 1 : 0,
@@ -210,7 +213,7 @@ export function resolveCondition<
     }
   }
   if (schemas.length) {
-    resolvedSchemas = schemas.map((s) => mergeSchemas(resolvedSchemaLessConditional, s) as S);
+    resolvedSchemas = schemas.map((s) => mergeBranch<S>(schemaLessConditional, s));
   }
   // As with `dependencies`, the merged result is re-walked as a follow-up pass so refs that were already expanded
   // keep their fixpoint depth and a $ref already flagged as a cycle stays collapsed.
@@ -477,6 +480,7 @@ export function resolveSchema<
     );
   }
   if (ALL_OF_KEY in schema && Array.isArray(schema[ALL_OF_KEY])) {
+    const allOfRecurseList = enclosingRefPath<S>(schema, recurseList, ALL_OF_KEY, rootSchema);
     const allOfSchemaElements: S[][] = schema.allOf.map((allOfSubschema) =>
       retrieveSchemaInternal<T, S, F>(
         context,
@@ -484,7 +488,7 @@ export function resolveSchema<
         rootSchema,
         formData,
         expandAllBranches,
-        enclosingRefPath(schema, recurseList, passCount, rootSchema),
+        allOfRecurseList,
         undefined,
         preserveDependencies,
         passCount > 0 ? 1 : 0,
@@ -573,6 +577,19 @@ export function resolveReference<
   return [schema];
 }
 
+/** How many times one `resolveAllReferences()` walk has replaced part of a schema with what it refers to. A level of
+ * the walk hands back the schema it was given unless the count rose beneath it, which is what lets `resolveReference()`
+ * tell by reference that a pass changed nothing. A cycle flag newly set counts too, since the flag is what stops the
+ * next walk from expanding the `$ref` again.
+ */
+class ReferenceTally {
+  resolved = 0;
+
+  count() {
+    this.resolved += 1;
+  }
+}
+
 /** Resolves all references within the schema itself as well as any of its properties and array items.
  *
  * @param schema - The schema for which resolving all references is desired
@@ -592,6 +609,8 @@ export function resolveReference<
  * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this walk belongs to; re-walks
  *   (pass > 0) put materialized refs back on the path so they stay at their fixpoint depth. Callers should omit
  *   this.
+ * @param [tally] - The `ReferenceTally` of the walk this call is a level of, which every level below it shares.
+ *   Callers should omit this.
  * @returns - given schema will all references resolved or the original schema if no internal `$refs` were resolved
  */
 export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
@@ -603,6 +622,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   markCycleOnDetection = false,
   expandedRefs?: string[],
   passCount = 0,
+  tally = new ReferenceTally(),
 ): S {
   // Normalize here, once per top-level walk: the worker re-enters itself for every property, item and option,
   // and normalizing on each entry would walk the whole root at every node. The worker therefore reads the
@@ -642,7 +662,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       topSchema[ID_KEY],
     );
   }
-  return resolveAllReferencesInternal<S>(
+  const result = resolveAllReferencesInternal<S>(
     topSchema,
     normalizedRoot,
     recurseList,
@@ -651,8 +671,13 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     markCycleOnDetection,
     expandedRefs,
     passCount,
+    tally,
     topBaseURI,
   );
+  // A walk that changed nothing hands back the schema it was given when the normalization it walked on rewrote
+  // nothing either: the no-op copy is this function's own working object, not a result the caller asked for. A
+  // normalization that rewrote refs still comes back, so its resolved spellings are what the caller sees
+  return result === topSchema && schema === rootSchema && normalizationRewroteNothing(normalizedRoot) ? schema : result;
 }
 
 /** The recursive worker behind `resolveAllReferences`; adds the `pointerScope` threading that keeps same-document
@@ -668,11 +693,13 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
   markCycleOnDetection: boolean,
   expandedRefs: string[] | undefined,
   passCount: number,
+  tally: ReferenceTally,
   parentPointerScope?: string,
 ): S {
   if (!isObject(schema)) {
     return schema;
   }
+  const resolvedBefore = tally.resolved;
   let resolvedSchema: S = schema;
   // The root the lookups below run against: the public wrapper normalized it already, so every ref inside it
   // is resolved against the root's own base (see `normalizeRootReferences`). Normalizing again here would
@@ -726,16 +753,24 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     // raw spelling must not collide with the same spelling written in another resource: only its resolved
     // spelling goes on the path. Same-document (`#`) and absolute spellings are scope-safe and keep matching raw
     const rawIsScoped = $ref!.startsWith('#') || resolvedRef === $ref!;
+    // A $ref an earlier pass flagged as a cycle stays collapsed too: a branch that was itself a $ref is merged
+    // without the marker of its definition, so the path rebuilt here no longer holds the ref a recursion inside
+    // that definition was stopped by.
     if (
       (rawIsScoped && pathList.includes($ref!)) ||
       pathList.includes(resolvedRef) ||
-      (passCount > 0 && (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY] === $ref)
+      (passCount > 0 &&
+        ((resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY] === $ref || RJSF_REF_CYCLE_KEY in resolvedSchema))
     ) {
-      // The cycle-flag copy spreads the normalized node, which would drop its `originalRefs` association
-      // (keyed by identity); carry it over so readers of the collapsed node still see the author's spelling
-      return markCycleOnDetection
-        ? carryOriginalRef({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true }, resolvedSchema)
-        : resolvedSchema;
+      if (markCycleOnDetection && !(RJSF_REF_CYCLE_KEY in resolvedSchema)) {
+        // Counted when newly set, so the levels above hand the flagged copy back rather than the schema they were
+        // given: a recursion the flag alone stops would otherwise be expanded again at the next render, without end.
+        // The cycle-flag copy spreads the normalized node, which would drop its `originalRefs` association
+        // (keyed by identity); carry it over so readers of the collapsed node still see the author's spelling
+        tally.count();
+        return carryOriginalRef({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true }, resolvedSchema);
+      }
+      return resolvedSchema;
     }
     if (resolvedRef !== $ref) {
       pathList = rawIsScoped ? [...pathList, $ref!, resolvedRef] : [...pathList, resolvedRef];
@@ -832,12 +867,14 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     const authorRef = originalRefOf(resolvedSchema);
     const refSchemaLessMarker = { ...refSchema } as S & Record<symbol, unknown>;
     delete refSchemaLessMarker[RJSF_SOURCE_REF_KEY];
+    // `resolvedSchemaOf` also records which branch keywords stood beside the `$ref`, which `enclosingRefPath`
+    // reads to keep a branch that is a second use of the definition off its own resolution path
+    const stamped = resolvedSchemaOf<S>($ref, refSchemaLessMarker, localSchema);
     resolvedSchema = {
-      ...refSchemaLessMarker,
-      ...localSchema,
-      [RJSF_REF_KEY]: $ref!,
+      ...stamped,
       ...(authorRef !== undefined && authorRef !== $ref ? { [RJSF_SOURCE_REF_KEY]: authorRef } : {}),
     };
+    tally.count();
     if (localOverride) {
       // The overriding `$id` resolves against the referring schema's scope, and same-document refs now point
       // into that local resource.
@@ -906,8 +943,13 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
   };
 
   if (PROPERTIES_KEY in resolvedSchema) {
+    const properties = resolvedSchema[PROPERTIES_KEY];
+    if (!isPlainObject(properties)) {
+      // Replaced below by the plain object the walk builds from its entries
+      tally.count();
+    }
     const updatedProps: RJSFSchema = {};
-    for (const [key, value] of Object.entries(resolvedSchema[PROPERTIES_KEY] ?? {})) {
+    for (const [key, value] of Object.entries(properties ?? {})) {
       // Mark cycles only when NOT in resolveAnyOfOrOneOfRefs mode. In simple (non-anyOf) resolution, a $ref cycle
       // in an object property always causes an infinite render loop and must be caught; in anyOf/oneOf mode a $ref
       // already expanded by an earlier option is collapsed on purpose (see the optionsPath handling below), so it
@@ -926,6 +968,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
         !resolveAnyOfOrOneOfRefs,
         expandedRefs,
         passCount,
+        tally,
         descended.scope,
       );
     }
@@ -954,6 +997,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
         false,
         expandedRefs,
         passCount,
+        tally,
         descendedItem.scope,
       ),
     };
@@ -987,6 +1031,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
             false,
             expandedRefs,
             passCount,
+            tally,
             descended.scope,
           );
           if (expandedRefs && expandedRefs.length > expandedBefore) {
@@ -998,39 +1043,42 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     }
   }
 
-  return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
+  return tally.resolved === resolvedBefore ? schema : resolvedSchema;
 }
 
-/** Returns the resolution path for a nested branch (an `allOf` element, a `then`/`else` schema or a `dependencies`
- * value) of a schema that was itself materialized by expanding a `$ref` earlier in this resolution. Keeping the
- * enclosing ref on the path lets a branch that refers back to the enclosing definition collapse as a cycle instead
- * of re-expanding without bound. As with the marker walk in `resolveAllReferences`, this only happens on re-walks
- * (`passCount > 0`): on the first pass of a fresh call the branch expands the ref one more level.
+/** Returns the resolution path for what a `schema` holds, which is the path `schema` was reached by plus the
+ * reference it was itself resolved from. A `$ref` back to that reference from inside the definition is a recursion,
+ * and having it on the path is what leaves such a `$ref` collapsed rather than expanded once more on every
+ * resolution.
  *
- * @param schema - The schema whose branch is about to be resolved
+ * A branch `keyword` that stood beside the `$ref` is not part of the definition, so the reference stays off the
+ * path of what it holds: a `$ref` to the same definition in there is a second use of it, not a way back into it.
+ *
+ * The path holds each spelling the walk compares against: the marker can hold either the resolved or the author's
+ * spelling, and a `#` ref also joins under its spelling resolved against the materialized schema's own `$id` (the
+ * scope of the resource the walk expanded), resolved against the root's base first the way the normalization walk
+ * applied it.
+ *
+ * @param schema - The schema whose own reference joins the path
  * @param recurseList - The list of refs already expanded on the current resolution path
- * @param passCount - The pass of the `resolveReference` fixpoint loop this resolution belongs to
- * @returns - `recurseList` plus the schema's source ref when it carries one on a re-walk, else `recurseList`
+ * @param [keyword] - The branch keyword of `schema` the path is for, when it is for the subschemas of one
+ * @param [rootSchema] - The root the walk resolves against, for resolving a materialized schema's relative `$id`
+ * @returns - `recurseList` plus every spelling of the reference `schema` was resolved from that is not on it
+ *          already and that the `keyword` did not stand beside
  */
-function enclosingRefPath<S extends StrictRJSFSchema>(
+function enclosingRefPath<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   recurseList: string[],
-  passCount: number,
+  keyword?: string,
   rootSchema?: S,
 ): string[] {
-  if (passCount === 0) {
-    return recurseList;
-  }
   const sourceRef = (schema as Record<symbol, unknown>)[RJSF_REF_KEY];
   if (typeof sourceRef !== 'string') {
     return recurseList;
   }
-  // The branch about to be resolved carries its `$ref` from the normalized root in the resolved spelling,
-  // while this marker can hold either spelling, so the path holds both, the way the marker walk in
-  // `resolveAllReferences` pushes both. The resolved spelling of a `#` ref comes from the materialized
-  // schema's own `$id` - the scope of the resource the walk expanded - when it carries one. A relative
-  // `$id` is resolved against the root's base first, the same resolution the normalization walk applied,
-  // so the addition spells the scope the way the normalized `$ref` does
+  if (refSiblingBranches(schema)?.includes(keyword)) {
+    return recurseList;
+  }
   const authorRef = (schema as Record<symbol, unknown>)[RJSF_SOURCE_REF_KEY];
   const candidates = typeof authorRef === 'string' && authorRef !== sourceRef ? [sourceRef, authorRef] : [sourceRef];
   const scope = schema[ID_KEY];
@@ -2296,20 +2344,21 @@ export function withDependentSchema<
   formData?: T,
   passCount = 0,
 ): S[] {
+  const dependencyPath = enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY, rootSchema);
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
     context,
     dependencyValue,
     rootSchema,
     formData,
     expandAllBranches,
-    enclosingRefPath(schema, recurseList, passCount, rootSchema),
+    dependencyPath,
     undefined,
     undefined,
     passCount > 0 ? 1 : 0,
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
-    const mergedSchema = mergeSchemas(schema, dependentSchema) as S;
+    const mergedSchema = mergeBranch<S>(schema, dependentSchema);
     // Since it does not contain oneOf, we return the original schema.
     if (oneOf === undefined) {
       return mergedSchema;
@@ -2325,7 +2374,7 @@ export function withDependentSchema<
         subschema as S,
         rootSchema,
         expandAllBranches,
-        enclosingRefPath(schema, recurseList, passCount, rootSchema),
+        dependencyPath,
         formData,
         undefined,
         undefined,
@@ -2407,6 +2456,7 @@ export function withExactlyOneSubschema<
     );
     return [schema];
   }
+  const dependencyPath = enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY, rootSchema);
   return validSubschemas.flatMap((s) => {
     const subschema: S = s as S;
     const [dependentSubschema] = splitKeyElementFromObject(dependencyKey, subschema.properties as GenericObjectType);
@@ -2417,11 +2467,11 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      enclosingRefPath(schema, recurseList, passCount, rootSchema),
+      dependencyPath,
       undefined,
       undefined,
       passCount > 0 ? 1 : 0,
     );
-    return schemas.map((resolvedSubschema) => mergeSchemas(schema, resolvedSubschema) as S);
+    return schemas.map((resolvedSubschema) => mergeBranch<S>(schema, resolvedSubschema));
   });
 }

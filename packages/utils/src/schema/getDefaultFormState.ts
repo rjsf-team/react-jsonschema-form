@@ -35,6 +35,7 @@ import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
+import { enclosingRefPath, resolvedFromRef } from '../refOf.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import toConstant from '../toConstant.ts';
 import type {
@@ -376,7 +377,14 @@ export function computeDefaults<
         : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
-    const resolvedSchema = resolveDependencies<T, S, F>(context, schema, rootSchema, false, [], defaultFormData);
+    const resolvedSchema = resolveDependencies<T, S, F>(
+      context,
+      schema,
+      rootSchema,
+      false,
+      enclosingRefPath<S>(schema, _recurseList, DEPENDENCIES_KEY),
+      defaultFormData,
+    );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
   } else if (isFixedItems(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
@@ -476,8 +484,25 @@ export function computeDefaults<
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
     // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
-    // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
-    schemaToCompute = retrieveSchema<T, S, F>(context, schema, rootSchema, rawFormData);
+    // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well. An `allOf` that stood beside the
+    // schema's own `$ref` is not part of the definition, so the ref stays off the path the merge is seeded with, as
+    // the resolver leaves it off
+    const pathWithOwnRef = enclosingRefPath<S>(schema, _recurseList, ALL_OF_KEY);
+    [schemaToCompute] = retrieveSchemaInternal<T, S, F>(
+      context,
+      schema,
+      rootSchema,
+      rawFormData,
+      false,
+      pathWithOwnRef,
+    );
+    // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
+    // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at.
+    // `getObjectDefaults()` leaves the schema's own ref off that path and this keeps it on, so a recursion under an
+    // `allOf` stops one level sooner here: followed once more, a `$ref` back to the schema leads to its definition
+    // with the `allOf` unmerged, where the entry already on the path collapses and the level takes the defaults of
+    // the other entries alone
+    updatedRecurseList = enclosingRefPath<S>(schemaToCompute, pathWithOwnRef);
   }
 
   if (schemaToCompute) {
@@ -629,9 +654,27 @@ export function getObjectDefaults<
     const shouldRetrieveSchema =
       shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) ||
       (defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in schema);
-    const retrievedSchema = shouldRetrieveSchema
-      ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData)
-      : schema;
+    const [retrievedSchema] = shouldRetrieveSchema
+      ? retrieveSchemaInternal<T, S, F>(
+          context,
+          schema,
+          rootSchema,
+          formData,
+          false,
+          // No branch keyword is named: the retrieve resolves the schema's `if` as well as its `allOf`, and it leaves
+          // a `$ref` under either's `properties` unexpanded, for `childRecurseList` below to decide
+          enclosingRefPath<S>(schema, _recurseList),
+        )
+      : [schema];
+    // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` of a schema that was not itself resolved from
+    // one joins the path of everything below, the way one the `$ref` branch of `computeDefaults()` expands does. The
+    // ref `schema` was itself resolved from does not: it seeds the retrieve above, but one more `$ref` back to it is
+    // still followed, as it is without the retrieve. Such a schema keeps its own ref through the merge of a branch,
+    // so a recursion inside a branch that was a `$ref` is stopped by the cycle flag the retrieve left on it instead
+    const childRecurseList =
+      resolvedFromRef<S>(retrievedSchema) === resolvedFromRef<S>(schema)
+        ? _recurseList
+        : enclosingRefPath<S>(retrievedSchema, _recurseList);
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties ?? {}).reduce(
       (acc: GenericObjectType, key: string) => {
@@ -651,7 +694,7 @@ export function getObjectDefaults<
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
           rootSchema,
-          _recurseList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
@@ -706,7 +749,7 @@ export function getObjectDefaults<
       keys.forEach((key) => {
         const computedDefault = computeDefaults(context, additionalPropertiesSchema as S, {
           rootSchema,
-          _recurseList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),

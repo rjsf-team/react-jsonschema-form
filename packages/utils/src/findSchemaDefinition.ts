@@ -633,6 +633,12 @@ const normalizedRoots = new WeakSet<StrictRJSFSchema>();
  */
 const rawRoots = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
 
+/** The marked no-op copies `normalizeRootReferences()` returned for roots that held nothing to rewrite. A caller
+ * holding one can hand its own original back when a resolution walk changes nothing, keeping the identity contract
+ * `resolveAllReferences()` had before normalization existed
+ */
+const noopNormalizedRoots = new WeakSet<StrictRJSFSchema>();
+
 /** Returns the root exactly as the caller wrote it when `rootSchema` is a root `normalizeRootReferences` produced,
  * `undefined` otherwise
  */
@@ -685,7 +691,18 @@ export function normalizeRootReferences<S extends StrictRJSFSchema = RJSFSchema>
   const copy = { ...rootSchema };
   normalizedRoots.add(copy);
   rawRoots.set(copy, rootSchema);
+  noopNormalizedRoots.add(copy);
   return copy;
+}
+
+/** Returns whether `rootSchema` is a copy `normalizeRootReferences()` made of a root it had nothing to rewrite in,
+ * so the root it was given and the root it returned differ only by the mark
+ *
+ * @param rootSchema - The root schema to check
+ * @returns - True when normalizing the root rewrote no reference in it
+ */
+export function normalizationRewroteNothing<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): boolean {
+  return noopNormalizedRoots.has(rootSchema);
 }
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
