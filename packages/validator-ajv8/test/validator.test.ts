@@ -8,7 +8,15 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { ErrorSchemaBuilder, createSchemaUtils, getFirstMatchingOption, noop, retrieveSchema } from '@rjsf/utils';
+import {
+  ErrorSchemaBuilder,
+  createSchemaUtils,
+  getFirstMatchingOption,
+  noop,
+  retrieveSchema,
+  ROOT_SCHEMA_PREFIX,
+  withVariantId,
+} from '@rjsf/utils';
 import type { Ajv } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
@@ -148,10 +156,16 @@ describe('AJV8Validator', () => {
         validator.isValid(schema, formData, rootSchema);
         validator.isValid(schema, formData, rootSchema);
 
-        // Root schema is added twice
-        expect(addSchemaSpy).toHaveBeenCalledTimes(2);
+        // Root schema is added under its own `$id` and again under the `ROOT_SCHEMA_PREFIX` alias that
+        // `withIdRefPrefix()` spells root-targeting refs with (#5477)
+        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
-        expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(
+          2,
+          expect.objectContaining({ ...rootSchema, $id: ROOT_SCHEMA_PREFIX }),
+          ROOT_SCHEMA_PREFIX,
+        );
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(3, expect.objectContaining(schema), schema.$id);
       });
       it('should fallback to using compile', () => {
         const schema: RJSFSchema = {
@@ -901,10 +915,16 @@ describe('AJV8Validator', () => {
         validator.isValid(schema, formData, rootSchema);
         validator.isValid(schema, formData, rootSchema);
 
-        // Root schema is added twice
-        expect(addSchemaSpy).toHaveBeenCalledTimes(2);
+        // Root schema is added under its own `$id` and again under the `ROOT_SCHEMA_PREFIX` alias that
+        // `withIdRefPrefix()` spells root-targeting refs with (#5477)
+        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
-        expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(
+          2,
+          expect.objectContaining({ ...rootSchema, $id: ROOT_SCHEMA_PREFIX }),
+          ROOT_SCHEMA_PREFIX,
+        );
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(3, expect.objectContaining(schema), schema.$id);
       });
     });
     describe('validator.validateFormData()', () => {
@@ -1389,10 +1409,16 @@ describe('AJV8Validator', () => {
         validator.isValid(schema, formData, rootSchema);
         validator.isValid(schema, formData, rootSchema);
 
-        // Root schema is added twice
-        expect(addSchemaSpy).toHaveBeenCalledTimes(2);
+        // Root schema is added under its own `$id` and again under the `ROOT_SCHEMA_PREFIX` alias that
+        // `withIdRefPrefix()` spells root-targeting refs with (#5477)
+        expect(addSchemaSpy).toHaveBeenCalledTimes(3);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
-        expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(
+          2,
+          expect.objectContaining({ ...rootSchema, $id: ROOT_SCHEMA_PREFIX }),
+          ROOT_SCHEMA_PREFIX,
+        );
+        expect(addSchemaSpy).toHaveBeenNthCalledWith(3, expect.objectContaining(schema), schema.$id);
       });
     });
     describe('validator.validateFormData()', () => {
@@ -3327,5 +3353,54 @@ describe('AJV8Validator validating against a normalized draft-7 root without an 
     su.retrieveSchema(su.getRootSchema(), { r: { s: 'x' } });
     expect(su.getValidator().validateFormData({ r: { s: 'x' } }, root).errors).toEqual([]);
     expect(validator.isValid({ $ref: '#/definitions/p' }, { s: 'x' }, su.getRootSchema())).toBe(true);
+  });
+
+  it('validates form data against the normalized root handed over on Form submit (#5477 review)', () => {
+    // core's submit path hands the validator `schemaUtils.getRootSchema()`, the walk's normalized root
+    const root: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      $id: 'schemas/root.json',
+      type: 'object',
+      definitions: { s: { type: 'string' } },
+      properties: { a: { $ref: '#/definitions/s' } },
+    };
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, root);
+    expect(validator.validateFormData({ a: 'x' }, su.getRootSchema()).errors).toEqual([]);
+  });
+
+  it('validates the nested-resource case against the normalized root handed over on Form submit (#5477 review)', () => {
+    const root: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        p: {
+          $id: 'nested/parent.json',
+          type: 'object',
+          properties: { s: { $ref: '#/definitions/str' } },
+          definitions: { str: { type: 'string' } },
+        },
+      },
+      properties: { r: { $ref: 'nested/parent.json' } },
+    };
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, root);
+    expect(validator.validateFormData({ r: { s: 'x' } }, su.getRootSchema()).errors).toEqual([]);
+  });
+
+  it('restores a normalized option spelling before isValid compiles it (#5477 review)', () => {
+    // MultiSchemaField hands isValid an option carrying the walk's normalized ref and the normalized root
+    const root: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      $id: 'schemas/root.json',
+      type: 'object',
+      definitions: { s: { type: 'string' } },
+      properties: { a: { $ref: '#/definitions/s' } },
+    };
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, root);
+    const normalizedRoot = su.getRootSchema() as RJSFSchema;
+    const option = (normalizedRoot.properties as Record<string, RJSFSchema>).a;
+    expect(option).toEqual({ $ref: 'schemas/root.json#/definitions/s' });
+    expect(validator.isValid(withVariantId(option), 'x', normalizedRoot)).toBe(true);
   });
 });

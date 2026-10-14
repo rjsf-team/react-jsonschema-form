@@ -8,7 +8,16 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, rawRootOf, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import {
+  deepEquals,
+  forValidation,
+  logOnce,
+  rawRootOf,
+  ID_KEY,
+  ROOT_SCHEMA_PREFIX,
+  schemaKey,
+  withIdRefPrefix,
+} from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import createAjvInstance from './createAjvInstance.ts';
@@ -200,7 +209,10 @@ export default class AJV8Validator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
+    // Validate the author's document: a root the utils walk normalized carries ref spellings AJV resolves a
+    // second time against the enclosing `$id`, so a relative root `$id` with a directory part would
+    // double-resolve. Map back to the root the author passed to `Form` (#5477)
+    const rawErrors = this.rawValidation<ErrorObject>(rawRootOf<S>(schema) ?? schema, formData);
     return processRawValidationErrors(
       { validator: this },
       rawErrors,
@@ -240,6 +252,20 @@ export default class AJV8Validator<
       this.ajv.removeSchema(rootSchemaId);
       this.ajv.addSchema(authorRoot, rootSchemaId);
     }
+    if (rootSchemaId !== ROOT_SCHEMA_PREFIX) {
+      // `withIdRefPrefix()` spells every root-targeting ref `<ROOT_SCHEMA_PREFIX>#...`, so the root must also
+      // answer under that alias when the author's `$id` took the primary slot. AJV's object cache ignores a
+      // second key for the same object, so the alias registers a copy that carries the alias as its `$id`:
+      // refs written against the author's `$id` still resolve through the primary registration (#5477)
+      const aliasCopy = { ...(authorRoot as object), [ID_KEY]: ROOT_SCHEMA_PREFIX };
+      const aliased = this.ajv.getSchema(ROOT_SCHEMA_PREFIX);
+      if (aliased === undefined) {
+        this.ajv.addSchema(aliasCopy, ROOT_SCHEMA_PREFIX);
+      } else if (!deepEquals(aliasCopy, aliased.schema)) {
+        this.ajv.removeSchema(ROOT_SCHEMA_PREFIX);
+        this.ajv.addSchema(aliasCopy, ROOT_SCHEMA_PREFIX);
+      }
+    }
     this.lastSeenRootSchema = authorRoot;
     this.hasRegisteredRootSchema = true;
   }
@@ -258,11 +284,14 @@ export default class AJV8Validator<
     let schemaId: string | undefined;
     let compiled = false;
     try {
-      this.handleSchemaUpdate(rootSchema);
+      // Validate with the author's spellings and the author's root, or a relative root `$id` double-resolves
+      // here as well. `forValidation` is the identity when the caller never went through the utils walk (#5477)
+      const [validationSchema, validationRoot] = forValidation<S>(schema, rootSchema);
+      this.handleSchemaUpdate(validationRoot);
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema);
+      const schemaWithIdRefPrefix = withIdRefPrefix<S>(validationSchema);
       schemaId = schemaKey(schemaWithIdRefPrefix);
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary

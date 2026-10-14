@@ -3308,3 +3308,42 @@ describe('dependencies/oneOf constraint violation produces validation errors on 
     expect(onError).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('Form submit against a root the utils walk normalized (#5477)', () => {
+  it('calls onSubmit when the root carries a relative $id with a directory part', async () => {
+    const schema: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      $id: 'schemas/root.json',
+      type: 'object',
+      definitions: { s: { type: 'string' } },
+      properties: { a: { $ref: '#/definitions/s' } },
+    };
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData: { a: 'x' } });
+
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ formData: { a: 'x' } }), expect.anything());
+  });
+
+  it('calls onSubmit when a nested resource refs its own definitions with a same-document spelling', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      definitions: {
+        p: {
+          $id: 'nested/parent.json',
+          type: 'object',
+          properties: { s: { $ref: '#/definitions/str' } },
+          definitions: { str: { type: 'string' } },
+        },
+      },
+      properties: { r: { $ref: 'nested/parent.json' } },
+    };
+    const { node, onSubmit, onError } = createFormComponent({ schema, formData: { r: { s: 'x' } } });
+
+    await submitForm(node, user);
+
+    expect(onError).not.toHaveBeenCalled();
+    expect(onSubmit).toHaveBeenCalledWith(expect.objectContaining({ formData: { r: { s: 'x' } } }), expect.anything());
+  });
+});

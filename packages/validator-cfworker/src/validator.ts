@@ -9,7 +9,16 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import {
+  deepEquals,
+  forValidation,
+  logOnce,
+  ID_KEY,
+  rawRootOf,
+  ROOT_SCHEMA_PREFIX,
+  schemaKey,
+  withIdRefPrefix,
+} from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -167,7 +176,10 @@ export default class CFWorkerValidator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<CFWorkerValidationError>(schema, formData);
+    // Validate the author's document: a root the utils walk normalized carries ref spellings the engine
+    // resolves a second time against the enclosing `$id`, so a relative root `$id` with a directory part would
+    // double-resolve. Map back to the root the author passed to `Form` (#5477)
+    const rawErrors = this.rawValidation<CFWorkerValidationError>(rawRootOf<S>(schema) ?? schema, formData);
     return processRawValidationErrors(
       { validator: this },
       rawErrors,
@@ -186,23 +198,27 @@ export default class CFWorkerValidator<
    * @param rootSchema - The root schema used to provide `$ref` resolutions
    */
   handleSchemaUpdate(rootSchema: S): void {
-    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
+    // Validators compile the author's document: a root the utils walk normalized carries ref spellings the
+    // engine resolves a second time against the enclosing `$id`, so a relative root `$id` with a directory
+    // part would double-resolve. Register the root exactly as the author wrote it instead (#5477)
+    const authorRoot = rawRootOf<S>(rootSchema) ?? rootSchema;
+    if (this.lastSeenRootSchema === authorRoot && this.hasRegisteredRootSchema) {
       return;
     }
     // `withIdRefPrefix()` rewrites local refs to ROOT_SCHEMA_PREFIX, so the
     // root must be registered under that alias even when it has its own $id.
     const rootSchemaId = ROOT_SCHEMA_PREFIX;
     const rootWithId =
-      rootSchema[ID_KEY] === rootSchemaId
-        ? (rootSchema as object)
-        : { ...(rootSchema as object), [ID_KEY]: rootSchemaId };
+      authorRoot[ID_KEY] === rootSchemaId
+        ? (authorRoot as object)
+        : { ...(authorRoot as object), [ID_KEY]: rootSchemaId };
 
     if (this.cachedRootSchema && !deepEquals(this.cachedRootSchema, rootWithId)) {
       this.validators.clear();
     }
     this.cachedRootSchema = rootWithId;
     this.getOrBuild(rootSchemaId, rootWithId);
-    this.lastSeenRootSchema = rootSchema;
+    this.lastSeenRootSchema = authorRoot;
     this.hasRegisteredRootSchema = true;
   }
 
@@ -217,8 +233,11 @@ export default class CFWorkerValidator<
     // Declared outside the try so the catch block can say which schema the error is about
     let id: string | undefined;
     try {
-      this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema);
+      // Validate with the author's spellings and the author's root, or a relative root `$id` double-resolves
+      // here as well. `forValidation` is the identity when the caller never went through the utils walk (#5477)
+      const [validationSchema, validationRoot] = forValidation<S>(schema, rootSchema);
+      this.handleSchemaUpdate(validationRoot);
+      const schemaWithIdRefPrefix = withIdRefPrefix<S>(validationSchema);
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;

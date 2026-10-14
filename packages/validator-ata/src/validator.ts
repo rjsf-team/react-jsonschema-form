@@ -8,7 +8,16 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import {
+  deepEquals,
+  forValidation,
+  logOnce,
+  ID_KEY,
+  rawRootOf,
+  ROOT_SCHEMA_PREFIX,
+  schemaKey,
+  withIdRefPrefix,
+} from '@rjsf/utils';
 import type { ValidationError, Validator } from 'ata-validator';
 
 import createAtaInstance from './createAtaInstance.ts';
@@ -84,6 +93,14 @@ export default class ATAValidator<
    */
   private cachedRootSchema?: object;
 
+  /** The author root with its own `$id`, handed to compiled validators as a second sibling so refs written
+   * against that `$id` resolve alongside the `ROOT_SCHEMA_PREFIX` alias copy. Undefined when the author root
+   * carries no `$id` of its own (the alias copy already IS the author root).
+   *
+   * @private
+   */
+  private cachedAuthorRoot?: object;
+
   /** Returns a structural copy of `formData` so ata's default-applier
    * (which writes `default` values into the input object during validation)
    * doesn't leak a mutation back to the caller. RJSF probes the same data
@@ -111,7 +128,10 @@ export default class ATAValidator<
     // Pass the rootSchema as a sibling so `$ref` to its definitions resolves.
     // Skip when the schema itself is the root, otherwise ata sees a
     // self-referential addition.
-    const siblingRoots = this.cachedRootSchema && this.cachedRootSchema !== schema ? [this.cachedRootSchema] : [];
+    const siblingRoots = [
+      ...(this.cachedRootSchema && this.cachedRootSchema !== schema ? [this.cachedRootSchema] : []),
+      ...(this.cachedAuthorRoot && this.cachedAuthorRoot !== schema ? [this.cachedAuthorRoot] : []),
+    ];
     const optionsWithSchemas = {
       ...this.options,
       ataOptionsOverrides: {
@@ -178,7 +198,10 @@ export default class ATAValidator<
     uiSchema?: UiSchema<T, S, F>,
     getCustomValidateFormData?: () => T,
   ): ValidationData<T> {
-    const rawErrors = this.rawValidation<ValidationError>(schema, formData);
+    // Validate the author's document: a root the utils walk normalized carries ref spellings the engine
+    // resolves a second time against the enclosing `$id`, so a relative root `$id` with a directory part would
+    // double-resolve. Map back to the root the author passed to `Form` (#5477)
+    const rawErrors = this.rawValidation<ValidationError>(rawRootOf<S>(schema) ?? schema, formData);
     return processRawValidationErrors(
       { validator: this },
       rawErrors,
@@ -197,25 +220,31 @@ export default class ATAValidator<
    * `addSchema(rootSchema, rootSchemaId)` flow.
    */
   handleSchemaUpdate(rootSchema: S): void {
-    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
+    // Validators compile the author's document: a root the utils walk normalized carries ref spellings the
+    // engine resolves a second time against the enclosing `$id`, so a relative root `$id` with a directory
+    // part would double-resolve. Register the root exactly as the author wrote it instead (#5477)
+    const authorRoot = rawRootOf<S>(rootSchema) ?? rootSchema;
+    if (this.lastSeenRootSchema === authorRoot && this.hasRegisteredRootSchema) {
       return;
     }
     // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
     // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
-    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
-    // Inject $id into a copy of the rootSchema so ata's schema registry can
-    // resolve `<rootSchemaId>#/...` refs produced by `withIdRefPrefix`.
-    // The original user-supplied schema is left untouched.
+    const rootSchemaId = authorRoot[ID_KEY] || ROOT_SCHEMA_PREFIX;
+    // `withIdRefPrefix()` spells every root-targeting ref `<ROOT_SCHEMA_PREFIX>#...`, so the sibling copy
+    // handed to every compiled validator carries the alias as its `$id` even when the author named the root:
+    // the author's own `$id` keeps the primary registration below for refs written against it (#5477)
     const rootWithId =
-      rootSchema[ID_KEY] === rootSchemaId
-        ? (rootSchema as object)
-        : { ...(rootSchema as object), [ID_KEY]: rootSchemaId };
+      authorRoot[ID_KEY] === ROOT_SCHEMA_PREFIX
+        ? (authorRoot as object)
+        : { ...(authorRoot as object), [ID_KEY]: ROOT_SCHEMA_PREFIX };
     this.cachedRootSchema = rootWithId;
+    // Refs written against the author's own `$id` resolve through the primary registration
+    this.cachedAuthorRoot = rootSchemaId === ROOT_SCHEMA_PREFIX ? undefined : authorRoot;
     const cached = this.validators.get(rootSchemaId);
-    if (!cached || !deepEquals(cached.schema, rootWithId)) {
-      this.getOrBuild(rootSchemaId, rootWithId);
+    if (!cached || !deepEquals(cached.schema, authorRoot)) {
+      this.getOrBuild(rootSchemaId, authorRoot);
     }
-    this.lastSeenRootSchema = rootSchema;
+    this.lastSeenRootSchema = authorRoot;
     this.hasRegisteredRootSchema = true;
   }
 
@@ -226,8 +255,11 @@ export default class ATAValidator<
     // Declared outside the try so the catch block can say which schema the error is about
     let id: string | undefined;
     try {
-      this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema);
+      // Validate with the author's spellings and the author's root, or a relative root `$id` double-resolves
+      // here as well. `forValidation` is the identity when the caller never went through the utils walk (#5477)
+      const [validationSchema, validationRoot] = forValidation<S>(schema, rootSchema);
+      this.handleSchemaUpdate(validationRoot);
+      const schemaWithIdRefPrefix = withIdRefPrefix<S>(validationSchema);
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;

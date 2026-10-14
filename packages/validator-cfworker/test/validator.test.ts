@@ -7,7 +7,7 @@ import type {
   RJSFValidationError,
   UiSchema,
 } from '@rjsf/utils';
-import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
+import { ROOT_SCHEMA_PREFIX, createSchemaUtils, withVariantId } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
@@ -298,5 +298,48 @@ describe('validateFormData() with a transformErrors that clears every message', 
     const { errors } = validator.validateFormData({ a: 'short' }, schema, undefined, transformErrors);
     expect(errors).not.toEqual([]);
     expect(validator.validateFormData({ a: 'short' }, schema, customValidate, transformErrors).errors).toEqual(errors);
+  });
+});
+
+describe('validating against a normalized root (#5477)', () => {
+  const relativeRoot: RJSFSchema = {
+    $schema: 'http://json-schema.org/draft-07/schema#',
+    $id: 'schemas/root.json',
+    type: 'object',
+    definitions: { s: { type: 'string' } },
+    properties: { a: { $ref: '#/definitions/s' } },
+  };
+  const nestedRoot: RJSFSchema = {
+    type: 'object',
+    definitions: {
+      p: {
+        $id: 'nested/parent.json',
+        type: 'object',
+        properties: { s: { $ref: '#/definitions/str' } },
+        definitions: { str: { type: 'string' } },
+      },
+    },
+    properties: { r: { $ref: 'nested/parent.json' } },
+  };
+
+  it('validates form data against the normalized root handed over on Form submit', () => {
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, relativeRoot);
+    expect(validator.validateFormData({ a: 'x' }, su.getRootSchema()).errors).toEqual([]);
+  });
+
+  it('validates the nested-resource case against the normalized root handed over on Form submit', () => {
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, nestedRoot);
+    expect(validator.validateFormData({ r: { s: 'x' } }, su.getRootSchema()).errors).toEqual([]);
+  });
+
+  it('restores a normalized option spelling before isValid compiles it', () => {
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, relativeRoot);
+    const normalizedRoot = su.getRootSchema() as RJSFSchema;
+    const option = (normalizedRoot.properties as Record<string, RJSFSchema>).a;
+    expect(option).toEqual({ $ref: 'schemas/root.json#/definitions/s' });
+    expect(validator.isValid(withVariantId(option), 'x', normalizedRoot)).toBe(true);
   });
 });
