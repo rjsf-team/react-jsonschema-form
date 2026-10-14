@@ -29,6 +29,11 @@ describe('widgetAriaProps()', () => {
   it("follows the caller's ids with the description of the selected option", () => {
     expect(widgetAriaProps(colorProps)['aria-describedby']).toBe('ext root_color__description');
   });
+  it('lists the description of the selected option once when its caller already passed it', () => {
+    expect(
+      widgetAriaProps({ ...colorProps, 'aria-describedby': 'ext root_color__description' })['aria-describedby'],
+    ).toBe('ext root_color__description');
+  });
   describe('with the plan of its field', () => {
     const presentation = resolveFieldPresentation({
       id: 'root_color',
