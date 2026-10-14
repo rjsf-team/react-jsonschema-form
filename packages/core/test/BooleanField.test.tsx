@@ -133,6 +133,23 @@ describe('BooleanField', () => {
       expect(requiredProps.at(-1)).toBe(expected);
     });
 
+    it.each([
+      ['declares it holds false unchecked', { uncheckedIsFalse: true }, false],
+      ['declares nothing', {}, true],
+    ])("marks the template's label for a switch that %s only where its plan says", (_, declaration, marked) => {
+      const SwitchWidget = () => null;
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { foo: { type: 'boolean', title: 'Foo' } }, required: ['foo'] },
+        uiSchema: { foo: { 'ui:widget': 'SwitchWidget' } },
+        widgets: { SwitchWidget },
+        presentation: { widgets: { SwitchWidget: { ...declaration, label: 'template' } } },
+      });
+
+      const label = node.querySelector('label[for="root_foo"]');
+      expect(label).toHaveTextContent(/^Foo/);
+      expect(Boolean(label?.querySelector('span.required'))).toBe(marked);
+    });
+
     it('should submit a required boolean left unchecked', async () => {
       const { node, onSubmit } = createFormComponent({
         schema: { type: 'object', properties: { foo: { type: 'boolean' } }, required: ['foo'] },
