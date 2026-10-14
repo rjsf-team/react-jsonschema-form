@@ -46,7 +46,7 @@ describe('widgetAriaProps()', () => {
     it('gives the control the attributes of its plan, followed by the description of the selected option', () => {
       expect(widgetAriaProps({ ...colorProps, 'aria-describedby': undefined, presentation })).toEqual({
         'aria-label': undefined,
-        'aria-describedby': 'root_color__error root_color__help root_color__description',
+        'aria-describedby': 'root_color__error root_color__help root_color__selectedOptionDescription',
         'aria-invalid': true,
       });
     });
