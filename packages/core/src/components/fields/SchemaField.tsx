@@ -439,7 +439,7 @@ function getFieldComponent<
  * @returns - The plan of the field component rendered beside them
  */
 function getPresentationBesideOptions(presentation: FieldPresentation): FieldPresentation {
-  const { label, description, help, errors, describedBy } = presentation;
+  const { label, description, help, errors, describedBy, showLabel } = presentation;
   const above = <P extends PartPresentation>(part: P): P => (part.by === 'none' ? part : { ...part, by: 'above' });
   return {
     label: above(label),
@@ -447,6 +447,7 @@ function getPresentationBesideOptions(presentation: FieldPresentation): FieldPre
     help: above(help),
     errors: above(errors),
     describedBy,
+    showLabel,
     inherited: presentation,
   };
 }
@@ -699,7 +700,7 @@ function SchemaFieldRender<
   // to, then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
   const showLabel =
     uiBooleanOption(ownUiOptions.label) ??
-    inheritedPresentation?.showLabel ??
+    inheritedPresentation?.plan.showLabel ??
     uiBooleanOption(globalUiOptions?.label) ??
     true;
   // When the options render, the field component renders beside them under the id a child named `XxxOf` would have,
@@ -728,8 +729,8 @@ function SchemaFieldRender<
   });
   // What the field below rendering this same id inherits: the option field, or the fallback UI's value field
   const presentationBelow = useMemo(
-    () => presentation && { id: fieldId, plan: presentation, showLabel, title, schemaDescription },
-    [fieldId, presentation, showLabel, title, schemaDescription],
+    () => presentation && { id: fieldId, plan: presentation, title, schemaDescription },
+    [fieldId, presentation, title, schemaDescription],
   );
   const plannedAsOptions = fieldToRender?.plannedAsOptions;
   const fieldComponentPresentation = useMemo(
