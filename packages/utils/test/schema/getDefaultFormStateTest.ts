@@ -5857,7 +5857,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual([{ animal: 'Cat', food: 'meat' }]);
         });
 
-        it('should fill in the then default of every if without required in array items with no data, so the first entry wins even when its if does not match the defaulted value', () => {
+        // Pins a known limitation rather than intended behavior; see the matching skipDefaults test below.
+        it('should fill in the first then default in array items with no data even when its if does not match the defaulted value (known limitation)', () => {
           const fishFirstArraySchema: RJSFSchema = { type: 'array', items: fishFirstAnimalInfoSchema };
           expect(
             getDefaultFormState(testValidator, fishFirstArraySchema, [{}], fishFirstArraySchema, undefined, {
@@ -5924,7 +5925,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animal: 'Cat' });
         });
 
-        it('should fill in the then default of every if without required on empty data, so the first entry wins even when its if does not match the defaulted value', () => {
+        // Pins a known limitation rather than intended behavior: the if is checked against the form data, not the
+        // computed defaults, so a Cat default gets the Fish entry's food. A fix that evaluates the if against the
+        // defaults is expected to change this result.
+        it('should fill in the first then default on empty data even when its if does not match the defaulted value (known limitation)', () => {
           expect(
             getDefaultFormState(
               testValidator,
