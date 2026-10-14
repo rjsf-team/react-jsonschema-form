@@ -61,6 +61,37 @@ export function resolveUri(base: string, ref: string): string {
   }
 }
 
+/** Expresses `resolved`, a ref spelling already resolved against the root's base, relative to that base, so any
+ * reader holding only the root resolves it back in one step: `resolveUri(base, spelling)` names the resource
+ * again. Same-document pointers come back as the `#/...` spelling an author writes at the root; absolute URIs
+ * stay absolute; a target outside the root's directory is reached with `..` segments.
+ */
+function relativizeToBase(base: string, resolved: string): string {
+  const baseDoc = base.split('#')[0];
+  if (ABSOLUTE_URI_REGEX.test(baseDoc) || baseDoc.startsWith('//')) {
+    // An absolute base names its resources outright, so the resolved spelling needs no relativizing
+    return resolved;
+  }
+  if (baseDoc !== '' && resolved.startsWith(`${baseDoc}#`)) {
+    // A same-document pointer comes back as the `#/...` spelling an author writes at the root
+    return resolved.slice(baseDoc.length);
+  }
+  if (ABSOLUTE_URI_REGEX.test(resolved) || resolved.startsWith('//') || resolved.startsWith('/')) {
+    return resolved;
+  }
+  const dir = baseDoc.slice(0, baseDoc.lastIndexOf('/') + 1);
+  if (dir === '' || resolved.startsWith(dir)) {
+    return resolved.slice(dir.length);
+  }
+  // The target lives outside the root's directory: climb out of it
+  const climbs = dir
+    .slice(0, -1)
+    .split('/')
+    .map(() => '..')
+    .join('/');
+  return `${climbs}/${resolved}`;
+}
+
 /** Normalizes a URI for comparison: scheme and host case, default port, dot segments and percent-encoded unreserved
  * characters
  */
@@ -487,19 +518,20 @@ export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchem
       resolved !== ref &&
       !targetExists(resolved) &&
       targetExists(ref);
-    // A ref rewritten against an absolute base names its resource outright, but a ref rewritten against a relative
-    // base stays relative - and inside a nested `$id` resource a JSON Schema validator resolves it against that
-    // resource's `$id` a second time. Such a node keeps the author's spelling, which resolves against the same
-    // `$id` to the resource the author meant; a root-scope ref still gets the root-relative spelling, which no
-    // nested `$id` re-bases. Same-document refs keep the resolved spelling: it names the resource the pointer
-    // belongs to, which cycle markers and `ui:definitions` keys read off the node. `rjsf`'s own lookups resolve
-    // refs against the lexical scope either way.
-    const absoluteSpelling = resolved !== undefined && (ABSOLUTE_URI_REGEX.test(resolved) || resolved.startsWith('//'));
-    const relativeNested =
-      typeof ref === 'string' && !absoluteSpelling && !ref.startsWith('#') && currentURI !== startURI;
+    // Every rewritten ref is spelled relative to the root's base, the way `v6` spelled them: a reader that
+    // holds only the root - a validator compiling the root, or a lookup that knows no lexical scope - resolves
+    // the spelling in one step, and no nested `$id` re-bases it because validators pre-resolve relative refs
+    // against the root they registered before compiling. A same-document pointer to the root comes back as the
+    // `#/...` spelling an author writes, so compiling the root never re-resolves the root's own `$id` against
+    // itself (a relative root `$id` with a directory part would double-resolve). The author's spelling is
+    // recorded on the node for readers that key on it (`ui:definitions`, cycle markers).
     const refChange =
-      typeof ref === 'string' && !originalRefs.has(node) && resolved !== ref && !alreadyNamesTarget && !relativeNested
-        ? { [REF_KEY]: resolved }
+      typeof ref === 'string' &&
+      resolved !== undefined &&
+      !originalRefs.has(node) &&
+      resolved !== ref &&
+      !alreadyNamesTarget
+        ? { [REF_KEY]: relativizeToBase(startURI, resolved) }
         : undefined;
     const visited = mapSubschemas(
       node,
@@ -608,14 +640,14 @@ export function rawRootOf<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S
   return rawRoots.get(rootSchema) as S | undefined;
 }
 
-/** Returns `[schema, rootSchema]` as a validator must see them: the root exactly as the author wrote it (the
- * normalized root carries ref spellings a validator resolves a second time against the enclosing `$id`, so a
- * relative root `$id` with a directory part would double-resolve), with the checked schema's refs restored to the
- * spelling the author wrote. A root no normalization produced is returned as given, with the schema untouched
+/** Returns `[schema, rootSchema]` as a validator must see them: the root exactly as the author wrote it, or the
+ * pair as given when no normalization produced the root. The schema needs no rewriting: normalization spells
+ * every ref relative to the root's base, so a validator resolves the spelling in one step no matter which
+ * scope the ref was written in
  */
 export function forValidation<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): [S, S] {
   const rawRoot = rawRootOf<S>(rootSchema);
-  return rawRoot !== undefined ? [restoreOriginalRefs<S>(schema, true), rawRoot] : [schema, rootSchema];
+  return rawRoot !== undefined ? [schema, rawRoot] : [schema, rootSchema];
 }
 
 /** Returns `rootSchema` with every ref inside it resolved against the root's own base (`$id` when present, `#`

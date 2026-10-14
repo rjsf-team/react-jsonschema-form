@@ -987,14 +987,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(utils.retrieveSchema(normalizedRoot.properties!.x as RJSFSchema, undefined)).toStrictEqual({
         $id: 'a.json',
         type: 'string',
-        [RJSF_REF_KEY]: 'schemas/a.json',
-        [RJSF_SOURCE_REF_KEY]: 'a.json',
+        [RJSF_REF_KEY]: 'a.json',
       });
       expect(utils.retrieveSchema(normalizedRoot.properties!.y as RJSFSchema, undefined)).toStrictEqual({
         $id: 'a.json',
         type: 'string',
-        [RJSF_REF_KEY]: 'schemas/root.json#/$defs/a',
-        [RJSF_SOURCE_REF_KEY]: '#/$defs/a',
+        [RJSF_REF_KEY]: '#/$defs/a',
       });
     });
     it('resolves a local $id override the same through SchemaUtils as directly', () => {

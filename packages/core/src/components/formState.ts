@@ -29,9 +29,7 @@ import {
   isWholeValueSelect,
   isPlainObject,
   mergeObjects,
-  rawRootOf,
   replaceEqualDeep,
-  restoreOriginalRefs,
   schemaHasNestedConditional,
   toErrorList,
   fieldPathFromList,
@@ -311,17 +309,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
   const { customValidate, transformErrors, uiSchema, formContext } = props;
   // When a pre-resolved schema is provided (e.g., from live validation), use it directly.
   // Otherwise validate against the original schema so AJV sees the full constraint set.
-  // A validator must compile the author's document: the normalized root carries ref spellings it resolves a
-  // second time against the enclosing `$id`, so a relative root `$id` with a directory part would double-resolve
-  // (#5477). When this form's root was normalized, submit compiles the author's root and live validation the
-  // retrieved schema with the author's spellings restored; a root no normalization produced is used as given.
-  const authorRoot = rawRootOf<S>(schema);
-  let validationSchema: S;
-  if (authorRoot !== undefined) {
-    validationSchema = retrievedSchema ? restoreOriginalRefs<S>(retrievedSchema, true) : authorRoot;
-  } else {
-    validationSchema = retrievedSchema ?? schema;
-  }
+  const validationSchema = retrievedSchema ?? schema;
   // JSON.stringify drops keys with `undefined` values; JSON.parse on the result gives AJV a clean
   // object that avoids spurious type errors for `type: "string"` fields that were cleared (#4518).
   // Falsy root values (`false`, `0`, `''`) are valid data, so only `undefined` skips the round trip (#5404).

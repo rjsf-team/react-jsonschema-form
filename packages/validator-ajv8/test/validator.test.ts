@@ -3310,7 +3310,7 @@ describe('AJV8Validator validating against a normalized draft-7 root without an 
     expect(su.getRootSchema().definitions!.parent).toEqual({
       $id: 'nested/parent.json',
       type: 'object',
-      properties: { v: { $ref: 'child.json' } },
+      properties: { v: { $ref: 'nested/child.json' } },
     });
     expect(validator.isValid({ $ref: '#/definitions/parent' }, { v: 'x' }, su.getRootSchema())).toBe(true);
   });
@@ -3387,7 +3387,7 @@ describe('AJV8Validator validating against a normalized draft-7 root without an 
     expect(validator.validateFormData({ r: { s: 'x' } }, su.getRootSchema()).errors).toEqual([]);
   });
 
-  it('restores a normalized option spelling before isValid compiles it (#5477 review)', () => {
+  it('compiles a normalized option spelling through isValid (#5477 review)', () => {
     // MultiSchemaField hands isValid an option carrying the walk's normalized ref and the normalized root
     const root: RJSFSchema = {
       $schema: 'http://json-schema.org/draft-07/schema#',
@@ -3400,7 +3400,7 @@ describe('AJV8Validator validating against a normalized draft-7 root without an 
     const su = createSchemaUtils({ validator }, root);
     const normalizedRoot = su.getRootSchema() as RJSFSchema;
     const option = (normalizedRoot.properties as Record<string, RJSFSchema>).a;
-    expect(option).toEqual({ $ref: 'schemas/root.json#/definitions/s' });
+    expect(option).toEqual({ $ref: '#/definitions/s' });
     expect(validator.isValid(withVariantId(option), 'x', normalizedRoot)).toBe(true);
   });
 });

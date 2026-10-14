@@ -620,10 +620,10 @@ describe('findSchemaDefinition()', () => {
       const prefix = $id.slice(0, $id.lastIndexOf('/') + 1);
       expect(findSchemaDefinition(`${prefix}leaf.json`, root, '')).toBe(leaf);
       const absolute = makeAllReferencesAbsolute(root, $id);
-      // Under a relative root the nested ref keeps the author's spelling: a validator resolves it against
-      // the resource's own `$id`, and a root-relative spelling would be re-based against that `$id` again
+      // Under a relative root the nested ref is spelled relative to the root's base: resolving it against
+      // the root names `relative/leaf.json`, the resource the author's `../leaf.json` meant
       expect((absolute.$defs!.parent as RJSFSchema).properties!.value).toEqual({
-        $ref: $id.includes('://') ? `${prefix}leaf.json` : '../leaf.json',
+        $ref: $id.includes('://') ? `${prefix}leaf.json` : 'leaf.json',
       });
       expect((absolute.$defs!.parent as RJSFSchema).$id).toBe('nested/parent.json');
     },
@@ -722,11 +722,10 @@ describe('findSchemaDefinition()', () => {
     });
     // An absolute-path reference stays rooted, so it must not collide with the relative `embedded.json`
     expect(findSchemaDefinition('#/properties/rooted', resolved)).toBe(resolved.$defs!.rooted);
-    // Inside the nested `sub/a.json` resource the author's spelling stays: it resolves against that
-    // resource's `$id` to `sub/b.json`, which a root-relative spelling would not survive a validator's
-    // second resolution against the `$id`
+    // Inside the nested `sub/a.json` resource the ref is spelled relative to the root's base: resolving
+    // `sub/b.json` against the root names the resource the author's `b.json` meant
     expect((resolved.$defs!.a as RJSFSchema).properties).toStrictEqual({
-      b: { $ref: 'b.json' },
+      b: { $ref: 'sub/b.json' },
     });
     expect(findSchemaDefinition('#/properties/dot', resolved)).toBe(resolved.$defs!.embedded);
     expect(findSchemaDefinition('#/$defs/a/properties/b', resolved)).toBe(resolved.$defs!.b);
@@ -752,7 +751,7 @@ describe('findSchemaDefinition()', () => {
     expect(resolved.properties).toStrictEqual({
       x: { $ref: '/schemas/a.json' },
       parent: { $ref: '/b.json' },
-      local: { $ref: '/schemas/root.json#/$defs/a' },
+      local: { $ref: '#/$defs/a' },
     });
     expect(findSchemaDefinition('#/properties/x', resolved)).toBe(resolved.$defs!.a);
     expect(findSchemaDefinition('#/properties/local', resolved)).toBe(resolved.$defs!.a);
@@ -1694,5 +1693,55 @@ describe('lexicalScopeOfNode', () => {
       properties: { p: target },
     };
     expect(lexicalScopeOfNode(root, target)).toEqual('');
+  });
+});
+
+describe('root-relative spelling (#5477 round 14)', () => {
+  it('spells a ref whose target lives outside the root directory with `..` segments', () => {
+    // The nested resource's `$id` climbs out of the root's directory, so a ref inside it resolves to a
+    // target `schemas/` cannot reach directly: the root-relative spelling climbs out with `..`, and
+    // resolving it against the root's base names `shared/thing.json` again
+    const root: RJSFSchema = {
+      $id: 'schemas/root.json',
+      $defs: {
+        escaped: {
+          $id: '../shared/embedded.json',
+          properties: { v: { $ref: 'thing.json' } },
+        },
+      },
+    };
+    const absolute = makeAllReferencesAbsolute(root, '');
+    const escaped = absolute.$defs!.escaped as RJSFSchema;
+    expect(escaped.properties!.v).toEqual({ $ref: '../shared/thing.json' });
+  });
+  it('resolves refs the walk left unmarked against the fallback scope, leaving other spellings alone', () => {
+    const root: RJSFSchema = {
+      $id: 'schemas/root.json',
+      $defs: {
+        b: {
+          allOf: [
+            { $ref: 'schemas/thing.json' },
+            { $ref: '#/definitions/local' },
+            { $ref: 'https://example.com/abs.json' },
+            { $ref: '//cdn.example.com/net.json' },
+          ],
+        },
+        local: { type: 'string' },
+      },
+    };
+    const absolute = makeAllReferencesAbsolute(root, '');
+    const b = absolute.$defs!.b as RJSFSchema;
+    // The walk leaves each spelling as written: the first already resolves against the root's base, and the
+    // same-document, absolute and network-path spellings need no relativizing
+    expect(b.allOf![0]).toEqual({ $ref: 'schemas/thing.json' });
+    expect(b.allOf![1]).toEqual({ $ref: '#/definitions/local' });
+    expect(b.allOf![2]).toEqual({ $ref: 'https://example.com/abs.json' });
+    expect(b.allOf![3]).toEqual({ $ref: '//cdn.example.com/net.json' });
+    const restored = restoreOriginalRefs(b, false, 'overrides/scope.json');
+    // `allOf` is a keyword the restore keeps resolved, and only the unmarked relative ref takes the scope
+    expect(restored.allOf![0]).toEqual({ $ref: 'overrides/schemas/thing.json' });
+    expect(restored.allOf![1]).toEqual({ $ref: '#/definitions/local' });
+    expect(restored.allOf![2]).toEqual({ $ref: 'https://example.com/abs.json' });
+    expect(restored.allOf![3]).toEqual({ $ref: '//cdn.example.com/net.json' });
   });
 });

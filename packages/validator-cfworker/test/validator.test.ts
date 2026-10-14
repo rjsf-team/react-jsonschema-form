@@ -334,12 +334,12 @@ describe('validating against a normalized root (#5477)', () => {
     expect(validator.validateFormData({ r: { s: 'x' } }, su.getRootSchema()).errors).toEqual([]);
   });
 
-  it('restores a normalized option spelling before isValid compiles it', () => {
+  it('compiles a normalized option spelling through isValid', () => {
     const validator = customizeValidator();
     const su = createSchemaUtils({ validator }, relativeRoot);
     const normalizedRoot = su.getRootSchema() as RJSFSchema;
     const option = (normalizedRoot.properties as Record<string, RJSFSchema>).a;
-    expect(option).toEqual({ $ref: 'schemas/root.json#/definitions/s' });
+    expect(option).toEqual({ $ref: '#/definitions/s' });
     expect(validator.isValid(withVariantId(option), 'x', normalizedRoot)).toBe(true);
   });
 });
