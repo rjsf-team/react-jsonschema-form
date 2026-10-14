@@ -1,6 +1,7 @@
 // oxlint-disable no-console
 import type { SubmitEvent } from 'react';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
@@ -146,6 +147,9 @@ export function readSharedSetup(hash: string): { setup?: LoadData; error?: unkno
 const { setup: sharedSetup, error: sharedSetupError } = readSharedSetup(
   typeof document === 'undefined' ? '' : document.location.hash.slice(1),
 );
+if (sharedSetupError !== undefined) {
+  console.error(sharedSetupError);
+}
 
 /** The playground state that loading `data` sets: for the page's first render, a picked sample, or a shared link.
  * `currentTheme` stands in for a theme the data doesn't name. `sampleName` and `validator` are `undefined` when the
@@ -262,14 +266,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
   const playGroundFormRef = useRef<FormRef>(null);
 
-  useEffect(() => {
-    if (sharedSetupError !== undefined) {
-      // oxlint-disable-next-line no-alert
-      alert('Unable to load form setup data.');
-      console.error(sharedSetupError);
-    }
-  }, []);
-
   // One themed Form per theme, so switching other settings doesn't remount it. It's returned inside an object
   // because react/static-components can't tell a memoized component from one created during render
   const { FormComponent } = useMemo(() => ({ FormComponent: withTheme(themes[theme].theme) }), [themes, theme]);
@@ -353,6 +349,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     <Box sx={{ display: 'flex', width: '100%' }}>
       <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
       <Box sx={{ width: '100%' }}>
+        {sharedSetupError !== undefined && <Alert severity='error'>Unable to load form setup data.</Alert>}
         <Editors
           formKey={formKey}
           themes={themes}
