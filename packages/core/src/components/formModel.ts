@@ -34,6 +34,7 @@ import {
   toEventFormData,
   toIChangeEvent,
   validateFormData,
+  withFormDataProp,
 } from './formState.ts';
 
 /** How a report reaches the consumer's callback: a handle method calls it directly, so a throw reaches the method's
@@ -362,12 +363,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       // scheduled; until it runs, operations start from its commit derived under the new props. A `formData` that was
       // the form's own data as the render began is recorded as seen first: the operation has moved the data on, so
       // the prop would otherwise read as a new value and replace the operation's edit
-      const { formData } = nextProps;
-      const isOwnData = Object.is(formData, renderedPublished.formData);
-      state = replaceEqualDeep(
-        derived,
-        deriveState(nextProps, isOwnData ? { ...state, formDataProp: formData } : state),
-      );
+      const isOwnData = Object.is(nextProps.formData, renderedPublished.formData);
+      state = replaceEqualDeep(derived, deriveState(nextProps, isOwnData ? withFormDataProp(state, nextProps) : state));
     },
     handle,
     handleSubmit,

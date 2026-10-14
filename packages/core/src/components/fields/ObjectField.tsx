@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import { memo, use, useCallback, useInsertionEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useInsertionEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
@@ -45,8 +45,9 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
+import useReadFieldData from '../../hooks/useReadFieldData.ts';
+import useSendMove from '../../hooks/useSendMove.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
-import FormDataContext from '../FormDataContext.ts';
 import RichDescription from '../RichDescription.tsx';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
@@ -379,31 +380,25 @@ export default function ObjectField<
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
-  const access = use(FormDataContext);
-  // Read by the handlers below through a ref rather than closed over, as the schema is below: a handler that changed
-  // with the data would re-render every property on every edit. Installed from an insertion Effect, so a layout Effect
-  // of the same commit that calls a handler reads the data that commit rendered
+  // Installed from an insertion Effect, so a layout Effect of the same commit that calls a handler reads the data that
+  // commit rendered
   const renderedFormData = useRef(formData);
   useInsertionEffect(() => {
     renderedFormData.current = formData;
   }, [formData]);
-  /** The form's current data at this path, edits made since the form last rendered included; outside a `Form`, the
-   * rendered data
-   */
-  const readData = useCallback(
-    () => (access ? access.readField<typeof formData>(fieldPath) : renderedFormData.current),
-    [access, fieldPath],
-  );
+  const readRenderedData = useCallback(() => renderedFormData.current, []);
+  const readData = useReadFieldData(fieldPath, readRenderedData);
+  const sendMove = useSendMove(fieldPath);
 
   const schema: S = useMemo(
     () => schemaUtils.retrieveSchema(rawSchema, formData, true),
     [schemaUtils, rawSchema, formData],
   );
-  // Read by the callbacks a property template holds onto rather than closed over by them, as the form data is above:
-  // the resolved schema changes identity whenever a key is added, renamed or removed, and a callback that changed with
-  // it would re-render every property beside the one that did. Written once the render it belongs to has committed, so
-  // that a render React starts and throws away cannot leave the callbacks answering from a schema resolved for form
-  // data the user never saw -- they run from an event handler, which is after the commit either way
+  // Read by the callbacks a property template holds onto rather than closed over by them: the resolved schema changes
+  // identity whenever a key is added, renamed or removed, and a callback that changed with it would re-render every
+  // property beside the one that did. Written once the render it belongs to has committed, so that a render React
+  // starts and throws away cannot leave the callbacks answering from a schema resolved for form data the user never saw
+  // -- they run from an event handler, which is after the commit either way
   const schemaRef = useRef(schema);
   useLayoutEffect(() => {
     schemaRef.current = schema;
@@ -704,16 +699,11 @@ export default function ObjectField<
           currentKey: actualNewKey,
         }));
         setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
-        const send = () => onChange(renamedObj, fieldPath);
-        if (access) {
-          // The errors the form holds under the old name describe the property, so they go to its new name with it
-          access.sendMove({ fieldPath, newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, send);
-        } else {
-          send();
-        }
+        // The errors the form holds under the old name describe the property, so they go to its new name with it
+        sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () => onChange(renamedObj, fieldPath));
       }
     },
-    [access, onChange, fieldPath, getAvailableKey, seedForKey, readData],
+    [sendMove, onChange, fieldPath, getAvailableKey, seedForKey, readData],
   );
 
   /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
@@ -745,8 +735,8 @@ export default function ObjectField<
   if (!renderOptionalField || hasFormData) {
     try {
       const definedPropertySet = new Set(definedPropertyOrder);
-      // A set, since an add a custom parent kept to itself leaves its key in the order, and the next add picks that
-      // key again
+      // A set, since an add that never reaches the data, as under a custom field that keeps the change to itself, leaves
+      // its key in the order, and the next add picks that key again
       const orderedSet = new Set(additionalPropertyOrder);
       const currentAdditionalProperties = [...orderedSet].filter(
         (property) => Object.hasOwn(schemaProperties, property) && !definedPropertySet.has(property),

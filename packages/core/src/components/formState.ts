@@ -66,7 +66,7 @@ type ErrorState<T> = Pick<
 type ChangedErrorState<T> = ErrorState<T> & Pick<FormState<T>, 'customErrors'>;
 
 /** The error members of `state` that a change works on */
-function ownedErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
+function errorStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>({
   errors,
   errorSchema,
   schemaValidationErrors,
@@ -658,7 +658,7 @@ function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContex
   const raised = raiseOf(change);
   const isDataChanged = changed.isRootReplaced || changed.paths.length > 0;
   if (!newKeyOf && !raised && customErrors === current.customErrors && !isDataChanged) {
-    return ownedErrorsOf(current);
+    return errorStateOf(current);
   }
   const path = fieldPathToList(fieldPath);
   // The validator's own result is the base `extraErrors` and the fields' own errors are merged onto again, as in
@@ -764,16 +764,14 @@ interface DeriveDataOptions<T, S extends StrictRJSFSchema, F extends FormContext
 /** The last settled form data and the root schema it settled under, for the `formDataSchema` marker pair: recorded
  * on construction and on every pass that sanitized, and otherwise carried untouched. A declined sanitize, an adopted
  * `formData` prop or a reset leaves the snapshot alone, so no path needs its own clearing rule; a schema swap drops it
- * at the sanitize call, where the marker root no longer matches. The root is shared through `replaceEqualDeep()` so
- * a deep-equal rebuild of the schema keeps the reference
+ * at the sanitize call, where the marker root no longer matches. The caller shares the root against the marker
+ * through `replaceEqualDeep()`, so a deep-equal rebuild of the schema keeps the reference and matches by identity
  *
  * @param current - The state the pass starts from; `undefined` on construction
  * @param rootSchema - The root schema this pass settles under, shared against `current.formDataSchema` by the caller
  * @param sanitizeRan - Whether this pass sanitized the data
  * @param formData - The data this pass settled
  * @param retrievedSchema - The schema this pass resolved for `formData`
- * @param rootMatches - Whether `rootSchema` is already known to match `current.formDataSchema`, from a sharing the
- * caller itself computed; omitted, the marker root is shared here instead
  * @returns - The marker triple to commit
  */
 function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -782,7 +780,6 @@ function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormConte
   sanitizeRan: boolean,
   formData: T | undefined,
   retrievedSchema: S | undefined,
-  rootMatches?: boolean,
 ): {
   formDataSchema: S | undefined;
   settledFormData: T | undefined;
@@ -791,25 +788,21 @@ function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormConte
 } {
   if (sanitizeRan || current === undefined) {
     return {
-      formDataSchema: replaceEqualDeep(current?.formDataSchema, rootSchema),
+      formDataSchema: rootSchema,
       settledFormData: formData,
       settledFormDataForPairing: formData,
       settledRetrievedSchema: retrievedSchema,
     };
   }
   // A marker whose root no longer matches can never become usable again, so it is dropped rather than held for
-  // the form's whole life; an empty marker also fails `hasSettledData`, so the sanitize call is unaffected. The
-  // caller that already shared the root against the marker passes the answer in, and this walks nothing twice
+  // the form's whole life; an empty marker also fails `hasSettledData`, so the sanitize call is unaffected
   if (current.formDataSchema !== undefined && rootSchema !== current.formDataSchema) {
-    const shared = rootMatches ?? replaceEqualDeep(current.formDataSchema, rootSchema) === current.formDataSchema;
-    if (!shared) {
-      return {
-        formDataSchema: undefined,
-        settledFormData: undefined,
-        settledFormDataForPairing: undefined,
-        settledRetrievedSchema: undefined,
-      };
-    }
+    return {
+      formDataSchema: undefined,
+      settledFormData: undefined,
+      settledFormDataForPairing: undefined,
+      settledRetrievedSchema: undefined,
+    };
   }
   return {
     formDataSchema: current.formDataSchema,
@@ -1099,14 +1092,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
     // A reset settles the way the first render does: the restored initial data is unchecked, but it is what
     // every later edit must compare against, or a flip back to the branch the reset restored reads as settled
     // on the wrong side. Passing no current state records the reset data and its resolved schema as the snapshot
-    ...settledFormDataState(
-      isReset ? undefined : current,
-      sharedRoot,
-      sanitizeRan,
-      formData,
-      retrievedSchema,
-      sharedRoot === current?.formDataSchema,
-    ),
+    ...settledFormDataState(isReset ? undefined : current, sharedRoot, sanitizeRan, formData, retrievedSchema),
   };
 }
 
@@ -1185,7 +1171,6 @@ function withoutErrorsOfChanged<T>(validation: ValidationData<T>, changed: DataC
  * whether or not the new item has a value. A property an object gained is a change, since the validator may have
  * reported it missing.
  */
-function withKeysMoved<T>(data: T, changed: T, path: FieldPathList, newKeyOf: KeyMove): T;
 function withKeysMoved(data: unknown, changed: unknown, path: FieldPathList, newKeyOf: KeyMove): unknown {
   const held = getAt<unknown>(data, path);
   const newHeld = getAt<unknown>(changed, path);
@@ -1766,6 +1751,18 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
   return { ...current, ...context, ...next };
 }
 
+/** The error members of a state with `extraErrors` as the only errors on display, as a reset or a valid submission
+ * leaves it
+ */
+function extraErrorsAlone<T>(extraErrors: ErrorSchema<T> | undefined): ErrorState<T> {
+  return {
+    errors: extraErrors ? toErrorList(extraErrors) : [],
+    errorSchema: extraErrors ?? {},
+    schemaValidationErrors: [],
+    schemaValidationErrorSchema: {},
+  };
+}
+
 /** The state after `reset()`: the data is re-derived from the props' seed the way an initial render does it, every
  * error the form holds, including the custom ones fields raised, is cleared, which leaves `extraErrors` as the only
  * errors on display, and the render context the derivation resolved with is committed alongside the data.
@@ -1778,7 +1775,6 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
   current: FormState<T, S, F>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  const { extraErrors } = props;
   const { formData, context, formDataSchema, settledFormData, settledFormDataForPairing, settledRetrievedSchema } =
     deriveFormData(current, seedOf(props), { isReset: true }, props);
   return {
@@ -1789,10 +1785,7 @@ export function applyReset<T, S extends StrictRJSFSchema, F extends FormContextT
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
-    errors: extraErrors ? toErrorList(extraErrors) : [],
-    errorSchema: extraErrors ?? {},
-    schemaValidationErrors: [],
-    schemaValidationErrorSchema: {},
+    ...extraErrorsAlone(props.extraErrors),
     // The reset pass has generated the initial defaults, so the next unrelated recompute is not an initial pass and
     // will not resurrect a `ui:initialValue` the user has since cleared
     initialDefaultsGenerated: true,
@@ -1879,9 +1872,7 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   return {
     ...current,
     formData,
-    ...mergeErrors({ errors: [], errorSchema: {} }, props.extraErrors),
-    schemaValidationErrors: [],
-    schemaValidationErrorSchema: {},
+    ...extraErrorsAlone(props.extraErrors),
   };
 }
 
@@ -1905,10 +1896,10 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
   return { ...deriveDataState(undefined, seedOf(props), props), formDataProp: props.formData };
 }
 
-/** `state` recording the `formData` prop it was derived with, by identity, which `replaceEqualDeep()` would not keep
- * for a value equal to the one before it
+/** `state` with the `formData` of `props` recorded as seen, see `deriveState()`. Recorded by identity, which
+ * `replaceEqualDeep()` would not keep for a value equal to the one before it
  */
-function withFormDataProp<T, S extends StrictRJSFSchema, F extends FormContextType>(
+export function withFormDataProp<T, S extends StrictRJSFSchema, F extends FormContextType>(
   state: FormState<T, S, F>,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
@@ -1931,6 +1922,14 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {
+  return withFormDataProp(replaceEqualDeep(state, deriveFromProps(props, state)), props);
+}
+
+/** The state `deriveState()` derives, before it is shared against `state` and records the `formData` prop */
+function deriveFromProps<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: FormProps<T, S, F>,
+  state: FormState<T, S, F>,
+): FormState<T, S, F> {
   // A `formData` is taken as the form's value the way a controlled `<input>` takes a new `value`, unless the form has
   // seen it already: as its own data, which a parent storing what `onChange` reported passes back on every edit, or as
   // the prop of the render before, which a parent that has yet to render an edit, or stores none, passes again. The
@@ -1938,7 +1937,7 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   // `NaN` taken again on every pass
   const isFormDataSeen = Object.is(props.formData, state.formDataProp) || Object.is(props.formData, state.formData);
   if (props.formData !== undefined && !isFormDataSeen) {
-    return withFormDataProp(replaceEqualDeep(state, deriveDataState(state, props.formData, props, true)), props);
+    return deriveDataState(state, props.formData, props, true);
   }
   const context = deriveRenderContext(props, state.retrievedSchema, state, resolveSchemaUtils(props, state));
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(state, context);
@@ -1950,7 +1949,7 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   const isEmptyValueChanged =
     context.uiSchema !== state.uiSchema && !deepEquals(emptyValuesOf(context.uiSchema), emptyValuesOf(state.uiSchema));
   if (isSchemaChanged || isEmptyValueChanged || context.defaultsBehavior !== state.defaultsBehavior) {
-    return withFormDataProp(replaceEqualDeep(state, deriveDataState(state, state.formData, props)), props);
+    return deriveDataState(state, state.formData, props);
   }
   // Resolved only once it is known the data is not re-derived, which resolves it itself
   const resolvedContext = {
@@ -1961,5 +1960,5 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
     mustValidate: mustLiveValidate(props, state.edit, isValidationPropChanged),
     validationSchema: context.schemaUtils === state.schemaUtils ? resolvedContext.retrievedSchema : undefined,
   });
-  return withFormDataProp(replaceEqualDeep(state, { ...state, ...resolvedContext, ...errors }), props);
+  return { ...state, ...resolvedContext, ...errors };
 }

@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react';
-import { memo, use, useCallback, useInsertionEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useInsertionEffect, useMemo, useRef, useState } from 'react';
 import type {
   ArrayFieldItemButtonProps,
   ArrayFieldTemplateProps,
@@ -36,8 +36,9 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+import useReadFieldData from '../../hooks/useReadFieldData.ts';
+import useSendMove from '../../hooks/useSendMove.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
-import FormDataContext from '../FormDataContext.ts';
 import { moveOfItems } from '../formState.ts';
 
 /** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
@@ -1028,8 +1029,9 @@ const NO_ITEMS: never[] = [];
  *
  * Two sets of rows are kept: `keys`, the rows of the field's latest change, and `confirmed`, the rows of the last data
  * whose length matched them. Data of the latest change's length uses `keys`, and becomes the confirmed rows. Data of
- * the confirmed rows' length uses `confirmed`. Data whose length matches neither, an external replacement, gives no way
- * to tell which rows survived, so every key is regenerated.
+ * the confirmed rows' length uses `confirmed`, as when the consumer answers the change by setting the field back to the
+ * data from before it, through `onChange` or `setFieldValue()`. Data whose length matches neither, an external replacement, gives no way to tell which rows
+ * survived, so every key is regenerated.
  *
  * A handler reads the rows from a ref rather than closing over the render's: a second handler in the same event has to
  * start from the rows the first one sent, which React has yet to render, and a handler closing over the rendered rows
@@ -1054,11 +1056,9 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
       setRows({ keys: rows.keys, confirmed: rows.keys });
     }
   } else if (rows.confirmed.length === items.length) {
-    // A parent that applies `onChange` later, after an `await` or in a transition, still passes the data from before the
-    // field's change, which matches the confirmed rows; keeping those, and the change's rows for when its data arrives,
-    // stops the rows and the order they were added in from being regenerated in between. Only lengths are compared, so
-    // two changes inside one such delay that leave the data at neither length, as a copy and then a remove, regenerate
-    // the keys of the renders in between, until the last change's data arrives
+    // The consumer set the field back to the data from before the change, which matches the confirmed rows;
+    // keeping those stops the rows and the order they were added in from being regenerated. Only lengths are compared,
+    // so data set back to another array of that length keeps the confirmed keys too
     itemKeys = rows.confirmed;
   } else {
     itemKeys = freshKeys();
@@ -1096,7 +1096,9 @@ export default function ArrayField<
   const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
   const { globalFormOptions, schemaUtils, translateString } = registry;
   const { keyedFormData, readSentRows, updateKeyedFormData } = useKeyedFormData<T>(formData);
-  const access = use(FormDataContext);
+  const readSentData = useCallback(() => keyedToPlainFormData(readSentRows()), [readSentRows]);
+  const readItems = useReadFieldData(fieldPath, readSentData);
+  const sendMove = useSendMove(fieldPath);
 
   /** The rows as a handler sees them: the form's current items at this path, edits made since the form last rendered
    * included, under the keys of the rows rendered or sent since, with a fresh key for an item those do not cover.
@@ -1104,7 +1106,7 @@ export default function ArrayField<
    */
   const readRows = useCallback(() => {
     const rows = readSentRows();
-    const items = access ? access.readField<T[] | undefined>(fieldPath) : keyedToPlainFormData(rows);
+    const items = readItems();
     if (!Array.isArray(items)) {
       return [];
     }
@@ -1112,7 +1114,7 @@ export default function ArrayField<
       const { key, order } = rows[index] ?? generateRowId();
       return { key, order, item };
     });
-  }, [access, fieldPath, readSentRows]);
+  }, [readItems, readSentRows]);
 
   /** Sends the rows a handler built from `rows`, keying them first so a second handler in the same event starts from
    * them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off the
@@ -1120,15 +1122,12 @@ export default function ArrayField<
    */
   const commitRows = useCallback(
     (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
-      const send = () => onChange(updateKeyedFormData(newKeyedFormData), fieldPath);
-      if (access) {
-        const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
-        access.sendMove({ fieldPath, newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, send);
-      } else {
-        send();
-      }
+      const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
+      sendMove({ newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
+        onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
+      );
     },
-    [access, onChange, updateKeyedFormData, fieldPath],
+    [sendMove, onChange, updateKeyedFormData, fieldPath],
   );
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data
