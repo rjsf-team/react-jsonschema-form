@@ -4198,7 +4198,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
         ]);
       });
-      it('returns neither condition with expandAll, using boolean based then/else', () => {
+      it('returns a `false` branch as `not: {}` and a `true` one as the schema without the condition with expandAll', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -4213,13 +4213,10 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           then: false,
           else: true,
         };
+        const rest = { type: 'object', properties: { ...SCHEMA_WITH_SINGLE_CONDITION.properties } };
         expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([
-          {
-            type: 'object',
-            properties: {
-              ...SCHEMA_WITH_SINGLE_CONDITION.properties,
-            },
-          },
+          { ...rest, not: {} },
+          rest,
         ]);
       });
     });
@@ -4256,9 +4253,42 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           unconditioned,
         ]);
       });
-      it('does not return the unconditioned schema for a `false` branch', () => {
+      it('returns a `false` branch as the schema with `not: {}`', () => {
         const schema: RJSFSchema = { ...base, then: thenBranch, else: false };
-        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([withThen]);
+        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([
+          withThen,
+          { ...unconditioned, not: {} },
+        ]);
+        const thenFalse: RJSFSchema = { ...base, then: false, else: elseBranch };
+        expect(resolveCondition({ validator: testValidator }, thenFalse, thenFalse, true, [])).toEqual([
+          { ...unconditioned, not: {} },
+          withElse,
+        ]);
+      });
+      it('returns only the schema without the condition when neither branch changes it', () => {
+        const schema: RJSFSchema = { ...base, then: true };
+        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([unconditioned]);
+      });
+      it('returns a lone `false` branch as the schema with `not: {}` next to the schema without it', () => {
+        const schema: RJSFSchema = { ...base, then: false };
+        expect(resolveCondition({ validator: testValidator }, schema, schema, true, [])).toEqual([
+          { ...unconditioned, not: {} },
+          unconditioned,
+        ]);
+      });
+      it('merges the schema’s own `then` over the rest before its allOf, as a form renders it', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string', maxLength: 10, title: 'A' } },
+          if: { properties: { b: { const: 'x' } }, required: ['b'] },
+          then: { properties: { a: { maxLength: 20, title: 'A2' } } },
+          allOf: [{ properties: { b: { type: 'string' } } }],
+        };
+        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
+        expect(all.map((s) => s.properties!.a)).toEqual([
+          { type: 'string', maxLength: 20, title: 'A2' },
+          { type: 'string', maxLength: 10, title: 'A' },
+        ]);
       });
       it('still returns only the branch the data selects without expandAll', () => {
         const schema: RJSFSchema = { ...base, then: thenBranch };
@@ -4290,7 +4320,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       it('counts the schema’s own one-sided condition with those of its allOf', () => {
         const schema: RJSFSchema = { type: 'object', ...oneSided('x', 'then'), allOf: [oneSided('y', 'then')] };
         const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
-        expect(forms(all)).toEqual(['x', 'y', 'x+y', '-']);
+        expect(forms(all)).toEqual(['x+y', 'y', 'x', '-']);
         expect(all.every((s) => !('if' in s))).toBe(true);
       });
       it('keeps what an allOf entry holds besides its condition whether or not the branch is applied', () => {
@@ -4329,6 +4359,41 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(consoleWarnSpy).toHaveBeenCalledWith(
           expect.stringMatching(/An allOf has 9 conditions with only one of `then` and `else`, more than the 8/),
         );
+      });
+      it('counts the schema’s own condition towards the limit', () => {
+        const keys = Array.from({ length: 8 }, (_, i) => `k${i}`);
+        const schema: RJSFSchema = {
+          type: 'object',
+          ...oneSided('own', 'then'),
+          allOf: keys.map((key) => oneSided(key, 'then')),
+        };
+        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
+        expect(all).toHaveLength(2 * (keys.length + 2));
+        expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringMatching(/An allOf has 9 conditions .* the 8 /));
+      });
+      it('shares the limit with the allOfs nested in it, naming the conditions of the one past it', () => {
+        const inner = Array.from({ length: 7 }, (_, i) => `i${i}`);
+        const schema: RJSFSchema = {
+          type: 'object',
+          allOf: [
+            oneSided('x', 'then'),
+            { ...oneSided('y', 'then'), allOf: inner.map((key) => oneSided(key, 'then')) },
+          ],
+        };
+        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
+        // Each of the 4 subsets of the outer conditions holds the inner allOf, which has 6 left: each alone, all, none
+        expect(all).toHaveLength(4 * (inner.length + 2));
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
+          expect.stringMatching(/An allOf has 7 conditions .* the 6 .*"required":\["if_i0"\]/),
+        );
+      });
+      it('keeps the Symbol keys of an entry holding nothing else beside its condition', () => {
+        const marker = Symbol('marker');
+        const entry = { ...oneSided('x', 'then'), [marker]: true } as RJSFSchema;
+        const schema: RJSFSchema = { type: 'object', allOf: [entry, oneSided('y', 'then')] };
+        const all = retrieveSchemaInternal({ validator: testValidator }, schema, schema, undefined, true);
+        expect(forms(all)).toEqual(['x', 'y', 'x+y', '-']);
+        expect(all.map((s) => (s as Record<symbol, unknown>)[marker])).toEqual([true, true, true, true]);
       });
     });
     describe('resolveReference() with customMergeAllOf', () => {

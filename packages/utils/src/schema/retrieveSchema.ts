@@ -105,34 +105,118 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
   return (schema ? {} : { not: {} }) as S;
 }
 
-/** The most one-sided conditions (an `if` with only one of `then` and `else`) one `allOf` may hold for every subset of
- * them to be expanded. There are `2 ** k` of those and each one resolves the schema afresh, so the count doubles with
- * every condition added
+/** The most one-sided conditions (an `if` with only one of `then` and `else`) whose subsets can all be expanded
+ * together. There are `2 ** k` of those and each one resolves the schema afresh, so the count doubles with every
+ * condition added. Nested `allOf`s share it: what an `allOf` spends, the schemas it resolves cannot
  */
 const MAX_COMBINED_ONE_SIDED_CONDITIONS = 8;
 
-/** Returns the one branch of a conditional schema that changes the schema when taken, if the other one leaves it as it
- * is (is missing or `true`): a `then` with no `else` (or with `else: true`), or an `else` with no `then`. A form renders
- * such a schema without the branch until the data selects it, so expanding all branches has to return both forms.
+/** What is left of `MAX_COMBINED_ONE_SIDED_CONDITIONS` for the resolution under way. Resolution is synchronous, so
+ * `withBudget()` lowers it for the schemas resolved inside a condition and restores it when they are done
+ */
+let oneSidedBudget = MAX_COMBINED_ONE_SIDED_CONDITIONS;
+
+/** Runs `resolve` with `spent` taken off the budget of one-sided conditions, restoring it afterwards
+ *
+ * @param spent - The conditions the caller expands, or `Infinity` to leave the schemas it resolves none
+ * @param resolve - The resolution to run
+ * @returns - What `resolve` returned
+ */
+function withBudget<R>(spent: number, resolve: () => R): R {
+  const budget = oneSidedBudget;
+  oneSidedBudget = Math.max(budget - spent, 0);
+  try {
+    return resolve();
+  } finally {
+    oneSidedBudget = budget;
+  }
+}
+
+/** Returns whether the schema holds a one-sided condition: an `if` whose `then` or `else`, but not both, leaves the
+ * schema as it is (is missing or `true`). A form renders such a schema without the other branch until the data selects
+ * it, so expanding all branches has to return both forms
  *
  * @param schema - A schema that may hold an `if`
- * @returns - The branch that changes the schema, or undefined when the schema is not a one-sided condition
+ * @returns - Whether the schema is a one-sided condition
  */
-function oneSidedBranch<S extends StrictRJSFSchema = RJSFSchema>(schema: S | boolean): S | undefined {
-  if (!isObject(schema) || !(IF_KEY in schema)) {
-    return undefined;
+function isOneSided<S extends StrictRJSFSchema = RJSFSchema>(schema: S | boolean): boolean {
+  return (
+    isObject(schema) &&
+    IF_KEY in schema &&
+    [schema.then, schema.else].filter((b) => b === undefined || b === true).length === 1
+  );
+}
+
+/** Resolves a conditional block (if/else/then) into the forms a form renders it in: the schema without the condition,
+ * merged with the branch the data selects. With `expandAllBranches` every branch is `applied`, a `false` one as
+ * `{ not: {} }`, and a one-sided condition also has the schema without its branch as its `unapplied` form, which is
+ * what a form renders until the data selects that branch. Every form is re-walked as a follow-up pass, as with
+ * `dependencies`, so refs that were already expanded keep their fixpoint depth and a $ref flagged as a cycle stays
+ * collapsed.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param schema - The schema for which resolving a condition is desired
+ * @param rootSchema - The root schema that will be forwarded to all the APIs
+ * @param expandAllBranches - Flag, if true, will return all possible branches
+ * @param recurseList - The list of refs already expanded on the current resolution path, used to detect cycles
+ * @param [formData] - The current formData to assist retrieving a schema
+ * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
+ * @param [passCount=0] - The pass of the `resolveReference` fixpoint loop this resolution belongs to
+ * @returns - The `applied` forms, and the `unapplied` ones of a one-sided condition when expanding all branches
+ */
+function conditionForms<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  context: SchemaContext<S, F>,
+  schema: S,
+  rootSchema: S,
+  expandAllBranches: boolean,
+  recurseList: string[],
+  formData?: T,
+  preserveDependencies = false,
+  passCount = 0,
+): { applied: S[]; unapplied?: S[] } {
+  const { if: expression, then, else: otherwise, ...rest } = schema;
+  // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
+  // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
+  const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
+  const walk = (s: S, path: string[], pass: number) =>
+    retrieveSchemaInternal<T, S, F>(
+      context,
+      s,
+      rootSchema,
+      formData,
+      expandAllBranches,
+      path,
+      undefined,
+      preserveDependencies,
+      pass,
+    );
+  const apply = (branch?: S | boolean) =>
+    (branch === undefined
+      ? [rest as S]
+      : walk(
+          normalizeBooleanSchema<S>(branch),
+          enclosingRefPath(schema, recurseList, passCount),
+          passCount > 0 ? 1 : 0,
+        ).map((s) => mergeSchemas(rest, s) as S)
+    ).flatMap((s) => walk(s, recurseList, passCount + 1));
+  if (!expandAllBranches) {
+    return { applied: apply((conditionValue ? then : otherwise) as S | boolean | undefined) };
   }
-  const { then, else: otherwise } = schema;
-  const isNoOp = (branch: unknown) => branch === undefined || branch === true;
-  if (isObject(then) && isNoOp(otherwise)) {
-    return then as S;
-  }
-  return isObject(otherwise) && isNoOp(then) ? (otherwise as S) : undefined;
+  const branches = [then, otherwise].filter((b) => b !== undefined && b !== true) as (S | boolean)[];
+  return {
+    applied: branches.length ? branches.flatMap(apply) : apply(),
+    unapplied: branches.length === 1 ? apply() : undefined,
+  };
 }
 
 /** Resolves a conditional block (if/else/then) by removing the condition and merging the appropriate conditional branch
  * with the rest of the schema. If `expandAllBranches` is true, then the `retrieveSchemaInteral()` results for both
- * conditions will be returned.
+ * conditions will be returned, a `false` branch as `{ not: {} }`, and for a condition with only one of them, also the
+ * schema without it, which is what a form renders until the data selects that branch.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param schema - The schema for which resolving a condition is desired
@@ -160,89 +244,20 @@ export function resolveCondition<
   preserveDependencies = false,
   passCount = 0,
 ): S[] {
-  const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
-
-  // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
-  // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
-  const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
-  let resolvedSchemas = [resolvedSchemaLessConditional as S];
-  let schemas: S[] = [];
-  if (expandAllBranches) {
-    if (then && typeof then !== 'boolean') {
-      const thenSchema = then as unknown as S;
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          thenSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
-    if (otherwise && typeof otherwise !== 'boolean') {
-      const otherwiseSchema = otherwise as unknown as S;
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          otherwiseSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
-  } else {
-    const conditionalBranch = (conditionValue ? then : otherwise) as S | boolean | undefined;
-    if (conditionalBranch !== undefined) {
-      const conditionalSchema = normalizeBooleanSchema<S>(conditionalBranch);
-      schemas = schemas.concat(
-        retrieveSchemaInternal<T, S, F>(
-          context,
-          conditionalSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          enclosingRefPath(schema, recurseList, passCount),
-          undefined,
-          preserveDependencies,
-          passCount > 0 ? 1 : 0,
-        ),
-      );
-    }
-  }
-  if (schemas.length) {
-    resolvedSchemas = schemas.map((s) => mergeSchemas(resolvedSchemaLessConditional, s) as S);
-    // Until the data selects the branch of a one-sided condition the form renders the schema without it, so that is
-    // one of its forms too. It is one extra form for this condition: `resolveSchema()` combines the one-sided
-    // conditions of an `allOf` itself rather than letting each one double the expansion
-    if (expandAllBranches && oneSidedBranch(schema)) {
-      resolvedSchemas.push(resolvedSchemaLessConditional as S);
-    }
-  }
-  // As with `dependencies`, the merged result is re-walked as a follow-up pass so refs that were already expanded
-  // keep their fixpoint depth and a $ref already flagged as a cycle stays collapsed.
-  return resolvedSchemas.flatMap((s) =>
-    retrieveSchemaInternal<T, S, F>(
+  // A one-sided condition doubles the forms of what it resolves, so it spends one from the budget of those schemas
+  const { applied, unapplied = [] } = withBudget(expandAllBranches && isOneSided(schema) ? 1 : 0, () =>
+    conditionForms<T, S, F>(
       context,
-      s,
+      schema,
       rootSchema,
-      formData,
       expandAllBranches,
       recurseList,
-      undefined,
+      formData,
       preserveDependencies,
-      passCount + 1,
+      passCount,
     ),
   );
+  return [...applied, ...unapplied];
 }
 
 /** Given a list of lists of allOf, anyOf or oneOf values, create a list of lists of all permutations of the values. The
@@ -493,19 +508,12 @@ export function resolveSchema<
     );
   }
   if (ALL_OF_KEY in schema && Array.isArray(schema[ALL_OF_KEY])) {
-    // When expanding all branches, the one-sided conditions of the `allOf` (an `if` with only one of `then` and `else`),
-    // counting the schema's own as an entry holding only it, merged first, expand as the subsets of them a form can
-    // render applied: a form leaves each one's branch unapplied until the data selects it. Expanding each condition into
-    // both of its forms would get those subsets too, but doubles the expansion for every condition with no limit, so the
-    // subsets are listed here once, under the same kind of cap as the subsets of `dependencies`: past it only each
-    // condition alone, all of them and none of them are expanded. Each condition is replaced by its branch, or dropped,
-    // so the resulting schemas do not expand the conditions again
-    const ownBranch = expandAllBranches ? oneSidedBranch(schema) : undefined;
+    const entries = schema.allOf as S[];
     const entryPath = enclosingRefPath(schema, recurseList, passCount);
-    const resolveEntry = (entry: S | boolean) =>
+    const resolveEntry = (entry: S) =>
       retrieveSchemaInternal<T, S, F>(
         context,
-        entry as S,
+        entry,
         rootSchema,
         formData,
         expandAllBranches,
@@ -514,46 +522,45 @@ export function resolveSchema<
         preserveDependencies,
         passCount > 0 ? 1 : 0,
       );
-    const entries = schema.allOf as (S | boolean)[];
-    // The resolved forms of each entry. A condition's `unapplied` forms are what is left of its entry without the
-    // branch; an entry that is not a one-sided condition has none
-    const lists = (ownBranch ? [{ [IF_KEY]: true, then: ownBranch } as unknown as S, ...entries] : entries).map(
-      (entry) => {
-        const branch = expandAllBranches ? oneSidedBranch(entry) : undefined;
-        if (!branch) {
-          return { applied: resolveEntry(entry) };
-        }
-        // An entry can hold more than its condition, which stays whether or not the branch is applied
-        const { if: _entryIf, then: _entryThen, else: _entryElse, ...rest } = entry as S;
-        const hasRest = Object.keys(rest).length > 0;
-        const unapplied = hasRest ? resolveEntry(rest as S) : [];
-        const applied = resolveEntry(branch).flatMap((b) =>
-          hasRest ? unapplied.map((r) => mergeSchemas(r, b) as S) : [b],
-        );
-        return { applied, unapplied };
-      },
-    );
-    const conditional = lists.flatMap((list, index) => (list.unapplied ? [index] : []));
-    const { if: _if, then: _then, else: _else, ...withoutOwnCondition } = schema;
-    const { allOf: _allOf, ...withoutAllOf } = (ownBranch ? withoutOwnCondition : schema) as S;
-    // With no condition to expand there is the one subset, none of them, and the entries are merged as they are
-    const base = (conditional.length ? withoutAllOf : schema) as S;
-    const subsets = combinationsUpTo(conditional, MAX_COMBINED_ONE_SIDED_CONDITIONS, () =>
+    const conditional = expandAllBranches ? entries.flatMap((entry, index) => (isOneSided(entry) ? [index] : [])) : [];
+    if (!conditional.length) {
+      return getAllPermutationsOfXxxOf<S>(entries.map(resolveEntry)).map((allOf) => ({ ...schema, allOf }));
+    }
+    // When expanding all branches, the one-sided conditions of the `allOf` expand as the subsets of them a form can
+    // render applied, rather than each doubling the expansion with no limit. The schema's own condition is resolved
+    // after the merge by `resolveCondition()`, as without them, doubling them once more, so it counts towards the limit
+    // too. Past the budget left, only each condition alone, all of them and none of them are expanded
+    const own = isOneSided(schema) ? 1 : 0;
+    let full = true;
+    const subsets = combinationsUpTo(conditional, oneSidedBudget - own, () => {
+      full = false;
       logOnce(
-        `An allOf has ${conditional.length} conditions with only one of \`then\` and \`else\`, more than the ${MAX_COMBINED_ONE_SIDED_CONDITIONS} whose subsets can all be expanded, so only each condition alone, all of them together and none of them were expanded. A form applies the subset whose \`if\` the data selects, so a form part-way between those has no compiled validator. Give the allOf fewer such conditions, or give them an \`else\`.`,
+        `An allOf has ${conditional.length + own} conditions with only one of \`then\` and \`else\`, more than the ${oneSidedBudget} whose subsets can all be expanded here, so only each alone, all and none of them were. A form part-way between those, as the data selects each \`if\`, has no compiled validator. Give the allOf fewer such conditions, or give them an \`else\`. Their \`if\`s are: ${JSON.stringify(conditional.map((index) => entries[index].if))}`,
         'warn',
+      );
+    });
+    subsets.push([]);
+    const lists = withBudget(full ? conditional.length + own : Infinity, () =>
+      entries.map((entry, index) =>
+        conditional.includes(index)
+          ? conditionForms<T, S, F>(
+              context,
+              entry,
+              rootSchema,
+              true,
+              entryPath,
+              formData,
+              preserveDependencies,
+              passCount > 0 ? 1 : 0,
+            )
+          : { applied: resolveEntry(entry) },
       ),
     );
-    subsets.push([]);
-    return subsets.flatMap((subset) => {
-      // An unapplied condition with nothing else in its entry leaves nothing to merge
-      const elements = lists.flatMap(({ applied, unapplied }, index) =>
-        !unapplied || subset.includes(index) ? [applied] : [unapplied].filter((list) => list.length),
-      );
-      return elements.length
-        ? getAllPermutationsOfXxxOf<S>(elements).map((permutation): S => ({ ...base, allOf: permutation }))
-        : [{ ...base }];
-    });
+    return subsets.flatMap((subset) =>
+      getAllPermutationsOfXxxOf<S>(
+        lists.map(({ applied, unapplied }, index) => (unapplied && !subset.includes(index) ? unapplied : applied)),
+      ).map((allOf) => ({ ...schema, allOf })),
+    );
   }
   // No $ref or dependencies or allOf attribute was found, returning the original schema.
   return [schema];

@@ -297,9 +297,58 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
       const options = CONDITIONAL_ONEOF_SCHEMA.oneOf as RJSFSchema[];
       const chosen = getClosestMatchingOption({ validator }, CONDITIONAL_ONEOF_SCHEMA, formData, options, 0);
       const retrieved = schemaUtils.retrieveSchema(options[chosen], formData);
-      // threw "No precompiled validator function was found for the given schema" while the `if` didn't hold
+      // the option the data selects has a compiled validator even when the `if` doesn't hold
       expect(validator.isValid(withVariantId(retrieved), formData, CONDITIONAL_ONEOF_SCHEMA)).toBe(true);
     });
+  });
+  describe.each([
+    [
+      'an own `then` merged over the rest before an `allOf`',
+      {
+        type: 'object',
+        properties: { a: { type: 'string', maxLength: 10, title: 'A' } },
+        if: { properties: { b: { const: 'x' } }, required: ['b'] },
+        then: { properties: { a: { maxLength: 20, title: 'A2' } } },
+        allOf: [{ properties: { b: { type: 'string' } } }],
+      },
+      [{}, { b: 'x' }, { b: 'q' }],
+    ],
+    [
+      'an `else: false`',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        if: { properties: { a: { const: 'x' } }, required: ['a'] },
+        then: { properties: { extra: { type: 'string' } } },
+        else: false,
+      },
+      [{ a: 'x' }, { a: 'q' }],
+    ],
+    [
+      'a `then: false` next to an `else`',
+      {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        if: { properties: { a: { const: 'x' } }, required: ['a'] },
+        then: false,
+        else: { properties: { other: { type: 'number' } } },
+      },
+      [{ a: 'x' }, { a: 'q' }],
+    ],
+  ] as [string, RJSFSchema, object[]][])('an option with %s', (_, option, formDatas) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [option, { type: 'object', properties: { z: { type: 'number' } }, required: ['z'] }],
+    };
+    it.each(formDatas.map((formData) => [formData]))(
+      'has a compiled validator for the form it retrieves for %s',
+      (formData) => {
+        const validator = buildPrecompiledValidator(schema);
+        const schemaUtils = createSchemaUtils({ validator }, schema);
+        const retrieved = schemaUtils.retrieveSchema(option, formData);
+        expect(() => validator.isValid(withVariantId(retrieved), formData, schema)).not.toThrow();
+      },
+    );
   });
   describe('a retrieved option validated as it stands', () => {
     /** The options carry an `$id`, which is what a validator keys the function it compiles by, so a retrieved option
