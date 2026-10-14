@@ -9,6 +9,22 @@ import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/
 
 const user = userEvent.setup();
 
+/** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
+ * there
+ */
+function expectReferencesResolve(container: HTMLElement) {
+  container.querySelectorAll('label[for]').forEach((label) => {
+    expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
+  });
+  container.querySelectorAll('[aria-labelledby], [aria-describedby]').forEach((element) => {
+    [element.getAttribute('aria-labelledby'), element.getAttribute('aria-describedby')]
+      .join(' ')
+      .split(/\s+/)
+      .filter(Boolean)
+      .forEach((referencedId) => expect(container.querySelector(`[id="${referencedId}"]`)).toBeInTheDocument());
+  });
+}
+
 formTests(Form);
 themeTests({ generateTemplates, generateTheme, generateWidgets });
 
@@ -410,5 +426,100 @@ describe('antd specific tests', () => {
 
     expect(screen.getAllByText('Bee')).toHaveLength(1);
     expect(screen.getByRole('checkbox')).toHaveAccessibleName('Bee');
+  });
+});
+
+describe("antd widgets carry their field's plan on the element a user focuses", () => {
+  test.each([
+    ['text', { type: 'string' }, {}],
+    ['number', { type: 'number' }, {}],
+    ['password', { type: 'string' }, { 'ui:widget': 'password' }],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }],
+    ['date', { type: 'string', format: 'date' }, {}],
+    ['checkbox', { type: 'boolean' }, {}],
+  ] as const)('a %s control is invalid and described only by elements that render', (_, schema, uiSchema) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { pet: { ...schema, title: 'Pet' } } }}
+        uiSchema={{ pet: uiSchema }}
+        extraErrors={{ pet: { __errors: ['too short'] } }}
+        validator={validator}
+      />,
+    );
+
+    const control = container.querySelector('#root_pet');
+    expect(control).toHaveAttribute('aria-invalid', 'true');
+    expect(control).toHaveAttribute('aria-describedby', 'root_pet__error');
+    expect(control).toHaveAccessibleDescription('too short');
+    expectReferencesResolve(container);
+  });
+
+  const colors: RJSFSchema = { type: 'string', title: 'Color', enum: ['red', 'blue'] };
+  // ARIA supports `aria-invalid` on a `radiogroup` but not on a `group`, so a radio group carries it in place of its
+  // radios while each checkbox carries its own
+  test.each([
+    ['radio', colors, 'radiogroup', 'radio', true],
+    ['checkboxes', { type: 'array', title: 'Color', items: colors, uniqueItems: true }, 'group', 'checkbox', false],
+  ] as const)(
+    "names a %s group by its label, marks the group or each option invalid, and describes each option by the field's errors",
+    (widget, color, role, item, invalidGroup) => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { color } }}
+          uiSchema={{ color: { 'ui:widget': widget } }}
+          extraErrors={{ color: { __errors: ['pick one'] } }}
+          validator={validator}
+        />,
+      );
+
+      expect(container.querySelector('#root_color')).toHaveRole(role);
+      expect(container.querySelector('#root_color')).toHaveAccessibleName('Color');
+      if (invalidGroup) {
+        expect(container.querySelector('#root_color')).toHaveAttribute('aria-invalid', 'true');
+      } else {
+        expect(container.querySelector('#root_color')).not.toHaveAttribute('aria-invalid');
+      }
+      for (const option of screen.getAllByRole(item)) {
+        if (invalidGroup) {
+          expect(option).not.toHaveAttribute('aria-invalid');
+        } else {
+          expect(option).toHaveAttribute('aria-invalid', 'true');
+        }
+        expect(option).toHaveAccessibleDescription('pick one');
+      }
+      expectReferencesResolve(container);
+    },
+  );
+
+  test("names a required range's slider by its label, which the label's for can't reach, and marks it required", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          required: ['volume'],
+          properties: { volume: { type: 'integer', title: 'Volume', minimum: 0, maximum: 10 } },
+        }}
+        uiSchema={{ volume: { 'ui:widget': 'range' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
+    expect(screen.getByRole('slider')).toHaveAttribute('aria-required', 'true');
+  });
+
+  test("names a range's slider by the text of the label ui:label: false hides", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { volume: { type: 'integer', title: 'Volume', minimum: 0, maximum: 10 } },
+        }}
+        uiSchema={{ volume: { 'ui:widget': 'range', 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
   });
 });

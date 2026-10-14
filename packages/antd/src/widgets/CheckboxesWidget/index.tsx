@@ -1,10 +1,10 @@
 import type { FormContextType, WidgetProps, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
   useOptionFocusHandlers,
@@ -32,6 +32,7 @@ export default function CheckboxesWidget<
   options,
   readonly,
   value,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
@@ -51,6 +52,10 @@ export default function CheckboxesWidget<
   const extraProps = { id };
 
   const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'group',
+  );
 
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <Checkbox.Group
@@ -58,7 +63,7 @@ export default function CheckboxesWidget<
       onChange={!readonly ? handleChange : undefined}
       value={selectValue}
       {...extraProps}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...groupAttributes}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (
@@ -74,6 +79,7 @@ export default function CheckboxesWidget<
               value={domValues[i]}
               onBlur={!readonly ? blurHandlers[i] : undefined}
               onFocus={!readonly ? focusHandlers[i] : undefined}
+              {...optionAttributes}
             >
               {option.label}
             </Checkbox>
