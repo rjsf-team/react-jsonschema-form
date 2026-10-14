@@ -280,6 +280,56 @@ function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectT
   return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
 }
 
+/** Collects every `$ref` a schema fragment declares, skipping references already on the resolution path or
+ * already collected. Used to know which references resolving a `dependencies` entry crossed, without a deep diff of
+ * the merged schema.
+ *
+ * @param node - The fragment to walk
+ * @param skip - The references already on the resolution path, which will not resolve again
+ * @param acc - The collected references, in walk order
+ */
+function collectDeclaredRefs(node: unknown, skip: string[], acc: string[]): void {
+  if (Array.isArray(node)) {
+    node.forEach((item) => collectDeclaredRefs(item, skip, acc));
+    return;
+  }
+  if (!isObject(node)) {
+    return;
+  }
+  for (const [key, value] of Object.entries(node)) {
+    if (key === REF_KEY && typeof value === 'string') {
+      if (!skip.includes(value) && !acc.includes(value)) {
+        acc.push(value);
+      }
+    } else {
+      collectDeclaredRefs(value, skip, acc);
+    }
+  }
+}
+
+/** Collects every reference the nodes of a schema fragment were resolved from. Used to know which references a
+ * merge resolved, without a deep diff of the merged schema.
+ *
+ * @param node - The fragment to walk
+ * @param acc - The collected references
+ * @param seen - The nodes already walked, so shared subtrees are walked once
+ */
+function collectResolvedRefs(node: unknown, acc: Set<string>, seen = new Set<object>()): void {
+  if (Array.isArray(node)) {
+    node.forEach((item) => collectResolvedRefs(item, acc, seen));
+    return;
+  }
+  if (!isObject(node) || seen.has(node)) {
+    return;
+  }
+  seen.add(node);
+  const marker = resolvedFromRef(node as StrictRJSFSchema);
+  if (marker !== undefined) {
+    acc.add(marker);
+  }
+  Object.values(node).forEach((value) => collectResolvedRefs(value, acc, seen));
+}
+
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
  * each level of the schema, recursively, to fill out every level of defaults provided by the schema.
  *
@@ -321,18 +371,14 @@ export function computeDefaults<
   let schemaToCompute: S | null = null;
   let resolvedHere = false;
   let contextToCompute = context;
-  // Seed the path with the reference this schema was itself resolved from, so a `$ref` back to it met through a
-  // branch that re-resolves it (a `dependencies` entry, a retrieved merge) reads as the recursion. The reference
-  // does not flow into the schema's own content: the type-based call below starts from the caller's list, and a
-  // `$ref` joins the path at the point a branch crosses into what it names (the `$ref` branch, a `oneOf`/`anyOf`
-  // option, an `allOf` merge). Branches that stood beside the `$ref` re-derive their own path with the keyword they
-  // are entered through, since a `$ref` back to the same definition from one of those is a second use, not a
-  // recursion.
-  let updatedRecurseList = enclosingRefPath<S>(schema, _recurseList); // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
+  // The path the type-based recursion below carries. Every branch that resolves or merges subschemas overrides
+  // this with the path its resolution crosses; when no branch runs there is no other schema to recurse into.
+  let updatedRecurseList = _recurseList;
+  // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
-  let branchUiSchema = uiSchema;
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
+  let branchUiSchema = uiSchema;
   let isWholeValue: boolean | undefined;
   const xxxOf = getXxxOfOptions<S>(schema);
   if (
@@ -388,10 +434,11 @@ export function computeDefaults<
         : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
-    // The dependencies a definition resolves are part of its own content, so the reference it was resolved from
-    // stays on the path the resolution and the recursion carry: two definitions whose dependencies point at each
-    // other meet the ref already on the path and stop, instead of resolving one another forever.
-    const dependencyPath = enclosingRefPath<S>(schema, _recurseList, DEPENDENCIES_KEY);
+    // A definition's dependencies are its own content, so its entries resolve against the caller's path as it
+    // came in: the reference this schema was itself resolved from joins that path only when the schema is met
+    // again below, so a `$ref` back to it from inside an entry is the first recursion into the definition, the way
+    // one through a plain property is, not a cycle.
+    const dependencyPath = _recurseList;
     const resolvedSchema = resolveDependencies<T, S, F>(
       context,
       schema,
@@ -401,17 +448,36 @@ export function computeDefaults<
       defaultFormData,
     );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
-    // A dependency that applied nothing leaves the node's own content as it was, so the recursion carries the
-    // caller's path unchanged; only a dependency that merged new content (which may resolve through a `$ref`) keeps
-    // the seeded path, so two definitions whose dependencies point at each other still stop.
-    const { [DEPENDENCIES_KEY]: _dependencies, ...schemaWithoutDependencies } = schema;
-    const dependenciesMerged = !deepEquals(schemaToCompute, schemaWithoutDependencies);
-    // The merge may itself be the resolution of a `$ref` the entry held, the way the `allOf` merge below resolves
-    // one among its subschemas: the ref it expanded joins the path, so a `$ref` back to it further down stops there
-    updatedRecurseList = dependenciesMerged ? enclosingRefPath<S>(schemaToCompute, dependencyPath) : _recurseList;
-    // A dependency that merged new content may have resolved a `$ref` doing so, the way this level's own retrieve
-    // does, so the recursion treats what it materialized as crossed here
-    resolvedHere = resolvedHere || dependenciesMerged;
+    // Work out exactly which entries applied and which references resolving them crossed, rather than diffing the
+    // merged schema: an array-form entry or a `oneOf` beside an unmet dependency applies nothing, and a deep-equal
+    // pass per level is a cost large schemas pay on every keystroke. An entry applies the way
+    // `processDependencies()` decides: its key has a value in the form data (the defaults the schema fills in
+    // count) and names one of the schema's properties.
+    const crossedRefs: string[] = [];
+    const dependencyEntries = schema[DEPENDENCIES_KEY] as Record<string, unknown>;
+    for (const key in dependencyEntries) {
+      if (
+        isObject(dependencyEntries[key]) &&
+        getByPath(defaultFormData, key) !== undefined &&
+        (!schema.properties || key in schema.properties)
+      ) {
+        collectDeclaredRefs(dependencyEntries[key], dependencyPath, crossedRefs);
+      }
+    }
+    if (crossedRefs.length > 0) {
+      // The references the applied entries resolved join the path the merged content is computed with, so a `$ref`
+      // back to one of them below stops there, the way the `allOf` merge below keeps the reference it expanded.
+      updatedRecurseList = Array.from(
+        new Set([...enclosingRefPath<S>(schema, _recurseList, DEPENDENCIES_KEY), ...crossedRefs]),
+      );
+      // The merge materialized those references here, so the properties it added are met with the path they were
+      // resolved against; properties the schema arrived with keep the caller's path, as `getObjectDefaults()` works
+      // out from `_resolvedHere`.
+      resolvedHere = true;
+    } else {
+      // No applied entry resolved a new reference, so the recursion carries the caller's path unchanged.
+      updatedRecurseList = _recurseList;
+    }
   } else if (isFixedItems(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
@@ -528,7 +594,15 @@ export function computeDefaults<
     // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
     // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at.
     updatedRecurseList = enclosingRefPath<S>(schemaToCompute, pathWithOwnRef);
-    resolvedHere = true;
+    // Only when the merge actually resolved a reference did this level cross into what it names, worked out the way
+    // `getObjectDefaults()` works its retrieve out. The reference can be anywhere in the merged schema, not only at
+    // its top, the way an `allOf` holding array `items` resolves the `items` rather than the array. An `allOf`
+    // that merged no reference leaves the depth of the items below as the caller's path has it.
+    const refsBefore = new Set<string>();
+    collectResolvedRefs(schema, refsBefore);
+    const refsAfter = new Set<string>();
+    collectResolvedRefs(schemaToCompute, refsAfter);
+    resolvedHere = [...refsAfter].some((ref) => !refsBefore.has(ref));
   }
 
   if (schemaToCompute) {

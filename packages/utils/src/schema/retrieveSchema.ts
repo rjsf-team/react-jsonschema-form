@@ -1992,7 +1992,12 @@ export function withDependentSchema<
   formData?: T,
   passCount = 0,
 ): S[] {
-  const dependencyPath = enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY);
+  // On a follow-up pass of the `resolveReference()` fixpoint the schema was materialized from its reference by an
+  // earlier pass of this resolution, so the reference goes back on the path and a `$ref` back to it from an entry
+  // stays collapsed, the way the re-walk keeps every other materialized ref at its fixpoint depth. On the first
+  // pass the schema came from the caller, whose path already carries what should stop: the reference the schema
+  // was itself resolved from stays off, and a `$ref` back to it from an entry is a first recursion, not a cycle.
+  const dependencyPath = passCount > 0 ? enclosingRefPath<S>(schema, recurseList, DEPENDENCIES_KEY) : recurseList;
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
     context,
     dependencyValue,
