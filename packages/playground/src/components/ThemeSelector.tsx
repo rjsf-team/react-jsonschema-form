@@ -1,6 +1,6 @@
 import type { SyntheticEvent } from 'react';
 import { useCallback } from 'react';
-import type { IChangeEvent } from '@rjsf/core';
+import type { IChangeEvent, ThemeProps } from '@rjsf/core';
 import Form from '@rjsf/core';
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
@@ -8,7 +8,7 @@ import localValidator from '@rjsf/validator-ajv8';
 import type { SubthemesType } from './SubthemeSelector.tsx';
 
 export interface ThemesType {
-  theme: any;
+  theme: ThemeProps;
   stylesheet: string;
   subthemes?: SubthemesType;
 }
