@@ -6,7 +6,7 @@ import {
   enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
-  getControlAttributes,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
   useOptionFocusHandlers,
@@ -41,13 +41,9 @@ function CheckboxesWidget<
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
-  // A label's `for` can't name a group, so the group is labelled by reference, and each input described and invalid
-  const { 'aria-labelledby': groupLabelledBy, ...inputAttributes } = getControlAttributes<T, S, F>({
-    id,
-    presentation,
-  });
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>({ id, presentation });
   return (
-    <div className='checkboxes' id={id} role='group' aria-labelledby={groupLabelledBy}>
+    <div className='checkboxes' id={id} role='group' {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
@@ -75,7 +71,7 @@ function CheckboxesWidget<
                 onChange={handleChange}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}
-                {...inputAttributes}
+                {...optionAttributes}
               />
               <span>{option.label}</span>
             </span>
