@@ -158,12 +158,13 @@ describe('parent harnesses', () => {
     await waitFor(() => expect(committed.at(-1)).toEqual({ name: 'x', other: null }));
   });
 
-  it('sibling null fields both reach the parent when they fill themselves in on mount', async () => {
-    // Each `NullField` sets `null` from a mount Effect, before the parent has rendered the other's edit
+  it('sibling null fields are both filled in on mount, as defaults are, without an onChange', async () => {
     const log = createParentLog<{ a?: null; b?: null }>();
+    const ref = createFormRef<{ a?: null; b?: null }>();
     await act(async () => {
       render(
         <AcceptingParent<{ a?: null; b?: null }>
+          ref={ref}
           schema={{ type: 'object', properties: { a: { type: 'null' }, b: { type: 'null' } } }}
           initialValue={{}}
           log={log}
@@ -171,7 +172,8 @@ describe('parent harnesses', () => {
       );
     });
 
-    expect(log.value).toEqual({ a: null, b: null });
+    expect(handleOf(ref).getFormData()).toEqual({ a: null, b: null });
+    expect(log.reported).toEqual([]);
   });
 
   it('an edit a field makes as it unmounts and one a field makes as it mounts both reach the parent', async () => {

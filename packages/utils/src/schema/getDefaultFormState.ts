@@ -182,7 +182,7 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
 function maybeAddDefaultToObject<T = unknown>(
   acc: GenericObjectType,
   key: string,
-  computedDefault: T | T[] | undefined,
+  computedDefault: T | T[] | null | undefined,
   includeUndefinedValues: boolean | 'excludeObjectChildren',
   isParentRequired?: boolean,
   requiredFields: string[] = [],
@@ -250,6 +250,10 @@ interface ComputeDefaultsProps<
 > extends Omit<GetDefaultFormStateProps<T, S, F>, 'schema' | 'formData'> {
   /** Any defaults provided by the parent field in the schema */
   parentDefaults?: T;
+  /** Whether the schema is the `anyOf`/`oneOf` option a field renders, whose `null` option renders no field and so is
+   * left without a value
+   */
+  isRenderedOption?: boolean;
   /** The current formData, if any, onto which to provide any missing defaults */
   rawFormData?: T;
   /** The list of ref names currently being recursed, used to prevent infinite recursion */
@@ -288,7 +292,11 @@ export function computeDefaults<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rawSchema: S, inputProps: ComputeDefaultsProps<T, S, F> = {}): T | T[] | undefined {
+>(
+  context: SchemaContext<S, F>,
+  rawSchema: S,
+  inputProps: ComputeDefaultsProps<T, S, F> = {},
+): T | T[] | null | undefined {
   const { defaultFormStateBehavior } = context;
   const {
     parentDefaults,
@@ -301,6 +309,7 @@ export function computeDefaults<
     initialDefaultsGenerated,
     uiSchema: localUiSchema,
     uiSchemaDefinitions,
+    isRenderedOption = false,
   } = inputProps;
   // Apply `ui:definitions` at every node, keyed by the `$ref` `retrieveSchema()` recorded when it resolved this
   // node, so defaults see the same uiSchema `SchemaField` renders with.
@@ -321,6 +330,8 @@ export function computeDefaults<
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
   let branchUiSchema = uiSchema;
+  // Whether `schemaToCompute` is the option a field renders, or the schema a rendered option's `$ref` names
+  let computesRenderedOption = isRenderedOption && REF_KEY in schema;
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
   let isWholeValue: boolean | undefined;
   const xxxOf = getXxxOfOptions<S>(schema);
@@ -479,6 +490,7 @@ export function computeDefaults<
         schemaToCompute = withDefaultOf(remaining, renderedOption) as S;
       }
       branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, optionIndex);
+      computesRenderedOption = true;
     }
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
@@ -507,6 +519,7 @@ export function computeDefaults<
 
   if (schemaToCompute) {
     return computeDefaults<T, S, F>(contextToCompute, schemaToCompute, {
+      isRenderedOption: computesRenderedOption,
       rootSchema,
       includeUndefinedValues,
       _recurseList: updatedRecurseList,
@@ -546,7 +559,11 @@ export function computeDefaults<
     isWholeValue,
   );
 
-  let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
+  let defaultsWithFormData: T | T[] | null | undefined = defaultBasedOnSchemaType ?? defaults;
+  // A `null` schema allows one value, so a missing one is that value, except for an option, whose field renders nothing
+  if (defaultsWithFormData === undefined && !isRenderedOption && getSchemaType<S>(schema) === 'null') {
+    defaultsWithFormData = null;
+  }
   // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
   if (shouldMergeDefaultsIntoFormData) {
     const { arrayMinItems = {} } = defaultFormStateBehavior ?? {};
@@ -1080,7 +1097,7 @@ export default function getDefaultFormState<
     const { mergeDefaultsIntoFormData } = context.defaultFormStateBehavior ?? {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
     const matchingFormData = ensureFormDataMatchingSchema<T, S, F>(context, schema, rootSchema ?? schema, formData);
-    const result = mergeDefaultsWithFormData<T | T[]>(
+    const result = mergeDefaultsWithFormData<T | T[] | null>(
       defaults,
       matchingFormData,
       true, // set to true to add any additional default array entries.

@@ -1764,13 +1764,15 @@ describe('a throwing callback a field reports from an Effect', () => {
     throw new Error('boom');
   };
 
-  it("a NullField's mount change keeps the form mounted", async () => {
+  it('fills a null property in on mount without calling onChange, so a throwing one is never reached', async () => {
     const onChange = vi.fn(boom);
+    const ref = createFormRef();
 
     const rethrown = await rethrownFromTimers(async () => {
       render(
         <Boundary>
           <Form
+            ref={ref}
             schema={{ type: 'object', properties: { n: { type: 'null' } } }}
             validator={validator}
             onChange={onChange}
@@ -1779,9 +1781,9 @@ describe('a throwing callback a field reports from an Effect', () => {
       );
     });
 
-    expect(rethrown).toEqual([new Error('boom')]);
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(screen.queryByText('Fallback')).toBeNull();
+    expect(handleOf(ref).getFormData()).toEqual({ n: null });
+    expect(rethrown).toEqual([]);
+    expect(onChange).not.toHaveBeenCalled();
     expect(document.querySelector('form')).toBeInTheDocument();
   });
 

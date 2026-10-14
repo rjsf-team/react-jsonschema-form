@@ -475,7 +475,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           required: ['requiredProperty'],
         };
         const includeUndefinedValues = 'excludeObjectChildren';
+        // A `null` schema allows one value, so a missing one is that value
         const expected = {
+          optionalNullProperty: null,
           requiredProperty: 'foo',
         };
 
