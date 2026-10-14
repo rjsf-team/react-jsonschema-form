@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { REF_SIBLING_BRANCHES, replaceEqualDeep, RJSF_REF_KEY } from '../src/index.ts';
+import { RJSF_REF_SIBLING_BRANCHES_KEY, replaceEqualDeep, RJSF_REF_KEY } from '../src/index.ts';
 import { enclosingRefPath, mergeBranch, refSiblingBranches, resolvedFromRef, resolvedSchemaOf } from '../src/refOf.ts';
 
 describe('resolvedSchemaOf()', () => {
@@ -12,7 +12,7 @@ describe('resolvedSchemaOf()', () => {
     const fromDefinition = resolvedSchemaOf('#/definitions/B', earlier, {});
     const fromSiblings = resolvedSchemaOf('#/definitions/B', {}, earlier);
 
-    expect(REF_SIBLING_BRANCHES in fromDefinition).toBe(false);
+    expect(RJSF_REF_SIBLING_BRANCHES_KEY in fromDefinition).toBe(false);
     expect(refSiblingBranches(fromDefinition)).toBeUndefined();
     expect(enclosingRefPath(fromDefinition, [], 'allOf')).toEqual(['#/definitions/B']);
     expect(refSiblingBranches(fromSiblings)).toEqual(['allOf']);
@@ -63,7 +63,7 @@ describe('refSiblingBranches()', () => {
     ['a boolean schema', true],
     ['no schema', undefined],
     ['null', null],
-    ['a marker that is not a list', { [REF_SIBLING_BRANCHES]: 'allOf' }],
+    ['a marker that is not a list', { [RJSF_REF_SIBLING_BRANCHES_KEY]: 'allOf' }],
   ])('returns undefined for %s', (_, schema) => {
     expect(refSiblingBranches(schema)).toBeUndefined();
   });

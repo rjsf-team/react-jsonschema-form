@@ -3,7 +3,7 @@ import {
   DEPENDENCIES_KEY,
   ELSE_KEY,
   REF_KEY,
-  REF_SIBLING_BRANCHES,
+  RJSF_REF_SIBLING_BRANCHES_KEY,
   RJSF_REF_KEY,
   THEN_KEY,
 } from './constants.ts';
@@ -68,7 +68,7 @@ export function resolvedSchemaOf<S extends StrictRJSFSchema = RJSFSchema>(
 ): S {
   const resolved = { ...definition, ...siblings, [RJSF_REF_KEY]: ref };
   // A list the definition or the siblings carry from an earlier resolution is not this reference's
-  setOrDelete(resolved, REF_SIBLING_BRANCHES, siblingBranchList(siblings));
+  setOrDelete(resolved, RJSF_REF_SIBLING_BRANCHES_KEY, siblingBranchList(siblings));
   return resolved;
 }
 
@@ -95,7 +95,7 @@ export function mergeBranch<S extends StrictRJSFSchema = RJSFSchema>(schema: S, 
   const ownRef = resolvedFromRef<S>(schema);
   if (ownRef !== undefined) {
     Reflect.set(merged, RJSF_REF_KEY, ownRef);
-    setOrDelete(merged, REF_SIBLING_BRANCHES, refSiblingBranches(schema));
+    setOrDelete(merged, RJSF_REF_SIBLING_BRANCHES_KEY, refSiblingBranches(schema));
   }
   return merged;
 }
@@ -107,10 +107,10 @@ export function mergeBranch<S extends StrictRJSFSchema = RJSFSchema>(schema: S, 
  * @returns - The branch keywords from beside the `$ref`, or undefined when there were none
  */
 export function refSiblingBranches(schema: unknown): unknown[] | undefined {
-  if (typeof schema !== 'object' || schema === null || !(REF_SIBLING_BRANCHES in schema)) {
+  if (typeof schema !== 'object' || schema === null || !(RJSF_REF_SIBLING_BRANCHES_KEY in schema)) {
     return undefined;
   }
-  const siblingBranches = schema[REF_SIBLING_BRANCHES];
+  const siblingBranches = schema[RJSF_REF_SIBLING_BRANCHES_KEY];
   return Array.isArray(siblingBranches) ? siblingBranches : undefined;
 }
 

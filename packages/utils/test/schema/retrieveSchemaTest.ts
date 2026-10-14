@@ -9,7 +9,7 @@ import {
   isObject,
   PROPERTIES_KEY,
   retrieveSchema,
-  REF_SIBLING_BRANCHES,
+  RJSF_REF_SIBLING_BRANCHES_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   noop,
@@ -4526,7 +4526,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           },
           allOf: undefined,
           [RJSF_REF_KEY]: '#/definitions/baseSchema',
-          [REF_SIBLING_BRANCHES]: ['dependencies'],
+          [RJSF_REF_SIBLING_BRANCHES_KEY]: ['dependencies'],
         });
       });
       it('should handle customMergeAllOf with nested $ref resolution', () => {
@@ -4608,7 +4608,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             base: { type: 'string' },
           },
           [RJSF_REF_KEY]: '#/definitions/testRef',
-          [REF_SIBLING_BRANCHES]: ['dependencies'],
+          [RJSF_REF_SIBLING_BRANCHES_KEY]: ['dependencies'],
         });
       });
       it('should handle customMergeAllOf that throws an error', () => {
