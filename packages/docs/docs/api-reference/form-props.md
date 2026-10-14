@@ -217,6 +217,7 @@ This is specific to `allOf`: an `if-then-else` placed directly in a nested objec
 For example, under `skipDefaults`, `items: { type: 'object', if, then }` fills in the `then` default, while `items: { type: 'object', allOf: [{ if, then }] }` does not, unless the same `items` schema also has a direct `if`, which also resolves its whole `allOf` unless `emptyObjectFields` is `skipEmptyDefaults`.
 With an `experimental_customMergeAllOf` built on a deep merger, such as `createDeepAllOfMerge` from `@x0k/json-schema-merge`, merging a root-level `allOf` also turns a property's `allOf: [{ if, then }]` into a direct `if-then-else`, so that property's `then` default is filled in under `skipDefaults` as long as the root has an `allOf`, unless `emptyObjectFields` is `skipEmptyDefaults`.
 Some actions compute defaults from a subschema as if it were the root, such as adding an array item or optional data, or switching a `oneOf` or `anyOf` option, so that subschema's own `allOf` provides its defaults with either value.
+The option picked on the initial render is not computed as if it were the root, even when its `oneOf` or `anyOf` is in the root schema, so under `skipDefaults` its `allOf` is left out until the user switches away from that option and back.
 
 ```tsx
 import { Form } from '@rjsf/core';

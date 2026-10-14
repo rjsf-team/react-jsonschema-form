@@ -5909,6 +5909,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animal: 'Cat', food: 'meat' });
         });
 
+        it('should skip the allOf of the oneOf option picked on the initial render, even in the root schema', () => {
+          const rootOneOfSchema: RJSFSchema = { oneOf: [{ type: 'object', ...animalInfoSchema }] };
+          expect(
+            getDefaultFormState(testValidator, rootOneOfSchema, undefined, rootOneOfSchema, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ animal: 'Cat' });
+        });
+
         it('should pick the if-then-else branch from the form data, so a then default whose if requires a defaulted value is left out', () => {
           // The mock validator cannot evaluate `required`, so it returns what the real validators do here; the claim
           // itself is only exercised by the ajv8, ata and cfworker runs of this test.
