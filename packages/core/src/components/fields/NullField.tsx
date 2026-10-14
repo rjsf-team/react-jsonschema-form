@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import type { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, titleId } from '@rjsf/utils';
+import { getTemplates, getUiOptions } from '@rjsf/utils';
 
 /** The `NullField` component is used to render a field in the schema is null. It also ensures that the `formData` is
  * also set to null if it has no value. It has no control for a label to name, so it draws its own title and
@@ -11,7 +11,7 @@ import { getTemplates, getUiOptions, titleId } from '@rjsf/utils';
 function NullField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
-  const { id, formData, onChange, fieldPath, schema, uiSchema, registry, required, presentation } = props;
+  const { formData, onChange, fieldPath, schema, uiSchema, registry, required, presentation } = props;
   useEffect(() => {
     if (formData === undefined) {
       onChange(null as unknown as T, fieldPath);
@@ -32,7 +32,7 @@ function NullField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exten
     <>
       {drawsLabel && (
         <TitleFieldTemplate
-          id={titleId(id)}
+          id={label.id}
           title={label.text}
           required={required}
           schema={schema}

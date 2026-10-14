@@ -495,7 +495,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                               class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                                                                             >
                                                                               <input
-                                                                                aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                                                 class="ant-checkbox-input"
                                                                                 id="root_tasks_0_done"
                                                                                 name="root[tasks][0][done]"
@@ -766,7 +765,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                               class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0 ant-checkbox-checked"
                                                                             >
                                                                               <input
-                                                                                aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                                                 checked=""
                                                                                 class="ant-checkbox-input"
                                                                                 id="root_tasks_1_done"
@@ -2547,7 +2545,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                                       class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                                     >
                                       <input
-                                        aria-describedby="root_active__error root_active__description root_active__help"
                                         class="ant-checkbox-input"
                                         id="root_active"
                                         name="root[active]"
@@ -2917,7 +2914,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                               class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                                                                             >
                                                                               <input
-                                                                                aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
                                                                                 class="ant-checkbox-input"
                                                                                 id="root_tasks_0_done"
                                                                                 name="root.tasks.0.done"
@@ -3188,7 +3184,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                               class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0 ant-checkbox-checked"
                                                                             >
                                                                               <input
-                                                                                aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
                                                                                 checked=""
                                                                                 class="ant-checkbox-input"
                                                                                 id="root_tasks_1_done"
@@ -4663,7 +4658,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                                       class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                                     >
                                       <input
-                                        aria-describedby="root_active__error root_active__description root_active__help"
                                         class="ant-checkbox-input"
                                         id="root_active"
                                         name="root.active"
@@ -5745,7 +5739,6 @@ exports[`single fields > checkbox field 1`] = `
                     class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
                       class="ant-checkbox-input"
                       id="root"
                       name="root"
@@ -5801,7 +5794,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
                     class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
+                      aria-describedby="root__description"
                       class="ant-checkbox-input"
                       id="root"
                       name="root"
@@ -5875,7 +5868,6 @@ exports[`single fields > checkbox field with label 1`] = `
                     class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
                       class="ant-checkbox-input"
                       id="root"
                       name="root"
@@ -5936,7 +5928,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
                     class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
+                      aria-describedby="root__description"
                       class="ant-checkbox-input"
                       id="root"
                       name="root"
@@ -6010,7 +6002,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
                     class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
+                      aria-describedby="root__description"
                       class="ant-checkbox-input"
                       id="root"
                       name="root"
@@ -15267,7 +15259,6 @@ exports[`single fields > required checkbox field 1`] = `
                                       class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                                     >
                                       <input
-                                        aria-describedby="root_agree__error root_agree__description root_agree__help"
                                         class="ant-checkbox-input"
                                         id="root_agree"
                                         name="root_agree"
@@ -15366,7 +15357,6 @@ exports[`single fields > required checkbox field, default true 1`] = `
                                       class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0 ant-checkbox-checked"
                                     >
                                       <input
-                                        aria-describedby="root_agree__error root_agree__description root_agree__help"
                                         checked=""
                                         class="ant-checkbox-input"
                                         id="root_agree"

@@ -21,6 +21,7 @@ export default function ObjectFieldTemplate<
     disabled,
     readonly,
     uiSchema,
+    presentation,
     id,
     schema,
     formData,
@@ -50,7 +51,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
+          id={presentation?.description.id ?? descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}

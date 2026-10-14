@@ -943,7 +943,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                       class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0 ant-checkbox-checked"
                                     >
                                       <input
-                                        aria-describedby="root_active__error root_active__description root_active__help"
                                         checked=""
                                         class="ant-checkbox-input"
                                         id="root_active"
