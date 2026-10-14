@@ -115,13 +115,15 @@ export interface Experimental_DefaultFormStateBehavior {
    * picked from `formData`, not from the computed defaults, so when the `if` lists in `required` a property that only a
    * default provides, the `then` default is left out until `formData` holds that value. Without `required`, such an
    * `if` passes with no `formData`, so its `then` default is filled in even when the `if` does not match the defaulted
-   * value. Only an `if-then-else` wrapped in a nested `allOf` is skipped: one placed directly in a nested object schema
-   * is resolved, along with any `allOf` next to it, unless `emptyObjectFields` is `skipEmptyDefaults`. With one `allOf`
-   * entry per `enum` value, the default `allOf` merger merges the `then` defaults of all the entries, and the first
-   * entry that defaults a property wins, while an `experimental_customMergeAllOf` that throws on the conflicting
-   * `default`s drops the whole `allOf`. An `experimental_customMergeAllOf` built on a deep merger also turns a
-   * property's `allOf: [{ if, then }]` into a direct `if-then-else` when it merges a root-level `allOf`, so that
-   * property's `then` default is filled in under `skipDefaults` too.
+   * value. A nested `allOf` is skipped as a whole, plain property defaults included, while an `if-then-else` placed
+   * directly in a nested object schema is resolved, along with any `allOf` next to it, unless `emptyObjectFields` is
+   * `skipEmptyDefaults`. With one `allOf` entry per `enum` value and no `formData`, the default `allOf` merger merges
+   * the `then` defaults of all the entries, and the first entry that defaults a property wins, while an
+   * `experimental_customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf`. An
+   * `experimental_customMergeAllOf` built on a deep merger also turns a property's `allOf: [{ if, then }]` into a
+   * direct `if-then-else` when it merges a root-level `allOf`, so that property's `then` default is filled in under
+   * `skipDefaults` too, unless `emptyObjectFields` is `skipEmptyDefaults`.
+   * See the `allOf` section of `experimental_defaultFormStateBehavior` in the form props docs for examples of each case.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
   /** Optional enumerated flag controlling how the defaults are merged into the form data when dealing with undefined
