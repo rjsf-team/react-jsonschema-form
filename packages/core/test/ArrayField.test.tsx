@@ -353,7 +353,7 @@ describe('ArrayField', () => {
       const legend = node.querySelector('fieldset > legend');
 
       expect(legend).toHaveTextContent('my list');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render a description', () => {
@@ -1833,7 +1833,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema });
       const legend = node.querySelector('fieldset > legend');
       expect(legend).toHaveTextContent('List of fixed items');
-      expect(legend).toHaveAttribute('id', 'root__title');
+      expect(legend).toContainElement(node.querySelector('#root__title'));
     });
 
     it('should render field widgets', () => {
@@ -3377,7 +3377,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          expect(node.querySelector('legend#root_0__title')).toHaveTextContent('Array-1');
+          expect(node.querySelector('legend #root_0__title')).toHaveTextContent('Array-1');
         },
       );
 
@@ -3399,7 +3399,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          const legendText = node.querySelector('legend#root_0__title');
+          const legendText = node.querySelector('legend #root_0__title');
 
           expect(legendText).toHaveTextContent('Item Field Title');
           expect(legendText).not.toHaveTextContent('Array-1');

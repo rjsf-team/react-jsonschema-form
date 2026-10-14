@@ -1179,8 +1179,8 @@ const schema: RJSFSchema = {
 function TitleFieldTemplate(props: TitleFieldProps) {
   const { id, required, title } = props;
   return (
-    <header id={id}>
-      {title}
+    <header>
+      <span id={id}>{title}</span>
       {required && <mark>*</mark>}
     </header>
   );
@@ -1194,7 +1194,7 @@ render(
 
 The following props are passed to each `TitleFieldTemplate`:
 
-- `id`: The id of the field in the hierarchy.
+- `id`: The id of the title, which an object's `anyOf`/`oneOf` option selector is named by through `aria-labelledby`. Put it on the element holding the title's text alone, so the selector's name leaves out the required marker and the optional data control.
 - `title`: The title of the field being rendered.
 - `schema`: The schema object for the field.
 - `uiSchema`: The uiSchema object for the field.

@@ -404,6 +404,22 @@ describe('the plan SchemaField builds', () => {
       expect(node.querySelector('#root__anyof_select')).toHaveAccessibleName('Pet');
     });
 
+    it.each([
+      ['required marker', ['pet'], 'span.required'],
+      ['optional data control', [], 'button'],
+    ])("names their selector by the heading's text alone, without its %s", (_, required, extra) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { pet: schema }, required },
+        uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } },
+        formData: { pet: { name: 'Rex' } },
+      });
+
+      const title = node.querySelector('#root_pet_XxxOf__title');
+      expect(title?.closest('legend')?.querySelector(extra)).toBeInTheDocument();
+      expect(title?.querySelector(extra)).toBeNull();
+      expect(node.querySelector('#root_pet__anyof_select')).toHaveAccessibleName('Pet');
+    });
+
     it("marks their selector invalid while the object's errors show", () => {
       const { node } = createFormComponent({
         schema,
