@@ -1,21 +1,7 @@
 import type { MergedThemePresentation, PartOwner, PresentationDeclaration, ThemePresentation } from './types.ts';
 
-/** Gets the value the last of `declarations` that declares `part` gives it
- *
- * @param declarations - The declarations, from the bottom
- * @param part - The part to read
- * @returns - The value of the topmost declaration of `part`, or `undefined` when none declares it
- */
-function topmost<Owner extends PartOwner, Part extends keyof PresentationDeclaration<Owner>>(
-  declarations: readonly (PresentationDeclaration<Owner> | undefined)[],
-  part: Part,
-): PresentationDeclaration<Owner>[Part] | undefined {
-  let value: PresentationDeclaration<Owner>[Part] | undefined;
-  for (const declaration of declarations) {
-    value = declaration?.[part] ?? value;
-  }
-  return value;
-}
+/** Everything a declaration declares, each layered on its own */
+const DECLARED = ['label', 'description', 'errors', 'help', 'labelledBy', 'uncheckedIsFalse'] as const;
 
 /** Layers `declarations` over one another, each later one replacing a part an earlier one declares. A part declared
  * `undefined` is left to the layers beneath it, so spreading an options object can't erase one, and a part none of
@@ -27,19 +13,16 @@ function topmost<Owner extends PartOwner, Part extends keyof PresentationDeclara
 export function layerDeclarations<Owner extends PartOwner>(
   ...declarations: readonly (PresentationDeclaration<Owner> | undefined)[]
 ): PresentationDeclaration<Owner> {
-  const layered: PresentationDeclaration<Owner> = {};
-  const layer = <Part extends keyof PresentationDeclaration<Owner>>(part: Part) => {
-    const value = topmost(declarations, part);
+  const layered: Record<string, unknown> = {};
+  for (const part of DECLARED) {
+    let value: unknown;
+    for (const declaration of declarations) {
+      value = declaration?.[part] ?? value;
+    }
     if (value !== undefined) {
       layered[part] = value;
     }
-  };
-  layer('label');
-  layer('description');
-  layer('errors');
-  layer('help');
-  layer('labelledBy');
-  layer('uncheckedIsFalse');
+  }
   return layered;
 }
 

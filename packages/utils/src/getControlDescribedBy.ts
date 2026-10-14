@@ -1,5 +1,6 @@
 import { ariaDescribedByIds } from './idGenerators.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
+import uniqueIds from './uniqueIds.ts';
 
 /** Gets the `aria-describedby` a widget gives the focusable element that carries its `id`: the ids its field's plan
  * describes its control by, followed by the ids of the elements the widget renders to describe that control itself,
@@ -16,9 +17,6 @@ export default function getControlDescribedBy<
   F extends FormContextType = FormContextType,
 >(props: Pick<WidgetProps<T, S, F>, 'id' | 'presentation'>, ownDescribedBy: readonly string[] = []) {
   const { id, presentation } = props;
-  if (!presentation) {
-    return [ariaDescribedByIds(id), ...ownDescribedBy].join(' ');
-  }
-  const planned = presentation.control?.attributes['aria-describedby']?.split(' ') ?? [];
-  return [...new Set([...planned, ...ownDescribedBy])].filter(Boolean).join(' ') || undefined;
+  const described = presentation ? presentation.control?.attributes['aria-describedby'] : ariaDescribedByIds(id);
+  return uniqueIds([...(described?.split(' ') ?? []), ...ownDescribedBy]).join(' ') || undefined;
 }

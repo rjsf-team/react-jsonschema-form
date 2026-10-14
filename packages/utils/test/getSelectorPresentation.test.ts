@@ -26,6 +26,7 @@ describe('getSelectorPresentation()', () => {
     expect(selector.description.by).toBe('above');
     expect(selector.errors.by).toBe('above');
     expect(selector.inherited).toBe(field);
+    expect(selector.showLabel).toBe(true);
     expect(selector.control).toEqual({
       id: SELECTOR,
       attributes: {
@@ -48,18 +49,6 @@ describe('getSelectorPresentation()', () => {
     expect(selector.label.by).toBe('self');
     expect(selector.description.by).toBe('self');
     expect(selector.control?.attributes['aria-labelledby']).toBeUndefined();
-  });
-
-  it("leaves out the describers its field's control renders for itself alone", () => {
-    const field = resolveFieldPresentation({
-      id: ID,
-      declaration: TEMPLATE,
-      label: 'Foo',
-      description: 'Describes foo',
-      controlDescribedBy: [`${ID}__examples`],
-    });
-    expect(field.control?.attributes['aria-describedby']).toBe(`${ID}__description ${ID}__examples`);
-    expect(getSelectorPresentation(field, SELECTOR).control?.attributes['aria-describedby']).toBe(`${ID}__description`);
   });
 
   it('has no control when its field has none on screen', () => {

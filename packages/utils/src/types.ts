@@ -915,10 +915,14 @@ export interface FieldPresentation {
     messages: readonly string[];
   };
   /** The ids of the field's parts describing its control, in order, counting only parts that render here or above. A
-   * field below rendering the same id inherits them, so the ids the control renders to describe itself alone are left
-   * out, and follow these only in `control.attributes['aria-describedby']`
+   * field below rendering the same id inherits them, so the ids of the elements a widget renders to describe its own
+   * control, which `getControlAttributes()` adds after these, are never in them
    */
   describedBy: readonly string[];
+  /** Whether `ui:label` lets the field show its label and description, as the caller resolved it through the fields
+   * above. A part it lets show may still be `none`, having no text, or `above`, drawn by a field above
+   */
+  showLabel: boolean;
   /** The control the label names. Undefined when there is no control on screen to name: a container, an opted-out
    * optional field or a hidden one
    */

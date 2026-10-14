@@ -1,6 +1,5 @@
 import getControlAttributes from './getControlAttributes.ts';
 import getSelectedOptionDescription from './getSelectedOptionDescription.ts';
-import { ariaDescribedByIds } from './idGenerators.ts';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import type { ControlAttributes, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
@@ -12,8 +11,7 @@ export type WidgetAriaPropsInput<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = SelectedOptionDescriptionProps<T, S, F> &
-  Pick<WidgetProps<T, S, F>, 'aria-label' | 'aria-describedby' | 'presentation'>;
+> = SelectedOptionDescriptionProps<T, S, F> & Pick<WidgetProps<T, S, F>, 'aria-label' | 'aria-describedby'>;
 
 /** Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses. A widget
  * rendered inside another one, such as each select of an `AltDateWidget`, has no label of its own and an id that no
@@ -34,10 +32,7 @@ export default function widgetAriaProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetAriaPropsInput<T, S, F>): Omit<ControlAttributes, 'required'> & { 'aria-label'?: string } {
-  const { id, presentation, 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy } = props;
-  if (!callerDescribedBy && !presentation) {
-    return { 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedByIds(id) };
-  }
+  const { 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy } = props;
   const selected = getSelectedOptionDescription<T, S, F>(props);
   const ownDescribedBy = selected ? [selected.id] : [];
   if (!callerDescribedBy) {

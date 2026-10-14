@@ -17,6 +17,7 @@ import type {
   PartPresentation,
   ResolvedPresentationDeclaration,
 } from './types.ts';
+import uniqueIds from './uniqueIds.ts';
 
 /** What `resolveFieldPresentation()` builds a field's plan from: the decisions already taken about it */
 export interface FieldPresentationInputs {
@@ -39,11 +40,6 @@ export interface FieldPresentationInputs {
   errors?: readonly string[];
   /** Whether `ui:hideError` is in effect for the field */
   hideError?: boolean;
-  /** The ids of the elements the control renders to describe itself, such as its `selectedOptionDescriptionId()` or
-   * its `examplesId()` list, which describe it after the field's parts. They describe this control alone, so they go
-   * in its `aria-describedby` but not in the plan's `describedBy`, which a field below rendering the same id inherits
-   */
-  controlDescribedBy?: readonly string[];
   /** Whether a control is on screen for the label to name: false for an opted-out optional field or a hidden one, and
    * for a container, whose label is its own heading. Defaults to true
    */
@@ -66,11 +62,6 @@ export interface FieldPresentationInputs {
 }
 
 const NONE: readonly string[] = Object.freeze([]);
-
-/** Drops the empty ids and the repeats from `ids`, keeping the first of each */
-function uniqueIds(ids: readonly string[]) {
-  return [...new Set(ids)].filter(Boolean);
-}
 
 /** Whether a part with this placement renders an element here */
 function rendersHere(by: PartPlacement) {
@@ -132,8 +123,8 @@ function placeText<Text>(
  * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
  * - A part the field's own component draws takes its ids from `componentId`, the id that component renders under beside
  *   the field's `anyOf`/`oneOf` options, and a part the template draws from `id`.
- * - The control is described by the parts that render, here or above, then by its own `controlDescribedBy`, and is
- *   `aria-invalid` whenever errors show.
+ * - The control is described by the parts that render, here or above, and is `aria-invalid` whenever errors show.
+ * - `showLabel` is recorded as resolved, for the levels and widgets beneath to read.
  *
  * @param inputs - The decisions the plan is built from
  * @returns - The field's plan
@@ -148,7 +139,6 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     help,
     errors = NONE,
     hideError = false,
-    controlDescribedBy = NONE,
     hasControl = true,
     required = false,
     inherited,
@@ -216,10 +206,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
 
   let control: FieldPresentation['control'];
   if (hasControl) {
-    const attributes: ControlAttributes = getDescribedControlAttributes(
-      uniqueIds([...describedBy, ...controlDescribedBy]),
-      messages,
-    );
+    const attributes: ControlAttributes = getDescribedControlAttributes(describedBy, messages);
     // The label above was drawn for the control of its own plan: with no `for` when that control was pointed at it
     // instead, and naming another element when the ids differ
     const forMissesControl =
@@ -243,6 +230,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     help: { text: help, ...helpPlacement },
     errors: errorsPlan,
     describedBy,
+    showLabel,
     control,
     inherited,
   };
