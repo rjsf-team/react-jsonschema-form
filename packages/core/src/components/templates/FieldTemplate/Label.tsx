@@ -1,3 +1,5 @@
+import { memo } from 'react';
+
 const REQUIRED_FIELD_SYMBOL = '*';
 
 export interface LabelProps {
@@ -13,7 +15,7 @@ export interface LabelProps {
  *
  * @param props - The `LabelProps` for this component
  */
-export default function Label(props: LabelProps) {
+function Label(props: LabelProps) {
   const { label, required, id } = props;
   if (!label) {
     return null;
@@ -25,3 +27,6 @@ export default function Label(props: LabelProps) {
     </label>
   );
 }
+// Memoized so a keystroke in its own field is not a render of its label. A keystroke in another field renders neither:
+// `SchemaField` is what keeps the fields apart, not this
+export default memo(Label);
