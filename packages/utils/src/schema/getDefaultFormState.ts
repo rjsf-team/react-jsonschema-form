@@ -1020,4 +1020,5 @@ export default function getDefaultFormState<
   }
 
   return defaults;
-    }
+}
+
