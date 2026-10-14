@@ -89,7 +89,11 @@ export default function SelectWidget<
   }, [enumDisabled, enumOptions, optgroups, domValues]);
 
   // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop
-  const { 'aria-label': ariaLabel, 'aria-describedby': describedBy } = widgetAriaProps(props);
+  const {
+    'aria-label': ariaLabel,
+    'aria-labelledby': labelledBy,
+    'aria-describedby': describedBy,
+  } = widgetAriaProps(props);
   // A plan describing the select by nothing gives no ids, which isn't a call for the default ones
   const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options, {
     describedBy: describedBy ?? '',
@@ -115,6 +119,7 @@ export default function SelectWidget<
     ...ariaDescribedByProps,
     ...getDescriptionProps(props),
     ...(ariaLabel && { 'aria-label': ariaLabel }),
+    ...(labelledBy && { 'aria-labelledby': labelledBy }),
   };
 
   return (

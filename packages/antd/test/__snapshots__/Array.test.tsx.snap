@@ -2840,7 +2840,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                                             class="ant-checkbox-input"
                                             id="root_2"
                                             name="root[2]"
-                                            required=""
                                             type="checkbox"
                                           />
                                         </span>
@@ -5791,7 +5790,7 @@ exports[`with title and description > array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -5925,7 +5924,7 @@ exports[`with title and description > array icons 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -6609,7 +6608,7 @@ exports[`with title and description > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Test field"
                       >
                         Test field
@@ -6909,7 +6908,7 @@ exports[`with title and description from both > array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -7043,7 +7042,7 @@ exports[`with title and description from both > array icons 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -7727,7 +7726,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -8027,7 +8026,7 @@ exports[`with title and description from uiSchema > array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -8161,7 +8160,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field
@@ -8845,7 +8844,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="My Field"
                       >
                         My Field

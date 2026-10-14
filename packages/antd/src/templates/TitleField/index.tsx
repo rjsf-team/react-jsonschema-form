@@ -20,34 +20,16 @@ export default function TitleField<
     labelChildren = title.replace(/[：:]\s*$/, '');
   }
 
-  const handleLabelClick = () => {
-    if (!id) {
-      return;
-    }
-
-    const control: HTMLLabelElement | null = document.querySelector(`[id="${id}"]`);
-    if (control?.focus) {
-      control.focus();
-    }
-  };
-
   const { getPrefixCls } = useContext(ConfigProvider.ConfigContext);
   const prefixCls = getPrefixCls('form');
   const labelClassName = classNames({
     [`${prefixCls}-item-required`]: required,
     [`${prefixCls}-item-no-colon`]: !colon,
   });
-  // The antd theme, for some reason, made its labels cause the associated field to get the focus when clicked (which
-  // kinda breaks a11y), but since it's built that way we will honor it until we decided to break it in a major release
-  // oxlint-disable jsx-a11y/no-noninteractive-element-interactions -- <label> is interactive; oxlint incorrectly flags it
+  // The heading carries its `titleId()`, which the control a container's heading names, such as its option selector,
+  // points `aria-labelledby` at
   let heading = title ? (
-    <label
-      className={labelClassName}
-      htmlFor={id}
-      onClick={handleLabelClick}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleLabelClick()}
-      title={typeof title === 'string' ? title : ''}
-    >
+    <label id={id} className={labelClassName} title={typeof title === 'string' ? title : ''}>
       {labelChildren}
     </label>
   ) : null;

@@ -199,7 +199,9 @@ function BooleanField<
       label={label}
       hideLabel={hideLabel}
       value={formData}
-      required={required}
+      // The plan's, which a checkbox the schema lets be `false` is not, so a widget written for any theme submits it
+      // unchecked (#5388)
+      required={presentation?.control?.requiredMarker ?? required}
       disabled={disabled}
       readonly={readonly}
       hideError={hideError}

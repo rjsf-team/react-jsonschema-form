@@ -5951,7 +5951,6 @@ exports[`single fields > required checkbox field 1`] = `
               <input
                 id="root_agree"
                 name="root_agree"
-                required=""
                 type="checkbox"
               />
               <span>
@@ -5996,7 +5995,6 @@ exports[`single fields > required checkbox field, default true 1`] = `
                 checked=""
                 id="root_agree"
                 name="root_agree"
-                required=""
                 type="checkbox"
               />
               <span>

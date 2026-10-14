@@ -83,7 +83,7 @@ function CheckboxWidget<
           id={id}
           name={htmlName || id}
           checked={typeof value === 'undefined' ? false : value}
-          required={required}
+          required={trueValueRequired}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onChange={handleChange}

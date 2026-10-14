@@ -53,7 +53,7 @@ export default function CheckboxWidget<
   const chakraProps = getChakra(options);
 
   return (
-    <Field mb={1} required={required} {...chakraProps}>
+    <Field mb={1} required={trueValueRequired} {...chakraProps}>
       {description && (
         <DescriptionFieldTemplate
           id={description.id}

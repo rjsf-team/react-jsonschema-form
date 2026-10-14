@@ -52,7 +52,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class=""
-                                    for="root_person__title"
+                                    id="root_person__title"
                                     title="Person Info"
                                   >
                                     Person Info
@@ -1336,7 +1336,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class=""
-                                    for="root_person__title"
+                                    id="root_person__title"
                                     title="Person Info"
                                   >
                                     Person Info
@@ -2677,7 +2677,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class=""
-                                    for="root_person__title"
+                                    id="root_person__title"
                                     title="Person Info"
                                   >
                                     Person Info
@@ -3755,7 +3755,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class=""
-                                    for="root_person__title"
+                                    id="root_person__title"
                                     title="Person Info"
                                   >
                                     Person Info
@@ -5036,7 +5036,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                               >
                                 <label
                                   class=""
-                                  for="root_person__title"
+                                  id="root_person__title"
                                   title="Person Info"
                                 >
                                   Person Info
@@ -5816,7 +5816,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                               >
                                 <label
                                   class=""
-                                  for="root_person__title"
+                                  id="root_person__title"
                                   title="Person Info"
                                 >
                                   Person Info

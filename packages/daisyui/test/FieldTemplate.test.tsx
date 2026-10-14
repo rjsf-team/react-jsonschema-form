@@ -432,10 +432,9 @@ describe('FieldTemplate', () => {
       expect(screen.getByRole('button', { name: 'Color' })).toHaveAccessibleDescription('');
     });
 
-    // The template labels the field's own control, not this selector, so nothing outside the button names it and its
-    // contents are its whole name — the value it displays is announced twice, which is the cost of a predicate that
-    // can only answer from the label the widget was handed
-    test('is named by its own contents where no label points at it', () => {
+    // The template's label names the field's own control through its `for`, and the selector through the
+    // `aria-labelledby` its plan gives it, so the option it displays is its description
+    test("is named by its field's label, and described by the option it displays", () => {
       render(
         <Form
           schema={{
@@ -456,10 +455,27 @@ describe('FieldTemplate', () => {
       );
 
       const selector = document.getElementById('root_region__oneof_select')!;
-      expect(screen.queryByLabelText('Region')).not.toBe(selector);
-      // The dropdown arrow is decoration, and hidden, so the name it falls back to is the option alone
-      expect(selector).toHaveAccessibleName('Europe');
+      expect(selector).toHaveAccessibleName('Region');
       expect(selector).toHaveAccessibleDescription('Europe');
+    });
+
+    test('is named by the heading of an object with properties beside its options', () => {
+      render(
+        <Form
+          schema={{
+            type: 'object',
+            title: 'Pet',
+            properties: { name: { type: 'string' } },
+            anyOf: [
+              { title: 'Dog', properties: { bark: { type: 'string' } } },
+              { title: 'Cat', properties: { meow: { type: 'string' } } },
+            ],
+          }}
+          validator={validator}
+        />,
+      );
+
+      expect(document.getElementById('root__anyof_select')).toHaveAccessibleName('Pet');
     });
 
     // Naming the button by reference instead would point at an id only this theme's `FieldTemplate` renders, leaving

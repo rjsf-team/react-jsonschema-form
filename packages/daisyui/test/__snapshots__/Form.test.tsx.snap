@@ -3165,6 +3165,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                         >
                           <button
                             aria-describedby="root_region__oneof_select__value"
+                            aria-labelledby="root_region__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_region__oneof_select"
                             tabindex="0"
@@ -6077,6 +6078,7 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <button
                             aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
@@ -6243,6 +6245,7 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <button
                             aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
@@ -7097,6 +7100,7 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <button
                             aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
@@ -7263,6 +7267,7 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <button
                             aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
