@@ -129,9 +129,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   parentPresent: boolean,
 ) {
   const { schemaContext, rootSchema, uiSchemaDefinitions, globalUiOptions, formContext, builder } = ctx;
-  // A repeated $ref is never expanded again for rendering either (see SchemaField/CyclicSchemaField) — without this,
-  // a recursive $ref reached through `ui:definitions` (the only thing that disables the prune below) would have
-  // `retrieveSchema()` re-resolve the same cycle forever.
+  // A recursive $ref that `retrieveSchema()` flagged as a cycle is not rendered until the user expands it (see
+  // SchemaField/CyclicSchemaField), so nothing below it can be required of them
   if ((schema as RJSFMarkedSchema)[RJSF_REF_CYCLE_KEY]) {
     return;
   }
@@ -149,20 +148,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!uiSchemaDefinitions && Object.keys(uiSchema).length === 0) {
     return;
   }
-  // resolveAnyOfOrOneOfRefs expands a oneOf/anyOf option that is itself a raw $ref, matching ObjectField's own
-  // retrieveSchema() call for the same schema shape (see ObjectField.tsx) — otherwise resolveSelectedBranch() below
-  // merges the unexpanded `{ $ref }` option and the branch's `properties` are never visited. Scoped to schemas that
-  // actually carry a oneOf/anyOf, rather than passed unconditionally like ObjectField does: unlike ObjectField, this
-  // walk starts a brand new, unmarked `retrieveSchema()` call at every node (no ancestor call has already flagged a
-  // cyclic $ref for it), and resolveAnyOfOrOneOfRefs also disables that flagging for plain (non-xxxOf) object
-  // properties, so passing it unconditionally would spin forever on an ordinary recursive $ref.
-  const resolvedSchema = retrieveSchema<T, S, F>(
-    schemaContext,
-    schema,
-    rootSchema,
-    formData as T,
-    ONE_OF_KEY in schema || ANY_OF_KEY in schema,
-  );
+  // Each subschema walked below is one this retrieve handed out, which carries where it came from, so retrieving it in
+  // turn flags a recursive $ref as `SchemaField` sees it, one level at a time. Resolving the oneOf/anyOf options too,
+  // as ObjectField's own retrieve does, gives `resolveSelectedBranch()` an option's `properties` rather than its `$ref`
+  const resolvedSchema = retrieveSchema<unknown, S, F>(schemaContext, schema, rootSchema, formData, true);
   // A select over object or array constants renders one control for its whole value, with no fields beneath it
   if (isWholeValueSelect<S>(resolvedSchema)) {
     return;

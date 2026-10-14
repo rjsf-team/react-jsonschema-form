@@ -49,6 +49,10 @@ describe('provenance', () => {
     expect(childProvenance(parent, { ...child, chain, expanded: true })).toBe(variants[4]);
     expect(variants[0].parent).toBe(parent);
   });
+  it('prints as its id, rather than as the graph it points into', () => {
+    const provenance = rootProvenance(graph, seeds);
+    expect(JSON.stringify(provenance)).toBe(`"provenance ${provenance.id}"`);
+  });
   it('copies the seeds it is given', () => {
     const refPath = [1];
     const provenance = rootProvenance(graph, [{ node: 3, refPath }]);

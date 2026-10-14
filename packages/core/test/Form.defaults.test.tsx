@@ -239,7 +239,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     });
 
     it('should let a keyword beside a $ref in additionalProperties win, as it does beside any other $ref', async () => {
-      // `resolveAllReferences()` layers a schema's own keywords over the referenced ones wherever a `$ref` appears, and
+      // Resolution layers a schema's own keywords over the referenced ones wherever a `$ref` appears, and
       // the add button seeds the new property from the same resolved schema the field renders it with, so the sibling
       // `type` is the one both of them read
       const schema: RJSFSchema = {

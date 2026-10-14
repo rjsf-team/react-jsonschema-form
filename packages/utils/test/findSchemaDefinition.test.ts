@@ -1,7 +1,7 @@
 import { ADDITIONAL_PROPERTY_FLAG, RJSF_REF_KEY } from '../src/constants.ts';
 import { findSchemaDefinitionRecursive, makeAllReferencesAbsolute } from '../src/findSchemaDefinition.ts';
 import type { GenericObjectType, RJSFSchema } from '../src/index.ts';
-import { createSchemaUtils, findSchemaDefinition, ID_KEY, retrieveSchema } from '../src/index.ts';
+import { createSchemaUtils, findSchemaDefinition, ID_KEY, isObject, retrieveSchema } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 const schema: RJSFSchema = {
@@ -902,6 +902,14 @@ describe('findSchemaDefinitionRecursive()', () => {
       (schema.definitions!.bundledSchema as RJSFSchema).properties!.num,
     );
   });
+  it('conjoins the keywords beside a chained ref with its target under JSON Schema Draft 2020-12', () => {
+    const integer: RJSFSchema = { type: 'integer' };
+    const root: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { integer, nonNegative: { $ref: '#/$defs/integer', minimum: 0 } },
+    };
+    expect(findSchemaDefinitionRecursive('#/$defs/nonNegative', root)).toEqual({ allOf: [{ minimum: 0 }, integer] });
+  });
   it('correctly resolves absolute bundled refs within a JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinitionRecursive('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(internalSchema);
   });
@@ -1356,10 +1364,15 @@ describe('structure-aware walk pins', () => {
     expect(((components.Foo as GenericObjectType).properties as GenericObjectType).x).toStrictEqual({
       $ref: '#/components/Bar',
     });
+    // `retrieveSchema` resolves the outer pointer, and the relative inner `$ref` once the property holding it is
+    // retrieved, against the base URI of the resource holding it rather than the root's
     const testValidator = getTestValidator({});
     const utils = createSchemaUtils({ validator: testValidator }, rewritten);
     const a = (utils.getRootSchema() as unknown as GenericObjectType).properties as GenericObjectType;
-    expect(utils.retrieveSchema(a.a as RJSFSchema, {}).properties!.x).toStrictEqual({
+    const foo = utils.retrieveSchema(a.a, {});
+    const x = foo.properties?.x;
+    expect(x).toEqual({ $ref: '#/components/Bar' });
+    expect(utils.retrieveSchema(isObject(x) ? x : {}, {})).toEqual({
       type: 'string',
       [RJSF_REF_KEY]: '#/components/Bar',
     });

@@ -28,6 +28,10 @@ export interface ProvenanceFields {
   readonly chain?: GuardChain;
   readonly dataRestart?: boolean;
   readonly expanded?: boolean;
+  /** For an `anyOf`/`oneOf` option, the `setKey` of the plan of the field offering it: an option whose own plan adds
+   * nothing to that set renders nothing beside the selector
+   */
+  readonly optionOf?: string;
 }
 
 /** A copy's provenance: the field it is the schema of, by the graph it was planned in and the seeds and chain the
@@ -41,6 +45,7 @@ export interface Provenance<S extends StrictRJSFSchema = RJSFSchema> {
   readonly chain?: GuardChain;
   readonly dataRestart: boolean;
   readonly expanded: boolean;
+  readonly optionOf?: string;
 }
 
 /** The interned values of one graph: equal values are one object, which `replaceEqualDeep()` needs, since it compares
@@ -123,12 +128,12 @@ function intern<S extends StrictRJSFSchema>(
 ): Provenance<S> {
   const table = tableOf(graph);
   const flags = `${fields.dataRestart ? 1 : 0}${fields.expanded ? 1 : 0}`;
-  const key = `${parent?.id ?? ''}|${seedsKey(fields.seeds)}|${fields.chain?.id ?? ''}|${flags}`;
+  const key = [parent?.id, seedsKey(fields.seeds), fields.chain?.id, flags, fields.optionOf].join('|');
   const interned = table.provenances.get(key);
   if (isProvenanceOf(interned, graph)) {
     return interned;
   }
-  const provenance: Provenance<S> = Object.freeze({
+  const provenance: Provenance<S> = {
     id: table.takeId(),
     graph,
     parent,
@@ -138,7 +143,12 @@ function intern<S extends StrictRJSFSchema>(
     chain: fields.chain,
     dataRestart: fields.dataRestart ?? false,
     expanded: fields.expanded ?? false,
-  });
+    optionOf: fields.optionOf,
+  };
+  // A printed schema shows its stamp through this rather than the whole graph the stamp points into, as the diff of a
+  // failed comparison prints it
+  Object.defineProperty(provenance, 'toJSON', { value: () => `provenance ${provenance.id}` });
+  Object.freeze(provenance);
   provenanceGraphs.set(provenance, graph);
   table.provenances.set(key, provenance);
   return provenance;
@@ -180,6 +190,21 @@ export function childProvenance<S extends StrictRJSFSchema = RJSFSchema>(
  */
 export function stamp<S extends StrictRJSFSchema = RJSFSchema>(schema: S, provenance: Provenance<S>): S {
   return { ...schema, [PROVENANCE]: provenance };
+}
+
+/** Returns `value` without the stamp `stamp()` put on it, or `value` itself when it carries none. Only tests need it:
+ * the stamp is private, so an expected schema written out by hand cannot name it
+ *
+ * @param value - The value to strip
+ * @returns - A shallow copy without the stamp, or `value`
+ */
+export function withoutProvenance(value: unknown): unknown {
+  if (typeof value !== 'object' || value === null || !Object.hasOwn(value, PROVENANCE)) {
+    return value;
+  }
+  const copy = { ...value };
+  Reflect.deleteProperty(copy, PROVENANCE);
+  return copy;
 }
 
 /** Returns the provenance `schema` was stamped with, when it was planned in `graph` or in a graph extending it. A

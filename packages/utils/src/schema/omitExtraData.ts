@@ -14,7 +14,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import { mergeAllOf, relaxOptionsForScoring, resolveAllReferences } from './retrieveSchema.ts';
+import { mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -276,9 +276,7 @@ export default function omitExtraData<
     const winning = (oneOf as (S | boolean)[])[bestIndex];
     // For object options, re-resolve without relaxation so additionalProperties:false is respected.
     // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
-    const resolved: S = isObject(winning)
-      ? resolveAllReferences<S>(winning, rootSchema, [])
-      : scoringOptions[bestIndex];
+    const resolved: S = isSchemaObject<S>(winning) ? resolveOwnRef<S>(winning, rootSchema) : scoringOptions[bestIndex];
     return omit(resolved, source, target, false);
   }
 
@@ -365,13 +363,14 @@ export default function omitExtraData<
     return resolved;
   }
 
-  /** Resolves the references of one `allOf` entry
+  /** Resolves the reference of one `allOf` entry. Only its own `$ref` needs resolving: the merge would hoist it rather
+   * than follow it, where the ones below are resolved as `omit()` reaches them
    *
    * @param entry - The `allOf` entry to resolve, which a boolean shorthand leaves alone
-   * @returns - The entry with its references resolved
+   * @returns - The entry with its own reference resolved
    */
-  function resolveAllOfEntry(entry: JSONSchema7Definition): S | boolean {
-    return isObject(entry) ? resolveAllReferences<S>(entry as S, rootSchema, []) : entry;
+  function resolveAllOfEntry(entry: JSONSchema7Definition): JSONSchema7Definition {
+    return isSchemaObject<S>(entry) ? resolveOwnRef<S>(entry, rootSchema) : entry;
   }
 
   /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.

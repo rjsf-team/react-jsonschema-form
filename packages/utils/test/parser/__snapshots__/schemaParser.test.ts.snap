@@ -1136,6 +1136,22 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     "type": "object",
     Symbol(__rjsf_ref): "#/definitions/choice2",
   },
+  "-284587a1": {
+    "$id": "-284587a1",
+    "anyOf": [
+      {
+        "required": [
+          "idCode",
+        ],
+      },
+    ],
+    "properties": {
+      "idCode": {
+        "$ref": "#/definitions/test",
+      },
+    },
+    "title": "Second method of identification",
+  },
   "-365ff3a7": {
     "$id": "-365ff3a7",
     "properties": {
@@ -1159,16 +1175,6 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     },
     "type": "object",
     Symbol(__rjsf_ref): "#/definitions/foo",
-  },
-  "-40dd246a": {
-    "$id": "-40dd246a",
-    "properties": {
-      "idCode": {
-        "type": "string",
-        Symbol(__rjsf_ref): "#/definitions/test",
-      },
-    },
-    "title": "Second method of identification",
   },
   "-42566fe2": {
     "$id": "-42566fe2",
@@ -1196,42 +1202,24 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     "type": "object",
     Symbol(__rjsf_ref): "#/definitions/choice1",
   },
-  "-4887b48c": {
-    "$id": "-4887b48c",
+  "-fcbf823": {
+    "$id": "-fcbf823",
     "properties": {
-      "firstName": {
-        "title": "First name",
-        "type": "string",
-      },
-      "lastName": {
-        "type": "string",
-        Symbol(__rjsf_ref): "#/definitions/test",
+      "idCode": {
+        "$ref": "#/definitions/test",
       },
     },
-    "title": "First method of identification",
+    "title": "Second method of identification",
   },
-  "-7df52035": {
-    "$id": "-7df52035",
-    "anyOf": [
-      {
-        "required": [
-          "firstName",
-        ],
-      },
-      {
-        "required": [
-          "lastName",
-        ],
-      },
-    ],
+  "2f1c1e4d": {
+    "$id": "2f1c1e4d",
     "properties": {
       "firstName": {
         "title": "First name",
         "type": "string",
       },
       "lastName": {
-        "type": "string",
-        Symbol(__rjsf_ref): "#/definitions/test",
+        "$ref": "#/definitions/test",
       },
     },
     "title": "First method of identification",
@@ -1253,22 +1241,30 @@ exports[`schemaParser() > parses superSchema properly 1`] = `
     "type": "object",
     Symbol(__rjsf_ref): "#/definitions/choice1",
   },
-  "587c7f18": {
-    "$id": "587c7f18",
+  "7cf7e824": {
+    "$id": "7cf7e824",
     "anyOf": [
       {
         "required": [
-          "idCode",
+          "firstName",
+        ],
+      },
+      {
+        "required": [
+          "lastName",
         ],
       },
     ],
     "properties": {
-      "idCode": {
+      "firstName": {
+        "title": "First name",
         "type": "string",
-        Symbol(__rjsf_ref): "#/definitions/test",
+      },
+      "lastName": {
+        "$ref": "#/definitions/test",
       },
     },
-    "title": "Second method of identification",
+    "title": "First method of identification",
   },
   "super-schema": {
     "$id": "super-schema",

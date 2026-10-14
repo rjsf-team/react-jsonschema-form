@@ -1309,8 +1309,9 @@ describe('SchemaField', () => {
 
       await user.click(expandButton);
 
+      // One level per click, as for a recursion through a `then` or an `allOf`
       expect(node.querySelector('#root_child_child-button')).toBeNull();
-      expect(node.querySelector<HTMLButtonElement>('#root_child_child_child_child-button')).not.toBeNull();
+      expect(node.querySelector('#root_child_child_child-button')).toHaveTextContent('Expand Cycle');
     });
   });
 });

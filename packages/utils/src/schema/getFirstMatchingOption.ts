@@ -58,9 +58,8 @@ function variantId(id: unknown, content: object): string {
  * This keys by the object the caller hands over, so it hits only where that object is stable across calls, which is
  * where an option is scored as `MultiSchemaField` has it: `retrieveSchema()` answers from its own cache while what it
  * resolves is unchanged. It misses where a caller rebuilds the option per call, which is what
- * `getClosestMatchingOption()` and `omitExtraData()` do for an option with a `$ref` anywhere inside it --
- * `resolveAllReferences()` returns a new object whenever it resolves anything -- so such an option is still derived
- * once per call. A schema is read rather than written wherever it is scored, so an entry stays the derivation of
+ * `getClosestMatchingOption()` and `omitExtraData()` do for an option that is a `$ref` -- resolving it returns a new
+ * object every time -- so such an option is still derived once per call. A schema is read rather than written wherever it is scored, so an entry stays the derivation of
  * its key
  */
 const scoringSchemas = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();

@@ -246,16 +246,20 @@ describe('buildPlan()', () => {
       expect(keywordsOf(planOf(looseSchema({ if: 'garbage', then: { title: 't' } })))).toEqual({});
       expect(keywordsOf(planOf({ then: { title: 'no if' } }))).toEqual({ then: { title: 'no if' } });
     });
-    it('checks a condition once per node and data', () => {
+    it('checks a condition once per node and data that cannot change', () => {
       const validator = miniValidator();
-      const data = { a: 'x' };
       const graph = parseSchemaGraph(schema);
       const seeds = [{ node: graph.root, refPath: [] }];
+      buildPlan({ context: { validator }, graph, seeds, data: 'x' });
+      buildPlan({ context: { validator }, graph, seeds, data: 'x', policy: { allOf: false } });
+      expect(validator.calls).toBe(1);
+      buildPlan({ context: { validator }, graph, seeds, data: 'y' });
+      expect(validator.calls).toBe(2);
+      // An object may be mutated in place between calls, so its condition is checked again
+      const data = { a: 'x' };
       buildPlan({ context: { validator }, graph, seeds, data });
       buildPlan({ context: { validator }, graph, seeds, data, policy: { allOf: false } });
-      expect(validator.calls).toBe(1);
-      buildPlan({ context: { validator }, graph, seeds, data: { a: 'x' } });
-      expect(validator.calls).toBe(2);
+      expect(validator.calls).toBe(4);
     });
   });
 
@@ -276,13 +280,22 @@ describe('buildPlan()', () => {
       expect(planOf(schema, { data: {}, depData: { a: 'default' } }).schema.properties).toHaveProperty('extra');
       expect(planOf(schema, { data: {} }).schema.properties).not.toHaveProperty('extra');
     });
-    it('qualifies a dependency on the properties its declaring node declares, not the merged ones', () => {
-      const schema: RJSFSchema = {
-        definitions: { D: { properties: { z: {} }, dependencies: { a: { title: 'applied' } } } },
-        $ref: D('D'),
-        properties: { a: {} },
-      };
-      expect(planOf(schema, { data: { a: 1 } }).schema.title).toBeUndefined();
+    it('qualifies a dependency on the properties its declaring node declares beside its $ref, not merged ones', () => {
+      const declaring: RJSFSchema = { properties: { z: {} }, dependencies: { a: { title: 'applied' } } };
+      // The `properties` beside the `$ref` override the definition's, as they do for the schema the dependencies read
+      expect(
+        planOf({ definitions: { D: declaring }, $ref: D('D'), properties: { a: {} } }, { data: { a: 1 } }).schema.title,
+      ).toBe('applied');
+      expect(planOf({ definitions: { D: declaring }, $ref: D('D') }, { data: { a: 1 } }).schema.title).toBeUndefined();
+      // A property an `allOf` entry declares is merged after the dependencies are judged
+      expect(
+        planOf(
+          { properties: { z: {} }, allOf: [{ properties: { a: {} } }], dependencies: { a: { title: 'applied' } } },
+          {
+            data: { a: 1 },
+          },
+        ).schema.title,
+      ).toBeUndefined();
       expect(planOf({ dependencies: { a: { title: 'applied' } } }, { data: { a: 1 } }).schema.title).toBe('applied');
     });
     it('drops dependencies that are not a map', () => {
@@ -292,8 +305,13 @@ describe('buildPlan()', () => {
     });
     it('adds nothing for a dependency already in the plan', () => {
       const shared: RJSFSchema = { title: 'shared' };
+      const plan = planOf({ dependencies: { a: shared, b: shared } }, { data: { a: 1, b: 1 } });
+      expect(plan.entries.filter(({ edge }) => edge === 'dependency')).toHaveLength(1);
+    });
+    it('applies the dependencies before the allOf, which then adds nothing they added', () => {
+      const shared: RJSFSchema = { title: 'shared' };
       const plan = planOf({ allOf: [shared], dependencies: { a: shared } }, { data: { a: 1 } });
-      expect(plan.entries.filter(({ edge }) => edge === 'dependency')).toEqual([]);
+      expect(plan.entries.map(({ edge }) => edge)).toEqual(['seed', 'dependency']);
     });
 
     describe('with a oneOf', () => {
@@ -332,16 +350,28 @@ describe('buildPlan()', () => {
         expect(log).toHaveBeenCalledWith(message);
         log.mockRestore();
       });
+      it('reads no condition off an option whose $ref resolves to no properties', () => {
+        const log = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        const plan = planOf(
+          { ...withOptions([{ $ref: D('bare') }]), definitions: { bare: { title: 'bare' } } },
+          { data: { kind: 'a' } },
+        );
+        expect(plan.schema.title).toBeUndefined();
+        log.mockRestore();
+      });
       it('reads a boolean condition property as a schema', () => {
         const plan = planOf(withOptions(options.slice(6, 7)), { data: { kind: 'anything' } });
         expect(plan.schema.properties).toHaveProperty('forAnything');
       });
       it('merges nothing for an option already in the plan', () => {
-        const option: RJSFSchema = { properties: { kind: { const: 'a' }, forA: {} } };
-        const plan = planOf({ allOf: [option], dependencies: { kind: { oneOf: [option] } } }, { data: { kind: 'a' } });
+        const option: RJSFSchema = { properties: { kind: { const: 'a' }, other: { const: 'a' }, forA: {} } };
+        const plan = planOf(
+          { dependencies: { kind: { oneOf: [option] }, other: { oneOf: [option] } } },
+          { data: { kind: 'a', other: 'a' } },
+        );
         expect(
           plan.entries.filter(({ edge }) => edge === 'dependency').map(({ node }) => plan.graph.node(node).pointer),
-        ).toEqual(['/dependencies/kind']);
+        ).toEqual(['/dependencies/kind', '/dependencies/kind/oneOf/0', '/dependencies/other']);
       });
       it('leaves a dependency whose oneOf is not a list as it is', () => {
         const plan = planOf(looseSchema({ dependencies: { kind: { oneOf: 'garbage', title: 't' } } }), {
@@ -367,9 +397,16 @@ describe('buildPlan()', () => {
           keyword: 'anyOf',
           provider: plan.graph.root,
           options: [expect.any(Number), expect.any(Number)],
+          dependencies: false,
           selected: undefined,
         },
-        { keyword: 'oneOf', provider: plan.graph.root, options: [expect.any(Number)], selected: undefined },
+        {
+          keyword: 'oneOf',
+          provider: plan.graph.root,
+          options: [expect.any(Number)],
+          dependencies: false,
+          selected: undefined,
+        },
       ]);
       expect(plan.schema.anyOf).toBe(schema.anyOf);
     });
@@ -494,13 +531,27 @@ describe('buildPlan()', () => {
       const context = { validator: miniValidator() };
       const graph = parseSchemaGraph({ type: 'object', if: true, then: { title: 't' } });
       const seeds = [{ node: graph.root, refPath: [] }];
-      const data = {};
+      const data = 'x';
       const plan = buildPlan({ context, graph, seeds, data });
       expect(buildPlan({ context, graph, seeds: [{ node: graph.root, refPath: [] }], data })).toBe(plan);
-      expect(buildPlan({ context, graph, seeds, data: {} })).not.toBe(plan);
+      expect(buildPlan({ context, graph, seeds, data: 'y' })).not.toBe(plan);
       expect(buildPlan({ context, graph, seeds, data, policy: { allOf: false } })).not.toBe(plan);
       expect(buildPlan({ context: { validator: miniValidator() }, graph, seeds, data })).not.toBe(plan);
       expect(plan.graph).toBe(graph);
+    });
+    it('plans data that is an object afresh, since a caller may mutate it in place', () => {
+      const context = { validator: miniValidator() };
+      const graph = parseSchemaGraph({
+        type: 'object',
+        if: { required: ['k'] },
+        then: { title: 'then' },
+        else: { title: 'else' },
+      });
+      const seeds = [{ node: graph.root, refPath: [] }];
+      const data: { k?: string } = {};
+      expect(buildPlan({ context, graph, seeds, data }).schema.title).toBe('else');
+      data.k = 'a';
+      expect(buildPlan({ context, graph, seeds, data }).schema.title).toBe('then');
     });
   });
 });

@@ -10,6 +10,7 @@ import {
   IF_KEY,
   ONE_OF_KEY,
   REF_KEY,
+  RJSF_REF_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
@@ -35,7 +36,6 @@ import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
-import { enclosingRefPath, resolvedFromRef } from '../refOf.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import toConstant from '../toConstant.ts';
 import type {
@@ -50,9 +50,17 @@ import type {
   UiSchema,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import { schemaFrom } from './graph/mergePlan.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
-import retrieveSchema, { resolveDependencies, retrieveSchemaInternal } from './retrieveSchema.ts';
+import retrieveSchema, {
+  enclosingRefs,
+  followRefOnTheWay,
+  markingRefsOnTheWay,
+  refsOnTheWay,
+  resolveDependencies,
+  retrieveSchemaInternal,
+} from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -253,7 +261,7 @@ interface ComputeDefaultsProps<
   /** The current formData, if any, onto which to provide any missing defaults */
   rawFormData?: T;
   /** The list of ref names currently being recursed, used to prevent infinite recursion */
-  _recurseList?: string[];
+  _recurseList?: readonly string[];
   /** Optional flag, if true, indicates this schema was required in the parent schema. */
   required?: boolean;
   /** Optional flag, if true, indicates this schema was required because it is the root. */
@@ -274,6 +282,15 @@ interface ComputeDefaultsProps<
  */
 function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectType): GenericObjectType {
   return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
+}
+
+/** Returns the `$ref` a schema was resolved from, which resolution marks it with
+ *
+ * @param schema - The schema to read the marker off
+ * @returns - The `$ref` the schema was resolved from, if it was resolved from one
+ */
+function resolvedFromRef(schema: object): unknown {
+  return Reflect.get(schema, RJSF_REF_KEY);
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
@@ -354,8 +371,13 @@ export function computeDefaults<
     defaults = schema.default as unknown as T;
   } else if (REF_KEY in schema) {
     const refName = schema[REF_KEY];
-    // Use referenced schema defaults for this node.
-    if (!_recurseList.includes(refName!)) {
+    const refsFollowed = refsOnTheWay(schema);
+    // Use referenced schema defaults for this node. A `$ref` resolution reached without following it on the way is
+    // followed as part of that resolution, keeping the keywords beside it; one it had followed is the recursion, which
+    // is followed once more, unless this function has followed it already
+    if (refsFollowed !== undefined && refName !== undefined && !refsFollowed.includes(refName)) {
+      schemaToCompute = followRefOnTheWay<S>(schema, rootSchema, refsFollowed, refName);
+    } else if (!_recurseList.includes(String(refName))) {
       updatedRecurseList = _recurseList.concat(refName!);
       schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
     }
@@ -382,7 +404,7 @@ export function computeDefaults<
       schema,
       rootSchema,
       false,
-      enclosingRefPath<S>(schema, _recurseList, DEPENDENCIES_KEY),
+      enclosingRefs(schema, _recurseList, DEPENDENCIES_KEY),
       defaultFormData,
     );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
@@ -487,12 +509,13 @@ export function computeDefaults<
     // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well. An `allOf` that stood beside the
     // schema's own `$ref` is not part of the definition, so the ref stays off the path the merge is seeded with, as
     // the resolver leaves it off
-    const pathWithOwnRef = enclosingRefPath<S>(schema, _recurseList, ALL_OF_KEY);
+    const pathWithOwnRef = enclosingRefs(schema, _recurseList, ALL_OF_KEY);
     [schemaToCompute] = retrieveSchemaInternal<T, S, F>(
       context,
       schema,
       rootSchema,
       rawFormData,
+      false,
       false,
       pathWithOwnRef,
     );
@@ -502,7 +525,7 @@ export function computeDefaults<
     // `allOf` stops one level sooner here: followed once more, a `$ref` back to the schema leads to its definition
     // with the `allOf` unmerged, where the entry already on the path collapses and the level takes the defaults of
     // the other entries alone
-    updatedRecurseList = enclosingRefPath<S>(schemaToCompute, pathWithOwnRef);
+    updatedRecurseList = enclosingRefs(schemaToCompute, pathWithOwnRef);
   }
 
   if (schemaToCompute) {
@@ -661,9 +684,10 @@ export function getObjectDefaults<
           rootSchema,
           formData,
           false,
-          // No branch keyword is named: the retrieve resolves the schema's `if` as well as its `allOf`, and it leaves
-          // a `$ref` under either's `properties` unexpanded, for `childRecurseList` below to decide
-          enclosingRefPath<S>(schema, _recurseList),
+          false,
+          // The retrieve resolves the schema's `if` as well as its `allOf`, and it leaves a `$ref` under either's
+          // `properties` unexpanded, for `childRecurseList` below to decide
+          enclosingRefs(schema, _recurseList),
         )
       : [schema];
     // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` of a schema that was not itself resolved from
@@ -672,9 +696,9 @@ export function getObjectDefaults<
     // still followed, as it is without the retrieve. Such a schema keeps its own ref through the merge of a branch,
     // so a recursion inside a branch that was a `$ref` is stopped by the cycle flag the retrieve left on it instead
     const childRecurseList =
-      resolvedFromRef<S>(retrievedSchema) === resolvedFromRef<S>(schema)
+      resolvedFromRef(retrievedSchema) === resolvedFromRef(schema)
         ? _recurseList
-        : enclosingRefPath<S>(retrievedSchema, _recurseList);
+        : enclosingRefs(retrievedSchema, _recurseList);
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties ?? {}).reduce(
       (acc: GenericObjectType, key: string) => {
@@ -1039,31 +1063,33 @@ export default function getDefaultFormState<
   }
   // Empty formData needs the defaults that computeDefaults will generate to resolve dependencies.
   const emptyFormData = isEmptyFormData(formData);
-  const [schema] = retrieveSchemaInternal<T, S, F>(
-    context,
-    theSchema,
-    rootSchema ?? ({} as S),
-    formData,
-    undefined,
-    undefined,
-    undefined,
-    emptyFormData,
+  const [schema] = markingRefsOnTheWay(() =>
+    retrieveSchemaInternal<T, S, F>(
+      context,
+      theSchema,
+      rootSchema ?? schemaFrom(theSchema, {}),
+      formData,
+      false,
+      emptyFormData,
+    ),
   );
 
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.
-  const defaults = computeDefaults<T, S, F>(context, schema, {
-    // Empty data can leave dependency references unresolved, including inside oneOf/anyOf.
-    rootSchema: rootSchema ?? (emptyFormData ? theSchema : undefined),
-    includeUndefinedValues,
-    rawFormData: formData,
-    shouldMergeDefaultsIntoFormData: true,
-    initialDefaultsGenerated,
-    requiredAsRoot: true,
-    uiSchema,
-    uiSchemaDefinitions,
-  });
+  const defaults = markingRefsOnTheWay(() =>
+    computeDefaults<T, S, F>(context, schema, {
+      // Empty data can leave dependency references unresolved, including inside oneOf/anyOf.
+      rootSchema: rootSchema ?? (emptyFormData ? theSchema : undefined),
+      includeUndefinedValues,
+      rawFormData: formData,
+      shouldMergeDefaultsIntoFormData: true,
+      initialDefaultsGenerated,
+      requiredAsRoot: true,
+      uiSchema,
+      uiSchemaDefinitions,
+    }),
+  );
 
   const objectDefaults: GenericObjectType | undefined = isObject(defaults) ? defaults : undefined;
   // Array form data takes the merge path below, which knows how to combine it with the defaults

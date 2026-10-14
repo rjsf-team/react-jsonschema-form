@@ -21,7 +21,7 @@ import { getByPath } from '../../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
-import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
+import type { DependencyEdge, NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -67,6 +67,8 @@ export interface OptionChoice {
   /** The node holding the options */
   readonly provider: NodeId;
   readonly options: readonly NodeId[];
+  /** Whether the schema offering the options has `dependencies`, the one case `retrieveSchema()` merges an option */
+  readonly dependencies: boolean;
   readonly selected?: number;
 }
 
@@ -74,6 +76,8 @@ export interface OptionChoice {
 export interface OptionRequest<S extends StrictRJSFSchema = RJSFSchema> extends Omit<OptionChoice, 'selected'> {
   readonly graph: SchemaGraph<S>;
   readonly data: unknown;
+  /** The `discriminator.propertyName` of the node holding the options */
+  readonly discriminator?: string;
 }
 
 /** The policies a view of the plan sets, which are not part of the recursion rule */
@@ -118,7 +122,15 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 }
 
 /** An `if` is checked against `{}` when the field has no data, as `resolveCondition()` checks it */
-const NO_DATA = {};
+const NO_DATA = Object.freeze({});
+
+/** Whether a result computed from `data` can be memoized under it. Form data may be an object a caller mutates in place
+ * between calls, which an entry keyed on its identity would answer for with what it held before, so only a value that
+ * cannot change is a key.
+ */
+function isImmutable(data: unknown): boolean {
+  return data === NO_DATA || data === null || typeof data !== 'object';
+}
 
 const conditionMemo = new KeyedMemo<boolean>();
 const planMemo = new KeyedMemo<object>();
@@ -127,7 +139,7 @@ const planMemo = new KeyedMemo<object>();
  * `S`, so the copy starts as `template`, which is one, with every keyword removed. A `source` that is not an object,
  * which only an `allOf` merge with a `false` member returns, has no keywords to copy.
  */
-function schemaFrom<S extends StrictRJSFSchema, U>(template: S, source: U): S {
+export function schemaFrom<S extends StrictRJSFSchema, U>(template: S, source: U): S {
   const schema = { ...template };
   for (const key of Reflect.ownKeys(schema)) {
     Reflect.deleteProperty(schema, key);
@@ -191,7 +203,7 @@ interface Provider<S extends StrictRJSFSchema> {
   readonly refPath: RefPath;
 }
 
-function withoutKeys<S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]): S {
+export function withoutKeys<S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]): S {
   const copy = { ...schema };
   for (const key of keys) {
     Reflect.deleteProperty(copy, key);
@@ -212,7 +224,7 @@ function symbolsOf(schemas: readonly object[]): Map<symbol, unknown> {
 }
 
 /** The schema a boolean subschema reads as, as `normalizeBooleanSchema()` reads it */
-function booleanSchema<S extends StrictRJSFSchema>(node: SchemaNode<S>, template: S): S {
+export function booleanSchema<S extends StrictRJSFSchema>(node: SchemaNode<S>, template: S): S {
   return schemaFrom(template, node.kind === 'boolean' && !node.value ? { not: {} } : {});
 }
 
@@ -260,9 +272,9 @@ function withRequired<S extends StrictRJSFSchema>(schema: S, required: readonly 
   return { ...schema, required: Array.isArray(existing) ? [...new Set([...existing, ...required])] : [...required] };
 }
 
-/** Builds one field's plan. Entries are added in v7's order: the `$ref` override, the `allOf` entries, the `then` or
- * `else`, the `dependencies` and the chosen option. A node already in the plan is not added again and adds nothing to
- * the schema, so `X AND X` is `X`.
+/** Builds one field's plan. Entries are added in the order `retrieveSchema()` merged them in v7: the `$ref` override,
+ * the chosen option, the `dependencies`, the `then` or `else`, and the `allOf` entries. A node already in the plan is
+ * not added again and adds nothing to the schema, so `X AND X` is `X`.
  */
 class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly entries: PlanEntry[] = [];
@@ -296,7 +308,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   build(seeds: readonly Seed[]): MergePlan<S> {
     const empty = { schema: schemaFrom(this.graph.rawRoot, {}), children: emptyChildren() };
     const [first = empty, ...rest] = seeds.flatMap((seed) => this.expand(seed.node, seed.refPath, 'seed', true) ?? []);
-    const merged = this.conjoin(first, rest);
+    // Several seeds are merged as the `allOf` of them all, which is how a property is merged with the patterns its name
+    // matches, so a `customMergeAllOf` is handed them as it is handed every other conjunction
+    const merged = rest.length === 0 ? first : this.conjoin(empty, [first, ...rest]);
     const set = new Set(this.entries.map(({ node }) => node));
     return {
       graph: this.graph,
@@ -369,14 +383,15 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       Reflect.set(schema, RJSF_REF_KEY, ref);
     }
     let part: Part<S> = { schema, children: childrenOf(keywords) };
-    part = this.applyAllOf(part, keywords.get(ALL_OF_KEY));
-    part = this.applyCondition(part, keywords);
-    part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY));
-    if (dependencyKey !== undefined) {
-      return this.applyExactlyOne(part, dependencyKey, keywords.get(ONE_OF_KEY));
+    if (dependencyKey === undefined) {
+      const dependencies = keywords.has(DEPENDENCIES_KEY);
+      part = this.applyOption(part, ANY_OF_KEY, keywords.get(ANY_OF_KEY), dependencies);
+      part = this.applyOption(part, ONE_OF_KEY, keywords.get(ONE_OF_KEY), dependencies);
     }
-    part = this.applyOption(part, ANY_OF_KEY, keywords.get(ANY_OF_KEY));
-    return this.applyOption(part, ONE_OF_KEY, keywords.get(ONE_OF_KEY));
+    part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY), keywords.get(PROPERTIES_KEY));
+    part = this.applyCondition(part, keywords);
+    part = this.applyAllOf(part, keywords.get(ALL_OF_KEY));
+    return dependencyKey === undefined ? part : this.applyExactlyOne(part, dependencyKey, keywords.get(ONE_OF_KEY));
   }
 
   private applyAllOf(part: Part<S>, provider: Provider<S> | undefined): Part<S> {
@@ -419,9 +434,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   private holds(key: string, condition: S, data: unknown): boolean {
-    return conditionMemo.get([this.context.validator, this.graph, key, data], () =>
-      this.context.validator.isValid(condition, data, this.graph.rawRoot),
-    );
+    const check = () => this.context.validator.isValid(condition, data, this.graph.rawRoot);
+    return isImmutable(data) ? conditionMemo.get([this.context.validator, this.graph, key, data], check) : check();
   }
 
   /** Applies the `then` or `else` the `if` chooses on the field's own data, `{}` standing in for none */
@@ -450,25 +464,35 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return branch === undefined ? undefined : this.expand(branch, provider.refPath, key, false);
   }
 
-  /** Applies each dependency whose key the dependency data has, which its declaring node declares as a property or
-   * declares no properties at all. Judging the declaring node rather than the merged schema keeps a dependency from
-   * being disqualified by a property a later merge adds.
+  /** Applies each dependency whose key the dependency data has, which the node declaring it declares as a property or
+   * declares no properties at all, its `$ref` followed and overridden by the keywords beside it, as `resolveSchema()`
+   * reads the dependencies. A property a dependency applied before it declares counts as declared, as it does where
+   * `processDependencies()` applies the rest to the schema the first one was merged into, so the first qualifying key
+   * in order is applied until none is left. Judging these rather than the merged schema keeps a dependency from being
+   * disqualified by a property a later merge adds.
    */
-  private applyDependencies(part: Part<S>, provider: Provider<S> | undefined): Part<S> {
+  private applyDependencies(
+    part: Part<S>,
+    provider: Provider<S> | undefined,
+    propertiesProvider: Provider<S> | undefined,
+  ): Part<S> {
     if (provider === undefined) {
       return part;
     }
     let next: Part<S> = { ...part, schema: withoutKeys(part.schema, DEPENDENCIES_KEY) };
-    const declared: unknown = Reflect.get(provider.node.raw, PROPERTIES_KEY);
-    const qualified = [...(provider.node.dependencies ?? [])].filter(
-      ([key]) => getByPath(this.depData, key) !== undefined && (!isObject(declared) || key in declared),
-    );
-    for (const [key, dependency] of qualified) {
+    const ownProperties: unknown = propertiesProvider && Reflect.get(propertiesProvider.node.raw, PROPERTIES_KEY);
+    const declared = isObject(ownProperties) ? new Set(Object.keys(ownProperties)) : undefined;
+    const pending = [...(provider.node.dependencies ?? [])];
+    const qualifies = ([key]: [string, DependencyEdge]) =>
+      getByPath(this.depData, key) !== undefined && (declared === undefined || declared.has(key));
+    for (let index = pending.findIndex(qualifies); index >= 0; index = pending.findIndex(qualifies)) {
+      const [[key, dependency]] = pending.splice(index, 1);
       if ('required' in dependency) {
         next = { ...next, schema: withRequired(next.schema, dependency.required) };
       } else {
         const dependent = this.expand(dependency.schema, provider.refPath, 'dependency', false, key);
         if (dependent !== undefined) {
+          Object.keys(dependent.schema.properties ?? {}).forEach((name) => declared?.add(name));
           next = mergeBranch(next, { ...dependent, schema: withoutKeys(dependent.schema, ONE_OF_KEY) });
         }
       }
@@ -476,14 +500,30 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return next;
   }
 
-  /** The node providing `keyword` to the subschema `id` resolves to, following its `$ref`s */
-  private keywordProvider(id: NodeId, keyword: string): ObjectNode<S> | undefined {
-    for (let node = this.graph.node(id); node.kind === 'schema'; node = this.graph.node(node.ref)) {
-      if (Object.hasOwn(node.raw, keyword) || node.ref === undefined) {
-        return Object.hasOwn(node.raw, keyword) ? node : undefined;
-      }
+  /** The subschema an option of a dependency's `oneOf` names its condition with: its `properties[key]`, read off the
+   * option as written, or, for an option spelled as a `$ref`, off the schema it resolves to, as `withDependentSchema()`
+   * resolves such an option before `withExactlyOneSubschema()` reads it
+   */
+  private dependencyCondition(option: NodeId, key: string): unknown {
+    const node = this.graph.node(option);
+    if (node.kind !== 'schema') {
+      return undefined;
     }
-    return undefined;
+    if (node.ref === undefined) {
+      const condition = node.properties?.get(key);
+      if (condition === undefined) {
+        return undefined;
+      }
+      const conditionNode = this.graph.node(condition);
+      return conditionNode.kind === 'schema'
+        ? conditionNode.raw
+        : conditionNode.kind === 'boolean' && conditionNode.value;
+    }
+    const resolved = new PlanBuilder(this.context, this.graph, this.data, this.depData, true, this.selectOption).build([
+      { node: option, refPath: [] },
+    ]);
+    const properties: unknown = resolved.schema.properties;
+    return isObject(properties) ? properties[key] : undefined;
   }
 
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property,
@@ -494,16 +534,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return part;
     }
     const valid = (provider.node.oneOf ?? []).filter((option) => {
-      const conditionNode = this.keywordProvider(option, PROPERTIES_KEY)?.properties?.get(key);
-      if (conditionNode === undefined) {
+      const condition = this.dependencyCondition(option, key);
+      if (!condition) {
         return false;
       }
-      const node = this.graph.node(conditionNode);
-      const conditionSchema = schemaFrom(this.graph.rawRoot, {
-        type: 'object',
-        properties: { [key]: node.kind === 'schema' ? node.raw : booleanSchema(node, this.graph.rawRoot) },
-      });
-      return this.holds(`dependency:${conditionNode}:${key}`, conditionSchema, this.depData);
+      const conditionSchema = schemaFrom(this.graph.rawRoot, { type: 'object', properties: { [key]: condition } });
+      return this.holds(`dependency:${option}:${key}`, conditionSchema, this.depData);
     });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
@@ -521,13 +557,23 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return mergeBranch(part, { schema, children: chosen.children });
   }
 
-  private applyOption(part: Part<S>, keyword: 'anyOf' | 'oneOf', provider: Provider<S> | undefined): Part<S> {
+  private applyOption(
+    part: Part<S>,
+    keyword: 'anyOf' | 'oneOf',
+    provider: Provider<S> | undefined,
+    dependencies: boolean,
+  ): Part<S> {
     const options = provider?.node[keyword];
     if (provider === undefined || options === undefined) {
       return part;
     }
-    const request = { keyword, provider: provider.node.id, options };
-    const chosen = this.selectOption?.({ ...request, graph: this.graph, data: this.data });
+    const request = { keyword, provider: provider.node.id, options, dependencies };
+    const chosen = this.selectOption?.({
+      ...request,
+      graph: this.graph,
+      data: this.data,
+      discriminator: provider.node.discriminator,
+    });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });
     // The chosen option is rendered as a schema of its own, so its ref path restarts
@@ -545,7 +591,8 @@ function isPlanOf<S extends StrictRJSFSchema>(value: unknown, graph: SchemaGraph
 
 /** Builds the merge plan of the field `input.seeds` seed, memoized per seeds, data, policy and context: the same
  * inputs give the same plan object. Checks of an `if` or a dependency condition are memoized per (node, data), so a
- * parent's lookahead and the child's own build do not check the same condition twice.
+ * parent's lookahead and the child's own build do not check the same condition twice. Data that is an object is not
+ * memoized under, since a caller may mutate it in place between calls.
  *
  * @param input - The graph, seeds, data, policy and context of the field
  * @returns - The field's merge plan
@@ -568,13 +615,16 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     data,
     depData,
   ];
-  const memoized = planMemo.peek(keys);
+  const memoizable = isImmutable(data) && isImmutable(depData);
+  const memoized = memoizable ? planMemo.peek(keys) : undefined;
   if (isPlanOf(memoized, graph)) {
     return memoized;
   }
   const plan = new PlanBuilder(context, graph, data, depData, allOf, selectOption).build(seeds);
   planGraphs.set(plan, graph);
-  planMemo.set(keys, plan);
+  if (memoizable) {
+    planMemo.set(keys, plan);
+  }
   return plan;
 }
 

@@ -8,7 +8,6 @@ import {
   ITEMS_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
-  RJSF_REF_KEY,
   THEN_KEY,
 } from '../constants.ts';
 import { sortedJSONStringify } from '../hashForSchema.ts';
@@ -92,24 +91,6 @@ function parseUnmergedAllOf<
   }
 }
 
-/** Returns the `recurseList` for the sub-schemas of `schema`, which is the path `schema` was reached by plus the
- * reference it was itself resolved from. Resolution marks each subtree it materializes with its source reference and
- * keeps its own path stack, which it never hands back, so the marker is what a caller resolving something derived from
- * the schema reads to learn the reference it must not follow round again.
- *
- * Only the schema's own marker joins the path. The markers further down belong to the paths of the subtrees that carry
- * them, and `resolveAllReferences()` scopes its path to each subtree for that reason: a reference a sibling resolved is
- * not on this one's path, and passing it as though it were leaves this one's own `$ref` a literal.
- *
- * @param schema - The resolved schema whose sub-schemas are about to be parsed
- * @param recurseList - The references resolved on the way to `schema`
- * @returns - The references resolved on the way to `schema`'s sub-schemas
- */
-function pathForValues<S extends StrictRJSFSchema = RJSFSchema>(schema: S, recurseList: string[]): string[] {
-  const sourceRef = (schema as Record<symbol, unknown>)[RJSF_REF_KEY];
-  return typeof sourceRef === 'string' && !recurseList.includes(sourceRef) ? [...recurseList, sourceRef] : recurseList;
-}
-
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The context's `ParserValidator` is
  * used to capture the sub-schemas that the `isValid()` function is called with. For each schema returned by the
  * `retrieveSchemaInternal()`, the sub-schemas the form renders its value with are parsed, as is each of its
@@ -119,15 +100,12 @@ function pathForValues<S extends StrictRJSFSchema = RJSFSchema>(schema: S, recur
  * @param state - The `ParseState` shared by every `parseSchema()` call of one `schemaParser()` call
  * @param rootSchema - The root schema from which the schema parsing began
  * @param schema - The current schema element being parsed
- * @param [recurseList=[]] - The references resolved on the way to this schema, so that one already on the path stays a
- *        literal rather than being resolved a level further
  */
 function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   context: SchemaContext<S, F>,
   state: ParseState,
   rootSchema: S,
   schema: S,
-  recurseList: string[] = [],
 ) {
   const parsedKey = sortedJSONStringify(schema);
   if (state.parsed.has(parsedKey)) {
@@ -151,34 +129,25 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
       }
     }
   }
-  // The references resolved on the way to this schema travel with it, so that one already on the path stays a literal
-  // rather than being resolved a level further. An option a recursive schema declares is merged into the schema as
-  // resolution has left it, which is one level deeper each time, and both `parsed` and `resolved` key by content, so
-  // nothing repeats and the descent has nothing to stop it
-  const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true, recurseList);
+  // Resolution follows a schema's own `$ref` and leaves those under its values as they stand, so a value is reached as
+  // the subschema it is in the root, and both `parsed` and `resolved` key by content: a recursive schema reaches the
+  // same subschemas again and stops there
+  const schemas = retrieveSchemaInternal<T, S, F>(context, schema, rootSchema, undefined, true);
   schemas.forEach((localSchema) => {
     const resolvedKey = sortedJSONStringify(localSchema);
     if (!state.resolved.has(resolvedKey)) {
       state.resolved.add(resolvedKey);
-      const resolvedRefs = pathForValues<S>(localSchema, recurseList);
       // An `allOf` a merge leaves in place is read unmerged wherever it was reached from, and one that only appears
       // after resolution -- in a `then` or a dependency -- is merged inside `retrieveSchemaInternal()`, so the entries
       // are reached here rather than only on the schema the caller handed in
       parseUnmergedAllOf<T, S, F>(context, state, rootSchema, localSchema);
-      parseValueSchemas<T, S, F>(context, state, rootSchema, localSchema, resolvedRefs);
+      parseValueSchemas<T, S, F>(context, state, rootSchema, localSchema);
       // An option can hold an `allOf`, conditions or dependencies of its own, which only parsing the option resolves.
       // The schema is parsed alongside its options rather than being taken as covered by them, since merging an option
       // into the schema can replace one of the schema's own subschemas (a property's `oneOf`, say)
-      for (const option of resolveAnyOrOneOfSchemas<T, S, F>(
-        context,
-        localSchema,
-        rootSchema,
-        true,
-        undefined,
-        resolvedRefs,
-      )) {
+      for (const option of resolveAnyOrOneOfSchemas<T, S, F>(context, localSchema, rootSchema, true)) {
         if (option !== localSchema) {
-          parseSchema<T, S, F>(context, state, rootSchema, option, resolvedRefs);
+          parseSchema<T, S, F>(context, state, rootSchema, option);
         }
       }
     }
@@ -193,13 +162,12 @@ function parseSchema<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
  * @param state - The `ParseState` shared by every `parseSchema()` call of one `schemaParser()` call
  * @param rootSchema - The root schema from which the schema parsing began
  * @param schema - The schema whose value sub-schemas are being parsed
- * @param recurseList - The references resolved on the way to `schema`, which each of its values is reached through
  */
 function parseValueSchemas<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S, recurseList: string[]) {
+>(context: SchemaContext<S, F>, state: ParseState, rootSchema: S, schema: S) {
   const valueSchemas: unknown[] = Object.values(schema[PROPERTIES_KEY] ?? {});
   // An additional key is only stubbed into `properties` once the form data has one, which a parse does not, so the
   // schema a form renders such a key with is reached here instead -- read through the same function the form reads it
@@ -226,10 +194,7 @@ function parseValueSchemas<
   }
   for (const valueSchema of valueSchemas) {
     if (isSchemaObject<S>(valueSchema)) {
-      // A value is reached through the schema that holds it, so it carries the references resolved on the way to that
-      // schema -- a recursion through an `items` grows the same way one through a `properties` does. The list is
-      // shared, since resolution extends the path it is given into a new list rather than appending to that one
-      parseSchema<T, S, F>(context, state, rootSchema, valueSchema, recurseList);
+      parseSchema<T, S, F>(context, state, rootSchema, valueSchema);
     }
   }
 }
