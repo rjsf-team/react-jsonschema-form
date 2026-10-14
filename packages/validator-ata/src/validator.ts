@@ -259,10 +259,7 @@ export default class ATAValidator<
       // here as well. `forValidation` is the identity when the caller never went through the utils walk (#5477)
       const [validationSchema, validationRoot] = forValidation<S>(schema, rootSchema);
       this.handleSchemaUpdate(validationRoot);
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(
-        validationSchema,
-        validationRoot[ID_KEY] || ROOT_SCHEMA_PREFIX,
-      );
+      const schemaWithIdRefPrefix = withIdRefPrefix<S>(validationSchema, validationRoot[ID_KEY] || ROOT_SCHEMA_PREFIX);
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(ATAValidator.cloneForValidation(formData)).valid;

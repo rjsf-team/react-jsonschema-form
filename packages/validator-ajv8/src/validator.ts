@@ -291,10 +291,7 @@ export default class AJV8Validator<
       // then rewrite the schema ref's to point to the rootSchema
       // this accounts for the case where schema have references to models
       // that lives in the rootSchema but not in the schema in question.
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(
-        validationSchema,
-        validationRoot[ID_KEY] || ROOT_SCHEMA_PREFIX,
-      );
+      const schemaWithIdRefPrefix = withIdRefPrefix<S>(validationSchema, validationRoot[ID_KEY] || ROOT_SCHEMA_PREFIX);
       schemaId = schemaKey(schemaWithIdRefPrefix);
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary
