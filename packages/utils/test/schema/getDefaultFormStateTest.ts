@@ -5714,10 +5714,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       };
 
       afterEach(() => {
-        // Reset the testValidator
-        if (typeof testValidator.reset === 'function') {
-          testValidator?.reset();
-        }
+        testValidator.reset?.();
       });
 
       it('should populate root defaults for allOf', () => {
@@ -5913,6 +5910,8 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('should pick the if-then-else branch from the form data, so a then default whose if requires a defaulted value is left out', () => {
+          // The mock validator cannot evaluate `required`, so it returns what the real validators do here; the claim
+          // itself is only exercised by the ajv8, ata and cfworker runs of this test.
           testValidator.setReturnValues({ isValid: [false] });
           const requiredAnimalSchema: RJSFSchema = {
             ...animalInfoSchema,
