@@ -643,7 +643,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       // in an object property always causes an infinite render loop and must be caught; in anyOf/oneOf mode a $ref
       // already expanded by an earlier option is collapsed on purpose (see the optionsPath handling below), so it
       // must not be marked.
-      updatedProps[key] = resolveAllReferences(
+      const resolvedProperty = resolveAllReferences(
         value as S,
         rootSchema,
         pathList,
@@ -653,6 +653,16 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         expandedRefs,
         passCount,
       );
+      if (key === '__proto__') {
+        Object.defineProperty(updatedProps, key, {
+          value: resolvedProperty,
+          enumerable: true,
+          writable: true,
+          configurable: true,
+        });
+      } else {
+        updatedProps[key] = resolvedProperty;
+      }
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
   }
