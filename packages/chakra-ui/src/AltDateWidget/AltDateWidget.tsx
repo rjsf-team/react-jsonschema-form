@@ -13,10 +13,10 @@ function AltDateWidget<
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
-  const chakraProps = getChakra({ uiSchema: props.uiSchema });
+  const chakraProps = getChakra(options);
 
   return (
-    <FieldsetRoot {...(chakraProps as any)}>
+    <FieldsetRoot {...chakraProps}>
       <Box display='flex' flexWrap='wrap' alignItems='center'>
         {elements.map((elemProps: DateElementProp, i) => {
           const elemId = dateElementId(id, elemProps.type);

@@ -125,7 +125,7 @@ export default function RangeWidget<
   );
 
   const handleChange = useCallback(
-    (nextValue: any) => {
+    (nextValue: number) => {
       if (!disabled && !readonly && onChange) {
         onChange(nextValue);
       }

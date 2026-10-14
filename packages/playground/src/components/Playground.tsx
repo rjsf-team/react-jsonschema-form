@@ -3,10 +3,17 @@ import type { SubmitEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
-import type { FormProps, IChangeEvent } from '@rjsf/core';
+import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
 import { withTheme } from '@rjsf/core';
 import MarkdownTemplate from '@rjsf/core/markdown';
-import type { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import type {
+  DefaultFormStateBehavior,
+  ErrorSchema,
+  RJSFSchema,
+  RJSFValidationError,
+  UiSchema,
+  ValidatorType,
+} from '@rjsf/utils';
 import { createSchemaUtils, resetLogOnce } from '@rjsf/utils';
 
 import { samples } from '../samples/index.ts';
@@ -16,7 +23,7 @@ import DemoFrame from './DemoFrame.tsx';
 import Editors from './Editors.tsx';
 import ErrorBoundary from './ErrorBoundary.tsx';
 import GeoPosition from './GeoPosition.tsx';
-import type { LiveSettings } from './OptionsDrawer.tsx';
+import type { LiveFlag, LiveSettings, LoadedArrayMinItems, LoadedLiveSettings } from './OptionsDrawer.tsx';
 import OptionsDrawer from './OptionsDrawer.tsx';
 import SampleSelector from './SampleSelector.tsx';
 import SpecialInput from './SpecialInput.tsx';
@@ -35,9 +42,9 @@ export function toLiveSetting(value: unknown): 'onChange' | 'onBlur' | undefined
 }
 
 /** Converts a legacy boolean `liveValidate`/`liveOmit` value - `true` from a v5 shared link, `false` from a v5/v6
- * one - into the current string value. Any other value (including `undefined`) passes through unchanged.
+ * one - into the current string value. A current value passes through.
  */
-function normalizeLiveFlag(value: unknown): unknown {
+function normalizeLiveFlag(value: LiveFlag | boolean | undefined): LiveFlag | undefined {
   if (value === true) {
     return 'onChange';
   }
@@ -47,16 +54,50 @@ function normalizeLiveFlag(value: unknown): unknown {
   return value;
 }
 
-/** Normalizes `liveSettings` decoded from a shared playground URL or sample: defaults a missing object to `{}` (a
- * shared URL predating `liveSettings` support omits it entirely) so callers never have to null-check it, and
- * converts any legacy boolean `liveValidate`/`liveOmit` values to their current string equivalents.
+/** Leaves out the `'populate'` an older link carries where `arrayMinItems` or its `populate` goes: the first came from
+ * the initial settings the playground had through v6, the second from the default its drawer filled in. Neither is a
+ * value the form takes.
  */
-export function normalizeLiveSettings(loadedLiveSettings?: LiveSettings): LiveSettings {
-  const settings = loadedLiveSettings ?? {};
+function normalizeArrayMinItems(
+  loaded: LoadedArrayMinItems | undefined,
+): DefaultFormStateBehavior['arrayMinItems'] | undefined {
+  if (!loaded || loaded === 'populate') {
+    return undefined;
+  }
+  const { populate, ...arrayMinItems } = loaded;
+  return populate === 'populate' ? arrayMinItems : { ...arrayMinItems, populate };
+}
+
+/** Normalizes `liveSettings` decoded from a shared playground URL or sample: defaults a missing object to `{}` (a
+ * shared URL predating `liveSettings` support omits it entirely) so callers never have to null-check it, converts any
+ * legacy boolean `liveValidate`/`liveOmit` values to their current string equivalents, reads a `validate` of `true`, the
+ * name the live validation toggle had in early v5, as `liveValidate` when the link holds none, and leaves out what an
+ * older link carries that the form has no use for: `validate` itself, `useFallbackField`, an `arrayMinItems` of
+ * `'populate'` and an `arrayMinItems.populate` of `'populate'`. A hand-edited link can hold `null` in its place.
+ */
+export function normalizeLiveSettings(loadedLiveSettings?: LoadedLiveSettings | null): LiveSettings {
+  const {
+    validate,
+    useFallbackField,
+    defaultFormStateBehavior,
+    liveValidate: loadedLiveValidate,
+    liveOmit: loadedLiveOmit,
+    ...settings
+  } = loadedLiveSettings ?? {};
+  const { arrayMinItems: loadedArrayMinItems, ...behavior } = defaultFormStateBehavior ?? {};
+  const arrayMinItems = normalizeArrayMinItems(loadedArrayMinItems);
+  const liveValidate = normalizeLiveFlag(loadedLiveValidate ?? (validate || undefined));
+  const liveOmit = normalizeLiveFlag(loadedLiveOmit);
   return {
     ...settings,
-    liveValidate: normalizeLiveFlag(settings.liveValidate),
-    liveOmit: normalizeLiveFlag(settings.liveOmit),
+    ...(defaultFormStateBehavior && {
+      defaultFormStateBehavior: {
+        ...behavior,
+        ...(arrayMinItems && { arrayMinItems }),
+      },
+    }),
+    ...(liveValidate && { liveValidate }),
+    ...(liveOmit && { liveOmit }),
   };
 }
 
@@ -64,7 +105,6 @@ const DEFAULT_VALIDATOR = 'AJV8';
 
 const INITIAL_LIVE_SETTINGS: LiveSettings = {
   showErrorList: 'top',
-  validate: false,
   disabled: false,
   noHtml5Validate: false,
   readonly: false,
@@ -72,15 +112,14 @@ const INITIAL_LIVE_SETTINGS: LiveSettings = {
   liveOmit: 'off',
   liveValidate: 'off',
   defaultFormStateBehavior: {
-    arrayMinItems: 'populate',
+    arrayMinItems: { populate: 'all' },
     emptyObjectFields: 'populateAllDefaults',
   },
-  useFallbackField: false,
 };
 
 type LoadData = Sample & {
   theme?: string;
-  liveSettings: LiveSettings;
+  liveSettings: LoadedLiveSettings;
   sampleName?: string;
   validator?: string;
 };
@@ -216,7 +255,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [liveSettings, setLiveSettings] = useState<LiveSettings>(initial.liveSettings);
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>(initial.otherFormProps);
 
-  const playGroundFormRef = useRef<any>(null);
+  const playGroundFormRef = useRef<FormRef>(null);
 
   useEffect(() => {
     if (sharedSetupError !== undefined) {
@@ -295,12 +334,15 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     [setFormData, setShareURL],
   );
 
-  const onFormDataSubmit = useCallback(({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<any>) => {
-    console.log('submitted formData', submittedFormData);
-    console.log('submit event', event);
-    // oxlint-disable-next-line no-alert
-    window.alert('Form submitted');
-  }, []);
+  const onFormDataSubmit = useCallback(
+    ({ formData: submittedFormData }: IChangeEvent, event: SubmitEvent<HTMLFormElement>) => {
+      console.log('submitted formData', submittedFormData);
+      console.log('submit event', event);
+      // oxlint-disable-next-line no-alert
+      window.alert('Form submitted');
+    },
+    [],
+  );
 
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>

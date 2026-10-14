@@ -1,9 +1,9 @@
 import type { ButtonHTMLAttributes, Dispatch, PropsWithChildren, RefObject, SetStateAction } from 'react';
 import { useCallback } from 'react';
 import Drawer from '@mui/material/Drawer';
-import type { FormRef, IChangeEvent } from '@rjsf/core';
+import type { FormProps, FormRef, IChangeEvent } from '@rjsf/core';
 import Form from '@rjsf/core';
-import type { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
+import type { DefaultFormStateBehavior, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, isObject } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
@@ -90,7 +90,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
           properties: {
             populate: {
               type: 'string',
-              default: 'populate',
+              default: 'all',
               title: 'Populate minItems in arrays',
               oneOf: [
                 {
@@ -284,15 +284,58 @@ const liveSettingsBooleanUiSchema: UiSchema = {
   },
 };
 
-export interface LiveSettings {
-  showErrorList?: false | 'top' | 'bottom';
-  [key: string]: any;
-}
+/** The value of the drawer's `liveValidate` and `liveOmit` radios */
+export type LiveFlag = 'off' | 'onChange' | 'onBlur';
+
+/** The drawer's settings. Most are `Form` props spread straight onto it; `liveValidate` and `liveOmit` hold the drawer's
+ * radio value, which `toLiveSetting()` maps onto the prop since `Form` has no `'off'`.
+ */
+export type LiveSettings = Pick<
+  FormProps,
+  | 'disabled'
+  | 'readonly'
+  | 'idPrefix'
+  | 'idSeparator'
+  | 'noHtml5Validate'
+  | 'noValidate'
+  | 'omitExtraData'
+  | 'showErrorList'
+  | 'useFallbackUiForUnsupportedType'
+> & {
+  focusOnFirstError?: boolean;
+  liveValidate?: LiveFlag;
+  liveOmit?: LiveFlag;
+  defaultFormStateBehavior?: DefaultFormStateBehavior;
+};
+
+type ArrayMinItems = NonNullable<DefaultFormStateBehavior['arrayMinItems']>;
+
+/** `arrayMinItems` as a shared link may carry it */
+export type LoadedArrayMinItems =
+  | 'populate'
+  | (Omit<ArrayMinItems, 'populate'> & { populate?: ArrayMinItems['populate'] | 'populate' });
+
+/** The settings as a shared link may carry them. A v5 or v6 link holds `liveValidate` and `liveOmit` as booleans. A link
+ * shared from the initial settings the playground had through v6 holds an `arrayMinItems` of `'populate'`, which
+ * `DefaultFormStateBehavior` never allowed, a `validate` of `false`, and `useFallbackField`, which names no `Form` prop.
+ * One shared after a change in the drawer can hold `'populate'` as its `arrayMinItems.populate`, the default the drawer
+ * filled in through v6, which is none of the values that takes either.
+ * `validate` was the name of the live validation toggle in early v5, whose links hold it in place of `liveValidate`.
+ */
+export type LoadedLiveSettings = Omit<LiveSettings, 'liveValidate' | 'liveOmit' | 'defaultFormStateBehavior'> & {
+  liveValidate?: LiveFlag | boolean;
+  liveOmit?: LiveFlag | boolean;
+  defaultFormStateBehavior?: Omit<DefaultFormStateBehavior, 'arrayMinItems'> & {
+    arrayMinItems?: LoadedArrayMinItems;
+  };
+  validate?: boolean;
+  useFallbackField?: boolean;
+};
 
 interface OptionsDrawerProps {
   schema: RJSFSchema;
   uiSchema: UiSchema;
-  formData: any;
+  formData: unknown;
   shareURL: string | null;
   theme: string;
   sampleName: string;

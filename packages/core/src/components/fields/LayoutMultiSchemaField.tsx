@@ -228,16 +228,24 @@ export default function LayoutMultiSchemaField<
     // `uiSchemaDefinitions` comes from the registry: `uiSchema` here is only this field's own sub-uiSchema and
     // never carries the root's `ui:definitions` itself.
     const keyword = getXxxOfKey<S>(schema) ?? ONE_OF_KEY;
+    const newOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex);
+    const oldOptionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex);
     const newFormData = formDataForNewOption<T, S, F>(schemaUtils, formData, newOption, oldOption, schema, {
-      newOptionUiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, newOptionIndex),
-      oldOptionUiSchema: getOptionUiSchema<T, S, F>(uiSchema, keyword, oldOptionIndex),
+      newOptionUiSchema,
+      oldOptionUiSchema,
       uiSchemaDefinitions,
     });
     if (newFormData) {
       setByPath(newFormData, selectorField, opt);
     }
     // Pass the component name in the path
-    sendOptionSwitch(schema, oldOption, newOption, formData, () => onChange(newFormData, fieldPath, undefined, id));
+    sendOptionSwitch(
+      schema,
+      { oldOption, newOption, oldUiSchema: oldOptionUiSchema, newUiSchema: newOptionUiSchema },
+      formData,
+      newFormData,
+      () => onChange(newFormData, fieldPath, undefined, id),
+    );
   };
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop

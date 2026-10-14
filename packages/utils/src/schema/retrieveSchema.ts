@@ -792,13 +792,13 @@ const SUBSCHEMA_KEYWORDS: string[] = [
  * copying them would give every sibling property the same identifier — and an `$id` naming a registered field would
  * route them all to it.
  */
-const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor', '$schema', '$vocabulary'];
+export const IDENTIFIER_KEYWORDS: string[] = ['$id', '$anchor', '$dynamicAnchor', '$schema', '$vocabulary'];
 
 /** The keywords that hold other subschemas for a `$ref` to name rather than describe a value. The stub drops the
  * `$ref` that would reach them, so copying them into every property would hand each one an unreachable copy that
  * `hashForSchema()` and `deepEquals()` then walk on every render.
  */
-const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
+export const CONTAINER_KEYWORDS: string[] = ['$defs', 'definitions'];
 
 /** Every keyword that constrains the value, for the reasons the first two lists above give. They are only ever
  * consulted together, and once per property key, so they are consulted as one.
@@ -830,7 +830,7 @@ const EXCLUDED_STUB_KEYWORDS = new Set<string>([...SUBSCHEMA_KEYWORDS, ...UNSTUB
  * @returns - The copy to build the stub from
  */
 function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): S {
-  const schema = { ...subSchema } as GenericObjectType;
+  const schema: GenericObjectType = { ...subSchema };
   UNSTUBBABLE_KEYWORDS.forEach((keyword) => delete schema[keyword]);
   return schema as S;
 }
@@ -854,7 +854,7 @@ function stubbableSchema<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S):
  */
 function guessedTypeSchema<S extends StrictRJSFSchema = RJSFSchema>(formData: unknown, subSchema: S = {} as S): S {
   const type = guessType(formData);
-  const schema = { ...subSchema } as GenericObjectType;
+  const schema: GenericObjectType = { ...subSchema };
   let isConstrained = false;
   Object.entries(subSchema).forEach(([key, value]) => {
     if (CONSTRAINING_KEYWORDS.has(key)) {
@@ -1454,11 +1454,12 @@ export function retrieveSchemaInternal<
       // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
       // (external library) only operates on string keys and will drop them.
       const allOfSymbols: Record<symbol, unknown> = {};
-      resolvedSchema.allOf?.forEach((allOfItem) => {
-        // A boolean subschema carries no symbols; `getOwnPropertySymbols` coerces it and returns an empty list
+      // A boolean subschema carries no symbols
+      resolvedSchema.allOf?.filter(isObject).forEach((allOfItem) => {
         for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
           if (!(sym in allOfSymbols)) {
-            allOfSymbols[sym] = (allOfItem as any)[sym];
+            // `Reflect.get` reads through a getter, and a schema's type has no symbol key to index it by
+            allOfSymbols[sym] = Reflect.get(allOfItem, sym);
           }
         }
       });
@@ -1470,9 +1471,7 @@ export function retrieveSchemaInternal<
       }
       resolvedSchema = mergedSchema;
       // Re-apply collected Symbol properties that the merge dropped.
-      for (const sym of Object.getOwnPropertySymbols(allOfSymbols)) {
-        (resolvedSchema as any)[sym] = allOfSymbols[sym];
-      }
+      Object.assign(resolvedSchema, allOfSymbols);
     }
     let withMergedProperties = [resolvedSchema];
     const { properties } = resolvedSchema;
@@ -1839,7 +1838,7 @@ function partiallyApplied<
   return subsets
     .filter((subset) => subset.length < schemaKeys.length)
     .flatMap((subset) => {
-      const partial = { ...dependencies } as Record<string, unknown>;
+      const partial: Record<string, unknown> = { ...dependencies };
       for (const key of schemaKeys) {
         if (!subset.includes(key)) {
           delete partial[key];

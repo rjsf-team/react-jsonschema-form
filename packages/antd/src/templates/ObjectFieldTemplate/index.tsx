@@ -3,14 +3,56 @@ import type {
   FormContextType,
   ObjectFieldTemplateProps,
   ObjectFieldTemplatePropertyType,
+  Registry,
   RJSFSchema,
   StrictRJSFSchema,
+  UIOptionsType,
   UiSchema,
 } from '@rjsf/utils';
-import { canExpand, getTemplates, getUiOptions, titleId, buttonId } from '@rjsf/utils';
+import {
+  canExpand,
+  getByPath,
+  getFieldTypeForWidget,
+  getTemplates,
+  getUiOptions,
+  isComponentType,
+  resolveUiSchema,
+  titleId,
+  buttonId,
+} from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import type { RowProps } from 'antd';
 import classNames from 'classnames';
+
+/** Whether `span` is a span antd's `Col` renders, which is a whole number of its 24 grid columns */
+function isColSpan(span: unknown): span is number {
+  return typeof span === 'number' && Number.isInteger(span) && span >= 0 && span <= 24;
+}
+
+/** Gets the `ui:field` that `SchemaField` renders a property with, resolved the way its `resolveUiField()` resolves
+ * one: the property's own `ui:field` when it names a field, and otherwise the one in `ui:globalOptions`, unless the
+ * property gives an empty `ui:field` to ask for no field
+ *
+ * @param ownUiOptions - The property's own UI options, without the global ones
+ * @param registry - The registry holding the fields and the global UI options
+ * @returns - The `ui:field` that names the rendered field, if one does
+ */
+function getRenderedUiField<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ownUiOptions: UIOptionsType<T, S, F>,
+  registry: Registry<T, S, F>,
+): UIOptionsType<T, S, F>['field'] {
+  const namesField = (field: unknown) =>
+    isComponentType(typeof field === 'string' ? getByPath(registry.fields, field) : field);
+  const ownField = ownUiOptions.field;
+  if (namesField(ownField)) {
+    return ownField;
+  }
+  if (!ownField && Object.hasOwn(ownUiOptions, 'field')) {
+    return undefined;
+  }
+  const globalField: UIOptionsType<T, S, F>['field'] = registry.globalUiOptions?.field;
+  return namesField(globalField) ? globalField : undefined;
+}
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -52,26 +94,34 @@ export default function ObjectFieldTemplate<
   } = formContext;
   const { colSpan = 24, labelAlign = 'right', rowGutter = 24 } = antdContext;
 
-  const findSchema = (element: ObjectFieldTemplatePropertyType<T, S, F>): S => element.content.props.schema;
-
-  const findSchemaType = (element: ObjectFieldTemplatePropertyType<T, S, F>) => findSchema(element).type;
-
-  const findUiSchema = (element: ObjectFieldTemplatePropertyType<T, S, F>): UiSchema<T, S, F> | undefined =>
-    element.content.props.uiSchema;
-
-  const findUiSchemaField = (element: ObjectFieldTemplatePropertyType<T, S, F>) =>
-    getUiOptions(findUiSchema(element)).field;
-
-  const findUiSchemaWidget = (element: ObjectFieldTemplatePropertyType<T, S, F>) =>
-    getUiOptions(findUiSchema(element)).widget;
+  const visibleProperties = properties.filter((e) => !e.hidden);
 
   const calculateColSpan = (element: ObjectFieldTemplatePropertyType<T, S, F>) => {
-    const type = findSchemaType(element);
-    const field = findUiSchemaField(element);
-    const widget = findUiSchemaWidget(element);
+    if (isColSpan(colSpan)) {
+      return colSpan;
+    }
+    // Resolved the way `SchemaField` resolves them before it picks the field, so that a `$ref` with a
+    // `ui:definitions` entry, or an `allOf`, is keyed by what is rendered
+    const { schema: rawSchema, uiSchema: rawUiSchema } = element.content.props;
+    const propertyFormData = getByPath<T>(formData, element.name);
+    const propertySchema: S = registry.schemaUtils.retrieveSchema(rawSchema, propertyFormData);
+    const propertyUiSchema: UiSchema<T, S, F> = resolveUiSchema<T, S, F>(rawSchema, rawUiSchema, registry);
+    const ownUiOptions = getUiOptions<T, S, F>(propertyUiSchema);
+    const type = getFieldTypeForWidget<S>(propertySchema, ownUiOptions.widget);
+    const field = getRenderedUiField<T, S, F>(ownUiOptions, registry);
+    // `BooleanField`, and `ArrayField` for a multi-select or a files array, render a widget from `ui:globalOptions`
+    // when the property names none, while `StringField` and `NumberField` only render the property's own. The
+    // select `SchemaField` infers for a boolean with labelled options is not modelled here (see #5516)
+    const readsGlobalWidget =
+      !field &&
+      (type === 'boolean' ||
+        (type === 'array' &&
+          (registry.schemaUtils.isMultiSelect(propertySchema) ||
+            registry.schemaUtils.isFilesArray(propertySchema, propertyUiSchema))));
+    const { widget } = readsGlobalWidget ? { ...registry.globalUiOptions, ...ownUiOptions } : ownUiOptions;
 
     const defaultColSpan =
-      properties.length < 2 || // Single or no field in object.
+      visibleProperties.length < 2 || // Single or no visible field in object.
       type === 'object' ||
       type === 'array' ||
       widget === 'textarea'
@@ -79,18 +129,11 @@ export default function ObjectFieldTemplate<
         : 12;
 
     if (typeof colSpan === 'object' && colSpan !== null) {
-      if (typeof widget === 'string') {
-        return colSpan[widget];
+      for (const key of [widget, field, type]) {
+        if (typeof key === 'string' && isColSpan(colSpan[key])) {
+          return colSpan[key];
+        }
       }
-      if (typeof field === 'string') {
-        return colSpan[field];
-      }
-      if (typeof type === 'string') {
-        return colSpan[type];
-      }
-    }
-    if (typeof colSpan === 'number') {
-      return colSpan;
     }
     return defaultColSpan;
   };
@@ -121,13 +164,11 @@ export default function ObjectFieldTemplate<
           </Col>
         )}
         {!showOptionalDataControlInTitle ? <Col span={24}>{optionalDataControl}</Col> : undefined}
-        {properties
-          .filter((e) => !e.hidden)
-          .map((element: ObjectFieldTemplatePropertyType<T, S, F>) => (
-            <Col key={element.name} span={calculateColSpan(element)}>
-              {element.content}
-            </Col>
-          ))}
+        {visibleProperties.map((element) => (
+          <Col key={element.name} span={calculateColSpan(element)}>
+            {element.content}
+          </Col>
+        ))}
       </Row>
       {canExpand(schema, uiSchema, formData) && (
         <Col span={24}>

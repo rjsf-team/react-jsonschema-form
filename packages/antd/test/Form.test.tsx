@@ -217,6 +217,22 @@ describe('antd specific tests', () => {
     });
   });
 
+  test("renders an array's description once when its anyOf option renders the title and description", () => {
+    const opt: RJSFSchema = {
+      type: 'array',
+      title: 'Tags',
+      description: 'Up to three',
+      items: { type: 'string' },
+      anyOf: [{ minItems: 1 }, { maxItems: 3 }],
+    };
+    const { container } = render(
+      <Form schema={{ type: 'object', properties: { opt } }} validator={validator} formData={{ opt: ['x'] }} />,
+    );
+
+    expect(screen.getAllByText('Up to three')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_opt__description')).toHaveLength(1);
+  });
+
   test('descriptionLocation tooltip in formContext', () => {
     const schema: RJSFSchema = {
       type: 'object',

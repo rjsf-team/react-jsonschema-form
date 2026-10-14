@@ -1,4 +1,4 @@
-import type { RJSFSchema } from '../src/index.ts';
+import type { RJSFSchema, StrictRJSFSchema } from '../src/index.ts';
 import { withIdRefPrefix } from '../src/index.ts';
 
 describe('withIdRefPrefix()', () => {
@@ -34,6 +34,16 @@ describe('withIdRefPrefix()', () => {
     };
 
     expect(withIdRefPrefix(schema)).toEqual(schema);
+  });
+  it('should take the union of its input shapes from a generic caller', () => {
+    function prefixed<S extends StrictRJSFSchema>(schemaNode: S | S[]) {
+      return withIdRefPrefix<S>(schemaNode);
+    }
+
+    expectTypeOf(prefixed<StrictRJSFSchema>).returns.toEqualTypeOf<
+      StrictRJSFSchema | StrictRJSFSchema[] | StrictRJSFSchema[keyof StrictRJSFSchema]
+    >();
+    expect(prefixed<StrictRJSFSchema>([{ $ref: '#/defs/foo' }])).toEqual([{ $ref: '__rjsf_rootSchema#/defs/foo' }]);
   });
   it('should handle null schemaNode', () => {
     const schemaNode = null;

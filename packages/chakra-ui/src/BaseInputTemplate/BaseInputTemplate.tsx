@@ -39,7 +39,6 @@ export default function BaseInputTemplate<
     autofocus,
     placeholder,
     disabled,
-    uiSchema,
     registry,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
@@ -58,7 +57,7 @@ export default function BaseInputTemplate<
     [onChange, options.emptyValue],
   );
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(options);
 
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
