@@ -54,7 +54,7 @@ describe('the plan SchemaField builds', () => {
       properties: { foo: { type: 'string', title: 'Foo', description: 'Describes foo' } },
     });
     const plan = templatePlans.get('root_foo');
-    expect(plan?.label).toEqual({ text: 'Foo', by: 'template', id: fieldLabelId('root_foo') });
+    expect(plan?.label).toEqual({ text: 'Foo', by: 'template', id: fieldLabelId('root_foo'), requiredMarker: false });
     expect(plan?.description).toEqual({ text: 'Describes foo', by: 'template', id: 'root_foo__description' });
     expect(plan?.control?.id).toBe('root_foo');
     expect(widgetPlans.get('root_foo')).toBe(plan);
@@ -105,8 +105,13 @@ describe('the plan SchemaField builds', () => {
     expect(templatePlans.get('root_foo')).toBe(plan);
     expect(plan?.inherited).toBeDefined();
     expect(plan?.inherited).toBe(outerTemplatePlans.get('root_foo'));
-    expect(plan?.inherited?.label).toEqual({ text: 'Foo', by: 'template', id: fieldLabelId('root_foo') });
-    expect(plan?.label).toEqual({ text: 'Foo', by: 'above', id: fieldLabelId('root_foo') });
+    expect(plan?.inherited?.label).toEqual({
+      text: 'Foo',
+      by: 'template',
+      id: fieldLabelId('root_foo'),
+      requiredMarker: false,
+    });
+    expect(plan?.label).toEqual({ text: 'Foo', by: 'above', id: fieldLabelId('root_foo'), requiredMarker: false });
   });
 
   it("keeps the option's name for its own label, under an option id, where the selector draws the field's", () => {
@@ -117,7 +122,12 @@ describe('the plan SchemaField builds', () => {
         presentation: { default: { label: 'self' }, fields: { AnyOfField: { label: 'self' } } },
       },
     );
-    expect(widgetPlans.get('root_foo')?.label).toEqual({ text: 'foo', by: 'self', id: 'root_foo__optionLabel' });
+    expect(widgetPlans.get('root_foo')?.label).toEqual({
+      text: 'foo',
+      by: 'self',
+      id: 'root_foo__optionLabel',
+      requiredMarker: false,
+    });
   });
 
   it("carries the field's ui:label false to an option given a uiSchema of its own", () => {
@@ -142,7 +152,7 @@ describe('the plan SchemaField builds', () => {
     );
     const plan = widgetPlans.get('root_foo');
     expect(plan?.inherited?.label.by).toBe('template');
-    expect(plan?.label).toEqual({ text: 'Foo', by: 'above', id: fieldLabelId('root_foo') });
+    expect(plan?.label).toEqual({ text: 'Foo', by: 'above', id: fieldLabelId('root_foo'), requiredMarker: false });
   });
 
   it('plans a required checkbox as required, by marker and attribute alike, only where its schema demands true', () => {
@@ -151,12 +161,21 @@ describe('the plan SchemaField builds', () => {
       required: ['agree', 'accept'],
       properties: { agree: { type: 'boolean' }, accept: { type: 'boolean', const: true } },
     });
-    expect(templatePlans.get('root_agree')?.control).toMatchObject({ requiredMarker: false });
+    expect(templatePlans.get('root_agree')?.label.requiredMarker).toBe(false);
     expect(templatePlans.get('root_agree')?.control?.attributes.required).toBeUndefined();
-    expect(templatePlans.get('root_accept')?.control).toMatchObject({
-      requiredMarker: true,
-      attributes: { required: true },
+    expect(templatePlans.get('root_accept')?.label.requiredMarker).toBe(true);
+    expect(templatePlans.get('root_accept')?.control?.attributes.required).toBe(true);
+  });
+
+  it('marks the heading of a required object, which has no control', () => {
+    const { templatePlans } = renderPlans({
+      type: 'object',
+      required: ['pet'],
+      properties: { pet: { type: 'object', title: 'Pet', properties: { name: { type: 'string' } } } },
     });
+    const plan = templatePlans.get('root_pet');
+    expect(plan?.label).toMatchObject({ text: 'Pet', requiredMarker: true });
+    expect(plan?.control).toBeUndefined();
   });
 
   it('hands the template the same plan on a render that changes nothing it reads', () => {

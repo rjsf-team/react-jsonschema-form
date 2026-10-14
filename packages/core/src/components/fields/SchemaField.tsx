@@ -478,7 +478,7 @@ function getOptionsPresentation(presentation: FieldPresentation, id: string, isC
   };
   if (namedByHeading) {
     const attributes = getDescribedControlAttributes(describedBy, errors.messages);
-    return { ...presentation, ...parts, control: { id, attributes, requiredMarker: false } };
+    return { ...presentation, ...parts, control: { id, attributes } };
   }
   if (isContainer) {
     return { ...presentation, ...parts };
