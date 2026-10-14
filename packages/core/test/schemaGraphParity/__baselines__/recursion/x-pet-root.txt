@@ -1,0 +1,40 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "hunts": "h",
+      "petType": "cat"
+    },
+    "passLengths": [
+      39,
+      39,
+      39,
+      39,
+      39,
+      39
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_friend-button"
+      ],
+      "expandButtons": [
+        "root_friend_friend-button"
+      ],
+      "inputs": [
+        "root_petType",
+        "root_friend_petType",
+        "root_friend_hunts",
+        "root_hunts"
+      ]
+    },
+    "expandButtons": [
+      "root_friend-button"
+    ],
+    "inputs": [
+      "root_petType",
+      "root_hunts"
+    ]
+  }
+}

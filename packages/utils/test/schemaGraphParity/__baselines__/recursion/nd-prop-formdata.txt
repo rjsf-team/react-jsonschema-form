@@ -1,0 +1,226 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "p": {
+          "a": "v",
+          "b": "y",
+          "child": {
+            "a": "v",
+            "b": "y",
+            "child": {
+              "a": "v"
+            },
+            "extra": "e"
+          },
+          "extra": "e"
+        }
+      },
+      "passLengths": [
+        178,
+        178,
+        178,
+        178,
+        178,
+        178
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "p": {
+          "a": "v",
+          "b": "y",
+          "child": {
+            "a": "v",
+            "b": "y",
+            "child": {
+              "a": "v"
+            },
+            "extra": "e"
+          },
+          "extra": "e"
+        }
+      },
+      "passLengths": [
+        178,
+        178,
+        178,
+        178,
+        178,
+        178
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "p": {
+          "a": "v",
+          "b": "y",
+          "child": {
+            "a": "v",
+            "b": "y",
+            "child": {
+              "a": "v"
+            },
+            "extra": "e"
+          },
+          "extra": "e"
+        }
+      },
+      "passLengths": [
+        178,
+        178,
+        178,
+        178,
+        178,
+        178
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "nd": {
+          "dependencies": {
+            "a": {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "properties": {
+            "a": {
+              "type": "string"
+            },
+            "b": {
+              "default": "y",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/nd"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p": {
+          "dependencies": {
+            "a": {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "properties": {
+            "a": {
+              "type": "string"
+            },
+            "b": {
+              "default": "y",
+              "type": "string"
+            },
+            "child": {
+              "dependencies": {
+                "a": {
+                  "properties": {
+                    "extra": {
+                      "default": "e",
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "properties": {
+                "a": {
+                  "type": "string"
+                },
+                "b": {
+                  "default": "y",
+                  "type": "string"
+                },
+                "child": {
+                  "$ref": "#/definitions/nd",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/nd"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/nd"
+        }
+      },
+      "type": "object"
+    },
+    "once": {
+      "definitions": {
+        "nd": {
+          "dependencies": {
+            "a": {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "properties": {
+            "a": {
+              "type": "string"
+            },
+            "b": {
+              "default": "y",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/nd"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p": {
+          "dependencies": {
+            "a": {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "properties": {
+            "a": {
+              "type": "string"
+            },
+            "b": {
+              "default": "y",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/nd",
+              "@@RJSF_REF_CYCLE_KEY": true
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/nd"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

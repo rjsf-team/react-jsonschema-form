@@ -1,0 +1,163 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {}
+                ]
+              }
+            ],
+            "name": "t"
+          }
+        ],
+        "name": "t"
+      },
+      "passLengths": [
+        169,
+        169,
+        169,
+        169,
+        169,
+        169
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {}
+                ]
+              }
+            ],
+            "name": "t"
+          }
+        ],
+        "name": "t"
+      },
+      "passLengths": [
+        169,
+        169,
+        169,
+        169,
+        169,
+        169
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {}
+                ]
+              }
+            ],
+            "name": "t"
+          }
+        ],
+        "name": "t"
+      },
+      "passLengths": [
+        169,
+        169,
+        169,
+        169,
+        169,
+        169
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "tree": {
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/definitions/tree"
+              },
+              "type": "array"
+            },
+            "name": {
+              "default": "t",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "children": {
+          "items": {
+            "properties": {
+              "children": {
+                "items": {
+                  "$ref": "#/definitions/tree"
+                },
+                "type": "array"
+              },
+              "name": {
+                "default": "t",
+                "type": "string"
+              }
+            },
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/tree"
+          },
+          "type": "array"
+        },
+        "name": {
+          "default": "t",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/tree"
+    },
+    "once": {
+      "definitions": {
+        "tree": {
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/definitions/tree"
+              },
+              "type": "array"
+            },
+            "name": {
+              "default": "t",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/definitions/tree"
+          },
+          "type": "array"
+        },
+        "name": {
+          "default": "t",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/tree"
+    }
+  }
+}

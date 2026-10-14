@@ -1,0 +1,113 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "child": {
+          "extra": "e"
+        },
+        "name": "b"
+      },
+      "passLengths": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "extra": "e"
+          },
+          "extra": "e",
+          "name": "b"
+        },
+        "name": "b"
+      },
+      "passLengths": [
+        111,
+        111,
+        111,
+        111,
+        111,
+        111
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "child": {
+          "extra": "e"
+        },
+        "name": "b"
+      },
+      "passLengths": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "Base": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/M"
+            },
+            "name": {
+              "default": "b",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "M": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Base"
+            }
+          ],
+          "properties": {
+            "extra": {
+              "default": "e",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "properties": {
+        "child": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Base"
+            }
+          ],
+          "properties": {
+            "extra": {
+              "default": "e",
+              "type": "string"
+            }
+          },
+          "@@RJSF_REF_KEY": "#/definitions/M"
+        },
+        "name": {
+          "default": "b",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Base"
+    }
+  }
+}

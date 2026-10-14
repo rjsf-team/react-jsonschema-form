@@ -1,0 +1,174 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "kids": [
+          {
+            "kids": [
+              "@@undefined"
+            ],
+            "name": "n"
+          }
+        ],
+        "name": "n"
+      },
+      "passLengths": [
+        112,
+        112,
+        112,
+        112,
+        112,
+        112
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "kids": [
+          {
+            "kids": [
+              "@@undefined"
+            ],
+            "name": "n"
+          }
+        ],
+        "name": "n"
+      },
+      "passLengths": [
+        112,
+        112,
+        112,
+        112,
+        112,
+        112
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "kids": [
+          {
+            "kids": [
+              "@@undefined"
+            ],
+            "name": "n"
+          }
+        ],
+        "name": "n"
+      },
+      "passLengths": [
+        112,
+        112,
+        112,
+        112,
+        112,
+        112
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "node": {
+          "if": {},
+          "properties": {
+            "kids": {
+              "items": {
+                "$ref": "#/definitions/node"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kids"
+          ],
+          "type": "object"
+        }
+      },
+      "properties": {
+        "kids": {
+          "items": {
+            "if": {},
+            "properties": {
+              "kids": {
+                "items": {
+                  "$ref": "#/definitions/node"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "name": {
+                "default": "n",
+                "type": "string"
+              }
+            },
+            "required": [
+              "kids"
+            ],
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/node"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kids"
+      ],
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    },
+    "once": {
+      "definitions": {
+        "node": {
+          "if": {},
+          "properties": {
+            "kids": {
+              "items": {
+                "$ref": "#/definitions/node"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "required": [
+            "kids"
+          ],
+          "type": "object"
+        }
+      },
+      "properties": {
+        "kids": {
+          "items": {
+            "$ref": "#/definitions/node"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kids"
+      ],
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

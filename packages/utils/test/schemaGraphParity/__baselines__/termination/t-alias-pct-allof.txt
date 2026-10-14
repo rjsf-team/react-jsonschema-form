@@ -1,0 +1,96 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "name": "n"
+      },
+      "passLengths": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "name": "n"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        92,
+        92,
+        92,
+        92,
+        92,
+        92
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "name": "n"
+      },
+      "passLengths": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "child": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/A"
+                },
+                {
+                  "$ref": "#/definitions/%41"
+                }
+              ]
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/A"
+            },
+            {
+              "$ref": "#/definitions/%41"
+            }
+          ]
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/A"
+    }
+  }
+}

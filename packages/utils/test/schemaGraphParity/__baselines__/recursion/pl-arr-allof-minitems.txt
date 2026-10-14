@@ -1,0 +1,147 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "arr": [
+          {
+            "a": "x",
+            "child": {
+              "a": "x",
+              "child": {
+                "a": "x"
+              }
+            }
+          }
+        ]
+      },
+      "passLengths": [
+        138,
+        138,
+        138,
+        138,
+        138,
+        138
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "pl": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/pl"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "arr": {
+          "allOf": [
+            {
+              "minItems": 1
+            }
+          ],
+          "items": {
+            "properties": {
+              "a": {
+                "default": "x",
+                "type": "string"
+              },
+              "child": {
+                "properties": {
+                  "a": {
+                    "default": "x",
+                    "type": "string"
+                  },
+                  "child": {
+                    "$ref": "#/definitions/pl",
+                    "@@RJSF_REF_CYCLE_KEY": true
+                  }
+                },
+                "type": "object",
+                "@@RJSF_REF_CYCLE_KEY": true,
+                "@@RJSF_REF_KEY": "#/definitions/pl"
+              }
+            },
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/pl"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
+    "once": {
+      "definitions": {
+        "pl": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/pl"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "arr": {
+          "allOf": [
+            {
+              "minItems": 1
+            }
+          ],
+          "items": {
+            "properties": {
+              "a": {
+                "default": "x",
+                "type": "string"
+              },
+              "child": {
+                "$ref": "#/definitions/pl",
+                "@@RJSF_REF_CYCLE_KEY": true
+              }
+            },
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/pl"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

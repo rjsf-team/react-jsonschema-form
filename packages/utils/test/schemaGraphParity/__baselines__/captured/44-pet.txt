@@ -1,0 +1,91 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "$ref": "#/definitions/Pet",
+      "definitions": {
+        "Cat": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Pet"
+            },
+            {
+              "properties": {
+                "hunts": {
+                  "type": "boolean"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        "Pet": {
+          "if": {
+            "properties": {
+              "petType": {
+                "const": "cat"
+              }
+            }
+          },
+          "properties": {
+            "petType": {
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/Cat"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "hunts": {
+          "type": "boolean"
+        },
+        "petType": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Pet"
+    }
+  }
+}

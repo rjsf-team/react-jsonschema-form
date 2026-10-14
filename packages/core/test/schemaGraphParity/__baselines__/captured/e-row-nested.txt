@@ -1,0 +1,52 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "kids": [
+        {
+          "kids": [
+            {}
+          ]
+        }
+      ]
+    },
+    "passLengths": [
+      67,
+      67,
+      67,
+      67,
+      67,
+      67
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_kids_0_kids_0_best-button"
+      ],
+      "expandButtons": [
+        "root_kids_0_kids_0_best_best-button",
+        "root_kids_0_best_best-button",
+        "root_best-button"
+      ],
+      "inputs": [
+        "root_name",
+        "root_kids_0_name",
+        "root_kids_0_kids_0_name",
+        "root_kids_0_kids_0_best_name",
+        "root_kids_0_best_name"
+      ]
+    },
+    "expandButtons": [
+      "root_kids_0_kids_0_best-button",
+      "root_kids_0_best_best-button",
+      "root_best-button"
+    ],
+    "inputs": [
+      "root_name",
+      "root_kids_0_name",
+      "root_kids_0_kids_0_name",
+      "root_kids_0_best_name"
+    ]
+  }
+}

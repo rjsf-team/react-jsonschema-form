@@ -1,0 +1,8 @@
+{
+  "getDefaultFormState": {
+    "throws": "Error: Definition for #/definitions/badCircularDeeperNestedRef contains a circular reference through #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef -> #/definitions/badCircularDeeperNestedRef"
+  },
+  "render": {
+    "throws": "Error: Definition for #/definitions/badCircularDeeperNestedRef contains a circular reference through #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef -> #/definitions/badCircularDeeperNestedRef"
+  }
+}

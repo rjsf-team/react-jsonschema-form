@@ -1,0 +1,154 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "kid": {
+          "tag": "t"
+        },
+        "tag": "t"
+      },
+      "passLengths": [
+        48,
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "kid": {
+          "tag": "t"
+        },
+        "tag": "t"
+      },
+      "passLengths": [
+        48,
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "kid": {
+          "tag": "t"
+        },
+        "tag": "t"
+      },
+      "passLengths": [
+        48,
+        48,
+        48,
+        48,
+        48,
+        48
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "kid": {
+          "properties": {
+            "kid": {
+              "$ref": "#/definitions/kid"
+            },
+            "tag": {
+              "default": "t",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "parent": {
+          "if": {},
+          "properties": {
+            "a": {
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/kid"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "kid": {
+          "properties": {
+            "kid": {
+              "$ref": "#/definitions/kid",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "tag": {
+              "default": "t",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/kid"
+        },
+        "tag": {
+          "default": "t",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/parent"
+    },
+    "once": {
+      "definitions": {
+        "kid": {
+          "properties": {
+            "kid": {
+              "$ref": "#/definitions/kid"
+            },
+            "tag": {
+              "default": "t",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "parent": {
+          "if": {},
+          "properties": {
+            "a": {
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/kid"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "kid": {
+          "$ref": "#/definitions/kid",
+          "@@RJSF_REF_CYCLE_KEY": true
+        },
+        "tag": {
+          "default": "t",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/parent"
+    }
+  }
+}

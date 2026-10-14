@@ -1,0 +1,140 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "branch": {
+          "properties": {
+            "a": {
+              "enum": [
+                "1"
+              ]
+            },
+            "kid": {
+              "$ref": "#/definitions/branch"
+            }
+          },
+          "type": "object"
+        },
+        "node": {
+          "if": true,
+          "properties": {
+            "a": {
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/branch"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "enum": [
+            "1"
+          ],
+          "type": "string"
+        },
+        "kid": {
+          "properties": {
+            "a": {
+              "enum": [
+                "1"
+              ]
+            },
+            "kid": {
+              "$ref": "#/definitions/branch",
+              "@@RJSF_REF_CYCLE_KEY": true
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/branch"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    },
+    "once": {
+      "definitions": {
+        "branch": {
+          "properties": {
+            "a": {
+              "enum": [
+                "1"
+              ]
+            },
+            "kid": {
+              "$ref": "#/definitions/branch"
+            }
+          },
+          "type": "object"
+        },
+        "node": {
+          "if": true,
+          "properties": {
+            "a": {
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/branch"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "enum": [
+            "1"
+          ],
+          "type": "string"
+        },
+        "kid": {
+          "$ref": "#/definitions/branch",
+          "@@RJSF_REF_CYCLE_KEY": true
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "tree": [
+        {
+          "children": [
+            {
+              "children": [],
+              "name": "L1"
+            }
+          ],
+          "name": "L0"
+        }
+      ]
+    },
+    "passLengths": [
+      149,
+      149,
+      149,
+      149,
+      149,
+      149
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_tree_0__oneof_select",
+      "root_tree_0_name",
+      "root_tree_0_children_0__oneof_select",
+      "root_tree_0_children_0_name"
+    ]
+  }
+}

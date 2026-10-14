@@ -1,0 +1,95 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x",
+          "child": {
+            "a": "x"
+          }
+        }
+      },
+      "passLengths": [
+        83,
+        83,
+        83,
+        83,
+        83,
+        83
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x",
+          "child": {
+            "a": "x"
+          }
+        }
+      },
+      "passLengths": [
+        83,
+        83,
+        83,
+        83,
+        83,
+        83
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x"
+        }
+      },
+      "passLengths": [
+        46,
+        46,
+        46,
+        46,
+        46,
+        46
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "properties": {
+        "a": {
+          "default": "x",
+          "type": "string"
+        },
+        "child": {
+          "if": {
+            "required": [
+              "a"
+            ]
+          },
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            }
+          },
+          "then": {
+            "properties": {
+              "child": {
+                "$ref": "#"
+              }
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

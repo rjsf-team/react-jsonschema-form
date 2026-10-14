@@ -1,0 +1,32 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "kids": [
+        {
+          "kids": [
+            "@@undefined"
+          ],
+          "name": "n"
+        }
+      ],
+      "name": "n"
+    },
+    "passLengths": [
+      112,
+      112,
+      112,
+      112,
+      112,
+      112
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_name",
+      "root_kids_0_name",
+      "root_kids_0_kids_0_name"
+    ]
+  }
+}

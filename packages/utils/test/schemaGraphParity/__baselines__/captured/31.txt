@@ -1,0 +1,178 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/B"
+            }
+          },
+          "type": "object"
+        },
+        "B": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/A"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "properties": {
+            "child": {
+              "properties": {
+                "child": {
+                  "properties": {
+                    "child": {
+                      "properties": {
+                        "child": {
+                          "$ref": "#/definitions/A",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/B"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_CYCLE_KEY": true,
+                  "@@RJSF_REF_KEY": "#/definitions/A"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/B"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/A"
+        },
+        "b": {
+          "properties": {
+            "child": {
+              "properties": {
+                "child": {
+                  "properties": {
+                    "child": {
+                      "properties": {
+                        "child": {
+                          "$ref": "#/definitions/B",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/A"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_CYCLE_KEY": true,
+                  "@@RJSF_REF_KEY": "#/definitions/B"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/A"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/B"
+        }
+      },
+      "type": "object"
+    },
+    "once": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/B"
+            }
+          },
+          "type": "object"
+        },
+        "B": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/A"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "properties": {
+            "child": {
+              "properties": {
+                "child": {
+                  "$ref": "#/definitions/A",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/B"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/A"
+        },
+        "b": {
+          "properties": {
+            "child": {
+              "properties": {
+                "child": {
+                  "$ref": "#/definitions/B",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/A"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/B"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

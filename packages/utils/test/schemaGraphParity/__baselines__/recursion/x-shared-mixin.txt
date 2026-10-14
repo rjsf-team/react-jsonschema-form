@@ -1,0 +1,115 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "created": "c",
+        "meta": {
+          "m": "m"
+        }
+      },
+      "passLengths": [
+        51,
+        51,
+        51,
+        51,
+        51,
+        51
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "created": "c",
+        "meta": {
+          "created": "c",
+          "m": "m"
+        }
+      },
+      "passLengths": [
+        71,
+        71,
+        71,
+        71,
+        71,
+        71
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "created": "c",
+        "meta": {
+          "m": "m"
+        }
+      },
+      "passLengths": [
+        51,
+        51,
+        51,
+        51,
+        51,
+        51
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "Doc": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/mixin"
+            }
+          ],
+          "properties": {
+            "meta": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/mixin"
+                }
+              ],
+              "properties": {
+                "m": {
+                  "default": "m",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "mixin": {
+          "properties": {
+            "created": {
+              "default": "c",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "created": {
+          "default": "c",
+          "type": "string"
+        },
+        "meta": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/mixin"
+            }
+          ],
+          "properties": {
+            "m": {
+              "default": "m",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/mixin"
+    }
+  }
+}

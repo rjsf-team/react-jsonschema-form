@@ -1,0 +1,87 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "patternProperties": {
+            "^child": {
+              "title": "Child"
+            }
+          },
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/node"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "patternProperties": {
+        "^child": {
+          "title": "Child"
+        }
+      },
+      "properties": {
+        "child": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/node",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            {
+              "title": "Child"
+            }
+          ],
+          "@@RJSF_REF_CYCLE_KEY": true
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

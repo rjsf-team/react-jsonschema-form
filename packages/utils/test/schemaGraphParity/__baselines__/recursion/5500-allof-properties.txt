@@ -1,0 +1,50 @@
+{
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "allOf": [
+                {
+                  "properties": {
+                    "x": {
+                      "$ref": "#/definitions/node"
+                    }
+                  }
+                }
+              ],
+              "type": "object"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "allOf": [
+            {
+              "properties": {
+                "x": {
+                  "$ref": "#/definitions/node"
+                }
+              }
+            }
+          ],
+          "type": "object"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

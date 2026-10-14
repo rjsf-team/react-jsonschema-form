@@ -1,0 +1,95 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "additionalProperties": {
+        "$ref": "#/definitions/property",
+        "default": {
+          "type": "string"
+        }
+      },
+      "definitions": {
+        "properties": {
+          "additionalProperties": {
+            "$ref": "#/definitions/property",
+            "default": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "property": {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "object"
+              }
+            }
+          },
+          "properties": {
+            "type": {
+              "default": "string",
+              "enum": [
+                "string",
+                "object"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "then": {
+            "properties": {
+              "properties": {
+                "$ref": "#/definitions/properties"
+              }
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {},
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/properties"
+    }
+  }
+}

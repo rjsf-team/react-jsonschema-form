@@ -1,0 +1,149 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "anyOf": [
+        {
+          "required": [
+            "a"
+          ]
+        },
+        {
+          "required": [
+            "b"
+          ]
+        }
+      ],
+      "definitions": {
+        "Node": {
+          "anyOf": [
+            {
+              "required": [
+                "a"
+              ]
+            },
+            {
+              "required": [
+                "b"
+              ]
+            }
+          ],
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/Node"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "anyOf": [
+            {
+              "required": [
+                "a"
+              ]
+            },
+            {
+              "required": [
+                "b"
+              ]
+            }
+          ],
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/Node",
+              "@@RJSF_REF_CYCLE_KEY": true
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/Node"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Node"
+    },
+    "once": {
+      "anyOf": [
+        {
+          "required": [
+            "a"
+          ]
+        },
+        {
+          "required": [
+            "b"
+          ]
+        }
+      ],
+      "definitions": {
+        "Node": {
+          "anyOf": [
+            {
+              "required": [
+                "a"
+              ]
+            },
+            {
+              "required": [
+                "b"
+              ]
+            }
+          ],
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/Node"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "$ref": "#/definitions/Node",
+          "@@RJSF_REF_CYCLE_KEY": true
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Node"
+    }
+  }
+}

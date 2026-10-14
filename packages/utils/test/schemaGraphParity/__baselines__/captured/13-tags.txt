@@ -1,0 +1,93 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": [
+        [
+          "@@undefined"
+        ]
+      ],
+      "passLengths": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": [
+        [
+          "@@undefined"
+        ]
+      ],
+      "passLengths": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": [
+        [
+          "@@undefined"
+        ]
+      ],
+      "passLengths": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "tags": {
+          "items": {
+            "$ref": "#/definitions/tags"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "items": {
+        "items": {
+          "$ref": "#/definitions/tags"
+        },
+        "minItems": 1,
+        "type": "array",
+        "@@RJSF_REF_KEY": "#/definitions/tags"
+      },
+      "minItems": 1,
+      "type": "array",
+      "@@RJSF_REF_KEY": "#/definitions/tags"
+    },
+    "once": {
+      "definitions": {
+        "tags": {
+          "items": {
+            "$ref": "#/definitions/tags"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "items": {
+        "$ref": "#/definitions/tags"
+      },
+      "minItems": 1,
+      "type": "array",
+      "@@RJSF_REF_KEY": "#/definitions/tags"
+    }
+  }
+}

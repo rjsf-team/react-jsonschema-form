@@ -1,0 +1,27 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "a": "x"
+    },
+    "last": {
+      "a": "x",
+      "b": "b"
+    },
+    "passLengths": [
+      15,
+      27,
+      27,
+      27,
+      27,
+      27
+    ],
+    "stable": false
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_a",
+      "root_b"
+    ]
+  }
+}

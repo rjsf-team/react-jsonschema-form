@@ -1,0 +1,48 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "p": {
+        "friend": {
+          "hunts": "h",
+          "petType": "cat"
+        },
+        "hunts": "h",
+        "petType": "cat"
+      }
+    },
+    "passLengths": [
+      122,
+      122,
+      122,
+      122,
+      122,
+      122
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_p_friend-button"
+      ],
+      "expandButtons": [
+        "root_p_friend_friend_friend-button"
+      ],
+      "inputs": [
+        "root_p_petType",
+        "root_p_friend_petType",
+        "root_p_friend_friend_petType",
+        "root_p_friend_friend_hunts",
+        "root_p_friend_hunts",
+        "root_p_hunts"
+      ]
+    },
+    "expandButtons": [
+      "root_p_friend-button"
+    ],
+    "inputs": [
+      "root_p_petType",
+      "root_p_hunts"
+    ]
+  }
+}

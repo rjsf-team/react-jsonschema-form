@@ -1,0 +1,200 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "n0": "n",
+        "n1": "n"
+      },
+      "passLengths": [
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "k": {
+          "k": {
+            "k": {
+              "k": {
+                "k": {
+                  "k": {
+                    "n1": "n"
+                  },
+                  "n1": "n"
+                },
+                "n1": "n"
+              },
+              "n0": "n",
+              "n1": "n"
+            },
+            "n0": "n",
+            "n1": "n"
+          },
+          "n0": "n",
+          "n1": "n"
+        },
+        "n0": "n",
+        "n1": "n"
+      },
+      "passLengths": [
+        338,
+        338,
+        338,
+        338,
+        338,
+        338
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "n0": "n",
+        "n1": "n"
+      },
+      "passLengths": [
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "C0_0": {
+          "properties": {
+            "k": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Leaf"
+                },
+                {
+                  "$ref": "#/definitions/C0_1"
+                }
+              ]
+            },
+            "n0": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "C0_1": {
+          "properties": {
+            "k": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Leaf"
+                },
+                {
+                  "$ref": "#/definitions/C0_0"
+                }
+              ]
+            },
+            "n0": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "C1_0": {
+          "properties": {
+            "k": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Leaf"
+                },
+                {
+                  "$ref": "#/definitions/C1_1"
+                }
+              ]
+            },
+            "n1": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "C1_1": {
+          "properties": {
+            "k": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Leaf"
+                },
+                {
+                  "$ref": "#/definitions/C1_2"
+                }
+              ]
+            },
+            "n1": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "C1_2": {
+          "properties": {
+            "k": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/Leaf"
+                },
+                {
+                  "$ref": "#/definitions/C1_0"
+                }
+              ]
+            },
+            "n1": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "Leaf": {
+          "type": "object"
+        }
+      },
+      "properties": {
+        "k": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Leaf"
+            },
+            {
+              "$ref": "#/definitions/C0_1"
+            },
+            {
+              "$ref": "#/definitions/C1_1"
+            }
+          ]
+        },
+        "n0": {
+          "default": "n",
+          "type": "string"
+        },
+        "n1": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/C0_0"
+    }
+  }
+}

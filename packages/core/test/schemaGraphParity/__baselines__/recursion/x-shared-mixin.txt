@@ -1,0 +1,27 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "created": "c",
+      "meta": {
+        "m": "m"
+      }
+    },
+    "passLengths": [
+      51,
+      51,
+      51,
+      51,
+      51,
+      51
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_meta_m",
+      "root_meta_created",
+      "root_created"
+    ]
+  }
+}

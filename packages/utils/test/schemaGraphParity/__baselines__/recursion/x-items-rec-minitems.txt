@@ -1,0 +1,156 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              "@@undefined"
+            ],
+            "name": "t"
+          }
+        ],
+        "name": "t"
+      },
+      "passLengths": [
+        120,
+        120,
+        120,
+        120,
+        120,
+        120
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              "@@undefined"
+            ],
+            "name": "t"
+          }
+        ],
+        "name": "t"
+      },
+      "passLengths": [
+        120,
+        120,
+        120,
+        120,
+        120,
+        120
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              "@@undefined"
+            ],
+            "name": "t"
+          }
+        ],
+        "name": "t"
+      },
+      "passLengths": [
+        120,
+        120,
+        120,
+        120,
+        120,
+        120
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "treeMin": {
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/definitions/treeMin"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "name": {
+              "default": "t",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "children": {
+          "items": {
+            "properties": {
+              "children": {
+                "items": {
+                  "$ref": "#/definitions/treeMin"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "name": {
+                "default": "t",
+                "type": "string"
+              }
+            },
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/treeMin"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "name": {
+          "default": "t",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/treeMin"
+    },
+    "once": {
+      "definitions": {
+        "treeMin": {
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/definitions/treeMin"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "name": {
+              "default": "t",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/definitions/treeMin"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "name": {
+          "default": "t",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/treeMin"
+    }
+  }
+}

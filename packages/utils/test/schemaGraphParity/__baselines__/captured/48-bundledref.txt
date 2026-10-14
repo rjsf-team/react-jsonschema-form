@@ -1,0 +1,16 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "throws": "Error: Could not find a definition for /bundled.ref.json."
+    },
+    "populateDefaults": {
+      "throws": "Error: Could not find a definition for /bundled.ref.json."
+    },
+    "skipEmptyDefaults": {
+      "throws": "Error: Could not find a definition for /bundled.ref.json."
+    }
+  },
+  "retrieveSchema": {
+    "throws": "Error: Could not find a definition for /bundled.ref.json."
+  }
+}

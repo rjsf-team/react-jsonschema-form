@@ -1,0 +1,40 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "extra": "e",
+      "name": "n"
+    },
+    "passLengths": [
+      34,
+      34,
+      34,
+      34,
+      34,
+      34
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_back-button"
+      ],
+      "expandButtons": [
+        "root_back_back-button"
+      ],
+      "inputs": [
+        "root_name",
+        "root_back_name",
+        "root_back_extra",
+        "root_extra"
+      ]
+    },
+    "expandButtons": [
+      "root_back-button"
+    ],
+    "inputs": [
+      "root_name",
+      "root_extra"
+    ]
+  }
+}

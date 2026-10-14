@@ -1,0 +1,83 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "badCircularDeepNestedRef": {
+          "$ref": "#/definitions/badCircularDeeperNestedRef"
+        },
+        "badCircularDeeperNestedRef": {
+          "$ref": "#/definitions/badCircularDeepestNestedRef"
+        },
+        "badCircularDeepestNestedRef": {
+          "$ref": "#/definitions/badCircularDeepNestedRef"
+        },
+        "badCircularNestedRef": {
+          "$ref": "#/definitions/badCircularNestedRef"
+        },
+        "bundledRef": {
+          "$ref": "/bundled.ref.json"
+        },
+        "bundledSchema": {
+          "$id": "https://example.com/bundled.ref.json",
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "properties": {
+            "num": {
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "extraNestedRef": {
+          "$ref": "#/definitions/stringRef",
+          "title": "foo"
+        },
+        "nestedRef": {
+          "$ref": "#/definitions/stringRef"
+        },
+        "stringRef": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

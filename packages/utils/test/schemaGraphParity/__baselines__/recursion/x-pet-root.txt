@@ -1,0 +1,110 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "hunts": "h",
+        "petType": "cat"
+      },
+      "passLengths": [
+        39,
+        39,
+        39,
+        39,
+        39,
+        39
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "hunts": "h",
+        "petType": "cat"
+      },
+      "passLengths": [
+        39,
+        39,
+        39,
+        39,
+        39,
+        39
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "petType": "cat"
+      },
+      "passLengths": [
+        23,
+        23,
+        23,
+        23,
+        23,
+        23
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "$ref": "#/definitions/Pet",
+      "definitions": {
+        "Cat": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Pet"
+            },
+            {
+              "properties": {
+                "hunts": {
+                  "default": "h",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        "Pet": {
+          "if": {
+            "properties": {
+              "petType": {
+                "const": "cat"
+              }
+            }
+          },
+          "properties": {
+            "friend": {
+              "$ref": "#/definitions/Pet"
+            },
+            "petType": {
+              "default": "cat",
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/Cat"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "friend": {
+          "$ref": "#/definitions/Pet",
+          "@@RJSF_REF_CYCLE_KEY": true
+        },
+        "hunts": {
+          "default": "h",
+          "type": "string"
+        },
+        "petType": {
+          "default": "cat",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Pet"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "arr": [
+        {
+          "a": "x",
+          "child": {
+            "a": "x",
+            "child": {
+              "a": "x"
+            }
+          }
+        }
+      ]
+    },
+    "passLengths": [
+      138,
+      138,
+      138,
+      138,
+      138,
+      138
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_arr_0_child-button"
+      ],
+      "expandButtons": [
+        "root_arr_0_child_child_child-button"
+      ],
+      "inputs": [
+        "root_arr_0_a",
+        "root_arr_0_child_a",
+        "root_arr_0_child_child_a"
+      ]
+    },
+    "expandButtons": [
+      "root_arr_0_child-button"
+    ],
+    "inputs": [
+      "root_arr_0_a"
+    ]
+  }
+}

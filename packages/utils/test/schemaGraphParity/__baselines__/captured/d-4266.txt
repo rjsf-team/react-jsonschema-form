@@ -1,0 +1,135 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "properties": {
+          "inner": {
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "passLengths": [
+        114,
+        114,
+        114,
+        114,
+        114,
+        114
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "properties": {
+          "inner": {
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "passLengths": [
+        114,
+        114,
+        114,
+        114,
+        114,
+        114
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "properties": {
+          "inner": {
+            "properties": {},
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "passLengths": [
+        114,
+        114,
+        114,
+        114,
+        114,
+        114
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "properties": {
+          "additionalProperties": {
+            "$ref": "#/definitions/property",
+            "default": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "property": {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "object"
+              }
+            }
+          },
+          "properties": {
+            "type": {
+              "default": "string",
+              "enum": [
+                "string",
+                "object"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "then": {
+            "properties": {
+              "properties": {
+                "$ref": "#/definitions/properties"
+              }
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "properties": {
+          "additionalProperties": {
+            "$ref": "#/definitions/property",
+            "default": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/properties"
+        },
+        "type": {
+          "default": "string",
+          "enum": [
+            "string",
+            "object"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/property"
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "throws": "Error: Definition for #/definitions/badCircularDeeperNestedRef contains a circular reference through #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef -> #/definitions/badCircularDeeperNestedRef"
+    },
+    "populateDefaults": {
+      "throws": "Error: Definition for #/definitions/badCircularDeeperNestedRef contains a circular reference through #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef -> #/definitions/badCircularDeeperNestedRef"
+    },
+    "skipEmptyDefaults": {
+      "throws": "Error: Definition for #/definitions/badCircularDeeperNestedRef contains a circular reference through #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef -> #/definitions/badCircularDeeperNestedRef"
+    }
+  },
+  "retrieveSchema": {
+    "throws": "Error: Definition for #/definitions/badCircularDeeperNestedRef contains a circular reference through #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef -> #/definitions/badCircularDeeperNestedRef"
+  }
+}

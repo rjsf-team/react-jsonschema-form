@@ -1,0 +1,108 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "child": [
+          {}
+        ],
+        "name": "n"
+      },
+      "passLengths": [
+        43,
+        43,
+        43,
+        43,
+        43,
+        43
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": [
+          {
+            "child": [
+              {}
+            ],
+            "name": "n"
+          }
+        ],
+        "name": "n"
+      },
+      "passLengths": [
+        103,
+        103,
+        103,
+        103,
+        103,
+        103
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "child": [
+          {}
+        ],
+        "name": "n"
+      },
+      "passLengths": [
+        43,
+        43,
+        43,
+        43,
+        43,
+        43
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "items": {
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/node"
+                  }
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/node"
+              }
+            ],
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

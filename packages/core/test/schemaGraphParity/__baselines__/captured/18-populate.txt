@@ -1,0 +1,36 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "extra": {
+        "name": "n"
+      },
+      "name": "n"
+    },
+    "last": {
+      "extra": {
+        "extra": {
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "name": "n"
+    },
+    "passLengths": [
+      52,
+      92,
+      92,
+      92,
+      92,
+      92
+    ],
+    "stable": false
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_name",
+      "root_extra-key",
+      "root_extra_name"
+    ]
+  }
+}

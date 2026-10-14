@@ -1,0 +1,22 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "p": "sib"
+    },
+    "passLengths": [
+      17,
+      17,
+      17,
+      17,
+      17,
+      17
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_p"
+    ]
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "p": {
+          "kid": {
+            "tag": "t"
+          },
+          "tag": "t"
+        }
+      },
+      "passLengths": [
+        69,
+        69,
+        69,
+        69,
+        69,
+        69
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "p": {
+          "kid": {
+            "tag": "t"
+          },
+          "tag": "t"
+        }
+      },
+      "passLengths": [
+        69,
+        69,
+        69,
+        69,
+        69,
+        69
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "kid": {
+          "properties": {
+            "kid": {
+              "$ref": "#/definitions/kid"
+            },
+            "tag": {
+              "default": "t",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "parent": {
+          "if": {},
+          "properties": {
+            "a": {
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/kid"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p": {
+          "if": {},
+          "properties": {
+            "a": {
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/kid"
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/parent"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

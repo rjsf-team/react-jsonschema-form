@@ -1,0 +1,70 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "x": {
+        "a": "x",
+        "b": {
+          "a2": {
+            "a": "x",
+            "b": {
+              "c": "y"
+            }
+          },
+          "c": "y"
+        }
+      },
+      "y": {
+        "a2": {
+          "a": "x",
+          "b": {
+            "a2": {
+              "a": "x"
+            },
+            "c": "y"
+          }
+        },
+        "c": "y"
+      }
+    },
+    "passLengths": [
+      294,
+      294,
+      294,
+      294,
+      294,
+      294
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_x_b_a2-button"
+      ],
+      "expandButtons": [
+        "root_x_b_a2_b_a2_b_a2-button",
+        "root_y_a2_b-button"
+      ],
+      "inputs": [
+        "root_x_a",
+        "root_x_b_c",
+        "root_x_b_a2_a",
+        "root_x_b_a2_b_c",
+        "root_x_b_a2_b_a2_a",
+        "root_x_b_a2_b_a2_b_c",
+        "root_y_c",
+        "root_y_a2_a"
+      ]
+    },
+    "expandButtons": [
+      "root_x_b_a2-button",
+      "root_y_a2_b-button"
+    ],
+    "inputs": [
+      "root_x_a",
+      "root_x_b_c",
+      "root_y_c",
+      "root_y_a2_a"
+    ]
+  }
+}

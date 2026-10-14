@@ -1,0 +1,112 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "k0": "v",
+        "k1": "v"
+      },
+      "last": {
+        "k0": "v",
+        "k1": "v",
+        "k2": "v",
+        "k3": "v",
+        "k4": "v",
+        "k5": "v",
+        "k6": "v"
+      },
+      "passLengths": [
+        29,
+        42,
+        55,
+        68,
+        81,
+        94
+      ],
+      "stable": false
+    },
+    "populateDefaults": {
+      "first": {
+        "k0": "v",
+        "k1": "v"
+      },
+      "last": {
+        "k0": "v",
+        "k1": "v",
+        "k2": "v",
+        "k3": "v",
+        "k4": "v",
+        "k5": "v",
+        "k6": "v"
+      },
+      "passLengths": [
+        29,
+        42,
+        55,
+        68,
+        81,
+        94
+      ],
+      "stable": false
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "k0": "v",
+        "k1": "v"
+      },
+      "last": {
+        "k0": "v",
+        "k1": "v",
+        "k2": "v",
+        "k3": "v",
+        "k4": "v",
+        "k5": "v",
+        "k6": "v"
+      },
+      "passLengths": [
+        29,
+        42,
+        55,
+        68,
+        81,
+        94
+      ],
+      "stable": false
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "properties": {
+        "k0": {
+          "default": "v",
+          "type": "string"
+        },
+        "k1": {
+          "type": "string"
+        },
+        "k2": {
+          "type": "string"
+        },
+        "k3": {
+          "type": "string"
+        },
+        "k4": {
+          "type": "string"
+        },
+        "k5": {
+          "type": "string"
+        },
+        "k6": {
+          "type": "string"
+        },
+        "k7": {
+          "type": "string"
+        },
+        "k8": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

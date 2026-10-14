@@ -1,0 +1,56 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": "@@undefined",
+      "passLengths": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": "@@undefined",
+      "passLengths": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": "@@undefined",
+      "passLengths": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "$ref": "#/definitions/a",
+      "definitions": {
+        "a": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/a"
+            }
+          ]
+        }
+      },
+      "@@RJSF_REF_KEY": "#/definitions/a"
+    }
+  }
+}

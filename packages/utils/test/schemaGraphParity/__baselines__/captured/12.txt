@@ -1,0 +1,98 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "a": {
+          "extra": "e",
+          "name": "n"
+        }
+      },
+      "passLengths": [
+        51,
+        51,
+        51,
+        51,
+        51,
+        51
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "inner": {
+          "properties": {
+            "back": {
+              "$ref": "#/definitions/outer"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "outer": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/inner"
+            },
+            {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "properties": {
+        "a": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/inner"
+            },
+            {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          ],
+          "@@RJSF_REF_KEY": "#/definitions/outer"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "fieldEither": {
+          "oneOf": [
+            {
+              "properties": {
+                "value": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            {
+              "properties": {
+                "value": {
+                  "items": {
+                    "$ref": "#/definitions/fieldEither"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "type": "object"
+        }
+      },
+      "properties": {
+        "value": {
+          "items": {
+            "oneOf": [
+              {
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              {
+                "properties": {
+                  "value": {
+                    "items": {
+                      "$ref": "#/definitions/fieldEither"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              }
+            ],
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/fieldEither"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

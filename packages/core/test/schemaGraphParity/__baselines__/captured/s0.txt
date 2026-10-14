@@ -1,0 +1,29 @@
+{
+  "getDefaultFormState": {
+    "first": {},
+    "passLengths": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_billing_address_street_address",
+      "root_billing_address_city",
+      "root_billing_address_state",
+      "root_shipping_address_street_address",
+      "root_shipping_address_city",
+      "root_shipping_address_state",
+      "root_tree_name",
+      "root_contact__oneof_select",
+      "root_contact_name",
+      "root_contact_details"
+    ]
+  }
+}

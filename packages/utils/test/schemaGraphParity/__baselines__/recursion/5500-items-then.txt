@@ -1,0 +1,56 @@
+{
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "items": {
+                "if": {},
+                "then": {
+                  "properties": {
+                    "x": {
+                      "$ref": "#/definitions/node"
+                    }
+                  }
+                },
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "items": {
+            "if": {},
+            "then": {
+              "properties": {
+                "x": {
+                  "$ref": "#/definitions/node"
+                }
+              }
+            },
+            "type": "object"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

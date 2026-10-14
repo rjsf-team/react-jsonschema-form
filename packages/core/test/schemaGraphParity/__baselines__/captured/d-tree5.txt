@@ -1,0 +1,47 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    {
+                      "children": [],
+                      "name": "L4"
+                    }
+                  ],
+                  "name": "L3"
+                }
+              ],
+              "name": "L2"
+            }
+          ],
+          "name": "L1"
+        }
+      ],
+      "name": "L0"
+    },
+    "passLengths": [
+      381,
+      381,
+      381,
+      381,
+      381,
+      381
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_name",
+      "root_children_0_name",
+      "root_children_0_children_0_name",
+      "root_children_0_children_0_children_0_name",
+      "root_children_0_children_0_children_0_children_0_name"
+    ]
+  }
+}

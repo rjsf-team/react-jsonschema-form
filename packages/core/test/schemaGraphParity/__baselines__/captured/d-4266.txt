@@ -1,0 +1,30 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "properties": {
+        "inner": {
+          "properties": {},
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "passLengths": [
+      114,
+      114,
+      114,
+      114,
+      114,
+      114
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_type",
+      "root_properties_inner-key",
+      "root_properties_inner_type"
+    ]
+  }
+}

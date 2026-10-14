@@ -1,0 +1,23 @@
+{
+  "getDefaultFormState": {
+    "first": {},
+    "passLengths": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_id",
+      "root_property_key",
+      "root_transformer__oneof_select",
+      "root_transformer_id"
+    ]
+  }
+}

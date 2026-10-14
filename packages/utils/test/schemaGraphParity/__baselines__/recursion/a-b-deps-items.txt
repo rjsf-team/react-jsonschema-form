@@ -1,0 +1,71 @@
+{
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "A": {
+          "dependencies": {
+            "a": {
+              "properties": {
+                "b": {
+                  "$ref": "#/definitions/B"
+                }
+              }
+            }
+          },
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "B": {
+          "dependencies": {
+            "c": {
+              "properties": {
+                "a2": {
+                  "$ref": "#/definitions/A"
+                }
+              }
+            }
+          },
+          "properties": {
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "arr": {
+          "items": {
+            "dependencies": {
+              "a": {
+                "properties": {
+                  "b": {
+                    "$ref": "#/definitions/B"
+                  }
+                }
+              }
+            },
+            "properties": {
+              "a": {
+                "default": "x",
+                "type": "string"
+              }
+            },
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/A"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

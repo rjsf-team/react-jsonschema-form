@@ -1,0 +1,25 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "p": {
+        "name": "q"
+      }
+    },
+    "passLengths": [
+      33,
+      33,
+      33,
+      33,
+      33,
+      33
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_p_name",
+      "root_p_friend_name"
+    ]
+  }
+}

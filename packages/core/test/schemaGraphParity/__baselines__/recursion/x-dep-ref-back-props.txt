@@ -1,0 +1,24 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "extra": "e",
+      "k": "k"
+    },
+    "passLengths": [
+      31,
+      31,
+      31,
+      31,
+      31,
+      31
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_k",
+      "root_extra"
+    ]
+  }
+}

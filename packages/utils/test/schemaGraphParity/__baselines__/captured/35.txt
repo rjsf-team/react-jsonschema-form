@@ -1,0 +1,103 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "branch": {
+          "properties": {
+            "a": {
+              "enum": [
+                "1"
+              ]
+            },
+            "x": {
+              "type": "string"
+            }
+          }
+        },
+        "extra": {
+          "properties": {
+            "x": {
+              "type": "string"
+            }
+          }
+        },
+        "node": {
+          "dependencies": {
+            "b": {
+              "properties": {
+                "child": {
+                  "$ref": "#/definitions/node"
+                }
+              }
+            }
+          },
+          "if": true,
+          "properties": {
+            "a": {
+              "type": "string"
+            },
+            "b": {
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/extra"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "b": {
+          "type": "string"
+        },
+        "x": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "getDefaultFormState": {
+    "first": {},
+    "passLengths": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_tree_child-button"
+      ],
+      "expandButtons": [
+        "root_tree_child_child_child-button"
+      ],
+      "inputs": [
+        "root_tree_name",
+        "root_tree_child_name",
+        "root_tree_child_child_name"
+      ]
+    },
+    "expandButtons": [
+      "root_tree_child-button"
+    ],
+    "inputs": [
+      "root_tree_name"
+    ]
+  }
+}

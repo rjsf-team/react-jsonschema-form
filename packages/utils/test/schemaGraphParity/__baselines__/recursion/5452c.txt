@@ -1,0 +1,35 @@
+{
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "dependencies": {
+        "a": [
+          "b"
+        ]
+      },
+      "oneOf": [
+        {
+          "$ref": "#"
+        },
+        {
+          "properties": {
+            "c": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "b": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#",
+      "@@RJSF_REF_CYCLE_KEY": true
+    }
+  }
+}

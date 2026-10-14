@@ -1,0 +1,172 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "k": {}
+      },
+      "passLengths": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "k": {}
+      },
+      "passLengths": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "k": {}
+      },
+      "passLengths": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "additionalProperties": {
+        "$ref": "#/definitions/map"
+      },
+      "definitions": {
+        "map": {
+          "additionalProperties": {
+            "$ref": "#/definitions/map"
+          },
+          "properties": {
+            "best": {
+              "$ref": "#/definitions/map"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "best": {
+          "additionalProperties": {
+            "$ref": "#/definitions/map"
+          },
+          "properties": {
+            "best": {
+              "$ref": "#/definitions/map",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/map"
+        },
+        "k": {
+          "additionalProperties": {
+            "$ref": "#/definitions/map"
+          },
+          "properties": {
+            "best": {
+              "additionalProperties": {
+                "$ref": "#/definitions/map"
+              },
+              "properties": {
+                "best": {
+                  "$ref": "#/definitions/map",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/map"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/map",
+          "@@ADDITIONAL_PROPERTY_FLAG": true
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/map"
+    },
+    "once": {
+      "additionalProperties": {
+        "$ref": "#/definitions/map"
+      },
+      "definitions": {
+        "map": {
+          "additionalProperties": {
+            "$ref": "#/definitions/map"
+          },
+          "properties": {
+            "best": {
+              "$ref": "#/definitions/map"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "best": {
+          "$ref": "#/definitions/map",
+          "@@RJSF_REF_CYCLE_KEY": true
+        },
+        "k": {
+          "additionalProperties": {
+            "$ref": "#/definitions/map"
+          },
+          "properties": {
+            "best": {
+              "$ref": "#/definitions/map",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/map",
+          "@@ADDITIONAL_PROPERTY_FLAG": true
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/map"
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x"
+        }
+      },
+      "passLengths": [
+        46,
+        46,
+        46,
+        46,
+        46,
+        46
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x"
+        }
+      },
+      "passLengths": [
+        46,
+        46,
+        46,
+        46,
+        46,
+        46
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x"
+        }
+      },
+      "passLengths": [
+        46,
+        46,
+        46,
+        46,
+        46,
+        46
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "pl": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/pl"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "default": "x",
+          "type": "string"
+        },
+        "child": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/pl",
+              "@@RJSF_REF_CYCLE_KEY": true
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/pl"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/pl"
+    },
+    "once": {
+      "definitions": {
+        "pl": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/pl"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "default": "x",
+          "type": "string"
+        },
+        "child": {
+          "$ref": "#/definitions/pl",
+          "@@RJSF_REF_CYCLE_KEY": true
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/pl"
+    }
+  }
+}

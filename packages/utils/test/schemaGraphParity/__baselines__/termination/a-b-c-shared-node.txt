@@ -1,0 +1,341 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "x": {
+          "a": "x",
+          "b": {
+            "a2": {
+              "a": "x",
+              "b": {
+                "c": "y"
+              }
+            },
+            "c": "y"
+          }
+        },
+        "y": {
+          "a2": {
+            "a": "x",
+            "b": {
+              "a2": {
+                "a": "x"
+              },
+              "c": "y"
+            }
+          },
+          "c": "y"
+        }
+      },
+      "passLengths": [
+        294,
+        294,
+        294,
+        294,
+        294,
+        294
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "x": {
+          "a": "x",
+          "b": {
+            "a2": {
+              "a": "x",
+              "b": {
+                "c": "y"
+              }
+            },
+            "c": "y"
+          }
+        },
+        "y": {
+          "a2": {
+            "a": "x",
+            "b": {
+              "a2": {
+                "a": "x"
+              },
+              "c": "y"
+            }
+          },
+          "c": "y"
+        }
+      },
+      "passLengths": [
+        294,
+        294,
+        294,
+        294,
+        294,
+        294
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "x": {
+          "a": "x",
+          "b": {
+            "a2": {
+              "a": "x",
+              "b": {
+                "c": "y"
+              }
+            },
+            "c": "y"
+          }
+        },
+        "y": {
+          "a2": {
+            "a": "x",
+            "b": {
+              "a2": {
+                "a": "x"
+              },
+              "c": "y"
+            }
+          },
+          "c": "y"
+        }
+      },
+      "passLengths": [
+        294,
+        294,
+        294,
+        294,
+        294,
+        294
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "b": {
+              "$ref": "#/definitions/B"
+            }
+          },
+          "type": "object"
+        },
+        "B": {
+          "properties": {
+            "a2": {
+              "$ref": "#/definitions/A"
+            },
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "C": {
+          "properties": {
+            "x": {
+              "$ref": "#/definitions/A"
+            },
+            "y": {
+              "$ref": "#/definitions/B"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "x": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "b": {
+              "properties": {
+                "a2": {
+                  "properties": {
+                    "a": {
+                      "default": "x",
+                      "type": "string"
+                    },
+                    "b": {
+                      "properties": {
+                        "a2": {
+                          "$ref": "#/definitions/A",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "c": {
+                          "default": "y",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/B"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_CYCLE_KEY": true,
+                  "@@RJSF_REF_KEY": "#/definitions/A"
+                },
+                "c": {
+                  "default": "y",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/B"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/A"
+        },
+        "y": {
+          "properties": {
+            "a2": {
+              "properties": {
+                "a": {
+                  "default": "x",
+                  "type": "string"
+                },
+                "b": {
+                  "properties": {
+                    "a2": {
+                      "properties": {
+                        "a": {
+                          "default": "x",
+                          "type": "string"
+                        },
+                        "b": {
+                          "$ref": "#/definitions/B",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/A"
+                    },
+                    "c": {
+                      "default": "y",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_CYCLE_KEY": true,
+                  "@@RJSF_REF_KEY": "#/definitions/B"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/A"
+            },
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/B"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/C"
+    },
+    "once": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "b": {
+              "$ref": "#/definitions/B"
+            }
+          },
+          "type": "object"
+        },
+        "B": {
+          "properties": {
+            "a2": {
+              "$ref": "#/definitions/A"
+            },
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "C": {
+          "properties": {
+            "x": {
+              "$ref": "#/definitions/A"
+            },
+            "y": {
+              "$ref": "#/definitions/B"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "x": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "b": {
+              "properties": {
+                "a2": {
+                  "$ref": "#/definitions/A",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "c": {
+                  "default": "y",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/B"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/A"
+        },
+        "y": {
+          "properties": {
+            "a2": {
+              "properties": {
+                "a": {
+                  "default": "x",
+                  "type": "string"
+                },
+                "b": {
+                  "$ref": "#/definitions/B",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/A"
+            },
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/B"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/C"
+    }
+  }
+}

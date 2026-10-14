@@ -1,0 +1,103 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "name": "n"
+      },
+      "passLengths": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "extra": {
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "last": {
+        "extra": {
+          "extra": {
+            "name": "n"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        52,
+        92,
+        92,
+        92,
+        92,
+        92
+      ],
+      "stable": false
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "name": "n"
+      },
+      "passLengths": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "additionalProperties": {
+        "allOf": [
+          {
+            "$ref": "#/definitions/node"
+          }
+        ],
+        "type": "object"
+      },
+      "default": {
+        "extra": {
+          "extra": {}
+        }
+      },
+      "definitions": {
+        "node": {
+          "additionalProperties": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/node"
+              }
+            ],
+            "type": "object"
+          },
+          "properties": {
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

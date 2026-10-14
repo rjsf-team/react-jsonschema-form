@@ -1,0 +1,120 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/node"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "tree": {
+          "properties": {
+            "child": {
+              "properties": {
+                "child": {
+                  "$ref": "#/definitions/node",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/node"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/node"
+        }
+      },
+      "type": "object"
+    },
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/node"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "tree": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/node",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/node"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

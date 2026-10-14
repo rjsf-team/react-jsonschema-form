@@ -1,0 +1,192 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "address": {
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "street_address": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "street_address",
+            "city",
+            "state"
+          ],
+          "type": "object"
+        },
+        "companyType": {
+          "properties": {
+            "details": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "node": {
+          "properties": {
+            "children": {
+              "items": {
+                "oneOf": [
+                  {
+                    "title": "None",
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/definitions/node"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "personType": {
+          "properties": {
+            "details": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "billing_address": {
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "street_address": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "street_address",
+            "city",
+            "state"
+          ],
+          "title": "Billing address",
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/address"
+        },
+        "contact": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/personType",
+              "title": "Person"
+            },
+            {
+              "$ref": "#/definitions/companyType",
+              "title": "Company"
+            }
+          ],
+          "title": "Contact (oneOf with same property names)"
+        },
+        "shipping_address": {
+          "properties": {
+            "city": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            },
+            "street_address": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "street_address",
+            "city",
+            "state"
+          ],
+          "title": "Shipping address",
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/address"
+        },
+        "tree": {
+          "properties": {
+            "children": {
+              "items": {
+                "oneOf": [
+                  {
+                    "title": "None",
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/definitions/node"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "title": "Recursive references",
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/node"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

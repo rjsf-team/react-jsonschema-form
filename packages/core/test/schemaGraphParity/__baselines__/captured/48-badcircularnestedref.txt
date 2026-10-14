@@ -1,0 +1,8 @@
+{
+  "getDefaultFormState": {
+    "throws": "Error: Definition for #/definitions/badCircularNestedRef is a circular reference"
+  },
+  "render": {
+    "throws": "Error: Definition for #/definitions/badCircularNestedRef is a circular reference"
+  }
+}

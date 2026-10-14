@@ -1,0 +1,35 @@
+{
+  "getDefaultFormState": {
+    "first": {},
+    "passLengths": [
+      3,
+      3,
+      3,
+      3,
+      3,
+      3
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_kid-button"
+      ],
+      "expandButtons": [
+        "root_kid_kid_kid-button"
+      ],
+      "inputs": [
+        "root_a",
+        "root_kid_a",
+        "root_kid_kid_a"
+      ]
+    },
+    "expandButtons": [
+      "root_kid-button"
+    ],
+    "inputs": [
+      "root_a"
+    ]
+  }
+}

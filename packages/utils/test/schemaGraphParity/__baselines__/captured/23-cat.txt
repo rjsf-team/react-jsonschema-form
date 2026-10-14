@@ -1,0 +1,79 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "cat": {
+          "properties": {
+            "meow": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "dog": {
+          "properties": {
+            "woof": {
+              "type": "string"
+            }
+          }
+        },
+        "loop": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/loop"
+            }
+          ]
+        },
+        "named": {
+          "$ref": "#/definitions/cat"
+        }
+      },
+      "properties": {
+        "meow": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/cat"
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "children": []
+      },
+      "passLengths": [
+        21,
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "children": []
+      },
+      "passLengths": [
+        21,
+        21,
+        21,
+        21,
+        21,
+        21
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "properties": {
+        "children": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "children"
+      ],
+      "type": "object"
+    }
+  }
+}

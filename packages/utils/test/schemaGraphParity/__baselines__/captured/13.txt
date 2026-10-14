@@ -1,0 +1,115 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "t": [
+          [
+            "@@undefined"
+          ]
+        ]
+      },
+      "passLengths": [
+        49,
+        49,
+        49,
+        49,
+        49,
+        49
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "t": [
+          [
+            "@@undefined"
+          ]
+        ]
+      },
+      "passLengths": [
+        49,
+        49,
+        49,
+        49,
+        49,
+        49
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "t": [
+          [
+            "@@undefined"
+          ]
+        ]
+      },
+      "passLengths": [
+        49,
+        49,
+        49,
+        49,
+        49,
+        49
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "tags": {
+          "items": {
+            "$ref": "#/definitions/tags"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "properties": {
+        "t": {
+          "items": {
+            "items": {
+              "$ref": "#/definitions/tags"
+            },
+            "minItems": 1,
+            "type": "array",
+            "@@RJSF_REF_KEY": "#/definitions/tags"
+          },
+          "minItems": 1,
+          "type": "array",
+          "@@RJSF_REF_KEY": "#/definitions/tags"
+        }
+      },
+      "required": [
+        "t"
+      ],
+      "type": "object"
+    },
+    "once": {
+      "definitions": {
+        "tags": {
+          "items": {
+            "$ref": "#/definitions/tags"
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "properties": {
+        "t": {
+          "items": {
+            "$ref": "#/definitions/tags"
+          },
+          "minItems": 1,
+          "type": "array",
+          "@@RJSF_REF_KEY": "#/definitions/tags"
+        }
+      },
+      "required": [
+        "t"
+      ],
+      "type": "object"
+    }
+  }
+}

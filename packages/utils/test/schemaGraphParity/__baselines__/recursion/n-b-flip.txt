@@ -1,0 +1,58 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "b": "y"
+      },
+      "passLengths": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "b": "y"
+      },
+      "passLengths": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "b": "y"
+      },
+      "passLengths": [
+        15,
+        15,
+        15,
+        15,
+        15,
+        15
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "properties": {
+        "b": {
+          "default": "y",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

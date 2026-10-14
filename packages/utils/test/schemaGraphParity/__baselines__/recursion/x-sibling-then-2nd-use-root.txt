@@ -1,0 +1,89 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "friend": {
+          "name": "q"
+        },
+        "name": "q"
+      },
+      "passLengths": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "friend": {
+          "name": "q"
+        },
+        "name": "q"
+      },
+      "passLengths": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "friend": {
+          "name": "q"
+        },
+        "name": "q"
+      },
+      "passLengths": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "Q": {
+          "properties": {
+            "name": {
+              "default": "q",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "friend": {
+          "properties": {
+            "name": {
+              "default": "q",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/Q"
+        },
+        "name": {
+          "default": "q",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Q"
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "Node": {
+          "oneOf": [
+            {
+              "required": [
+                "a"
+              ]
+            }
+          ],
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/definitions/Node"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "a"
+          ]
+        }
+      ],
+      "properties": {
+        "children": {
+          "items": {
+            "oneOf": [
+              {
+                "required": [
+                  "a"
+                ]
+              }
+            ],
+            "properties": {
+              "children": {
+                "items": {
+                  "$ref": "#/definitions/Node"
+                },
+                "type": "array"
+              }
+            },
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/Node"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Node"
+    },
+    "once": {
+      "definitions": {
+        "Node": {
+          "oneOf": [
+            {
+              "required": [
+                "a"
+              ]
+            }
+          ],
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/definitions/Node"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "a"
+          ]
+        }
+      ],
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/definitions/Node"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Node"
+    }
+  }
+}

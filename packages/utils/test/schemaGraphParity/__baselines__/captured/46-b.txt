@@ -1,0 +1,165 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "b": {
+              "$ref": "#/definitions/B"
+            }
+          },
+          "type": "object"
+        },
+        "B": {
+          "patternProperties": {
+            "^a$": {
+              "title": "Pattern"
+            }
+          },
+          "properties": {
+            "a": {
+              "$ref": "#/definitions/A"
+            },
+            "s": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "patternProperties": {
+        "^a$": {
+          "title": "Pattern"
+        }
+      },
+      "properties": {
+        "a": {
+          "properties": {
+            "b": {
+              "patternProperties": {
+                "^a$": {
+                  "title": "Pattern"
+                }
+              },
+              "properties": {
+                "a": {
+                  "properties": {
+                    "b": {
+                      "$ref": "#/definitions/B",
+                      "@@RJSF_REF_CYCLE_KEY": true
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_KEY": "#/definitions/A"
+                },
+                "s": {
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/B"
+            }
+          },
+          "title": "Pattern",
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/A"
+        },
+        "s": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/B"
+    },
+    "once": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "b": {
+              "$ref": "#/definitions/B"
+            }
+          },
+          "type": "object"
+        },
+        "B": {
+          "patternProperties": {
+            "^a$": {
+              "title": "Pattern"
+            }
+          },
+          "properties": {
+            "a": {
+              "$ref": "#/definitions/A"
+            },
+            "s": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "patternProperties": {
+        "^a$": {
+          "title": "Pattern"
+        }
+      },
+      "properties": {
+        "a": {
+          "properties": {
+            "b": {
+              "$ref": "#/definitions/B",
+              "@@RJSF_REF_CYCLE_KEY": true
+            }
+          },
+          "title": "Pattern",
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/A"
+        },
+        "s": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/B"
+    }
+  }
+}

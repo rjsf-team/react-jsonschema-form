@@ -1,0 +1,70 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/loop"
+        }
+      ],
+      "definitions": {
+        "loop": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/loop"
+            }
+          ],
+          "properties": {
+            "deep": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "properties": {
+        "deep": {
+          "type": "string"
+        }
+      },
+      "@@RJSF_REF_KEY": "#/definitions/loop"
+    }
+  }
+}

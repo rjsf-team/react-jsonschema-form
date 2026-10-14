@@ -1,0 +1,107 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "name": "g"
+      },
+      "passLengths": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "extra": "e"
+          },
+          "extra": "e",
+          "name": "g"
+        },
+        "name": "g"
+      },
+      "passLengths": [
+        111,
+        111,
+        111,
+        111,
+        111,
+        111
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "name": "g"
+      },
+      "passLengths": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/node"
+                },
+                {
+                  "properties": {
+                    "extra": {
+                      "default": "e",
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "name": {
+              "default": "g",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/node"
+            },
+            {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        },
+        "name": {
+          "default": "g",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

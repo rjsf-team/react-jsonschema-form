@@ -1,0 +1,16 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "throws": "Error: Definition for #/definitions/badCircularNestedRef is a circular reference"
+    },
+    "populateDefaults": {
+      "throws": "Error: Definition for #/definitions/badCircularNestedRef is a circular reference"
+    },
+    "skipEmptyDefaults": {
+      "throws": "Error: Definition for #/definitions/badCircularNestedRef is a circular reference"
+    }
+  },
+  "retrieveSchema": {
+    "throws": "Error: Definition for #/definitions/badCircularNestedRef is a circular reference"
+  }
+}

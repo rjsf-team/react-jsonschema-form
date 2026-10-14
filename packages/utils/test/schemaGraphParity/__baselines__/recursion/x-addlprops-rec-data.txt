@@ -1,0 +1,145 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "k": {
+          "j": {
+            "i": {
+              "name": "m"
+            },
+            "name": "m"
+          },
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "passLengths": [
+        126,
+        126,
+        126,
+        126,
+        126,
+        126
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "k": {
+          "j": {
+            "i": {
+              "name": "m"
+            },
+            "name": "m"
+          },
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "passLengths": [
+        126,
+        126,
+        126,
+        126,
+        126,
+        126
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "k": {
+          "j": {
+            "i": {
+              "name": "m"
+            },
+            "name": "m"
+          },
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "passLengths": [
+        126,
+        126,
+        126,
+        126,
+        126,
+        126
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "additionalProperties": {
+        "$ref": "#/definitions/map"
+      },
+      "definitions": {
+        "map": {
+          "additionalProperties": {
+            "$ref": "#/definitions/map"
+          },
+          "properties": {
+            "name": {
+              "default": "m",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "k": {
+          "additionalProperties": {
+            "$ref": "#/definitions/map"
+          },
+          "properties": {
+            "j": {
+              "additionalProperties": {
+                "$ref": "#/definitions/map"
+              },
+              "properties": {
+                "i": {
+                  "additionalProperties": {
+                    "$ref": "#/definitions/map"
+                  },
+                  "properties": {
+                    "name": {
+                      "default": "m",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_KEY": "#/definitions/map",
+                  "@@ADDITIONAL_PROPERTY_FLAG": true
+                },
+                "name": {
+                  "default": "m",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/map",
+              "@@ADDITIONAL_PROPERTY_FLAG": true
+            },
+            "name": {
+              "default": "m",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/map",
+          "@@ADDITIONAL_PROPERTY_FLAG": true
+        },
+        "name": {
+          "default": "m",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/map"
+    }
+  }
+}

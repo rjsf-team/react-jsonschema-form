@@ -1,0 +1,44 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "components": [
+        {
+          "fn": {
+            "id": "transform",
+            "property_key": "uri",
+            "transformer": {
+              "base_url": "http://localhost",
+              "id": "to_absolute"
+            }
+          },
+          "id": "map"
+        }
+      ],
+      "id": "chain"
+    },
+    "passLengths": [
+      261,
+      261,
+      261,
+      261,
+      261,
+      261
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root__oneof_select",
+      "root_id",
+      "root_components_0__oneof_select",
+      "root_components_0_id",
+      "root_components_0_fn__oneof_select",
+      "root_components_0_fn_id",
+      "root_components_0_fn_property_key",
+      "root_components_0_fn_transformer__oneof_select",
+      "root_components_0_fn_transformer_id",
+      "root_components_0_fn_transformer_base_url"
+    ]
+  }
+}

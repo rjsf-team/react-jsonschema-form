@@ -1,0 +1,89 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "description": "A simple form example.",
+      "properties": {
+        "child": {
+          "description": "A simple form example.",
+          "properties": {
+            "child": {
+              "description": "A simple form example.",
+              "properties": {
+                "child": {
+                  "$ref": "#",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                }
+              },
+              "title": "A registration form",
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#"
+            }
+          },
+          "title": "A registration form",
+          "type": "object",
+          "@@RJSF_REF_KEY": "#"
+        }
+      },
+      "title": "A registration form",
+      "type": "object"
+    },
+    "once": {
+      "description": "A simple form example.",
+      "properties": {
+        "child": {
+          "description": "A simple form example.",
+          "properties": {
+            "child": {
+              "$ref": "#",
+              "@@RJSF_REF_CYCLE_KEY": true
+            }
+          },
+          "title": "A registration form",
+          "type": "object",
+          "@@RJSF_REF_KEY": "#"
+        }
+      },
+      "title": "A registration form",
+      "type": "object"
+    }
+  }
+}

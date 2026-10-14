@@ -1,0 +1,153 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "child": {
+          "child": {
+            "name": "n"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        92,
+        92,
+        92,
+        92,
+        92,
+        92
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "name": "n"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        92,
+        92,
+        92,
+        92,
+        92,
+        92
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "name": "n"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        92,
+        92,
+        92,
+        92,
+        92,
+        92
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/%41"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "properties": {
+            "child": {
+              "properties": {
+                "child": {
+                  "$ref": "#/definitions/%41",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "name": {
+                  "default": "n",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/%41"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/%41"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/A"
+    },
+    "once": {
+      "definitions": {
+        "A": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/%41"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/%41",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/%41"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/A"
+    }
+  }
+}

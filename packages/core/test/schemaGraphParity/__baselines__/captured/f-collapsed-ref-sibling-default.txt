@@ -1,0 +1,40 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "child": {
+        "child": {
+          "own": "o"
+        },
+        "name": "n"
+      },
+      "name": "n"
+    },
+    "passLengths": [
+      91,
+      91,
+      91,
+      91,
+      91,
+      91
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_child-button"
+      ],
+      "expandButtons": [],
+      "inputs": [
+        "root_name",
+        "root_child_own"
+      ]
+    },
+    "expandButtons": [
+      "root_child-button"
+    ],
+    "inputs": [
+      "root_name"
+    ]
+  }
+}

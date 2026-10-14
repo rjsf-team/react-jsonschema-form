@@ -1,0 +1,54 @@
+{
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "dependencies": {
+                "x": {
+                  "$ref": "#/definitions/node"
+                }
+              },
+              "properties": {
+                "x": {
+                  "default": "x",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "dependencies": {
+            "x": {
+              "$ref": "#/definitions/node"
+            }
+          },
+          "properties": {
+            "x": {
+              "default": "x",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

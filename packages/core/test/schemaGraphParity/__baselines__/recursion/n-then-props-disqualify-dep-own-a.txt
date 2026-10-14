@@ -1,0 +1,26 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "a": "v",
+      "d": "dd",
+      "z": "z"
+    },
+    "passLengths": [
+      40,
+      40,
+      40,
+      40,
+      40,
+      40
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_a",
+      "root_d",
+      "root_z"
+    ]
+  }
+}

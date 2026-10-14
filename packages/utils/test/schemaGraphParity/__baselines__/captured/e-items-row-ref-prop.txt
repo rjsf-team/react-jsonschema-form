@@ -1,0 +1,162 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "kids": [
+          {}
+        ]
+      },
+      "passLengths": [
+        27,
+        27,
+        27,
+        27,
+        27,
+        27
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "kids": [
+          {}
+        ]
+      },
+      "passLengths": [
+        27,
+        27,
+        27,
+        27,
+        27,
+        27
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "kids": [
+          {}
+        ]
+      },
+      "passLengths": [
+        27,
+        27,
+        27,
+        27,
+        27,
+        27
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "best": {
+              "$ref": "#/definitions/node"
+            },
+            "kids": {
+              "items": {
+                "$ref": "#/definitions/node"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "best": {
+          "properties": {
+            "best": {
+              "$ref": "#/definitions/node",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "kids": {
+              "items": {
+                "$ref": "#/definitions/node"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/node"
+        },
+        "kids": {
+          "items": {
+            "properties": {
+              "best": {
+                "$ref": "#/definitions/node",
+                "@@RJSF_REF_CYCLE_KEY": true
+              },
+              "kids": {
+                "items": {
+                  "$ref": "#/definitions/node"
+                },
+                "type": "array"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/definitions/node"
+          },
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    },
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "best": {
+              "$ref": "#/definitions/node"
+            },
+            "kids": {
+              "items": {
+                "$ref": "#/definitions/node"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "best": {
+          "$ref": "#/definitions/node",
+          "@@RJSF_REF_CYCLE_KEY": true
+        },
+        "kids": {
+          "items": {
+            "$ref": "#/definitions/node"
+          },
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

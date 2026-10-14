@@ -1,0 +1,102 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "name": ""
+      },
+      "passLengths": [
+        17,
+        17,
+        17,
+        17,
+        17,
+        17
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "name": ""
+      },
+      "passLengths": [
+        17,
+        17,
+        17,
+        17,
+        17,
+        17
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "name": ""
+      },
+      "passLengths": [
+        17,
+        17,
+        17,
+        17,
+        17,
+        17
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "@enum": {
+          "properties": {
+            "_id": {
+              "title": "Value",
+              "type": "number"
+            },
+            "children": {
+              "items": {
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/@enum"
+                  }
+                ]
+              },
+              "title": "Subvalues",
+              "type": "array"
+            },
+            "name": {
+              "default": "",
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "_id": {
+          "title": "Value",
+          "type": "number"
+        },
+        "children": {
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/@enum"
+              }
+            ]
+          },
+          "title": "Subvalues",
+          "type": "array"
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/@enum"
+    }
+  }
+}

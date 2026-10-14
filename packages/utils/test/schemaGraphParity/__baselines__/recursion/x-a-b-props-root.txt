@@ -1,0 +1,196 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "a": "x",
+        "b": {
+          "a2": {
+            "a": "x",
+            "b": {
+              "c": "y"
+            }
+          },
+          "c": "y"
+        }
+      },
+      "passLengths": [
+        115,
+        115,
+        115,
+        115,
+        115,
+        115
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "a": "x",
+        "b": {
+          "a2": {
+            "a": "x",
+            "b": {
+              "c": "y"
+            }
+          },
+          "c": "y"
+        }
+      },
+      "passLengths": [
+        115,
+        115,
+        115,
+        115,
+        115,
+        115
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "a": "x",
+        "b": {
+          "a2": {
+            "a": "x",
+            "b": {
+              "c": "y"
+            }
+          },
+          "c": "y"
+        }
+      },
+      "passLengths": [
+        115,
+        115,
+        115,
+        115,
+        115,
+        115
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "A2": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "b": {
+              "$ref": "#/definitions/B2"
+            }
+          },
+          "type": "object"
+        },
+        "B2": {
+          "properties": {
+            "a2": {
+              "$ref": "#/definitions/A2"
+            },
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "default": "x",
+          "type": "string"
+        },
+        "b": {
+          "properties": {
+            "a2": {
+              "properties": {
+                "a": {
+                  "default": "x",
+                  "type": "string"
+                },
+                "b": {
+                  "properties": {
+                    "a2": {
+                      "$ref": "#/definitions/A2",
+                      "@@RJSF_REF_CYCLE_KEY": true
+                    },
+                    "c": {
+                      "default": "y",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_KEY": "#/definitions/B2"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/A2"
+            },
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/B2"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/A2"
+    },
+    "once": {
+      "definitions": {
+        "A2": {
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "b": {
+              "$ref": "#/definitions/B2"
+            }
+          },
+          "type": "object"
+        },
+        "B2": {
+          "properties": {
+            "a2": {
+              "$ref": "#/definitions/A2"
+            },
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "default": "x",
+          "type": "string"
+        },
+        "b": {
+          "properties": {
+            "a2": {
+              "$ref": "#/definitions/A2",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "c": {
+              "default": "y",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/B2"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/A2"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "kid": {
+        "tag": "t"
+      },
+      "tag": "t"
+    },
+    "passLengths": [
+      48,
+      48,
+      48,
+      48,
+      48,
+      48
+    ],
+    "stable": true
+  },
+  "render": {
+    "afterClicking": {
+      "clicked": [
+        "root_kid-button"
+      ],
+      "expandButtons": [
+        "root_kid_kid_kid-button"
+      ],
+      "inputs": [
+        "root_a",
+        "root_tag",
+        "root_kid_tag",
+        "root_kid_kid_tag"
+      ]
+    },
+    "expandButtons": [
+      "root_kid-button"
+    ],
+    "inputs": [
+      "root_a",
+      "root_tag"
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "value": [
+        "@@undefined"
+      ]
+    },
+    "passLengths": [
+      39,
+      39,
+      39,
+      39,
+      39,
+      39
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_value_0_name",
+      "root_value_0__id"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "k": {
+        "j": {
+          "i": {
+            "name": "m"
+          },
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "name": "m"
+    },
+    "passLengths": [
+      126,
+      126,
+      126,
+      126,
+      126,
+      126
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_name",
+      "root_k-key",
+      "root_k_name",
+      "root_k_j-key",
+      "root_k_j_name",
+      "root_k_j_i-key",
+      "root_k_j_i_name"
+    ]
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "name": "n"
+      },
+      "passLengths": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "back": {
+          "extra": "e",
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        69,
+        69,
+        69,
+        69,
+        69,
+        69
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "name": "n"
+      },
+      "passLengths": [
+        18,
+        18,
+        18,
+        18,
+        18,
+        18
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "inner": {
+          "properties": {
+            "back": {
+              "$ref": "#/definitions/outer"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "outer": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/inner"
+            },
+            {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "properties": {
+        "back": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/inner"
+            },
+            {
+              "properties": {
+                "extra": {
+                  "default": "e",
+                  "type": "string"
+                }
+              }
+            }
+          ],
+          "@@RJSF_REF_KEY": "#/definitions/outer"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/inner"
+    }
+  }
+}

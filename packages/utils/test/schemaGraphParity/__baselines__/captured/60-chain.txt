@@ -1,0 +1,155 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "any": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/chain"
+            },
+            {
+              "$ref": "#/definitions/map"
+            },
+            {
+              "$ref": "#/definitions/to_absolute"
+            },
+            {
+              "$ref": "#/definitions/transform"
+            }
+          ]
+        },
+        "chain": {
+          "properties": {
+            "components": {
+              "items": {
+                "$ref": "#/definitions/any"
+              },
+              "type": "array"
+            },
+            "id": {
+              "enum": [
+                "chain"
+              ]
+            }
+          },
+          "title": "Chain",
+          "type": "object"
+        },
+        "map": {
+          "properties": {
+            "fn": {
+              "$ref": "#/definitions/any"
+            },
+            "id": {
+              "enum": [
+                "map"
+              ]
+            }
+          },
+          "title": "Map",
+          "type": "object"
+        },
+        "to_absolute": {
+          "properties": {
+            "base_url": {
+              "type": "string"
+            },
+            "id": {
+              "enum": [
+                "to_absolute"
+              ]
+            }
+          },
+          "title": "To Absolute",
+          "type": "object"
+        },
+        "transform": {
+          "properties": {
+            "id": {
+              "enum": [
+                "transform"
+              ]
+            },
+            "property_key": {
+              "type": "string"
+            },
+            "transformer": {
+              "$ref": "#/definitions/any"
+            }
+          },
+          "title": "Transform",
+          "type": "object"
+        }
+      },
+      "properties": {
+        "components": {
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/definitions/chain"
+              },
+              {
+                "$ref": "#/definitions/map"
+              },
+              {
+                "$ref": "#/definitions/to_absolute"
+              },
+              {
+                "$ref": "#/definitions/transform"
+              }
+            ],
+            "@@RJSF_REF_KEY": "#/definitions/any"
+          },
+          "type": "array"
+        },
+        "id": {
+          "enum": [
+            "chain"
+          ]
+        }
+      },
+      "title": "Chain",
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/chain"
+    }
+  }
+}

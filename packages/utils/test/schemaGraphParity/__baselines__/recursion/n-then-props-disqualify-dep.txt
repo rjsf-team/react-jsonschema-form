@@ -1,0 +1,68 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "a": "v",
+        "d": "dd",
+        "z": "z"
+      },
+      "passLengths": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "a": "v",
+        "d": "dd",
+        "z": "z"
+      },
+      "passLengths": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "a": "v",
+        "d": "dd",
+        "z": "z"
+      },
+      "passLengths": [
+        40,
+        40,
+        40,
+        40,
+        40,
+        40
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "properties": {
+        "d": {
+          "default": "dd",
+          "type": "string"
+        },
+        "z": {
+          "default": "z",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -1,0 +1,127 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "p": {
+          "a": "x",
+          "child": {
+            "a": "x"
+          },
+          "s": "s"
+        }
+      },
+      "passLengths": [
+        81,
+        81,
+        81,
+        81,
+        81,
+        81
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "p": {
+          "a": "x",
+          "child": {
+            "a": "x"
+          },
+          "s": "s"
+        }
+      },
+      "passLengths": [
+        81,
+        81,
+        81,
+        81,
+        81,
+        81
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "p": {
+          "a": "x",
+          "s": "s"
+        }
+      },
+      "passLengths": [
+        44,
+        44,
+        44,
+        44,
+        44,
+        44
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "Def": {
+          "if": {
+            "properties": {
+              "a": {
+                "const": "x"
+              }
+            }
+          },
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            }
+          },
+          "then": {
+            "properties": {
+              "child": {
+                "$ref": "#/definitions/Def"
+              }
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p": {
+          "dependencies": {
+            "a": {
+              "properties": {
+                "s": {
+                  "default": "s"
+                }
+              }
+            }
+          },
+          "if": {
+            "properties": {
+              "a": {
+                "const": "x"
+              }
+            }
+          },
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            }
+          },
+          "then": {
+            "properties": {
+              "child": {
+                "$ref": "#/definitions/Def"
+              }
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/Def"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

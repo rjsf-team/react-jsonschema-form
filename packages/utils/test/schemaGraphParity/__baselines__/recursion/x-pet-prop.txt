@@ -1,0 +1,226 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "p": {
+          "friend": {
+            "hunts": "h",
+            "petType": "cat"
+          },
+          "hunts": "h",
+          "petType": "cat"
+        }
+      },
+      "passLengths": [
+        122,
+        122,
+        122,
+        122,
+        122,
+        122
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "p": {
+          "friend": {
+            "hunts": "h",
+            "petType": "cat"
+          },
+          "hunts": "h",
+          "petType": "cat"
+        }
+      },
+      "passLengths": [
+        122,
+        122,
+        122,
+        122,
+        122,
+        122
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "p": {
+          "friend": {
+            "petType": "cat"
+          },
+          "petType": "cat"
+        }
+      },
+      "passLengths": [
+        84,
+        84,
+        84,
+        84,
+        84,
+        84
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "Cat": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Pet"
+            },
+            {
+              "properties": {
+                "hunts": {
+                  "default": "h",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        "Pet": {
+          "if": {
+            "properties": {
+              "petType": {
+                "const": "cat"
+              }
+            }
+          },
+          "properties": {
+            "friend": {
+              "$ref": "#/definitions/Pet"
+            },
+            "petType": {
+              "default": "cat",
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/Cat"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p": {
+          "if": {
+            "properties": {
+              "petType": {
+                "const": "cat"
+              }
+            }
+          },
+          "properties": {
+            "friend": {
+              "if": {
+                "properties": {
+                  "petType": {
+                    "const": "cat"
+                  }
+                }
+              },
+              "properties": {
+                "friend": {
+                  "$ref": "#/definitions/Pet",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "petType": {
+                  "default": "cat",
+                  "type": "string"
+                }
+              },
+              "then": {
+                "$ref": "#/definitions/Cat"
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/Pet"
+            },
+            "petType": {
+              "default": "cat",
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/Cat"
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/Pet"
+        }
+      },
+      "type": "object"
+    },
+    "once": {
+      "definitions": {
+        "Cat": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/Pet"
+            },
+            {
+              "properties": {
+                "hunts": {
+                  "default": "h",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        "Pet": {
+          "if": {
+            "properties": {
+              "petType": {
+                "const": "cat"
+              }
+            }
+          },
+          "properties": {
+            "friend": {
+              "$ref": "#/definitions/Pet"
+            },
+            "petType": {
+              "default": "cat",
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/Cat"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p": {
+          "if": {
+            "properties": {
+              "petType": {
+                "const": "cat"
+              }
+            }
+          },
+          "properties": {
+            "friend": {
+              "$ref": "#/definitions/Pet",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "petType": {
+              "default": "cat",
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/Cat"
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/Pet"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

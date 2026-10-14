@@ -1,0 +1,287 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "next": {
+          "next": {
+            "next": {
+              "next": {
+                "next": {
+                  "next": {
+                    "next": {
+                      "v": "v"
+                    },
+                    "v": "v"
+                  },
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "v": "v"
+      },
+      "passLengths": [
+        351,
+        351,
+        351,
+        351,
+        351,
+        351
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "next": {
+          "next": {
+            "next": {
+              "next": {
+                "next": {
+                  "next": {
+                    "next": {
+                      "v": "v"
+                    },
+                    "v": "v"
+                  },
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "v": "v"
+      },
+      "passLengths": [
+        351,
+        351,
+        351,
+        351,
+        351,
+        351
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "next": {
+          "next": {
+            "next": {
+              "next": {
+                "next": {
+                  "next": {
+                    "next": {
+                      "v": "v"
+                    },
+                    "v": "v"
+                  },
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "v": "v"
+      },
+      "passLengths": [
+        351,
+        351,
+        351,
+        351,
+        351,
+        351
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "D0": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/D1"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "D1": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/D2"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "D2": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/D3"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "D3": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/D4"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "D4": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/D5"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "D5": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/D6"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "D6": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/D7"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "D7": {
+          "properties": {
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "next": {
+          "properties": {
+            "next": {
+              "properties": {
+                "next": {
+                  "properties": {
+                    "next": {
+                      "properties": {
+                        "next": {
+                          "properties": {
+                            "next": {
+                              "properties": {
+                                "next": {
+                                  "properties": {
+                                    "v": {
+                                      "default": "v",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "type": "object",
+                                  "@@RJSF_REF_KEY": "#/definitions/D7"
+                                },
+                                "v": {
+                                  "default": "v",
+                                  "type": "string"
+                                }
+                              },
+                              "type": "object",
+                              "@@RJSF_REF_KEY": "#/definitions/D6"
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/D5"
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/D4"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_KEY": "#/definitions/D3"
+                },
+                "v": {
+                  "default": "v",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/D2"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/D1"
+        },
+        "v": {
+          "default": "v",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/D0"
+    }
+  }
+}

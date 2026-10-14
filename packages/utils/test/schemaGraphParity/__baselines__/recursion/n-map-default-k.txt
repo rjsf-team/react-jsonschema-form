@@ -1,0 +1,154 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "k": {
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "last": {
+        "k": {
+          "k": {
+            "k": {
+              "k": {
+                "k": {
+                  "k": {
+                    "name": "m"
+                  },
+                  "name": "m"
+                },
+                "name": "m"
+              },
+              "name": "m"
+            },
+            "name": "m"
+          },
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "passLengths": [
+        48,
+        84,
+        126,
+        174,
+        228,
+        288
+      ],
+      "stable": false
+    },
+    "populateDefaults": {
+      "first": {
+        "k": {
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "last": {
+        "k": {
+          "k": {
+            "k": {
+              "k": {
+                "k": {
+                  "k": {
+                    "name": "m"
+                  },
+                  "name": "m"
+                },
+                "name": "m"
+              },
+              "name": "m"
+            },
+            "name": "m"
+          },
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "passLengths": [
+        48,
+        84,
+        126,
+        174,
+        228,
+        288
+      ],
+      "stable": false
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "k": {
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "last": {
+        "k": {
+          "k": {
+            "k": {
+              "k": {
+                "k": {
+                  "k": {
+                    "name": "m"
+                  },
+                  "name": "m"
+                },
+                "name": "m"
+              },
+              "name": "m"
+            },
+            "name": "m"
+          },
+          "name": "m"
+        },
+        "name": "m"
+      },
+      "passLengths": [
+        48,
+        84,
+        126,
+        174,
+        228,
+        288
+      ],
+      "stable": false
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "additionalProperties": {
+        "$ref": "#/definitions/map2"
+      },
+      "default": {
+        "k": {}
+      },
+      "definitions": {
+        "map2": {
+          "additionalProperties": {
+            "$ref": "#/definitions/map2"
+          },
+          "default": {
+            "k": {}
+          },
+          "properties": {
+            "name": {
+              "default": "m",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "name": {
+          "default": "m",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/map2"
+    }
+  }
+}

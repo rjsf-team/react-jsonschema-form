@@ -1,0 +1,111 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "child": {
+          "own": "o"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        51,
+        51,
+        51,
+        51,
+        51,
+        51
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "own": "o"
+          },
+          "name": "n",
+          "own": "o"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        107,
+        107,
+        107,
+        107,
+        107,
+        107
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "child": {
+          "own": "o"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        51,
+        51,
+        51,
+        51,
+        51,
+        51
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/node"
+                }
+              ],
+              "properties": {
+                "own": {
+                  "default": "o",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/node"
+            }
+          ],
+          "properties": {
+            "own": {
+              "default": "o",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

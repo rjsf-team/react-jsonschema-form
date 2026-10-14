@@ -1,0 +1,91 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "a": "da",
+        "b": "db"
+      },
+      "passLengths": [
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "a": "da",
+        "b": "db"
+      },
+      "passLengths": [
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "a": "da",
+        "b": "db"
+      },
+      "passLengths": [
+        29,
+        29,
+        29,
+        29,
+        29,
+        29
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "default": {
+        "a": "da",
+        "b": "db"
+      },
+      "definitions": {
+        "O": {
+          "default": {
+            "a": "da",
+            "b": "db"
+          },
+          "properties": {
+            "a": {
+              "type": "string"
+            },
+            "b": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "b"
+          ],
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "type": "string"
+        },
+        "b": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "a"
+      ],
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/O"
+    }
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "Node": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/Node"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "next": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/Node",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/Node"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Node"
+    },
+    "once": {
+      "definitions": {
+        "Node": {
+          "properties": {
+            "next": {
+              "$ref": "#/definitions/Node"
+            },
+            "value": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "next": {
+          "$ref": "#/definitions/Node",
+          "@@RJSF_REF_CYCLE_KEY": true
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/Node"
+    }
+  }
+}

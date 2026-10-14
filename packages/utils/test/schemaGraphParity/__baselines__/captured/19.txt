@@ -1,0 +1,100 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "value": [
+          "@@undefined"
+        ]
+      },
+      "passLengths": [
+        39,
+        39,
+        39,
+        39,
+        39,
+        39
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "value": [
+          {
+            "name": ""
+          }
+        ]
+      },
+      "passLengths": [
+        50,
+        50,
+        50,
+        50,
+        50,
+        50
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "value": [
+          "@@undefined"
+        ]
+      },
+      "passLengths": [
+        39,
+        39,
+        39,
+        39,
+        39,
+        39
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "@enum": {
+          "properties": {
+            "_id": {
+              "title": "Value",
+              "type": "number"
+            },
+            "children": {
+              "items": {
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/@enum"
+                  }
+                ]
+              },
+              "title": "Subvalues",
+              "type": "array"
+            },
+            "name": {
+              "default": "",
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "value": {
+          "items": {
+            "allOf": [
+              {
+                "$ref": "#/definitions/@enum"
+              }
+            ]
+          },
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

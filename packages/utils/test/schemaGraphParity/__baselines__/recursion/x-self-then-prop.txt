@@ -1,0 +1,89 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "p": {
+          "k": "a"
+        }
+      },
+      "passLengths": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "p": {
+          "k": "a"
+        }
+      },
+      "passLengths": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "p": {
+          "k": "a"
+        }
+      },
+      "passLengths": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "if": {},
+          "properties": {
+            "k": {
+              "default": "a",
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/node"
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p": {
+          "if": {},
+          "properties": {
+            "k": {
+              "default": "a",
+              "type": "string"
+            }
+          },
+          "then": {
+            "$ref": "#/definitions/node"
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/node"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

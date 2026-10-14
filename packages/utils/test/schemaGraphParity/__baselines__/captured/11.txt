@@ -1,0 +1,117 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "child": {
+          "child": {
+            "name": "deep"
+          }
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        78,
+        78,
+        78,
+        78,
+        78,
+        78
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "child": {
+              "name": "deep"
+            },
+            "name": "deep"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        144,
+        144,
+        144,
+        144,
+        144,
+        144
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "name": "deep"
+          }
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        78,
+        78,
+        78,
+        78,
+        78,
+        78
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "default": {
+        "child": {
+          "child": {
+            "name": "deep"
+          }
+        }
+      },
+      "definitions": {
+        "node": {
+          "default": {
+            "child": {
+              "child": {
+                "name": "deep"
+              }
+            }
+          },
+          "properties": {
+            "child": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/node"
+                }
+              ]
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/node"
+            }
+          ]
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

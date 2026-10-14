@@ -1,0 +1,86 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "$defs": {
+        "node": {
+          "properties": {
+            "children": {
+              "items": {
+                "oneOf": [
+                  {
+                    "title": "None",
+                    "type": "null"
+                  },
+                  {
+                    "$ref": "#/$defs/node"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "tree": {
+          "items": {
+            "oneOf": [
+              {
+                "title": "None",
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/node"
+              }
+            ]
+          },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

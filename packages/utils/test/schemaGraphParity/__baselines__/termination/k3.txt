@@ -1,0 +1,1022 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "p1": {
+          "p0": {
+            "p1": {
+              "p2": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p1": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "p2": {
+            "p0": {
+              "p1": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p1": {
+              "p0": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p0": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "p2": {
+          "p0": {
+            "p1": {
+              "p2": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p1": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "p1": {
+            "p0": {
+              "p1": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p0": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p1": {
+                "p0": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "v": "v"
+      },
+      "passLengths": [
+        1495,
+        1495,
+        1495,
+        1495,
+        1495,
+        1495
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "p1": {
+          "p0": {
+            "p1": {
+              "p2": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p1": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "p2": {
+            "p0": {
+              "p1": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p1": {
+              "p0": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p0": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "p2": {
+          "p0": {
+            "p1": {
+              "p2": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p1": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "p1": {
+            "p0": {
+              "p1": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p0": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p1": {
+                "p0": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "v": "v"
+      },
+      "passLengths": [
+        1495,
+        1495,
+        1495,
+        1495,
+        1495,
+        1495
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "p1": {
+          "p0": {
+            "p1": {
+              "p2": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p1": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "p2": {
+            "p0": {
+              "p1": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p1": {
+              "p0": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p0": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "p2": {
+          "p0": {
+            "p1": {
+              "p2": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p1": {
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "p1": {
+            "p0": {
+              "p1": {
+                "p2": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p2": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "p2": {
+              "p0": {
+                "p1": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "p1": {
+                "p0": {
+                  "v": "v"
+                },
+                "v": "v"
+              },
+              "v": "v"
+            },
+            "v": "v"
+          },
+          "v": "v"
+        },
+        "v": "v"
+      },
+      "passLengths": [
+        1495,
+        1495,
+        1495,
+        1495,
+        1495,
+        1495
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "d0": {
+          "properties": {
+            "p1": {
+              "$ref": "#/definitions/d1"
+            },
+            "p2": {
+              "$ref": "#/definitions/d2"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "d1": {
+          "properties": {
+            "p0": {
+              "$ref": "#/definitions/d0"
+            },
+            "p2": {
+              "$ref": "#/definitions/d2"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "d2": {
+          "properties": {
+            "p0": {
+              "$ref": "#/definitions/d0"
+            },
+            "p1": {
+              "$ref": "#/definitions/d1"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p1": {
+          "properties": {
+            "p0": {
+              "properties": {
+                "p1": {
+                  "properties": {
+                    "p0": {
+                      "$ref": "#/definitions/d0",
+                      "@@RJSF_REF_CYCLE_KEY": true
+                    },
+                    "p2": {
+                      "properties": {
+                        "p0": {
+                          "$ref": "#/definitions/d0",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p1": {
+                          "$ref": "#/definitions/d1",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d2"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_KEY": "#/definitions/d1"
+                },
+                "p2": {
+                  "properties": {
+                    "p0": {
+                      "$ref": "#/definitions/d0",
+                      "@@RJSF_REF_CYCLE_KEY": true
+                    },
+                    "p1": {
+                      "properties": {
+                        "p0": {
+                          "$ref": "#/definitions/d0",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p2": {
+                          "$ref": "#/definitions/d2",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d1"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_KEY": "#/definitions/d2"
+                },
+                "v": {
+                  "default": "v",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/d0"
+            },
+            "p2": {
+              "properties": {
+                "p0": {
+                  "properties": {
+                    "p1": {
+                      "properties": {
+                        "p0": {
+                          "$ref": "#/definitions/d0",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p2": {
+                          "properties": {
+                            "p0": {
+                              "$ref": "#/definitions/d0",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "p1": {
+                              "$ref": "#/definitions/d1",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/d2"
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d1"
+                    },
+                    "p2": {
+                      "properties": {
+                        "p0": {
+                          "$ref": "#/definitions/d0",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p1": {
+                          "properties": {
+                            "p0": {
+                              "$ref": "#/definitions/d0",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "p2": {
+                              "$ref": "#/definitions/d2",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/d1"
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d2"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_CYCLE_KEY": true,
+                  "@@RJSF_REF_KEY": "#/definitions/d0"
+                },
+                "p1": {
+                  "properties": {
+                    "p0": {
+                      "properties": {
+                        "p1": {
+                          "$ref": "#/definitions/d1",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p2": {
+                          "properties": {
+                            "p0": {
+                              "$ref": "#/definitions/d0",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "p1": {
+                              "$ref": "#/definitions/d1",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/d2"
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d0"
+                    },
+                    "p2": {
+                      "properties": {
+                        "p0": {
+                          "properties": {
+                            "p1": {
+                              "$ref": "#/definitions/d1",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "p2": {
+                              "$ref": "#/definitions/d2",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/d0"
+                        },
+                        "p1": {
+                          "$ref": "#/definitions/d1",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d2"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_CYCLE_KEY": true,
+                  "@@RJSF_REF_KEY": "#/definitions/d1"
+                },
+                "v": {
+                  "default": "v",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/d2"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/d1"
+        },
+        "p2": {
+          "properties": {
+            "p0": {
+              "properties": {
+                "p1": {
+                  "properties": {
+                    "p0": {
+                      "$ref": "#/definitions/d0",
+                      "@@RJSF_REF_CYCLE_KEY": true
+                    },
+                    "p2": {
+                      "properties": {
+                        "p0": {
+                          "$ref": "#/definitions/d0",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p1": {
+                          "$ref": "#/definitions/d1",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d2"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_KEY": "#/definitions/d1"
+                },
+                "p2": {
+                  "properties": {
+                    "p0": {
+                      "$ref": "#/definitions/d0",
+                      "@@RJSF_REF_CYCLE_KEY": true
+                    },
+                    "p1": {
+                      "properties": {
+                        "p0": {
+                          "$ref": "#/definitions/d0",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p2": {
+                          "$ref": "#/definitions/d2",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d1"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_KEY": "#/definitions/d2"
+                },
+                "v": {
+                  "default": "v",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_CYCLE_KEY": true,
+              "@@RJSF_REF_KEY": "#/definitions/d0"
+            },
+            "p1": {
+              "properties": {
+                "p0": {
+                  "properties": {
+                    "p1": {
+                      "properties": {
+                        "p0": {
+                          "$ref": "#/definitions/d0",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p2": {
+                          "properties": {
+                            "p0": {
+                              "$ref": "#/definitions/d0",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "p1": {
+                              "$ref": "#/definitions/d1",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/d2"
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d1"
+                    },
+                    "p2": {
+                      "properties": {
+                        "p0": {
+                          "$ref": "#/definitions/d0",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "p1": {
+                          "properties": {
+                            "p0": {
+                              "$ref": "#/definitions/d0",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "p2": {
+                              "$ref": "#/definitions/d2",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/d1"
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d2"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_CYCLE_KEY": true,
+                  "@@RJSF_REF_KEY": "#/definitions/d0"
+                },
+                "p2": {
+                  "properties": {
+                    "p0": {
+                      "properties": {
+                        "p1": {
+                          "properties": {
+                            "p0": {
+                              "$ref": "#/definitions/d0",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "p2": {
+                              "$ref": "#/definitions/d2",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/d1"
+                        },
+                        "p2": {
+                          "$ref": "#/definitions/d2",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d0"
+                    },
+                    "p1": {
+                      "properties": {
+                        "p0": {
+                          "properties": {
+                            "p1": {
+                              "$ref": "#/definitions/d1",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "p2": {
+                              "$ref": "#/definitions/d2",
+                              "@@RJSF_REF_CYCLE_KEY": true
+                            },
+                            "v": {
+                              "default": "v",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "@@RJSF_REF_KEY": "#/definitions/d0"
+                        },
+                        "p2": {
+                          "$ref": "#/definitions/d2",
+                          "@@RJSF_REF_CYCLE_KEY": true
+                        },
+                        "v": {
+                          "default": "v",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object",
+                      "@@RJSF_REF_KEY": "#/definitions/d1"
+                    },
+                    "v": {
+                      "default": "v",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "@@RJSF_REF_CYCLE_KEY": true,
+                  "@@RJSF_REF_KEY": "#/definitions/d2"
+                },
+                "v": {
+                  "default": "v",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/d1"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/d2"
+        },
+        "v": {
+          "default": "v",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/d0"
+    },
+    "once": {
+      "definitions": {
+        "d0": {
+          "properties": {
+            "p1": {
+              "$ref": "#/definitions/d1"
+            },
+            "p2": {
+              "$ref": "#/definitions/d2"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "d1": {
+          "properties": {
+            "p0": {
+              "$ref": "#/definitions/d0"
+            },
+            "p2": {
+              "$ref": "#/definitions/d2"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "d2": {
+          "properties": {
+            "p0": {
+              "$ref": "#/definitions/d0"
+            },
+            "p1": {
+              "$ref": "#/definitions/d1"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "p1": {
+          "properties": {
+            "p0": {
+              "$ref": "#/definitions/d0",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "p2": {
+              "properties": {
+                "p0": {
+                  "$ref": "#/definitions/d0",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "p1": {
+                  "$ref": "#/definitions/d1",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "v": {
+                  "default": "v",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/d2"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/d1"
+        },
+        "p2": {
+          "properties": {
+            "p0": {
+              "$ref": "#/definitions/d0",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "p1": {
+              "properties": {
+                "p0": {
+                  "$ref": "#/definitions/d0",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "p2": {
+                  "$ref": "#/definitions/d2",
+                  "@@RJSF_REF_CYCLE_KEY": true
+                },
+                "v": {
+                  "default": "v",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "@@RJSF_REF_KEY": "#/definitions/d1"
+            },
+            "v": {
+              "default": "v",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_KEY": "#/definitions/d2"
+        },
+        "v": {
+          "default": "v",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/d0"
+    }
+  }
+}

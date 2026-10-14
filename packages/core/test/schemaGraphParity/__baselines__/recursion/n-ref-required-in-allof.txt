@@ -1,0 +1,24 @@
+{
+  "getDefaultFormState": {
+    "first": {
+      "a": "da",
+      "b": "db"
+    },
+    "passLengths": [
+      29,
+      29,
+      29,
+      29,
+      29,
+      29
+    ],
+    "stable": true
+  },
+  "render": {
+    "expandButtons": [],
+    "inputs": [
+      "root_a",
+      "root_b"
+    ]
+  }
+}

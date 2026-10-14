@@ -1,0 +1,113 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x",
+          "obj": {
+            "inner": "i"
+          }
+        },
+        "obj": {
+          "inner": "i"
+        }
+      },
+      "passLengths": [
+        118,
+        118,
+        118,
+        118,
+        118,
+        118
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x",
+          "obj": {
+            "inner": "i"
+          }
+        },
+        "obj": {
+          "inner": "i"
+        }
+      },
+      "passLengths": [
+        118,
+        118,
+        118,
+        118,
+        118,
+        118
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x",
+          "obj": {
+            "inner": "i"
+          }
+        },
+        "obj": {
+          "inner": "i"
+        }
+      },
+      "passLengths": [
+        118,
+        118,
+        118,
+        118,
+        118,
+        118
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "deep": {
+          "dependencies": {
+            "a": {
+              "properties": {
+                "child": {
+                  "$ref": "#/definitions/deep"
+                },
+                "obj": {
+                  "properties": {
+                    "inner": {
+                      "default": "i"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "default": "x",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/deep"
+    }
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "tag": "p"
+          },
+          "tag": "p"
+        }
+      },
+      "passLengths": [
+        75,
+        75,
+        75,
+        75,
+        75,
+        75
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {},
+      "passLengths": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": "same",
+    "once": {
+      "definitions": {
+        "node": {
+          "patternProperties": {
+            "^c": {
+              "properties": {
+                "tag": {
+                  "oneOf": [
+                    {
+                      "const": "p"
+                    }
+                  ]
+                }
+              },
+              "type": "object"
+            }
+          },
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/node"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "patternProperties": {
+        "^c": {
+          "properties": {
+            "tag": {
+              "oneOf": [
+                {
+                  "const": "p"
+                }
+              ]
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/node",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            {
+              "properties": {
+                "tag": {
+                  "oneOf": [
+                    {
+                      "const": "p"
+                    }
+                  ]
+                }
+              },
+              "type": "object"
+            }
+          ],
+          "@@RJSF_REF_CYCLE_KEY": true
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

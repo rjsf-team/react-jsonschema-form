@@ -1,0 +1,185 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "name": "L4"
+                      }
+                    ],
+                    "name": "L3"
+                  }
+                ],
+                "name": "L2"
+              }
+            ],
+            "name": "L1"
+          }
+        ],
+        "name": "L0"
+      },
+      "passLengths": [
+        381,
+        381,
+        381,
+        381,
+        381,
+        381
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "name": "L4"
+                      }
+                    ],
+                    "name": "L3"
+                  }
+                ],
+                "name": "L2"
+              }
+            ],
+            "name": "L1"
+          }
+        ],
+        "name": "L0"
+      },
+      "passLengths": [
+        381,
+        381,
+        381,
+        381,
+        381,
+        381
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [],
+                        "name": "L4"
+                      }
+                    ],
+                    "name": "L3"
+                  }
+                ],
+                "name": "L2"
+              }
+            ],
+            "name": "L1"
+          }
+        ],
+        "name": "L0"
+      },
+      "passLengths": [
+        381,
+        381,
+        381,
+        381,
+        381,
+        381
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "$defs": {
+        "node": {
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/$defs/node"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "children": {
+          "items": {
+            "properties": {
+              "children": {
+                "items": {
+                  "$ref": "#/$defs/node"
+                },
+                "type": "array"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "type": "object",
+            "@@RJSF_REF_KEY": "#/$defs/node"
+          },
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/$defs/node"
+    },
+    "once": {
+      "$defs": {
+        "node": {
+          "properties": {
+            "children": {
+              "items": {
+                "$ref": "#/$defs/node"
+              },
+              "type": "array"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "children": {
+          "items": {
+            "$ref": "#/$defs/node"
+          },
+          "type": "array"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/$defs/node"
+    }
+  }
+}

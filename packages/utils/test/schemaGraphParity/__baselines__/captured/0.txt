@@ -1,0 +1,129 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "children": {
+          "name": ""
+        },
+        "name": ""
+      },
+      "passLengths": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "children": {
+          "name": ""
+        },
+        "name": ""
+      },
+      "passLengths": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "children": {
+          "name": ""
+        },
+        "name": ""
+      },
+      "passLengths": [
+        53,
+        53,
+        53,
+        53,
+        53,
+        53
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "@enum": {
+          "properties": {
+            "children": {
+              "$ref": "#/definitions/@enum"
+            },
+            "name": {
+              "default": "",
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "children": {
+          "properties": {
+            "children": {
+              "$ref": "#/definitions/@enum",
+              "@@RJSF_REF_CYCLE_KEY": true
+            },
+            "name": {
+              "default": "",
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/@enum"
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/@enum"
+    },
+    "once": {
+      "definitions": {
+        "@enum": {
+          "properties": {
+            "children": {
+              "$ref": "#/definitions/@enum"
+            },
+            "name": {
+              "default": "",
+              "title": "Name",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "children": {
+          "$ref": "#/definitions/@enum",
+          "@@RJSF_REF_CYCLE_KEY": true
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/@enum"
+    }
+  }
+}

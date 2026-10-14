@@ -1,0 +1,147 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "child": {
+          "child": {
+            "own": "o"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        91,
+        91,
+        91,
+        91,
+        91,
+        91
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "own": "o"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        91,
+        91,
+        91,
+        91,
+        91,
+        91
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "child": {
+          "child": {
+            "own": "o"
+          },
+          "name": "n"
+        },
+        "name": "n"
+      },
+      "passLengths": [
+        91,
+        91,
+        91,
+        91,
+        91,
+        91
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/node",
+              "properties": {
+                "own": {
+                  "default": "o",
+                  "type": "string"
+                }
+              }
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "properties": {
+            "own": {
+              "default": "o",
+              "type": "string"
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/node"
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    },
+    "once": {
+      "definitions": {
+        "node": {
+          "properties": {
+            "child": {
+              "$ref": "#/definitions/node",
+              "properties": {
+                "own": {
+                  "default": "o",
+                  "type": "string"
+                }
+              }
+            },
+            "name": {
+              "default": "n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "child": {
+          "$ref": "#/definitions/node",
+          "properties": {
+            "own": {
+              "default": "o",
+              "type": "string"
+            }
+          },
+          "@@RJSF_REF_CYCLE_KEY": true
+        },
+        "name": {
+          "default": "n",
+          "type": "string"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/node"
+    }
+  }
+}

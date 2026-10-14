@@ -1,0 +1,139 @@
+{
+  "getDefaultFormState": {
+    "default": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x"
+        }
+      },
+      "passLengths": [
+        46,
+        46,
+        46,
+        46,
+        46,
+        46
+      ],
+      "stable": true
+    },
+    "populateDefaults": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x"
+        }
+      },
+      "passLengths": [
+        46,
+        46,
+        46,
+        46,
+        46,
+        46
+      ],
+      "stable": true
+    },
+    "skipEmptyDefaults": {
+      "first": {
+        "a": "x",
+        "child": {
+          "a": "x"
+        }
+      },
+      "passLengths": [
+        46,
+        46,
+        46,
+        46,
+        46,
+        46
+      ],
+      "stable": true
+    }
+  },
+  "retrieveSchema": {
+    "onItsOutput": {
+      "definitions": {
+        "rq": {
+          "dependencies": {
+            "a": [
+              "child"
+            ]
+          },
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/rq"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "default": "x",
+          "type": "string"
+        },
+        "child": {
+          "dependencies": {
+            "a": [
+              "child"
+            ]
+          },
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/rq",
+              "@@RJSF_REF_CYCLE_KEY": true
+            }
+          },
+          "type": "object",
+          "@@RJSF_REF_CYCLE_KEY": true,
+          "@@RJSF_REF_KEY": "#/definitions/rq"
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/rq"
+    },
+    "once": {
+      "definitions": {
+        "rq": {
+          "dependencies": {
+            "a": [
+              "child"
+            ]
+          },
+          "properties": {
+            "a": {
+              "default": "x",
+              "type": "string"
+            },
+            "child": {
+              "$ref": "#/definitions/rq"
+            }
+          },
+          "type": "object"
+        }
+      },
+      "properties": {
+        "a": {
+          "default": "x",
+          "type": "string"
+        },
+        "child": {
+          "$ref": "#/definitions/rq",
+          "@@RJSF_REF_CYCLE_KEY": true
+        }
+      },
+      "type": "object",
+      "@@RJSF_REF_KEY": "#/definitions/rq"
+    }
+  }
+}
