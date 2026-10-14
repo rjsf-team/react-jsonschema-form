@@ -38,7 +38,7 @@ import {
 } from '@rjsf/utils';
 
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { hidesWidgetLabel } from './fieldWidgetUtils.ts';
+import { getTemplateParts, hidesWidgetLabel } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 
 /** Gets the index of the selected option in the list of `options`, the way `getSelectedOption()` finds the option
@@ -272,11 +272,13 @@ export default function LayoutMultiSchemaField<
     hasControl: !hidden,
     required,
   });
-  // A template that doesn't read `presentation` renders from these deprecated props, each derived from the plan
-  const templateDescription = presentation.description.by === 'template' ? presentation.description : undefined;
+  const {
+    displayLabel,
+    description: templateDescription,
+    help,
+    errors: templateErrors,
+  } = getTemplateParts(presentation);
   const description = templateDescription?.text ?? '';
-  const help = presentation.help.by === 'template' ? presentation.help.text : undefined;
-  const templateErrors = presentation.errors.by === 'template' ? presentation.errors.messages : undefined;
   const errors = templateErrors && (
     <FieldErrorTemplate id={id} schema={schema} errors={[...templateErrors]} registry={registry} />
   );
@@ -313,7 +315,7 @@ export default function LayoutMultiSchemaField<
       required={required}
       readonly={!!readonly}
       registry={registry}
-      displayLabel={presentation.label.by === 'template'}
+      displayLabel={displayLabel}
       presentation={presentation}
       classNames={getFieldClassNames<S>(schema, hasErrors, uiClassNames)}
       style={style}

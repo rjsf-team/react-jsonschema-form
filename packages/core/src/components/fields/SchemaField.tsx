@@ -58,6 +58,7 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import { getTemplateParts } from './fieldWidgetUtils.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
@@ -858,13 +859,13 @@ function SchemaFieldRender<
     </PresentationContext>
   );
 
-  // A template that doesn't read `presentation` renders from these deprecated props, each derived from the plan, so it
-  // draws a part exactly where the plan says the template draws it
-  const displayLabel = presentation?.label.by === 'template';
-  const templateDescription = presentation?.description.by === 'template' ? presentation.description : undefined;
+  const {
+    displayLabel,
+    description: templateDescription,
+    help,
+    errors: templateErrors,
+  } = getTemplateParts(presentation);
   const description = templateDescription?.text ?? '';
-  const help = presentation?.help.by === 'template' ? presentation.help.text : undefined;
-  const templateErrors = presentation?.errors.by === 'template' ? presentation.errors.messages : undefined;
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
 

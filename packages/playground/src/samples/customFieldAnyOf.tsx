@@ -4,7 +4,18 @@ import { getTemplates, isObject, isSchemaObject, noop, toFieldPath } from '@rjsf
 import type { Sample } from './Sample.ts';
 
 function UiField(props: FieldProps) {
-  const { fieldPath, id: _id, formData, onChange, registry, schema, uiSchema, ...otherProps } = props;
+  // The plan is this field's own, so it is kept from the fields below, which would take its label and ids for theirs
+  const {
+    fieldPath,
+    id: _id,
+    formData,
+    onChange,
+    registry,
+    schema,
+    uiSchema,
+    presentation: _presentation,
+    ...otherProps
+  } = props;
   // The form data is unknown to the `Form` this sample renders, so narrow it before reading the branch fields
   const location = isObject(formData) ? formData : {};
   const { fields, schemaUtils } = registry;

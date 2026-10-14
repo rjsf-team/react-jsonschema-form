@@ -11,7 +11,7 @@ import { getTemplates, getUiOptions } from '@rjsf/utils';
 function NullField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FieldProps<T, S, F>,
 ) {
-  const { formData, onChange, fieldPath, schema, uiSchema, registry, required, presentation } = props;
+  const { formData, onChange, fieldPath, schema, uiSchema, registry, presentation } = props;
   useEffect(() => {
     if (formData === undefined) {
       onChange(null as unknown as T, fieldPath);
@@ -34,7 +34,7 @@ function NullField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exten
         <TitleFieldTemplate
           id={label.id}
           title={label.text}
-          required={required}
+          required={label.requiredMarker}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
