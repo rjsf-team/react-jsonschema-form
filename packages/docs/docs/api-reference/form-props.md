@@ -726,6 +726,20 @@ Pass a stable reference: a function recreated on every render of the parent coun
 
 Keep it pure. The form calls it while React renders whenever the errors on screen have to follow the props, for example when a `formData` you pass is validated live, so it follows [React's rules for rendering](https://react.dev/reference/rules/components-and-hooks-must-be-pure): no side effects, the same result for the same arguments, and no reliance on being called once, since React can render more than once (Strict Mode does in development) or discard a render.
 
+## transformChange
+
+A pure function that decides what an edit leaves the form with. The form calls it with the data the edit produced and the data before it, for a field's change and for `setFieldValue()`, before it stores the result, validates it and reports it through [`onChange`](#onchange). Return `next` to take the edit, `previous` to refuse it, or another value, such as `next` with a field trimmed:
+
+```tsx
+<Form
+  schema={schema}
+  validator={validator}
+  transformChange={(next, previous) => (isAllowed(next.title) ? { ...next, title: next.title.trim() } : previous)}
+/>
+```
+
+Return `next`'s unchanged subtrees as they are, so their fields do not render again. The function must be pure: the form may call it again for the same edit. It is not called for `reset()` or for a blur.
+
 ## translateString
 
 Optional string translation function, if provided, allows users to change the translation of the RJSF internal strings.

@@ -197,6 +197,13 @@ export interface FormProps<
    * Schema validation
    */
   transformErrors?: ErrorTransformer<Uninferred<T>, S, F>;
+  /** Returns the data an edit leaves the form with, given the data the edit produced and the data before it: `next` to
+   * take the edit as it is, `previous` to refuse it, or another value, such as `next` with a field trimmed. It runs
+   * for every edit, a field's change and `setFieldValue()` alike, before the form stores the result, validates it and
+   * reports it through `onChange`. It must be pure, since the form may call it again for the same edit, and should
+   * return `next`'s unchanged subtrees as they are, so their fields do not render again.
+   */
+  transformChange?: (next: Uninferred<T> | undefined, previous: Uninferred<T> | undefined) => Uninferred<T> | undefined;
   /** If set to true, then the first field with an error will receive the focus when the form is submitted with errors
    */
   focusOnFirstError?: boolean | ((error: RJSFValidationError) => void);

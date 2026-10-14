@@ -11,6 +11,7 @@ import {
   callWithDeferredThrow,
   deepEquals,
   propertyToPath,
+  ROOT_FIELD_PATH,
   replaceEqualDeep,
   fieldPathFromList,
   fieldPathToId,
@@ -188,6 +189,26 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     return false;
   };
 
+  /** `change` applied to `base`, then, when the consumer's `transformChange` returns other data than the change left,
+   * that data written over the whole form with no key move, so its errors, live validation and row pairing describe
+   * the data the form keeps. Pure, as `settled()` asks: it may run again on a newer base.
+   */
+  const applyEdit = (
+    base: FormState<T, S, F>,
+    change: Parameters<typeof applyChange<T, S, F>>[1],
+    props: FormProps<T, S, F>,
+  ) => {
+    const next = applyChange(base, change, props);
+    const { transformChange } = props;
+    if (!transformChange) {
+      return next;
+    }
+    const transformed = transformChange(next.formData, base.formData);
+    return Object.is(transformed, next.formData)
+      ? next
+      : applyChange(next, { newValue: transformed, fieldPath: ROOT_FIELD_PATH }, props);
+  };
+
   /** Applies a change to the field at `fieldPath` with `applyChange()`, commits the result and reports it through
    * `onChange`, which is called before this returns, the way `deliver` says.
    *
@@ -215,7 +236,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     const committed = commit(
       settled((base) =>
-        applyChange(
+        applyEdit(
           base,
           {
             newValue,
