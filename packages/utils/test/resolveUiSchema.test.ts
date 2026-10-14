@@ -1,5 +1,5 @@
 import type { Registry, RJSFSchema, TemplatesType, UiSchema, UiSchemaDefinitions } from '../src/index.ts';
-import { RJSF_REF_KEY, noop, resolveUiSchema } from '../src/index.ts';
+import { mergeThemePresentation, noop, resolveUiSchema, RJSF_REF_KEY } from '../src/index.ts';
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -15,6 +15,7 @@ const baseRegistry: Registry = {
   translateString: () => '',
   fields: {},
   widgets: {},
+  presentation: mergeThemePresentation(),
   templates: {} as TemplatesType,
   globalFormOptions: { idPrefix: 'root', idSeparator: '_', useFallbackUiForUnsupportedType: false },
 };

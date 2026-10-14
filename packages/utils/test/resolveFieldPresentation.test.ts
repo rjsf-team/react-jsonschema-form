@@ -120,10 +120,20 @@ describe('resolveFieldPresentation()', () => {
     );
   });
 
-  it('carries the native required attribute apart from the marker', () => {
-    const plan = resolve({ required: true, requiredAttribute: false });
-    expect(plan.control?.requiredMarker).toBe(true);
-    expect(plan.control?.attributes.required).toBeUndefined();
+  it('gives the parts a component rendered beside its options draws ids of its own, and the rest the field ids', () => {
+    const plan = resolve({
+      declaration: { ...TEMPLATE, label: 'self', description: 'self' },
+      componentId: `${ID}_XxxOf`,
+      description: 'Describes foo',
+      help: 'Helps with foo',
+      errors: ['is required'],
+      hasControl: false,
+    });
+    expect(plan.label.id).toBe(`${ID}_XxxOf__title`);
+    expect(plan.description.id).toBe(`${ID}_XxxOf__description`);
+    expect(plan.help.id).toBe(`${ID}__help`);
+    expect(plan.errors.id).toBe(`${ID}__error`);
+    expect(plan.describedBy).toEqual([`${ID}__error`, `${ID}_XxxOf__description`, `${ID}__help`]);
   });
 
   describe('under a field above rendering the same id', () => {
@@ -151,9 +161,9 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.label).toEqual({ text: 'Foo', by: 'above', id: `${ID}__label` });
     });
 
-    it('keeps the heading a container draws itself beneath a template label above when it says something else', () => {
+    it('keeps the heading a container draws itself beneath a template label above when it says something else, under an id of its own', () => {
       const container = resolve({ inherited: above, declaration: WIDGET_LABEL, label: 'Dog', hasControl: false });
-      expect(container.label).toEqual({ text: 'Dog', by: 'self', id: `${ID}__label` });
+      expect(container.label).toEqual({ text: 'Dog', by: 'self', id: `${ID}__title` });
       expect(container.control).toBeUndefined();
     });
 

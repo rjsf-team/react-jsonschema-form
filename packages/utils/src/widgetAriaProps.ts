@@ -1,7 +1,8 @@
+import getControlAttributes from './getControlAttributes.ts';
 import getSelectedOptionDescription from './getSelectedOptionDescription.ts';
 import { ariaDescribedByIds, descriptionId } from './idGenerators.ts';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
+import type { ControlAttributes, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 /** The props of a `SelectWidget` from which the name and the description of the control it renders are built: the
  * `aria-label` and `aria-describedby` its caller may hand it, and the props that decide whether it shows the
@@ -11,7 +12,8 @@ export type WidgetAriaPropsInput<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = SelectedOptionDescriptionProps<T, S, F> & Pick<WidgetProps<T, S, F>, 'aria-label' | 'aria-describedby'>;
+> = SelectedOptionDescriptionProps<T, S, F> &
+  Pick<WidgetProps<T, S, F>, 'aria-label' | 'aria-describedby' | 'presentation'>;
 
 /** Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses. A widget
  * rendered inside another one, such as each select of an `AltDateWidget`, has no label of its own and an id that no
@@ -19,22 +21,26 @@ export type WidgetAriaPropsInput<
  * passed are followed by `descriptionId(props.id)` only while `SelectedOptionDescription` renders that element, the
  * one the widget renders itself, so the description of the selected option is still announced. Otherwise the id is
  * left out: no element has it, and it may be another field's description id, as `root_when_year__description` is for
- * both the year select of `when` and a `when_year` property.
+ * both the year select of `when` and a `when_year` property. A select its field's plan reaches, with no ids from its
+ * caller, takes the attributes `getControlAttributes()` gives its control, the selected option's description among
+ * its describers while it renders.
  *
- * @param props - The widget's props, of which `id`, `aria-label`, `aria-describedby` and those
+ * @param props - The widget's props, of which `id`, `presentation`, `aria-label`, `aria-describedby` and those
  *   `SelectedOptionDescription` reads are used
- * @returns - The `aria-label` and `aria-describedby` to spread on the focused element
+ * @returns - The `aria-label` and the attributes to spread on the focused element
  */
 export default function widgetAriaProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(props: WidgetAriaPropsInput<T, S, F>) {
-  const { id, 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy } = props;
-  if (!callerDescribedBy) {
+>(props: WidgetAriaPropsInput<T, S, F>): Omit<ControlAttributes, 'required'> & { 'aria-label'?: string } {
+  const { id, presentation, 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy } = props;
+  if (!callerDescribedBy && !presentation) {
     return { 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedByIds(id) };
   }
-  const showsOptionDescription = !!getSelectedOptionDescription<T, S, F>(props);
-  const describedBy = showsOptionDescription ? `${callerDescribedBy} ${descriptionId(id)}` : callerDescribedBy;
-  return { 'aria-label': ariaLabel, 'aria-describedby': describedBy };
+  const ownDescribedBy = getSelectedOptionDescription<T, S, F>(props) ? [descriptionId(id)] : [];
+  if (!callerDescribedBy) {
+    return { 'aria-label': ariaLabel, ...getControlAttributes<T, S, F>(props, ownDescribedBy) };
+  }
+  return { 'aria-label': ariaLabel, 'aria-describedby': [callerDescribedBy, ...ownDescribedBy].join(' ') };
 }

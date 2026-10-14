@@ -1,5 +1,5 @@
 import type { Registry, WidgetAriaPropsInput } from '../src/index.ts';
-import { ariaDescribedByIds, widgetAriaProps } from '../src/index.ts';
+import { ariaDescribedByIds, resolveFieldPresentation, widgetAriaProps } from '../src/index.ts';
 
 const describedOptions = {
   enumOptions: [
@@ -28,6 +28,34 @@ describe('widgetAriaProps()', () => {
   });
   it("follows the caller's ids with the description of the selected option", () => {
     expect(widgetAriaProps(colorProps)['aria-describedby']).toBe('ext root_color__description');
+  });
+  describe('with the plan of its field', () => {
+    const presentation = resolveFieldPresentation({
+      id: 'root_color',
+      declaration: {
+        label: 'template',
+        description: 'template',
+        errors: 'template',
+        help: 'template',
+        labelledBy: 'for',
+      },
+      label: 'Color',
+      help: 'Pick one',
+      errors: ['is required'],
+    });
+    it('gives the control the attributes of its plan, followed by the description of the selected option', () => {
+      expect(widgetAriaProps({ ...colorProps, 'aria-describedby': undefined, presentation })).toEqual({
+        'aria-label': undefined,
+        'aria-describedby': 'root_color__error root_color__help root_color__description',
+        'aria-invalid': true,
+      });
+    });
+    it("leaves the control to the caller's ids when it passes some", () => {
+      expect(widgetAriaProps({ ...colorProps, presentation, value: 'b' })).toEqual({
+        'aria-label': undefined,
+        'aria-describedby': 'ext',
+      });
+    });
   });
   it.each([
     ['is multiple', { multiple: true, value: ['r'] }],

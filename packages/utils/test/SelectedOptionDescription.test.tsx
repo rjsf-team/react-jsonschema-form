@@ -2,7 +2,7 @@
 import { render } from '@testing-library/react';
 
 import type { DescriptionFieldProps, Registry, SelectedOptionDescriptionProps } from '../src/index.ts';
-import { SelectedOptionDescription } from '../src/index.ts';
+import { resolveFieldPresentation, SelectedOptionDescription } from '../src/index.ts';
 
 function DescriptionFieldTemplate({ id, description, schema }: DescriptionFieldProps) {
   return (
@@ -49,6 +49,23 @@ describe('SelectedOptionDescription', () => {
     const { container } = render(<SelectedOptionDescription {...{ ...baseProps, hideLabel: true }} />);
 
     expect(container.innerHTML).toBe('');
+  });
+
+  it("renders under its field's plan when hideLabel only says the template draws the label", () => {
+    const presentation = resolveFieldPresentation({
+      id: 'root',
+      declaration: {
+        label: 'template',
+        description: 'template',
+        errors: 'template',
+        help: 'template',
+        labelledBy: 'for',
+      },
+      label: 'Choice',
+    });
+    const { container } = render(<SelectedOptionDescription {...baseProps} hideLabel presentation={presentation} />);
+
+    expect(container.querySelector('#root__description')?.textContent).toBe('Foo description');
   });
 
   it.each([

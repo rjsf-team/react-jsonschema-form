@@ -158,6 +158,9 @@ export default function getPresentationDeclaration<
   const ownDeclaration = getComponentDeclaration(source.presentation?.fields, source.fields, field, fieldKey);
   const fieldDeclaration = layerDeclarations(fieldDefault, ownDeclaration);
   const widgetDeclaration = widget === undefined ? fieldDefault : getWidgetDeclaration<T, S, F>(schema, widget, source);
+  // A fact about the control, which the widget alone speaks for when the field renders one: a field declaring it for its
+  // checkbox says nothing about the radios a `ui:widget` swaps in
+  const uncheckedIsFalse = widget === undefined ? ownDeclaration?.uncheckedIsFalse : widgetDeclaration.uncheckedIsFalse;
   return {
     label: ownerOf('label', fieldDeclaration, widgetDeclaration),
     description: ownerOf('description', fieldDeclaration, widgetDeclaration),
@@ -169,5 +172,6 @@ export default function getPresentationDeclaration<
       (fieldDeclaration.label === 'widget' && widget !== undefined
         ? (widgetDeclaration.labelledBy ?? ownDeclaration?.labelledBy)
         : fieldDeclaration.labelledBy) ?? 'for',
+    ...(uncheckedIsFalse && { uncheckedIsFalse }),
   };
 }

@@ -4,21 +4,30 @@ import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription
 import type { FormContextType, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
 /** Return the description a single-select widget shows for the option it has selected, along with that option's
- * schema, or undefined when it shows none: for a `multiple` select, for a hidden label, when nothing is selected and
- * when the selected option has no description. It is the one place that decides whether the element with
- * `descriptionId(id)` exists, for `SelectedOptionDescription`, which renders it, and for `widgetAriaProps()`, which
- * references it.
+ * schema, or undefined when it shows none: for a `multiple` select, for a label `ui:label` turns off, when nothing is
+ * selected and when the selected option has no description. Under its field's plan, `hideLabel` says only that the
+ * widget doesn't draw the label, which the template may, so it is read only without one. It is the one place that
+ * decides whether the element with `descriptionId(id)` exists, for `SelectedOptionDescription`, which renders it, and
+ * for `widgetAriaProps()`, which references it.
  *
- * @param props - The widget's props, of which `multiple`, `hideLabel`, `options`, `registry`, `uiSchema` and `value`
- *   are read
+ * @param props - The widget's props, of which `multiple`, `hideLabel`, `presentation`, `options`, `registry`,
+ *   `uiSchema` and `value` are read
  * @returns - The `description` of the selected option and its `schema`, or undefined when no description is shown
  */
 export default function getSelectedOptionDescription<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ hideLabel, multiple, options, registry, uiSchema, value }: Omit<SelectedOptionDescriptionProps<T, S, F>, 'id'>) {
-  if (multiple || hideLabel) {
+>({
+  hideLabel,
+  multiple,
+  options,
+  registry,
+  uiSchema,
+  value,
+  presentation,
+}: Omit<SelectedOptionDescriptionProps<T, S, F>, 'id'>) {
+  if (multiple || (!presentation && hideLabel)) {
     return undefined;
   }
 

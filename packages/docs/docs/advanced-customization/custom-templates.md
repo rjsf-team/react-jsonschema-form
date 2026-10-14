@@ -117,6 +117,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `schema`: The schema object for this array.
 - `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
+- `presentation`: The array's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `formData`: The formData for this array.
 - `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
@@ -182,6 +183,7 @@ The following props are passed to each `ArrayFieldDescriptionTemplate`:
 
 - `description`: The description of the array field being rendered.
 - `id`: The id of the field in the hierarchy.
+- `presentation`: The array's plan, whose description id the description renders under when there is one.
 - `schema`: The schema object for this array field.
 - `uiSchema`: The uiSchema object for this array field.
 - `registry`: The `registry` object.
@@ -740,8 +742,8 @@ const schema: RJSFSchema = {
 };
 
 function FieldHelpTemplate(props: FieldHelpProps) {
-  const { help, id } = props;
-  return <aside id={helpId(id)}>{help}</aside>;
+  const { help, id, presentation } = props;
+  return <aside id={presentation?.help.id ?? helpId(id)}>{help}</aside>;
 }
 
 render(
@@ -756,7 +758,9 @@ The following props are passed to the `FieldHelpTemplate`:
 - `uiSchema`: The uiSchema for the field
 - `id`: The id of the field in the hierarchy.
 - `help`: The help information to be rendered
+- `hasErrors`: Whether the field has errors to show
 - `registry`: The `Registry` object
+- `presentation`: The field's plan, whose help id the help renders under when there is one. An `anyOf`/`oneOf` option showing help of its own beneath its field's takes `optionHelpId()`, so it doesn't repeat the field's `helpId(id)`.
 
 ## FieldTemplate
 
@@ -826,20 +830,21 @@ The following props are passed to a custom field template component:
 - `label`: The computed label for this field, as a string.
 - `keyName`: The name of this field's property in its parent object, carrying none of the decoration `label` may have picked up — a `ui:title`, or the marker a `deprecated` schema adds.
   The key of an `additionalProperties` property is this rather than its `label`, so renaming one reads and writes the real key.
-- `description`: A component instance rendering the field description, if one is defined (this will use any [custom `DescriptionFieldTemplate`](#descriptionfieldtemplate) defined in the `templates` passed to the `Form`).
-- `rawDescription`: A string containing any `ui:description` uiSchema directive defined.
+- `description`: A component instance rendering the field description, when the field's plan says the template draws it (this will use any [custom `DescriptionFieldTemplate`](#descriptionfieldtemplate) defined in the `templates` passed to the `Form`). Render it whenever it is present rather than deciding again from `displayLabel`.
+- `rawDescription`: The description the template draws, from the schema or a `ui:description`, or empty where the plan leaves it to the field or its widget.
 - `children`: The field or widget component instance for this field row.
-- `errors`: A component instance listing any encountered errors for this field.
-- `rawErrors`: An array of strings listing the generated error messages this field is displaying, `undefined` while `ui:hideError` is in effect.
+- `errors`: A component instance listing any encountered errors for this field, when the field's plan says the template draws them.
+- `rawErrors`: An array of strings listing the generated error messages this field is displaying, `undefined` while `ui:hideError` is in effect. Deprecated: read `presentation.errors.messages`, which has `ui:hideError` applied, and `presentation.errors.by` for whether this template draws them, instead.
 - `errorSchema`: The tree of errors for this field and its children, carrying every error whatever `hideError` says.
-- `help`: A component instance rendering any `ui:help` uiSchema directive defined.
+- `help`: A component instance rendering any `ui:help` uiSchema directive defined, when the field's plan says the template draws it.
 - `rawHelp`: The `ui:help` uiSchema directive as it was given, a `string` or a `ReactElement`, resolved the same way as the `help` component that renders it, so it is a truthy check for whether the field has any help at all.
 - `hidden`: A boolean value stating if the field should be hidden.
 - `required`: A boolean value stating if the field is required.
 - `readonly`: A boolean value stating if the field is read-only.
 - `hideError`: A boolean value stating if the field is hiding its errors
 - `disabled`: A boolean value stating if the field is disabled.
-- `displayLabel`: A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where you don't want to clutter the UI.
+- `displayLabel`: A boolean value stating if the template renders the label: true only where the field's plan says the template draws it, so it is false where the widget draws its own label, and where `ui:label: false` turns it off. Deprecated: read `presentation.label.by === 'template'` instead.
+- `presentation`: The field's plan, built by `SchemaField`: who draws its label, description, help and errors, under which ids, and the attributes its control carries. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
 - `onChange`: The value change event handler; Can be called with a new value to change the value for this field.
@@ -1051,6 +1056,7 @@ Please see the [customObject.tsx sample](https://github.com/rjsf-team/react-json
 The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 
 - `title`: A string value containing the title for the object.
+- `presentation`: The object's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `description`: A string value containing the description for the object.
 - `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the object. Each of the properties represent a child with properties described below.
@@ -1289,6 +1295,7 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.
+- `presentation`: The field's plan. Whether to label the key input is [`hasAdditionalKeyLabel()`](../api-reference/utility-functions.md#hasadditionalkeylabel): wherever the value's label is drawn, by the template or the value's own component.
 - `keyName`: The name of this field's property in its parent object, carrying none of the decoration `label` may have picked up — a `ui:title`, or the marker a `deprecated` schema adds.
   The key of an `additionalProperties` property is this rather than its `label`, so renaming one reads and writes the real key.
 - `required`: A boolean value stating if the field is required.

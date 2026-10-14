@@ -1,6 +1,15 @@
 import type { ReactElement } from 'react';
 
-import { descriptionId, errorId, fieldLabelId, helpId, optionDescriptionId, optionHelpId } from './idGenerators.ts';
+import getDescribedControlAttributes from './getDescribedControlAttributes.ts';
+import {
+  descriptionId,
+  errorId,
+  fieldLabelId,
+  helpId,
+  optionDescriptionId,
+  optionHelpId,
+  titleId,
+} from './idGenerators.ts';
 import type {
   ControlAttributes,
   FieldPresentation,
@@ -39,17 +48,21 @@ export interface FieldPresentationInputs {
    * for a container, whose label is its own heading. Defaults to true
    */
   hasControl?: boolean;
-  /** Whether the label shows the field as required */
-  required?: boolean;
-  /** Whether the control carries the native `required` attribute, when that differs from `required`: a checkbox the
-   * schema lets be `false` is required to have a value, which unchecked it already does. Defaults to `required`
+  /** Whether the field is required, which its label's marker and its control's native attribute both show.
+   * `@rjsf/core` plans a checkbox the schema lets be `false` as not required, since unchecked it already has the value
+   * it is required to have (#5388)
    */
-  requiredAttribute?: boolean;
+  required?: boolean;
   /** The plan of the field above that renders this same id: the field whose selected `anyOf`/`oneOf` option this is,
    * or the fallback UI's field this is the value field of. A selector, whose id is its own, takes the plan of the field
    * it picks the option of
    */
   inherited?: FieldPresentation;
+  /** The id the field's own component renders under, when it differs from `id`: a field rendered beside its
+   * `anyOf`/`oneOf` options, whose selected option renders `id`. A part the component draws itself takes its id from
+   * this one, so it renders under an id of its own, and a part the template draws from `id`. Defaults to `id`
+   */
+  componentId?: string;
 }
 
 const NONE: readonly string[] = Object.freeze([]);
@@ -68,7 +81,9 @@ function rendersHere(by: PartPlacement) {
  *
  * - With no text, `above` under the nearest field above that shows one, which it carries on to the levels beneath it,
  *   or else nowhere.
- * - With the text a field above shows, `above`.
+ * - With the text a field above shows, `above`. Text is compared with `===`, so an element `ui:help` matches only the
+ *   same element: an option inheriting its field's `uiSchema` carries it, but the same JSX written out again is another
+ *   element, which no comparison of elements could tell apart reliably
  * - Otherwise by its owner, which is `none` when it is hidden here. It takes `ownId`, or, when a field above already
  *   shows text under that id, the option id numbered by how many fields above show text of their own, so even a
  *   hidden part's id names no element drawn above.
@@ -115,6 +130,8 @@ function placeText<Text>(
  *   own takes `optionDescriptionId()` or `optionHelpId()` when a field above shows text under the id it would take,
  *   numbered by how many fields above show text of their own, so each level's own text has an id of its own.
  * - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
+ * - A part the field's own component draws takes its ids from `componentId`, the id that component renders under beside
+ *   the field's `anyOf`/`oneOf` options, and a part the template draws from `id`.
  * - The control is described by the parts that render, here or above, then by its own `controlDescribedBy`, and is
  *   `aria-invalid` whenever errors show.
  *
@@ -134,9 +151,11 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     controlDescribedBy = NONE,
     hasControl = true,
     required = false,
-    requiredAttribute = required,
     inherited,
+    componentId = id,
   } = inputs;
+  /** The id a part's ids derive from: the component's own for a part it draws itself, the field's otherwise */
+  const partId = (owner: PartPlacement) => (owner === 'self' ? componentId : id);
 
   const plansAbove: FieldPresentation[] = [];
   for (let plan = inherited; plan; plan = plan.inherited) {
@@ -149,7 +168,12 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     hasControl || declaration.label === 'template'
       ? plansAbove.find((plan) => plan.label.by === 'template')
       : plansAbove.find((plan) => rendersHere(plan.label.by) && plan.label.text === labelText);
-  const { text: shownLabel, id: labelId } = labelAbove?.label ?? { text: labelText, id: fieldLabelId(id) };
+  // A level with a control is named by a label; one with none, such as a container, draws its label as the heading every
+  // title template renders under `titleId()`
+  const { text: shownLabel, id: labelId } = labelAbove?.label ?? {
+    text: labelText,
+    id: (hasControl ? fieldLabelId : titleId)(partId(declaration.label)),
+  };
   let labelBy: PartPlacement = declaration.label;
   if (labelAbove) {
     labelBy = 'above';
@@ -160,19 +184,22 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
   const descriptionPlacement = placeText(
     description,
     showLabel ? declaration.description : 'none',
-    descriptionId(id),
-    (depth) => optionDescriptionId(id, depth),
+    descriptionId(partId(declaration.description)),
+    (depth) => optionDescriptionId(partId(declaration.description), depth),
     plansAbove.map((plan) => plan.description),
   );
   const helpPlacement = placeText(
     help,
     declaration.help,
-    helpId(id),
-    (depth) => optionHelpId(id, depth),
+    helpId(partId(declaration.help)),
+    (depth) => optionHelpId(partId(declaration.help), depth),
     plansAbove.map((plan) => plan.help),
   );
 
-  const { messages, id: errorsId } = inherited?.errors ?? { messages: hideError ? NONE : errors, id: errorId(id) };
+  const { messages, id: errorsId } = inherited?.errors ?? {
+    messages: hideError ? NONE : errors,
+    id: errorId(partId(declaration.errors)),
+  };
   const errorsBy = inherited ? 'above' : declaration.errors;
   const errorsPlan: FieldPresentation['errors'] = {
     messages,
@@ -189,7 +216,10 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
 
   let control: FieldPresentation['control'];
   if (hasControl) {
-    const attributes: ControlAttributes = {};
+    const attributes: ControlAttributes = getDescribedControlAttributes(
+      uniqueIds([...describedBy, ...controlDescribedBy]),
+      messages,
+    );
     // The label above was drawn for the control of its own plan: with no `for` when that control was pointed at it
     // instead, and naming another element when the ids differ
     const forMissesControl =
@@ -201,14 +231,7 @@ export default function resolveFieldPresentation(inputs: FieldPresentationInputs
     ) {
       attributes['aria-labelledby'] = labelId;
     }
-    const controlDescribers = uniqueIds([...describedBy, ...controlDescribedBy]);
-    if (controlDescribers.length > 0) {
-      attributes['aria-describedby'] = controlDescribers.join(' ');
-    }
-    if (messages.length > 0) {
-      attributes['aria-invalid'] = true;
-    }
-    if (requiredAttribute) {
+    if (required) {
       attributes.required = true;
     }
     control = { id, attributes, requiredMarker: required };

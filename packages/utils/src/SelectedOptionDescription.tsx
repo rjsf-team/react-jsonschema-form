@@ -7,7 +7,10 @@ export type SelectedOptionDescriptionProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Pick<WidgetProps<T, S, F>, 'id' | 'multiple' | 'options' | 'registry' | 'uiSchema' | 'value' | 'hideLabel'>;
+> = Pick<
+  WidgetProps<T, S, F>,
+  'id' | 'multiple' | 'options' | 'registry' | 'uiSchema' | 'value' | 'hideLabel' | 'presentation'
+>;
 
 /** Renders the description associated with the selected oneOf or anyOf option in a single-select widget. */
 export default function SelectedOptionDescription<
