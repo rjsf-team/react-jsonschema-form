@@ -1,4 +1,4 @@
-import { startTransition, useEffect, useLayoutEffect, useState } from 'react';
+import { startTransition, StrictMode, useEffect, useLayoutEffect, useState } from 'react';
 import type {
   ArrayFieldTemplateProps,
   ArrayFieldItemButtonsTemplateProps,
@@ -518,6 +518,44 @@ describe('ArrayField', () => {
       await user.click(elementOf(node, '.rjsf-array-item-add button'));
 
       expect(node.querySelector('.rjsf-array-item')).toHaveAttribute(ArrayKeyDataAttr);
+    });
+
+    it('keys the rows it renders from the data alike on every render, in StrictMode too', () => {
+      const keyedForm = () => (
+        <StrictMode>
+          <Form
+            schema={schema}
+            validator={validator}
+            initialFormData={['a', 'b']}
+            templates={{
+              ArrayFieldTemplate: ExposedArrayKeyTemplate,
+              ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+            }}
+          />
+        </StrictMode>
+      );
+      const first = render(keyedForm());
+      const second = render(keyedForm());
+
+      // Rendering makes the rows' keys from the data alone, so it is pure: no count kept outside the render moves
+      expect(rowKeys(first.container)).toEqual(rowKeys(second.container));
+      expect(new Set(rowKeys(first.container)).size).toBe(2);
+    });
+
+    it('gives a row added after a remove a key no row of the field has had', async () => {
+      const { node } = createFormComponent({
+        schema,
+        initialFormData: ['a', 'b', 'c'],
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
+      });
+      const keysBefore = rowKeys(node);
+
+      await user.click(node.querySelectorAll('.rjsf-array-item-remove')[2]);
+      await user.click(elementOf(node, '.rjsf-array-item-add button'));
+
+      const keysAfter = rowKeys(node);
+      expect(keysAfter.slice(0, 2)).toEqual(keysBefore.slice(0, 2));
+      expect(keysBefore).not.toContain(keysAfter[2]);
     });
 
     it('should add a field when clicking add button even if event is not passed to onAddClick', async () => {

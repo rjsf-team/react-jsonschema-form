@@ -41,7 +41,7 @@ import useSendMove from '../../hooks/useSendMove.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
 
-/** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
+/** A row's stable React `key`, and its `order`: when the row was added, relative to the other rows of its array */
 interface RowId {
   key: string;
   order: number;
@@ -52,12 +52,21 @@ interface KeyedFormDataType<T> extends RowId {
   item: T;
 }
 
-/** Used to generate a unique ID for an element in a row */
-let rowIdCounter = 0;
+/** The rows of items the field renders without a handler having made them, on mount or when the data's length gives
+ * no way to tell which rows survived: keyed by `generation`, which each such pass raises, so no row of an earlier pass
+ * hands its instance to one of these, and ordered as the items are
+ *
+ * @param length - The number of items
+ * @param generation - The pass the rows are made in
+ * @returns - The rows
+ */
+function renderedRows(length: number, generation: number): RowId[] {
+  return Array.from({ length }, (_, index) => ({ key: `rjsf-array-item-${generation}-${index}`, order: index }));
+}
 
-function generateRowId(): RowId {
-  rowIdCounter += 1;
-  return { key: `rjsf-array-item-${rowIdCounter}`, order: rowIdCounter };
+/** The highest `order` among `rows`, or `-1` for none */
+function maxOrder(rows: readonly RowId[]): number {
+  return rows.reduce((max, { order }) => Math.max(max, order), -1);
 }
 
 /** Converts `KeyedFormDataType` data into the inner `formData`
@@ -1042,20 +1051,18 @@ const NO_ITEMS: never[] = [];
  */
 function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
-  // `Array.from()` rather than `map()`, which skips the holes a write past the end of an array leaves: every slot is
-  // an item with a row of its own
-  const freshKeys = () => Array.from(items, () => generateRowId());
-  // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them
-  const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[] }>(() => {
-    const keys = freshKeys();
-    return { keys, confirmed: keys };
+  // `keys` are the rows of the field's latest change, and `confirmed` those of the last data that matched them;
+  // `generation` counts the passes that made rows while rendering, see `renderedRows()`
+  const [rows, setRows] = useState<{ keys: RowId[]; confirmed: RowId[]; generation: number }>(() => {
+    const keys = renderedRows(items.length, 0);
+    return { keys, confirmed: keys, generation: 0 };
   });
 
   let itemKeys: RowId[];
   if (rows.keys.length === items.length) {
     itemKeys = rows.keys;
     if (rows.confirmed !== rows.keys) {
-      setRows({ keys: rows.keys, confirmed: rows.keys });
+      setRows({ ...rows, confirmed: rows.keys });
     }
   } else if (rows.confirmed.length === items.length) {
     // The consumer set the field back to the data from before the change, which matches the confirmed rows;
@@ -1063,8 +1070,9 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
     // so data set back to another array of that length keeps the confirmed keys too
     itemKeys = rows.confirmed;
   } else {
-    itemKeys = freshKeys();
-    setRows({ keys: itemKeys, confirmed: itemKeys });
+    const generation = rows.generation + 1;
+    itemKeys = renderedRows(items.length, generation);
+    setRows({ keys: itemKeys, confirmed: itemKeys, generation });
   }
 
   const keyedFormData = useMemo(
@@ -1081,7 +1089,7 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
     sentRows.current = newData;
     const keys = newData.map(({ key, order }) => ({ key, order }));
-    setRows((current) => ({ keys, confirmed: current.confirmed }));
+    setRows((current) => ({ ...current, keys }));
     return keyedToPlainFormData(newData);
   }, []);
 
@@ -1101,6 +1109,14 @@ export default function ArrayField<
   const { keyedFormData, readSentRows, readSentItems, updateKeyedFormData } = useKeyedFormData<T>(formData);
   const readItems = useReadFieldData(fieldPath, readSentItems);
   const sendMove = useSendMove(fieldPath);
+  // Counts the rows the handlers made, so that a row a handler adds never takes the key of one it removed in the same
+  // event, whose instance React would then reuse; mutated by handlers only, so rendering stays pure
+  const handlerRowCount = useRef(0);
+  /** A row a handler adds next to `rows`, ordered after every one of them, as the newest */
+  const newRowId = useCallback((rows: readonly RowId[]): RowId => {
+    handlerRowCount.current += 1;
+    return { key: `rjsf-array-item-added-${handlerRowCount.current}`, order: maxOrder(rows) + 1 };
+  }, []);
 
   /** The rows as a handler sees them: the form's current items at this path, edits made since the form last rendered
    * included, under the keys of the rows rendered or sent since, with a fresh key for an item those do not cover.
@@ -1112,11 +1128,15 @@ export default function ArrayField<
     if (!Array.isArray(items)) {
       return [];
     }
-    return Array.from(items, (item, index) => {
-      const { key, order } = rows[index] ?? generateRowId();
-      return { key, order, item };
-    });
-  }, [readItems, readSentRows]);
+    // By index rather than through `map()`, which skips the holes a write past the end of an array leaves: every slot is
+    // an item with a row of its own. A row made here is ordered after the ones before it, made here too included
+    const read: KeyedFormDataType<T>[] = [];
+    for (let index = 0; index < items.length; index++) {
+      const { key, order } = rows[index] ?? newRowId(read);
+      read.push({ key, order, item: items[index] });
+    }
+    return read;
+  }, [readItems, readSentRows, newRowId]);
 
   /** Sends the rows a handler built from `rows`, keying them first so a second handler in the same event starts from
    * them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off the
@@ -1147,7 +1167,7 @@ export default function ArrayField<
 
       const rows = readRows();
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        ...generateRowId(),
+        ...newRowId(rows),
         item: getNewFormDataRow<T, S, F>(registry, schema, index ?? rows.length, uiSchema),
       };
       const newKeyedFormData = [...rows];
@@ -1158,7 +1178,7 @@ export default function ArrayField<
       }
       commitRows(rows, newKeyedFormData);
     },
-    [registry, schema, uiSchema, commitRows, readRows],
+    [registry, schema, uiSchema, commitRows, readRows, newRowId],
   );
 
   /** Callback handler for when the user clicks on the copy button on an existing array element. Clones the row of
@@ -1179,7 +1199,7 @@ export default function ArrayField<
       }
 
       const newKeyedFormDataRow: KeyedFormDataType<T> = {
-        ...generateRowId(),
+        ...newRowId(rows),
         item: structuredClone(rows[index].item),
       };
       const newKeyedFormData = [...rows];
@@ -1190,7 +1210,7 @@ export default function ArrayField<
       }
       commitRows(rows, newKeyedFormData);
     },
-    [commitRows, readRows],
+    [commitRows, readRows, newRowId],
   );
 
   /** Callback handler for when the user clicks on the remove button on an existing array element. Removes the row of
