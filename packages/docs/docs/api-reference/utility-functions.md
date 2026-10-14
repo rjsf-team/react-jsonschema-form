@@ -232,6 +232,21 @@ Given a `formData` object, recursively creates a `FormValidation` error handling
 
 - FormValidation&lt;T>: A `FormValidation` object based on the `formData` structure
 
+### createRootSchemaGuard&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns a guard that throws when the `schema` it is given is neither the `rootSchema` a precompiled validator was compiled from nor that schema's resolution for the `formData`.
+A schema is compared once per object: one the guard accepted before is accepted again without comparing, including when it was changed since or, for a resolution, the data differs from the data it was resolved for.
+A form validates with the same schema object until its schema changes, and passes the resolution for the data being validated, so the comparison runs once per schema rather than on every validation.
+
+#### Parameters
+
+- schemaContext: SchemaContext&lt;S, F> - The context to resolve the `rootSchema` with: the validator itself and the merge its schemas were compiled with
+- rootSchema: S - The root schema the validator was compiled from
+
+#### Returns
+
+- (schema: S, formData?: unknown) => void: A function that takes the `schema` to validate with and the `formData` the schema may have been resolved for, and throws when the schema is neither the `rootSchema` nor its resolution
+
 ### dataURItoBlob()
 
 Given the `FileReader.readAsDataURL()` based `dataURI` extracts that data into an actual Blob along with the name
@@ -1704,23 +1719,6 @@ A boolean or missing subschema describes no value of its own, so it has nothing 
 
 - boolean: True when the definition is a schema object rather than a boolean shorthand or absent, narrowing it to `S`
 
-### isRootSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Helper to check whether a JSON schema object is the root schema. The schema is a root schema with root `properties`
-key or a root `$ref` key. If the `schemaToCompare` has a root `oneOf` property, the function will
-return false. Else if `schemaToCompare` and `rootSchema` are the same object or equal, the function will return
-`true`. Else if the `rootSchema` has a $ref, it will be resolved using `schemaUtils.resolveSchema` utility. If the
-resolved schema matches the `schemaToCompare` the function will return `true`. Otherwise, it will return false.
-
-#### Parameters
-
-- registry: Registry&lt;T, S, F> - The `Registry` used to get the `rootSchema` and `schemaUtils`
-- schemaToCompare: S - The JSON schema object to check. If `schemaToCompare` is an root schema, the function will return true.
-
-#### Returns
-
-- boolean: True if the `uiSchema` describes a custom widget, false otherwise
-
 ### isValueEmpty()
 
 Returns true when a form value is considered empty: `null`, `undefined`, or `''` (empty string), an empty array (`[]`), or a plain object whose every own value is itself empty (checked recursively). Scalar values such as `0` and `false` are not considered empty.
@@ -2278,14 +2276,15 @@ setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 
 Determines whether the field information from the combination of `schema` and `required` along with the
 `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
-should be rendered with the Optional Data Controls UI.
+should be rendered with the Optional Data Controls UI. The root field never is.
 
 #### Parameters
 
 - registry: Registry&lt;T, S, F> - The `registry` object
 - schema: S - The schema for the field
 - required - Flag indicating whether the field is required
-- [uiSchema]: UiSchema&lt;T, S, F> - The optional uiSchema for the field
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field, if any
+- fieldPath: FieldPath - The `FieldPath` of the field, which is `ROOT_FIELD_PATH` for the root field
 
 #### Returns
 
