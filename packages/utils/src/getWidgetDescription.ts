@@ -3,7 +3,9 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
 
 /** Gets the description a widget draws itself, as a checkbox does: the one its field's plan says the widget draws, under
  * the id the plan gives it. A widget rendered without a plan draws its `ui:description` or schema `description` unless
- * `hideLabel` turns its label off
+ * `hideLabel` turns its label off, an empty `ui:description` falling back to the schema's, as a field's description does. Without a plan it can't tell which description the theme's `FieldTemplate` draws:
+ * `@rjsf/core`'s and `@rjsf/chakra-ui`'s draw it for a field whose `ui:widget` is the `checkbox` alias (#4825), so a
+ * checkbox widget in those themes doesn't call it there, as their own `CheckboxWidget`s don't
  *
  * @param props - The widget's `id`, `options`, `schema`, `hideLabel` and `presentation`
  * @returns - The text and id of the description the widget draws, or undefined when it draws none
