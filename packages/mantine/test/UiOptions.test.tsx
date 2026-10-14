@@ -88,4 +88,22 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
       expect(unrecognizedProps()).not.toContain(prop);
     }
   });
+
+  it("does not pass ObjectFieldTemplate's grid options on from the global options", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { agree: { type: 'boolean', title: 'Agree' } } }}
+        uiSchema={{
+          'ui:globalOptions': { gridCols: 2, gridSpacing: 'md', gridVerticalSpacing: 'lg' },
+          agree: { 'ui:widget': 'select' },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('[gridcols], [gridspacing], [gridverticalspacing]')).toBeNull();
+    for (const prop of ['gridCols', 'gridSpacing', 'gridVerticalSpacing']) {
+      expect(unrecognizedProps()).not.toContain(prop);
+    }
+  });
 });

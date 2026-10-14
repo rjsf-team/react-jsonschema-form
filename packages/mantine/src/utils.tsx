@@ -114,14 +114,18 @@ const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
 // They can't be derived like the rest, since `UiSchema`'s `ui:${string}` key, which every option takes, absorbs them.
 const uiSchemaOptionNames = ['definitions', 'fieldReplacesAnyOrOneOf', 'globalOptions'] as const;
 
-// The options rjsf's widgets and fields read that no type declares, so they can't be derived either: the alt-date
-// widgets' `yearsRange`, `format`, `hideNowButton` and `hideClearButton`, the file widget's `accept`, the rating
-// widget's `stars` and `shape`, and an object's `expandable`. `ColorWidget` and `FileWidget` pass `format` and `accept`
+// The options rjsf's widgets, fields and templates read that no type declares, so they can't be derived either: the
+// alt-date widgets' `yearsRange`, `format`, `hideNowButton` and `hideClearButton`, the file widget's `accept`, the
+// rating widget's `stars` and `shape`, an object's `expandable`, and the `gridCols`, `gridSpacing` and
+// `gridVerticalSpacing` of this theme's `ObjectFieldTemplate`. `ColorWidget` and `FileWidget` pass `format` and `accept`
 // on themselves, since their Mantine components take options of those names.
 const undeclaredOptionNames = [
   'accept',
   'expandable',
   'format',
+  'gridCols',
+  'gridSpacing',
+  'gridVerticalSpacing',
   'hideClearButton',
   'hideNowButton',
   'shape',
@@ -134,7 +138,7 @@ type StrippedOptionName =
   | (typeof uiSchemaOptionNames)[number]
   | (typeof undeclaredOptionNames)[number];
 
-const uiOptionsKeys = new Set<string>([
+const strippedOptionNames = new Set<string>([
   ...Object.keys(rjsfOptionNameRecord),
   ...uiSchemaOptionNames,
   ...undeclaredOptionNames,
@@ -198,7 +202,7 @@ export function useContainerErrors(props: VisibleErrorsProps & { id: string }) {
  * index signature of `WidgetProps['options']`, so they're passed on untyped.
  */
 type CleanedOptions<T> = {
-  [K in keyof T as string extends K ? never : K extends StrippedOptionName ? never : K]: T[K];
+  [K in keyof T as K extends DeclaredKeys<T> ? Exclude<K, StrippedOptionName> : never]: T[K];
 };
 
 const noExtraKeys: ReadonlySet<string> = new Set();
@@ -207,7 +211,7 @@ const noExtraKeys: ReadonlySet<string> = new Set();
  * its Mantine component
  *
  * @param options - The widget's options
- * @param [extraKeys] - Further keys to leave out, as a `Set`, or an array as it took before
+ * @param [extraKeys] - Further keys to leave out, as a `Set` or an array
  * @returns - The options that aren't rjsf's or in `extraKeys`
  */
 export function cleanupOptions<T extends object>(
@@ -217,11 +221,11 @@ export function cleanupOptions<T extends object>(
   const extraKeySet = 'has' in extraKeys ? extraKeys : new Set(extraKeys);
   const result: GenericObjectType = {};
   for (const key in options) {
-    if (!uiOptionsKeys.has(key) && !extraKeySet.has(key)) {
+    if (!strippedOptionNames.has(key) && !extraKeySet.has(key)) {
       result[key] = options[key];
     }
   }
-  return result as CleanedOptions<T>;
+  return result;
 }
 
 /**

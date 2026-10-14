@@ -86,8 +86,13 @@ describe('ColorWidget', () => {
       expect(renderWithFormat('#ff0000', 'rgba')).toHaveBeenCalledWith('rgba(255, 0, 0, 1)');
     });
 
-    test("is ignored when ColorInput doesn't take it, such as the alt-date widgets' DMY", () => {
-      expect(renderWithFormat('rgba(255, 0, 0, 1)', 'DMY')).not.toHaveBeenCalled();
+    test.each(['DMY', 'MDY', 'YMD'])("is ignored when it's the alt-date widgets' order %s", (format) => {
+      expect(renderWithFormat('rgba(255, 0, 0, 1)', format)).not.toHaveBeenCalled();
+    });
+
+    test('is passed on when ColorInput may take it, such as a format a later Mantine release adds', () => {
+      // Mantine 9.6 doesn't know `oklch`, so it converts the color to hex, its default
+      expect(renderWithFormat('rgba(255, 0, 0, 1)', 'oklch')).toHaveBeenCalledWith('#ff0000');
     });
   });
 });

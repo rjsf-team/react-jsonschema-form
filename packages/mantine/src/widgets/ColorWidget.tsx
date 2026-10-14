@@ -2,28 +2,22 @@ import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { ColorInputProps } from '@mantine/core';
 import { ColorInput } from '@mantine/core';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import type { DateElementFormat, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
-type ColorFormat = NonNullable<ColorInputProps['format']>;
+// A record, not a list, so that an order the alt-date widgets gain fails typecheck until it is listed here. Only those
+// orders are left out, so that a format a later Mantine release adds to `ColorInput` still reaches it.
+const dateElementFormatRecord: Record<DateElementFormat, true> = { DMY: true, MDY: true, YMD: true };
 
-// A record, not a list, so that a format a later Mantine release adds fails typecheck until it is listed here
-const colorFormatRecord: Record<ColorFormat, true> = {
-  hex: true,
-  hexa: true,
-  rgb: true,
-  rgba: true,
-  hsl: true,
-  hsla: true,
-};
-
-/** Whether `format` is one `ColorInput` takes. `format` is also the alt-date widgets' option, so a value meant for them,
- * such as `DMY`, is left out, and Mantine's default or the theme's applies instead
+/** The `format` to pass on to `ColorInput`. `format` is also the alt-date widgets' option, so one of their orders, such
+ * as `DMY`, is left out, and Mantine's default or the theme's applies instead.
  */
-function isColorFormat(format: unknown): format is ColorFormat {
-  return typeof format === 'string' && Object.hasOwn(colorFormatRecord, format);
+function colorFormat(format: unknown): ColorInputProps['format'] {
+  return typeof format === 'string' && !Object.hasOwn(dateElementFormatRecord, format)
+    ? (format as ColorInputProps['format'])
+    : undefined;
 }
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
@@ -88,7 +82,7 @@ export default function ColorWidget<
       name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
-      format={isColorFormat(options.format) ? options.format : undefined}
+      format={colorFormat(options.format)}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
