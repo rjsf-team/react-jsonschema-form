@@ -1496,7 +1496,8 @@ Components rendering an error state (a red outline, an invalid flag, inline erro
 ### getWidgetDescription()
 
 Gets the description a widget draws itself, as a checkbox does: the one its field's plan says the widget draws, with the text and id the plan gives it.
-A widget rendered without a plan draws its `ui:description` or schema `description` unless `hideLabel` turns its label off.
+A widget rendered without a plan draws its `ui:description` or schema `description` unless `hideLabel` turns its label off, an empty `ui:description` falling back to the schema's, as a field's description and `getArrayDescription()`'s do.
+Without a plan it can't tell which description the theme's `FieldTemplate` draws: `@rjsf/core`'s and `@rjsf/chakra-ui`'s draw it for a field whose `ui:widget` is the `checkbox` alias ([#4825](https://github.com/rjsf-team/react-jsonschema-form/issues/4825)), so a checkbox widget in those themes doesn't call it there, as their own `CheckboxWidget`s don't.
 
 #### Parameters
 
