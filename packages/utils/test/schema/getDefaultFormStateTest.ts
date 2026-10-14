@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema, UiSchema } from '../../src/index.ts';
-import { createSchemaUtils, getDefaultFormState, noop } from '../../src/index.ts';
+import { createSchemaUtils, getDefaultFormState, isObject, noop } from '../../src/index.ts';
 import {
   AdditionalItemsHandling,
   computeDefaultBasedOnSchemaTypeAndDefaults,
