@@ -28,6 +28,19 @@ describe('getControlDescribedBy()', () => {
     );
   });
 
+  it("keeps a widget's own id once when the plan already lists it among several", () => {
+    const presentation = resolveFieldPresentation({
+      id: ID,
+      declaration: TEMPLATE,
+      label: 'Foo',
+      description: 'Describes foo',
+      errors: ['is required'],
+    });
+    expect(getControlDescribedBy({ id: ID, presentation }, [`${ID}__description`])).toBe(
+      `${ID}__error ${ID}__description`,
+    );
+  });
+
   it('is undefined for a control nothing describes, or a plan with no control', () => {
     const presentation = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo' });
     expect(getControlDescribedBy({ id: ID, presentation })).toBeUndefined();
