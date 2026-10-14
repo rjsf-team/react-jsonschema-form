@@ -6,7 +6,7 @@ import {
   enumOptionValueDecoder,
   enumOptionsDomValues,
   enumOptionsIsSelected,
-  getControlAttributes,
+  getGroupAttributes,
   getOptionValueFormat,
   optionId,
 } from '@rjsf/utils';
@@ -50,13 +50,9 @@ function RadioWidget<
     [onFocus, enumOptions, emptyValue, id, optionValueFormat],
   );
 
-  // A label's `for` can't name a group, so the group is labelled by reference, and each input described and invalid
-  const { 'aria-labelledby': groupLabelledBy, ...inputAttributes } = getControlAttributes<T, S, F>({
-    id,
-    presentation,
-  });
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>({ id, presentation });
   return (
-    <div className='field-radio-group' id={id} role='radiogroup' aria-labelledby={groupLabelledBy}>
+    <div className='field-radio-group' id={id} role='radiogroup' {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value, false);
@@ -79,7 +75,7 @@ function RadioWidget<
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={handleFocus}
-                {...inputAttributes}
+                {...optionAttributes}
               />
               <span>{option.label}</span>
             </span>
