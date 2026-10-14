@@ -1,3 +1,6 @@
+import { isValidElement } from 'react';
+
+import describeElementGivenAsComponent from './describeElementGivenAsComponent.ts';
 import isComponentType from './isComponentType.ts';
 import logOnce from './logOnce.ts';
 import type { FormContextType, TemplatesType, Registry, UIOptionsType, StrictRJSFSchema, RJSFSchema } from './types.ts';
@@ -24,14 +27,24 @@ export default function getTemplate<
   const uiOverrides: Record<string, unknown> = uiOptions;
   const override = uiOverrides[name];
   // Allow templates to be customized per-field by using string keys from the registry; a string naming no registered
-  // template is not a component, so the registry's own template is used instead
+  // template is not a component, so warn and use the registry's own template instead
   let template = override;
   if (typeof override === 'string') {
     template = Object.hasOwn(customTemplates, override) ? customTemplates[override] : undefined;
   }
   if (!isComponentType(template)) {
-    if (override) {
-      logOnce(`Ignoring invalid ${name} override: expected a component or a registered template name.`);
+    if (override !== undefined) {
+      const description = isValidElement(template)
+        ? describeElementGivenAsComponent('MyTemplate')
+        : `is not a component (got ${template === null ? 'null' : typeof template})`;
+      let given = description;
+      if (typeof override === 'string') {
+        given =
+          template == null
+            ? `names no registered template ('${override}')`
+            : `names a registered template ('${override}') that ${description}`;
+      }
+      logOnce(`ui:${name} ${given}, so it is ignored.`);
     }
     return templates[name];
   }
