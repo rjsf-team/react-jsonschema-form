@@ -100,4 +100,22 @@ describe('scoring an option that references itself', () => {
     // The `required` an option declares is dropped for scoring, so a key the user has yet to fill in still matches
     expect(getFirstMatchingOption({ validator: precompiled }, { b: undefined }, options, schema)).toBe(0);
   });
+
+  it('names the option when its scoring validator was not precompiled', () => {
+    const option: RJSFSchema = {
+      $id: 'namedOption',
+      type: 'object',
+      properties: { name: { type: 'string' } },
+    };
+    const schema: RJSFSchema = { oneOf: [option] };
+    const precompiled = createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(schema)), schema);
+    const changedOption: RJSFSchema = {
+      ...option,
+      properties: { ...option.properties, count: { type: 'integer' } },
+    };
+
+    expect(() => getFirstMatchingOption({ validator: precompiled }, { name: 'Ada' }, [changedOption], schema)).toThrow(
+      /^No precompiled validator function was found for the given schema for "namedOption\?rjsf=[^"]+"$/,
+    );
+  });
 });
