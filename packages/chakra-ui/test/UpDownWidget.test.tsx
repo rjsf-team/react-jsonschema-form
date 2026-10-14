@@ -1,6 +1,8 @@
+import { createRef } from 'react';
+import type { FormRef } from '@rjsf/core';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from './WrappedForm.tsx';
@@ -45,5 +47,41 @@ describe('UpDownWidget focus handlers', () => {
     trigger.focus();
 
     expect(onFocus).toHaveBeenCalledWith('root', undefined);
+  });
+});
+
+describe('UpDownWidget value', () => {
+  it('shows a value set from outside the widget, through the form', async () => {
+    const ref = createRef<FormRef>();
+    render(
+      <Form
+        ref={ref}
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'updown' }}
+        initialFormData={5}
+        validator={validator}
+      />,
+    );
+
+    act(() => ref.current?.setFieldValue('', 9));
+
+    await waitFor(() => expect(screen.getByRole('spinbutton')).toHaveValue('9'));
+  });
+
+  it('shows what the user types', async () => {
+    render(
+      <Form
+        schema={{ type: 'integer' }}
+        uiSchema={{ 'ui:widget': 'updown' }}
+        initialFormData={5}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('spinbutton');
+
+    await user.clear(input);
+    await user.type(input, '42');
+
+    expect(input).toHaveValue('42');
   });
 });
