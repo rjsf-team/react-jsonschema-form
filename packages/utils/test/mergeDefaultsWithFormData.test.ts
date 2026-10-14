@@ -47,7 +47,7 @@ describe('mergeDefaultsWithFormData()', () => {
 
   it('preserves a nested __proto__ form value', () => {
     const formData = JSON.parse('{"nested":{"__proto__":{"marker":1}}}');
-    const result = mergeDefaultsWithFormData({ nested: {} }, formData);
+    const result = mergeDefaultsWithFormData({ nested: { d: { e: 1 } } }, formData);
     expect(Object.hasOwn(result?.nested, '__proto__')).toBe(true);
     expect(Object.getPrototypeOf(result?.nested)).toBe(Object.prototype);
   });
