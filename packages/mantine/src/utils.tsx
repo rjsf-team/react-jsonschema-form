@@ -21,9 +21,9 @@ import type {
 } from '@rjsf/utils';
 import {
   ariaDescribedByIds,
-  descriptionId,
   errorId,
   getTemplates,
+  getWidgetDescription,
   getVisibleErrors,
   isObject,
   labelValue,
@@ -242,21 +242,20 @@ export function getDescriptionProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(widgetProps: WidgetProps<T, S, F>) {
-  const { id, schema, uiSchema, registry, options, hideLabel } = widgetProps;
-  const description = options.description || schema.description;
+  const { schema, uiSchema, registry, options } = widgetProps;
+  const description = getWidgetDescription<T, S, F>(widgetProps);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
 
   return {
-    description:
-      !hideLabel && !!description ? (
-        <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
-          schema={schema}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      ) : undefined,
+    description: description ? (
+      <DescriptionFieldTemplate
+        id={description.id}
+        description={description.text}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+      />
+    ) : undefined,
   };
 }
 

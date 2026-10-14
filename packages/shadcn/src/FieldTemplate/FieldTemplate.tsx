@@ -16,6 +16,7 @@ export default function FieldTemplate<
   id,
   children,
   displayLabel,
+  presentation,
   rawErrors,
   hideError,
   errors,
@@ -54,6 +55,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
       onRemoveProperty={onRemoveProperty}
@@ -79,7 +81,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
-        {displayLabel && rawDescription && !isCheckbox && (
+        {rawDescription && !isCheckbox && (
           <span className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': hasError })}>
             {description}
           </span>

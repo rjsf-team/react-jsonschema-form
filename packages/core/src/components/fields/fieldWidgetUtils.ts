@@ -1,6 +1,7 @@
 import type {
   EnumOptionsType,
   Field,
+  FieldPresentation,
   FormContextType,
   Registry,
   RJSFSchema,
@@ -126,6 +127,40 @@ export function getArrayFieldWidget<
     registry.globalUiOptions,
   );
   return widget;
+}
+
+/** Whether a widget is told to hide its label: unless its plan has it draw the label. A field with no label text has
+ * none for anyone to draw, and there it says whether the widget draws the description, which a widget that keys its
+ * description on `hideLabel` still has to draw
+ *
+ * @param presentation - The plan of the field the widget renders the value of
+ * @returns - The `hideLabel` the widget receives
+ */
+function hidesWidgetLabel({ label, description }: FieldPresentation): boolean {
+  if (label.by === 'none') {
+    return description.by !== 'self';
+  }
+  return label.by !== 'self';
+}
+
+/** Gets the `label` and `hideLabel` a field hands the widget it renders: the field's label from its plan, whoever draws
+ * it, and whether the widget draws it, or, for a field rendered without a plan, the field's own label and whether
+ * `getDisplayLabel()` shows it
+ *
+ * @param presentation - The field's plan, if `SchemaField` built one
+ * @param ownLabel - The label the field computes for itself, used without a plan
+ * @param showsLabel - Whether the field shows its label without a plan, called only then
+ * @returns - The `label` and `hideLabel` for the widget
+ */
+export function getWidgetLabelProps(
+  presentation: FieldPresentation | undefined,
+  ownLabel: string,
+  showsLabel: () => boolean,
+): { label: string; hideLabel: boolean } {
+  if (presentation) {
+    return { label: presentation.label.text, hideLabel: hidesWidgetLabel(presentation) };
+  }
+  return { label: ownLabel, hideLabel: !showsLabel() };
 }
 
 /** Gets the single widget the field component renders its value with, as the field itself picks it, so `SchemaField`

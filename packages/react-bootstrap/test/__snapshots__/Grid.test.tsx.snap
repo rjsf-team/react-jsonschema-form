@@ -387,7 +387,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               State*
                             </label>
                             <select
-                              aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               class="form-select"
                               id="root_person_address_state"
                               name="root_person_address_state"
@@ -887,7 +886,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         State*
                       </label>
                       <select
-                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         class="form-select"
                         id="root_employment_location_state"
                         name="root_employment_location_state"
@@ -1585,7 +1583,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               State*
                             </label>
                             <select
-                              aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               class="form-select"
                               id="root_person_address_state"
                               name="root_person_address_state"
@@ -2110,7 +2107,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         State*
                       </label>
                       <select
-                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         class="form-select"
                         id="root_employment_location_state"
                         name="root_employment_location_state"
@@ -2808,7 +2804,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               State*
                             </label>
                             <select
-                              aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               class="form-select"
                               id="root_person_address_state"
                               name="root_person_address_state"
@@ -3651,7 +3646,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               State*
                             </label>
                             <select
-                              aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               class="form-select"
                               id="root_person_address_state"
                               name="root_person_address_state"
@@ -4151,7 +4145,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         State*
                       </label>
                       <select
-                        aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         class="form-select"
                         id="root_employment_location_state"
                         name="root_employment_location_state"
@@ -4820,7 +4813,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                   State*
                 </label>
                 <select
-                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                   class="form-select"
                   id="root_person_address_state"
                   name="root_person_address_state"
@@ -5489,7 +5481,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   State*
                 </label>
                 <select
-                  aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                   class="form-select"
                   id="root_person_address_state"
                   name="root_person_address_state"

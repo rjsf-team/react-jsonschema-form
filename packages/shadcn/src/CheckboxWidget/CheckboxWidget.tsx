@@ -1,5 +1,11 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, descriptionId, getTemplates, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  getControlDescribedBy,
+  getTemplates,
+  getWidgetDescription,
+  labelValue,
+  schemaRequiresTrueValue,
+} from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
 import { Label } from '../components/ui/label.tsx';
@@ -29,6 +35,7 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
     registry,
+    presentation,
     uiSchema,
     className,
     required,
@@ -43,16 +50,16 @@ export default function CheckboxWidget<
   const handleBlur = () => onBlur(id, value);
   const handleFocus = () => onFocus(id, value);
 
-  const description = options.description || schema.description;
+  const description = getWidgetDescription<T, S, F>(props);
   return (
     <div
       className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}
-      aria-describedby={ariaDescribedByIds(id)}
+      aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
     >
-      {!hideLabel && description && (
+      {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
-          description={description}
+          id={description.id}
+          description={description.text}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

@@ -508,7 +508,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   class="fui-Checkbox r1nzur1d ___13877ya_6gg83z0 f19n0e5 f35ds98 f12mnkne fei9a8h fix56y3 f1bcv2js f7dr4go f1r5cpua"
                 >
                   <input
-                    aria-describedby="root_active__error root_active__description root_active__help"
                     checked=""
                     class="fui-Checkbox__input ruo9svu ___qlal8r0_1xrlghj f1vgc2s3"
                     id="root_active"
@@ -3129,7 +3128,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     class="fui-Label ___zkh2gz0_1ef3qts fk6fouc f19n0e5 fkhj508 f1i3iumi fq1loh5 futqtb8 f14rdt9"
                     for="root_foo"
                   >
-                    foo
+                    foo (deprecated)
                   </label>
                   <span
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"

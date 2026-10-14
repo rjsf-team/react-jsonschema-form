@@ -1,6 +1,9 @@
 import { Children } from 'react';
 import type { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import { getTemplate } from '@rjsf/utils';
+import { render } from '@testing-library/react';
 
+import { getTestRegistry } from '../src/testing.ts';
 import { createFormComponent } from './testUtils.tsx';
 
 describe('FieldTemplate', () => {
@@ -106,6 +109,53 @@ describe('FieldTemplate', () => {
 
       expect(node.querySelectorAll('#root-schema')).toHaveLength(1);
       expect(node.querySelectorAll('#root-schema')[0].innerHTML).toEqual(JSON.stringify(schema));
+    });
+  });
+
+  describe('rendered without a plan, as outside SchemaField', () => {
+    function renderTemplate(displayLabel: boolean, uiSchema?: FieldTemplateProps['uiSchema']) {
+      const registry = getTestRegistry({});
+      const FieldTemplate = getTemplate('FieldTemplate', registry);
+      return render(
+        <FieldTemplate
+          id='root_foo'
+          fieldPath={'foo' as FieldTemplateProps['fieldPath']}
+          label='Foo'
+          keyName='foo'
+          description={<p id='root_foo__description'>About foo</p>}
+          rawDescription='About foo'
+          displayLabel={displayLabel}
+          schema={{ type: 'string' }}
+          uiSchema={uiSchema}
+          registry={registry}
+          readonly={false}
+          disabled={false}
+          required={false}
+          onChange={vi.fn()}
+          onKeyRename={vi.fn()}
+          onKeyRenameBlur={vi.fn()}
+          onRemoveProperty={vi.fn()}
+        >
+          <input id='root_foo' />
+        </FieldTemplate>,
+      );
+    }
+
+    it('draws the description where displayLabel lets it draw the label', () => {
+      const { container } = renderTemplate(true);
+      expect(container.querySelector('#root_foo__description')).toHaveTextContent('About foo');
+    });
+
+    it('draws no description where displayLabel turns the label off', () => {
+      const { container } = renderTemplate(false);
+      expect(container.querySelector('label')).toBeNull();
+      expect(container.querySelector('#root_foo__description')).toBeNull();
+    });
+
+    it('leaves the label of a field whose ui:widget is the checkbox alias to its checkbox, and draws its description', () => {
+      const { container } = renderTemplate(true, { 'ui:widget': 'checkbox' });
+      expect(container.querySelector('label')).toBeNull();
+      expect(container.querySelector('#root_foo__description')).toHaveTextContent('About foo');
     });
   });
 });

@@ -2239,7 +2239,6 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                                       />
                                       <input
                                         aria-autocomplete="list"
-                                        aria-describedby="root_color__error root_color__description root_color__help"
                                         aria-expanded="false"
                                         aria-haspopup="listbox"
                                         autocomplete="new-password"
@@ -4344,7 +4343,6 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                                       />
                                       <input
                                         aria-autocomplete="list"
-                                        aria-describedby="root_color__error root_color__description root_color__help"
                                         aria-expanded="false"
                                         aria-haspopup="listbox"
                                         autocomplete="new-password"
@@ -4891,17 +4889,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                           class="ant-row ant-form-item-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                                         >
                                           <div
-                                            class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                          >
-                                            <label
-                                              class=""
-                                              for="root_region"
-                                              title="Europe"
-                                            >
-                                              Europe
-                                            </label>
-                                          </div>
-                                          <div
                                             class="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-oc1rc0 css-var-root"
                                           >
                                             <div
@@ -4922,7 +4909,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                                     Germany
                                                     <input
                                                       aria-autocomplete="list"
-                                                      aria-describedby="root_region__error root_region__description root_region__help"
                                                       aria-expanded="false"
                                                       aria-haspopup="listbox"
                                                       autocomplete="new-password"
@@ -5026,7 +5012,6 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                     Subscribed
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -5114,7 +5099,6 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                     Once
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -5202,7 +5186,6 @@ exports[`select widget from oneOf boolean constants with a null option without a
                     Unknown
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -5290,7 +5273,6 @@ exports[`select widget from oneOf constants without a type 1`] = `
                     Bar
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -5378,7 +5360,6 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                     No
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -5466,7 +5447,6 @@ exports[`select widget with options sharing a String() in the realValue format (
                     String
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -8979,23 +8959,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                      style="padding-inline: 12px;"
-                                                    >
-                                                      <label
-                                                        class=""
-                                                        for="root_optionalObjectWithOneofs__title"
-                                                        title="optionalObjectWithOneofs"
-                                                      >
-                                                        optionalObjectWithOneofs
-                                                      </label>
-                                                      <div
-                                                        class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
-                                                        role="separator"
-                                                        style="margin-block: 1px;"
-                                                      />
-                                                    </div>
-                                                    <div
                                                       class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                       style="padding-inline: 12px;"
                                                     >
@@ -9178,23 +9141,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                     style="margin-inline: -12px;"
                                                   >
-                                                    <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                      style="padding-inline: 12px;"
-                                                    >
-                                                      <label
-                                                        class=""
-                                                        for="root_optionalArrayWithAnyofs__title"
-                                                        title="optionalArrayWithAnyofs"
-                                                      >
-                                                        optionalArrayWithAnyofs
-                                                      </label>
-                                                      <div
-                                                        class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
-                                                        role="separator"
-                                                        style="margin-block: 1px;"
-                                                      />
-                                                    </div>
                                                     <div
                                                       class="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                       style="padding-inline: 12px;"
@@ -10463,23 +10409,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                     style="margin-inline: -12px;"
                                                   >
                                                     <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                      style="padding-inline: 12px;"
-                                                    >
-                                                      <label
-                                                        class=""
-                                                        for="root_optionalObjectWithOneofs__title"
-                                                        title="optionalObjectWithOneofs"
-                                                      >
-                                                        optionalObjectWithOneofs
-                                                      </label>
-                                                      <div
-                                                        class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
-                                                        role="separator"
-                                                        style="margin-block: 1px;"
-                                                      />
-                                                    </div>
-                                                    <div
                                                       class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                       style="padding-inline: 12px;"
                                                     />
@@ -10667,23 +10596,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                     style="margin-inline: -12px;"
                                                   >
-                                                    <div
-                                                      class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                      style="padding-inline: 12px;"
-                                                    >
-                                                      <label
-                                                        class=""
-                                                        for="root_optionalArrayWithAnyofs__title"
-                                                        title="optionalArrayWithAnyofs"
-                                                      >
-                                                        optionalArrayWithAnyofs
-                                                      </label>
-                                                      <div
-                                                        class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
-                                                        role="separator"
-                                                        style="margin-block: 1px;"
-                                                      />
-                                                    </div>
                                                     <div
                                                       class="ant-col ant-col-24 row array-item-list css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                       style="padding-inline: 12px;"
@@ -15685,7 +15597,6 @@ exports[`single fields > select field 1`] = `
                     />
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -15783,7 +15694,6 @@ exports[`single fields > select field multiple choice 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -15883,7 +15793,6 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -16201,7 +16110,6 @@ exports[`single fields > select field multiple choice formData 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -16301,7 +16209,6 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                     >
                       <input
                         aria-autocomplete="list"
-                        aria-describedby="root__error root__description root__help"
                         aria-expanded="false"
                         aria-haspopup="listbox"
                         autocomplete="new-password"
@@ -16392,7 +16299,6 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                     />
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -16660,7 +16566,6 @@ exports[`single fields > select field single choice formData 1`] = `
                     bar
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -16749,7 +16654,6 @@ exports[`single fields > select field single choice optgroups 1`] = `
                     />
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -16838,7 +16742,6 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                     />
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -17028,7 +16931,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                     />
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
+                      aria-describedby="root__description"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -17129,7 +17032,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                     Foo
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
+                      aria-describedby="root__description"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -17222,7 +17125,6 @@ exports[`single fields > select widget with selected oneOf option description an
                     Foo
                     <input
                       aria-autocomplete="list"
-                      aria-describedby="root__error root__description root__help"
                       aria-expanded="false"
                       aria-haspopup="listbox"
                       autocomplete="new-password"
@@ -18754,7 +18656,6 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                                       Yes
                                       <input
                                         aria-autocomplete="list"
-                                        aria-describedby="root_answer__error root_answer__description root_answer__help"
                                         aria-expanded="false"
                                         aria-haspopup="listbox"
                                         autocomplete="new-password"

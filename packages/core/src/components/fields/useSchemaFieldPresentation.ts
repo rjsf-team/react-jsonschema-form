@@ -28,14 +28,16 @@ export interface SchemaFieldPresentationInputs<
 > {
   /** The id of the field */
   id: string;
+  /** The id the field component renders under, when it renders beside the schema's options under an id of its own */
+  componentId?: string;
   /** The registry, whose `presentation`, `fields` and `widgets` are read */
   registry: Registry<T, S, F>;
   /** The schema the field renders */
   schema: S;
   /** The uiSchema the field renders */
   uiSchema: UiSchema<T, S, F>;
-  /** The field component that renders, or undefined when none does, as for a `$ref` cycle or a field withheld for the
-   * schema's options
+  /** The field component that renders, or undefined when none does, as for a `$ref` cycle. Read only when `xxxOfKey`
+   * is not given
    */
   field?: Field<T, S, F>;
   /** The registry key that named `field`, if one did */
@@ -66,16 +68,34 @@ export interface SchemaFieldPresentationInputs<
  *
  * @param field - The field component planned
  * @param widget - The single widget it renders, if any
- * @param fields - The registered fields
- * @returns - False for a container or `NullField`, true otherwise, a custom field included
+ * @param registry - The registry, whose `fields`, `globalFormOptions`, `schemaUtils` and `globalUiOptions` are read
+ * @param schema - The schema the field renders
+ * @param uiSchema - The uiSchema the field renders
+ * @returns - False for a container, `NullField`, or `FallbackField` rendering the unsupported-field template, or a
+ *   value its own field labels, true otherwise, a custom field included
  */
 function rendersControl<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(field: Field<T, S, F>, widget: Widget<T, S, F> | string | undefined, fields: Registry<T, S, F>['fields']) {
+>(
+  field: Field<T, S, F>,
+  widget: Widget<T, S, F> | string | undefined,
+  registry: Registry<T, S, F>,
+  schema: S,
+  uiSchema: UiSchema<T, S, F>,
+) {
+  const { fields, globalFormOptions, schemaUtils, globalUiOptions } = registry;
   if (field === fields.ArrayField) {
     return widget !== undefined;
+  }
+  if (field === fields.FallbackField) {
+    // The fallback UI labels its value from outside by the same call it makes to decide that, and otherwise leaves the
+    // value field to draw its own heading or label
+    return (
+      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
+      schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions)
+    );
   }
   return !CONTROLLESS_FIELD_KEYS.some((key) => fields[key] === field);
 }
@@ -93,6 +113,7 @@ export default function useSchemaFieldPresentation<
 >(inputs: SchemaFieldPresentationInputs<T, S, F>): FieldPresentation | undefined {
   const {
     id,
+    componentId,
     registry,
     schema,
     uiSchema,
@@ -121,18 +142,34 @@ export default function useSchemaFieldPresentation<
     () => (field && xxxOfKey === undefined ? getFieldWidget<T, S, F>(field, schema, uiSchema, registry) : undefined),
     [field, xxxOfKey, schema, uiSchema, registry],
   );
-  const declaration = useMemo(
+  const declaration = useMemo(() => {
+    if (!plannedField) {
+      return undefined;
+    }
+    const declared = getPresentationDeclaration<T, S, F>(registry, {
+      schema,
+      field: plannedField,
+      fieldKey: plannedKey,
+      widget,
+    });
+    // The field rendering the options draws its label only through its selector, so with the selector withheld, as for
+    // an opted-out optional field, there is no label of its own, and the field below keeps the heading it draws
+    return xxxOfKey !== undefined && hidden ? { ...declared, label: 'template' as const } : declared;
+  }, [registry, schema, plannedField, plannedKey, widget, xxxOfKey, hidden]);
+  // Memoized, since a `FallbackField` asks `getDisplayLabel()`
+  const hasControl = useMemo(
     () =>
-      plannedField &&
-      getPresentationDeclaration<T, S, F>(registry, { schema, field: plannedField, fieldKey: plannedKey, widget }),
-    [registry, schema, plannedField, plannedKey, widget],
+      plannedField !== undefined &&
+      !hidden &&
+      rendersControl<T, S, F>(plannedField, widget, registry, schema, uiSchema),
+    [plannedField, hidden, widget, registry, schema, uiSchema],
   );
-  const hasControl = plannedField !== undefined && !hidden && rendersControl<T, S, F>(plannedField, widget, fields);
   return useMemo(
     () =>
       declaration &&
       resolveFieldPresentation({
         id,
+        componentId,
         declaration,
         label,
         showLabel,
@@ -144,6 +181,19 @@ export default function useSchemaFieldPresentation<
         required,
         inherited,
       }),
-    [id, declaration, label, showLabel, description, help, errors, hideError, hasControl, required, inherited],
+    [
+      id,
+      componentId,
+      declaration,
+      label,
+      showLabel,
+      description,
+      help,
+      errors,
+      hideError,
+      hasControl,
+      required,
+      inherited,
+    ],
   );
 }

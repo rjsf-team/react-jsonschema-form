@@ -256,7 +256,9 @@ export default function LayoutMultiSchemaField<
     <FieldErrorTemplate id={id} schema={schema} errors={visibleErrors} registry={registry} />
   ) : undefined;
   const { help, description: uiDescription } = uiOptions;
-  const description = uiDescription || schema.description || '';
+  // A template renders the description it is handed, so it is handed none where `ui:label: false` turns the label off
+  // along with the description
+  const description = uiBooleanOption(uiOptions.label) === false ? '' : uiDescription || schema.description || '';
   const descriptionComponent = (
     <DescriptionFieldTemplate
       id={descriptionId(id)}

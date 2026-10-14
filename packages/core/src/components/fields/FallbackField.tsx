@@ -361,6 +361,7 @@ function FallbackUiField<
     registry,
     fieldPath,
     onChange,
+    presentation,
   } = props;
   const { translateString, fields, templates, widgets, globalFormOptions, globalUiOptions, schemaUtils } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -440,11 +441,15 @@ function FallbackUiField<
     return { [UI_OPTIONS_KEY]: options };
   }, [label, globalUiOptions, templates]);
 
-  // The same call the field around the value makes to decide whether it renders the schema's title and description, so
-  // that exactly one of the two fields renders them: the outer one when it labels the value, the value field otherwise
+  // The field's plan gives it a control only where its label names the value, so that exactly one of the two fields
+  // renders the title: the outer one when it labels the value, the value field otherwise. Without a plan, the call the
+  // plan is built by decides it
   const isLabelled = useMemo(
-    () => schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
-    [schemaUtils, schema, uiSchema, globalUiOptions],
+    () =>
+      presentation
+        ? presentation.control !== undefined
+        : schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+    [presentation, schemaUtils, schema, uiSchema, globalUiOptions],
   );
   const valueSchema = useMemo(
     () => getValueSchema<S>(schema, type, translateString(TranslatableString.Value), isLabelled),

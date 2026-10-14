@@ -1,5 +1,11 @@
 import type { WrapIfAdditionalTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { AdditionalPropertyKeySelect, buttonId, ADDITIONAL_PROPERTY_FLAG, TranslatableString } from '@rjsf/utils';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  AdditionalPropertyKeySelect,
+  buttonId,
+  hasAdditionalKeyLabel,
+  TranslatableString,
+} from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -20,6 +26,7 @@ export default function WrapIfAdditionalTemplate<
     label,
     keyName,
     displayLabel,
+    presentation,
     readonly,
     required,
     schema,
@@ -32,6 +39,8 @@ export default function WrapIfAdditionalTemplate<
     registry,
     ...rest
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>({ displayLabel, presentation });
 
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const { templates, translateString } = registry;
@@ -39,7 +48,7 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const marginDesc = rawDescription ? 10 : 0;
-  const margin = displayLabel ? 32 + marginDesc : 10;
+  const margin = hasKeyLabel ? 32 + marginDesc : 10;
 
   if (!additional) {
     return (
@@ -53,7 +62,7 @@ export default function WrapIfAdditionalTemplate<
     <div className={`wrap-if-additional-template ${classNames ?? ''}`.trim()} style={style} {...rest}>
       <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
         <div>
-          {displayLabel && (
+          {hasKeyLabel && (
             <label htmlFor={`${id}-key`} className='label'>
               <span className='label-text'>{keyLabel}</span>
             </label>
@@ -63,7 +72,7 @@ export default function WrapIfAdditionalTemplate<
               id={`${id}-key`}
               label={keyLabel}
               hideLabel
-              labelledByTemplate={displayLabel}
+              labelledByTemplate={hasKeyLabel}
               value={keyName}
               propertyNamesEnum={propertyNamesEnum}
               onKeyRename={onKeyRename}

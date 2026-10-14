@@ -19,6 +19,7 @@ export default function FieldTemplate<
     style,
     disabled,
     displayLabel,
+    presentation,
     hidden,
     label,
     keyName,
@@ -55,6 +56,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -68,7 +70,7 @@ export default function FieldTemplate<
     >
       <Field validationState={hasError ? 'error' : undefined} required={required}>
         {children}
-        {displayLabel && rawDescription && !isCheckbox ? (
+        {rawDescription && !isCheckbox ? (
           <Text as='p' block style={{ marginTop: 0, marginBottom: 0 }}>
             {description}
           </Text>

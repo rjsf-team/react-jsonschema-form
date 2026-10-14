@@ -1,8 +1,9 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
 import {
-  AdditionalPropertyKeySelect,
   ADDITIONAL_PROPERTY_FLAG,
+  AdditionalPropertyKeySelect,
   buttonId,
+  hasAdditionalKeyLabel,
   hasVisibleErrors,
   TranslatableString,
 } from '@rjsf/utils';
@@ -24,7 +25,6 @@ export default function WrapIfAdditionalTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
     label,
     keyName,
     onKeyRename,
@@ -41,6 +41,8 @@ export default function WrapIfAdditionalTemplate<
     uiSchema,
     registry,
   } = props;
+  // The key is labelled wherever the value's label is drawn, by the template or the value's own component
+  const hasKeyLabel = hasAdditionalKeyLabel<T, S, F>(props);
   const { templates, translateString } = registry;
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
@@ -67,14 +69,14 @@ export default function WrapIfAdditionalTemplate<
       <div className='row'>
         <div className='col-xs-5 form-additional'>
           <div className='form-group'>
-            {displayLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
-            {displayLabel && rawDescription && <div>&nbsp;</div>}
+            {hasKeyLabel && <Label label={keyLabel} required={required} id={`${id}-key`} />}
+            {hasKeyLabel && rawDescription && <div>&nbsp;</div>}
             {propertyNamesEnum ? (
               <AdditionalPropertyKeySelect<T, S, F>
                 id={`${id}-key`}
                 label={keyLabel}
                 hideLabel
-                labelledByTemplate={displayLabel}
+                labelledByTemplate={hasKeyLabel}
                 value={keyName}
                 propertyNamesEnum={propertyNamesEnum}
                 onKeyRename={onKeyRename}
@@ -89,6 +91,7 @@ export default function WrapIfAdditionalTemplate<
                 className='form-control'
                 type='text'
                 id={`${id}-key`}
+                aria-label={hasKeyLabel ? undefined : keyLabel}
                 onBlur={onKeyRenameBlur}
                 defaultValue={keyName}
               />
@@ -96,7 +99,7 @@ export default function WrapIfAdditionalTemplate<
           </div>
         </div>
         <div className='form-additional form-group col-xs-5'>{children}</div>
-        <div className='col-xs-2' style={{ marginTop: displayLabel ? `${margin}px` : undefined }}>
+        <div className='col-xs-2' style={{ marginTop: hasKeyLabel ? `${margin}px` : undefined }}>
           <RemoveButton
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove btn-block'

@@ -25,7 +25,7 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
-import { getBooleanFieldWidget } from './fieldWidgetUtils.ts';
+import { getBooleanFieldWidget, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 
 /** Whether `ui:enumOrder` would reorder or drop any of the constant `options` if it applied to them
  *
@@ -89,7 +89,11 @@ function BooleanField<
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
-  const label = uiTitle ?? schemaTitle ?? title ?? name;
+  const { label, hideLabel } = getWidgetLabelProps(
+    presentation,
+    uiTitle ?? schemaTitle ?? title ?? name,
+    () => displayLabel,
+  );
   // Only a select and radios are known to list the options, so only they can drop a label or an order. A checkbox, a
   // hidden field or a custom widget such as a toggle may show no option labels, which would make the warnings noise
   const showsOptions = Widget === widgets.SelectWidget || Widget === widgets.RadioWidget;
@@ -193,7 +197,7 @@ function BooleanField<
       onFocus={onFocus}
       onBlur={onBlur}
       label={label}
-      hideLabel={!displayLabel}
+      hideLabel={hideLabel}
       value={formData}
       required={required}
       disabled={disabled}

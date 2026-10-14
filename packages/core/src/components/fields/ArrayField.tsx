@@ -38,7 +38,7 @@ import {
 import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
-import { ARRAY_MODE_DEFAULT_WIDGETS, getArrayFieldMode } from './fieldWidgetUtils.ts';
+import { ARRAY_MODE_DEFAULT_WIDGETS, getArrayFieldMode, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
@@ -216,8 +216,9 @@ function ArrayAsMultiSelect<
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const { label, hideLabel } = getWidgetLabelProps(presentation, uiTitle ?? schema.title ?? name, () =>
+    schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+  );
   return (
     <Widget
       id={id}
@@ -236,7 +237,7 @@ function ArrayAsMultiSelect<
       hideError={hideError}
       required={required}
       label={label}
-      hideLabel={!displayLabel}
+      hideLabel={hideLabel}
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
@@ -275,8 +276,9 @@ function ArrayAsCustomWidget<
   const { widgets, schemaUtils, globalUiOptions } = registry;
   const { widget, title: uiTitle, placeholder, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const { label, hideLabel } = getWidgetLabelProps(presentation, uiTitle ?? schema.title ?? name, () =>
+    schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+  );
   return (
     <Widget
       id={id}
@@ -295,7 +297,7 @@ function ArrayAsCustomWidget<
       hideError={hideError}
       required={required}
       label={label}
-      hideLabel={!displayLabel}
+      hideLabel={hideLabel}
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
@@ -339,8 +341,9 @@ function ArrayAsFiles<
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const label = uiTitle ?? schema.title ?? name;
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const { label, hideLabel } = getWidgetLabelProps(presentation, uiTitle ?? schema.title ?? name, () =>
+    schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+  );
   return (
     <Widget
       options={options}
@@ -362,7 +365,7 @@ function ArrayAsFiles<
       rawErrors={rawErrors}
       presentation={presentation}
       label={label}
-      hideLabel={!displayLabel}
+      hideLabel={hideLabel}
       placeholder={placeholder}
       htmlName={htmlName}
     />
@@ -776,6 +779,21 @@ interface InternalArrayFieldProps<
   handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
 }
 
+/** Gets the heading an array's template draws: under its plan, the field's label where the array draws its own heading,
+ * and none where a field above already draws that text, so a theme's template that reads only `title` follows the plan;
+ * without a plan, the array's own title
+ *
+ * @param presentation - The array's plan, if `SchemaField` built one
+ * @param fieldTitle - The array's own title
+ * @returns - The `title` its template is handed
+ */
+function getArrayHeading(presentation: FieldPresentation | undefined, fieldTitle: string): string {
+  if (!presentation) {
+    return fieldTitle;
+  }
+  return presentation.label.by === 'self' ? presentation.label.text : '';
+}
+
 /** Renders a normal array without any limitations of length
  */
 function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
@@ -805,6 +823,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
+    presentation,
   } = props;
   const fieldTitle = schema.title || title || name;
   const { schemaUtils, fields, formContext, globalUiOptions } = registry;
@@ -826,6 +845,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
   const optionalDataControl = renderOptionalField ? <OptionalDataControlsField {...props} /> : undefined;
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
+    presentation,
     items: actualFormData.map((keyedItem, index: number) => {
       const { key, item } = keyedItem;
       // While we are actually dealing with a single item of type T, the types require a T[], so cast
@@ -878,7 +898,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     hideError,
     required,
     schema,
-    title: fieldTitle,
+    title: getArrayHeading(presentation, fieldTitle),
     formData,
     errorSchema,
     rawErrors,
@@ -919,6 +939,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     handleCopyItem,
     handleRemoveItem,
     handleReorderItems,
+    presentation,
   } = props;
   // A `type` list naming `array` alongside another type can hold a `null` or a value of that other type here
   let items: T[] = Array.isArray(props.formData) ? props.formData : [];
@@ -943,6 +964,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   const itemNames = useItemNames<T, S, F>(keyedFormData, registry, schema, uiSchema, uiOptions, schemaItems.length);
   const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
     canAdd,
+    presentation,
     className: `rjsf-field rjsf-field-array rjsf-field-array-fixed-items${extraClass}`,
     disabled,
     id,
@@ -1011,7 +1033,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     registry,
     schema,
     uiSchema,
-    title: fieldTitle,
+    title: getArrayHeading(presentation, fieldTitle),
     errorSchema,
     rawErrors,
     optionalDataControl,

@@ -626,7 +626,6 @@ exports[`array fields > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -2510,7 +2509,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -5837,7 +5835,7 @@ exports[`with title and description > array icons 1`] = `
                       id="root_0-label"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-1
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -6063,7 +6061,7 @@ exports[`with title and description > array icons 1`] = `
                       id="root_1-label"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-2
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -6397,7 +6395,7 @@ exports[`with title and description > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root__error root__description root__help"
+                aria-describedby="root__description"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -6631,7 +6629,7 @@ exports[`with title and description > fixed array 1`] = `
                       id="root_0-label"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-1
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-TextInput-required"
@@ -6704,7 +6702,7 @@ exports[`with title and description > fixed array 1`] = `
                       id="root_1-label"
                       style="--input-label-size: var(--mantine-font-size-sm);"
                     >
-                      Test field-2
+                      Test item
                       <span
                         aria-hidden="true"
                         class="m_78a94662 mantine-InputWrapper-required mantine-NumberInput-required"
@@ -7579,7 +7577,7 @@ exports[`with title and description from both > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root__error root__description root__help"
+                aria-describedby="root__description"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -8761,7 +8759,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root__error root__description root__help"
+                aria-describedby="root__description"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -9218,9 +9216,6 @@ exports[`with title and description with global label off > array 1`] = `
         data-variant="default"
         id="root"
       >
-        <legend
-          class="m_90794832 mantine-Fieldset-legend"
-        />
         <div
           class="row rjsf-array-item-list"
         />
@@ -9316,9 +9311,6 @@ exports[`with title and description with global label off > array icons 1`] = `
         data-variant="default"
         id="root"
       >
-        <legend
-          class="m_90794832 mantine-Fieldset-legend"
-        />
         <div
           class="row rjsf-array-item-list"
         >
@@ -9823,7 +9815,6 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               style="--pg-gap: var(--pg-gap-sm);"
             >
               <input
-                aria-describedby="root__error root__description root__help"
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
@@ -10006,9 +9997,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
         data-variant="default"
         id="root"
       >
-        <legend
-          class="m_90794832 mantine-Fieldset-legend"
-        />
         <div
           class="row rjsf-array-item-list"
         >

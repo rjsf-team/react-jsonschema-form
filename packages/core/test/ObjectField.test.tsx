@@ -888,6 +888,18 @@ describe('ObjectField', () => {
       expect(objectTitle).toHaveTextContent('CustomName');
     });
 
+    it('shows the schema title of an additionalProperties object as its heading when no ui:title names it', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          additionalProperties: { type: 'object', title: 'Entry', properties: { name: { type: 'string' } } },
+        },
+        initialFormData: { property1: { name: 'hello' } },
+      });
+
+      expect(node.querySelector('.form-additional > fieldset > legend')).toHaveTextContent('Entry');
+    });
+
     it('should not throw validation errors if additionalProperties is undefined', async () => {
       const undefinedAPSchema: RJSFSchema = {
         ...schema,
@@ -951,6 +963,17 @@ describe('ObjectField', () => {
       });
 
       expect(node.querySelector("[for='root_first-key']")).toHaveTextContent('first Key');
+    });
+
+    it("names the additional property key's input by its label where ui:label: false hides it", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { additionalProperties: { 'ui:label': false } },
+        initialFormData: { first: 1 },
+      });
+
+      expect(node.querySelector("[for='root_first-key']")).toBeNull();
+      expect(screen.getByRole('textbox', { name: 'first Key' })).toHaveAttribute('id', 'root_first-key');
     });
 
     it('should render a label for the additional property key if additionalProperties is true', () => {

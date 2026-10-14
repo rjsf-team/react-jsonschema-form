@@ -182,7 +182,7 @@ describe('antd specific tests', () => {
     expect(explain.querySelector('.ant-form-item-explain-error')).toBeNull();
   });
 
-  test('styles help as help in the error-tinted block a oneOf field renders without its errors', () => {
+  test('styles help as help in the error-tinted block a oneOf field renders its errors and help in', () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -204,15 +204,12 @@ describe('antd specific tests', () => {
       />,
     );
 
-    // `SchemaField` leaves `errors` undefined for the option selector while still reporting `rawErrors`, so this block
-    // is in the error state with nothing but help to render. The block is found rather than indexed because the option
-    // selector and the option it selected both render this field's help, under the same id — a pre-existing duplication
-    // in `MultiSchemaField`, unrelated to the help/error precedence under test here
-    const explains = Array.from(container.querySelectorAll('.ant-form-item-explain'));
-    const helpOnly = explains.find((explain) => !explain.querySelector('[id$="__error"]'));
-    expect(helpOnly).toBeDefined();
-    expect(helpOnly!.querySelector('.ant-form-item-explain-error')).not.toBeNull();
-    expect(helpOnly!.querySelector('.help-block')).toHaveStyle({
+    // The field above the option it selected draws its help and its errors once, in the one block
+    expect(container.querySelectorAll('#root_name__help')).toHaveLength(1);
+    const explain = container.querySelector('#root_name__help')!.closest('.ant-form-item-explain');
+    expect(explain?.querySelector('#root_name__error')).not.toBeNull();
+    expect(explain?.querySelector('.ant-form-item-explain-error')).not.toBeNull();
+    expect(explain?.querySelector('.help-block')).toHaveStyle({
       color: theme.getDesignToken().colorTextDescription,
     });
   });

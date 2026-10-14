@@ -16,7 +16,6 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
-  descriptionId,
   fieldPathToId,
   getByPath,
   getDeprecatedHandling,
@@ -38,6 +37,7 @@ import {
   isConstantOptionList,
   isConstantSelect,
   isFormDataAvailable,
+  isLabelledByTemplate,
   logOnce,
   omitConsumedStyling,
   resolveUiSchema,
@@ -55,7 +55,6 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
-import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
@@ -279,7 +278,7 @@ function getFieldComponent<
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
   optionsReplaceNamedField: boolean;
-  withheldForOptions: boolean;
+  plannedAsOptions: boolean;
   fieldKey: string | undefined;
 } {
   const { widget } = uiOptions;
@@ -414,13 +413,17 @@ function getFieldComponent<
   const optionsReplaceNamedField = yieldsToOptions && namedField === fields.FallbackField;
 
   const isWithheld = yieldsToOptions && FieldComponent !== fields.ObjectField;
+  // An object with no properties of its own besides its options, a pure union, renders an empty field beside them, so
+  // like a withheld field it is planned as the field that renders its options, whose template labels it
+  const isPureUnion =
+    yieldsToOptions && !schema.properties && !schema.additionalProperties && !schema.patternProperties;
   return {
     FieldComponent: isWithheld ? RenderNothing : FieldComponent,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
     optionsReplaceNamedField,
-    withheldForOptions: isWithheld,
+    plannedAsOptions: isWithheld || isPureUnion,
     fieldKey,
   };
 }
@@ -585,9 +588,15 @@ function SchemaFieldRender<
   // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
   const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
+  const inheritedPresentation = useInheritedPresentation(fieldId);
+  // The property name and the title a parent hands down label the field above, which a selected option or the fallback
+  // UI's value renders the value of, so a field below with no title of its own isn't labelled by them a second time
+  // where the template's label above names its control. A label the field above draws itself, such as a selector's,
+  // names another control, so the field below keeps them
+  const labelledAbove = inheritedPresentation !== undefined && isLabelledByTemplate(inheritedPresentation.plan);
   const label = getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, {
-    name,
-    title: props.title,
+    name: labelledAbove ? undefined : name,
+    title: labelledAbove ? undefined : props.title,
     unresolvedSchema: props.schema,
     wasPropertyKeyModified,
   });
@@ -601,7 +610,6 @@ function SchemaFieldRender<
     shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema, fieldPath) &&
     !isFormDataAvailable<T>(formData);
   const fieldDescription = uiOptions.description || props.schema.description || schema.description || '';
-  const inheritedPresentation = useInheritedPresentation(fieldId);
   // `ui:label` is resolved as `hideError` is: the field's own, then the one the field above rendering this id resolved
   // to, then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
   const showLabel =
@@ -609,14 +617,22 @@ function SchemaFieldRender<
     inheritedPresentation?.showLabel ??
     uiBooleanOption(globalUiOptions?.label) ??
     true;
+  // When the options render, the field component renders beside them under the id a child named `XxxOf` would have,
+  // to avoid DOM id duplication with the rendering of the same data address by the `XxxOfField`. The `fieldPath`
+  // stays the truthful data address either way
+  const fieldComponentId = xxxOfOptions ? fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions) : fieldId;
+  const plannedAsOptions = fieldToRender?.plannedAsOptions;
+  const renderedComponent = fieldToRender?.FieldComponent;
   const presentation = useSchemaFieldPresentation<T, S, F>({
     id: fieldId,
+    // The parts the field draws itself render under its own id, unless it is planned as the field rendering the options
+    componentId: plannedAsOptions ? undefined : fieldComponentId,
     registry,
     schema,
     uiSchema: fieldUiSchema,
-    field: fieldToRender?.withheldForOptions ? undefined : fieldToRender?.FieldComponent,
+    field: renderedComponent,
     fieldKey: fieldToRender?.fieldKey,
-    xxxOfKey: fieldToRender?.withheldForOptions ? xxxOfKey : undefined,
+    xxxOfKey: plannedAsOptions ? xxxOfKey : undefined,
     label,
     showLabel,
     description: fieldDescription,
@@ -697,28 +713,15 @@ function SchemaFieldRender<
     );
   }
 
-  const isLabelled = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-  let displayLabel = isLabelled;
-
   let XxxOfField: Field<T, S, F> | undefined;
+  if (xxxOfOptions) {
+    XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
+  }
   // An option that declares no `uiSchema` of its own is rendered against this one, so a `ui:field` the options are
   // rendered in place of would reach every option and have each render the field this schema declined. Shadowed rather
   // than deleted, for the reason `FallbackField` shadows the same key: `getUiOptions()` layers a
   // `ui:globalOptions.field` under the local entry, so deleting the local one leaves the global showing through
   const XxxOfUiSchema: UiSchema<T, S, F> = optionsReplaceNamedField ? uiSchemaWithoutNamedField : uiSchema;
-  // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
-  // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
-  let fieldComponentId = fieldId;
-  // An opted-out option selector's label names a control that is not on screen yet, see `isOptedOut`
-  if (isOptedOut) {
-    displayLabel = false;
-  }
-  if (xxxOfOptions) {
-    XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
-    // The main FieldComponent gets the id a child named `XxxOf` would have, to avoid DOM id duplication with the
-    // rendering of the same data address by the `XxxOfField`
-    fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);
-  }
 
   const { __errors, ...fieldErrorSchema } = errorSchema ?? {};
 
@@ -735,8 +738,7 @@ function SchemaFieldRender<
       hideError={hideError}
       autofocus={autofocus}
       errorSchema={fieldErrorSchema as ErrorSchema}
-      // The `XxxOfField` renders the field's own errors whenever it renders, which is also why `FieldErrorTemplate`
-      // is skipped then
+      // The `XxxOfField` hands the field's own errors to the selected option and its selector
       rawErrors={XxxOfField ? undefined : __errors}
       presentation={presentation}
     />
@@ -750,20 +752,13 @@ function SchemaFieldRender<
     </PresentationContext>
   );
 
-  // The field of the selected option renders a description in that case, its own or, where it declares none, this
-  // field's, so the template, which may render the description of a field it leaves unlabelled, is handed none. Decided
-  // from the uiSchema the `XxxOfField` is handed, as it decides whether to render it, since a shadowed `ui:field` no
-  // longer turns its label off
-  const description =
-    XxxOfField &&
-    optionRendersFieldLabel<S>(
-      schema,
-      uiOptions.label,
-      XxxOfUiSchema === uiSchema ? isLabelled : schemaUtils.getDisplayLabel(schema, XxxOfUiSchema, globalUiOptions),
-    )
-      ? ''
-      : fieldDescription;
-  const { help } = uiOptions;
+  // A template that doesn't read `presentation` renders from these deprecated props, each derived from the plan, so it
+  // draws a part exactly where the plan says the template draws it
+  const displayLabel = presentation?.label.by === 'template';
+  const templateDescription = presentation?.description.by === 'template' ? presentation.description : undefined;
+  const description = templateDescription?.text ?? '';
+  const help = presentation?.help.by === 'template' ? presentation.help.text : undefined;
+  const templateErrors = presentation?.errors.by === 'template' ? presentation.errors.messages : undefined;
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
 
@@ -777,29 +772,27 @@ function SchemaFieldRender<
       registry={registry}
     />
   );
-  // AnyOf/OneOf errors are handled by the child schema, so they are skipped whenever one is rendering. A select is
-  // already excluded because it is what stops `XxxOfField` from being assigned in the first place
-  const errorsComponent =
-    hideError || XxxOfField ? undefined : (
-      <FieldErrorTemplate
-        errors={__errors}
-        errorSchema={errorSchema}
-        id={fieldId}
-        schema={schema}
-        uiSchema={uiSchema}
-        registry={registry}
-      />
-    );
+  // The field above a selected option draws its errors right after the option, so they don't vanish with no option
+  const errorsComponent = templateErrors && (
+    <FieldErrorTemplate
+      errors={[...templateErrors]}
+      errorSchema={errorSchema}
+      id={fieldId}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  );
   const fieldProps: Omit<FieldTemplateProps<T, S, F>, 'children'> = {
-    description: (
+    description: templateDescription?.text ? (
       <DescriptionFieldTemplate
-        id={descriptionId(fieldId)}
-        description={description}
+        id={templateDescription.id}
+        description={templateDescription.text}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-    ),
+    ) : undefined,
     rawDescription: description,
     help: helpComponent,
     rawHelp: help,

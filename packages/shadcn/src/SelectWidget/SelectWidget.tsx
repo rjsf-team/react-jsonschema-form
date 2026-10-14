@@ -16,6 +16,7 @@ import {
   groupEnumOptions,
   hasVisibleErrors,
   isEnumOptionsGroup,
+  isLabelledByTemplate,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   TranslatableString,
@@ -82,6 +83,7 @@ export default function SelectWidget<
     uiSchema,
     label,
     hideLabel,
+    presentation,
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -133,8 +135,12 @@ export default function SelectWidget<
           required={required}
           placeholder={placeholderText}
           ariaLabel={ariaLabel}
-          // The template's label shows the property name for a field with no title, and `*` when required
-          named={!!ariaLabel || (!hideLabel && (!!label || !!name || !!required))}
+          // The template's label shows the property name for a field with no title, and `*` when required; under the
+          // plan, a label the template draws here or for a field above names the select
+          named={
+            !!ariaLabel ||
+            (presentation ? isLabelledByTemplate(presentation) : !hideLabel && (!!label || !!name || !!required))
+          }
           className={cnClassName}
           onFocus={handleFancyFocus}
           onBlur={handleFancyBlur}

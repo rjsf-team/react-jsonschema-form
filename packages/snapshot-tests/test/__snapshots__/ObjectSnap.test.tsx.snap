@@ -28,11 +28,11 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               <label
                 class="control-label"
                 for="root_person_name"
+                id="root_person_name__label"
               >
                 name
               </label>
               <input
-                aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                 class="form-control"
                 id="root_person_name"
                 label="name"
@@ -59,11 +59,11 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   <label
                     class="control-label"
                     for="root_person_address_street"
+                    id="root_person_address_street__label"
                   >
                     street
                   </label>
                   <input
-                    aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                     class="form-control"
                     id="root_person_address_street"
                     label="street"
@@ -79,11 +79,11 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   <label
                     class="control-label"
                     for="root_person_address_city"
+                    id="root_person_address_city__label"
                   >
                     city
                   </label>
                   <input
-                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                     class="form-control"
                     id="root_person_address_city"
                     label="city"
@@ -99,11 +99,11 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   <label
                     class="control-label"
                     for="root_person_address_country"
+                    id="root_person_address_country__label"
                   >
                     country
                   </label>
                   <input
-                    aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
                     class="form-control"
                     id="root_person_address_country"
                     label="country"
@@ -148,11 +148,11 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
           <label
             class="control-label"
             for="root_name"
+            id="root_name__label"
           >
             name
           </label>
           <input
-            aria-describedby="root_name__error root_name__description root_name__help"
             class="form-control"
             id="root_name"
             label="name"
@@ -194,11 +194,11 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
               <label
                 class="control-label"
                 for="root_customField"
+                id="root_customField__label"
               >
                 customField
               </label>
               <input
-                aria-describedby="root_customField__error root_customField__description root_customField__help"
                 class="form-control"
                 id="root_customField"
                 label="customField"
@@ -275,11 +275,11 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           <label
             class="control-label"
             for="root_name"
+            id="root_name__label"
           >
             name
           </label>
           <input
-            aria-describedby="root_name__error root_name__description root_name__help"
             class="form-control"
             id="root_name"
             label="name"
@@ -295,11 +295,11 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           <label
             class="control-label"
             for="root_age"
+            id="root_age__label"
           >
             age
           </label>
           <input
-            aria-describedby="root_age__error root_age__description root_age__help"
             class="form-control"
             id="root_age"
             inputmode="decimal"
@@ -320,7 +320,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
           >
             <label>
               <input
-                aria-describedby="root_active__error root_active__description root_active__help"
                 checked=""
                 id="root_active"
                 name="root[active]"
@@ -360,6 +359,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     <label
                       class="control-label"
                       for="root_tags_0"
+                      id="root_tags_0__label"
                     >
                       tags-1
                       <span
@@ -369,7 +369,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       </span>
                     </label>
                     <input
-                      aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                       class="form-control"
                       id="root_tags_0"
                       label="tags-1"
@@ -435,6 +434,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                     <label
                       class="control-label"
                       for="root_tags_1"
+                      id="root_tags_1__label"
                     >
                       tags-2
                       <span
@@ -444,7 +444,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       </span>
                     </label>
                     <input
-                      aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                       class="form-control"
                       id="root_tags_1"
                       label="tags-2"
@@ -549,11 +548,11 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           <label
             class="control-label"
             for="root_firstName"
+            id="root_firstName__label"
           >
             firstName
           </label>
           <input
-            aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
             class="form-control"
             id="root_firstName"
             label="firstName"
@@ -569,11 +568,11 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           <label
             class="control-label"
             for="root_lastName"
+            id="root_lastName__label"
           >
             lastName
           </label>
           <input
-            aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
             class="form-control"
             id="root_lastName"
             label="lastName"
@@ -589,11 +588,11 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
           <label
             class="control-label"
             for="root_age"
+            id="root_age__label"
           >
             age
           </label>
           <input
-            aria-describedby="root_age__error root_age__description root_age__help"
             class="form-control"
             id="root_age"
             inputmode="decimal"
@@ -648,11 +647,11 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               <label
                 class="control-label"
                 for="root_person_name"
+                id="root_person_name__label"
               >
                 name
               </label>
               <input
-                aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                 class="form-control"
                 id="root_person_name"
                 label="name"
@@ -679,11 +678,11 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   <label
                     class="control-label"
                     for="root_person_address_street"
+                    id="root_person_address_street__label"
                   >
                     street
                   </label>
                   <input
-                    aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                     class="form-control"
                     id="root_person_address_street"
                     label="street"
@@ -699,11 +698,11 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   <label
                     class="control-label"
                     for="root_person_address_city"
+                    id="root_person_address_city__label"
                   >
                     city
                   </label>
                   <input
-                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                     class="form-control"
                     id="root_person_address_city"
                     label="city"
@@ -748,11 +747,11 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           <label
             class="control-label"
             for="root_name"
+            id="root_name__label"
           >
             name
           </label>
           <input
-            aria-describedby="root_name__error root_name__description root_name__help"
             class="form-control"
             id="root_name"
             label="name"
@@ -768,11 +767,11 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
           <label
             class="control-label"
             for="root_count"
+            id="root_count__label"
           >
             count
           </label>
           <input
-            aria-describedby="root_count__error root_count__description root_count__help"
             class="form-control"
             id="root_count"
             inputmode="decimal"
@@ -813,6 +812,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                     <label
                       class="control-label"
                       for="root_items_0"
+                      id="root_items_0__label"
                     >
                       items-1
                       <span
@@ -822,7 +822,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       </span>
                     </label>
                     <input
-                      aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
                       class="form-control"
                       id="root_items_0"
                       label="items-1"
@@ -888,6 +887,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                     <label
                       class="control-label"
                       for="root_items_1"
+                      id="root_items_1__label"
                     >
                       items-2
                       <span
@@ -897,7 +897,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       </span>
                     </label>
                     <input
-                      aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
                       class="form-control"
                       id="root_items_1"
                       label="items-2"
@@ -1002,11 +1001,11 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           <label
             class="control-label"
             for="root_firstName"
+            id="root_firstName__label"
           >
             firstName
           </label>
           <input
-            aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
             class="form-control"
             id="root_firstName"
             label="firstName"
@@ -1022,11 +1021,11 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           <label
             class="control-label"
             for="root_lastName"
+            id="root_lastName__label"
           >
             lastName
           </label>
           <input
-            aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
             class="form-control"
             id="root_lastName"
             label="lastName"
@@ -1042,11 +1041,11 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
           <label
             class="control-label"
             for="root_age"
+            id="root_age__label"
           >
             age
           </label>
           <input
-            aria-describedby="root_age__error root_age__description root_age__help"
             class="form-control"
             id="root_age"
             inputmode="decimal"
@@ -1116,11 +1115,11 @@ exports[`object fields > additionalProperties 1`] = `
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo
               </label>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -1241,6 +1240,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo
               </label>
@@ -1251,7 +1251,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                 A description
               </div>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                aria-describedby="root_foo__description"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -1351,12 +1351,6 @@ exports[`object fields > additionalProperties, array type 1`] = `
             <div
               class="form-additional form-group col-xs-5"
             >
-              <label
-                class="control-label"
-                for="root_foo"
-              >
-                foo
-              </label>
               <fieldset
                 class="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root_foo"
@@ -1485,6 +1479,7 @@ exports[`object fields > additionalProperties, description 1`] = `
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo
               </label>
@@ -1495,7 +1490,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                 item description
               </div>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                aria-describedby="root_foo__description"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -1598,11 +1593,11 @@ exports[`object fields > additionalProperties, label off 1`] = `
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo
               </label>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -1702,12 +1697,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
             <div
               class="form-additional form-group col-xs-5"
             >
-              <label
-                class="control-label"
-                for="root_foo"
-              >
-                foo
-              </label>
               <fieldset
                 id="root_foo"
               >
@@ -1722,11 +1711,11 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   <label
                     class="control-label"
                     for="root_foo_foo"
+                    id="root_foo_foo__label"
                   >
                     foo
                   </label>
                   <input
-                    aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
                     class="form-control"
                     id="root_foo_foo"
                     label="foo"
@@ -1846,11 +1835,11 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo
               </label>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -1968,14 +1957,14 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo (deprecated)
               </label>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
                 class="form-control"
                 id="root_foo"
-                label="foo"
+                label="foo (deprecated)"
                 name="root_foo"
                 placeholder=""
                 type="text"
@@ -2049,11 +2038,11 @@ exports[`object fields > object 1`] = `
           <label
             class="control-label"
             for="root_a"
+            id="root_a__label"
           >
             A
           </label>
           <input
-            aria-describedby="root_a__error root_a__description root_a__help"
             class="form-control"
             id="root_a"
             label="A"
@@ -2069,11 +2058,11 @@ exports[`object fields > object 1`] = `
           <label
             class="control-label"
             for="root_b"
+            id="root_b__label"
           >
             B
           </label>
           <input
-            aria-describedby="root_b__error root_b__description root_b__help"
             class="form-control"
             id="root_b"
             inputmode="decimal"
@@ -2143,11 +2132,11 @@ exports[`object fields > show add button and fields if additionalProperties is t
               <label
                 class="control-label"
                 for="root_additionalProperty"
+                id="root_additionalProperty__label"
               >
                 additionalProperty
               </label>
               <input
-                aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                 class="form-control"
                 id="root_additionalProperty"
                 label="additionalProperty"
@@ -2261,11 +2250,11 @@ exports[`object fields > with title and description > additionalProperties 1`] =
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo
               </label>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -2353,6 +2342,7 @@ exports[`object fields > with title and description > object 1`] = `
           <label
             class="control-label"
             for="root_a"
+            id="root_a__label"
           >
             A
           </label>
@@ -2363,7 +2353,7 @@ exports[`object fields > with title and description > object 1`] = `
             A description
           </div>
           <input
-            aria-describedby="root_a__error root_a__description root_a__help"
+            aria-describedby="root_a__description"
             class="form-control"
             id="root_a"
             label="A"
@@ -2379,6 +2369,7 @@ exports[`object fields > with title and description > object 1`] = `
           <label
             class="control-label"
             for="root_b"
+            id="root_b__label"
           >
             B
           </label>
@@ -2389,7 +2380,7 @@ exports[`object fields > with title and description > object 1`] = `
             B description
           </div>
           <input
-            aria-describedby="root_b__error root_b__description root_b__help"
+            aria-describedby="root_b__description"
             class="form-control"
             id="root_b"
             inputmode="decimal"
@@ -2470,11 +2461,11 @@ exports[`object fields > with title and description > show add button and fields
               <label
                 class="control-label"
                 for="root_additionalProperty"
+                id="root_additionalProperty__label"
               >
                 additionalProperty
               </label>
               <input
-                aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                 class="form-control"
                 id="root_additionalProperty"
                 label="additionalProperty"
@@ -2588,11 +2579,11 @@ exports[`object fields > with title and description from both > additionalProper
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo
               </label>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -2680,6 +2671,7 @@ exports[`object fields > with title and description from both > object 1`] = `
           <label
             class="control-label"
             for="root_a"
+            id="root_a__label"
           >
             My Item A
           </label>
@@ -2690,7 +2682,7 @@ exports[`object fields > with title and description from both > object 1`] = `
             a fancier item A description
           </div>
           <input
-            aria-describedby="root_a__error root_a__description root_a__help"
+            aria-describedby="root_a__description"
             class="form-control"
             id="root_a"
             label="My Item A"
@@ -2706,6 +2698,7 @@ exports[`object fields > with title and description from both > object 1`] = `
           <label
             class="control-label"
             for="root_b"
+            id="root_b__label"
           >
             My Item B
           </label>
@@ -2716,7 +2709,7 @@ exports[`object fields > with title and description from both > object 1`] = `
             a fancier item B description
           </div>
           <input
-            aria-describedby="root_b__error root_b__description root_b__help"
+            aria-describedby="root_b__description"
             class="form-control"
             id="root_b"
             inputmode="decimal"
@@ -2797,11 +2790,11 @@ exports[`object fields > with title and description from uiSchema > additionalPr
               <label
                 class="control-label"
                 for="root_foo"
+                id="root_foo__label"
               >
                 foo
               </label>
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -2889,6 +2882,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           <label
             class="control-label"
             for="root_a"
+            id="root_a__label"
           >
             My Item A
           </label>
@@ -2899,7 +2893,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
             a fancier item A description
           </div>
           <input
-            aria-describedby="root_a__error root_a__description root_a__help"
+            aria-describedby="root_a__description"
             class="form-control"
             id="root_a"
             label="My Item A"
@@ -2915,6 +2909,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
           <label
             class="control-label"
             for="root_b"
+            id="root_b__label"
           >
             My Item B
           </label>
@@ -2925,7 +2920,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
             a fancier item B description
           </div>
           <input
-            aria-describedby="root_b__error root_b__description root_b__help"
+            aria-describedby="root_b__description"
             class="form-control"
             id="root_b"
             inputmode="decimal"
@@ -3006,11 +3001,11 @@ exports[`object fields > with title and description from uiSchema > show add but
               <label
                 class="control-label"
                 for="root_additionalProperty"
+                id="root_additionalProperty__label"
               >
                 additionalProperty
               </label>
               <input
-                aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                 class="form-control"
                 id="root_additionalProperty"
                 label="additionalProperty"
@@ -3094,6 +3089,7 @@ exports[`object fields > with title and description with global label off > addi
                 class="form-group"
               >
                 <input
+                  aria-label="foo Key"
                   class="form-control"
                   id="root_foo-key"
                   type="text"
@@ -3105,7 +3101,6 @@ exports[`object fields > with title and description with global label off > addi
               class="form-additional form-group col-xs-5"
             >
               <input
-                aria-describedby="root_foo__error root_foo__description root_foo__help"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -3179,7 +3174,6 @@ exports[`object fields > with title and description with global label off > obje
           class="form-group rjsf-field rjsf-field-string"
         >
           <input
-            aria-describedby="root_a__error root_a__description root_a__help"
             class="form-control"
             id="root_a"
             label="A"
@@ -3193,7 +3187,6 @@ exports[`object fields > with title and description with global label off > obje
           class="form-group rjsf-field rjsf-field-number"
         >
           <input
-            aria-describedby="root_b__error root_b__description root_b__help"
             class="form-control"
             id="root_b"
             inputmode="decimal"
@@ -3244,6 +3237,7 @@ exports[`object fields > with title and description with global label off > show
                 class="form-group"
               >
                 <input
+                  aria-label="additionalProperty Key"
                   class="form-control"
                   id="root_additionalProperty-key"
                   type="text"
@@ -3255,7 +3249,6 @@ exports[`object fields > with title and description with global label off > show
               class="form-additional form-group col-xs-5"
             >
               <input
-                aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                 class="form-control"
                 id="root_additionalProperty"
                 label="additionalProperty"

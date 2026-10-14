@@ -33,6 +33,7 @@ export default function ObjectFieldTemplate<
     schema,
     title,
     uiSchema,
+    presentation,
   } = props;
   const options = getUiOptions<T, S, F>(uiSchema);
   const { TitleFieldTemplate, DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
@@ -65,7 +66,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId(id)}
+          id={presentation?.description.id ?? descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}

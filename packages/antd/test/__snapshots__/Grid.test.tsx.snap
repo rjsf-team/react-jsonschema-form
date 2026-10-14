@@ -761,7 +761,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                         />
                                                         <input
                                                           aria-autocomplete="list"
-                                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                                           aria-expanded="false"
                                                           aria-haspopup="listbox"
                                                           autocomplete="new-password"
@@ -1206,7 +1205,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             />
                                             <input
                                               aria-autocomplete="list"
-                                              aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                               aria-expanded="false"
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"
@@ -2032,7 +2030,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                         />
                                                         <input
                                                           aria-autocomplete="list"
-                                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                                           aria-expanded="false"
                                                           aria-haspopup="listbox"
                                                           autocomplete="new-password"
@@ -2533,7 +2530,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             />
                                             <input
                                               aria-autocomplete="list"
-                                              aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                               aria-expanded="false"
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"
@@ -3359,7 +3355,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                         />
                                                         <input
                                                           aria-autocomplete="list"
-                                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                                           aria-expanded="false"
                                                           aria-haspopup="listbox"
                                                           autocomplete="new-password"
@@ -4426,7 +4421,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                                         />
                                                         <input
                                                           aria-autocomplete="list"
-                                                          aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                                           aria-expanded="false"
                                                           aria-haspopup="listbox"
                                                           autocomplete="new-password"
@@ -4871,7 +4865,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                             />
                                             <input
                                               aria-autocomplete="list"
-                                              aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                                               aria-expanded="false"
                                               aria-haspopup="listbox"
                                               autocomplete="new-password"
@@ -5644,7 +5637,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                                     />
                                     <input
                                       aria-autocomplete="list"
-                                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                       aria-expanded="false"
                                       aria-haspopup="listbox"
                                       autocomplete="new-password"
@@ -6416,7 +6408,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                                     />
                                     <input
                                       aria-autocomplete="list"
-                                      aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                                       aria-expanded="false"
                                       aria-haspopup="listbox"
                                       autocomplete="new-password"

@@ -35,6 +35,7 @@ export default function FieldTemplate<
     style,
     disabled,
     displayLabel,
+    presentation,
     hidden,
     label,
     keyName,
@@ -75,6 +76,7 @@ export default function FieldTemplate<
       label={label}
       keyName={keyName}
       displayLabel={displayLabel}
+      presentation={presentation}
       rawDescription={rawDescription}
       onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
@@ -95,7 +97,7 @@ export default function FieldTemplate<
         className={otherMuiProps.className}
       >
         {children}
-        {displayLabel && !isCheckbox && rawDescription ? (
+        {!isCheckbox && rawDescription ? (
           <Typography variant='caption' color='textSecondary' {...muiSlotProps?.fieldTypography}>
             {description}
           </Typography>

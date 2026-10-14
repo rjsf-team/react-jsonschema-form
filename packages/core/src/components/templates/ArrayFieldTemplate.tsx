@@ -24,11 +24,19 @@ export default function ArrayFieldTemplate<
     required,
     schema,
     title,
+    presentation,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   // Button templates are not overridden in the uiSchema
   const showOptionalDataControlInTitle = !readonly && !disabled;
+  // Under a plan, `ArrayField` hands the heading its plan gives the array as `title`, and the plan says whether the
+  // description is the array's to draw, so an option repeating its field's text draws neither
+  const shownTitle = presentation ? title : uiOptions.title || title;
+  let shownDescription = uiOptions.description || schema.description;
+  if (presentation) {
+    shownDescription = presentation.description.by === 'self' ? presentation.description.text : undefined;
+  }
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
@@ -36,7 +44,7 @@ export default function ArrayFieldTemplate<
     <fieldset className={className} id={id}>
       <ArrayFieldTitleTemplate
         id={id}
-        title={uiOptions.title || title}
+        title={shownTitle}
         required={required}
         schema={schema}
         uiSchema={uiSchema}
@@ -45,10 +53,11 @@ export default function ArrayFieldTemplate<
       />
       <ArrayFieldDescriptionTemplate
         id={id}
-        description={uiOptions.description || schema.description}
+        description={shownDescription}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
+        presentation={presentation}
       />
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
       <div className='row array-item-list'>{items}</div>
