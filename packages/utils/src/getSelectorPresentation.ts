@@ -38,6 +38,7 @@ export default function getSelectorPresentation(field: FieldPresentation, select
     help: asSelectorPart(field.help),
     errors: asSelectorPart(field.errors),
     describedBy: field.describedBy,
+    showLabel: field.showLabel,
     control,
     inherited: field,
   };

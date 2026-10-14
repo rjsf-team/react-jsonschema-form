@@ -69,23 +69,26 @@ describe('SelectedOptionDescription', () => {
     expect(container.querySelector('#root__description')).toBeNull();
   });
 
-  it("renders nothing under its field's plan where `ui:label: false`, resolved through the fields above, hides the label", () => {
-    const presentation = resolveFieldPresentation({
-      id: 'root',
-      declaration: {
-        label: 'template',
-        description: 'template',
-        errors: 'template',
-        help: 'template',
-        labelledBy: 'for',
-      },
-      label: 'Choice',
-      showLabel: false,
-    });
-    const { container } = render(<SelectedOptionDescription {...baseProps} presentation={presentation} />);
+  it.each(['Choice', ''])(
+    "renders nothing under its field's plan where its resolved `ui:label: false` applies, label %j",
+    (label) => {
+      const presentation = resolveFieldPresentation({
+        id: 'root',
+        declaration: {
+          label: 'template',
+          description: 'template',
+          errors: 'template',
+          help: 'template',
+          labelledBy: 'for',
+        },
+        label,
+        showLabel: false,
+      });
+      const { container } = render(<SelectedOptionDescription {...baseProps} presentation={presentation} />);
 
-    expect(container).toBeEmptyDOMElement();
-  });
+      expect(container).toBeEmptyDOMElement();
+    },
+  );
 
   it.each([
     ['ui:options label', { ...baseProps, uiSchema: { 'ui:options': { label: false } } }],

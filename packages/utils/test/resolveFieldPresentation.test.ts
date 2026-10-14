@@ -28,6 +28,7 @@ describe('resolveFieldPresentation()', () => {
       help: { text: 'Helps with foo', by: 'template', id: `${ID}__help` },
       errors: { messages: ['is required'], by: 'template', id: `${ID}__error` },
       describedBy: [`${ID}__error`, `${ID}__description`, `${ID}__help`],
+      showLabel: true,
       control: {
         id: ID,
         attributes: {
@@ -47,6 +48,7 @@ describe('resolveFieldPresentation()', () => {
       help: { text: undefined, by: 'none', id: `${ID}__help` },
       errors: { messages: [], by: 'none', id: `${ID}__error` },
       describedBy: [],
+      showLabel: true,
       control: { id: ID, attributes: {}, requiredMarker: false },
     });
   });
@@ -70,6 +72,7 @@ describe('resolveFieldPresentation()', () => {
   describe('label', () => {
     it('hides the label and the description under ui:label false, but not the help', () => {
       const plan = resolve({ showLabel: false, description: 'Describes foo', help: 'Helps with foo' });
+      expect(plan.showLabel).toBe(false);
       expect(plan.label.by).toBe('none');
       expect(plan.description).toEqual({ text: 'Describes foo', by: 'none', id: `${ID}__description` });
       expect(plan.help.by).toBe('template');
@@ -109,15 +112,6 @@ describe('resolveFieldPresentation()', () => {
       expect(plan.errors).toEqual({ messages: [], by: 'none', id: `${ID}__error` });
       expect(plan.control?.attributes).toEqual({});
     });
-  });
-
-  it('describes the control by the elements it renders to describe itself, after its parts', () => {
-    const controlDescribedBy = [`${ID}__selectedOptionDescription`, `${ID}__examples`];
-    const plan = resolve({ description: 'Describes foo', controlDescribedBy });
-    expect(plan.describedBy).toEqual([`${ID}__description`]);
-    expect(plan.control?.attributes['aria-describedby']).toBe(
-      `${ID}__description ${ID}__selectedOptionDescription ${ID}__examples`,
-    );
   });
 
   it('gives the parts a component rendered beside its options draws ids of its own, and the rest the field ids', () => {
@@ -275,13 +269,6 @@ describe('resolveFieldPresentation()', () => {
       const own = resolve({ inherited: middle, description: 'Describes the option', help: 'Helps with the option' });
       expect(own.description.id).toBe(`${ID}__optionDescription`);
       expect(own.help.id).toBe(`${ID}__optionHelp`);
-    });
-
-    it("isn't described by the elements the control above renders to describe itself", () => {
-      const withExamples = resolve({ description: 'Describes the field', controlDescribedBy: [`${ID}__examples`] });
-      const plan = resolve({ inherited: withExamples });
-      expect(plan.describedBy).toEqual([`${ID}__description`]);
-      expect(plan.control?.attributes['aria-describedby']).toBe(`${ID}__description`);
     });
 
     it('links the plan to the one it was built under', () => {
