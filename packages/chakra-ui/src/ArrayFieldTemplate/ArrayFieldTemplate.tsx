@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 import type { ArrayFieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getArrayDescription, getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
 
 export default function ArrayFieldTemplate<
   T = unknown,
@@ -20,9 +20,11 @@ export default function ArrayFieldTemplate<
     required,
     schema,
     title,
+    presentation,
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const shownDescription = getArrayDescription<T, S, F>(props);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
@@ -41,10 +43,11 @@ export default function ArrayFieldTemplate<
       />
       <ArrayFieldDescriptionTemplate
         id={id}
-        description={uiOptions.description || schema.description}
+        description={shownDescription}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
+        presentation={presentation}
       />
       <Grid key={`array-item-list-${id}`}>
         <GridItem>

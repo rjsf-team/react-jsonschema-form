@@ -1,6 +1,6 @@
 import { Fieldset, Box, Group } from '@mantine/core';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getArrayDescription, getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
 
 import { useContainerErrors } from '../utils.tsx';
 
@@ -26,11 +26,13 @@ export default function ArrayFieldTemplate<
     schema,
     uiSchema,
     title,
+    presentation,
     registry,
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
+  const shownDescription = getArrayDescription<T, S, F>(props);
   const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
@@ -53,13 +55,14 @@ export default function ArrayFieldTemplate<
 
   return (
     <Fieldset legend={legend} className={className} id={id}>
-      {(uiOptions.description || schema.description) && (
+      {shownDescription && (
         <ArrayFieldDescriptionTemplate
-          description={uiOptions.description || schema.description}
+          description={shownDescription}
           id={id}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          presentation={presentation}
         />
       )}
       <Box className='row rjsf-array-item-list'>
