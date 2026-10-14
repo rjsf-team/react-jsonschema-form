@@ -96,7 +96,7 @@ exports[`antd specific tests > descriptionLocation tooltip in formContext 1`] = 
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                      aria-describedby="root_my-field__description"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_my-field"
                                       name="root_my-field"
@@ -166,7 +166,6 @@ exports[`format iso-date-time 1`] = `
                     class="ant-picker-input"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
                       aria-invalid="false"
                       autocomplete="off"
                       id="root"
@@ -247,7 +246,6 @@ exports[`format iso-time 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -447,7 +445,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                             style="width: 100%;"
                                                                           >
                                                                             <input
-                                                                              aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                                                               class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                               id="root_tasks_0_title"
                                                                               name="root[tasks][0][title]"
@@ -717,7 +714,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                             style="width: 100%;"
                                                                           >
                                                                             <input
-                                                                              aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                                                               class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                               id="root_tasks_1_title"
                                                                               name="root[tasks][1][title]"
@@ -1102,7 +1098,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_tags_0"
                                                             name="root[tags][0]"
@@ -1270,7 +1265,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_tags_1"
                                                             name="root[tags][1]"
@@ -1539,7 +1533,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div
-                                    aria-describedby="root_choices__error root_choices__description root_choices__help"
+                                    aria-labelledby="root_choices__label"
                                     class="ant-checkbox-group css-var-root ant-checkbox-css-var css-dev-only-do-not-override-oc1rc0"
                                     id="root_choices"
                                     name="root[choices][]"
@@ -1757,7 +1751,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_person_firstName"
                                                         name="root[person][firstName]"
@@ -1815,7 +1808,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_person_lastName"
                                                         name="root[person][lastName]"
@@ -1919,7 +1911,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_street"
                                                                           name="root[person][address][street]"
@@ -1977,7 +1968,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_city"
                                                                           name="root[person][address][city]"
@@ -2099,7 +2089,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div
-                                    aria-describedby="root_option__error root_option__description root_option__help"
+                                    aria-labelledby="root_option__label"
                                     class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                                     id="root_option"
                                     role="radiogroup"
@@ -2379,7 +2369,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_firstName"
                                       name="root[firstName]"
@@ -2437,7 +2426,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_age__error root_age__description root_age__help"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_age"
@@ -2653,7 +2641,6 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                                     style="width: 100%;"
                                   >
                                     <textarea
-                                      aria-describedby="root_description__error root_description__description root_description__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_description"
                                       name="root[description]"
@@ -2866,7 +2853,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                             style="width: 100%;"
                                                                           >
                                                                             <input
-                                                                              aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                                                               class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                               id="root_tasks_0_title"
                                                                               name="root.tasks.0.title"
@@ -3136,7 +3122,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                             style="width: 100%;"
                                                                           >
                                                                             <input
-                                                                              aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                                                               class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                               id="root_tasks_1_title"
                                                                               name="root.tasks.1.title"
@@ -3521,7 +3506,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_tags_0"
                                                             name="root.tags.0"
@@ -3689,7 +3673,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_tags_1"
                                                             name="root.tags.1"
@@ -4008,7 +3991,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_person_firstName"
                                                         name="root.person.firstName"
@@ -4066,7 +4048,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_person_lastName"
                                                         name="root.person.lastName"
@@ -4170,7 +4151,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_street"
                                                                           name="root.person.address.street"
@@ -4228,7 +4208,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_person_address_city"
                                                                           name="root.person.address.city"
@@ -4492,7 +4471,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_firstName"
                                       name="root.firstName"
@@ -4550,7 +4528,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_age__error root_age__description root_age__help"
                                       autocomplete="off"
                                       class="ant-input-number-input"
                                       id="root_age"
@@ -4721,7 +4698,6 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -6090,7 +6066,7 @@ exports[`single fields > checkboxes field 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
+                  aria-labelledby="root__label"
                   class="ant-checkbox-group css-var-root ant-checkbox-css-var css-dev-only-do-not-override-oc1rc0"
                   id="root"
                   name="root"
@@ -6243,7 +6219,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
+                  aria-labelledby="root__label"
                   class="ant-checkbox-group css-var-root ant-checkbox-css-var css-dev-only-do-not-override-oc1rc0"
                   id="root"
                   name="root"
@@ -6257,6 +6233,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0 ant-checkbox-checked"
                       >
                         <input
+                          aria-describedby="root__description root__help"
                           checked=""
                           class="ant-checkbox-input"
                           id="root-0"
@@ -6280,6 +6257,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                       >
                         <input
+                          aria-describedby="root__description root__help"
                           class="ant-checkbox-input"
                           id="root-1"
                           name="root"
@@ -6302,6 +6280,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                       >
                         <input
+                          aria-describedby="root__description root__help"
                           class="ant-checkbox-input"
                           id="root-2"
                           name="root"
@@ -6399,7 +6378,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
+                  aria-labelledby="root__label"
                   class="ant-checkbox-group css-var-root ant-checkbox-css-var css-dev-only-do-not-override-oc1rc0"
                   id="root"
                   name="root"
@@ -6413,6 +6392,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                       >
                         <input
+                          aria-describedby="root__description"
                           class="ant-checkbox-input"
                           id="root-0"
                           name="root"
@@ -6436,6 +6416,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                       >
                         <input
+                          aria-describedby="root__description"
                           class="ant-checkbox-input"
                           id="root-1"
                           name="root"
@@ -6459,6 +6440,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                         class="ant-checkbox ant-wave-target css-dev-only-do-not-override-oc1rc0"
                       >
                         <input
+                          aria-describedby="root__description"
                           class="ant-checkbox-input"
                           id="root-2"
                           name="root"
@@ -6575,7 +6557,7 @@ exports[`single fields > field with description 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                      aria-describedby="root_my-field__description"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_my-field"
                                       name="root_my-field"
@@ -6696,7 +6678,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                      aria-describedby="root_my-field__description"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_my-field"
                                       name="root_my-field"
@@ -6817,7 +6799,7 @@ exports[`single fields > field with markdown description 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                      aria-describedby="root_my-field__description"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_my-field"
                                       name="root_my-field"
@@ -6944,7 +6926,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                      aria-describedby="root_my-field__description"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_my-field"
                                       name="root_my-field"
@@ -7024,7 +7006,6 @@ exports[`single fields > format color 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -7085,7 +7066,6 @@ exports[`single fields > format date 1`] = `
                     class="ant-picker-input"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
                       aria-invalid="false"
                       autocomplete="off"
                       id="root"
@@ -7169,7 +7149,6 @@ exports[`single fields > format datetime 1`] = `
                     class="ant-picker-input"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
                       aria-invalid="false"
                       autocomplete="off"
                       id="root"
@@ -7250,7 +7229,6 @@ exports[`single fields > format time 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -7370,7 +7348,8 @@ exports[`single fields > help and error display 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__error root__help"
+                    aria-invalid="true"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -7529,7 +7508,6 @@ exports[`single fields > hidden label 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -7627,7 +7605,6 @@ exports[`single fields > number field 0 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     aria-valuenow="0"
                     autocomplete="off"
                     class="ant-input-number-input"
@@ -7746,7 +7723,6 @@ exports[`single fields > number field 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     autocomplete="off"
                     class="ant-input-number-input"
                     id="root"
@@ -7968,7 +7944,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_nestedObjectOptional_test"
                                                         name="root_nestedObjectOptional_test"
@@ -8072,7 +8047,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                                                           name="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -8185,7 +8159,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_nestedObjectOptional_deepObject_deepTest"
                                                                           name="root_nestedObjectOptional_deepObject_deepTest"
@@ -8743,7 +8716,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_nestedObject_test"
                                                         name="root_nestedObject_test"
@@ -9028,7 +9000,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                                     style="width: 100%;"
                                                                   >
                                                                     <input
-                                                                      aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                                                       class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                                       disabled=""
                                                                       id="root_optionalObjectWithOneofs_name"
@@ -9403,7 +9374,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                                         class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                         disabled=""
                                                         id="root_nestedObjectOptional_test"
@@ -9512,7 +9482,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                                                           class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                                           disabled=""
                                                                           id="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -9630,7 +9599,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                                                           class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                                           disabled=""
                                                                           id="root_nestedObjectOptional_deepObject_deepTest"
@@ -10197,7 +10165,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                                         class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                         disabled=""
                                                         id="root_nestedObject_test"
@@ -10489,7 +10456,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                                     style="width: 100%;"
                                                                   >
                                                                     <input
-                                                                      aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                                                       class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                                       disabled=""
                                                                       id="root_optionalObjectWithOneofs_name"
@@ -10903,7 +10869,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_nestedObjectOptional_test"
                                                         name="root_nestedObjectOptional_test"
@@ -11110,7 +11075,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                                                           class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                                           id="root_nestedObjectOptional_deepObject_deepTest"
                                                                           name="root_nestedObjectOptional_deepObject_deepTest"
@@ -11612,7 +11576,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                                             class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                             id="root_nestedArrayOptional_0"
                                                             name="root_nestedArrayOptional_0"
@@ -11818,7 +11781,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_nestedObject_test"
                                                         name="root_nestedObject_test"
@@ -12380,7 +12342,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                                         class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                         disabled=""
                                                         id="root_nestedObjectOptional_test"
@@ -12554,7 +12515,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                                         style="width: 100%;"
                                                                       >
                                                                         <input
-                                                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                                                           class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                                           disabled=""
                                                                           id="root_nestedObjectOptional_deepObject_deepTest"
@@ -12972,7 +12932,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                           style="width: 100%;"
                                                         >
                                                           <input
-                                                            aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                                             class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                             disabled=""
                                                             id="root_nestedArrayOptional_0"
@@ -13185,7 +13144,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                                         class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                         disabled=""
                                                         id="root_nestedObject_test"
@@ -13872,7 +13830,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                                         class="ant-input css-dev-only-do-not-override-oc1rc0"
                                                         id="root_nestedObject_test"
                                                         name="root_nestedObject_test"
@@ -14565,7 +14522,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                       style="width: 100%;"
                                                     >
                                                       <input
-                                                        aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                                         class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                                                         disabled=""
                                                         id="root_nestedObject_test"
@@ -14937,7 +14893,6 @@ exports[`single fields > password field 1`] = `
                   class="ant-input-affix-wrapper css-dev-only-do-not-override-oc1rc0 ant-input-outlined ant-input-password css-var-root ant-input-css-var"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -15023,7 +14978,6 @@ exports[`single fields > radio field 1`] = `
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -15123,7 +15077,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
+                  aria-labelledby="root__label"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -15135,6 +15089,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                       class="ant-radio ant-wave-target"
                     >
                       <input
+                        aria-describedby="root__description"
                         class="ant-radio-input"
                         id="root-0"
                         name="root"
@@ -15155,6 +15110,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                       class="ant-radio ant-wave-target"
                     >
                       <input
+                        aria-describedby="root__description"
                         class="ant-radio-input"
                         id="root-1"
                         name="root"
@@ -15425,7 +15381,7 @@ exports[`single fields > schema examples 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help root__examples"
+                    aria-describedby="root__examples"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     list="root__examples"
@@ -15503,7 +15459,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help root__examples"
+                    aria-describedby="root__examples"
                     aria-valuenow="5432"
                     autocomplete="off"
                     class="ant-input-number-input"
@@ -15918,7 +15874,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
                   class="ant-checkbox-group css-var-root ant-checkbox-css-var css-dev-only-do-not-override-oc1rc0"
                   id="root"
                   name="root"
@@ -16422,7 +16377,6 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -16511,7 +16465,6 @@ exports[`single fields > select field single choice form disabled using radio wi
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -16865,7 +16818,6 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                 class="ant-form-item-control-input-content"
               >
                 <div
-                  aria-describedby="root__error root__description root__help"
                   class="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-oc1rc0 css-var-root ant-radio-css-var"
                   id="root"
                   role="radiogroup"
@@ -17332,7 +17284,7 @@ exports[`single fields > string field > field with markdown help and description
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -17450,7 +17402,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -17559,7 +17511,7 @@ exports[`single fields > string field > field with markdown help text without a 
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -17646,7 +17598,6 @@ exports[`single fields > string field > format data-url 1`] = `
                     style="width: 100%;"
                   >
                     <input
-                      aria-describedby="root__error root__description root__help"
                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                       id="root"
                       name="root"
@@ -17705,7 +17656,6 @@ exports[`single fields > string field > format email 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -17763,7 +17713,6 @@ exports[`single fields > string field > format uri 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -17821,7 +17770,6 @@ exports[`single fields > string field > regular 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -17891,7 +17839,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
+                    aria-describedby="root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -17983,7 +17931,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input ant-input-disabled css-dev-only-do-not-override-oc1rc0"
                     disabled=""
                     id="root"
@@ -18042,7 +17989,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -18131,7 +18077,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -18189,7 +18134,6 @@ exports[`single fields > textarea field 1`] = `
                   style="width: 100%;"
                 >
                   <textarea
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -18309,7 +18253,6 @@ exports[`single fields > title field 1`] = `
                                     style="width: 100%;"
                                   >
                                     <input
-                                      aria-describedby="root_title__error root_title__description root_title__help"
                                       class="ant-input css-dev-only-do-not-override-oc1rc0"
                                       id="root_title"
                                       name="root_title"
@@ -18427,7 +18370,6 @@ exports[`single fields > up/down field 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     autocomplete="off"
                     class="ant-input-number-input"
                     id="root"
@@ -18545,7 +18487,6 @@ exports[`single fields > using custom tagName 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"
                     name="root"
@@ -18603,7 +18544,6 @@ exports[`string field with autocapitalize 1`] = `
                   style="width: 100%;"
                 >
                   <input
-                    aria-describedby="root__error root__description root__help"
                     autocapitalize="words"
                     class="ant-input css-dev-only-do-not-override-oc1rc0"
                     id="root"

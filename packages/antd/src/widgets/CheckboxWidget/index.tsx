@@ -1,6 +1,6 @@
 import type { FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { getControlDescribedBy, schemaRequiresTrueValue, widgetDrawsLabel } from '@rjsf/utils';
+import { getControlAttributes, schemaRequiresTrueValue, widgetDrawsLabel } from '@rjsf/utils';
 import type { CheckboxProps } from 'antd';
 import { Checkbox, theme } from 'antd';
 
@@ -58,7 +58,7 @@ export default function CheckboxWidget<
       required={trueValueRequired}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
-      aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     >
       {!hideLabel && label ? (
         <>

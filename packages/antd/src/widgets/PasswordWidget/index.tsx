@@ -1,6 +1,6 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, GenericObjectType } from '@rjsf/utils';
-import { ariaDescribedByIds } from '@rjsf/utils';
+import { getControlAttributes } from '@rjsf/utils';
 import { Input } from 'antd';
 
 /** The `PasswordWidget` component uses the `BaseInputTemplate` changing the type to `password`.
@@ -12,7 +12,8 @@ export default function PasswordWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { disabled, registry, id, onBlur, onChange, onFocus, options, placeholder, readonly, value } = props;
+  const { disabled, registry, id, onBlur, onChange, onFocus, options, placeholder, readonly, value, presentation } =
+    props;
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
@@ -35,7 +36,7 @@ export default function PasswordWidget<
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       value={value || ''}
-      aria-describedby={ariaDescribedByIds(id)}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 }
