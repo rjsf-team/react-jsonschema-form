@@ -15,13 +15,13 @@ import type {
   UiSchema,
 } from '@rjsf/utils';
 import {
-  ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
   descriptionId,
   fieldPathToId,
   getByPath,
   getDeprecatedHandling,
   getFieldClassNames,
+  getFieldLabel,
   getFieldTypeForWidget,
   getSchemaOwnTypes,
   getSchemaType,
@@ -46,7 +46,6 @@ import {
   isObject,
   toConstant,
   toFieldPath,
-  TranslatableString,
   UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
@@ -57,7 +56,9 @@ import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
+import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {
@@ -176,6 +177,8 @@ interface UiFieldResolution<
 > {
   /** The field `getFieldComponent()` renders in place of the one for the schema's type, if a `ui:field` names one */
   namedField?: Field<T, S, F>;
+  /** The registry key the `ui:field` named it by, when it named it by one rather than giving the component */
+  namedFieldKey?: string;
   /** What the field's own `ui:field` was, when it was given but names no field, for the warning that it was ignored */
   ignoredOwnField?: string;
   /** What `ui:globalOptions.field` was, when it applied to the field but names no field, for the same warning */
@@ -210,7 +213,7 @@ function resolveUiField<
   const ownField = ownUiOptions.field;
   const ownResolved = lookUpUiField<T, S, F>(ownField, fields);
   if (isComponentType<FieldProps<T, S, F>>(ownResolved)) {
-    return { namedField: ownResolved };
+    return { namedField: ownResolved, namedFieldKey: typeof ownField === 'string' ? ownField : undefined };
   }
   if (!ownField && Object.hasOwn(ownUiOptions, 'field')) {
     return {};
@@ -220,7 +223,11 @@ function resolveUiField<
     : undefined;
   const globalResolved = lookUpUiField<T, S, F>(globalField, fields);
   if (isComponentType<FieldProps<T, S, F>>(globalResolved)) {
-    return { namedField: globalResolved, ignoredOwnField };
+    return {
+      namedField: globalResolved,
+      namedFieldKey: typeof globalField === 'string' ? globalField : undefined,
+      ignoredOwnField,
+    };
   }
   return {
     ignoredOwnField,
@@ -240,6 +247,7 @@ const RenderNothing = () => null;
  * @param uiOptions - The UI Options that may affect the component decision
  * @param ownWidget - The field's own `ui:widget`, without `ui:globalOptions`, which picks a type list's field
  * @param namedField - The field the `ui:field` resolved to through `resolveUiField()`, if it resolved to one
+ * @param namedFieldKey - The registry key the `ui:field` named that field by, if it named it by one
  * @param registry - The registry from which fields and templates are obtained
  * @param xxxOfKey - The keyword the `schema`'s options are read from, if it has any
  * @param isSelectSchema - Whether the `schema` is an `enum` or a `oneOf`/`anyOf` that represents a select
@@ -249,7 +257,8 @@ const RenderNothing = () => null;
  *            option selector of. Both flags are decided here so that this function and `SchemaFieldRender` read the
  *            same answers, and `SchemaFieldRender` reads them together: when the fallback UI has the schema it renders
  *            those options itself, within the value field for the type it has pinned, so the selector it would render
- *            is left unrendered even though the schema calls for one
+ *            is left unrendered even though the schema calls for one. Also the component that renders the field, even
+ *            when it is withheld for the options, and the registry key that named it, which the field is planned by
  */
 function getFieldComponent<
   T = unknown,
@@ -260,6 +269,7 @@ function getFieldComponent<
   uiOptions: UIOptionsType<T, S, F>,
   ownWidget: UIOptionsType<T, S, F>['widget'],
   namedField: Field<T, S, F> | undefined,
+  namedFieldKey: string | undefined,
   registry: Registry<T, S, F>,
   xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY | undefined,
   isSelectSchema: boolean,
@@ -269,6 +279,8 @@ function getFieldComponent<
   rendersOptionsItself: boolean;
   rendersOptionSelector: boolean;
   optionsReplaceNamedField: boolean;
+  withheldForOptions: boolean;
+  fieldKey: string | undefined;
 } {
   const { widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
@@ -330,8 +342,12 @@ function getFieldComponent<
    * `ui:field` resolved to, or the field the type and the `$id` settled on a name for, or the fallback UI for a name
    * no field is registered under — an unrecognized `type`, or no type at all
    */
-  const FieldComponent =
-    namedField ?? (Object.hasOwn(fields, componentName) ? fields[componentName] : fields.FallbackField);
+  const isRegisteredName = Object.hasOwn(fields, componentName);
+  const FieldComponent = namedField ?? (isRegisteredName ? fields[componentName] : fields.FallbackField);
+  let fieldKey = namedFieldKey;
+  if (!namedField) {
+    fieldKey = isRegisteredName ? componentName : 'FallbackField';
+  }
   /** Whether the component is this very field, whatever named it — the type having no field of its own, the opt-in
    * diverting a union, a `ui:field` or a `$id`. What it renders depends on the opt-in; that it is not a field written
    * for the schema does not
@@ -397,12 +413,15 @@ function getFieldComponent<
    */
   const optionsReplaceNamedField = yieldsToOptions && namedField === fields.FallbackField;
 
+  const isWithheld = yieldsToOptions && FieldComponent !== fields.ObjectField;
   return {
-    FieldComponent: yieldsToOptions && FieldComponent !== fields.ObjectField ? RenderNothing : FieldComponent,
+    FieldComponent: isWithheld ? RenderNothing : FieldComponent,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
     optionsReplaceNamedField,
+    withheldForOptions: isWithheld,
+    fieldKey,
   };
 }
 
@@ -531,6 +550,7 @@ function SchemaFieldRender<
       uiOptions,
       ownUiOptions.widget,
       uiField.namedField,
+      uiField.namedFieldKey,
       registry,
       xxxOfKey,
       isSelectSchema,
@@ -555,6 +575,64 @@ function SchemaFieldRender<
     [retrievesOptions, xxxOfKey, schema, schemaUtils, formData],
   );
 
+  const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
+  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
+  // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
+  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
+  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
+  const uiRequired = uiBooleanOption(fieldUiRequired);
+  const effectiveRequired = uiRequired ?? required;
+  // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
+  const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
+  const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
+  const label = getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, {
+    name,
+    title: props.title,
+    unresolvedSchema: props.schema,
+    wasPropertyKeyModified,
+  });
+  // When the option selector is an optional data control AND it does not have form data, the control is not on screen
+  // yet. This is decided here rather than with the `XxxOfField` below because the fallback UI renders that same selector
+  // for the type it has pinned, and the value field it renders it within is already labelled `false`, which leaves this
+  // the only field either label can come from
+  const isOptedOut =
+    fieldToRender !== undefined &&
+    fieldToRender.rendersOptionSelector &&
+    shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema, fieldPath) &&
+    !isFormDataAvailable<T>(formData);
+  const fieldDescription = uiOptions.description || props.schema.description || schema.description || '';
+  const inheritedPresentation = useInheritedPresentation(fieldId);
+  // `ui:label` is resolved as `hideError` is: the field's own, then the one the field above rendering this id resolved
+  // to, then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
+  const showLabel =
+    uiBooleanOption(ownUiOptions.label) ??
+    inheritedPresentation?.showLabel ??
+    uiBooleanOption(globalUiOptions?.label) ??
+    true;
+  const presentation = useSchemaFieldPresentation<T, S, F>({
+    id: fieldId,
+    registry,
+    schema,
+    uiSchema: fieldUiSchema,
+    field: fieldToRender?.withheldForOptions ? undefined : fieldToRender?.FieldComponent,
+    fieldKey: fieldToRender?.fieldKey,
+    xxxOfKey: fieldToRender?.withheldForOptions ? xxxOfKey : undefined,
+    label,
+    showLabel,
+    description: fieldDescription,
+    help: uiOptions.help,
+    errors: errorSchema?.__errors,
+    hideError,
+    hidden: hidden || isOptedOut,
+    required: effectiveRequired,
+    inherited: inheritedPresentation?.plan,
+  });
+  // What the field below rendering this same id inherits: the option field, or the fallback UI's value field
+  const presentationBelow = useMemo(
+    () => presentation && { id: fieldId, plan: presentation, showLabel },
+    [fieldId, presentation, showLabel],
+  );
+
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
@@ -566,23 +644,15 @@ function SchemaFieldRender<
     );
   }
   const { ignoredOwnField, ignoredGlobalField } = uiField;
-  const { FieldComponent, rendersOptionSelector, optionsReplaceNamedField } = fieldToRender;
+  const { FieldComponent, optionsReplaceNamedField } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
   );
 
-  const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
-
   const disabled = Boolean(uiOptions.disabled ?? props.disabled) || deprecatedHandling === 'disable';
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
-  // ui:required is deliberately resolved from this field's own uiSchema only (no globalUiOptions fallback): unlike
-  // most ui:options, it has to be seen by getUiRequiredErrorSchema() too, which resolves a field's own uiSchema
-  // uiSchema, so a form-wide default here would make the required indicator and schema validation disagree
-  const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
-  const uiRequired = uiBooleanOption(fieldUiRequired);
-  const effectiveRequired = uiRequired ?? required;
   if (
     uiRequired === false &&
     required &&
@@ -601,8 +671,6 @@ function SchemaFieldRender<
         'will still fail if it is left empty.',
     );
   }
-  // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
   const autofocus = Boolean(uiOptions.autofocus ?? props.autofocus);
   if (Object.keys(schema).length === 0) {
     return null;
@@ -641,19 +709,9 @@ function SchemaFieldRender<
   // When rendering the `XxxOfField` the main component needs a different id, since the `XxxOfField` renders the
   // selected option for the same data address. The `fieldPath` stays the truthful data address either way.
   let fieldComponentId = fieldId;
-  // When the option selector is an optional data control AND it does not have form data, hide the label: it names a
-  // control that is not on screen yet. This is decided here rather than with the `XxxOfField` below because the
-  // fallback UI renders that same selector for the type it has pinned, and the value field it renders it within is
-  // already labelled `false`, which leaves this the only field either label can come from
-  if (rendersOptionSelector) {
-    const isOptionalRender = shouldRenderOptionalField<T, S, F>(
-      registry,
-      schema,
-      effectiveRequired,
-      uiSchema,
-      fieldPath,
-    );
-    displayLabel = displayLabel && (!isOptionalRender || isFormDataAvailable<T>(formData));
+  // An opted-out option selector's label names a control that is not on screen yet, see `isOptedOut`
+  if (isOptedOut) {
+    displayLabel = false;
   }
   if (xxxOfOptions) {
     XxxOfField = xxxOfKey === ANY_OF_KEY ? _AnyOfField : _OneOfField;
@@ -680,27 +738,17 @@ function SchemaFieldRender<
       // The `XxxOfField` renders the field's own errors whenever it renders, which is also why `FieldErrorTemplate`
       // is skipped then
       rawErrors={XxxOfField ? undefined : __errors}
+      presentation={presentation}
     />
   );
-  // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
+  // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it.
+  // A container's properties and items render under ids of their own, so they inherit nothing from it, and are handed
+  // no plan whose every change would re-render each of them past its `memo`
   const field = (
-    <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+    <PresentationContext value={isContainer ? undefined : presentationBelow}>
+      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+    </PresentationContext>
   );
-
-  // If this schema has a title defined, but the user has set a new key/label, retain their input.
-  let label;
-  if (wasPropertyKeyModified) {
-    label = name;
-  } else {
-    label =
-      ADDITIONAL_PROPERTY_FLAG in schema
-        ? name
-        : uiOptions.title || props.schema.title || schema.title || props.title || name;
-  }
-
-  if (deprecatedHandling === 'label') {
-    label = registry.translateString(TranslatableString.DeprecatedLabel, [label]);
-  }
 
   // The field of the selected option renders a description in that case, its own or, where it declares none, this
   // field's, so the template, which may render the description of a field it leaves unlabelled, is handed none. Decided
@@ -714,9 +762,8 @@ function SchemaFieldRender<
       XxxOfUiSchema === uiSchema ? isLabelled : schemaUtils.getDisplayLabel(schema, XxxOfUiSchema, globalUiOptions),
     )
       ? ''
-      : uiOptions.description || props.schema.description || schema.description || '';
+      : fieldDescription;
   const { help } = uiOptions;
-  const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
 
@@ -774,6 +821,7 @@ function SchemaFieldRender<
     readonly,
     hideError,
     displayLabel,
+    presentation,
     classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames),
     style: uiOptions.style,
     formData,
@@ -790,26 +838,29 @@ function SchemaFieldRender<
         <>
           {field}
           {XxxOfField && (
-            <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-              <XxxOfField
-                name={name}
-                disabled={disabled}
-                readonly={readonly}
-                hideError={hideError}
-                errorSchema={errorSchema}
-                formData={formData}
-                fieldPath={fieldPath}
-                id={fieldId}
-                onBlur={props.onBlur}
-                onChange={props.onChange}
-                onFocus={props.onFocus}
-                options={xxxOfOptions}
-                registry={registry}
-                required={effectiveRequired}
-                schema={schema}
-                uiSchema={XxxOfUiSchema}
-              />
-            </RawFormDataContext>
+            <PresentationContext value={presentationBelow}>
+              <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
+                <XxxOfField
+                  name={name}
+                  disabled={disabled}
+                  readonly={readonly}
+                  hideError={hideError}
+                  errorSchema={errorSchema}
+                  formData={formData}
+                  fieldPath={fieldPath}
+                  id={fieldId}
+                  onBlur={props.onBlur}
+                  onChange={props.onChange}
+                  onFocus={props.onFocus}
+                  options={xxxOfOptions}
+                  registry={registry}
+                  required={effectiveRequired}
+                  schema={schema}
+                  uiSchema={XxxOfUiSchema}
+                  presentation={presentation}
+                />
+              </RawFormDataContext>
+            </PresentationContext>
           )}
         </>
       </FieldTemplate>

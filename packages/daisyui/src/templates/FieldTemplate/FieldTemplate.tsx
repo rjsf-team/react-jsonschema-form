@@ -104,6 +104,7 @@ export default function FieldTemplate<
     onChange,
     fieldPath,
     style,
+    presentation,
     ...divProps
   } = props;
 

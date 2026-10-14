@@ -23,8 +23,10 @@ import { generateTemplates } from './components/templates/index.ts';
 import { generateWidgets } from './components/widgets/index.ts';
 
 /** Which parts of a field `@rjsf/core`'s fields and widgets draw themselves. The fields that render one widget leave
- * every part to it, and a widget draws only what its entry says, so the `FieldTemplate` draws the rest. Built fresh on
- * every call, as the rest of the theme is, since a caller may mutate it
+ * every part to it, and a widget draws only what its entry says, so the `FieldTemplate` draws the rest. The template
+ * labels a field whose value a field below renders under the same id, the selected option or the fallback UI's value,
+ * so that field's control is named once (#5358); an object draws its own heading. Built fresh on every call, as the
+ * rest of the theme is, since a caller may mutate it
  */
 function generatePresentation(): ThemePresentation {
   return {
@@ -34,9 +36,14 @@ function generatePresentation(): ThemePresentation {
       RadioWidget: { labelledBy: 'aria-labelledby' },
     },
     fields: {
+      AnyOfField: { label: 'template', description: 'template' },
       ArrayField: { ...WIDGET_FIELD_PRESENTATION },
       BooleanField: { ...WIDGET_FIELD_PRESENTATION },
+      FallbackField: { label: 'template', description: 'template' },
+      NullField: { label: 'template', description: 'template' },
       NumberField: { ...WIDGET_FIELD_PRESENTATION },
+      ObjectField: { label: 'self', description: 'self' },
+      OneOfField: { label: 'template', description: 'template' },
       StringField: { ...WIDGET_FIELD_PRESENTATION },
     },
   };
