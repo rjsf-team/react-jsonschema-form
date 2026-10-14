@@ -447,7 +447,7 @@ exports[`array fields > checkboxes 1`] = `
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"
@@ -1734,7 +1734,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"

@@ -23,14 +23,13 @@ export default function RangeWidget<
   label,
   hideLabel,
   id,
-  uiSchema,
 }: WidgetProps<T, S, F>) {
   const handleChange = ({ value: newValue }: SliderValueChangeDetails) =>
     onChange(newValue === undefined ? options.emptyValue : newValue[0]);
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target?.value);
   const handleFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target?.value);
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(options);
 
   return (
     <Field mb={1} label={labelValue(label, hideLabel || !label)} {...chakraProps}>

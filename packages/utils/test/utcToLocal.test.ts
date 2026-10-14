@@ -49,6 +49,26 @@ describe('utcToLocal()', () => {
   ])('returns empty string when given %s, which means no value', (_, value) => {
     expect(utcToLocal(value)).toEqual('');
   });
+  it('returns empty string when given a Boolean object from another realm, which fails instanceof Boolean', () => {
+    const foreignBoolean: unknown = vm.runInNewContext('new Boolean(false)');
+    expect(foreignBoolean).not.toBeInstanceOf(Boolean);
+    expect(utcToLocal(foreignBoolean)).toEqual('');
+  });
+  it('converts an object that only names itself a Boolean through Symbol.toStringTag', () => {
+    const tagged = { [Symbol.toStringTag]: 'Boolean', valueOf: () => EPOCH };
+    expect(utcToLocal(tagged)).toEqual(utcToLocal(EPOCH));
+  });
+  it('returns empty string for an object whose property reads throw', () => {
+    const strict = new Proxy(
+      {},
+      {
+        get() {
+          throw new TypeError('no such property');
+        },
+      },
+    );
+    expect(utcToLocal(strict)).toEqual('');
+  });
   it.each([
     ['the bigint 0n', 0n],
     ['a symbol', Symbol('epoch')],

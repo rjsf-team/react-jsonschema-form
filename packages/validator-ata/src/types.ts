@@ -1,4 +1,4 @@
-import type { CustomMergeAllOf, RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
+import type { Bivariant, CustomMergeAllOf, RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '@rjsf/utils';
 import type { ValidationError, Validator, ValidatorOptions } from 'ata-validator';
 
 /** Custom format checker. Receives a string and returns true when the value
@@ -78,13 +78,11 @@ export interface PrecompiledValidatorOptionsType<S extends StrictRJSFSchema = RJ
 }
 
 /** The simplified `ValidateFunction` shape produced by ata's compiled
- * standalone modules. Kept for symmetry with the AJV validator package and
- * for the upcoming precompiled-validator support; not consumed by the
- * runtime path in this initial release.
+ * standalone modules, which `ATAPrecompiledValidator` calls. Its call is checked bivariantly, as the AJV package's is,
+ * so a hand-written validator may declare the `data` it was written for rather than having to accept `unknown`.
  */
-export interface CompiledValidateFunction {
+export interface CompiledValidateFunction extends Bivariant<[data: unknown], boolean> {
   errors?: null | ValidationError[];
-  (data: unknown): boolean;
 }
 
 export type ValidatorFunctions = Record<string, CompiledValidateFunction>;

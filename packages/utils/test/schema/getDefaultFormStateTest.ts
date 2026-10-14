@@ -6497,6 +6497,121 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           testValidator?.reset();
         }
       });
+      it("computes an array's defaults from its selected option as it is rendered, meeting the parent's bounds and items", () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: { type: 'object', properties: { a: { type: 'string', default: 'dflt' } } },
+          anyOf: [{ items: true, minItems: 1 }, { maxItems: 3 }],
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual([{ a: 'dflt' }, { a: 'dflt' }]);
+      });
+      it("computes an array's defaults from a selected option written as a $ref as from the option it names", () => {
+        const schema: RJSFSchema = {
+          definitions: { loose: { items: true, minItems: 1 } },
+          type: 'array',
+          minItems: 2,
+          items: { type: 'object', properties: { a: { type: 'string', default: 'dflt' } } },
+          anyOf: [{ $ref: '#/definitions/loose' }, { maxItems: 3 }],
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual([
+          { a: 'dflt' },
+          { a: 'dflt' },
+        ]);
+      });
+      describe('a selected option written as a $ref naming an allOf', () => {
+        const pet = (field: RJSFSchema): RJSFSchema => ({
+          $defs: {
+            Base: { type: 'object', properties: { id: { type: 'string', default: 'ID' } } },
+            Cat: {
+              allOf: [
+                { $ref: '#/$defs/Base' },
+                { type: 'object', properties: { meow: { type: 'boolean', default: true } } },
+              ],
+            },
+          },
+          type: 'object',
+          properties: { pet: { ...field, anyOf: [{ $ref: '#/$defs/Cat' }] } },
+        });
+        it.each<[string, RJSFSchema]>([
+          ['that inherits nothing', {}],
+          ['that inherits from its field', { minProperties: 1 }],
+        ])('leaves the allOf defaults to the allOf behavior for an option %s', (_, field) => {
+          const schema = pet(field);
+          expect(
+            getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { pet: {} } }),
+          ).toEqual({ pet: {} });
+          expect(
+            getDefaultFormState(
+              { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
+              { schema, rootSchema: schema, formData: { pet: {} } },
+            ),
+          ).toEqual({ pet: { id: 'ID', meow: true } });
+        });
+      });
+      it("hands a selected option written as a $ref its field's default, as a $ref property is handed it", () => {
+        const schema: RJSFSchema = {
+          $defs: {
+            O: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } },
+            S: { type: 'string', default: 'child' },
+          },
+          type: 'object',
+          properties: {
+            o: { default: { a: 1 }, anyOf: [{ $ref: '#/$defs/O' }] },
+            s: { default: 'parent', anyOf: [{ $ref: '#/$defs/S' }] },
+          },
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { o: { b: 2 } } }),
+        ).toEqual({ o: { b: 2 }, s: 'child' });
+        expect(
+          getDefaultFormState(
+            { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
+            { schema, rootSchema: schema, formData: { o: { b: 2 } } },
+          ),
+        ).toEqual({ o: { b: 2 }, s: 'parent' });
+      });
+      it('stops following a selected option written as a $ref once it leads back to a $ref already followed', () => {
+        const schema: RJSFSchema = {
+          definitions: {
+            a: { type: 'string', anyOf: [{ $ref: '#/definitions/b' }, { minLength: 1 }] },
+            b: { type: 'string', default: 'b', anyOf: [{ $ref: '#/definitions/a' }, { maxLength: 3 }] },
+          },
+          $ref: '#/definitions/a',
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual('b');
+      });
+      it("computes a tuple's defaults from its selected option as it is rendered", () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [{ type: 'string', default: 'a' }],
+          additionalItems: { type: 'string', default: 'z' },
+          anyOf: [{ minItems: 3 }, { maxItems: 5 }],
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual(['a', 'z', 'z']);
+      });
+      it("seeds a field's selected option with the field's default, whether the option is a schema or true", () => {
+        const schema: RJSFSchema = { type: 'string', default: 'x', anyOf: [true, { minLength: 1 }] };
+        expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual('x');
+        expect(getDefaultFormState({ validator: testValidator }, { schema: { ...schema, anyOf: [{}] } })).toEqual('x');
+      });
+      it("adds both options' defaults to an object whose type comes through its allOf, as to one declaring it", () => {
+        const field: RJSFSchema = {
+          allOf: [{ $ref: '#/definitions/Base' }],
+          anyOf: [{ properties: { a: { type: 'string', default: 'A' } } }],
+          oneOf: [{ properties: { b: { type: 'string', default: 'B' } } }],
+        };
+        const withField = (v: RJSFSchema): RJSFSchema => ({
+          definitions: { Base: { type: 'object', properties: { id: { type: 'string' } } } },
+          type: 'object',
+          properties: { v },
+        });
+        const expected = { v: { a: 'A', b: 'B' } };
+        expect(getDefaultFormState({ validator: testValidator }, { schema: withField(field) })).toEqual(expected);
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema: withField({ ...field, type: 'object' }) }),
+        ).toEqual(expected);
+      });
       it('should not populate defaults for empty anyOf', () => {
         const schema: RJSFSchema = {
           type: 'object',

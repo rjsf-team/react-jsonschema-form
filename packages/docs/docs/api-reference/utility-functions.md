@@ -922,7 +922,9 @@ A finite epoch number or a valid `Date` is an exact instant. It is converted to 
 Returns the suggestions a text input offers for `schema`: its `examples` and `default`, as the strings a user could pick from a `<datalist>`.
 Examples and a default that share a `String()` are one suggestion, e.g. `["5432", 5432]` with a default of `5432` is the single suggestion `'5432'`.
 A schema without `examples` has no suggestions, and neither has one whose examples and default are all `null`, `undefined`, objects or arrays.
-A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop so they are computed once.
+A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop, so both read the same list.
+The same schema object gets the same array back each time, which is frozen since every caller shares it.
+The suggestions are read once per schema object, so `examples` or a `default` edited in place afterwards is not seen: pass a new schema object to change them.
 
 #### Parameters
 
@@ -930,7 +932,7 @@ A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `a
 
 #### Returns
 
-- string[]: The distinct suggestions, in the order of `examples` followed by the `default`
+- readonly string[]: The distinct suggestions, in the order of `examples` followed by the `default`
 
 ### getFieldClassNames&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1131,6 +1133,33 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 #### Returns
 
 - S: The sub-schema for `property`, or an empty schema when it is not declared
+
+### getRenderedOptionSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
+Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
+It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
+The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
+A bound both declare (`minItems`, `maxItems`, `minLength`, `maxLength`, `minProperties`, `maxProperties`, `minimum`, `maximum`, `exclusiveMinimum` or `exclusiveMaximum`) keeps the stricter of the two, since a value has to meet both.
+It does so within each subschema keyword both declare, such as `items` or a property, and position by position within a tuple, but not within a keyword holding a value rather than a schema, such as a `const`, or one JSON Schema does not define.
+`uniqueItems` holds when either asks for it, and two `required` lists ask for every name either does.
+An option's `true` subschema, such as `items: true`, adds nothing to meet, so it leaves the parent's subschema in place, a tuple included, rather than replacing it.
+A parent's `false` subschema, which nothing meets, likewise stays in place of the option's.
+An option's `items` schema beside the parent's tuple applies to each of its positions, and to the items past it where the tuple declares `additionalItems`, as the parent's beside the option's tuple does; a tuple declaring none stays at its length, as `ArrayField` offers it no Add.
+A `not`, or a conditional (`if`, `then` and `else` together), that the option declares replaces the parent's as a whole: `not: true` rejects every value, and one schema's `if` with the other's `then` is a condition neither declared.
+Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf`, an `enum` or a `const` or `default` object, is the option's. An `enum` is the option's list as it stands, since its `ui:enumNames` are read by position against it, so a value the parent doesn't list stays, for validation to reject.
+A pair of subschemas either of which holds a `$ref` is returned as an `allOf` of the two, since the `$ref` is resolved only where the subschema is rendered, against the root schema, and the keywords met in beside it would be layered over the ones it names; the field's `allOf` merge meets them once it is resolved.
+An option naming no `type` takes the parent's, every type of a type list included, and an object parent that names none, such as one with only `properties`, passes on `object`.
+
+#### Parameters
+
+- parent: S - The schema holding the `anyOf`/`oneOf`, with its `$ref`s and `allOf` resolved
+- option: S - The option, with its own `$ref` resolved
+
+#### Returns
+
+- S: The option as it is rendered, or `option` itself when the parent has nothing to pass on
 
 ### getSchemaOwnTypes()
 
@@ -1754,11 +1783,11 @@ Converts a local Date string into a UTC date string
 
 #### Parameters
 
-- dateString: string - The string representation of a date as accepted by the `Date()` constructor
+- dateString: unknown - The string representation of a date as accepted by the `Date()` constructor, or a `datetime-local` value whose year has five or six digits. The input writes such a year as plain digits, `10000-07-01T00:01`, which `Date` reads only in the signed six-digit form, so it is expanded to `+010000-07-01T00:01` before parsing; any other text goes to `Date` as written
 
 #### Returns
 
-- string | undefined: A UTC date string if `dateString` is truthy, otherwise undefined
+- string | null | undefined: A UTC date string if `dateString` is truthy and names a valid date; `undefined` for an empty value, and `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date. Years 1-9999 are the supported range, as in `getDateTimeLocalValue()`; a five or six digit year is read all the same, up to the last instant `Date` holds, 275760-09-13T00:00Z, so the string it gives keeps that year and fails `date-time` validation instead of `null` wiping the value
 
 ### logOnce()
 
@@ -2028,6 +2057,20 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 #### Returns
 
 - RangeSpecType: A range specification from the schema
+
+### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+Such a field shows its own properties and other keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option as [getRenderedOptionSchema()](#getrenderedoptionschema) renders it.
+`getRenderedOptionSchema()`, the defaults `getDefaultFormState()` computes, the `getUiRequiredErrorSchema()` walk and `MultiSchemaField` all read it to choose between the two, so none of them renders one option and seeds or walks another.
+
+#### Parameters
+
+- schema: S - The schema holding the options
+
+#### Returns
+
+- boolean: True when the field renders a field of its own beside the option
 
 ### replaceEqualDeep&lt;T>()
 

@@ -14,7 +14,7 @@ And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize th
       "chakra": {
         "p": "1rem",
         "color": "blue.200",
-        "sx": {
+        "css": {
           "margin": "0 auto"
         }
       }
@@ -23,9 +23,10 @@ And, `uiSchema` allows for the use of a `"chakra"` `"ui:option"` to customize th
 }
 ```
 
-It accepts the theme accessible [style props](https://chakra-ui.com/docs/features/style-props) provided by [Chakra](https://chakra-ui.com/docs/getting-started) and [Emotion](https://emotion.sh/docs/introduction).
+It accepts Chakra's [style props](https://chakra-ui.com/docs/styling/overview#style-props), and anything else in it is ignored. Only the style props of Chakra's default system are recognized: a utility or condition that your own `createSystem()` adds is ignored too.
+Like any other option, it can also be written as the `"ui:chakra"` shorthand, or set for every field of the form under the root's `"ui:globalOptions"`.
 
 ### Limitations
 
 - The `chakra` option is only available for the Chakra-UI theme.
-- The props are given to the parent component in the individual widget. To pass styles to the inner components, use the [`sx` prop](https://chakra-ui.com/docs/features/the-sx-prop).
+- The props are given to the parent component in the individual widget. To style the inner components, use a nested selector in the `css` prop, such as `"css": { "& input": { "bg": "gray.100" } }`, or a [slot recipe](https://chakra-ui.com/docs/theming/slot-recipes) in the theme.

@@ -218,7 +218,7 @@ export default class CFWorkerValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema) as S;
+      const schemaWithIdRefPrefix = withIdRefPrefix<S>(schema);
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;

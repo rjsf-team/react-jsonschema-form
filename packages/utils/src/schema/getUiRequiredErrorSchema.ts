@@ -11,6 +11,7 @@ import { fieldPathFromList } from '../fieldPath.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getItemUiSchemaForItem from '../getItemUiSchemaForItem.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
+import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getUiOptions from '../getUiOptions.ts';
@@ -42,9 +43,15 @@ import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import { AdditionalItemsHandling, getInnerSchemaForArrayItem } from './getDefaultFormState.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
-/** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node. */
+/** The schema and uiSchema of the `anyOf`/`oneOf` branch that applies to a node, and, for an object node, the option
+ * itself. An object node's branch merges the whole node into the option, since the walk visits the properties the
+ * node's own `ObjectField` renders as well as the option's; whether the option's own field is an Optional Data Control
+ * is read from the option as `MultiSchemaField` renders it, which carries only what that field is rendered with. Any
+ * other node renders nothing beside its option, so its branch is that rendered option and is gated on as it is.
+ */
 interface SelectedBranch<T, S extends StrictRJSFSchema, F extends FormContextType> {
   schema: S;
+  option?: S;
   uiSchema: UiSchema<T, S, F>;
 }
 
@@ -63,8 +70,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   uiSchema: UiSchema<T, S, F>,
   formData: unknown,
 ): SelectedBranch<T, S, F> {
-  // Both keywords are dropped, since `MultiSchemaField` renders the option without the one it doesn't read either, so a
-  // leftover `oneOf` beside the `anyOf` read must not decide the option's Optional Data Controls type
+  // Both keywords are dropped, since `MultiSchemaField` renders the option without the one it doesn't read either
   const { [ANY_OF_KEY]: _anyOf, [ONE_OF_KEY]: _oneOf, ...remaining } = schema;
   const index = getClosestMatchingOption<T, S, F>(
     context,
@@ -74,10 +80,13 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
     0,
     getDiscriminatorFieldFromSchema<S>(schema),
   );
-  return {
-    schema: mergeSchemas(remaining, options[index]) as S,
-    uiSchema: getOptionUiSchema<T, S, F>(uiSchema, key, index) ?? {},
-  };
+  // A boolean option is rendered as an empty schema, as `SchemaField` retrieves it
+  const option = isObject(options[index]) ? options[index] : ({} as S);
+  const optionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, index) ?? {};
+  if (!rendersOwnFieldBesideOption<S>(schema)) {
+    return { schema: getRenderedOptionSchema<S>(schema, option), uiSchema: optionUiSchema };
+  }
+  return { schema: mergeSchemas(remaining, option) as S, option, uiSchema: optionUiSchema };
 }
 
 /** Resolves the uiSchema for the array item at `idx`, matching `ArrayField`'s own resolution. A fixed (tuple) schema's
@@ -165,7 +174,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   // no control of its own: it renders the selected option as a field of its own, with the option's uiSchema, so that
   // field is gated.
   const xxxOf = getXxxOfOptions<S>(resolvedSchema);
-  const { schema: retrieved, uiSchema: branchUiSchema } = xxxOf
+  const {
+    schema: retrieved,
+    option,
+    uiSchema: branchUiSchema,
+  }: SelectedBranch<T, S, F> = xxxOf
     ? resolveSelectedBranch<T, S, F>(schemaContext, rootSchema, resolvedSchema, xxxOf, uiSchema, formData)
     : { schema: resolvedSchema, uiSchema };
   // The option's own `SchemaField` reads `ui:required` from the option's uiSchema, and a required option renders its
@@ -175,11 +188,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     path.length > 0 &&
     !isFormDataAvailable(formData) &&
     !branchRequired &&
-    isOptionalDataControlsType<T, S, F>(retrieved, branchUiSchema, globalUiOptions) &&
+    isOptionalDataControlsType<T, S, F>(
+      option ? () => getRenderedOptionSchema<S>(resolvedSchema, option) : retrieved,
+      branchUiSchema,
+      globalUiOptions,
+    ) &&
     // An object node also renders its own ObjectField beside the option (see `getFieldComponent()` in `SchemaField`),
     // showing the properties it shares with the option unless the node is a control that hides them as well
     (!xxxOf ||
-      getSchemaType<S>(resolvedSchema) !== 'object' ||
+      !rendersOwnFieldBesideOption<S>(resolvedSchema) ||
       (!effectiveRequired && isOptionalDataControlsType<T, S, F>(resolvedSchema, uiSchema, globalUiOptions)))
   ) {
     return;

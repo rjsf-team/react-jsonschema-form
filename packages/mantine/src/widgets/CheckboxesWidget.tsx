@@ -32,7 +32,7 @@ export default function CheckboxesWidget<
   const fieldDisabled = disabled || readonly;
 
   const handleChange = useCallback(
-    (nextValue: any) => {
+    (nextValue: string[]) => {
       if (!fieldDisabled && onChange) {
         onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
       }

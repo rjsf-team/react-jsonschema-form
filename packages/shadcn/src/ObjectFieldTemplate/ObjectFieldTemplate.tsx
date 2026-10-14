@@ -57,7 +57,7 @@ export default function ObjectFieldTemplate<
       )}
       <div className='flex flex-col gap-2'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-        {properties.map((element: any) => (
+        {properties.map((element) => (
           <div key={element.name} className={`${element.hidden ? 'hidden' : ''} flex`}>
             <div className='w-full'>{element.content}</div>
           </div>

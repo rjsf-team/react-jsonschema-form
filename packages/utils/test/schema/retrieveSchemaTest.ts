@@ -1650,6 +1650,20 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('allOf', () => {
+      it.each([true, false])(
+        'should keep a symbol an `allOf` branch defines with a getter (enumerable: %s)',
+        (enumerable) => {
+          const branch: RJSFSchema = { type: 'string' };
+          Object.defineProperty(branch, RJSF_REF_KEY, { get: () => '#/definitions/a', enumerable });
+          const schema: RJSFSchema = { allOf: [branch, { title: 'A' }] };
+
+          expect(retrieveSchema({ validator: testValidator }, schema, {}, 'x')).toEqual({
+            type: 'string',
+            title: 'A',
+            [RJSF_REF_KEY]: '#/definitions/a',
+          });
+        },
+      );
       it('should merge types', () => {
         const schema: RJSFSchema = {
           allOf: [{ type: ['string', 'number', 'null'] }, { type: 'string' }],

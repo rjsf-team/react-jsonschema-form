@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import type { RadioGroupOnChangeData } from '@fluentui/react-components';
+import type { RadioGroupProps } from '@fluentui/react-components';
 import { Label, Radio, RadioGroup } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
@@ -40,7 +40,7 @@ export default function RadioWidget<
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
 
-  const handleChange = (_: any, data: RadioGroupOnChangeData) =>
+  const handleChange: NonNullable<RadioGroupProps['onChange']> = (_, data) =>
     onChange(enumOptionValueDecoder<S>(data.value, enumOptions, optionValueFormat, emptyValue));
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
