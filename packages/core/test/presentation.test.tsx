@@ -1,19 +1,22 @@
 import type {
   ArrayFieldTemplateProps,
   FieldPresentation,
+  FieldProps,
   FieldTemplateProps,
+  ObjectFieldTemplateProps,
   RJSFSchema,
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { fieldLabelId } from '@rjsf/utils';
+import { fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 
-import { generateTemplates, generateWidgets } from '../src/index.ts';
+import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
 
 const { FieldTemplate: CoreFieldTemplate } = generateTemplates();
 const { TextWidget: CoreTextWidget, SelectWidget: CoreSelectWidget } = generateWidgets();
-const { ArrayFieldTemplate: CoreArrayFieldTemplate } = generateTemplates();
+const { ArrayFieldTemplate: CoreArrayFieldTemplate, ObjectFieldTemplate: CoreObjectFieldTemplate } =
+  generateTemplates();
 
 /** Renders the form with a `FieldTemplate` and a `TextWidget` that record the plans they are handed, by id. Several
  * templates render the same id under a `oneOf`, so `outerTemplatePlans` keeps the plan of the outermost, which inherits
@@ -166,6 +169,159 @@ describe('the plan SchemaField builds', () => {
     expect(renders.get('root_foo')).toBe(before);
   });
 
+  describe("an anyOf field's option selector", () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        foo: {
+          title: 'Foo',
+          description: 'Describes foo',
+          anyOf: [
+            { title: 'Text', type: 'string' },
+            { title: 'Number', type: 'number' },
+          ],
+        },
+      },
+    };
+
+    it("is named by the label the field's template draws, and described by the parts that render", () => {
+      const { node } = createFormComponent({
+        schema,
+        extraErrors: { foo: { __errors: ['is wrong'] } },
+      });
+      const selector = node.querySelector('#root_foo__anyof_select')!;
+      expect(selector).toHaveAttribute('aria-labelledby', fieldLabelId('root_foo'));
+      expect(node.querySelector(`#${fieldLabelId('root_foo')}`)).toHaveTextContent('Foo');
+      expect(selector).toHaveAttribute('aria-invalid', 'true');
+      const describedBy = selector.getAttribute('aria-describedby')!.split(' ');
+      expect(describedBy).toEqual(['root_foo__error', 'root_foo__description']);
+      describedBy.forEach((describer) => expect(node.querySelector(`#${describer}`)).toBeInTheDocument());
+    });
+
+    it("gives an option's own help an id of its own beside the field's", () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { foo: { 'ui:help': 'Field help', anyOf: [{ 'ui:help': 'Option help' }] } },
+      });
+      expect(node.querySelectorAll(`#${helpId('root_foo')}`)).toHaveLength(1);
+      expect(node.querySelector(`#${helpId('root_foo')}`)).toHaveTextContent('Field help');
+      expect(node.querySelector(`#${optionHelpId('root_foo')}`)).toHaveTextContent('Option help');
+      expect(node.querySelector('#root_foo')!.getAttribute('aria-describedby')!.split(' ')).toEqual(
+        expect.arrayContaining([helpId('root_foo'), optionHelpId('root_foo')]),
+      );
+    });
+
+    it('draws none of the parts a custom field rendered beside the options draws itself', () => {
+      const selectorProps: WidgetProps[] = [];
+      function SelectWidget(props: WidgetProps) {
+        selectorProps.push(props);
+        return <CoreSelectWidget {...props} />;
+      }
+      const MyField = ({ presentation }: FieldProps) => <span id='custom'>{presentation?.label.text}</span>;
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { foo: { 'ui:field': MyField } },
+        widgets: { SelectWidget },
+      });
+      const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
+      expect(node.querySelector('#custom')).toHaveTextContent('Foo');
+      expect(selector.hideLabel).toBe(true);
+      expect(selector.presentation?.label.by).toBe('none');
+      expect(selector.presentation?.description.by).toBe('none');
+      expect(node.querySelector('#root_foo__anyof_select')).not.toHaveAttribute('aria-labelledby');
+    });
+
+    it("draws no label of its own when the field's ui:label hides it", () => {
+      const selectorProps: WidgetProps[] = [];
+      function SelectWidget(props: WidgetProps) {
+        selectorProps.push(props);
+        return <CoreSelectWidget {...props} />;
+      }
+      createFormComponent({
+        schema,
+        uiSchema: { foo: { 'ui:label': false } },
+        widgets: { SelectWidget },
+        presentation: { fields: { AnyOfField: { label: 'self' } } },
+      });
+      const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
+      expect(selector.hideLabel).toBe(true);
+    });
+  });
+
+  describe('a deprecated array whose option has its title', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        tags: {
+          type: 'array',
+          title: 'Tags',
+          deprecated: true,
+          items: { type: 'string' },
+          anyOf: [
+            { title: 'Tags', maxItems: 3 },
+            { title: 'Long', minItems: 1 },
+          ],
+        },
+      },
+    };
+
+    it('shows the Deprecated marker on its label, and no second heading for the option', () => {
+      const { node } = createFormComponent({ schema });
+
+      expect(node.querySelector(`#${fieldLabelId('root_tags')}`)).toHaveTextContent('Tags (deprecated)');
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+    });
+
+    it('keeps the heading of an option titled differently, without the marker', () => {
+      const tags = schema.properties!.tags as RJSFSchema;
+      const { node } = createFormComponent({
+        schema: { ...schema, properties: { tags: { ...tags, anyOf: [...tags.anyOf!].reverse() } } },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_tags')}`)).toHaveTextContent('Tags (deprecated)');
+      expect(node.querySelector('#root_tags__title')).toHaveTextContent(/^Long$/);
+    });
+  });
+
+  describe('a pure anyOf union object', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Pet',
+      anyOf: [
+        { title: 'Dog', properties: { bark: { type: 'string' } } },
+        { title: 'Cat', properties: { meow: { type: 'string' } } },
+      ],
+    };
+
+    it('draws no heading beside its options where the field draws its own label', () => {
+      const titles = new Map<string, string>();
+      function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
+        titles.set(props.id, props.title);
+        return <CoreObjectFieldTemplate {...props} />;
+      }
+      createFormComponent({
+        schema,
+        templates: { ObjectFieldTemplate },
+        presentation: { fields: { AnyOfField: { label: 'self' } } },
+      });
+      expect(titles.get('root_XxxOf')).toBe('');
+      expect(titles.get('root')).toBe('Dog');
+    });
+
+    it('keeps the heading of a custom field wrapping ObjectField', () => {
+      const { ObjectField } = generateTheme().fields;
+      const MyObject = (props: FieldProps) => <ObjectField {...props} />;
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { o: { type: 'object', title: 'Thing', properties: { a: { type: 'string' } } } },
+        },
+        uiSchema: { o: { 'ui:field': MyObject } },
+      });
+      expect(node.querySelector('#root_o__title')).toHaveTextContent('Thing');
+    });
+  });
+
   describe('an anyOf field whose own component draws its label and description', () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -198,7 +354,8 @@ describe('the plan SchemaField builds', () => {
       const selector = selectorProps.find((props) => props.id === 'root_opt__anyof_select')!;
       expect(selector.hideLabel).toBe(false);
       expect(selector.label).toBe('Parent title');
-      expect(selector.options.description).toBe('Parent description');
+      expect(selector.presentation?.description).toMatchObject({ by: 'self', text: 'Parent description' });
+      expect(selector.presentation?.control?.id).toBe('root_opt__anyof_select');
     });
   });
 

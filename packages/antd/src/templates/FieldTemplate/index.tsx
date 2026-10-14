@@ -25,6 +25,7 @@ export default function FieldTemplate<
     hidden,
     id,
     label,
+    presentation,
     rawErrors,
     hideError,
     rawDescription,
@@ -84,7 +85,10 @@ export default function FieldTemplate<
         help={explainNode}
         htmlFor={id}
         label={displayLabel && !isCheckbox && label}
-        labelCol={labelCol}
+        // antd's label takes no id, so its column carries the one a control labelled through `aria-labelledby` points
+        // at, which holds what the label's `for` names the field's own control by. The label stays a string, which antd
+        // strips a trailing colon from and gives a `title`
+        labelCol={presentation ? { ...labelCol, id: presentation.label.id } : labelCol}
         required={required}
         style={wrapperStyle}
         validateStatus={hasError ? 'error' : undefined}

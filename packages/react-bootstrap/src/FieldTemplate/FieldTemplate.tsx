@@ -64,7 +64,7 @@ export default function FieldTemplate<
     >
       <Form.Group>
         {displayLabel && !isCheckbox && (
-          <Form.Label htmlFor={id} className={hasError ? 'text-danger' : ''}>
+          <Form.Label htmlFor={id} id={presentation?.label.id} className={hasError ? 'text-danger' : ''}>
             {label}
             {required ? '*' : null}
           </Form.Label>

@@ -10,7 +10,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { noop } from '@rjsf/utils';
+import { noop, optionDescriptionId } from '@rjsf/utils';
 import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -2370,6 +2370,314 @@ describe('oneOf', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(1);
+    });
+  });
+
+  describe('the selected option rendered for the same id as its field', () => {
+    const europe: RJSFSchema = {
+      title: 'Europe',
+      oneOf: [
+        { const: 'FR', title: 'France' },
+        { const: 'DE', title: 'Germany' },
+      ],
+    };
+    const regionSchema = (europeSchema: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: {
+        region: { oneOf: [{ title: 'None', type: 'null' }, { $ref: '#/$defs/europe' }] },
+      },
+      $defs: { europe: europeSchema },
+    });
+    const schema = regionSchema(europe);
+    const formData = { region: 'DE' };
+    const CustomField = () => <div className='custom-field'>Custom field</div>;
+
+    it('labels the control once, with the field label', () => {
+      const { node } = createFormComponent({ schema, formData });
+
+      expect(node.querySelectorAll('label[for="root_region"]')).toHaveLength(1);
+      // The field's label names the option's control and, through `aria-labelledby`, the option selector
+      expect(screen.getAllByLabelText('region')).toEqual([
+        node.querySelector('select#root_region__oneof_select'),
+        node.querySelector('select#root_region'),
+      ]);
+      expect(screen.queryByLabelText('Europe')).toBeNull();
+    });
+
+    it('labels the control once, with the field label, when the field names FallbackField as its ui:field', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { x: { oneOf: [{ type: 'string', title: 'Text' }, { type: 'number' }] } },
+        },
+        uiSchema: { x: { 'ui:field': 'FallbackField' } },
+        formData: { x: 'a' },
+      });
+
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+      expect(screen.getAllByLabelText('x')).toEqual([
+        node.querySelector('select#root_x__oneof_select'),
+        node.querySelector('input#root_x'),
+      ]);
+      expect(screen.queryByLabelText('Text')).toBeNull();
+    });
+
+    it('renders the field help once', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { region: { 'ui:help': 'pick a region' } },
+      });
+
+      expect(node.querySelectorAll('#root_region__help')).toHaveLength(1);
+      expect(screen.getAllByText('pick a region')).toHaveLength(1);
+    });
+
+    it('renders a ui:globalOptions help once for an option with a uiSchema of its own', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { 'ui:globalOptions': { help: 'global help' }, region: { oneOf: [{}, {}] } },
+      });
+
+      expect(node.querySelectorAll('#root_region__help')).toHaveLength(1);
+    });
+
+    it('renders the help an option declares for itself', () => {
+      createFormComponent({
+        schema,
+        formData,
+        uiSchema: { region: { oneOf: [{}, { 'ui:help': 'option help' }] } },
+      });
+
+      expect(screen.getByText('option help')).toBeInTheDocument();
+    });
+
+    it('describes the option once, under the id its control is described by', () => {
+      const { node } = createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        formData,
+      });
+
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('A country in Europe');
+      expect(node.querySelector('select#root_region')).toHaveAttribute(
+        'aria-describedby',
+        expect.stringContaining('root_region__description'),
+      );
+    });
+
+    it("describes the option under an id of its own beneath the field's description", () => {
+      const { node } = createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        uiSchema: { region: { 'ui:description': 'Where you live' } },
+        formData,
+      });
+
+      expect(screen.getAllByText('Where you live')).toHaveLength(1);
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_region__description')).toHaveLength(1);
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('Where you live');
+      expect(node.querySelector(`#${optionDescriptionId('root_region')}`)).toHaveTextContent('A country in Europe');
+      expect(node.querySelector('select#root_region')).toHaveAttribute(
+        'aria-describedby',
+        expect.stringContaining(optionDescriptionId('root_region')),
+      );
+    });
+
+    it("describes a checkbox option under an id of its own beneath the field's description", () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              description: 'Field desc',
+              oneOf: [
+                { type: 'boolean', description: 'Opt desc' },
+                { type: 'string', title: 'Text' },
+              ],
+            },
+          },
+        },
+        formData: { x: true },
+      });
+
+      expect(screen.getAllByText('Opt desc')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_x__description')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Field desc');
+      expect(node.querySelector(`#${optionDescriptionId('root_x')}`)).toHaveTextContent('Opt desc');
+    });
+
+    it('leaves a checkbox option its own description when the field has none', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              oneOf: [
+                { type: 'boolean', description: 'Opt desc' },
+                { type: 'string', title: 'Text' },
+              ],
+            },
+          },
+        },
+        formData: { x: true },
+      });
+
+      expect(screen.getAllByText('Opt desc')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Opt desc');
+    });
+
+    it.each([
+      ['has no description', {}],
+      ['has a description', { 'ui:description': 'Where you live' }],
+    ])('hides the description of an option whose ui:label is false when the field %s', (_, fieldUiSchema) => {
+      createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        uiSchema: { region: { ...fieldUiSchema, oneOf: [{}, { 'ui:label': false }] } },
+        formData,
+      });
+
+      expect(screen.queryByText('A country in Europe')).toBeNull();
+    });
+
+    it('renders no second description under the field description id for a fallback value described apart', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              description: 'Field desc',
+              type: ['string', 'number'],
+              if: { type: 'string' },
+              then: { description: 'Value desc' },
+            },
+          },
+        },
+        formData: { x: 'a' },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelectorAll('#root_x__description')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Field desc');
+    });
+
+    it('describes an option whose constants render as a select', () => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            region: {
+              oneOf: [
+                { title: 'None', type: 'null' },
+                {
+                  type: 'boolean',
+                  description: 'Yes or no',
+                  oneOf: [
+                    { const: true, title: 'Yes' },
+                    { const: false, title: 'No' },
+                  ],
+                },
+              ],
+            },
+          },
+        },
+        formData: { region: true },
+      });
+
+      expect(screen.getAllByText('Yes or no')).toHaveLength(1);
+    });
+
+    it('describes the option with its own description under a ui:globalOptions description', () => {
+      createFormComponent({
+        schema: regionSchema({ ...europe, description: 'A country in Europe' }),
+        uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
+        formData,
+      });
+
+      expect(screen.getAllByText('A country in Europe')).toHaveLength(1);
+    });
+
+    it("keeps a fallback value from repeating its field's description over a ui:globalOptions description", () => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { x: { title: 'X', description: 'Field desc', type: ['string', 'number'] } },
+        },
+        uiSchema: { 'ui:globalOptions': { description: 'Every field' } },
+        formData: { x: 'a' },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(screen.queryByText('Field desc')).toBeNull();
+    });
+
+    it('describes the option with the ui:description it declares for itself', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData,
+        uiSchema: { region: { oneOf: [{}, { 'ui:description': 'Pick a European country' }] } },
+      });
+
+      expect(node.querySelector('#root_region__description')).toHaveTextContent('Pick a European country');
+    });
+
+    it('renders the field ui:description once', () => {
+      createFormComponent({ schema, formData, uiSchema: { region: { 'ui:description': 'Where you live' } } });
+
+      expect(screen.getAllByText('Where you live')).toHaveLength(1);
+    });
+
+    it('keeps the title and description of an object option', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          oneOf: [
+            { title: 'Option A', description: 'The first option', properties: { a: { type: 'string' } } },
+            { title: 'Option B', properties: { b: { type: 'number' } } },
+          ],
+        },
+      });
+
+      expect(node.querySelector('#root__title')).toHaveTextContent('Option A');
+      expect(node.querySelector('#root__description')).toHaveTextContent('The first option');
+    });
+
+    it('labels a control once when the fallback UI renders the options of a field allowing several types', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              title: 'X',
+              type: ['string', 'number'],
+              oneOf: [{ title: 'Text', description: 'Some text', minLength: 1 }, { title: 'Num' }],
+            },
+          },
+        },
+        uiSchema: { x: { oneOf: [{}, {}] } },
+        formData: { x: 'a' },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+      expect(screen.getAllByLabelText('X')).toEqual([
+        node.querySelector('select#root_x__oneof_select'),
+        node.querySelector('input#root_x'),
+      ]);
+      expect(screen.getAllByText('Some text')).toHaveLength(1);
+      expect(node.querySelector('#root_x__description')).toHaveTextContent('Some text');
+    });
+
+    it('renders a ui:field an option declares for itself', () => {
+      const { node } = createFormComponent({
+        schema: { oneOf: [{ type: 'number' }, { type: 'string' }] },
+        uiSchema: { oneOf: [{ 'ui:field': CustomField }, {}] },
+      });
+
+      expect(node.querySelectorAll('.custom-field')).toHaveLength(1);
+      expect(node.querySelector('input#root')).toBeNull();
     });
   });
 

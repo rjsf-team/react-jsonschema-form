@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import { JSON_SCHEMA_TYPES } from '@rjsf/utils';
+import { screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import FallbackField from '../src/components/fields/FallbackField.tsx';
@@ -178,6 +179,32 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         multi: { type: ['string', 'boolean'] },
       },
     } as RJSFSchema;
+
+    it.each([
+      ['an object', 'object', { a: 'q' }],
+      ['an array', 'array', ['q']],
+      ['a boolean', 'boolean', true],
+      ['a number', 'number', 3],
+    ] as const)('renders the field title once for %s value', (_, type, value) => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            x: {
+              title: 'XTitle',
+              type: ['string', type],
+              ...(type === 'array' ? { items: { type: 'string' } } : {}),
+              ...(type === 'object' ? { additionalProperties: { type: 'string' } } : {}),
+            },
+          },
+        },
+        formData: { x: value },
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(screen.getAllByText('XTitle')).toHaveLength(1);
+      expect(node.querySelectorAll('label[for="root_x"]')).toHaveLength(1);
+    });
 
     it('renders the first type when useFallbackUiForUnsupportedType is false', () => {
       const { node } = createFormComponent({ schema: multiTypeSchema });

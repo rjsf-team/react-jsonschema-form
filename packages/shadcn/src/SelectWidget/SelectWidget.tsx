@@ -113,7 +113,9 @@ export default function SelectWidget<
     ? toSections<S>(groupEnumOptions<S>(enumOptions, optgroups, enumDisabled), toFancyItem)
     : undefined;
 
-  const { 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby } = widgetAriaProps(props);
+  const ariaProps = widgetAriaProps(props);
+  const { 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby } = ariaProps;
+  const ariaLabelledby = 'aria-labelledby' in ariaProps ? ariaProps['aria-labelledby'] : undefined;
 
   const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 
@@ -135,6 +137,7 @@ export default function SelectWidget<
           required={required}
           placeholder={placeholderText}
           ariaLabel={ariaLabel}
+          ariaLabelledby={ariaLabelledby}
           // The template's label shows the property name for a field with no title, and `*` when required; under the
           // plan, a label the template draws here or for a field above names the select
           named={

@@ -45,6 +45,7 @@ exports[`antd specific tests > descriptionLocation tooltip in formContext 1`] = 
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_my-field__label"
                             >
                               <label
                                 class=""
@@ -422,6 +423,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                   >
                                                                     <div
                                                                       class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                      id="root_tasks_0_title__label"
                                                                     >
                                                                       <label
                                                                         class=""
@@ -692,6 +694,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                                   >
                                                                     <div
                                                                       class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                      id="root_tasks_1_title__label"
                                                                     >
                                                                       <label
                                                                         class=""
@@ -1077,6 +1080,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_tags_0__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -1244,6 +1248,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_tags_1__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -1516,6 +1521,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_choices__label"
                             >
                               <label
                                 class=""
@@ -1729,6 +1735,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_person_firstName__label"
                                               >
                                                 <label
                                                   class=""
@@ -1786,6 +1793,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_person_lastName__label"
                                               >
                                                 <label
                                                   class=""
@@ -1889,6 +1897,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_street__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -1946,6 +1955,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_city__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -2071,6 +2081,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_option__label"
                             >
                               <label
                                 class=""
@@ -2208,6 +2219,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_color__label"
                             >
                               <label
                                 class=""
@@ -2345,6 +2357,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_firstName__label"
                             >
                               <label
                                 class=""
@@ -2402,6 +2415,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_age__label"
                             >
                               <label
                                 class=""
@@ -2618,6 +2632,7 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_description__label"
                             >
                               <label
                                 class=""
@@ -2830,6 +2845,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                   >
                                                                     <div
                                                                       class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                      id="root_tasks_0_title__label"
                                                                     >
                                                                       <label
                                                                         class=""
@@ -3100,6 +3116,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                                   >
                                                                     <div
                                                                       class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                      id="root_tasks_1_title__label"
                                                                     >
                                                                       <label
                                                                         class=""
@@ -3485,6 +3502,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_tags_0__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -3652,6 +3670,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_tags_1__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -3970,6 +3989,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_person_firstName__label"
                                               >
                                                 <label
                                                   class=""
@@ -4027,6 +4047,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_person_lastName__label"
                                               >
                                                 <label
                                                   class=""
@@ -4130,6 +4151,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_street__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -4187,6 +4209,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_person_address_city__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -4312,6 +4335,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_color__label"
                             >
                               <label
                                 class=""
@@ -4449,6 +4473,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_firstName__label"
                             >
                               <label
                                 class=""
@@ -4506,6 +4531,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_age__label"
                             >
                               <label
                                 class=""
@@ -4811,6 +4837,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_region__label"
                             >
                               <label
                                 class=""
@@ -4843,9 +4870,9 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                           Europe
                                           <input
                                             aria-autocomplete="list"
-                                            aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
+                                            aria-labelledby="root_region__label"
                                             autocomplete="new-password"
                                             class="ant-select-input"
                                             id="root_region__oneof_select"
@@ -6051,6 +6078,7 @@ exports[`single fields > checkboxes field 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -6203,6 +6231,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -6358,6 +6387,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -6529,6 +6559,7 @@ exports[`single fields > field with description 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_my-field__label"
                             >
                               <label
                                 class=""
@@ -6649,6 +6680,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_my-field__label"
                             >
                               <label
                                 class=""
@@ -6769,6 +6801,7 @@ exports[`single fields > field with markdown description 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_my-field__label"
                             >
                               <label
                                 class=""
@@ -6895,6 +6928,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_my-field__label"
                             >
                               <label
                                 class=""
@@ -7918,6 +7952,7 @@ exports[`single fields > optional data controls > does not show optional control
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObjectOptional_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -8021,6 +8056,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -8133,6 +8169,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_nestedObjectOptional_deepObject_deepTest__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -8690,6 +8727,7 @@ exports[`single fields > optional data controls > does not show optional control
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObject_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -8865,6 +8903,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_optionalObjectWithOneofs__label"
                             >
                               <label
                                 class=""
@@ -8897,9 +8936,9 @@ exports[`single fields > optional data controls > does not show optional control
                                           Option 1
                                           <input
                                             aria-autocomplete="list"
-                                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
+                                            aria-labelledby="root_optionalObjectWithOneofs__label"
                                             autocomplete="new-password"
                                             class="ant-select-input"
                                             id="root_optionalObjectWithOneofs__oneof_select"
@@ -8973,6 +9012,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                           >
                                                             <div
                                                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                              id="root_optionalObjectWithOneofs_name__label"
                                                             >
                                                               <label
                                                                 class=""
@@ -9047,6 +9087,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_optionalArrayWithAnyofs__label"
                             >
                               <label
                                 class=""
@@ -9079,9 +9120,9 @@ exports[`single fields > optional data controls > does not show optional control
                                           Option 1
                                           <input
                                             aria-autocomplete="list"
-                                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
+                                            aria-labelledby="root_optionalArrayWithAnyofs__label"
                                             autocomplete="new-password"
                                             class="ant-select-input"
                                             id="root_optionalArrayWithAnyofs__anyof_select"
@@ -9346,6 +9387,7 @@ exports[`single fields > optional data controls > does not show optional control
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObjectOptional_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -9454,6 +9496,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_nestedObjectOptional_deepObjectOptional_deepTest__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -9571,6 +9614,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_nestedObjectOptional_deepObject_deepTest__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -10137,6 +10181,7 @@ exports[`single fields > optional data controls > does not show optional control
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObject_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -10314,6 +10359,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_optionalObjectWithOneofs__label"
                             >
                               <label
                                 class=""
@@ -10346,9 +10392,9 @@ exports[`single fields > optional data controls > does not show optional control
                                           Option 1
                                           <input
                                             aria-autocomplete="list"
-                                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
+                                            aria-labelledby="root_optionalObjectWithOneofs__label"
                                             autocomplete="new-password"
                                             class="ant-select-input"
                                             disabled=""
@@ -10427,6 +10473,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                           >
                                                             <div
                                                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                              id="root_optionalObjectWithOneofs_name__label"
                                                             >
                                                               <label
                                                                 class=""
@@ -10501,6 +10548,7 @@ exports[`single fields > optional data controls > does not show optional control
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_optionalArrayWithAnyofs__label"
                             >
                               <label
                                 class=""
@@ -10533,9 +10581,9 @@ exports[`single fields > optional data controls > does not show optional control
                                           Option 1
                                           <input
                                             aria-autocomplete="list"
-                                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                                             aria-expanded="false"
                                             aria-haspopup="listbox"
+                                            aria-labelledby="root_optionalArrayWithAnyofs__label"
                                             autocomplete="new-password"
                                             class="ant-select-input"
                                             disabled=""
@@ -10839,6 +10887,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObjectOptional_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -11045,6 +11094,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_nestedObjectOptional_deepObject_deepTest__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -11546,6 +11596,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_nestedArrayOptional_0__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -11751,6 +11802,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObject_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -12312,6 +12364,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObjectOptional_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -12485,6 +12538,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                               >
                                                                 <div
                                                                   class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                                  id="root_nestedObjectOptional_deepObject_deepTest__label"
                                                                 >
                                                                   <label
                                                                     class=""
@@ -12902,6 +12956,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                 >
                                                   <div
                                                     class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                    id="root_nestedArrayOptional_0__label"
                                                   >
                                                     <label
                                                       class="ant-form-item-required"
@@ -13114,6 +13169,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObject_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -13800,6 +13856,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObject_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -14492,6 +14549,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                             >
                                               <div
                                                 class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                                                id="root_nestedObject_test__label"
                                               >
                                                 <label
                                                   class=""
@@ -15053,6 +15111,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -16900,6 +16959,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -17260,6 +17320,7 @@ exports[`single fields > string field > field with markdown help and description
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -17377,6 +17438,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -17485,6 +17547,7 @@ exports[`single fields > string field > field with markdown help text without a 
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -17816,6 +17879,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
         >
           <div
             class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+            id="root__label"
           >
             <label
               class=""
@@ -18233,6 +18297,7 @@ exports[`single fields > title field 1`] = `
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_title__label"
                             >
                               <label
                                 class=""
@@ -18626,6 +18691,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                           >
                             <div
                               class="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-oc1rc0 css-var-root"
+                              id="root_answer__label"
                             >
                               <label
                                 class=""

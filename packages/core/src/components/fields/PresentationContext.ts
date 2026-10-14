@@ -12,6 +12,12 @@ export interface InheritedPresentation {
    * `uiSchema` of its own doesn't carry the field's (#5490 decision 24)
    */
   showLabel: boolean;
+  /** Its title, without the Deprecated marker its label may carry, which a field below titled the same takes the label
+   * of
+   */
+  title: string;
+  /** The description its schema declares, which a field below declaring the same doesn't declare of its own */
+  schemaDescription: string;
 }
 
 /** Carries a field's plan to the field below it rendering the same id. `SchemaField` provides it around the field it

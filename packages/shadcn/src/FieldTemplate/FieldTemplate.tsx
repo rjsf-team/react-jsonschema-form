@@ -75,6 +75,7 @@ export default function FieldTemplate<
               { ' text-destructive': hasError },
             )}
             htmlFor={id}
+            id={presentation?.label.id}
           >
             {label}
             {required ? '*' : null}

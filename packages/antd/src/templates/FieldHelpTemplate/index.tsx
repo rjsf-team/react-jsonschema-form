@@ -13,6 +13,7 @@ function HelpBlock<T, S extends StrictRJSFSchema, F extends FormContextType>({
   hasErrors,
   uiSchema,
   registry,
+  presentation,
 }: FieldHelpProps<T, S, F> & { help: string | ReactElement }) {
   const { token } = theme.useToken();
 
@@ -25,7 +26,11 @@ function HelpBlock<T, S extends StrictRJSFSchema, F extends FormContextType>({
   // wrapping help in a `<span>`, which cannot legally hold the block content that markdown or an element `ui:help` puts
   // in it
   return (
-    <div id={helpId(id)} className='help-block' style={hasErrors ? { color: token.colorTextDescription } : undefined}>
+    <div
+      id={presentation?.help.id ?? helpId(id)}
+      className='help-block'
+      style={hasErrors ? { color: token.colorTextDescription } : undefined}
+    >
       <RichHelp help={help} registry={registry} uiSchema={uiSchema} />
     </div>
   );

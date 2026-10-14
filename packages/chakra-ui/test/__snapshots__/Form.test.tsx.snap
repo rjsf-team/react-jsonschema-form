@@ -10527,7 +10527,6 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 >
                                   <button
                                     aria-controls="select:root_region__oneof_select:content"
-                                    aria-describedby="root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -24095,7 +24094,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <button
                                     aria-controls="select:root_optionalObjectWithOneofs__oneof_select:content"
-                                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -24421,7 +24419,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <button
                                     aria-controls="select:root_optionalArrayWithAnyofs__anyof_select:content"
-                                    aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -26158,7 +26155,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <button
                                     aria-controls="select:root_optionalObjectWithOneofs__oneof_select:content"
-                                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"
@@ -26505,7 +26501,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <button
                                     aria-controls="select:root_optionalArrayWithAnyofs__anyof_select:content"
-                                    aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
                                     aria-expanded="false"
                                     aria-haspopup="listbox"
                                     aria-invalid="false"

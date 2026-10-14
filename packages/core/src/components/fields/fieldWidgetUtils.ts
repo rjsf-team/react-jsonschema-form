@@ -136,7 +136,7 @@ export function getArrayFieldWidget<
  * @param presentation - The plan of the field the widget renders the value of
  * @returns - The `hideLabel` the widget receives
  */
-function hidesWidgetLabel({ label, description }: FieldPresentation): boolean {
+export function hidesWidgetLabel({ label, description }: FieldPresentation): boolean {
   if (label.by === 'none') {
     return description.by !== 'self';
   }

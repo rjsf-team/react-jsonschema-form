@@ -3,6 +3,8 @@ import type {
   ErrorSchema,
   Field,
   FieldPath,
+  FieldPresentation,
+  PartPresentation,
   FieldProps,
   FieldTemplateProps,
   FormContextType,
@@ -428,6 +430,45 @@ function getFieldComponent<
   };
 }
 
+/** Gets the plan the field component of a pure union is handed: it renders beside the options of the field the plan
+ * was built for, which draws each of its parts, so every part drawn at all is drawn above it and it has no control of
+ * its own
+ *
+ * @param presentation - The plan of the field rendering the options
+ * @returns - The plan of the field component rendered beside them
+ */
+function getPresentationBesideOptions(presentation: FieldPresentation): FieldPresentation {
+  const { label, description, help, errors, describedBy } = presentation;
+  const above = <P extends PartPresentation>(part: P): P => (part.by === 'none' ? part : { ...part, by: 'above' });
+  return {
+    label: above(label),
+    description: above(description),
+    help: above(help),
+    errors: above(errors),
+    describedBy,
+    inherited: presentation,
+  };
+}
+
+/** Gets the plan the field rendering a field component's options is handed when that component is not planned as it:
+ * the parts the component draws itself are its own, such as a custom field's label or an object's heading, so the
+ * options' selector draws none of them and isn't pointed at a label id the component may not render
+ *
+ * @param presentation - The plan of the field component the options render beside
+ * @returns - The plan of the field rendering the options
+ */
+function getOptionsPresentation(presentation: FieldPresentation): FieldPresentation {
+  const { label, description, help, errors } = presentation;
+  const notDrawn = <P extends PartPresentation>(part: P): P => (part.by === 'self' ? { ...part, by: 'none' } : part);
+  return {
+    ...presentation,
+    label: notDrawn(label),
+    description: notDrawn(description),
+    help: notDrawn(help),
+    errors: notDrawn(errors),
+  };
+}
+
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
  * render based on the `schema`, `uiSchema` and all the other props. It also deals with rendering the `anyOf` and
  * `oneOf` fields.
@@ -594,12 +635,19 @@ function SchemaFieldRender<
   // where the template's label above names its control. A label the field above draws itself, such as a selector's,
   // names another control, so the field below keeps them
   const labelledAbove = inheritedPresentation !== undefined && isLabelledByTemplate(inheritedPresentation.plan);
-  const label = getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, {
+  const labelSources = {
     name: labelledAbove ? undefined : name,
     title: labelledAbove ? undefined : props.title,
     unresolvedSchema: props.schema,
     wasPropertyKeyModified,
-  });
+  };
+  const ownLabel = getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, labelSources);
+  const title = schema.deprecated
+    ? getFieldLabel<T, S, F>({ ...schema, deprecated: false }, uiOptions, registry.translateString, labelSources)
+    : ownLabel;
+  // A field below titled as the field above says what that field's label says, so it takes that label, Deprecated
+  // marker included, and its heading is recognised as the same one rather than kept for differing by the marker
+  const label = inheritedPresentation?.title === title ? inheritedPresentation.plan.label.text : ownLabel;
   // When the option selector is an optional data control AND it does not have form data, the control is not on screen
   // yet. This is decided here rather than with the `XxxOfField` below because the fallback UI renders that same selector
   // for the type it has pinned, and the value field it renders it within is already labelled `false`, which leaves this
@@ -609,7 +657,14 @@ function SchemaFieldRender<
     fieldToRender.rendersOptionSelector &&
     shouldRenderOptionalField<T, S, F>(registry, schema, effectiveRequired, uiSchema, fieldPath) &&
     !isFormDataAvailable<T>(formData);
-  const fieldDescription = uiOptions.description || props.schema.description || schema.description || '';
+  const schemaDescription = props.schema.description || schema.description || '';
+  // A description a field below declares of its own, as a selected option does, says more about it than a form-wide
+  // `ui:globalOptions.description`, so it wins over that, though not over its own `ui:description`. The fallback UI's
+  // value carries its field's own description, which is not its own
+  const ownSchemaDescription =
+    inheritedPresentation && schemaDescription !== inheritedPresentation.schemaDescription ? schemaDescription : '';
+  const fieldDescription =
+    ownUiOptions.description || ownSchemaDescription || uiOptions.description || schemaDescription;
   // `ui:label` is resolved as `hideError` is: the field's own, then the one the field above rendering this id resolved
   // to, then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
   const showLabel =
@@ -645,8 +700,16 @@ function SchemaFieldRender<
   });
   // What the field below rendering this same id inherits: the option field, or the fallback UI's value field
   const presentationBelow = useMemo(
-    () => presentation && { id: fieldId, plan: presentation, showLabel },
-    [fieldId, presentation, showLabel],
+    () => presentation && { id: fieldId, plan: presentation, showLabel, title, schemaDescription },
+    [fieldId, presentation, showLabel, title, schemaDescription],
+  );
+  const fieldComponentPresentation = useMemo(
+    () => (plannedAsOptions && presentation ? getPresentationBesideOptions(presentation) : presentation),
+    [plannedAsOptions, presentation],
+  );
+  const optionsPresentation = useMemo(
+    () => (!plannedAsOptions && presentation ? getOptionsPresentation(presentation) : presentation),
+    [plannedAsOptions, presentation],
   );
 
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag,
@@ -740,7 +803,7 @@ function SchemaFieldRender<
       errorSchema={fieldErrorSchema as ErrorSchema}
       // The `XxxOfField` hands the field's own errors to the selected option and its selector
       rawErrors={XxxOfField ? undefined : __errors}
-      presentation={presentation}
+      presentation={fieldComponentPresentation}
     />
   );
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it.
@@ -770,6 +833,7 @@ function SchemaFieldRender<
       uiSchema={uiSchema}
       hasErrors={hasErrors}
       registry={registry}
+      presentation={presentation}
     />
   );
   // The field above a selected option draws its errors right after the option, so they don't vanish with no option
@@ -850,7 +914,7 @@ function SchemaFieldRender<
                   required={effectiveRequired}
                   schema={schema}
                   uiSchema={XxxOfUiSchema}
-                  presentation={presentation}
+                  presentation={optionsPresentation}
                 />
               </RawFormDataContext>
             </PresentationContext>

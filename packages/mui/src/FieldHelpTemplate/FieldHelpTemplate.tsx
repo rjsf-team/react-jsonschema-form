@@ -24,7 +24,7 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldHelpProps<T, S, F>) {
-  const { id, help, uiSchema, registry } = props;
+  const { id, help, uiSchema, registry, presentation } = props;
   if (!help) {
     return null;
   }
@@ -35,7 +35,7 @@ export default function FieldHelpTemplate<
   return (
     <FormHelperText
       component='div'
-      id={helpId(id)}
+      id={presentation?.help.id ?? helpId(id)}
       {...helpFormHelperText}
       sx={computeSxProps<FormHelperTextProps>({ mt: 0.625 }, helpFormHelperText)}
     >

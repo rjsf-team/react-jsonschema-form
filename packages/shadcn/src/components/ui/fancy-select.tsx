@@ -57,6 +57,8 @@ interface FancySelectInterface {
   autoFocus?: boolean;
   /** Accessible name given to the button that opens the dropdown, for a select that no label points at */
   ariaLabel?: string;
+  /** The ids of the elements naming the button, for a select whose label's `for` names another element */
+  ariaLabelledby?: string;
   /** Whether something other than its own contents names the button, a label pointing at it or `ariaLabel`, which
    * replaces the selected item it displays as its name, so that item is announced as its description instead */
   named?: boolean;
@@ -93,6 +95,7 @@ export function FancySelect({
   disabled = false,
   placeholder,
   ariaLabel,
+  ariaLabelledby,
   named = false,
   ariaDescribedby,
   ariaPlaceholder,
@@ -169,6 +172,7 @@ export function FancySelect({
         aria-expanded={open}
         aria-haspopup='listbox'
         aria-label={ariaLabel}
+        aria-labelledby={ariaLabelledby}
         aria-describedby={describedBy}
         onClick={() => !disabled && setOpen(!open)}
         onKeyDown={(e) => {

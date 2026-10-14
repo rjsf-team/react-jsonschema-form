@@ -3164,7 +3164,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_region__oneof_select__value root_region__oneof_select__error root_region__oneof_select__description root_region__oneof_select__help"
+                            aria-describedby="root_region__oneof_select__value"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_region__oneof_select"
                             tabindex="0"
@@ -6076,7 +6076,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
@@ -6242,7 +6242,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
@@ -7096,7 +7096,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalObjectWithOneofs__oneof_select"
                             tabindex="0"
@@ -7262,7 +7262,7 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalArrayWithAnyofs__anyof_select"
                             tabindex="0"
