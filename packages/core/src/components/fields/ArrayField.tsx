@@ -1017,6 +1017,8 @@ interface KeyedFormDataState<T = unknown> {
   keyedFormData: KeyedFormDataType<T>[];
   /** The rows as a handler sees them: those rendered, or sent since by a handler */
   readSentRows: () => KeyedFormDataType<T>[];
+  /** The items of those rows, the field's own record of its data for a handler outside a `Form` */
+  readSentItems: () => T[];
   /** Updates the keyed form data elements to the given value */
   updateKeyedFormData: (newData: KeyedFormDataType<T>[]) => T[];
 }
@@ -1074,6 +1076,7 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
     sentRows.current = keyedFormData;
   }, [keyedFormData]);
   const readSentRows = useCallback(() => sentRows.current, []);
+  const readSentItems = useCallback(() => keyedToPlainFormData(sentRows.current), []);
 
   const updateKeyedFormData = useCallback((newData: KeyedFormDataType<T>[]) => {
     sentRows.current = newData;
@@ -1082,7 +1085,7 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
     return keyedToPlainFormData(newData);
   }, []);
 
-  return { keyedFormData, readSentRows, updateKeyedFormData };
+  return { keyedFormData, readSentRows, readSentItems, updateKeyedFormData };
 }
 
 /** The `ArrayField` component is used to render a field in the schema that is of type `array`. It supports both normal
@@ -1095,9 +1098,8 @@ export default function ArrayField<
 >(props: FieldProps<T[], S, F>) {
   const { schema, uiSchema, fieldPath, id: fieldId, registry, formData, onChange } = props;
   const { globalFormOptions, schemaUtils, translateString } = registry;
-  const { keyedFormData, readSentRows, updateKeyedFormData } = useKeyedFormData<T>(formData);
-  const readSentData = useCallback(() => keyedToPlainFormData(readSentRows()), [readSentRows]);
-  const readItems = useReadFieldData(fieldPath, readSentData);
+  const { keyedFormData, readSentRows, readSentItems, updateKeyedFormData } = useKeyedFormData<T>(formData);
+  const readItems = useReadFieldData(fieldPath, readSentItems);
   const sendMove = useSendMove(fieldPath);
 
   /** The rows as a handler sees them: the form's current items at this path, edits made since the form last rendered

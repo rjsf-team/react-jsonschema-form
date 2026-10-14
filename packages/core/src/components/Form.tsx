@@ -243,7 +243,7 @@ export interface FormState<
   /** Whether there is data to live-validate when a prop changes: the props handed the form data when it last took
    * some, rather than leaving it to the schema's defaults
    */
-  edit: boolean;
+  isDataPassed: boolean;
   /** The current list of errors for the form, includes `extraErrors` */
   errors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form, includes `extraErrors` */

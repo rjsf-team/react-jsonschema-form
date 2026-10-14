@@ -117,7 +117,7 @@ export function toIChangeEvent<
 }
 
 /** A field change, applied by `applyChange()` */
-export interface FieldChange<T> {
+interface FieldChange<T> {
   /** The `FieldPath` into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
   fieldPath: FieldPath;
   /** The new value to set into the formData */
@@ -137,7 +137,7 @@ export interface FieldChange<T> {
 }
 
 /** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
-export type KeyMove = (key: string) => string | undefined;
+type KeyMove = (key: string) => string | undefined;
 
 /** A `KeyMove` with the path of the array or object whose keys it moved */
 export interface AnnouncedMove {
@@ -644,18 +644,22 @@ function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends FormConte
  * @param current - The state the change applies to
  * @param change - The change
  * @param extraErrors - The `extraErrors` prop, which the displayed errors carry
- * @param changed - What the change replaced in the data, see `dataChange()`
+ * @param getDataChange - Returns what the change replaced in the data, see `dataChange()`; called only when there are
+ * validator errors to clear
  * @returns - The error members of the state after the change, `current`'s own when the change left them as they were
  */
 function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   change: FieldChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
-  changed: DataChange,
+  getDataChange: () => DataChange,
 ): ChangedErrorState<T> {
   const { fieldPath, newKeyOf } = change;
   const customErrors = ownErrorsAfterChange(current, change);
   const raised = raiseOf(change);
+  // Diffing the data is what a keystroke would otherwise cost every form, so it is skipped when no validator error is
+  // there to clear
+  const changed = current.schemaValidationErrors.length > 0 ? getDataChange() : UNCHANGED;
   const isDataChanged = changed.isRootReplaced || changed.paths.length > 0;
   if (!newKeyOf && !raised && customErrors === current.customErrors && !isDataChanged) {
     return errorStateOf(current);
@@ -1178,10 +1182,10 @@ function withKeysMoved(data: unknown, changed: unknown, path: FieldPathList, new
   if (Array.isArray(held) && Array.isArray(newHeld)) {
     const items: unknown[] = [...newHeld];
     held.forEach((item, index) => {
-      // A removed item has no new key, which is no index
-      const newIndex = Number(newKeyOf(String(index)));
-      if (newIndex < items.length) {
-        items[newIndex] = item;
+      // A removed item has no new key
+      const newKey = newKeyOf(String(index));
+      if (newKey !== undefined && Number(newKey) < items.length) {
+        items[Number(newKey)] = item;
       }
     });
     moved = items;
@@ -1245,10 +1249,10 @@ function reconcileErrors<T, S extends StrictRJSFSchema, F extends FormContextTyp
  */
 function mustLiveValidate<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
-  edit: boolean,
+  isDataPassed: boolean,
   isInputChanged: boolean,
 ): boolean {
-  return edit && isLiveValidated(props) && isInputChanged;
+  return isDataPassed && isLiveValidated(props) && isInputChanged;
 }
 
 /** Whether the form validates its data on every change */
@@ -1290,14 +1294,15 @@ function detectContextChanges<T, S extends StrictRJSFSchema, F extends FormConte
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The data to derive from
  * @param props - The current props
- * @param isSeeded - Whether the props handed `inputFormData` over, rather than `current` holding it
+ * @param [options.isDataPassed] - Whether the props handed the form data, see `FormState.isDataPassed`: by default
+ * whether there is a seed on construction, and what `current` says afterwards
  * @returns - The new state, sharing every unchanged subtree with `current`
  */
 function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F> | undefined,
   inputFormData: T | undefined,
   props: FormProps<T, S, F>,
-  isSeeded = current === undefined,
+  { isDataPassed = current ? current.isDataPassed : inputFormData !== undefined }: { isDataPassed?: boolean } = {},
 ): FormState<T, S, F> {
   const {
     formData,
@@ -1311,10 +1316,9 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
   const isDataChanged = current !== undefined && formData !== current.formData;
-  const edit = isSeeded || !current ? inputFormData !== undefined : current.edit;
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
-    mustValidate: mustLiveValidate(props, edit, isDataChanged || isValidationPropChanged),
+    mustValidate: mustLiveValidate(props, isDataPassed, isDataChanged || isValidationPropChanged),
     validationSchema: areSchemaUtilsReused ? context.retrievedSchema : undefined,
     // Without a validation pass, the errors of the fields the data changed at describe values that are gone. The
     // data is shared against the committed data, so unchanged subtrees are skipped by identity
@@ -1328,7 +1332,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
-    edit,
+    isDataPassed,
     ...errors,
     initialDefaultsGenerated: true,
   };
@@ -1742,11 +1746,12 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
   } else {
     // No validation rewrites the validator's errors here, so those of the replaced values are cleared instead. What a
     // key move leaves is diffed with the keys where the move put them, so the errors that moved with them stay
-    const changed = dataChange(
-      newFormData,
-      change.newKeyOf ? withKeysMoved(oldFormData, newFormData, path, change.newKeyOf) : oldFormData,
-    );
-    next = { ...next, ...applyChangeToErrors(current, change, extraErrors, changed) };
+    const getDataChange = () =>
+      dataChange(
+        newFormData,
+        change.newKeyOf ? withKeysMoved(oldFormData, newFormData, path, change.newKeyOf) : oldFormData,
+      );
+    next = { ...next, ...applyChangeToErrors(current, change, extraErrors, getDataChange) };
   }
   return { ...current, ...context, ...next };
 }
@@ -1937,7 +1942,7 @@ function deriveFromProps<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // `NaN` taken again on every pass
   const isFormDataSeen = Object.is(props.formData, state.formDataProp) || Object.is(props.formData, state.formData);
   if (props.formData !== undefined && !isFormDataSeen) {
-    const next = deriveDataState(state, props.formData, props, true);
+    const next = deriveDataState(state, props.formData, props, { isDataPassed: true });
     // The pairing view follows the container writes the form made, so it describes the form's own data. A copy of that
     // data, as from a parent storing a clone of what `onChange` reported, keeps it; any other value, such as a parent
     // setting a reorder back, is paired against the data as it last settled, from before those writes (#5451)
@@ -1963,7 +1968,7 @@ function deriveFromProps<T, S extends StrictRJSFSchema, F extends FormContextTyp
     retrievedSchema: resolveRetrievedSchema(state, context.schemaUtils, state.formData),
   };
   const errors = reconcileErrors(state, props, resolvedContext, state.formData, {
-    mustValidate: mustLiveValidate(props, state.edit, isValidationPropChanged),
+    mustValidate: mustLiveValidate(props, state.isDataPassed, isValidationPropChanged),
     validationSchema: context.schemaUtils === state.schemaUtils ? resolvedContext.retrievedSchema : undefined,
   });
   return { ...state, ...resolvedContext, ...errors };
