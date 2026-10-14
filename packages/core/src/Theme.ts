@@ -5,6 +5,7 @@ import type {
   RJSFSchema,
   SchemaUtilsType,
   StrictRJSFSchema,
+  ThemePresentation,
 } from '@rjsf/utils';
 import {
   DEFAULT_ID_PREFIX,
@@ -13,6 +14,7 @@ import {
   mergeThemePresentation,
   UI_DEFINITIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
+  WIDGET_FIELD_PRESENTATION,
 } from '@rjsf/utils';
 
 import { generateFields } from './components/fields/index.ts';
@@ -20,16 +22,37 @@ import type { FormProps } from './components/Form.tsx';
 import { generateTemplates } from './components/templates/index.ts';
 import { generateWidgets } from './components/widgets/index.ts';
 
-/** The core theme: every field, widget and template `@rjsf/core` implements */
+/** Which parts of a field `@rjsf/core`'s fields and widgets draw themselves. The fields that render one widget leave
+ * every part to it, and a widget draws only what its entry says, so the `FieldTemplate` draws the rest. Built fresh on
+ * every call, as the rest of the theme is, since a caller may mutate it
+ */
+function generatePresentation(): ThemePresentation {
+  return {
+    widgets: {
+      CheckboxWidget: { label: 'self', description: 'self' },
+      CheckboxesWidget: { labelledBy: 'aria-labelledby' },
+      RadioWidget: { labelledBy: 'aria-labelledby' },
+    },
+    fields: {
+      ArrayField: { ...WIDGET_FIELD_PRESENTATION },
+      BooleanField: { ...WIDGET_FIELD_PRESENTATION },
+      NumberField: { ...WIDGET_FIELD_PRESENTATION },
+      StringField: { ...WIDGET_FIELD_PRESENTATION },
+    },
+  };
+}
+
+/** The core theme: every field, widget and template `@rjsf/core` implements, and which parts of a field they draw */
 export function generateTheme<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> {
+>(): Pick<Registry<T, S, F>, 'fields' | 'widgets' | 'templates'> & { presentation: ThemePresentation } {
   return {
     fields: generateFields<T, S, F>(),
     widgets: generateWidgets<T, S, F>(),
     templates: generateTemplates<T, S, F>(),
+    presentation: generatePresentation(),
   };
 }
 
@@ -70,7 +93,7 @@ export function buildRegistry<
   F extends FormContextType = FormContextType,
 >(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
   const { translateString = englishStringTranslator, uiSchema } = props;
-  const { fields, templates, widgets } = generateTheme<T, S, F>();
+  const { fields, templates, widgets, presentation } = generateTheme<T, S, F>();
   return {
     fields: { ...fields, ...props.fields },
     templates: {
@@ -82,7 +105,7 @@ export function buildRegistry<
       },
     },
     widgets: { ...widgets, ...props.widgets },
-    presentation: mergeThemePresentation(),
+    presentation: mergeThemePresentation(presentation, props.presentation),
     rootSchema: schema,
     // `F` may be narrower than `{}`, but an omitted formContext is an empty object
     formContext: props.formContext ?? ({} as F),
