@@ -11,6 +11,7 @@ import {
   RJSF_REF_KEY,
   THEN_KEY,
 } from '../constants.ts';
+import { normalizeRootReferences, rawRootOf } from '../findSchemaDefinition.ts';
 import { sortedJSONStringify } from '../hashForSchema.ts';
 import { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
@@ -246,13 +247,19 @@ export default function schemaParser<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(rootSchema: S, options: SchemaParserOptions<S> = {}): SchemaMap<S> {
-  const validator = new ParserValidator<S, F>(rootSchema);
+  // Normalize once here: the walk's per-call wrapper re-normalizes any root it doesn't recognize, so parsing
+  // from the raw root would re-walk the whole root - embedded resources included - for every parsed sub-schema.
+  // The `ParserValidator` still stashes the root exactly as the author wrote it, since the schemas it collects
+  // are serialized into precompiled validators that must compile the author's document
+  const normalizedRoot = normalizeRootReferences<S>(rootSchema);
+  /* v8 ignore next -- `normalizeRootReferences` records the raw root for every root it returns, so the lookup never misses; the fallback only guards a hand-built normalized root */
+  const validator = new ParserValidator<S, F>(rawRootOf<S>(normalizedRoot) ?? normalizedRoot);
 
   parseSchema(
     { ...options, validator },
     { parsed: new Set(), resolved: new Set(), patterns: new Set() },
-    rootSchema,
-    rootSchema,
+    normalizedRoot,
+    normalizedRoot,
   );
 
   return validator.getSchemaMap();

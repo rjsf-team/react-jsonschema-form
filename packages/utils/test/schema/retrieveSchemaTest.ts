@@ -6080,6 +6080,65 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       expect(resolved.properties!.a).toMatchObject({ title: 'OTHER' });
     });
 
+    it('resolves a relative $ref against the sibling $id scope on a 2020-12 root (#5477 review)', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://x.com/root.json',
+        type: 'object',
+        $defs: {
+          a: { $id: 'nested/a.json', $ref: 'b.json' },
+          b: { $id: 'b.json', minimum: 5 },
+          nested: { $id: 'nested/', $defs: { b: { $id: 'b.json', minimum: 2 } } },
+        },
+      };
+      const resolved = resolveAllReferences({ $ref: '#/$defs/a' }, root, [], root.$id);
+      // a sibling `$id` re-identifies the referrer, so the target lands in the merge branch; the merged
+      // `minimum` says which `b.json` was found (ROOT-B writes 5, NESTED-B writes 2)
+      expect(resolved.allOf).toMatchObject([{ $id: 'nested/a.json' }, { minimum: 2 }]);
+    });
+
+    it('does not collide two nested resources that use the same relative $ref spelling (#5477 review)', () => {
+      const root: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        type: 'object',
+        $defs: {
+          aParent: {
+            $id: 'a/parent.json',
+            type: 'object',
+            properties: { x: { $ref: 'child.json' } },
+            $defs: {
+              child: { $id: 'child.json', type: 'object', properties: { next: { $ref: '../b/parent.json' } } },
+            },
+          },
+          bParent: {
+            $id: 'b/parent.json',
+            type: 'object',
+            properties: { y: { $ref: 'child.json' } },
+            $defs: { child: { $id: 'child.json', type: 'string' } },
+          },
+        },
+        properties: { r: { $ref: 'a/parent.json' } },
+      };
+      const resolved = resolveAllReferences({ $ref: '#/properties/r' }, root, [], undefined);
+      const next = (resolved.properties!.x as RJSFSchema).properties!.next as RJSFSchema;
+      // b/parent.json's own `child.json` is the string schema, not a's object one, and not a cycle
+      expect(next.properties!.y).toMatchObject({ type: 'string' });
+    });
+
+    it('on a draft-7 root a $ref ignores the $id written beside it (#5477 review)', () => {
+      const root: RJSFSchema = {
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        $id: 'https://ex.com/root.json',
+        definitions: {
+          foo: { type: 'object', properties: { bar: { $ref: '#/definitions/bar' } } },
+          bar: { type: 'string' },
+        },
+        properties: { a: { $id: 'https://other.com/a.json', $ref: '#/definitions/foo' } },
+      };
+      const resolved = resolveAllReferences({ $ref: '#/properties/a' }, root, [], root.$id);
+      expect(resolved.properties!.bar).toMatchObject({ type: 'string' });
+    });
+
     it('resolves a local $id next to $ref against the referring scope, not the target scope', () => {
       const root: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',

@@ -75,14 +75,24 @@ export default function resolveUiSchema<
       try {
         // The lookup goes against the scope the schema sits in: `ref` prefers the author's spelling, which
         // keys `ui:definitions` correctly but is relative to a nested `$id` resource when one applies, and a
-        // lookup against the root's base would miss it
-        const scope = lexicalScopeOfNode<S>(registry.rootSchema, schema);
-        resolvedSchema = findSchemaDefinitionWithBaseURI<S>(
-          declaredRef<S>(schema),
-          registry.rootSchema,
-          [],
-          scope,
-        ).schema;
+        // lookup against the root's base would miss it. The root's own base answers for every schema that
+        // isn't inside a nested resource, so it goes first, and the identity walk only pays for the miss
+        try {
+          resolvedSchema = findSchemaDefinitionWithBaseURI<S>(
+            declaredRef<S>(schema),
+            registry.rootSchema,
+            [],
+            undefined,
+          ).schema;
+        } catch {
+          const scope = lexicalScopeOfNode<S>(registry.rootSchema, schema);
+          resolvedSchema = findSchemaDefinitionWithBaseURI<S>(
+            declaredRef<S>(schema),
+            registry.rootSchema,
+            [],
+            scope,
+          ).schema;
+        }
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
         return result;

@@ -30,6 +30,7 @@ import findSchemaDefinition, {
   isPre2019Root,
   lexicalScopeOfNode,
   normalizeRootReferences,
+  forValidation,
   carryOriginalRef,
   originalRefOf,
   resourceName,
@@ -152,7 +153,8 @@ export function resolveCondition<
 
   // `null` is checked as `{}` like `undefined`: object keywords such as `required` ignore non-objects, so a `null`
   // would satisfy `if: { required: ['a'] }` and take `then` for an object with no data
-  const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
+  const [condition, conditionRoot] = forValidation<S>(expression as S, rootSchema);
+  const conditionValue = context.validator.isValid(condition, formData ?? {}, conditionRoot);
   let resolvedSchemas = [resolvedSchemaLessConditional as S];
   let schemas: S[] = [];
   if (expandAllBranches) {
@@ -698,17 +700,34 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
   let pathList = recurseList;
   // resolve top level ref
   if (REF_KEY in resolvedSchema) {
-    const { $ref, ...localSchema } = resolvedSchema;
+    // A stale source-ref marker must not survive into the merge below: it is re-written from `authorRef`
+    // when this pass resolves a different spelling than the author's, and dropped otherwise, so a node
+    // materialized from an earlier ref and then re-pointed by a merge never keeps the old ref's marker
+    const { $ref, ...localSchemaRaw } = resolvedSchema;
+    const localSchema = localSchemaRaw as S & Record<symbol, unknown>;
+    delete localSchema[RJSF_SOURCE_REF_KEY];
+    // On a root of 2019-09 or later a `$ref` resolves against the `$id` written beside it; before that a `$ref`
+    // ignores its sibling keywords, `$id` included, so the referring scope stands
+    const siblingId = localSchema[ID_KEY];
+    const siblingScope =
+      !isPre2019Root(rootSchema) && typeof siblingId === 'string' && !siblingId.startsWith('#')
+        ? resolveUri(currentBaseURI ?? '', siblingId)
+        : undefined;
+    const refScope = siblingScope ?? currentBaseURI;
     // The path holds each ref as this walk carries it and as the expanded target carries it: a ref
     // normalization rewrote meets its own target again under the resolved spelling, and either spelling
     // repeating is the cycle. On a re-walk (passCount > 0), a schema whose RJSF_REF_KEY marker equals its
     // $ref was materialized from that ref by an earlier pass and had the collapsed $ref merged back onto it
     // (e.g. by a dependencies or if/then merge): expanding it again would repeat the earlier pass forever,
     // so it stays collapsed too.
-    const cycleBase = $ref!.startsWith('#') ? pointerScope : currentBaseURI;
+    const cycleBase = $ref!.startsWith('#') ? pointerScope : refScope;
     const resolvedRef = cycleBase !== undefined ? resolveUri(cycleBase, $ref!) : $ref!;
+    // A relative ref kept as written (a nested resource's own spelling) names nothing outside its scope, so its
+    // raw spelling must not collide with the same spelling written in another resource: only its resolved
+    // spelling goes on the path. Same-document (`#`) and absolute spellings are scope-safe and keep matching raw
+    const rawIsScoped = $ref!.startsWith('#') || resolvedRef === $ref!;
     if (
-      pathList.includes($ref!) ||
+      (rawIsScoped && pathList.includes($ref!)) ||
       pathList.includes(resolvedRef) ||
       (passCount > 0 && (resolvedSchema as Record<symbol, unknown>)[RJSF_REF_KEY] === $ref)
     ) {
@@ -718,14 +737,18 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
         ? carryOriginalRef({ ...resolvedSchema, [RJSF_REF_CYCLE_KEY]: true }, resolvedSchema)
         : resolvedSchema;
     }
-    pathList = resolvedRef !== $ref ? [...pathList, $ref!, resolvedRef] : [...pathList, $ref];
+    if (resolvedRef !== $ref) {
+      pathList = rawIsScoped ? [...pathList, $ref!, resolvedRef] : [...pathList, resolvedRef];
+    } else {
+      pathList = [...pathList, $ref];
+    }
     // Look the ref up against the normalized root: its refs are already resolved against the root's own base,
     // so the lookup treats the ref as already resolved first and only resolves it against the given scope when
     // it matches nothing as given (a relative ref written on the caller's own schema, which the normalization
     // never touched). A same-document ref (one starting with `#`) names a pointer inside the resource the
     // referring schema currently belongs to, so it looks up against `pointerScope`; every other ref goes
     // against the referring scope. Chain failures inside the lookup still throw.
-    const lookupBase = $ref!.startsWith('#') ? pointerScope : currentBaseURI;
+    const lookupBase = $ref!.startsWith('#') ? pointerScope : refScope;
     // A ref that normalization rewrote names its resource as given; any other (including a restored author
     // spelling) resolves against the current scope first, and the refs inside the normalized root are resolved
     let found = findSchemaDefinitionWithBaseURIOrUndefined<S>(
@@ -736,6 +759,24 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
       originalRefOf(resolvedSchema) !== undefined,
       true,
     );
+    if (
+      found === undefined &&
+      siblingScope !== undefined &&
+      siblingScope !== currentBaseURI &&
+      !$ref!.startsWith('#')
+    ) {
+      // A caller-held schema's `$id` need not be the scope its refs were written against (the walk's own
+      // callers pass such nodes with the referring scope): when the sibling-`$id` reading misses, the
+      // referring scope gets its turn before the miss is final
+      found = findSchemaDefinitionWithBaseURIOrUndefined<S>(
+        $ref,
+        rootSchema,
+        [],
+        currentBaseURI,
+        originalRefOf(resolvedSchema) !== undefined,
+        true,
+      );
+    }
     if (found === undefined && !$ref!.startsWith('#')) {
       // A node a caller holds from an earlier walk carries no base URI of its own, so its relative ref was
       // looked up against the root and missed; recover the scope the walk gave the node's resource - the
@@ -761,7 +802,7 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     const pre2019 = isPre2019Root(rootSchema);
     if (
       ID_KEY in localSchema &&
-      !(pre2019 && REF_KEY in localSchema) &&
+      !pre2019 &&
       typeof localSchema[ID_KEY] === 'string' &&
       // A fragment-only `$id` anchors a location inside the current resource; it establishes no scope of
       // its own, so it cannot override the referenced resource's scope either
@@ -789,8 +830,10 @@ function resolveAllReferencesInternal<S extends StrictRJSFSchema = RJSFSchema>(
     // rewrote it, is kept on a separate marker for `resolveUiSchema`, whose `ui:definitions` are keyed by that
     // spelling.
     const authorRef = originalRefOf(resolvedSchema);
+    const refSchemaLessMarker = { ...refSchema } as S & Record<symbol, unknown>;
+    delete refSchemaLessMarker[RJSF_SOURCE_REF_KEY];
     resolvedSchema = {
-      ...refSchema,
+      ...refSchemaLessMarker,
       ...localSchema,
       [RJSF_REF_KEY]: $ref!,
       ...(authorRef !== undefined && authorRef !== $ref ? { [RJSF_SOURCE_REF_KEY]: authorRef } : {}),
@@ -1255,7 +1298,8 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
             return false;
           }
           const conditionSchema = { type: 'object', properties: { [dependencyKey]: conditionPropertySchema } } as S;
-          return context.validator.isValid(conditionSchema, formData, rootSchema);
+          const [check, checkRoot] = forValidation<S>(conditionSchema, rootSchema);
+          return context.validator.isValid(check, formData, checkRoot);
         });
   return matching.length === 1 ? [withoutOneOf, matching[0]] : [withoutOneOf];
 }
@@ -1308,7 +1352,8 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   const refs = new Set(followedRefs);
   merged.push(referencedDefinition<S>(schema, rootSchema, refs));
   if (IF_KEY in schema && rootSchema !== undefined) {
-    const holds = context.validator.isValid(schema[IF_KEY] as S, formData, rootSchema);
+    const [condition, conditionRoot] = forValidation<S>(schema[IF_KEY] as S, rootSchema);
+    const holds = context.validator.isValid(condition, formData, conditionRoot);
     merged.push((holds ? schema[THEN_KEY] : schema[ELSE_KEY]) as S | boolean | undefined);
   }
   const properties = schema[PROPERTIES_KEY];
@@ -1923,7 +1968,10 @@ export function resolveAnyOrOneOfSchemas<
       // declines the switch to another option, the data still fitting the chosen one is what keeps it. That asks for
       // the option under the derived `$id` scoring gives it, since the retrieved form is not what the option's own
       // `$id` names, so the derivation is applied to the option here too
-      retrievedOptions.forEach((item) => context.validator.isValid(withVariantId<S>(item), formData, rootSchema));
+      retrievedOptions.forEach((item) => {
+        const [restoredItem, itemRoot] = forValidation<S>(item, rootSchema);
+        context.validator.isValid(withVariantId<S>(restoredItem), formData, itemRoot);
+      });
       getFirstMatchingOption<T, S, F>(
         context,
         formData,
@@ -2345,7 +2393,8 @@ export function withExactlyOneSubschema<
           [dependencyKey]: conditionPropertySchema,
         },
       } as S;
-      return context.validator.isValid(conditionSchema, formData, rootSchema) || expandAllBranches;
+      const [check, checkRoot] = forValidation<S>(conditionSchema, rootSchema);
+      return context.validator.isValid(check, formData, checkRoot) || expandAllBranches;
     }
     return false;
   });

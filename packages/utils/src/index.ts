@@ -36,7 +36,7 @@ import {
   fieldPathToName,
   toFieldPath,
 } from './fieldPath.ts';
-import findSchemaDefinition, { carryOriginalRef, normalizeRootReferences } from './findSchemaDefinition.ts';
+import findSchemaDefinition, { carryOriginalRef, normalizeRootReferences, rawRootOf } from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getChangedFields from './getChangedFields.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
@@ -303,6 +303,7 @@ export {
   mergeSchemas,
   noop,
   normalizeRootReferences,
+  rawRootOf,
   offsetTimeToLocalTime,
   omitConsumedStyling,
   optionalControlsId,

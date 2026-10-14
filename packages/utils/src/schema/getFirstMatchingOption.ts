@@ -1,5 +1,6 @@
 import { allowsAdditionalProperties } from '../additionalPropertiesUtils.ts';
 import { ALL_OF_KEY, ID_KEY, JUNK_OPTION_ID, PROPERTIES_KEY, REQUIRED_KEY } from '../constants.ts';
+import { forValidation } from '../findSchemaDefinition.ts';
 import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import hashForSchema from '../hashForSchema.ts';
 import isObject from '../isObject.ts';
@@ -194,11 +195,15 @@ export default function getFirstMatchingOption<
       : undefined;
     if (discriminatorField && discriminator !== undefined) {
       const value = getByPath<T>(formData, discriminatorField);
-      if (context.validator.isValid(discriminator, value, rootSchema)) {
+      const [check, checkRoot] = forValidation<S>(discriminator, rootSchema);
+      if (context.validator.isValid(check, value, checkRoot)) {
         return i;
       }
-    } else if (context.validator.isValid(scoringSchema<S>(option), formData, rootSchema)) {
-      return i;
+    } else {
+      const [check, checkRoot] = forValidation<S>(scoringSchema<S>(option), rootSchema);
+      if (context.validator.isValid(check, formData, checkRoot)) {
+        return i;
+      }
     }
   }
   return 0;

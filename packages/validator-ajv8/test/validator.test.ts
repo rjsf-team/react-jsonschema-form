@@ -3288,4 +3288,44 @@ describe('AJV8Validator validating against a normalized draft-7 root without an 
     });
     expect(validator.isValid({ $ref: '#/definitions/parent' }, { v: 'x' }, su.getRootSchema())).toBe(true);
   });
+
+  it('compiles the author spelling of a root whose relative $id has a directory part (#5477 review)', () => {
+    const root: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      $id: 'schemas/root.json',
+      type: 'object',
+      definitions: { s: { type: 'string' } },
+      properties: { k: { $ref: '#/definitions/s' } },
+      if: { properties: { k: { const: 'a' } } },
+      then: { properties: { extra: { type: 'number' } } },
+    };
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, root);
+    // the if/then check runs `isValid` while the walk holds the normalized root; the validator must still
+    // compile the author's document, or the rewritten ref double-resolves against the relative `$id`
+    su.retrieveSchema(su.getRootSchema(), { k: 'a' });
+    expect(su.getValidator().validateFormData({ k: 'a', extra: 1 }, root).errors).toEqual([]);
+    expect(validator.isValid(root, { k: 'a' }, su.getRootSchema())).toBe(true);
+  });
+
+  it('compiles a same-document ref inside a nested resource with a relative $id as written (#5477 review)', () => {
+    const root: RJSFSchema = {
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      type: 'object',
+      definitions: {
+        p: {
+          $id: 'nested/parent.json',
+          type: 'object',
+          properties: { s: { $ref: '#/definitions/str' } },
+          definitions: { str: { type: 'string' } },
+        },
+      },
+      properties: { r: { $ref: 'nested/parent.json' } },
+    };
+    const validator = customizeValidator();
+    const su = createSchemaUtils({ validator }, root);
+    su.retrieveSchema(su.getRootSchema(), { r: { s: 'x' } });
+    expect(su.getValidator().validateFormData({ r: { s: 'x' } }, root).errors).toEqual([]);
+    expect(validator.isValid({ $ref: '#/definitions/p' }, { s: 'x' }, su.getRootSchema())).toBe(true);
+  });
 });

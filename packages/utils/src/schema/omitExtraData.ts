@@ -5,7 +5,7 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
 } from '../additionalPropertiesUtils.ts';
-import findSchemaDefinition from '../findSchemaDefinition.ts';
+import findSchemaDefinition, { forValidation } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
@@ -239,7 +239,12 @@ export default function omitExtraData<
     if (condition === undefined) {
       return target;
     }
-    const isThenBranch = isSchemaObject<S>(condition) ? validator.isValid(condition, source, rootSchema) : condition;
+    let isThenBranch: JSONSchema7Definition = condition;
+    if (isSchemaObject<S>(condition)) {
+      // The validator compiles the author's document, never the walk's normalized root (see `forValidation`)
+      const [check, checkRoot] = forValidation<S>(condition, rootSchema);
+      isThenBranch = validator.isValid(check, source, checkRoot);
+    }
     const branch = isThenBranch ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
   }

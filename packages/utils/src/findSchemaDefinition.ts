@@ -204,22 +204,27 @@ export function isPre2019Root<S extends StrictRJSFSchema = RJSFSchema>(rootSchem
 function walkEmbeddedSchemas<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   ref: string,
+  normalizedRef: string,
   baseURI = '',
   asWrittenRef?: string,
   pre2019 = false,
 ): FoundSchema<S> | undefined {
   const currentURI = childScope(schema, baseURI, pre2019);
+  // `ref` is normalized once by the caller (`findEmbeddedSchemaRecursive`) rather than at every `$id` node here
+  const currentName = resourceName(currentURI);
   if (
     typeof schema[ID_KEY] === 'string' &&
     // A fragment-only `$id` is an anchor: it leaves the scope unchanged, so it must not match the scope it
     // sits in, the same way `childScope` leaves it out of the scope
     !schema[ID_KEY].startsWith('#') &&
-    (uriEqual(resourceName(currentURI), ref) || (asWrittenRef !== undefined && schema[ID_KEY] === asWrittenRef))
+    (currentName === ref ||
+      normalizeUri(currentName) === normalizedRef ||
+      (asWrittenRef !== undefined && schema[ID_KEY] === asWrittenRef))
   ) {
     return { schema, baseURI: currentURI };
   }
   for (const subSchema of subschemas(schema)) {
-    const result = walkEmbeddedSchemas<S>(subSchema, ref, currentURI, asWrittenRef, pre2019);
+    const result = walkEmbeddedSchemas<S>(subSchema, ref, normalizedRef, currentURI, asWrittenRef, pre2019);
     if (result !== undefined) {
       return result;
     }
@@ -245,9 +250,13 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(
   asWrittenRef?: string,
   pre2019 = false,
 ): FoundSchema<S> | undefined {
+  // The ref's normalized form is computed once for the whole walk rather than per `$id` node
+  const normalizedRef = normalizeUri(ref);
   return (
-    walkEmbeddedSchemas<S>(schema, ref, baseURI, undefined, pre2019) ??
-    (asWrittenRef !== undefined ? walkEmbeddedSchemas<S>(schema, ref, baseURI, asWrittenRef, pre2019) : undefined)
+    walkEmbeddedSchemas<S>(schema, ref, normalizedRef, baseURI, undefined, pre2019) ??
+    (asWrittenRef !== undefined
+      ? walkEmbeddedSchemas<S>(schema, ref, normalizedRef, baseURI, asWrittenRef, pre2019)
+      : undefined)
   );
 }
 
@@ -585,6 +594,30 @@ export function restoreOriginalRefs<S extends StrictRJSFSchema = RJSFSchema>(
  */
 const normalizedRoots = new WeakSet<StrictRJSFSchema>();
 
+/** The root a caller handed in, keyed by the root `normalizeRootReferences` produced from it. Validators compile
+ * the author's document: the normalized root carries rewritten ref spellings a validator resolves a second time
+ * against the enclosing `$id` (a relative root `$id` with a directory part then double-resolves), so a validator
+ * must never see the normalized root
+ */
+const rawRoots = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
+
+/** Returns the root exactly as the caller wrote it when `rootSchema` is a root `normalizeRootReferences` produced,
+ * `undefined` otherwise
+ */
+export function rawRootOf<S extends StrictRJSFSchema = RJSFSchema>(rootSchema: S): S | undefined {
+  return rawRoots.get(rootSchema) as S | undefined;
+}
+
+/** Returns `[schema, rootSchema]` as a validator must see them: the root exactly as the author wrote it (the
+ * normalized root carries ref spellings a validator resolves a second time against the enclosing `$id`, so a
+ * relative root `$id` with a directory part would double-resolve), with the checked schema's refs restored to the
+ * spelling the author wrote. A root no normalization produced is returned as given, with the schema untouched
+ */
+export function forValidation<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): [S, S] {
+  const rawRoot = rawRootOf<S>(rootSchema);
+  return rawRoot !== undefined ? [restoreOriginalRefs<S>(schema, true), rawRoot] : [schema, rootSchema];
+}
+
 /** Returns `rootSchema` with every ref inside it resolved against the root's own base (`$id` when present, `#`
  * otherwise), so that refs carried by nested content keep the meaning they were written with no matter which
  * scope later looks them up. A root this function already produced comes back unchanged, so repeated entry points
@@ -611,6 +644,7 @@ export function normalizeRootReferences<S extends StrictRJSFSchema = RJSFSchema>
     // Only a root this function produced is marked: marking the input when something changed would freeze it,
     // and a root edited in place after a normalization must be read as it now stands on the next call
     normalizedRoots.add(normalized);
+    rawRoots.set(normalized, rootSchema);
     return normalized;
   }
   // A no-op normalization gets a marked shallow copy: a caller that stores the result (createSchemaUtils)
@@ -618,6 +652,7 @@ export function normalizeRootReferences<S extends StrictRJSFSchema = RJSFSchema>
   // stays unmarked, so a root edited in place is still re-read as it stands when it is passed in again
   const copy = { ...rootSchema };
   normalizedRoots.add(copy);
+  rawRoots.set(copy, rootSchema);
   return copy;
 }
 

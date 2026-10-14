@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, logOnce, rawRootOf, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import createAjvInstance from './createAjvInstance.ts';
@@ -221,22 +221,26 @@ export default class AJV8Validator<
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   handleSchemaUpdate(rootSchema: S): void {
-    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
+    // Validators compile the author's document: a root the utils walk normalized carries ref spellings AJV
+    // resolves a second time against the enclosing `$id`, so a relative root `$id` with a directory part would
+    // double-resolve. Register the root exactly as the author wrote it instead
+    const authorRoot = rawRootOf<S>(rootSchema) ?? rootSchema;
+    if (this.lastSeenRootSchema === authorRoot && this.hasRegisteredRootSchema) {
       return;
     }
     // An empty `$id` names nothing, so the root is registered under `ROOT_SCHEMA_PREFIX` instead: that is the
     // base `withIdRefPrefix()` rewrites a local `$ref` against, and nothing would resolve it under an empty name
-    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
+    const rootSchemaId = authorRoot[ID_KEY] || ROOT_SCHEMA_PREFIX;
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // if schema validator instance doesn't exist, add it.
     // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
     if (this.ajv.getSchema(rootSchemaId) === undefined) {
-      this.ajv.addSchema(rootSchema, rootSchemaId);
-    } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
+      this.ajv.addSchema(authorRoot, rootSchemaId);
+    } else if (!deepEquals(authorRoot, this.ajv.getSchema(rootSchemaId)?.schema)) {
       this.ajv.removeSchema(rootSchemaId);
-      this.ajv.addSchema(rootSchema, rootSchemaId);
+      this.ajv.addSchema(authorRoot, rootSchemaId);
     }
-    this.lastSeenRootSchema = rootSchema;
+    this.lastSeenRootSchema = authorRoot;
     this.hasRegisteredRootSchema = true;
   }
 
