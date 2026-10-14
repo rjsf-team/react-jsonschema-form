@@ -1,4 +1,12 @@
-import { ALL_OF_KEY, DEPENDENCIES_KEY, ELSE_KEY, REF_KEY, RJSF_REF_KEY, THEN_KEY } from './constants.ts';
+import {
+  ALL_OF_KEY,
+  DEPENDENCIES_KEY,
+  ELSE_KEY,
+  REF_KEY,
+  REF_SIBLING_BRANCHES,
+  RJSF_REF_KEY,
+  THEN_KEY,
+} from './constants.ts';
 import mergeSchemas from './mergeSchemas.ts';
 import type { GenericObjectType, RJSFMarkedSchema, RJSFSchema, StrictRJSFSchema } from './types.ts';
 
@@ -26,12 +34,24 @@ export function resolvedFromRef<S extends StrictRJSFSchema = RJSFSchema>(schema:
  */
 const BRANCH_KEYWORDS: string[] = [ALL_OF_KEY, DEPENDENCIES_KEY, ELSE_KEY, THEN_KEY];
 
-/** Marks a schema resolved from a `$ref` that had branch keywords beside it with the names of those keywords. The
- * resolved schema holds the definition's keywords and the ones from beside the `$ref` alike, and only this tells them
- * apart. It is exported for this package alone, which sets it in `resolvedSchemaOf()` and reads it in
- * `enclosingRefPath()`.
+/** One frozen list per combination of branch keywords, so that resolving the same `$ref` again marks it with the same
+ * value and `replaceEqualDeep()` can keep the earlier resolution.
  */
-export const REF_SIBLING_BRANCHES = Symbol('__rjsf_ref_sibling_branches');
+const siblingBranchLists = new Map<string, readonly string[]>();
+
+function siblingBranchList(siblings: object): readonly string[] | undefined {
+  const branches = BRANCH_KEYWORDS.filter((keyword) => Reflect.get(siblings, keyword) !== undefined);
+  if (branches.length === 0) {
+    return undefined;
+  }
+  const key = branches.join();
+  let list = siblingBranchLists.get(key);
+  if (list === undefined) {
+    list = Object.freeze(branches);
+    siblingBranchLists.set(key, list);
+  }
+  return list;
+}
 
 /** Returns the schema a `$ref` resolves to: the definition it names under the keywords that stood beside it, marked
  * with the reference it was resolved from and with which of its branch keywords were ones beside the `$ref`.
@@ -46,15 +66,9 @@ export function resolvedSchemaOf<S extends StrictRJSFSchema = RJSFSchema>(
   definition: S,
   siblings: object,
 ): S {
-  let siblingBranches: string[] | undefined;
-  for (const keyword of BRANCH_KEYWORDS) {
-    if (Reflect.get(siblings, keyword) !== undefined) {
-      (siblingBranches ??= []).push(keyword);
-    }
-  }
   const resolved = { ...definition, ...siblings, [RJSF_REF_KEY]: ref };
   // A list the definition or the siblings carry from an earlier resolution is not this reference's
-  setOrDelete(resolved, REF_SIBLING_BRANCHES, siblingBranches);
+  setOrDelete(resolved, REF_SIBLING_BRANCHES, siblingBranchList(siblings));
   return resolved;
 }
 

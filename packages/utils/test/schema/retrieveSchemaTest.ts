@@ -9,11 +9,12 @@ import {
   isObject,
   PROPERTIES_KEY,
   retrieveSchema,
+  REF_SIBLING_BRANCHES,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   noop,
 } from '../../src/index.ts';
-import { REF_SIBLING_BRANCHES, resolvedFromRef } from '../../src/refOf.ts';
+import { resolvedFromRef } from '../../src/refOf.ts';
 import {
   getAdditionalPropertyType,
   getAllPermutationsOfXxxOf,

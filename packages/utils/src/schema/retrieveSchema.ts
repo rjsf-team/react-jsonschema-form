@@ -463,6 +463,7 @@ export function resolveSchema<
     );
   }
   if (ALL_OF_KEY in schema && Array.isArray(schema[ALL_OF_KEY])) {
+    const allOfRecurseList = enclosingRefPath<S>(schema, recurseList, ALL_OF_KEY);
     const allOfSchemaElements: S[][] = schema.allOf.map((allOfSubschema) =>
       retrieveSchemaInternal<T, S, F>(
         context,
@@ -470,7 +471,7 @@ export function resolveSchema<
         rootSchema,
         formData,
         expandAllBranches,
-        enclosingRefPath<S>(schema, recurseList, ALL_OF_KEY),
+        allOfRecurseList,
         undefined,
         preserveDependencies,
         passCount > 0 ? 1 : 0,

@@ -1,13 +1,6 @@
 import type { RJSFSchema } from '../src/index.ts';
-import { RJSF_REF_KEY } from '../src/index.ts';
-import {
-  enclosingRefPath,
-  mergeBranch,
-  REF_SIBLING_BRANCHES,
-  refSiblingBranches,
-  resolvedFromRef,
-  resolvedSchemaOf,
-} from '../src/refOf.ts';
+import { REF_SIBLING_BRANCHES, replaceEqualDeep, RJSF_REF_KEY } from '../src/index.ts';
+import { enclosingRefPath, mergeBranch, refSiblingBranches, resolvedFromRef, resolvedSchemaOf } from '../src/refOf.ts';
 
 describe('resolvedSchemaOf()', () => {
   const definition: RJSFSchema = { type: 'object', allOf: [{ title: 'from the definition' }] };
@@ -23,6 +16,14 @@ describe('resolvedSchemaOf()', () => {
     expect(refSiblingBranches(fromDefinition)).toBeUndefined();
     expect(enclosingRefPath(fromDefinition, [], 'allOf')).toEqual(['#/definitions/B']);
     expect(refSiblingBranches(fromSiblings)).toEqual(['allOf']);
+  });
+
+  it('marks a second resolution of the same $ref with the same value, so it can replace the first', () => {
+    const resolve = () =>
+      resolvedSchemaOf('#/definitions/A', definition, { allOf: [{ title: 'beside' }], then: { title: 'beside' } });
+    const first = resolve();
+
+    expect(replaceEqualDeep(first, resolve())).toBe(first);
   });
 
   it('does not count a sibling keyword that is present but undefined as a branch beside the $ref', () => {
