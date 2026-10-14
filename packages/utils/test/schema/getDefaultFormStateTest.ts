@@ -4536,9 +4536,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ['a', '0'],
         ],
       ])('should not add index keys to object form data for %s', (_, schema, formData, indexKeyPath) => {
-        expect(getDefaultFormState({ validator: testValidator }, { schema, formData })).not.toHaveProperty(
-          indexKeyPath,
-        );
+        const result = getDefaultFormState({ validator: testValidator }, { schema, formData });
+        // Only an object holding the key is the bug; a string or array that satisfies the schema has index keys too
+        const holder = indexKeyPath
+          .slice(0, -1)
+          .reduce<unknown>((value, key) => (value as GenericObjectType)?.[key], result);
+        const holderIsObject = typeof holder === 'object' && holder !== null && !Array.isArray(holder);
+        expect(holderIsObject && Object.hasOwn(holder, indexKeyPath.at(-1)!)).toBe(false);
       });
       it('should not spread a primitive form data value into an object default', () => {
         const schema: RJSFSchema = { type: 'string', enum: ['a', 'b'], default: { a: 1 } };

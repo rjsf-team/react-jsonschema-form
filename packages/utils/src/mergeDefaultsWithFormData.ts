@@ -11,7 +11,8 @@ import isObject from './isObject.ts';
  *     which case the extras are appended onto the end of the form data
  *   - when the array is not set in form data, the default is copied over
  * - scalars are overwritten/set by form data unless undefined and there is a default AND `defaultSupercedesUndefined`
- *   is true
+ *   is true, or unless `overrideFormDataWithDefaults` is true and the form data is neither `undefined` nor `null`, in
+ *   which case the default replaces it
  * - a non-object default is ignored when form data is an object, whatever the flags, so
  *   `mergeDefaultsWithFormData('x', { b: 2 })` returns `{ b: 2 }`
  *
@@ -19,10 +20,11 @@ import isObject from './isObject.ts';
  * @param [formData] - The form data into which the defaults will be merged
  * @param [mergeExtraArrayDefaults=false] - If true, any additional default array entries are appended onto the formData
  * @param [defaultSupercedesUndefined=false] - If true, an explicit undefined value will be overwritten by the default value
- * @param [overrideFormDataWithDefaults=false] - If true, the default value will overwrite the form data value. If the value
- *        doesn't exist in the default, we take it from formData and in the case where the value is set to undefined in formData.
- *       This is useful when we have already merged formData with defaults and want to add an additional field from formData
- *       that does not exist in defaults.
+ * @param [overrideFormDataWithDefaults=false] - If true, the default value will overwrite the form data value, except
+ *        that an `undefined` or `null` form data value is kept unless `defaultSupercedesUndefined` is true, a form data
+ *        key or array entry that doesn't exist in the defaults keeps its value, and object form data is never replaced
+ *        by a non-object default. This is useful when we have already merged formData with defaults and want to add an
+ *        additional field from formData that does not exist in defaults.
  * @returns - The resulting merged form data with defaults
  */
 export default function mergeDefaultsWithFormData<T = unknown>(
