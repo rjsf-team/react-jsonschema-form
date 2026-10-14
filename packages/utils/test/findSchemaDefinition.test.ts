@@ -429,6 +429,19 @@ describe('findSchemaDefinition()', () => {
       expect(findSchemaDefinition('#/$defs/lib/properties/p', bundle)).toBe(lib.$defs!.x);
       expect(findSchemaDefinition('#/$defs/lib/$defs/inner/properties/q', bundle)).toBe(inner.$defs!.x);
     });
+    it('rebases on a resource the pointer reaches through a keyword holding one subschema', () => {
+      const item: RJSFSchema = {
+        $id: 'item.json',
+        properties: { r: { $ref: '#/$defs/x' } },
+        $defs: { x: { type: 'null' } },
+      };
+      const bundle: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        $defs: { list: { type: 'array', items: item }, x: { type: 'number' } },
+      };
+      expect(findSchemaDefinition('#/$defs/list/items/properties/r', bundle)).toBe(item.$defs!.x);
+    });
     it('rebases on a resource the pointer reaches from an embedded base', () => {
       const bundle = bundleUnder('https://example.com/root.json');
       expect(findSchemaDefinition('#/$defs/inner/properties/q', bundle, 'https://example.com/lib.json')).toBe(
@@ -462,6 +475,61 @@ describe('findSchemaDefinition()', () => {
         allOf: [{ $id: '#anchored' }, { type: 'string' }],
       });
     });
+    it('does not rebase on an `$id` under a keyword that holds no subschemas', () => {
+      const pet: RJSFSchema = { $id: 'pet.json', properties: { name: { $ref: '#/components/Name' } } };
+      const bundle = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        properties: { a: { $ref: '#/components/Pet/properties/name' } },
+        components: { Pet: pet, Name: { type: 'string' } },
+      } as unknown as RJSFSchema;
+      const utils = createSchemaUtils({ validator: getTestValidator({}) }, bundle);
+      expect(utils.retrieveSchema(utils.getRootSchema()).properties!.a).toMatchObject({ type: 'string' });
+    });
+    it('reads a circular reference the caller already followed under the base it passes', () => {
+      const bundle = bundleUnder('https://example.com/root.json');
+      const cyclic: RJSFSchema = { ...lib, $defs: { ...lib.$defs, y: { $ref: '#/$defs/x' } } };
+      const cyclicBundle: RJSFSchema = { ...bundle, $defs: { ...bundle.$defs, lib: cyclic } };
+      expect(() =>
+        findSchemaDefinitionRecursive('#/$defs/y', cyclicBundle, ['#/$defs/x'], 'https://example.com/lib.json'),
+      ).toThrow('Definition for #/$defs/y is a circular reference');
+    });
+  });
+  describe('the keywords beside a `$ref` into an embedded resource', () => {
+    const bundleUnder = (rootId: string | undefined): RJSFSchema => ({
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      ...(rootId === undefined ? {} : { $id: rootId }),
+      properties: { a: { $ref: '#/$defs/lib/$defs/x', properties: { y: { $ref: '#/$defs/top' } } } },
+      $defs: { lib: { $id: 'lib.json', $defs: { x: { type: 'object' } } }, top: { type: 'string' } },
+    });
+
+    it('keep the base of the resource they were written in through `createSchemaUtils()`', () => {
+      const utils = createSchemaUtils({ validator: getTestValidator({}) }, bundleUnder(undefined));
+      const a = utils.retrieveSchema(utils.getRootSchema()).properties!.a as RJSFSchema;
+      expect(a.properties!.y).toMatchObject({ type: 'string' });
+    });
+    it('keep the base of the resource they were written in through `retrieveSchema()`', () => {
+      const bundle = bundleUnder('https://example.com/root.json');
+      const a = retrieveSchema({ validator: getTestValidator({}) }, bundle, bundle, {}).properties!.a as RJSFSchema;
+      expect(a.properties!.y).toMatchObject({ type: 'string' });
+    });
+    it('resolve against an `$id` beside the `$ref`, as the `$ref` does', () => {
+      const bundle: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'https://example.com/root.json',
+        properties: {
+          a: {
+            $id: 'own.json',
+            $ref: '#/$defs/obj',
+            properties: { y: { $ref: '#/$defs/str' } },
+            $defs: { obj: { type: 'object' }, str: { type: 'string' } },
+          },
+        },
+        $defs: { obj: { type: 'number' }, str: { type: 'number' } },
+      };
+      const a = retrieveSchema({ validator: getTestValidator({}) }, bundle, bundle, {}).properties!.a as RJSFSchema;
+      expect(a.type).toBe('object');
+      expect(a.properties!.y).toMatchObject({ type: 'string' });
+    });
   });
   it('finds a resource whose relative nested `$id` ends in `/`', () => {
     const bundle: RJSFSchema = {
@@ -472,6 +540,36 @@ describe('findSchemaDefinition()', () => {
     expect(findSchemaDefinition('https://example.com/nested/#/$defs/x', bundle)).toBe(
       (bundle.$defs!.dir as RJSFSchema).$defs!.x,
     );
+    expect(() => findSchemaDefinition('https://example.com/nested', bundle)).toThrow(
+      'Could not find a definition for https://example.com/nested',
+    );
+  });
+  it('finds a root whose `$id` ends in an empty fragment', () => {
+    const bundle: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json#',
+      properties: { a: { $ref: '#/$defs/x' } },
+      $defs: { x: { type: 'string' } },
+    };
+    const utils = createSchemaUtils({ validator: getTestValidator({}) }, bundle);
+    expect(utils.retrieveSchema(utils.getRootSchema()).properties!.a).toMatchObject({ type: 'string' });
+  });
+  it('resolves a `#` ref inside an embedded resource whose `$id` ends in an empty fragment', () => {
+    const bundle: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'https://example.com/root.json',
+      properties: { a: { $ref: 'lib.json' } },
+      $defs: {
+        lib: {
+          $id: 'lib.json#',
+          type: 'object',
+          properties: { c: { $ref: '#/$defs/n' } },
+          $defs: { n: { type: 'string' } },
+        },
+      },
+    };
+    const a = retrieveSchema({ validator: getTestValidator({}) }, bundle, bundle, {}).properties!.a as RJSFSchema;
+    expect(a.properties!.c).toMatchObject({ type: 'string' });
   });
   it('resolves relative refs made absolute against the `#` base used for a root without `$id`', () => {
     const schemaWithoutId: RJSFSchema = {
