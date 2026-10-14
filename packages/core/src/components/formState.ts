@@ -1937,7 +1937,13 @@ function deriveFromProps<T, S extends StrictRJSFSchema, F extends FormContextTyp
   // `NaN` taken again on every pass
   const isFormDataSeen = Object.is(props.formData, state.formDataProp) || Object.is(props.formData, state.formData);
   if (props.formData !== undefined && !isFormDataSeen) {
-    return deriveDataState(state, props.formData, props, true);
+    const next = deriveDataState(state, props.formData, props, true);
+    // The pairing view follows the container writes the form made, so it describes the form's own data. A copy of that
+    // data, as from a parent storing a clone of what `onChange` reported, keeps it; any other value, such as a parent
+    // setting a reorder back, is paired against the data as it last settled, from before those writes (#5451)
+    return deepEquals(props.formData, state.formData)
+      ? next
+      : { ...next, settledFormDataForPairing: next.settledFormData };
   }
   const context = deriveRenderContext(props, state.retrievedSchema, state, resolveSchemaUtils(props, state));
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(state, context);
