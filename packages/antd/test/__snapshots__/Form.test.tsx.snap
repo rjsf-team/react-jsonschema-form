@@ -343,7 +343,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_tasks__title"
+                                          id="root_tasks__title"
                                           title="tasks"
                                         >
                                           tasks
@@ -397,7 +397,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                             >
                                                               <label
                                                                 class="ant-form-item-required"
-                                                                for="root_tasks_0__title"
+                                                                id="root_tasks_0__title"
                                                                 title="tasks-1"
                                                               >
                                                                 tasks-1
@@ -668,7 +668,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                             >
                                                               <label
                                                                 class="ant-form-item-required"
-                                                                for="root_tasks_1__title"
+                                                                id="root_tasks_1__title"
                                                                 title="tasks-2"
                                                               >
                                                                 tasks-2
@@ -1046,7 +1046,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_tags__title"
+                                          id="root_tags__title"
                                           title="tags"
                                         >
                                           tags
@@ -1709,7 +1709,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_person__title"
+                                          id="root_person__title"
                                           title="person"
                                         >
                                           person
@@ -1871,7 +1871,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_person_address__title"
+                                                            id="root_person_address__title"
                                                             title="address"
                                                           >
                                                             address
@@ -2765,7 +2765,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_tasks__title"
+                                          id="root_tasks__title"
                                           title="tasks"
                                         >
                                           tasks
@@ -2819,7 +2819,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                             >
                                                               <label
                                                                 class="ant-form-item-required"
-                                                                for="root_tasks_0__title"
+                                                                id="root_tasks_0__title"
                                                                 title="tasks-1"
                                                               >
                                                                 tasks-1
@@ -3090,7 +3090,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                             >
                                                               <label
                                                                 class="ant-form-item-required"
-                                                                for="root_tasks_1__title"
+                                                                id="root_tasks_1__title"
                                                                 title="tasks-2"
                                                               >
                                                                 tasks-2
@@ -3468,7 +3468,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_tags__title"
+                                          id="root_tags__title"
                                           title="tags"
                                         >
                                           tags
@@ -3963,7 +3963,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_person__title"
+                                          id="root_person__title"
                                           title="person"
                                         >
                                           person
@@ -4125,7 +4125,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_person_address__title"
+                                                            id="root_person_address__title"
                                                             title="address"
                                                           >
                                                             address
@@ -5562,7 +5562,7 @@ exports[`single fields > Cyclic schema 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="A registration form"
                       >
                         A registration form
@@ -5608,7 +5608,7 @@ exports[`single fields > Cyclic schema 1`] = `
                                       >
                                         <label
                                           class=""
-                                          for="root_child__title"
+                                          id="root_child__title"
                                           title="A registration form"
                                         >
                                           A registration form
@@ -7880,7 +7880,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="test"
                       >
                         test
@@ -7926,7 +7926,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class=""
-                                          for="root_nestedObjectOptional__title"
+                                          id="root_nestedObjectOptional__title"
                                           title="nestedObjectOptional"
                                         >
                                           nestedObjectOptional
@@ -8030,7 +8030,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepObjectOptional__title"
+                                                            id="root_nestedObjectOptional_deepObjectOptional__title"
                                                             title="deepObjectOptional"
                                                           >
                                                             deepObjectOptional
@@ -8143,7 +8143,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            for="root_nestedObjectOptional_deepObject__title"
+                                                            id="root_nestedObjectOptional_deepObject__title"
                                                             title="deepObject"
                                                           >
                                                             deepObject
@@ -8257,7 +8257,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepArrayOptional__title"
+                                                            id="root_nestedObjectOptional_deepArrayOptional__title"
                                                             title="deepArrayOptional"
                                                           >
                                                             deepArrayOptional
@@ -8366,7 +8366,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepArrayOptional2__title"
+                                                            id="root_nestedObjectOptional_deepArrayOptional2__title"
                                                             title="deepArrayOptional2"
                                                           >
                                                             deepArrayOptional2
@@ -8475,7 +8475,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            for="root_nestedObjectOptional_deepArray__title"
+                                                            id="root_nestedObjectOptional_deepArray__title"
                                                             title="deepArray"
                                                           >
                                                             deepArray
@@ -8593,7 +8593,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class=""
-                                          for="root_nestedArrayOptional__title"
+                                          id="root_nestedArrayOptional__title"
                                           title="nestedArrayOptional"
                                         >
                                           nestedArrayOptional
@@ -8701,7 +8701,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedObject__title"
+                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
                                           nestedObject
@@ -8815,7 +8815,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedArray__title"
+                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
                                           nestedArray
@@ -9307,7 +9307,7 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="test"
                       >
                         test
@@ -9357,7 +9357,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class=""
-                                          for="root_nestedObjectOptional__title"
+                                          id="root_nestedObjectOptional__title"
                                           title="nestedObjectOptional"
                                         >
                                           nestedObjectOptional
@@ -9466,7 +9466,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepObjectOptional__title"
+                                                            id="root_nestedObjectOptional_deepObjectOptional__title"
                                                             title="deepObjectOptional"
                                                           >
                                                             deepObjectOptional
@@ -9584,7 +9584,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            for="root_nestedObjectOptional_deepObject__title"
+                                                            id="root_nestedObjectOptional_deepObject__title"
                                                             title="deepObject"
                                                           >
                                                             deepObject
@@ -9703,7 +9703,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepArrayOptional__title"
+                                                            id="root_nestedObjectOptional_deepArrayOptional__title"
                                                             title="deepArrayOptional"
                                                           >
                                                             deepArrayOptional
@@ -9813,7 +9813,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepArrayOptional2__title"
+                                                            id="root_nestedObjectOptional_deepArrayOptional2__title"
                                                             title="deepArrayOptional2"
                                                           >
                                                             deepArrayOptional2
@@ -9923,7 +9923,7 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            for="root_nestedObjectOptional_deepArray__title"
+                                                            id="root_nestedObjectOptional_deepArray__title"
                                                             title="deepArray"
                                                           >
                                                             deepArray
@@ -10042,7 +10042,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class=""
-                                          for="root_nestedArrayOptional__title"
+                                          id="root_nestedArrayOptional__title"
                                           title="nestedArrayOptional"
                                         >
                                           nestedArrayOptional
@@ -10151,7 +10151,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedObject__title"
+                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
                                           nestedObject
@@ -10270,7 +10270,7 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedArray__title"
+                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
                                           nestedArray
@@ -10770,7 +10770,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="test"
                       >
                         test
@@ -10823,7 +10823,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           >
                                             <label
                                               class=""
-                                              for="root_nestedObjectOptional__title"
+                                              id="root_nestedObjectOptional__title"
                                               title="nestedObjectOptional"
                                             >
                                               nestedObjectOptional
@@ -10972,7 +10972,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                             >
                                                               <label
                                                                 class=""
-                                                                for="root_nestedObjectOptional_deepObjectOptional__title"
+                                                                id="root_nestedObjectOptional_deepObjectOptional__title"
                                                                 title="deepObjectOptional"
                                                               >
                                                                 deepObjectOptional
@@ -11068,7 +11068,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            for="root_nestedObjectOptional_deepObject__title"
+                                                            id="root_nestedObjectOptional_deepObject__title"
                                                             title="deepObject"
                                                           >
                                                             deepObject
@@ -11182,7 +11182,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepArrayOptional__title"
+                                                            id="root_nestedObjectOptional_deepArrayOptional__title"
                                                             title="deepArrayOptional"
                                                           >
                                                             deepArrayOptional
@@ -11298,7 +11298,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                             >
                                                               <label
                                                                 class=""
-                                                                for="root_nestedObjectOptional_deepArrayOptional2__title"
+                                                                id="root_nestedObjectOptional_deepArrayOptional2__title"
                                                                 title="deepArrayOptional2"
                                                               >
                                                                 deepArrayOptional2
@@ -11399,7 +11399,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            for="root_nestedObjectOptional_deepArray__title"
+                                                            id="root_nestedObjectOptional_deepArray__title"
                                                             title="deepArray"
                                                           >
                                                             deepArray
@@ -11524,7 +11524,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           >
                                             <label
                                               class=""
-                                              for="root_nestedArrayOptional__title"
+                                              id="root_nestedArrayOptional__title"
                                               title="nestedArrayOptional"
                                             >
                                               nestedArrayOptional
@@ -11776,7 +11776,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedObject__title"
+                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
                                           nestedObject
@@ -11890,7 +11890,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedArray__title"
+                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
                                           nestedArray
@@ -12025,7 +12025,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_optionalObjectWithOneofs__title"
+                                                            id="root_optionalObjectWithOneofs__title"
                                                             title="optionalObjectWithOneofs"
                                                           >
                                                             optionalObjectWithOneofs
@@ -12156,7 +12156,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_optionalArrayWithAnyofs__title"
+                                                            id="root_optionalArrayWithAnyofs__title"
                                                             title="optionalArrayWithAnyofs"
                                                           >
                                                             optionalArrayWithAnyofs
@@ -12284,7 +12284,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="test"
                       >
                         test
@@ -12334,7 +12334,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class=""
-                                          for="root_nestedObjectOptional__title"
+                                          id="root_nestedObjectOptional__title"
                                           title="nestedObjectOptional"
                                         >
                                           nestedObjectOptional
@@ -12443,7 +12443,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepObjectOptional__title"
+                                                            id="root_nestedObjectOptional_deepObjectOptional__title"
                                                             title="deepObjectOptional"
                                                           >
                                                             deepObjectOptional
@@ -12508,7 +12508,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            for="root_nestedObjectOptional_deepObject__title"
+                                                            id="root_nestedObjectOptional_deepObject__title"
                                                             title="deepObject"
                                                           >
                                                             deepObject
@@ -12627,7 +12627,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepArrayOptional__title"
+                                                            id="root_nestedObjectOptional_deepArrayOptional__title"
                                                             title="deepArrayOptional"
                                                           >
                                                             deepArrayOptional
@@ -12737,7 +12737,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_nestedObjectOptional_deepArrayOptional2__title"
+                                                            id="root_nestedObjectOptional_deepArrayOptional2__title"
                                                             title="deepArrayOptional2"
                                                           >
                                                             deepArrayOptional2
@@ -12803,7 +12803,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            for="root_nestedObjectOptional_deepArray__title"
+                                                            id="root_nestedObjectOptional_deepArray__title"
                                                             title="deepArray"
                                                           >
                                                             deepArray
@@ -12922,7 +12922,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class=""
-                                          for="root_nestedArrayOptional__title"
+                                          id="root_nestedArrayOptional__title"
                                           title="nestedArrayOptional"
                                         >
                                           nestedArrayOptional
@@ -13139,7 +13139,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedObject__title"
+                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
                                           nestedObject
@@ -13258,7 +13258,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedArray__title"
+                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
                                           nestedArray
@@ -13387,7 +13387,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     >
                                                       <label
                                                         class=""
-                                                        for="root_optionalObjectWithOneofs__title"
+                                                        id="root_optionalObjectWithOneofs__title"
                                                         title="optionalObjectWithOneofs"
                                                       >
                                                         optionalObjectWithOneofs
@@ -13480,7 +13480,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     >
                                                       <label
                                                         class=""
-                                                        for="root_optionalArrayWithAnyofs__title"
+                                                        id="root_optionalArrayWithAnyofs__title"
                                                         title="optionalArrayWithAnyofs"
                                                       >
                                                         optionalArrayWithAnyofs
@@ -13573,7 +13573,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="test"
                       >
                         test
@@ -13626,7 +13626,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                           >
                                             <label
                                               class=""
-                                              for="root_nestedObjectOptional__title"
+                                              id="root_nestedObjectOptional__title"
                                               title="nestedObjectOptional"
                                             >
                                               nestedObjectOptional
@@ -13730,7 +13730,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                           >
                                             <label
                                               class=""
-                                              for="root_nestedArrayOptional__title"
+                                              id="root_nestedArrayOptional__title"
                                               title="nestedArrayOptional"
                                             >
                                               nestedArrayOptional
@@ -13830,7 +13830,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedObject__title"
+                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
                                           nestedObject
@@ -13944,7 +13944,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedArray__title"
+                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
                                           nestedArray
@@ -14079,7 +14079,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_optionalObjectWithOneofs__title"
+                                                            id="root_optionalObjectWithOneofs__title"
                                                             title="optionalObjectWithOneofs"
                                                           >
                                                             optionalObjectWithOneofs
@@ -14210,7 +14210,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                         >
                                                           <label
                                                             class=""
-                                                            for="root_optionalArrayWithAnyofs__title"
+                                                            id="root_optionalArrayWithAnyofs__title"
                                                             title="optionalArrayWithAnyofs"
                                                           >
                                                             optionalArrayWithAnyofs
@@ -14338,7 +14338,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="test"
                       >
                         test
@@ -14388,7 +14388,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class=""
-                                          for="root_nestedObjectOptional__title"
+                                          id="root_nestedObjectOptional__title"
                                           title="nestedObjectOptional"
                                         >
                                           nestedObjectOptional
@@ -14454,7 +14454,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class=""
-                                          for="root_nestedArrayOptional__title"
+                                          id="root_nestedArrayOptional__title"
                                           title="nestedArrayOptional"
                                         >
                                           nestedArrayOptional
@@ -14519,7 +14519,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedObject__title"
+                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
                                           nestedObject
@@ -14638,7 +14638,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          for="root_nestedArray__title"
+                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
                                           nestedArray
@@ -14767,7 +14767,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                     >
                                                       <label
                                                         class=""
-                                                        for="root_optionalObjectWithOneofs__title"
+                                                        id="root_optionalObjectWithOneofs__title"
                                                         title="optionalObjectWithOneofs"
                                                       >
                                                         optionalObjectWithOneofs
@@ -14860,7 +14860,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                     >
                                                       <label
                                                         class=""
-                                                        for="root_optionalArrayWithAnyofs__title"
+                                                        id="root_optionalArrayWithAnyofs__title"
                                                         title="optionalArrayWithAnyofs"
                                                       >
                                                         optionalArrayWithAnyofs
@@ -15271,7 +15271,6 @@ exports[`single fields > required checkbox field 1`] = `
                                         class="ant-checkbox-input"
                                         id="root_agree"
                                         name="root_agree"
-                                        required=""
                                         type="checkbox"
                                       />
                                     </span>
@@ -15372,7 +15371,6 @@ exports[`single fields > required checkbox field, default true 1`] = `
                                         class="ant-checkbox-input"
                                         id="root_agree"
                                         name="root_agree"
-                                        required=""
                                         type="checkbox"
                                       />
                                     </span>
@@ -18271,7 +18269,7 @@ exports[`single fields > title field 1`] = `
                     >
                       <label
                         class=""
-                        for="root__title"
+                        id="root__title"
                         title="Titre 1"
                       >
                         Titre 1

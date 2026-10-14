@@ -11,7 +11,7 @@ import type {
   UiSchema,
   Widget,
 } from '@rjsf/utils';
-import { ANY_OF_KEY, getPresentationDeclaration, resolveFieldPresentation } from '@rjsf/utils';
+import { ANY_OF_KEY, getPresentationDeclaration, resolveFieldPresentation, schemaRequiresTrueValue } from '@rjsf/utils';
 
 import getFieldWidget from './fieldWidgetUtils.ts';
 
@@ -156,6 +156,13 @@ export default function useSchemaFieldPresentation<
     // an opted-out optional field, there is no label of its own, and the field below keeps the heading it draws
     return xxxOfKey !== undefined && hidden ? { ...declared, label: 'template' as const } : declared;
   }, [registry, schema, plannedField, plannedKey, widget, xxxOfKey, hidden]);
+  // A control holding `false` left alone, as an unchecked checkbox does, would fail the browser's own check of a native
+  // `required` for a value the schema accepts, so it is required, by its attribute and its marker alike, only where the
+  // schema demands `true` (#5388)
+  const controlRequired = useMemo(
+    () => required && (!declaration?.uncheckedIsFalse || schemaRequiresTrueValue<S>(schema)),
+    [required, declaration, schema],
+  );
   // Memoized, since a `FallbackField` asks `getDisplayLabel()`
   const hasControl = useMemo(
     () =>
@@ -178,7 +185,7 @@ export default function useSchemaFieldPresentation<
         errors,
         hideError,
         hasControl,
-        required,
+        required: controlRequired,
         inherited,
       }),
     [
@@ -192,7 +199,7 @@ export default function useSchemaFieldPresentation<
       errors,
       hideError,
       hasControl,
-      required,
+      controlRequired,
       inherited,
     ],
   );

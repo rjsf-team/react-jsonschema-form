@@ -887,4 +887,23 @@ describe('aria-describedby', () => {
       descriptionId('root_region'),
     );
   });
+
+  test("names an object's option selector by the object's heading", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          title: 'Pet',
+          properties: { name: { type: 'string' } },
+          anyOf: [
+            { title: 'Dog', properties: { bark: { type: 'string' } } },
+            { title: 'Cat', properties: { meow: { type: 'string' } } },
+          ],
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
+  });
 });

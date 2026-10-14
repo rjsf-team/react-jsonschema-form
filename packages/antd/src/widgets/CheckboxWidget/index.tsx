@@ -54,7 +54,7 @@ export default function CheckboxWidget<
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
       name={htmlName || id}
-      required={required}
+      required={trueValueRequired}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
       aria-describedby={ariaDescribedByIds(id)}

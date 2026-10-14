@@ -21,6 +21,7 @@ import {
   fieldPathToId,
   getByPath,
   getDeprecatedHandling,
+  getDescribedControlAttributes,
   getFieldClassNames,
   getFieldLabel,
   getFieldTypeForWidget,
@@ -452,21 +453,48 @@ function getPresentationBesideOptions(presentation: FieldPresentation): FieldPre
 
 /** Gets the plan the field rendering a field component's options is handed when that component is not planned as it:
  * the parts the component draws itself are its own, such as a custom field's label or an object's heading, so the
- * options' selector draws none of them and isn't pointed at a label id the component may not render
+ * options' selector draws none of them. A container's heading, which renders under the label id its plan gives it,
+ * names the selector as a template's label would, and its description and errors describe it, marking it invalid while
+ * they show. A custom field, or a layout grid, may render none of the ids its own parts take, so neither its label
+ * nor the ids of the parts it draws itself name or describe the selector, or the option below that inherits this plan.
+ * Only the control's attributes reach the selector, which takes an id of its own
  *
  * @param presentation - The plan of the field component the options render beside
+ * @param id - The id of the field
+ * @param isContainer - Whether that component is core's `ObjectField` or `ArrayField`, which draw their heading under
+ *   the plan's label id
  * @returns - The plan of the field rendering the options
  */
-function getOptionsPresentation(presentation: FieldPresentation): FieldPresentation {
-  const { label, description, help, errors } = presentation;
+function getOptionsPresentation(presentation: FieldPresentation, id: string, isContainer: boolean): FieldPresentation {
+  const { label, description, help, errors, control, describedBy } = presentation;
   const notDrawn = <P extends PartPresentation>(part: P): P => (part.by === 'self' ? { ...part, by: 'none' } : part);
-  return {
-    ...presentation,
-    label: notDrawn(label),
+  const namedByHeading = isContainer && control === undefined && label.by === 'self';
+  const parts = {
+    label: namedByHeading ? { ...label, by: 'above' as const } : notDrawn(label),
     description: notDrawn(description),
     help: notDrawn(help),
     errors: notDrawn(errors),
   };
+  if (namedByHeading) {
+    const attributes = getDescribedControlAttributes(describedBy, errors.messages);
+    return { ...presentation, ...parts, control: { id, attributes, requiredMarker: false } };
+  }
+  if (isContainer) {
+    return { ...presentation, ...parts };
+  }
+  const ownIds = new Set(
+    [label, description, help, errors].filter((part) => part.by === 'self').map((part) => part.id),
+  );
+  const shownDescribers = describedBy.filter((describer) => !ownIds.has(describer));
+  let shownControl = control;
+  if (control) {
+    const { 'aria-describedby': _describedBy, 'aria-invalid': _invalid, ...attributes } = control.attributes;
+    shownControl = {
+      ...control,
+      attributes: { ...attributes, ...getDescribedControlAttributes(shownDescribers, errors.messages) },
+    };
+  }
+  return { ...presentation, ...parts, describedBy: shownDescribers, control: shownControl };
 }
 
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
@@ -626,8 +654,10 @@ function SchemaFieldRender<
   const { required: fieldUiRequired, initialValue: fieldInitialValue, emptyValue: fieldEmptyValue } = ownUiOptions;
   const uiRequired = uiBooleanOption(fieldUiRequired);
   const effectiveRequired = uiRequired ?? required;
-  // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideError = uiBooleanOption(uiOptions.hideError) ?? props.hideError;
+  // `ui:hideError` is resolved as the field's own, then the one the field above resolved to, then `ui:globalOptions`, so
+  // a parent's reaches its children even where a global one is set (#5490)
+  const hideError =
+    uiBooleanOption(ownUiOptions.hideError) ?? props.hideError ?? uiBooleanOption(globalUiOptions?.hideError);
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
   const inheritedPresentation = useInheritedPresentation(fieldId);
   // The property name and the title a parent hands down label the field above, which a selected option or the fallback
@@ -706,9 +736,23 @@ function SchemaFieldRender<
     () => (plannedAsOptions && presentation ? getPresentationBesideOptions(presentation) : presentation),
     [plannedAsOptions, presentation],
   );
+  const renderedComponent = fieldToRender?.FieldComponent;
+  const isContainer = renderedComponent === fields.ObjectField || renderedComponent === fields.ArrayField;
   const optionsPresentation = useMemo(
-    () => (!plannedAsOptions && presentation ? getOptionsPresentation(presentation) : presentation),
-    [plannedAsOptions, presentation],
+    () =>
+      xxxOfOptions && !plannedAsOptions && presentation
+        ? getOptionsPresentation(presentation, fieldId, isContainer)
+        : presentation,
+    [xxxOfOptions, plannedAsOptions, presentation, fieldId, isContainer],
+  );
+  // The option below a custom field inherits the plan its options are handed, which describes it by none of the ids the
+  // custom field may not render; below a container it inherits the field's own, whose heading it compares its own with
+  const optionsBelow = useMemo(
+    () =>
+      presentationBelow && optionsPresentation && !isContainer && optionsPresentation !== presentation
+        ? { ...presentationBelow, plan: optionsPresentation }
+        : presentationBelow,
+    [presentationBelow, optionsPresentation, isContainer, presentation],
   );
 
   // Stop $ref cycles: when resolveAllReferences detects a repeated property $ref it tags the schema with this flag,
@@ -755,9 +799,7 @@ function SchemaFieldRender<
   }
   // Falling back to the field for the schema is kept over throwing, but a caller who asked for their own field would
   // otherwise have no sign it was dropped.
-  // The message describes the intended fallback. Until #5389 is fixed, `getDisplayLabel()` still hides the label for
-  // any top-level `ui:field` that is set, resolved or not, so that field's label is missing; that is #5389's to fix,
-  // not this message's.
+  // The message describes the fallback the field renders, which its plan labels as it labels that field anywhere else.
   // A `ui:globalOptions.field` reaches every field that sets none of its own, each with its own label, so it is warned
   // about once for the form rather than once per field. An `items` entry reaches every item of its array the same way,
   // so a field's own `ui:field` is named with the item's index left out, and every item the entry reaches shares one
@@ -894,7 +936,7 @@ function SchemaFieldRender<
         <>
           {field}
           {XxxOfField && (
-            <PresentationContext value={presentationBelow}>
+            <PresentationContext value={optionsBelow}>
               <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
                 <XxxOfField
                   name={name}

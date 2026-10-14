@@ -52,7 +52,7 @@ describe('a pure anyOf union', () => {
     expect(container.querySelector('#root__title')).toHaveTextContent('Dog');
   });
 
-  it('is named by its heading alone where it has properties beside the options', () => {
+  it('is named by its heading, which it repeats nowhere, where it has properties beside the options', () => {
     const schema: RJSFSchema = {
       type: 'object',
       title: 'Pet',
@@ -66,6 +66,7 @@ describe('a pure anyOf union', () => {
 
     expect(screen.getAllByText('Pet')).toHaveLength(1);
     expect(container.querySelector('#root__anyof_select-label')).not.toBeInTheDocument();
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
   });
 
   it('leaves the label to a custom field rendered beside the options', () => {

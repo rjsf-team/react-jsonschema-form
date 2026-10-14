@@ -139,7 +139,7 @@ export default function LayoutMultiSchemaField<
     readonly,
     required,
     errorSchema,
-    hideError = false,
+    hideError,
   } = props;
   const { fields, widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
@@ -153,7 +153,7 @@ export default function LayoutMultiSchemaField<
     title = '',
     placeholder = '',
     optionsSchemaSelector: selectorField = discriminator,
-    hideError: uiSchemaHideError,
+    hideError: _hideError,
     // See #439: the class names and style this field's `FieldTemplate` consumes must not reach the widget below, so
     // they are destructured out of the options it is handed and stripped from the `uiSchema` it is handed as well
     classNames: uiClassNames,
@@ -193,9 +193,12 @@ export default function LayoutMultiSchemaField<
   optionSchema = optionSchema?.type ? optionSchema : { ...optionSchema, type: option?.type || baseType };
   const { Widget } = resolveWidget<T, S, F>(optionSchema, widget, widgets);
 
-  // The following code was copied from `@rjsf`'s `SchemaField`
-  // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
-  const hideFieldError = uiBooleanOption(uiSchemaHideError) ?? hideError;
+  // Resolved as `SchemaField` resolves it: the field's own `ui:hideError`, then the one handed down, then
+  // `ui:globalOptions`
+  const hideFieldError =
+    uiBooleanOption(getUiOptions<T, S, F>(uiSchema).hideError) ??
+    hideError ??
+    uiBooleanOption(globalUiOptions?.hideError);
 
   const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;

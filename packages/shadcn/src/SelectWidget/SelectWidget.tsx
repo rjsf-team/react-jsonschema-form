@@ -113,9 +113,11 @@ export default function SelectWidget<
     ? toSections<S>(groupEnumOptions<S>(enumOptions, optgroups, enumDisabled), toFancyItem)
     : undefined;
 
-  const ariaProps = widgetAriaProps(props);
-  const { 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedby } = ariaProps;
-  const ariaLabelledby = 'aria-labelledby' in ariaProps ? ariaProps['aria-labelledby'] : undefined;
+  const {
+    'aria-label': ariaLabel,
+    'aria-labelledby': ariaLabelledby,
+    'aria-describedby': ariaDescribedby,
+  } = widgetAriaProps(props);
 
   const cnClassName = cn({ 'border-destructive': hasVisibleErrors({ rawErrors, hideError }) }, className);
 

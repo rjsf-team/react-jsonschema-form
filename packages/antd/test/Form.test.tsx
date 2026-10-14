@@ -379,4 +379,23 @@ describe('antd specific tests', () => {
     expect(container.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
     expect(container.querySelector('label[for="root_foo"]')).toHaveAttribute('title', 'Foo:');
   });
+
+  test("names an object's option selector by the object's heading", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          title: 'Pet',
+          properties: { name: { type: 'string' } },
+          anyOf: [
+            { title: 'Dog', properties: { bark: { type: 'string' } } },
+            { title: 'Cat', properties: { meow: { type: 'string' } } },
+          ],
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
+  });
 });

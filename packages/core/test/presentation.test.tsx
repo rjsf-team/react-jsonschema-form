@@ -8,7 +8,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId, titleId } from '@rjsf/utils';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
@@ -145,6 +145,20 @@ describe('the plan SchemaField builds', () => {
     expect(plan?.label).toEqual({ text: 'Foo', by: 'above', id: fieldLabelId('root_foo') });
   });
 
+  it('plans a required checkbox as required, by marker and attribute alike, only where its schema demands true', () => {
+    const { templatePlans } = renderPlans({
+      type: 'object',
+      required: ['agree', 'accept'],
+      properties: { agree: { type: 'boolean' }, accept: { type: 'boolean', const: true } },
+    });
+    expect(templatePlans.get('root_agree')?.control).toMatchObject({ requiredMarker: false });
+    expect(templatePlans.get('root_agree')?.control?.attributes.required).toBeUndefined();
+    expect(templatePlans.get('root_accept')?.control).toMatchObject({
+      requiredMarker: true,
+      attributes: { required: true },
+    });
+  });
+
   it('hands the template the same plan on a render that changes nothing it reads', () => {
     const schema: RJSFSchema = { type: 'object', properties: { foo: { type: 'string' }, bar: { type: 'string' } } };
     const { templatePlans, rerender } = renderPlans(schema, { formData: { foo: 'a', bar: 'b' } });
@@ -231,6 +245,22 @@ describe('the plan SchemaField builds', () => {
       expect(node.querySelector('#root_foo__anyof_select')).not.toHaveAttribute('aria-labelledby');
     });
 
+    it('is described, as the option below is, by none of the ids a custom field beside the options may not render', () => {
+      const MyField = () => <span id='custom' />;
+      const { node } = createFormComponent({
+        schema,
+        // An option given a uiSchema of its own renders its own field rather than the custom one (#5391)
+        uiSchema: { foo: { 'ui:field': MyField, anyOf: [{}, {}] } },
+        formData: { foo: 'a' },
+      });
+
+      for (const control of [node.querySelector('#root_foo__anyof_select')!, node.querySelector('input#root_foo')!]) {
+        const describers = control.getAttribute('aria-describedby')?.split(' ') ?? [];
+        expect(describers).not.toContain('root_foo_XxxOf__description');
+        describers.forEach((describer) => expect(node.querySelector(`#${describer}`)).toBeInTheDocument());
+      }
+    });
+
     it("draws no label of its own when the field's ui:label hides it", () => {
       const selectorProps: WidgetProps[] = [];
       function SelectWidget(props: WidgetProps) {
@@ -245,6 +275,47 @@ describe('the plan SchemaField builds', () => {
       });
       const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
       expect(selector.hideLabel).toBe(true);
+    });
+  });
+
+  describe('an object with properties beside its anyOf options', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      title: 'Pet',
+      properties: { name: { type: 'string' } },
+      anyOf: [
+        { title: 'Dog', properties: { bark: { type: 'string' } } },
+        { title: 'Cat', properties: { meow: { type: 'string' } } },
+      ],
+    };
+
+    it("names their selector by the object's heading", () => {
+      const { node } = createFormComponent({
+        schema,
+      });
+
+      expect(node.querySelector('#root__anyof_select')).toHaveAttribute('aria-labelledby', titleId('root_XxxOf'));
+      expect(node.querySelector('#root__anyof_select')).toHaveAccessibleName('Pet');
+    });
+
+    it("marks their selector invalid while the object's errors show", () => {
+      const { node } = createFormComponent({
+        schema,
+        extraErrors: { __errors: ['pick a pet'] },
+      });
+
+      expect(node.querySelector('#root__anyof_select')).toHaveAttribute('aria-invalid', 'true');
+      expect(node.querySelector('#root__anyof_select')).toHaveAttribute('aria-describedby', errorId('root'));
+    });
+
+    // A layout grid renders no heading under the plan's label id, so pointing the selector at one would name nothing
+    it('leaves their selector unnamed by a heading a layout grid rendered beside them does not draw', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:field': 'LayoutGridField', 'ui:layoutGrid': { 'ui:row': [{ 'ui:col': ['name'] }] } },
+      });
+
+      expect(node.querySelector('#root__anyof_select')).not.toHaveAttribute('aria-labelledby');
     });
   });
 
