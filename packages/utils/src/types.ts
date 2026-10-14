@@ -494,6 +494,10 @@ export type FieldHelpProps<
   id: string;
   /** Flag indicating whether there are errors associated with this field */
   hasErrors?: boolean;
+  /** The plan of the field, whose help id the help takes: an option showing help of its own beneath its field's takes
+   * `optionHelpId()` rather than repeating `helpId(id)`
+   */
+  presentation?: FieldPresentation;
 };
 
 /** The properties that are passed to a `GridTemplate` */
@@ -710,6 +714,10 @@ export interface Registry<
    * registered widgets
    */
   readonly widgets: RegistryWidgetsType<T, S, F>;
+  /** Which parts of a field each registered field and widget draws itself, merged from the declarations of `core`, the
+   * theme and the `Form`'s `presentation` prop by `mergeThemePresentation()`
+   */
+  readonly presentation: MergedThemePresentation;
   /** The `formContext` object that was passed to `Form` */
   readonly formContext: F;
   /** The root schema, as passed to the `Form`, which can contain referenced definitions */
@@ -771,6 +779,11 @@ export interface FieldProps<
   name: string;
   /** An array of strings listing all generated error messages from encountered errors for this field */
   rawErrors?: string[];
+  /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
+   * and the attributes its control carries. Set on the field `SchemaField` renders, not on the `SchemaField` itself,
+   * which builds it
+   */
+  presentation?: FieldPresentation;
 }
 
 /** Who draws one part of a field: its `FieldTemplate`, or the field or widget component itself. `widget` is for a field
@@ -800,15 +813,21 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
    * label's `fieldLabelId(id)`, which a group of controls needs since `for` names a single element
    */
   labelledBy?: 'for' | 'aria-labelledby';
+  /** Whether the control, left alone, already holds `false`, as an unchecked checkbox or switch does. A native
+   * `required` would then fail a value the schema accepts, so `@rjsf/core` plans the control as required only where the
+   * schema demands `true` (#5388)
+   */
+  uncheckedIsFalse?: boolean;
 }
 
 /** A widget's `PresentationDeclaration`, which has no widget beneath it to leave a part to */
 export type WidgetPresentationDeclaration = PresentationDeclaration<Exclude<PartOwner, 'widget'>>;
 
 /** A `PresentationDeclaration` with every part settled on the template or the component, as
- * `getPresentationDeclaration()` returns it
+ * `getPresentationDeclaration()` returns it, and `uncheckedIsFalse` left out where nothing declares it
  */
-export type ResolvedPresentationDeclaration = Required<WidgetPresentationDeclaration>;
+export type ResolvedPresentationDeclaration = Required<Omit<WidgetPresentationDeclaration, 'uncheckedIsFalse'>> &
+  Pick<WidgetPresentationDeclaration, 'uncheckedIsFalse'>;
 
 /** The declarations a theme registers for the components it provides, keyed by the registry key each is registered
  * under, so a component replacing another under the same key draws what that key declares. A component given
@@ -889,7 +908,8 @@ export interface FieldPresentation {
     id: string;
     /** Spread onto the element(s) carrying `id`, and nowhere else */
     attributes: ControlAttributes;
-    /** Whether the label shows a required marker, which a checkbox can show without its control being `required` */
+    /** Whether the label shows a required marker, as `attributes.required` has the control carry the native attribute
+     */
     requiredMarker: boolean;
   };
   /** The plan of the field above that renders this same id, which this one was built under */
@@ -962,10 +982,14 @@ export type FieldTemplateProps<
   hideError?: boolean;
   /** A boolean value stating if the field is disabled */
   disabled: boolean;
-  /** A boolean value stating if the label should be rendered or not. This is useful for nested fields in arrays where
-   * you don't want to clutter the UI
+  /** A boolean value stating if the template renders the label: true only where the field's `presentation` says the
+   * template draws it, so it is false where the widget draws its own label and where `ui:label: false` turns it off
    */
   displayLabel?: boolean;
+  /** The plan `SchemaField` built for the field: who draws its label, description, help and errors, under which ids,
+   * and the attributes its control carries
+   */
+  presentation?: FieldPresentation;
   /** The formData for this field */
   formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
@@ -1073,6 +1097,8 @@ export type ArrayFieldDescriptionProps<
   description?: string | ReactElement;
   /** The id of the field in the hierarchy */
   id: string;
+  /** The plan of the array, whose description id the description renders under when there is one */
+  presentation?: FieldPresentation;
 };
 
 /** The properties of the buttons to render for each element in the ArrayFieldTemplateProps.items array */
@@ -1195,6 +1221,10 @@ export type ContainerFieldTemplateProps<
   errorSchema?: ErrorSchema<T>;
   /** The optional data control node to render within the ObjectFieldTemplate that controls */
   optionalDataControl?: ReactNode;
+  /** The plan `SchemaField` built for the field: whether its heading and description are the container's to draw, and
+   * under which ids
+   */
+  presentation?: FieldPresentation;
 };
 
 /** The properties that are passed to an `ArrayFieldTemplate` implementation */
@@ -1302,6 +1332,7 @@ export type WrapIfAdditionalTemplateProps<
     | 'onRemoveProperty'
     | 'propertyNamesEnum'
     | 'registry'
+    | 'presentation'
   >;
 
 /** The properties that are passed to a MultiSchemaFieldTemplate implementation */
@@ -1341,7 +1372,9 @@ export interface WidgetProps<
   name: string;
   /** The current value for this widget */
   value: any;
-  /** The required status of this widget */
+  /** The required status of this widget. A widget declared `uncheckedIsFalse`, as `CheckboxWidget` is, is required only
+   * where the schema demands `true`, since left alone it already holds the `false` a required boolean accepts (#5388)
+   */
   required?: boolean;
   /** A boolean value stating if the widget is disabled */
   disabled?: boolean;
@@ -1370,14 +1403,18 @@ export interface WidgetProps<
   onFocus: (id: string, value: any) => void;
   /** The computed label for this widget, as a string */
   label: string;
-  /** A boolean value, if true, will cause the label to be hidden. This is useful for nested fields where you don't want
-   * to clutter the UI. Customized via `label` in the `UiSchema`
+  /** A boolean value, if true, tells the widget not to draw its label: its field's `presentation` has the template, or a
+   * field above rendering the same id, draw it, or `label` in the `UiSchema` turns it off
    */
   hideLabel?: boolean;
   /** A boolean value stating if the widget can accept multiple values */
   multiple?: boolean;
   /** An array of strings listing all generated error messages from encountered errors for this widget */
   rawErrors?: string[];
+  /** The plan of the field the widget renders the value of: whether it draws the label and description itself, and the
+   * attributes its control carries. Undefined for a widget rendered without a `SchemaField` above it
+   */
+  presentation?: FieldPresentation;
   /** The optional custom HTML name attribute generated by the nameGenerator function, if provided */
   htmlName?: string;
   /** An accessible name chosen by the widget's caller, such as the `DateElement` an `AltDateWidget` renders for each

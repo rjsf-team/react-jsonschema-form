@@ -97,6 +97,34 @@ const ThemeObject: ThemeProps = {
 export default ThemeObject;
 ```
 
+### Presentation
+
+A theme's **presentation** is a `ThemePresentation` declaring which parts of a field its fields and widgets draw themselves: the `label`, `description`, `errors` and `help`, each owned by the `'template'` (the `FieldTemplate`) or by the component itself (`'self'`), and `labelledBy`, how a label the template draws reaches the control.
+A widget whose control holds `false` left alone, as a checkbox or a switch does, declares `uncheckedIsFalse: true`, so a required boolean the schema lets be `false` isn't given a native `required` that would stop the browser submitting it ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)); `@rjsf/core` declares it for its `CheckboxWidget`.
+Declarations are keyed by the name a field or widget is registered under, so a wrapper registered under the same name keeps them.
+A `default` covers every part the theme's own entry for a widget leaves out, for every widget, custom ones included, so it also overrides what `@rjsf/core` declares for those parts; a `fieldDefault` covers every part a field's merged entry leaves out.
+
+```tsx
+import { ThemeProps } from '@rjsf/core';
+
+const ThemeObject: ThemeProps = {
+  widgets: myWidgets,
+  presentation: {
+    // Every widget built on this library draws its own label, its checkbox its description too
+    default: { label: 'self' },
+    widgets: { CheckboxWidget: { label: 'self', description: 'self' } },
+    // This theme's template draws no label, so an `anyOf`/`oneOf` field is named by its option selector
+    fields: { AnyOfField: { label: 'self' }, OneOfField: { label: 'self' } },
+  },
+};
+```
+
+A declaration states what the theme's templates and widgets do.
+`@rjsf/core` declares that its checkbox draws its own label and description, that a radio or checkboxes group is labelled through `aria-labelledby`, that the fields rendering one widget (`StringField`, `NumberField`, `BooleanField`, and `ArrayField` as a multi-select or files) leave every part to it, and that an `anyOf`/`oneOf` field and the fallback UI are labelled by the template; everything else is drawn by the template, except a custom field's or an object's label and description, which they draw themselves.
+`SchemaField` hands the theme's `FieldTemplate` the parts the plan gives it as `displayLabel`, `description`, `help` and `errors`, and its widgets `hideLabel`, so a template renders what it is handed and a widget draws its label where `hideLabel` is false.
+
+The theme's declarations are layered part by part over `@rjsf/core`'s, and the `Form`'s [`presentation`](../api-reference/form-props.md#presentation) prop over the theme's, by [`mergeThemePresentation()`](../api-reference/utility-functions.md#mergethemepresentation), so each layer declares only the parts it changes.
+
 ## Overriding other Form props
 
 Just as the theme can override **widgets**, **fields**, any of the **templates**, and set default values to properties like **showErrorList**, you can do the same with the instance of the withTheme() Form component.

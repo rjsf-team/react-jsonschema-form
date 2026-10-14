@@ -41,12 +41,15 @@ import {
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getChangedFields from './getChangedFields.ts';
+import getControlAttributes from './getControlAttributes.ts';
+import getControlDescribedBy from './getControlDescribedBy.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps from './getDateElementProps.ts';
 import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
 import getDateTimeLocalValue from './getDateTimeLocalValue.ts';
 import getDecimalSeparator from './getDecimalSeparator.ts';
 import getDeprecatedHandling from './getDeprecatedHandling.ts';
+import getDescribedControlAttributes from './getDescribedControlAttributes.ts';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema.ts';
 import getExampleSuggestions from './getExampleSuggestions.ts';
 import getFieldClassNames from './getFieldClassNames.ts';
@@ -67,6 +70,7 @@ import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
 import getSelectFieldType from './getSelectFieldType.ts';
+import getSelectorPresentation from './getSelectorPresentation.ts';
 import getStaticItemsUiSchema from './getStaticItemsUiSchema.ts';
 import getSubmitButtonOptions from './getSubmitButtonOptions.ts';
 import getTemplate from './getTemplate.ts';
@@ -83,10 +87,12 @@ import getWidget, {
   getWidgetType,
   resolveWidget,
 } from './getWidget.tsx';
+import getWidgetDescription from './getWidgetDescription.ts';
 import getXxxOfKey from './getXxxOfKey.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
 import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
+import hasAdditionalKeyLabel from './hasAdditionalKeyLabel.ts';
 import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
@@ -116,6 +122,7 @@ import isCustomWidget from './isCustomWidget.ts';
 import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
+import isLabelledByTemplate from './isLabelledByTemplate.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
@@ -249,10 +256,13 @@ export {
   flattenGroupedOptions,
   getAdditionalPropertySchema,
   getChangedFields,
+  getControlAttributes,
+  getControlDescribedBy,
   getDateElementProps,
   getDateTimeLocalValue,
   getDecimalSeparator,
   getDeprecatedHandling,
+  getDescribedControlAttributes,
   getDiscriminatorFieldFromSchema,
   getExampleSuggestions,
   getFieldClassNames,
@@ -274,6 +284,7 @@ export {
   getSchemaType,
   getSchemaTypeForValue,
   getSelectFieldType,
+  getSelectorPresentation,
   getByPath,
   getKnownTypes,
   getStaticItemsUiSchema,
@@ -285,11 +296,13 @@ export {
   getUnionTypes,
   getVisibleErrors,
   getWidget,
+  getWidgetDescription,
   getWidgetType,
   getXxxOfKey,
   getXxxOfOptions,
   groupEnumOptions,
   guessType,
+  hasAdditionalKeyLabel,
   hasByPath,
   hasVisibleErrors,
   hasWidget,
@@ -305,6 +318,7 @@ export {
   isEnumOptionsGroup,
   isFixedItems,
   isFormDataAvailable,
+  isLabelledByTemplate,
   isObject,
   isPlainObject,
   isSchemaObject,

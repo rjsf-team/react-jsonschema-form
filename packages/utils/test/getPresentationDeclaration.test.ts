@@ -390,6 +390,55 @@ describe('getPresentationDeclaration()', () => {
     });
   });
 
+  describe('uncheckedIsFalse', () => {
+    const widgets = { ...presentation.widgets, CheckboxWidget: { label: 'self', uncheckedIsFalse: true } } as const;
+    const fields = { Toggle: { uncheckedIsFalse: true } } as const;
+    const flagged = { ...source, presentation: { ...presentation, widgets, fields } };
+
+    it('takes it from the widget the field renders', () => {
+      expect(
+        getPresentationDeclaration(flagged, {
+          schema: { type: 'boolean' },
+          field: StringField,
+          fieldKey: 'BooleanField',
+          widget: 'checkbox',
+        }),
+      ).toMatchObject({ uncheckedIsFalse: true });
+    });
+
+    it("takes it from the field's own entry when the field renders no widget", () => {
+      expect(
+        getPresentationDeclaration(flagged, { schema: { type: 'boolean' }, field: ObjectField, fieldKey: 'Toggle' }),
+      ).toMatchObject({ uncheckedIsFalse: true });
+    });
+
+    it("ignores the field's own entry when the field renders a widget that doesn't declare it", () => {
+      const withBooleanField = {
+        ...flagged,
+        presentation: { ...flagged.presentation, fields: { BooleanField: { uncheckedIsFalse: true } } },
+      };
+      expect(
+        getPresentationDeclaration(withBooleanField, {
+          schema: { type: 'boolean' },
+          field: StringField,
+          fieldKey: 'BooleanField',
+          widget: 'RadioWidget',
+        }),
+      ).not.toHaveProperty('uncheckedIsFalse');
+    });
+
+    it('is left out where nothing declares it', () => {
+      expect(
+        getPresentationDeclaration(flagged, {
+          schema: { type: 'string' },
+          field: StringField,
+          fieldKey: 'StringField',
+          widget: 'TextWidget',
+        }),
+      ).not.toHaveProperty('uncheckedIsFalse');
+    });
+  });
+
   it('looks a field key up as an own property', () => {
     expect(
       getPresentationDeclaration(source, {

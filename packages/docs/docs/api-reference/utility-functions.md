@@ -95,7 +95,8 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 
 Renders the description of the `oneOf`/`anyOf` option currently selected in a single-select widget, through the `DescriptionFieldTemplate` from the registry.
 A theme's `SelectWidget` renders it so that choosing an option shows what that option is for, which the widget's own description cannot say.
-Nothing is rendered when the widget takes multiple values, when the label is suppressed by `hideLabel` or a `ui:label` of false, or when the selected option's schema has no `description`.
+Nothing is rendered when the widget takes multiple values, when a `ui:label` of false turns the label off, or when the selected option's schema has no `description`.
+Without its field's plan, `hideLabel` turns it off as well; under the plan, `hideLabel` says only that the widget doesn't draw the label, which the template may.
 
 #### Props
 
@@ -105,7 +106,8 @@ Nothing is rendered when the widget takes multiple values, when the label is sup
 - registry: Registry&lt;T, S, F> - The `registry` object, from which the `DescriptionFieldTemplate` is resolved
 - [uiSchema]: UiSchema&lt;T, S, F> - The uiSchema for the field, read for the `label` option
 - [multiple]: boolean - Optional flag, if true, nothing is rendered
-- [hideLabel]: boolean - Optional flag, if true, nothing is rendered
+- [hideLabel]: boolean - Optional flag, if true and there is no `presentation`, nothing is rendered
+- [presentation]: FieldPresentation - The plan of the widget's field, under which `hideLabel` is not read
 
 ## Non-Validator utility functions
 
@@ -907,6 +909,20 @@ Only the label handed to the `FieldTemplate` is decorated under `label`; the one
 
 - 'hide' | 'disable' | 'label' | undefined: The handling to apply, or `undefined` when the schema is not deprecated
 
+### getDescribedControlAttributes()
+
+Gets the attributes that describe a control from the parts of its field's plan: `aria-describedby` listing the ids of the parts that render, and `aria-invalid` while the field shows errors.
+[resolveFieldPresentation()](#resolvefieldpresentation) builds a control's attributes with it, and so can a caller planning a control the resolver didn't, such as an option selector named by an object's heading.
+
+#### Parameters
+
+- describedBy: readonly string[] - The ids of the parts describing the control, in order, each once
+- errors: readonly string[] - The error messages the field shows
+
+#### Returns
+
+- Pick&lt;ControlAttributes, 'aria-describedby' | 'aria-invalid'>: The `aria-describedby` and `aria-invalid`, each left out when there is nothing to say
+
 ### getDiscriminatorFieldFromSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when it is not a string.
@@ -919,6 +935,43 @@ Returns `undefined` when a valid discriminator is not present.
 #### Returns
 
 - string | undefined: The `discriminator.propertyName` if it exists in the schema, otherwise `undefined`
+
+### getControlAttributes()
+
+Gets the ARIA attributes a widget spreads onto the focusable element that carries its `id`: the `aria-labelledby`, `aria-describedby` and `aria-invalid` its field's plan gives its control, followed in `aria-describedby` by the ids of the elements the widget renders to describe that control itself, such as its examples list, each once.
+A widget rendered without a plan, as one a caller renders without a `SchemaField` above it, is described by [ariaDescribedByIds()](#ariadescribedbyids).
+The plan's `required` is left to the widget's own `required` prop, which a widget may turn off, as `FileWidget` does once a file is chosen.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'presentation'> - The widget's `id` and `presentation`
+- [ownDescribedBy=[]]: readonly string[] - The ids of the elements the widget renders to describe its control
+
+#### Returns
+
+- Omit&lt;ControlAttributes, 'required'>: The attributes to spread onto the control
+
+#### Example
+
+```tsx
+// In a widget that renders an examples list
+<input id={id} {...getControlAttributes({ id, presentation }, hasExamples ? [examplesId(id)] : [])} />
+```
+
+### getControlDescribedBy()
+
+Gets the `aria-describedby` a widget gives the focusable element that carries its `id`: the ids its field's plan describes its control by, followed by the ids of the elements the widget renders to describe that control itself, each once.
+A widget rendered without a plan is described by [ariaDescribedByIds()](#ariadescribedbyids).
+[getControlAttributes()](#getcontrolattributes) builds its `aria-describedby` from it; call this one where a widget needs only that attribute.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'presentation'> - The widget's `id` and `presentation`
+- [ownDescribedBy=[]]: readonly string[] - The ids of the elements the widget renders to describe its control
+
+#### Returns
+
+- string | undefined: The `aria-describedby`, or undefined when nothing describes the control
 
 ### getDateElementProps()
 
@@ -1183,6 +1236,7 @@ A widget's declaration is the merged `widgets` entry for its key, beneath which 
 An alias is looked up by the key it stands for, and a widget given as a component by the first key it is registered under that declares it, or by the `default` alone when none does.
 A part a field leaves to its widget, with no widget given, falls back to the field default, so a field such as `ArrayField` that renders a single widget only for a multi-select draws its own heading otherwise.
 A field that leaves its label to the widget it renders takes that widget's `labelledBy`, or else its own entry's, but never the `fieldDefault`'s, which reaches only the fields that keep their label or render no widget to leave it to.
+`uncheckedIsFalse` is the widget's when the field renders one, since it describes the control, or else the field's own entry's, and is left out where nothing declares it.
 A part nothing declares is drawn by the template. A widget `getWidget()` rejects, such as a name that is neither registered nor an alias, gets whatever is declared for it.
 
 #### Parameters
@@ -1192,7 +1246,7 @@ A part nothing declares is drawn by the template. A widget `getWidget()` rejects
 
 #### Returns
 
-- ResolvedPresentationDeclaration: The owner, `'template'` or `'self'`, of each part, and `labelledBy`, how a label the template draws reaches the control
+- ResolvedPresentationDeclaration: The owner, `'template'` or `'self'`, of each part, `labelledBy`, how a label the template draws reaches the control, and `uncheckedIsFalse` where the control holds `false` left alone
 
 ### getPropertySchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1304,6 +1358,22 @@ Mixed types can't share a typed field (`NumberField` would cast a string option 
 #### Returns
 
 - string: The type of the field that renders the select
+
+### getSelectorPresentation()
+
+Derives the plan of the selector an `anyOf`/`oneOf` field renders to pick its option from the field's own plan.
+The selector draws the parts the field's plan has the field draw itself, as a theme whose template draws no label declares, and the parts drawn elsewhere are `'above'` it. It is derived from the plan of the field rendering the options, which `SchemaField` hands none of the parts a component rendered beside the options draws itself, such as a custom field's label or an object's heading.
+It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it always holds an option.
+`MultiSchemaField` passes it to the selector as `presentation`.
+
+#### Parameters
+
+- field: FieldPresentation - The plan of the field the selector picks the option of
+- selectorId: string - The id of the selector
+
+#### Returns
+
+- FieldPresentation: The selector's plan, with no control when the field has none on screen
 
 ### getStaticItemsUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -1422,6 +1492,19 @@ Components rendering an error state (a red outline, an invalid flag, inline erro
 #### Returns
 
 - string[]: The errors to display, or an empty array when there are none or they are being hidden
+
+### getWidgetDescription()
+
+Gets the description a widget draws itself, as a checkbox does: the one its field's plan says the widget draws, with the text and id the plan gives it.
+A widget rendered without a plan draws its `ui:description` or schema `description` unless `hideLabel` turns its label off.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'options' | 'schema' | 'hideLabel' | 'presentation'> - The widget's props
+
+#### Returns
+
+- \{ text: string, id: string } | undefined: The text and id of the description the widget draws, or undefined when it draws none
 
 ### getWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getwidget}
 
@@ -1587,6 +1670,19 @@ Stringifies the schema and returns the hash of the resulting string.
 
 - string: The string obtained from the hash of the stringified schema
 
+### hasAdditionalKeyLabel()
+
+Whether a `WrapIfAdditionalTemplate` labels the key input of an `additionalProperties` entry, which it does wherever the entry's value is labelled, whether the template or the value's own component draws that label, so the key lines up with it.
+Without a plan, as for a template rendered outside `SchemaField`, it follows `displayLabel`.
+
+#### Parameters
+
+- props: Pick&lt;WrapIfAdditionalTemplateProps&lt;T, S, F>, 'displayLabel' | 'presentation'> - The `displayLabel` and `presentation` of the `WrapIfAdditionalTemplate`
+
+#### Returns
+
+- boolean: True when the key input is labelled
+
 ### hasVisibleErrors()
 
 Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
@@ -1738,6 +1834,19 @@ Determines whether the given `formData` represents valid form data, such as a pr
 #### Returns
 
 - boolean: True if `formData` is not undefined, null, a primitive type or an array or an empty object
+
+### isLabelledByTemplate()
+
+Whether a label a `FieldTemplate` draws names the field's control: the template's own, or one the template of a field above rendering the same id draws, as for a selected `anyOf`/`oneOf` option.
+A widget whose contents would otherwise name it, such as a button displaying its value, reads this to know its name comes from outside.
+
+#### Parameters
+
+- presentation: FieldPresentation - The field's plan
+
+#### Returns
+
+- boolean: True when a template's label names the control
 
 ### isObject()
 
@@ -2235,14 +2344,14 @@ Builds a field's plan (`FieldPresentation`) of what draws its label, description
 It predicts nothing: whether a part shows is decided from the decisions passed in, so a template and a widget reading the plan agree on it.
 Each part is placed `template` or `self` by its declared owner, `above` when a field above rendering the same id already draws it, or `none`.
 
-- The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name. It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a second time; a level with no control, such as a container whose label is its own heading, keeps its label only when no field above already draws its text, or else is `above` under the id of the label that does. The control points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the control above was pointed at that label too, since its template may then draw it with no `for`, or when its id isn't the one that label's `for` names, such as a selector's.
-- The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one; text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the id it would take, numbered by how many fields above show text of their own, so each level's text has an id of its own.
+- The label shows where it has text and `showLabel` allows it. A label its template draws needs a control to name. It is `above`, under the id and text of the label drawn there, when the template of a field above rendering the same id already draws it, whoever would draw it here, so a widget that draws its own label doesn't name the control a second time; a level with no control, such as a container whose label is its own heading, keeps its label only when no field above already draws its text, or else is `above` under the id of the label that does. A label with a control to name takes [fieldLabelId()](#fieldlabelid); a heading takes [titleId()](#titleid), the id every title template renders it under, so a heading kept beneath a label above has an id of its own. The control points `aria-labelledby` at a label its template draws, or one above, when its declaration says so, when the control above was pointed at that label too, since its template may then draw it with no `for`, or when its id isn't the one that label's `for` names, such as a selector's.
+- The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one. Text is compared with `===`, so an element `ui:help` is matched only by the same element, which an option inheriting its field's `uiSchema` carries; to repeat one in an option's own `uiSchema`, reuse the one element rather than writing the JSX again. Text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the id it would take, numbered by how many fields above show text of their own, so each level's text has an id of its own.
 - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
 - The control is described by the parts that render, here or above, which the plan lists as `describedBy`, then by its own `controlDescribedBy`, and is `aria-invalid` whenever errors show. A field below rendering the same id inherits `describedBy`, so the elements a control renders to describe itself alone don't describe the control beneath it. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at [fieldLabelId()](#fieldlabelid).
 
 #### Parameters
 
-- inputs: FieldPresentationInputs - The `id`, the `declaration`, the `label` from [getFieldLabel()](#getfieldlabel), and the optional `showLabel` (resolved by the caller: the field's own `ui:label`, else the one the field above rendering the same id resolved to, since an option's `uiSchema` given per option doesn't carry the field's; a level's description is hidden by its own `showLabel` alone, not by a field above hiding the same text), `description`, `help`, `errors`, `hideError`, `controlDescribedBy` (the ids of the elements the control renders to describe itself, such as its `examplesId()` list, which come last in its `aria-describedby` and stay out of the plan's `describedBy`), `hasControl`, `required`, `requiredAttribute` and `inherited` plan of the field above
+- inputs: FieldPresentationInputs - The `id`, the `declaration`, the `label` from [getFieldLabel()](#getfieldlabel), and the optional `showLabel` (resolved by the caller: the field's own `ui:label`, else the one the field above rendering the same id resolved to, since an option's `uiSchema` given per option doesn't carry the field's; a level's description is hidden by its own `showLabel` alone, not by a field above hiding the same text), `description`, `help`, `errors`, `hideError`, `controlDescribedBy` (the ids of the elements the control renders to describe itself, such as its `examplesId()` list, which come last in its `aria-describedby` and stay out of the plan's `describedBy`), `hasControl`, `required` (the label's marker and the control's native attribute alike), `inherited` plan of the field above and `componentId` (the id the field's own component renders under, when it renders beside the field's `anyOf`/`oneOf` options under an `XxxOf` id, which the parts it draws itself take their ids from)
 
 #### Returns
 
@@ -2756,16 +2865,16 @@ Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the elemen
 A select rendered inside another widget, such as each select of an `AltDateWidget`, has no label of its own and an id that no help or error element is rendered for, so only its caller can name it and link it to its field.
 While the select shows the description of its selected option, the ids the caller passed are followed by `descriptionId(props.id)`, the one element the select renders itself, so that description is still announced.
 A select that shows none is described by the ids the caller passed alone: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render no such element, and its id may be another field's description id.
-Without ids from the caller, the result is `ariaDescribedByIds(props.id)`.
+Without ids from the caller, a select its field's plan reaches takes the attributes [getControlAttributes()](#getcontrolattributes) gives its control, the selected option's description among its describers while it renders one, and a select rendered without a plan `ariaDescribedByIds(props.id)`.
 Every theme's `SelectWidget` gives the result to its control, and a replacement `SelectWidget` should do the same; no other widget is required to.
 
 #### Parameters
 
-- props: WidgetAriaPropsInput&lt;T, S, F> - The widget's props, of which `id`, `aria-label`, `aria-describedby` and those `SelectedOptionDescription` reads (`multiple`, `hideLabel`, `options`, `registry`, `uiSchema` and `value`) are used
+- props: WidgetAriaPropsInput&lt;T, S, F> - The widget's props, of which `id`, `presentation`, `aria-label`, `aria-describedby` and those `SelectedOptionDescription` reads (`multiple`, `hideLabel`, `options`, `registry`, `uiSchema` and `value`) are used
 
 #### Returns
 
-- \{ 'aria-label'?: string, 'aria-describedby': string }: The props to spread on the focused element
+- \{ 'aria-label'?: string, 'aria-describedby'?: string, 'aria-labelledby'?: string, 'aria-invalid'?: true }: The props to spread on the focused element
 
 #### Example
 
@@ -2896,6 +3005,7 @@ The closest match is determined using the number of matching properties, and mor
 ### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
+Deprecated: a field's plan, from [resolveFieldPresentation()](#resolvefieldpresentation), says what draws its label; `SchemaField` no longer derives `displayLabel` from this.
 An `object` or `array` schema whose `anyOf`/`oneOf` is a list of constants renders as one select for the whole value, so it keeps its label.
 
 #### Parameters
