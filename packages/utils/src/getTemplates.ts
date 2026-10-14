@@ -22,8 +22,11 @@ export default function getTemplates<
   let templates: TemplatesType<T, S, F> | undefined;
   for (const name in uiOptions) {
     if (Object.hasOwn(uiOptions, name) && Object.hasOwn(registry.templates, name)) {
-      templates ??= { ...registry.templates };
-      templates[name] = getTemplate(name, registry, uiOptions);
+      const template = getTemplate(name, registry, uiOptions);
+      if (template !== registry.templates[name]) {
+        templates ??= { ...registry.templates };
+        templates[name] = template;
+      }
     }
   }
   return templates ?? registry.templates;
