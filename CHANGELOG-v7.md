@@ -549,6 +549,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** `Registry` has a required `presentation`; code that builds a `Registry` by hand adds `presentation: mergeThemePresentation()`, as the [v7 upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#registry-has-a-required-presentation-breaking-change) shows ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - The props of fields, widgets and their templates have an optional `presentation`, the field's plan, which `widgetAriaProps()` and `SelectedOptionDescription` read when given ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `getDisplayLabel()`, a widget's `hideLabel` and a `FieldTemplate`'s `displayLabel` and `rawErrors` are deprecated in favor of the field's plan; they stay through v7 ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- Added `getGroupAttributes()`, which splits the attributes `getControlAttributes()` gives a widget rendering a group of controls, such as radios or checkboxes, into the `aria-labelledby` for the group's wrapper and the `aria-describedby` and `aria-invalid` for each control in it ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/validator-ajv8
 

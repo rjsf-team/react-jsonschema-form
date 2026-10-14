@@ -1089,6 +1089,32 @@ A `propertyNames` written as a `$ref` reads as the former, since resolving one n
 
 - string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
 
+### getGroupAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Gets the ARIA attributes a widget rendering a group of controls, such as radios or checkboxes, spreads onto the group's wrapper and onto each control in it.
+A label's `for` reaches a single control rather than the element wrapping a group, so the wrapper takes the `aria-labelledby` its field's plan gives the control, and each control the `aria-describedby` and `aria-invalid` [getControlAttributes()](#getcontrolattributes) gives it.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'presentation'> - The widget's `id` and `presentation`
+
+#### Returns
+
+- \{ group: Pick&lt;ControlAttributes, 'aria-labelledby'>, option: Omit&lt;ControlAttributes, 'aria-labelledby' | 'required'> }: `group`, the attributes for the group's wrapper, and `option`, those for each control in it
+
+#### Example
+
+```tsx
+const { group, option } = getGroupAttributes({ id, presentation });
+return (
+  <div id={id} role='radiogroup' {...group}>
+    {enumOptions.map((opt, i) => (
+      <input key={i} type='radio' id={optionId(id, i)} {...option} />
+    ))}
+  </div>
+);
+```
+
 ### getInputProps&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.

@@ -56,6 +56,7 @@ import getFieldClassNames from './getFieldClassNames.ts';
 import type { FieldLabelSources } from './getFieldLabel.ts';
 import getFieldLabel from './getFieldLabel.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
+import getGroupAttributes from './getGroupAttributes.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
@@ -269,6 +270,7 @@ export {
   getFieldLabel,
   getFieldTypeForWidget,
   getFreePropertyNames,
+  getGroupAttributes,
   getInputProps,
   getItemUiSchemaForItem,
   getMatchingPatternProperties,
