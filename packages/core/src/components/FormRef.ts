@@ -4,21 +4,23 @@ import type { EventFormData } from './IChangeEvent.ts';
 
 /** Public methods exposed by a Form ref.
  * Commands read and write Form's latest stored value, edits made earlier in the same tick included. Use event handlers
- * for user actions, or passive Effects for synchronization after prop changes. A command issued from the setup of a
- * layout Effect or from a callback ref being attached, in the commit that renders new props, sees those props too. The
- * cleanup of a layout Effect, a ref being detached or a `componentWillUnmount` in that commit may run earlier,
- * depending on where it sits in the tree, and then sees the previous configuration.
+ * for user actions, or passive Effects for synchronization after prop changes. A layout Effect inside the form, a
+ * widget's, runs before the form takes the props of its commit, so a command it issues sees the previous ones; one
+ * outside the form sees the new props. A form that has unmounted, or that an `<Activity>` hides, which React asks to
+ * be treated alike, drops changes, `reset()` and `submit()`, and its validation methods return their result without
+ * calling `onError`.
  */
 export interface FormRef<T = unknown> {
   /** Reads the latest stored value. Treat the result as read-only. An edit can be visible here before the inputs
    * update.
    */
   getFormData(): EventFormData<T>;
-  /** Submits the form through its element, as a submit button does: native constraint validation checks the inputs as
-   * they are rendered and, when it passes, schema validation checks the stored value and `onSubmit` or `onError` is
-   * called before this returns. An input the browser rejects blocks the submit, and neither is called. An edit made in
-   * the same tick is submitted, while the native validation still sees the inputs as rendered before it. Does nothing
-   * when `tagName` renders something other than a `<form>`.
+  /** Submits the form through its element, as a submit button does: native constraint validation checks the inputs and,
+   * when it passes, schema validation checks the stored value and `onSubmit` or `onError` is called. An input the
+   * browser rejects blocks the submit, and neither is called. When the inputs already show the stored value, both
+   * happen before this returns; after an edit React has yet to show, the submit waits for the commit that renders it,
+   * so the browser checks the inputs as they show the edit. Does nothing when `tagName` renders something other than
+   * a `<form>`.
    */
   submit(): void;
   /** Clears the validation errors and resets the data to the props' `formData`, or else `initialFormData`, and the

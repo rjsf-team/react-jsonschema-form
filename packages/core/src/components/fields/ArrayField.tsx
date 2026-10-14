@@ -1,5 +1,5 @@
 import type { MouseEvent } from 'react';
-import { memo, useCallback, useInsertionEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   ArrayFieldItemButtonProps,
   ArrayFieldTemplateProps,
@@ -1080,7 +1080,7 @@ function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataS
     [itemKeys, items],
   );
   const sentRows = useRef(keyedFormData);
-  useInsertionEffect(() => {
+  useLayoutEffect(() => {
     sentRows.current = keyedFormData;
   }, [keyedFormData]);
   const readSentRows = useCallback(() => sentRows.current, []);

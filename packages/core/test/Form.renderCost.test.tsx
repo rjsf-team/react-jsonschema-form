@@ -30,19 +30,48 @@ describe('render cost of one update', () => {
     expect(onRender).toHaveBeenCalledTimes(1);
   });
 
-  it('commits once for an unrelated prop change on a form seeded with initialFormData', () => {
+  it('commits once for a prop change the form state does not take, on a form seeded with initialFormData', () => {
     const onRender = vi.fn();
-    const element = (idPrefix: string) => (
+    const element = (className: string) => (
       <Profiler id='form' onRender={onRender}>
-        <Form schema={schema} validator={validator} initialFormData={{ name: '' }} idPrefix={idPrefix} />
+        <Form schema={schema} validator={validator} initialFormData={{ name: '' }} className={className} />
       </Profiler>
     );
-    const { rerender } = render(element('root'));
+    const { rerender } = render(element('one'));
     onRender.mockClear();
 
     rerender(element('other'));
 
     expect(onRender).toHaveBeenCalledTimes(1);
+  });
+
+  it('publishes a prop change the form state takes in a second commit, which renders no field', () => {
+    const onRender = vi.fn();
+    const widgetRenders = vi.fn();
+    function CountingWidget({ id, value }: WidgetProps) {
+      widgetRenders(id);
+      return <input id={id} value={typeof value === 'string' ? value : ''} readOnly />;
+    }
+    const element = (idPrefix: string) => (
+      <Profiler id='form' onRender={onRender}>
+        <Form
+          schema={schema}
+          validator={validator}
+          widgets={{ TextWidget: CountingWidget }}
+          initialFormData={{ name: '' }}
+          idPrefix={idPrefix}
+        />
+      </Profiler>
+    );
+    const { rerender } = render(element('root'));
+    onRender.mockClear();
+    widgetRenders.mockClear();
+
+    rerender(element('other'));
+
+    // The store takes the state the render derived once it is on screen, so the second commit renders the same state
+    expect(onRender).toHaveBeenCalledTimes(2);
+    expect(widgetRenders.mock.calls).toEqual([['other_name']]);
   });
 
   it('derives the render state once per keystroke render', async () => {

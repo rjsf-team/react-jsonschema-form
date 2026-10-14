@@ -845,22 +845,23 @@ describe('form data ownership', () => {
       expect(input(container, 'root_a')).toHaveValue('');
     });
 
-    it('edits made while hidden by Activity are applied and reported at once', async () => {
+    it('drops an edit made while hidden by Activity, as React asks hidden content to be treated as unmounted', async () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
-      const { hide } = renderInActivity(() => <PolicyParent ref={ref} log={log} />);
+      const { hide, show } = renderInActivity(() => <PolicyParent ref={ref} log={log} />);
       const handle = handleOf(ref);
       hide();
 
       await act(async () => {
         handle.setFieldValue('a', 'first');
       });
+      show();
 
-      expect(log.reported).toEqual([{ a: 'first', b: '' }]);
-      expect(handle.getFormData()).toEqual({ a: 'first', b: '' });
+      expect(log.reported).toEqual([]);
+      expect(handle.getFormData()).toEqual({ a: '', b: '' });
     });
 
-    it('a reset and a submit made while hidden by Activity are applied and reported at once', () => {
+    it('drops a reset and a submit made while hidden by Activity', () => {
       const ref = createFormRef<Data>();
       const onChange = vi.fn();
       const onSubmit = vi.fn();
@@ -882,10 +883,9 @@ describe('form data ownership', () => {
       act(() => handle.reset());
       act(() => handle.submit());
 
-      expect(onChange).toHaveBeenCalledTimes(1);
-      expect(onChange.mock.calls[0][0].formData).toEqual({ a: 'seed' });
-      expect(onSubmit).toHaveBeenCalledTimes(1);
-      expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'seed' });
+      expect(onChange).not.toHaveBeenCalled();
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(handle.getFormData()).toEqual({ a: 'edited' });
     });
 
     /** A widget that sets its field to `to` from `useCommitEffect` */
@@ -984,7 +984,7 @@ describe('form data ownership', () => {
       expect(log.value).toEqual({ a: 'x', b: 'from cleanup', c: 'from setup' });
     });
 
-    it('an edit made as a hidden form is shown builds on one made while it was hidden', () => {
+    it('takes an edit made as a hidden form is shown, and none made while it was hidden', () => {
       const ref = createFormRef<Data>();
       const log = createParentLog<Data>();
       let onShown = noop;
@@ -1000,7 +1000,7 @@ describe('form data ownership', () => {
 
       show();
 
-      expect(log.value).toEqual({ a: 'hidden', b: 'shown' });
+      expect(log.value).toEqual({ a: '', b: 'shown' });
     });
 
     it('a setFieldValue from inside onChange builds on the edit being handled', async () => {
@@ -1631,7 +1631,7 @@ describe('a submit in the same tick as an edit', () => {
     expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'x' });
   });
 
-  it('is checked by native validation against the inputs as rendered before the edit', () => {
+  it('is checked by native validation against the inputs once they show the edit', () => {
     const ref = createFormRef<Data>();
     const { container, onSubmit, onError } = createFormComponent({
       ref,
@@ -1650,7 +1650,7 @@ describe('a submit in the same tick as an edit', () => {
     expect(onError).not.toHaveBeenCalled();
   });
 
-  it('is blocked by native validation when the edit fills the required input, until React renders it', () => {
+  it('passes native validation when the edit fills the required input, since the submit waits for React to render it', () => {
     const ref = createFormRef<Data>();
     const { onSubmit } = createFormComponent({
       ref,
@@ -1661,14 +1661,25 @@ describe('a submit in the same tick as an edit', () => {
     act(() => {
       handleOf(ref).setFieldValue('a', 'x');
       handleOf(ref).submit();
+      expect(onSubmit).not.toHaveBeenCalled();
     });
-    expect(onSubmit).not.toHaveBeenCalled();
-
-    // The input shows the edit now, so a submit goes through: submit from an Effect, or turn `noHtml5Validate` on
-    act(() => handleOf(ref).submit());
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'x' });
+  });
+
+  it('submits before submit() returns when the inputs already show the data', () => {
+    const ref = createFormRef<Data>();
+    const { onSubmit } = createFormComponent({
+      ref,
+      schema: { ...schema, required: ['a'] },
+      initialFormData: { a: 'x' },
+    });
+
+    act(() => {
+      handleOf(ref).submit();
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+    });
   });
 });
 

@@ -15,7 +15,7 @@ import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { renderToString } from 'react-dom/server';
 
-import type { FormRef, IChangeEvent } from '../src/index.ts';
+import type { FormRef } from '../src/index.ts';
 import Form, { ArrayFieldItemTemplate as DefaultItemTemplate } from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
 import {
@@ -83,7 +83,7 @@ it('renders seeded data on the server without a browser or effect publishing a s
   expect(markup).toContain('value="server"');
 });
 
-it('new props are available to the Effects of the commit that renders them', () => {
+it("new props reach a field's passive Effects of the commit that renders them, and its layout Effects the commit after", () => {
   const ref = createFormRef<{ name?: string; extra?: string }>();
   const phases: [string, unknown, unknown][] = [];
   const before: RJSFSchema = { type: 'object', properties: { name: { type: 'string' }, extra: { type: 'string' } } };
@@ -105,8 +105,9 @@ it('new props are available to the Effects of the commit that renders them', () 
   const { rerender } = render(<Form {...props} schema={before} initialFormData={{ name: 'kept' }} />);
   phases.length = 0;
   rerender(<Form {...props} schema={after} initialFormData={{ name: 'kept' }} />);
+  // A field's layout Effects run before the form's, which hand the model the props of the commit
   expect(phases).toEqual([
-    ['layout', 'added', { name: 'kept', extra: 'added' }],
+    ['layout', 'added', { name: 'kept' }],
     ['passive', 'added', { name: 'kept', extra: 'added' }],
   ]);
 });
@@ -386,7 +387,7 @@ it('a draft a widget flushes as its form unmounts does not reach the form that r
   expect(screen.getByRole('status')).toHaveTextContent('{"id":"B","data":{"name":"b"}}');
 });
 
-it('a form hidden by Activity applies a retained handle and a late field change, and reports them at once', () => {
+it('a form hidden by Activity drops a retained handle and a late field change, as an unmounted form does', () => {
   const { RetainingWidget, change } = createRetainingWidget();
   const ref = createFormRef<{ name?: string }>();
   const onChange = vi.fn();
@@ -408,18 +409,16 @@ it('a form hidden by Activity applies a retained handle and a late field change,
     change('root_name', 'late');
   });
 
-  expect(handle.getFormData()).toEqual({ name: 'late' });
-  expect(onChange.mock.calls.map(([event]: IChangeEvent[]) => event.formData)).toEqual([
-    { name: 'later' },
-    { name: 'late' },
-  ]);
+  // React asks that hidden content be treated as unmounted: what reaches the form while it is hidden is dropped
+  expect(handle.getFormData()).toEqual({ name: 'a' });
+  expect(onChange).not.toHaveBeenCalled();
 
   show();
 
-  expect(screen.getByText('late')).toBeInTheDocument();
+  expect(screen.getByText('a')).toBeInTheDocument();
 });
 
-it('a form hidden by Activity shows an edit made while it was hidden, with no render of its own to show it', () => {
+it('a form shown again after Activity hid it takes and shows an edit, with no render of its own before it', () => {
   const ref = createFormRef<{ name?: string }>();
   const form = (className: string) => (
     <Form ref={ref} className={className} schema={schema} validator={validator} initialFormData={{ name: 'a' }} />
@@ -431,9 +430,9 @@ it('a form hidden by Activity shows an edit made while it was hidden, with no re
   show(rendered);
   const handle = handleOf(ref);
   hide(rendered);
+  show(rendered);
 
   act(() => handle.setFieldValue('name', 'later'));
-  show(rendered);
 
   expect(input(container, 'root_name')).toHaveValue('later');
 });
@@ -441,7 +440,7 @@ it('a form hidden by Activity shows an edit made while it was hidden, with no re
 describe('a formData passed to a form hidden by Activity', () => {
   const warnings = setupConsoleWarnSuppression();
 
-  it('is ignored, while data set through the handle is taken', () => {
+  it('is ignored, and data set through the handle is taken once the form is shown', () => {
     interface Record {
       name?: string;
       other?: string;
@@ -467,9 +466,11 @@ describe('a formData passed to a form hidden by Activity', () => {
     hide({ name: 'b', other: 'y' });
     expect(handle.getFormData()).toEqual({ name: 'a', other: 'x' });
 
+    // So is the handle, while the form is hidden, as for an unmounted form
+    act(() => handle.setFieldValue('name', 'hidden'));
+    show({ name: 'b', other: 'y' });
     act(() => handle.setFieldValue('', { name: 'b', other: 'y' }));
     act(() => handle.setFieldValue('name', 'edited'));
-    show({ name: 'b', other: 'y' });
 
     expect(handle.getFormData()).toEqual({ name: 'edited', other: 'y' });
     expectToHaveBeenCalledWithFormData(onChange, { name: 'edited', other: 'y' }, 'root_name');
@@ -478,7 +479,7 @@ describe('a formData passed to a form hidden by Activity', () => {
   });
 });
 
-it('a submit on a form hidden by Activity submits at once, after the change it reports', () => {
+it('a submit and a change on a form hidden by Activity are dropped', () => {
   const ref = createFormRef<{ name?: string }>();
   const calls: string[] = [];
   const { hide } = renderInActivity(() => (
@@ -499,7 +500,8 @@ it('a submit on a form hidden by Activity submits at once, after the change it r
     handle.submit();
   });
 
-  expect(calls).toEqual(['change', 'submit {"name":"later"}']);
+  expect(calls).toEqual([]);
+  expect(handle.getFormData()).toEqual({});
 });
 
 describe('validateForm() from a passive Effect after a prop change (#5034)', () => {

@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import { memo, useCallback, useInsertionEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
@@ -383,7 +383,7 @@ export default function ObjectField<
   // Installed from an insertion Effect, so a layout Effect of the same commit that calls a handler reads the data that
   // commit rendered
   const renderedFormData = useRef(formData);
-  useInsertionEffect(() => {
+  useLayoutEffect(() => {
     renderedFormData.current = formData;
   }, [formData]);
   const readRenderedData = useCallback(() => renderedFormData.current, []);

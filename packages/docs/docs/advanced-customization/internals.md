@@ -149,7 +149,7 @@ function Editor() {
 }
 ```
 
-`submit()` submits the form's current value through the form element, as a submit button does: the browser's constraint validation checks the inputs as they are rendered and, when it passes, schema validation checks the value and `onSubmit` or `onError` is called before `submit()` returns. An input the browser rejects blocks the submit, and neither is called. A write followed by `submit()` in the same handler submits the new value, but the browser still sees the inputs as rendered before the write; see [the migration guide](../migration-guides/v7.x%20upgrade%20guide.md#submit-in-the-same-handler-as-an-edit). `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
+`submit()` submits the form's current value through the form element, as a submit button does: the browser's constraint validation checks the inputs and, when it passes, schema validation checks the value and `onSubmit` or `onError` is called. An input the browser rejects blocks the submit, and neither is called. When the inputs already show the value, that happens before `submit()` returns. A write followed by `submit()` in the same handler submits the new value once React has rendered it, so the browser checks the inputs as they show the write; `onSubmit` or `onError` is then called after `submit()` returns, before the browser paints. `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
 
 ## Change form data programmatically
 
@@ -178,14 +178,12 @@ useEffect(() => {
 }, [formRef, schema, data]);
 ```
 
-A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, sees those props too: Form installs them into its store in an insertion Effect, which React runs before any of those, and also while an `<Activity>` hides the form. The cleanup of a layout Effect, a ref being detached or a `componentWillUnmount` in that commit may run earlier, depending on where it sits in the tree, and then sees Form's previous configuration. Those in the form's own subtree, in a sibling rendered before the form, and in anything removed from under one of the form's ancestors run earlier; those in a sibling rendered after the form, or in an ancestor that stays mounted, run later.
+Form takes the props of a commit in a layout Effect, which React runs children first. A command issued from the setup of a layout Effect, a callback ref being attached, or a class component's `componentDidMount` or `componentDidUpdate`, in the commit that renders new props, sees those props when it sits in an ancestor of the form or in a sibling rendered after it, and the previous ones when it sits inside the form, such as a widget's, or in a sibling rendered before it. Passive Effects and event handlers always see the new props.
 
 Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render, and an edit made while a validation runs has the operation that ran it validate a second time, on the edited data.
 
 Under `liveValidate: 'onBlur'`, a blur in the same event as an edit validates the edit, and its `onChange` carries the errors found.
 
-Inside `<Activity mode="hidden">`, the form works as it does when shown: `setFieldValue()`, `reset()`, a field's change and `submit()` are applied and reported at once, and the inputs show the result when the form is shown again.
-
-A form that has unmounted drops a change that reaches it late: `setFieldValue()` or `reset()` through a handle you kept, or a field's change, such as the value a debounced widget flushes as it unmounts or a file that finishes reading. It neither changes the data nor calls `onChange`, as in v6, so the late change of one record is never stored as the data of the form that replaced it. A form hidden by `<Activity>` is not unmounted and goes on taking changes.
+A form that has unmounted drops a change that reaches it late: `setFieldValue()` or `reset()` through a handle you kept, or a field's change, such as the value a debounced widget flushes as it unmounts or a file that finishes reading. It neither changes the data nor calls `onChange`, as in v6, so the late change of one record is never stored as the data of the form that replaced it. React asks that content an `<Activity>` hides be treated as unmounted, so a hidden form does the same until it is shown again: it drops a field's change, `setFieldValue()`, `reset()` and `submit()`, and `validateForm()` returns its result without calling `onError`. Its data and errors are kept for when it is shown.
 
 Form stores edits synchronously through `useSyncExternalStore`. Wrapping a handle call in `startTransition()` does not make it non-blocking. See the [migration guide](../migration-guides/v7.x%20upgrade%20guide.md#edits-are-applied-immediately-breaking-change) for examples of timing-dependent code to update.

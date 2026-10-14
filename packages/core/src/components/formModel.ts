@@ -72,10 +72,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
   // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
   let announced: AnnouncedMove | undefined;
-  // A change that reaches a form after it unmounted is dropped: a draft a widget flushes from an Effect cleanup, a
-  // timer or a file read that finishes late, or a call through a handle kept past the unmount. Reported through the
-  // `onChange` of the last render, it would be stored as the data of whichever form replaced this one
-  let isUnmounted = false;
+  // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
+  // what reaches it then: a draft a widget flushes from an Effect cleanup, a timer or a file read that finishes late,
+  // or a call through a handle kept past the unmount. Reported through the `onChange` of the last render, it would be
+  // stored as the data of whichever form replaced this one, or of a form the user cannot see
+  let isDetached = false;
+  // The data the inputs show, as the last commit rendered it, and whether a `submit()` waits for a commit that
+  // renders the data the form holds
+  let renderedFormData = initial.formData;
+  let isSubmitQueued = false;
   // Development only, for the warning about a `formData` passed after mount, which the form ignores: the prop as the
   // last commit passed it, and every object the form's data has been, since a parent that stores what `onChange`
   // reported passes those back, later ones as well as the latest
@@ -121,6 +126,14 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const withExtraDataOmitted = (props: FormProps<T, S, F>) =>
     props.omitExtraData === true ? state.schemaUtils.omitExtraData(state.schema, state.formData) : state.formData;
 
+  /** Hands the form element to the browser's submission, which runs native constraint validation on the inputs */
+  const requestSubmit = () => {
+    const view = formWindow();
+    if (view && formElement instanceof view.HTMLFormElement) {
+      formElement.requestSubmit();
+    }
+  };
+
   /** The window of the form element, whose classes the element and what it holds are instances of: a form rendered
    * into another document, such as an iframe's, is no instance of this window's `HTMLFormElement`
    */
@@ -156,7 +169,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
 
   /** Validates the data `readFormData` returns for a submission or a programmatic validation, committing the errors it
    * reports and calling `onError` with them, or focusing the first one when `focusOnFirstError` asks for it. The data
-   * itself is never installed. A form that has unmounted only answers: the errors have no form to show them, and
+   * itself is never installed. A detached form only answers: the errors have no form to show them, and
    * `onError` would be the last render's, as a change's `onChange` would be.
    *
    * @param props - The props the operation started with
@@ -165,7 +178,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    */
   const runValidation = (props: FormProps<T, S, F>, readFormData: () => T | undefined): boolean => {
     const { hasError, next } = settled((base) => applyValidation(base, props, readFormData()));
-    if (isUnmounted) {
+    if (isDetached) {
       return !hasError;
     }
     const { errors } = commit(next);
@@ -225,7 +238,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     id?: string,
     deliver: Deliver = deliverToCaller,
   ) => {
-    if (isUnmounted) {
+    if (isDetached) {
       return;
     }
     const props = committedProps;
@@ -261,7 +274,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const blur = (id: string) => {
     const props = committedProps;
     const { omitExtraData, liveOmit } = props;
-    if (isUnmounted || !((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
+    if (isDetached || !((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
     }
     const start = state;
@@ -293,12 +306,17 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     getFormData: () => toEventFormData(state.formData),
 
     /** Submits through the form element, see `FormRef.submit()`: native constraint validation reads the inputs, and
-     * the submit event it dispatches reaches `handleSubmit()`, which submits the data the form holds
+     * the submit event it dispatches reaches `handleSubmit()`, which submits the data the form holds. While the inputs
+     * have yet to show an edit, the submit waits for the commit that renders it, see `committed()`
      */
     submit: () => {
-      const view = formWindow();
-      if (view && formElement instanceof view.HTMLFormElement) {
-        formElement.requestSubmit();
+      if (isDetached) {
+        return;
+      }
+      if (state.formData === renderedFormData) {
+        requestSubmit();
+      } else {
+        isSubmitQueued = true;
       }
     },
 
@@ -306,7 +324,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
      * clears every error and tells `onChange`. `extraErrors` are the props' and stay.
      */
     reset: () => {
-      if (isUnmounted) {
+      if (isDetached) {
         return;
       }
       const props = committedProps;
@@ -349,8 +367,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   return {
     /** The callback ref of the form element. React detaches it, with `null`, while an `<Activity>` hides the form as
      * well as when the form unmounts; the element lives on through the former, so it is kept until the next one
-     * replaces it. A `requestSubmit()` on an element that has left the document does nothing, so a `submit()` through
-     * a handle kept past the unmount is harmless.
+     * replaces it. A detached form makes no submit through it, see `attached()`.
      */
     setFormElement: (element: HTMLElement | null) => {
       if (element) {
@@ -376,32 +393,37 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         listeners.delete(listener);
       };
     },
-    /** The setup of the insertion Effect that tells the model the form is mounted; what it returns is the cleanup.
-     * React runs that cleanup when the form unmounts and not when an `<Activity>` hides it, which destroys layout and
-     * passive Effects only, so a hidden form goes on taking changes. It runs before the cleanup of any Effect below
-     * the form, so a change a field makes as it unmounts with the form is already one made after the unmount.
+    /** The setup of the layout Effect that attaches the form; what it returns is the cleanup. React runs that cleanup
+     * when the form unmounts and when an `<Activity>` hides it, and React asks that hidden content be treated as
+     * unmounted, so a hidden form drops what reaches it as an unmounted one does, until it is shown again.
      */
-    mounted: () => {
-      isUnmounted = false;
+    attached: () => {
+      isDetached = false;
       return () => {
-        isUnmounted = true;
+        isDetached = true;
+        isSubmitQueued = false;
       };
     },
-    /** Called from an insertion Effect of every commit of the form, with what React rendered. React runs those before
-     * the setup of any layout Effect, so an Effect of the same commit that issues a command finds the props and the
-     * state of this commit.
+    /** Called from a layout Effect of every commit of the form, with what React rendered, once the inputs show it.
+     * Publishes the state the render derived from new props, so the store holds what the form shows, and performs a
+     * queued `submit()` once the inputs show the data the form holds.
      */
     committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedPublished: FormState<T, S, F>) => {
+      const previousProps = committedProps;
       committedProps = nextProps;
+      renderedFormData = derived.formData;
+      // An operation that committed after this render began, from a field's layout Effect, is not in `derived`; it
+      // started from props this commit may have replaced, so it is derived again under the new ones when it did.
+      // Publishing what the props changed renders the form once more, with the state it already shows
       if (published === renderedPublished) {
-        state = derived;
-        hold(state.formData);
-        return;
+        commit(derived);
+      } else if (nextProps !== previousProps) {
+        commit(replaceEqualDeep(derived, deriveState(nextProps, state)));
       }
-      // An operation that committed after this render began is not in `derived`. A render for it is already
-      // scheduled; until it runs, operations start from its commit derived under the new props
-      state = replaceEqualDeep(derived, deriveState(nextProps, state));
-      hold(state.formData);
+      if (isSubmitQueued && !isDetached && state.formData === renderedFormData) {
+        isSubmitQueued = false;
+        requestSubmit();
+      }
     },
     /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held
      * nor a copy of the data it holds. Called after the commit that passed it, in development only

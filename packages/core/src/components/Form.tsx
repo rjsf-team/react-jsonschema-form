@@ -1,13 +1,5 @@
 import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
-import {
-  memo,
-  useEffect,
-  useImperativeHandle,
-  useInsertionEffect,
-  useMemo,
-  useState,
-  useSyncExternalStore,
-} from 'react';
+import { memo, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -324,32 +316,24 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 ) {
   const { ref } = props;
   // The model is created once and kept in the render cache, so the form has the one model for as long as it is mounted
-  const [cache, setCache] = useState(() => {
-    const state = initialState(props);
-    return { model: createFormModel(props, state), published: state, props, state };
-  });
-  const { model } = cache;
+  // Created on the first render through an initializer, as React documents for a value made once, and never replaced,
+  // so there is no setter to name
+  // oxlint-disable-next-line react/hook-use-state
+  const [model] = useState(() => createFormModel(props, initialState(props)));
   const { setFormElement } = model;
   // Renders the form after each operation that changed its state. The server snapshot is the store's own: the render
   // that reads it is the one that created the model, so nothing has been committed to it yet
   const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
-  // With no operation since the cached derivation, that derivation is the latest state, committed to the model or not
-  const base = published === cache.published ? cache.state : published;
-  // `deriveState()` is pure, so the re-render that `setCache` triggers reuses its result instead of deriving the same
-  // state again
-  const state = props === cache.props && base === cache.state ? cache.state : deriveState(props, base);
-  if (state !== cache.state) {
-    setCache({ model, published, props, state });
-  }
-  // Hands every commit to the model in the phase in which React switches its own event handlers to the new props:
-  // before the setup of any layout Effect, a callback ref being attached or a passive Effect can issue a command. What
-  // React does in that phase before it reaches the form runs earlier: the cleanup of a layout Effect, a ref being
-  // detached and a `componentWillUnmount`, in the form's subtree, in an earlier sibling's, and in anything removed
-  // from under an ancestor.
-  useInsertionEffect(() => {
+  // `deriveState()` hands `published` back when the props change nothing, so the render after the model published a
+  // derivation, see `committed()`, renders the very state it rendered before
+  const state = useMemo(() => deriveState(props, published), [props, published]);
+  // Layout Effects, since what they do is tied to what the form shows: each commit hands the model the props and the
+  // state it rendered once the inputs show them, and the attachment ends when the form unmounts or an `<Activity>`
+  // hides it. A field's own layout Effect runs before the form's, so it still sees the props of the commit before
+  useLayoutEffect(() => {
     model.committed(props, state, published);
   });
-  useInsertionEffect(() => model.mounted(), [model]);
+  useLayoutEffect(() => model.attached(), [model]);
   const { formData: formDataProp } = props;
   useEffect(() => {
     if (isDevelopment) {
