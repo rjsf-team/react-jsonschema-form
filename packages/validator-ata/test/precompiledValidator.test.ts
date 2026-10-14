@@ -9,6 +9,8 @@ import {
   mergeSchemas,
   noop,
   retrieveSchema,
+  withVariantId,
+  withoutStubbedProperties,
 } from '@rjsf/utils';
 import type { Mock } from 'vitest';
 
@@ -517,34 +519,32 @@ describe('ATAPrecompiledValidator with a customMergeAllOf', () => {
 });
 
 describe('an option whose patternProperties or additionalProperties take keys from the form data', () => {
-  // Retrieving the option against the data stubs each key the patterns take into its `properties`, so the option
-  // `MultiSchemaField` validates and scores depends on the keys the user typed, which no parse can enumerate
-  const schema: RJSFSchema = {
-    type: 'object',
-    properties: {
-      v: {
-        oneOf: [
-          {
-            type: 'object',
-            properties: { id: { type: 'string' } },
-            patternProperties: { '^s_': { type: 'string' }, '^s_n': { enum: ['xx', 'yy'] } },
-          },
-          { type: 'number' },
-        ],
-      },
+  // Retrieving the option against the data stubs each key the patterns take into its `properties`. Options are
+  // scored and checked without those stubs, so the schema validated is one the parse compiled
+  const options: RJSFSchema[] = [
+    {
+      type: 'object',
+      properties: { id: { type: 'string' } },
+      patternProperties: { '^s_': { type: 'string' }, '^s_n': { enum: ['xx', 'yy'] } },
     },
-  };
-  const options = (schema.properties!.v as RJSFSchema).oneOf as RJSFSchema[];
+    { type: 'object', properties: { s_na: { type: 'string' } } },
+  ];
+  const schema: RJSFSchema = { type: 'object', properties: { v: { oneOf: options } } };
   const validator = new ATAPrecompiledValidator(loadModule(compileSchemaValidatorsCode(schema)), schema);
   const schemaUtils = createSchemaUtils({ validator }, schema);
 
   it.each([
-    [{ id: 'a', s_na: 'xx' }, true],
-    [{ id: 'a', s_na: 'x' }, false],
-  ])('validates and scores the option retrieved against %j', (subFormData, valid) => {
+    [{ id: 'a', s_na: 'xx' }, true, 0],
+    [{ id: 'a', s_na: 'x' }, false, 1],
+  ])('validates and scores the option retrieved against %j', (subFormData, valid, picked) => {
     const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
-    // threw "No precompiled validator function was found for the given schema"
-    expect(validator.isValid(retrieved[0], subFormData, schema)).toBe(valid);
-    expect(getFirstMatchingOption({ validator }, subFormData, retrieved, schema)).toBe(0);
+    const checked = withVariantId(withoutStubbedProperties(retrieved[0]) ?? retrieved[0]);
+    expect(validator.isValid(checked, subFormData, schema)).toBe(valid);
+    // option 1 also takes the data, so the pick says whether option 0 matched rather than falling back to it
+    expect(getFirstMatchingOption({ validator }, subFormData, retrieved, schema)).toBe(picked);
+  });
+  it('throws for the stubbed schema as it stands', () => {
+    const stubbed = schemaUtils.retrieveSchema(options[0], { s_a: 'x' });
+    expect(() => validator.isValid(stubbed, { s_a: 'x' }, schema)).toThrow(/No precompiled validator function/);
   });
 });

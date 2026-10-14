@@ -3,6 +3,7 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
+  isStubbedProperty,
 } from '../additionalPropertiesUtils.ts';
 import { combinationsUpTo } from '../combinationsOf.ts';
 import {
@@ -1494,7 +1495,7 @@ export function retrieveSchemaInternal<
         // registered field, or a `default` of the pattern's type over a value of another, that the stub dropped on
         // purpose. The stubbing runs after this merge, so a key skipped here is one an earlier pass stubbed
         const property = properties[key];
-        if (isObject(property) && (property as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]) {
+        if (isStubbedProperty(property)) {
           return [];
         }
         const matchingProperties = getMatchingPatternProperties(resolvedSchema, key);
@@ -1653,8 +1654,9 @@ export function resolveAnyOrOneOfSchemas<
       // `$id` names, so the derivation is applied to the option here too
       retrievedOptions.forEach((item) => context.validator.isValid(withVariantId<S>(item), formData, rootSchema));
       // Once the user adds a key an option's `patternProperties` or `additionalProperties` take, the option is
-      // retrieved with that key stubbed into its `properties`, and scored in the form that doesn't depend on which
-      // keys they were
+      // retrieved with that key stubbed into its `properties`. Scoring and the decline check strip the stubs again,
+      // which leaves the option retrieved here, checked under `withVariantId()` as above and, while the key holds a
+      // defined value, scored without the `anyOf` of its names that the key satisfies
       retrievedOptions.forEach((item) => {
         if (isObject(item) && allowsAdditionalProperties<S>(item)) {
           context.validator.isValid(scoringSchemaWithDataKeys<S>(item), formData, rootSchema);

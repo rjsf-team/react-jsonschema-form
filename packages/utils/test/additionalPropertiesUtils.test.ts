@@ -3,6 +3,7 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
+  isStubbedProperty,
   withoutStubbedProperties,
 } from '../src/additionalPropertiesUtils.ts';
 import { ADDITIONAL_PROPERTY_FLAG } from '../src/constants.ts';
@@ -166,5 +167,14 @@ describe('withoutStubbedProperties()', () => {
     const unstubbed = withoutStubbedProperties({ type: 'object', properties })!;
     expect(Object.keys(unstubbed.properties)).toEqual(['__proto__']);
     expect(Object.getPrototypeOf(unstubbed.properties)).toBe(Object.prototype);
+  });
+});
+
+describe('isStubbedProperty()', () => {
+  it('is true for a property retrieveSchema() stubbed in', () => {
+    expect(isStubbedProperty({ type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true })).toBe(true);
+  });
+  it.each([[{ type: 'string' }], [true], [undefined], [null]])('is false for %j', (property) => {
+    expect(isStubbedProperty(property)).toBe(false);
   });
 });

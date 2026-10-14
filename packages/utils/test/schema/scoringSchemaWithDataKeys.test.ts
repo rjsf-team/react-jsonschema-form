@@ -1,6 +1,6 @@
 import { ADDITIONAL_PROPERTY_FLAG } from '../../src/constants.ts';
 import type { RJSFSchema, ValidatorType } from '../../src/index.ts';
-import { getFirstMatchingOption, JUNK_OPTION_ID } from '../../src/index.ts';
+import { getFirstMatchingOption } from '../../src/index.ts';
 import { scoringSchemaWithDataKeys } from '../../src/schema/getFirstMatchingOption.ts';
 
 /** A validator that records the schemas it is asked about and answers true for every one */
@@ -37,10 +37,6 @@ describe('scoringSchemaWithDataKeys()', () => {
     });
     expect(scored.$id).toMatch(/^opt\?rjsf=/);
   });
-  it('leaves the junk option as it is', () => {
-    const junk: RJSFSchema = { $id: JUNK_OPTION_ID, type: 'object', properties: {}, required: ['x'] };
-    expect(scoringSchemaWithDataKeys(junk)).toBe(junk);
-  });
 });
 
 describe('scoring an option with keys of the data stubbed into it', () => {
@@ -69,5 +65,42 @@ describe('scoring an option with keys of the data stubbed into it', () => {
       patternProperties: declared.patternProperties,
       anyOf: [{ required: ['id'] }],
     });
+  });
+  it('scores it by the anyOf of its declared names while every stubbed key holds undefined', () => {
+    const { schemas, validator } = recordingValidator();
+    const retrieved: RJSFSchema = {
+      ...declared,
+      properties: { ...declared.properties, s_a: stub({ type: 'string' }) },
+    };
+    getFirstMatchingOption({ validator }, { s_a: undefined }, [retrieved, { type: 'number' }], {});
+    expect(schemas[0]).toEqual({
+      type: 'object',
+      properties: declared.properties,
+      patternProperties: declared.patternProperties,
+      anyOf: [{ required: ['id'] }],
+    });
+  });
+  it('derives each form once per retrieved option', () => {
+    const { schemas, validator } = recordingValidator();
+    const retrieved: RJSFSchema = {
+      ...declared,
+      properties: { ...declared.properties, s_a: stub({ type: 'string' }) },
+    };
+    getFirstMatchingOption({ validator }, { s_a: 'x' }, [retrieved], {});
+    getFirstMatchingOption({ validator }, { s_a: 'y' }, [retrieved], {});
+    getFirstMatchingOption({ validator }, { s_a: undefined }, [retrieved], {});
+    getFirstMatchingOption({ validator }, {}, [retrieved], {});
+    expect(schemas[1]).toBe(schemas[0]);
+    expect(schemas[3]).toBe(schemas[2]);
+    expect(schemas[2]).not.toEqual(schemas[0]);
+  });
+  it('scores non-object data by the anyOf of the declared names', () => {
+    const { schemas, validator } = recordingValidator();
+    const retrieved: RJSFSchema = {
+      ...declared,
+      properties: { ...declared.properties, s_a: stub({ type: 'string' }) },
+    };
+    getFirstMatchingOption({ validator }, 'text', [retrieved], {});
+    expect(schemas[0]).toHaveProperty('anyOf');
   });
 });

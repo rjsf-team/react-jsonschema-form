@@ -17,6 +17,7 @@ import {
   omitExtraData,
   relaxOptionsForScoring,
   withVariantId,
+  withoutStubbedProperties,
 } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -313,58 +314,128 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
 });
 
 describe('an option whose patternProperties or additionalProperties take keys from the form data', () => {
-  /** Retrieving an option against the data stubs each key its `patternProperties` or `additionalProperties` match into
-   * its `properties`, so the option `MultiSchemaField` scores depends on the keys the user typed, which no parse can
-   * enumerate
+  /** Retrieving an option against the data stubs each key its `patternProperties` or `additionalProperties` take into
+   * its `properties`. Those stubs only render the keys: options are scored and checked without them, so the precompiled
+   * and live validators validate the same schema, and the keyword that takes a key decides its value
    */
-  const STUBBING_SCHEMA: RJSFSchema = {
-    type: 'object',
-    properties: {
-      v: {
-        oneOf: [
-          {
-            type: 'object',
-            properties: { id: { type: 'string' } },
-            patternProperties: { '^s_': { type: 'string' }, '^s_n': { minLength: 2 } },
-          },
-          {
-            type: 'object',
-            properties: { kind: { const: 'extra' } },
-            additionalProperties: { type: 'number' },
-          },
-          { type: 'object', properties: { name: { type: 'string' } }, additionalProperties: false },
-          { type: 'number' },
-        ],
-      },
-    },
-  };
-  const options = (STUBBING_SCHEMA.properties!.v as RJSFSchema).oneOf as RJSFSchema[];
+  function rootFor(options: RJSFSchema[]): RJSFSchema {
+    return { type: 'object', properties: { v: { oneOf: options } } };
+  }
 
-  it.each([
-    [{ id: 'a', s_na: 'xx' }],
-    [{ id: 'a', s_na: 'x' }],
-    [{ kind: 'extra', n: 1 }],
-    [{ kind: 'extra', n: 'one' }],
-    [{ name: 'a', other: null }],
-  ])('scores the options retrieved against %j as the non-precompiled validator does', (subFormData) => {
-    const validator = buildPrecompiledValidator(STUBBING_SCHEMA);
-    const schemaUtils = createSchemaUtils({ validator }, STUBBING_SCHEMA);
-    const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
-    // threw "No precompiled validator function was found for the given schema" for every stubbed option
-    const answers = retrieved.map((option) => validator.isValid(option, subFormData, STUBBING_SCHEMA));
-    const live = customizeValidator();
-    const liveUtils = createSchemaUtils({ validator: live }, STUBBING_SCHEMA);
-    const expected = options.map((option) =>
-      live.isValid(liveUtils.retrieveSchema(option, subFormData), subFormData, STUBBING_SCHEMA),
-    );
-    expect(answers).toEqual(expected);
-    expect(getFirstMatchingOption({ validator }, subFormData, retrieved, STUBBING_SCHEMA)).toBe(
-      getFirstMatchingOption({ validator: live }, subFormData, retrieved, STUBBING_SCHEMA),
-    );
+  /** The option the precompiled and the live validator each pick for `data`, scoring the options retrieved against
+   * it as `MultiSchemaField` does, through both `getFirstMatchingOption()` and `getClosestMatchingOption()`
+   */
+  function picks(options: RJSFSchema[], data: unknown) {
+    const root = rootFor(options);
+    return [buildPrecompiledValidator(root), customizeValidator()].map((validator) => {
+      const schemaUtils = createSchemaUtils({ validator }, root);
+      const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, data));
+      return [
+        getFirstMatchingOption({ validator }, data, retrieved, root),
+        getClosestMatchingOption({ validator }, root, data, retrieved),
+      ];
+    });
+  }
+
+  it('does not let the `{ type: "null" }` stub of a key `additionalProperties: false` forbids match it', () => {
+    // v7 picked option 0, since the stub accepted `other: null`; option 0 forbids `other`, so option 1 is picked
+    const options: RJSFSchema[] = [
+      {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        patternProperties: { '^s_': { type: 'string' } },
+        additionalProperties: false,
+      },
+      { type: 'object', properties: { other: {} } },
+    ];
+    expect(picks(options, { other: null })).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
   });
-  it('still throws for a schema the parse never saw', () => {
-    const validator = buildPrecompiledValidator(STUBBING_SCHEMA);
-    expect(() => validator.isValid({ type: 'string', minLength: 99 }, 'x', STUBBING_SCHEMA)).toThrow(
+  it('applies the `not` a guessed-type stub drops', () => {
+    // v7 picked option 1, since its stub for `k` dropped `not`; `{ k: 'x' }` breaks option 1, so option 2 is picked
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { q: { type: 'number' } } },
+      { type: 'object', properties: { id: { type: 'string' } }, additionalProperties: { not: { const: 'x' } } },
+      { type: 'object', properties: { k: { const: 'x' } } },
+    ];
+    expect(picks(options, { k: 'x' })).toEqual([
+      [2, 2],
+      [2, 2],
+    ]);
+    expect(picks(options, { k: 'y' })).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+  });
+  it('does not count a key holding undefined as one the option takes', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { q: { type: 'number' } } },
+      { type: 'object', properties: { a: { type: 'string' } }, additionalProperties: true },
+    ];
+    // v7's `anyOf` of the option's names failed for `z`, since `required` treats a key holding undefined as missing
+    const [precompiled, live] = picks(options, { z: undefined });
+    expect(precompiled[0]).toBe(0);
+    expect(live[0]).toBe(0);
+    expect(precompiled[1]).toBe(live[1]);
+    expect(picks(options, { z: 'set' })).toEqual([
+      [1, 1],
+      [1, 1],
+    ]);
+  });
+  it('checks a retrieved option that carries an `$id` as MultiSchemaField does when a switch is declined', () => {
+    const options: RJSFSchema[] = [
+      { $id: 'http://e.com/opt.json', type: 'object', additionalProperties: { type: 'string' } },
+      { type: 'number' },
+    ];
+    const root = rootFor(options);
+    const validator = buildPrecompiledValidator(root);
+    const live = customizeValidator();
+    for (const data of [{ k: 'v' }, { k: 1 }]) {
+      const chosen = createSchemaUtils({ validator: live }, root).retrieveSchema(options[0], data);
+      const checked = withVariantId(withoutStubbedProperties(chosen) ?? chosen);
+      // threw "No precompiled validator function was found for the given schema for "http://e.com/opt.json?rjsf=..."
+      expect(validator.isValid(checked, data, root)).toBe(live.isValid(checked, data, root));
+    }
+    expect(picks(options, { k: 'v' })).toEqual([
+      [0, 0],
+      [0, 0],
+    ]);
+  });
+  it.each([
+    [{ id: 'a', s_na: 'xx' }, 0],
+    [{ name: 'a', s_na: 'x' }, 2],
+    [{ kind: 'extra', n: 1 }, 1],
+    [{ kind: 'extra', n: 'one', name: 'b' }, 2],
+    [{ name: 'a' }, 2],
+  ])('picks the same option for %j with either validator', (data, expected) => {
+    const options: RJSFSchema[] = [
+      {
+        type: 'object',
+        properties: { id: { type: 'string' } },
+        patternProperties: { '^s_': { type: 'string' }, '^s_n': { minLength: 2 } },
+        additionalProperties: false,
+      },
+      { type: 'object', properties: { kind: { const: 'extra' } }, additionalProperties: { type: 'number' } },
+      { type: 'object', properties: { name: { type: 'string' } } },
+      { type: 'number' },
+    ];
+    expect(picks(options, data)).toEqual([
+      [expected, expected],
+      [expected, expected],
+    ]);
+  });
+  it('throws for a stubbed schema handed to it as it stands, as for any schema the parse never saw', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { id: { type: 'string' } }, patternProperties: { '^s_': { type: 'string' } } },
+      { type: 'number' },
+    ];
+    const root = rootFor(options);
+    const validator = buildPrecompiledValidator(root);
+    const stubbed = createSchemaUtils({ validator }, root).retrieveSchema(options[0], { s_a: 'x' });
+    expect(() => validator.isValid(stubbed, { s_a: 'x' }, root)).toThrow(/No precompiled validator function was found/);
+    expect(() => validator.isValid({ type: 'string', minLength: 99 }, 'x', root)).toThrow(
       /No precompiled validator function was found/,
     );
   });

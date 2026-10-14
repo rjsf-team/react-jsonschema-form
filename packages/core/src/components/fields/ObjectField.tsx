@@ -8,7 +8,6 @@ import type {
   FormContextType,
   GenericObjectType,
   Registry,
-  RJSFMarkedSchema,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
@@ -19,7 +18,6 @@ import {
   hasByPath,
   setByPath,
   ADDITIONAL_PROPERTIES_KEY,
-  ADDITIONAL_PROPERTY_FLAG,
   allowsAdditionalProperties,
   deepEquals,
   getAdditionalPropertySchema,
@@ -34,6 +32,7 @@ import {
   isConstantSelect,
   isFormDataAvailable,
   isSchemaObject,
+  isStubbedProperty,
   optionsList,
   orderProperties,
   shouldRenderOptionalField,
@@ -114,10 +113,6 @@ function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S, root
   return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption, rootSchema) : undefined;
 }
 
-function isAdditionalPropertySchema(schema: unknown) {
-  return Boolean((schema as RJSFMarkedSchema)?.[ADDITIONAL_PROPERTY_FLAG]);
-}
-
 /** Returns whether the object declares `key` in its own `properties`, which is what decides whose schema and whose
  * `uiSchema` entry the property is rendered and seeded from. `retrieveSchema()` stubs every additional key the form
  * data holds in among the `properties` too, so a stub is told from a declared property by the flag it carries and left
@@ -132,13 +127,13 @@ function declaresProperty<S extends StrictRJSFSchema = RJSFSchema>(
   schemaProperties: NonNullable<S['properties']>,
   key: string,
 ) {
-  return Object.hasOwn(schemaProperties, key) && !isAdditionalPropertySchema(schemaProperties[key]);
+  return Object.hasOwn(schemaProperties, key) && !isStubbedProperty(schemaProperties[key]);
 }
 
 function getAdditionalPropertyOrder<S extends StrictRJSFSchema = RJSFSchema>(
   schemaProperties: NonNullable<S['properties']>,
 ) {
-  return Object.keys(schemaProperties).filter((property) => isAdditionalPropertySchema(schemaProperties[property]));
+  return Object.keys(schemaProperties).filter((property) => isStubbedProperty(schemaProperties[property]));
 }
 
 /** Picks the name a new additional property should prefer out of the `freeNames` the schema still allows. A name one

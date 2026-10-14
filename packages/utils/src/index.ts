@@ -2,6 +2,7 @@ import {
   allowsAdditionalProperties,
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
+  isStubbedProperty,
   withoutStubbedProperties,
 } from './additionalPropertiesUtils.ts';
 import AdditionalPropertyKeySelect from './AdditionalPropertyKeySelect.tsx';
@@ -355,6 +356,7 @@ export {
   widgetAriaProps,
   withIdRefPrefix,
   withoutStubbedProperties,
+  isStubbedProperty,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };
