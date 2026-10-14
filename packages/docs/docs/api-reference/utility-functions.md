@@ -2004,6 +2004,18 @@ Returns `rootSchema` with every `$ref` inside it resolved against the root's own
 
 - S: The normalized root. When normalization changed nothing, a marked shallow copy of it, not the original object: the mark lets a caller that stores the result (`createSchemaUtils()`) skip a fresh walk on later calls, while the caller's unmarked original is still re-read as it stands when passed in again. A side effect of the copy is that `retrieveSchema(validator, root, root)` on such a root returns a new object rather than `root` itself
 
+### rawRootOf&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the root exactly as the caller wrote it when `rootSchema` is a root `normalizeRootReferences()` produced, `undefined` otherwise. Validators compile the author's document: the normalized root carries rewritten ref spellings a validator resolves a second time against the enclosing `$id`, so a validator maps the root it is handed back through this before compiling. Intended for the internals of `@rjsf/core` and the validators; application code should not need it.
+
+#### Parameters
+
+- rootSchema: S - The root schema, possibly one `normalizeRootReferences()` produced
+
+#### Returns
+
+- S | undefined: The raw root the caller passed to `createSchemaUtils()`, or `undefined` when `rootSchema` did not come out of `normalizeRootReferences()`
+
 ### pad()
 
 Returns a string representation of the `num` that is padded with leading "0"s if necessary
