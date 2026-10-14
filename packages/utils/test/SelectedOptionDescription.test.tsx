@@ -2,7 +2,7 @@
 import { render } from '@testing-library/react';
 
 import type { DescriptionFieldProps, Registry, SelectedOptionDescriptionProps } from '../src/index.ts';
-import { resolveFieldPresentation, SelectedOptionDescription } from '../src/index.ts';
+import { resolveFieldPresentation, SelectedOptionDescription, selectedOptionDescriptionId } from '../src/index.ts';
 
 function DescriptionFieldTemplate({ id, description, schema }: DescriptionFieldProps) {
   return (
@@ -51,7 +51,7 @@ describe('SelectedOptionDescription', () => {
     expect(container.innerHTML).toBe('');
   });
 
-  it("renders under its field's plan when hideLabel only says the template draws the label", () => {
+  it("renders under its field's plan when hideLabel only says the template draws the label, under an id of its own", () => {
     const presentation = resolveFieldPresentation({
       id: 'root',
       declaration: {
@@ -65,7 +65,26 @@ describe('SelectedOptionDescription', () => {
     });
     const { container } = render(<SelectedOptionDescription {...baseProps} hideLabel presentation={presentation} />);
 
-    expect(container.querySelector('#root__description')?.textContent).toBe('Foo description');
+    expect(container.querySelector(`#${selectedOptionDescriptionId('root')}`)?.textContent).toBe('Foo description');
+    expect(container.querySelector('#root__description')).toBeNull();
+  });
+
+  it("renders nothing under its field's plan where `ui:label: false`, resolved through the fields above, hides the label", () => {
+    const presentation = resolveFieldPresentation({
+      id: 'root',
+      declaration: {
+        label: 'template',
+        description: 'template',
+        errors: 'template',
+        help: 'template',
+        labelledBy: 'for',
+      },
+      label: 'Choice',
+      showLabel: false,
+    });
+    const { container } = render(<SelectedOptionDescription {...baseProps} presentation={presentation} />);
+
+    expect(container).toBeEmptyDOMElement();
   });
 
   it.each([

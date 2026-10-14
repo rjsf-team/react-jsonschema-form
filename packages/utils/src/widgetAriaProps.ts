@@ -1,6 +1,6 @@
 import getControlAttributes from './getControlAttributes.ts';
 import getSelectedOptionDescription from './getSelectedOptionDescription.ts';
-import { ariaDescribedByIds, descriptionId } from './idGenerators.ts';
+import { ariaDescribedByIds } from './idGenerators.ts';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import type { ControlAttributes, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
@@ -18,7 +18,7 @@ export type WidgetAriaPropsInput<
 /** Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses. A widget
  * rendered inside another one, such as each select of an `AltDateWidget`, has no label of its own and an id that no
  * help or error element is rendered for, so only the caller can name it and link it to its field. The ids the caller
- * passed are followed by `descriptionId(props.id)` only while `SelectedOptionDescription` renders that element, the
+ * passed are followed by the selected option's description id only while `SelectedOptionDescription` renders it, the
  * one the widget renders itself, so the description of the selected option is still announced. Otherwise the id is
  * left out: no element has it, and it may be another field's description id, as `root_when_year__description` is for
  * both the year select of `when` and a `when_year` property. A select its field's plan reaches, with no ids from its
@@ -38,7 +38,8 @@ export default function widgetAriaProps<
   if (!callerDescribedBy && !presentation) {
     return { 'aria-label': ariaLabel, 'aria-describedby': ariaDescribedByIds(id) };
   }
-  const ownDescribedBy = getSelectedOptionDescription<T, S, F>(props) ? [descriptionId(id)] : [];
+  const selected = getSelectedOptionDescription<T, S, F>(props);
+  const ownDescribedBy = selected ? [selected.id] : [];
   if (!callerDescribedBy) {
     return { 'aria-label': ariaLabel, ...getControlAttributes<T, S, F>(props, ownDescribedBy) };
   }

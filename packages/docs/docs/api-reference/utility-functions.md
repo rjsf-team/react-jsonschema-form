@@ -96,7 +96,7 @@ The `useAltDateWidgetProps()` hook returns the props for each of them, so a them
 Renders the description of the `oneOf`/`anyOf` option currently selected in a single-select widget, through the `DescriptionFieldTemplate` from the registry.
 A theme's `SelectWidget` renders it so that choosing an option shows what that option is for, which the widget's own description cannot say.
 Nothing is rendered when the widget takes multiple values, when a `ui:label` of false turns the label off, or when the selected option's schema has no `description`.
-Without its field's plan, `hideLabel` turns it off as well; under the plan, `hideLabel` says only that the widget doesn't draw the label, which the template may.
+Without its field's plan, `hideLabel` turns it off as well, and it renders under `descriptionId()`. Under the plan, `hideLabel` says only that the widget doesn't draw the label, which the template may; the plan's label says instead whether `ui:label: false`, resolved through the fields above, turns it off, and it renders under [selectedOptionDescriptionId()](#selectedoptiondescriptionid), since the field's own description may render under `descriptionId()`.
 
 #### Props
 
@@ -2469,7 +2469,7 @@ Check to see if a `schema` specifies that a value must be true. This happens whe
 ### selectedOptionDescriptionId()
 
 Return a consistent `id` for the description of the option a select widget has selected, which describes that option rather than the field, so it can't share the field's [descriptionId()](#descriptionid).
-[`SelectedOptionDescription`](#selectedoptiondescription) still renders under `descriptionId()`, so nothing carries this id yet.
+[`SelectedOptionDescription`](#selectedoptiondescription) renders under it when its field's plan reaches it, and under `descriptionId()` without one.
 
 #### Parameters
 

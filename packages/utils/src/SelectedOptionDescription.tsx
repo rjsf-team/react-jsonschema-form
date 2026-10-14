@@ -1,6 +1,5 @@
 import getSelectedOptionDescription from './getSelectedOptionDescription.ts';
 import getTemplates from './getTemplates.ts';
-import { descriptionId } from './idGenerators.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
 
 export type SelectedOptionDescriptionProps<
@@ -23,11 +22,11 @@ export default function SelectedOptionDescription<
     return null;
   }
 
-  const { id, options, registry, uiSchema } = props;
+  const { options, registry, uiSchema } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   return (
     <DescriptionFieldTemplate
-      id={descriptionId(id)}
+      id={selected.id}
       description={selected.description}
       schema={selected.schema}
       uiSchema={uiSchema}
