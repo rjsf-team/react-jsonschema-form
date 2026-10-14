@@ -55,6 +55,15 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
     expect(unrecognizedProps()).not.toContain('MarkdownTemplate');
   });
 
+  it('does not pass on a ButtonTemplates override, which rjsf ignores', () => {
+    const { container } = render(
+      <Form schema={{ type: 'string' }} uiSchema={{ 'ui:options': { ButtonTemplates: {} } }} validator={validator} />,
+    );
+
+    expect(container.querySelector('[buttontemplates]')).toBeNull();
+    expect(unrecognizedProps()).not.toContain('ButtonTemplates');
+  });
+
   it('does not pass ui:definitions on from the root field', () => {
     const { container } = render(
       <Form schema={{ type: 'string' }} uiSchema={{ 'ui:definitions': {} }} validator={validator} />,
@@ -75,6 +84,8 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
     );
 
     expect(container.querySelector('[yearsrange], [format], [hidenowbutton], [hideclearbutton]')).toBeNull();
-    expect(unrecognizedProps()).toEqual(expect.not.arrayContaining(['yearsRange', 'hideNowButton', 'hideClearButton']));
+    for (const prop of ['yearsRange', 'hideNowButton', 'hideClearButton']) {
+      expect(unrecognizedProps()).not.toContain(prop);
+    }
   });
 });

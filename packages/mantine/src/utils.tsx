@@ -36,9 +36,10 @@ import {
 type DeclaredKeys<T> = keyof { [K in keyof T as string extends K ? never : K]: T[K] };
 
 /** The options rjsf reads from a widget's `options`: those `WidgetProps` declares, and a per-field override of any
- * template but the button templates, which `getTemplates()` resolves from `ui:options`
+ * template, which `getTemplates()` matches in `ui:options` by name. That includes `ButtonTemplates`, though
+ * `getTemplate()` ignores an override of it.
  */
-type RjsfOptionName = DeclaredKeys<WidgetProps['options']> | Exclude<DeclaredKeys<TemplatesType>, 'ButtonTemplates'>;
+type RjsfOptionName = DeclaredKeys<WidgetProps['options']> | DeclaredKeys<TemplatesType>;
 
 // A record, not a list, so that an option or template a later release declares fails typecheck until it is listed here
 const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
@@ -90,6 +91,7 @@ const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
   ArrayFieldTemplate: true,
   ArrayFieldTitleTemplate: true,
   BaseInputTemplate: true,
+  ButtonTemplates: true,
   CyclicSchemaExpandTemplate: true,
   DescriptionFieldTemplate: true,
   ErrorListTemplate: true,
@@ -192,19 +194,34 @@ export function useContainerErrors(props: VisibleErrorsProps & { id: string }) {
   return errors ? <Input.Error id={errorId(props.id)}>{errors}</Input.Error> : undefined;
 }
 
+/** The keys of `T` it declares that `cleanupOptions()` doesn't strip. Mantine's own props reach a widget through the
+ * index signature of `WidgetProps['options']`, so they're passed on untyped.
+ */
+type CleanedOptions<T> = {
+  [K in keyof T as string extends K ? never : K extends StrippedOptionName ? never : K]: T[K];
+};
+
 const noExtraKeys: ReadonlySet<string> = new Set();
 
+/** Leaves out of a widget's `options` the ones rjsf reads, so that the rest, Mantine's own props, can be spread onto
+ * its Mantine component
+ *
+ * @param options - The widget's options
+ * @param [extraKeys] - Further keys to leave out, as a `Set`, or an array as it took before
+ * @returns - The options that aren't rjsf's or in `extraKeys`
+ */
 export function cleanupOptions<T extends object>(
   options: T,
-  extraKeys: ReadonlySet<string> = noExtraKeys,
-): Omit<T, StrippedOptionName> {
-  const result = {} as T;
+  extraKeys: ReadonlySet<string> | readonly string[] = noExtraKeys,
+): CleanedOptions<T> {
+  const extraKeySet = 'has' in extraKeys ? extraKeys : new Set(extraKeys);
+  const result: GenericObjectType = {};
   for (const key in options) {
-    if (!uiOptionsKeys.has(key) && !extraKeys.has(key)) {
+    if (!uiOptionsKeys.has(key) && !extraKeySet.has(key)) {
       result[key] = options[key];
     }
   }
-  return result;
+  return result as CleanedOptions<T>;
 }
 
 /**
