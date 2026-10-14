@@ -328,7 +328,7 @@ export function computeDefaults<
   // option, an `allOf` merge). Branches that stood beside the `$ref` re-derive their own path with the keyword they
   // are entered through, since a `$ref` back to the same definition from one of those is a second use, not a
   // recursion.
-  let updatedRecurseList = enclosingRefPath<S>(schema, _recurseList);  // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
+  let updatedRecurseList = enclosingRefPath<S>(schema, _recurseList); // Overridden below when a `oneOf`/`anyOf` branch is selected, so that branch's own `uiSchema[keyword][index]`
   // fragment (matching `MultiSchemaField`'s `optionsUiSchema`/`optionUiSchema`) is what its fields see, rather than
   // the parent uiSchema, which is otherwise passed straight through.
   let branchUiSchema = uiSchema;
@@ -408,7 +408,7 @@ export function computeDefaults<
     const dependenciesMerged = !deepEquals(schemaToCompute, schemaWithoutDependencies);
     // The merge may itself be the resolution of a `$ref` the entry held, the way the `allOf` merge below resolves
     // one among its subschemas: the ref it expanded joins the path, so a `$ref` back to it further down stops there
-    updatedRecurseList = dependenciesMerged ? enclosingRefPath<S>(schemaToCompute as S, dependencyPath) : _recurseList;
+    updatedRecurseList = dependenciesMerged ? enclosingRefPath<S>(schemaToCompute, dependencyPath) : _recurseList;
     // A dependency that merged new content may have resolved a `$ref` doing so, the way this level's own retrieve
     // does, so the recursion treats what it materialized as crossed here
     resolvedHere = resolvedHere || dependenciesMerged;
@@ -571,8 +571,9 @@ export function computeDefaults<
     // The same starting list the `dependencies` branch's throwaway walk above gets: the caller's own, so the
     // conditions there are judged against the defaults this call can actually produce. A `$ref` joins it at the
     // point a branch crosses into what it names, so a definition's own reference never blocks its first
-    // self-reference below.
-    { ...computeDefaultsProps, _recurseList },
+    // self-reference below. The props carry that same list - a branch records what it crosses in
+    // `updatedRecurseList` instead - so they are passed through as they are rather than rebuilt at every node.
+    computeDefaultsProps,
     defaults,
     isWholeValue,
   );
