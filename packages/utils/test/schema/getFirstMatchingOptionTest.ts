@@ -65,6 +65,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         // The option stays whole inside the `allOf`, under a derived `$id` that keeps its own as the base, so that a
         // relative `$ref` left inside it still resolves and resolves to the option rather than to what wraps it
         {
+          $id: expect.stringMatching(/^anOption\?rjsf=.+/),
           allOf: [
             {
               $id: expect.stringMatching(/^anOption\?rjsf=.+/),
@@ -77,6 +78,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
         // The precompiled validators recognise the junk option by its `$id` and answer it without a compiled function
         { $id: JUNK_OPTION_ID, type: 'object', properties: { id: { enum: ['b'] } }, anyOf: [{ required: ['id'] }] },
       ]);
+      expect(validated[0].$id).not.toBe((validated[0].allOf![0] as RJSFSchema).$id);
     });
     it('drops the required of an option that has an $id along with the one that has none', () => {
       const { validated, validator } = recordingValidator();
