@@ -1,5 +1,5 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getArrayDescription, getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -33,10 +33,7 @@ export default function ArrayFieldTemplate<
   // Under a plan, `ArrayField` hands the heading its plan gives the array as `title`, and the plan says whether the
   // description is the array's to draw, so an option repeating its field's text draws neither
   const shownTitle = presentation ? title : uiOptions.title || title;
-  let shownDescription = uiOptions.description || schema.description;
-  if (presentation) {
-    shownDescription = presentation.description.by === 'self' ? presentation.description.text : undefined;
-  }
+  const shownDescription = getArrayDescription<T, S, F>(props);
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
