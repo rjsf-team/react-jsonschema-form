@@ -7,7 +7,7 @@ import { userEvent } from '@testing-library/user-event';
 
 import type { FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
-import { AcceptingParent, createParentLog, handleOf, input, TransformingParent } from './testUtils.tsx';
+import { AcceptingParent, createParentLog, elementOf, handleOf, input, TransformingParent } from './testUtils.tsx';
 
 interface ColorListData {
   color?: string;
@@ -965,6 +965,70 @@ describe('settled snapshot sanitization', () => {
     expect(log.value?.rows).toEqual([
       { kind: 'x', tags: [null, null] },
       { kind: 'y', tags: [null, null] },
+    ]);
+  });
+
+  it('keeps each row paired with its own previous value when the parent stores a reorder with a field of its own (#5451)', async () => {
+    interface Row {
+      kind?: string;
+      tags?: (string | null)[];
+    }
+    interface StampedData {
+      note?: string;
+      stamp?: number;
+      rows?: Row[];
+    }
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        note: { type: 'string' },
+        rows: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              kind: { type: 'string', enum: ['x', 'y'] },
+              tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
+            },
+            allOf: [
+              {
+                if: { properties: { kind: { const: 'x' } } },
+                then: { properties: { tags: { items: { enum: ['a'] } } } },
+              },
+              {
+                if: { properties: { kind: { const: 'y' } } },
+                then: { properties: { tags: { items: { enum: ['b'] } } } },
+              },
+            ],
+          },
+        },
+      },
+    };
+    const log = createParentLog<StampedData>();
+    let stamp = 0;
+    const { container } = render(
+      <TransformingParent<StampedData>
+        schema={schema}
+        initialValue={{
+          rows: [
+            { kind: 'x', tags: [null, null] },
+            { kind: 'y', tags: [null, null] },
+          ],
+        }}
+        log={log}
+        // A parent that stores every edit with a field of its own, so the value it passes is never the form's data
+        transform={(reported) => {
+          stamp += 1;
+          return reported === undefined ? reported : { ...reported, stamp };
+        }}
+      />,
+    );
+    // The rows the parent stores are the reordered ones, so they keep the moved pairing view though the root differs
+    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
+    await user.type(input(container, 'root_note'), 'n');
+    expect(log.value?.rows).toEqual([
+      { kind: 'y', tags: [null, null] },
+      { kind: 'x', tags: [null, null] },
     ]);
   });
 

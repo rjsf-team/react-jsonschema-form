@@ -527,13 +527,13 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
  * dropped then, so the next sanitize filters it with no previous value rather than a wrong one, and the rest
  * of the view keeps its recorded moves
  */
-function moveSettledArrayAtPath<T>(
-  data: T,
+function moveSettledArrayAtPath(
+  data: unknown,
   path: FieldPathList,
   newKeyOf: KeyMove,
   newArray: unknown[],
   oldLength: number,
-): T | undefined {
+): unknown {
   const settled = getAt<unknown>(data, path);
   if (!Array.isArray(settled)) {
     return data;
@@ -543,7 +543,7 @@ function moveSettledArrayAtPath<T>(
     path.length === 0 ? value : setByPath(copyAlongPath(data, path), path, value);
   if (settled.length !== oldLength) {
     // Drop only this array: this position holds no previous array, and the rest of the view keeps its moves
-    return writeAtPath(undefined) as T | undefined;
+    return writeAtPath(undefined);
   }
   const moved: unknown[] = new Array(newArray.length);
   settled.forEach((item, index) => {
@@ -559,7 +559,45 @@ function moveSettledArrayAtPath<T>(
       moved[index] = newArray[index];
     }
   }
-  return writeAtPath(moved) as T;
+  return writeAtPath(moved);
+}
+
+/** The pairing view for a value the form takes in place of its own data: the moved `view` wherever the value holds what
+ * the form's data does, since the container writes that moved the view moved those very rows, and the data as it last
+ * `settled`, from before those writes, wherever it holds something else, such as a reorder the parent set back. A
+ * parent that stores each edit with a field of its own therefore keeps the moves of the arrays it left alone (#5451)
+ *
+ * @param taken - The value the form takes
+ * @param own - The form's data the value replaces
+ * @param view - The pairing view of `own`
+ * @param settled - The data as it last settled
+ * @returns - The pairing view of `taken`
+ */
+function pairingViewOfTaken(taken: unknown, own: unknown, view: unknown, settled: unknown): unknown {
+  if (deepEquals(taken, own)) {
+    return view;
+  }
+  if (
+    Array.isArray(taken) &&
+    Array.isArray(own) &&
+    Array.isArray(view) &&
+    taken.length === own.length &&
+    view.length === own.length
+  ) {
+    return Array.from(view, (item, index) =>
+      pairingViewOfTaken(taken[index], own[index], item, Array.isArray(settled) ? settled[index] : undefined),
+    );
+  }
+  if (isPlainObject(taken) && isPlainObject(own) && isPlainObject(view)) {
+    const settledObject = isPlainObject(settled) ? settled : {};
+    return Object.fromEntries(
+      Object.entries(view).map(([key, value]) => [
+        key,
+        pairingViewOfTaken(taken[key], own[key], value, settledObject[key]),
+      ]),
+    );
+  }
+  return settled;
 }
 
 /** `validation` after the keys of the array or object at `path` moved, the list by the rule `moveErrorSchemaKeys()`
@@ -714,7 +752,7 @@ interface DerivedData<T, S extends StrictRJSFSchema, F extends FormContextType> 
    * with the row's own starting value, while the old schema side keeps reading `settledFormData`, whose
    * conditionals resolved the way the settled data saw them. Settles and resets together with `settledFormData`
    */
-  settledFormDataForPairing: T | undefined;
+  settledFormDataForPairing: unknown;
   /** The schema the settling pass resolved for `settledFormData`: the previous-data side of the sanitize call
    * resolves from it, since the committed data's resolved schema already carries the root's conditionals for
    * data that can sit on the other side of a flip
@@ -787,7 +825,7 @@ function settledFormDataState<T, S extends StrictRJSFSchema, F extends FormConte
 ): {
   formDataSchema: S | undefined;
   settledFormData: T | undefined;
-  settledFormDataForPairing: T | undefined;
+  settledFormDataForPairing: unknown;
   settledRetrievedSchema: S | undefined;
 } {
   if (sanitizeRan || current === undefined) {
@@ -1943,12 +1981,15 @@ function deriveFromProps<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const isFormDataSeen = Object.is(props.formData, state.formDataProp) || Object.is(props.formData, state.formData);
   if (props.formData !== undefined && !isFormDataSeen) {
     const next = deriveDataState(state, props.formData, props, { isDataPassed: true });
-    // The pairing view follows the container writes the form made, so it describes the form's own data. A copy of that
-    // data, as from a parent storing a clone of what `onChange` reported, keeps it; any other value, such as a parent
-    // setting a reorder back, is paired against the data as it last settled, from before those writes (#5451)
-    return deepEquals(props.formData, state.formData)
-      ? next
-      : { ...next, settledFormDataForPairing: next.settledFormData };
+    return {
+      ...next,
+      settledFormDataForPairing: pairingViewOfTaken(
+        props.formData,
+        state.formData,
+        next.settledFormDataForPairing,
+        next.settledFormData,
+      ),
+    };
   }
   const context = deriveRenderContext(props, state.retrievedSchema, state, resolveSchemaUtils(props, state));
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(state, context);

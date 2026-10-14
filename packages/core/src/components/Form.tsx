@@ -276,7 +276,7 @@ export interface FormState<
    * with the row's own starting value, while the old schema side keeps reading `settledFormData`, whose
    * conditionals resolved the way the settled data saw them. Settles and resets together with `settledFormData`
    */
-  settledFormDataForPairing?: T;
+  settledFormDataForPairing?: unknown;
   /** The schema `settledFormData` was resolved under when it settled: the previous-data side of the sanitize
    * call resolves from it, since the committed data's `retrievedSchema` already carries the root's
    * conditionals merged for data that can sit on the other side of a flip
