@@ -156,6 +156,15 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
   return shouldReturnNullAsDefault ? (null as T) : computedDefault;
 }
 
+/** Writes a computed default as an own key without invoking the prototype setter. */
+function setOwnDefault(acc: GenericObjectType, key: string, value: unknown) {
+  if (key === '__proto__') {
+    Object.defineProperty(acc, key, { value, enumerable: true, writable: true, configurable: true });
+  } else {
+    acc[key] = value;
+  }
+}
+
 /** Either add `computedDefault` at `key` into `obj` or not add it based on its value, the value of
  * `includeUndefinedValues`, the value of `emptyObjectFields` and if its parent field is required. Generally undefined
  * `computedDefault` values are added only when `includeUndefinedValues` is either true/"excludeObjectChildren". If `
@@ -177,6 +186,7 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
  * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
  * @param isNullType - The type of the schema is null
  */
+
 function maybeAddDefaultToObject<T = unknown>(
   acc: GenericObjectType,
   key: string,
@@ -191,7 +201,7 @@ function maybeAddDefaultToObject<T = unknown>(
   if (includeUndefinedValues === true || isConst) {
     // If includeUndefinedValues is explicitly true
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
-    acc[key] = computedDefault;
+    setOwnDefault(acc, key, computedDefault);
   } else if (includeUndefinedValues === 'excludeObjectChildren') {
     // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
     // Only add the computed default if it's not an empty object placeholder for a primitive field
@@ -200,7 +210,7 @@ function maybeAddDefaultToObject<T = unknown>(
       !isObject(computedDefault) ||
       Object.keys(computedDefault).length > 0
     ) {
-      acc[key] = computedDefault;
+      setOwnDefault(acc, key, computedDefault);
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
   } else if (emptyObjectFields !== 'skipDefaults') {
@@ -212,7 +222,7 @@ function maybeAddDefaultToObject<T = unknown>(
       // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
       if (emptyObjectFields === 'skipEmptyDefaults') {
         if (Object.keys(computedDefault).length > 0) {
-          acc[key] = computedDefault;
+          setOwnDefault(acc, key, computedDefault);
         }
       } // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
@@ -221,7 +231,7 @@ function maybeAddDefaultToObject<T = unknown>(
         (Object.keys(computedDefault).length > 0 || requiredFields.includes(key)) &&
         (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
       ) {
-        acc[key] = computedDefault;
+        setOwnDefault(acc, key, computedDefault);
       }
     } else if (
       // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
@@ -233,7 +243,7 @@ function maybeAddDefaultToObject<T = unknown>(
         emptyObjectFields === 'skipEmptyDefaults' ||
         (isSelfOrParentRequired && requiredFields.includes(key)))
     ) {
-      acc[key] = computedDefault;
+      setOwnDefault(acc, key, computedDefault);
     }
   }
 }
@@ -537,8 +547,11 @@ export function ensureFormDataMatchingSchema<
     validFormData = Object.keys(schemaToMatch.properties).reduce(
       (acc: GenericObjectType, key: string) => {
         const propertySchema = getPropertySchema<S>(schemaToMatch, key);
-        if (key in acc && (shouldRetrieveAllOf || (isObject(propertySchema) && ALL_OF_KEY in propertySchema))) {
-          acc[key] = ensureFormDataMatchingSchema<T, S, F>(context, propertySchema, rootSchema, acc[key]);
+        if (
+          Object.hasOwn(acc, key) &&
+          (shouldRetrieveAllOf || (isObject(propertySchema) && ALL_OF_KEY in propertySchema))
+        ) {
+          setOwnDefault(acc, key, ensureFormDataMatchingSchema<T, S, F>(context, propertySchema, rootSchema, acc[key]));
         }
         return acc;
       },
@@ -1007,4 +1020,4 @@ export default function getDefaultFormState<
   }
 
   return defaults;
-}
+    }
