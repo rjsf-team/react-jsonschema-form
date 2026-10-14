@@ -90,9 +90,10 @@ describe('ColorWidget', () => {
       expect(renderWithFormat('rgba(255, 0, 0, 1)', format)).not.toHaveBeenCalled();
     });
 
-    test('is passed on when ColorInput may take it, such as a format a later Mantine release adds', () => {
-      // Mantine 9.6 doesn't know `oklch`, so it converts the color to hex, its default
-      expect(renderWithFormat('rgba(255, 0, 0, 1)', 'oklch')).toHaveBeenCalledWith('#ff0000');
+    test("is passed on when ColorInput doesn't know it, such as a format a later Mantine release adds", () => {
+      // A format left out converts nothing, so the conversion to hex, Mantine's fallback for a format it doesn't know,
+      // shows this one reached `ColorInput`
+      expect(renderWithFormat('rgba(255, 0, 0, 1)', 'not-a-color-format')).toHaveBeenCalledWith('#ff0000');
     });
   });
 });

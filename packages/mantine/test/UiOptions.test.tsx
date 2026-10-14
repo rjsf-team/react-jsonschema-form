@@ -20,6 +20,13 @@ describe('the options rjsf reads are not passed on to Mantine components', () =>
       .map(([, prop]) => prop);
   }
 
+  it('reports a prop React warns about, so the tests below can rely on it', () => {
+    const leaked: Record<string, string> = { leakedOption: 'value' };
+    render(<div {...leaked} />);
+
+    expect(unrecognizedProps()).toEqual(['leakedOption']);
+  });
+
   it('leaves an optional field optional under a global required option, which rjsf ignores', () => {
     render(
       <Form
