@@ -12,7 +12,6 @@ import {
   DEPENDENCIES_KEY,
   ELSE_KEY,
   GUESSED_TYPE_FLAG,
-  ID_KEY,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
@@ -23,7 +22,10 @@ import {
   THEN_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
+import findSchemaDefinition, {
+  findSchemaDefinitionWithBase,
+  splitKeyElementFromObject,
+} from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -640,12 +642,10 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     }
     pathList = [...pathList, $ref!];
     // Retrieve the referenced schema definition.
-    const refSchema = findSchemaDefinition<S>($ref, rootSchema, currentBaseURI);
+    let refSchema: S;
+    [refSchema, currentBaseURI] = findSchemaDefinitionWithBase<S>($ref, rootSchema, [], currentBaseURI);
     resolvedSchema = resolvedSchemaOf<S>($ref, refSchema, localSchema);
     tally.count();
-    if (ID_KEY in resolvedSchema) {
-      currentBaseURI = resolvedSchema[ID_KEY];
-    }
     expandedRefs?.push($ref!);
   } else if (passCount > 0) {
     // Only on fixpoint re-walks (pass > 0): a subtree materialized by a previous pass still carries its source
