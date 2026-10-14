@@ -384,7 +384,8 @@ render(
 > Note: Registered fields can be reused across the entire schema.
 
 A custom field draws its own label and description: the `FieldTemplate` around it draws neither, whether it is named by `ui:field`, `ui:options.field` or a schema's `$id`.
-A field that wants the template to draw them, as `geo` above would to show its title, declares so under the key it is registered by, through the `Form`'s or the theme's [`presentation`](../api-reference/form-props.md#presentation), or for every custom field through `fieldDefault`:
+A field that wants the template to draw them, as `geo` above would to show its title, declares so under the key it is registered by, through the `Form`'s or the theme's [`presentation`](../api-reference/form-props.md#presentation).
+Declare a template label under the field's own key rather than through `fieldDefault`: that also reaches objects and arrays, which have no control for the template's label to name, so they would draw no heading at all:
 
 ```tsx
 <Form
