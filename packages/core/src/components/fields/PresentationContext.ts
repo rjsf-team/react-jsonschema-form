@@ -8,10 +8,6 @@ export interface InheritedPresentation {
   id: string;
   /** The plan it built */
   plan: FieldPresentation;
-  /** Whether its `ui:label` lets it show its label, which a field below declaring none takes, as an option given a
-   * `uiSchema` of its own doesn't carry the field's (#5490 decision 24)
-   */
-  showLabel: boolean;
   /** Its title, without the Deprecated marker its label may carry, which a field below titled the same takes the label
    * of
    */
@@ -29,7 +25,7 @@ const PresentationContext = createContext<InheritedPresentation | undefined>(und
 /** Gets what the field above handed down, when that field renders the same `id`
  *
  * @param id - The id of the field asking
- * @returns - The plan and `showLabel` of the field above rendering `id`, if there is one
+ * @returns - What the field above rendering `id` handed down, if there is one
  */
 export function useInheritedPresentation(id: string): InheritedPresentation | undefined {
   const inherited = use(PresentationContext);
