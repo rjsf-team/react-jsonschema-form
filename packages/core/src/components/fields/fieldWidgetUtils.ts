@@ -163,6 +163,21 @@ export function getWidgetLabelProps(
   return { label: ownLabel, hideLabel: !showsLabel() };
 }
 
+/** Gets the parts of a field's plan its template draws, from which the deprecated props a template that doesn't read
+ * `presentation` renders from are derived, so it draws a part exactly where the plan says the template draws it
+ *
+ * @param presentation - The field's plan, if one was built
+ * @returns - Whether the template draws the label, and the description, help and error messages it draws, if any
+ */
+export function getTemplateParts(presentation: FieldPresentation | undefined) {
+  return {
+    displayLabel: presentation?.label.by === 'template',
+    description: presentation?.description.by === 'template' ? presentation.description : undefined,
+    help: presentation?.help.by === 'template' ? presentation.help.text : undefined,
+    errors: presentation?.errors.by === 'template' ? presentation.errors.messages : undefined,
+  };
+}
+
 /** Gets the single widget the field component renders its value with, as the field itself picks it, so `SchemaField`
  * plans the field with the widget the field renders rather than predicting one. A component registered under one of
  * core's widget-rendering field keys is taken to pick its widget the way core's does; any other renders no single
