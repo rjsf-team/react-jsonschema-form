@@ -922,7 +922,7 @@ A finite epoch number or a valid `Date` is an exact instant. It is converted to 
 Returns the suggestions a text input offers for `schema`: its `examples` and `default`, as the strings a user could pick from a `<datalist>`.
 Examples and a default that share a `String()` are one suggestion, e.g. `["5432", 5432]` with a default of `5432` is the single suggestion `'5432'`.
 A schema without `examples` has no suggestions, and neither has one whose examples and default are all `null`, `undefined`, objects or arrays.
-A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop so they are computed once.
+A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop, so both read the same list.
 The same schema object gets the same array back each time, which is frozen since every caller shares it.
 The suggestions are read once per schema object, so `examples` or a `default` edited in place afterwards is not seen: pass a new schema object to change them.
 
