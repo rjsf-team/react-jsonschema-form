@@ -46800,7 +46800,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiSelect-root emotion-2"
           >
             <div
-              aria-describedby="root__description"
+              aria-describedby="root__selectedOptionDescription"
               aria-expanded="false"
               aria-haspopup="listbox"
               class="MuiSelect-select MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input emotion-3"
@@ -46850,7 +46850,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         </div>
         <h6
           class="MuiTypography-root MuiTypography-subtitle2 emotion-8"
-          id="root__description"
+          id="root__selectedOptionDescription"
         >
           Foo description
         </h6>

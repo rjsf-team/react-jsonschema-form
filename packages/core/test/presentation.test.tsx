@@ -8,7 +8,7 @@ import type {
   UiSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { errorId, fieldLabelId, helpId, optionHelpId, titleId } from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
@@ -317,6 +317,32 @@ describe('the plan SchemaField builds', () => {
 
       expect(node.querySelector('#root__anyof_select')).not.toHaveAttribute('aria-labelledby');
     });
+  });
+
+  it("gives a select's selected option description an id of its own beside the field's description", () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          color: {
+            title: 'Color',
+            description: 'Pick a color',
+            oneOf: [
+              { const: 'r', title: 'Red', description: 'Warm' },
+              { const: 'b', title: 'Blue', description: 'Cool' },
+            ],
+          },
+        },
+      },
+      formData: { color: 'r' },
+    });
+
+    expect(node.querySelectorAll('#root_color__description')).toHaveLength(1);
+    expect(node.querySelector('#root_color__description')).toHaveTextContent('Pick a color');
+    expect(node.querySelector(`#${selectedOptionDescriptionId('root_color')}`)).toHaveTextContent('Warm');
+    expect(node.querySelector('select#root_color')!.getAttribute('aria-describedby')!.split(' ')).toEqual(
+      expect.arrayContaining(['root_color__description', selectedOptionDescriptionId('root_color')]),
+    );
   });
 
   describe('a deprecated array whose option has its title', () => {

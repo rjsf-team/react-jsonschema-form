@@ -183,6 +183,8 @@ export default function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
     </div>
   );

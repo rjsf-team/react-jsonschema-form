@@ -39,6 +39,8 @@ export default function SelectWidget<
     hideError,
     registry,
     uiSchema,
+    hideLabel,
+    presentation,
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue, optgroups } = options;
 
@@ -124,6 +126,8 @@ export default function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
     </>
   );

@@ -57,6 +57,8 @@ function SelectWidget<
     htmlName,
     registry,
     uiSchema,
+    hideLabel,
+    presentation,
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
@@ -117,6 +119,8 @@ function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
+        hideLabel={hideLabel}
+        presentation={presentation}
       />
       <select
         id={id}
