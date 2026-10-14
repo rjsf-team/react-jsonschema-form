@@ -1,7 +1,7 @@
 import type { MockInstance } from 'vitest';
 
 import type { DefaultFormStateBehavior, GenericObjectType, RJSFSchema, UiSchema } from '../../src/index.ts';
-import { createSchemaUtils, getDefaultFormState, noop } from '../../src/index.ts';
+import { createSchemaUtils, getDefaultFormState, isObject, noop } from '../../src/index.ts';
 import {
   AdditionalItemsHandling,
   computeDefaultBasedOnSchemaTypeAndDefaults,
@@ -4766,6 +4766,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const schema: RJSFSchema = { type: 'string', const: 'x', default: { a: 1 } };
         expect(getDefaultFormState({ validator: testValidator }, { schema })).toEqual('x');
         expect(getDefaultFormState({ validator: testValidator }, { schema, formData: 'y' })).toEqual('y');
+      });
+      it.each<[string, RJSFSchema, GenericObjectType, (string | number)[]]>([
+        ['a string const schema', { type: 'string', const: 'x', default: { a: 1 } }, { b: 2 }, ['0']],
+        ['an array default', { type: 'array', default: [1, 2] }, { b: 2 }, ['0']],
+        ['the tail of an array default', { type: 'array', default: [1, 2] }, { b: 2 }, ['1']],
+        ['a string default inside allOf', { allOf: [{ type: 'string', default: 'x' }] }, { b: 2 }, ['0']],
+        [
+          'a nested string property default',
+          { type: 'object', properties: { a: { type: 'string', default: 'x' } } },
+          { a: { b: 2 } },
+          ['a', '0'],
+        ],
+      ])('should not add index keys to object form data for %s', (_, schema, formData, indexKeyPath) => {
+        const result = getDefaultFormState({ validator: testValidator }, { schema, formData });
+        // Only an object holding the key is the bug; a string or array that satisfies the schema has index keys too.
+        // An object holder must equal the form data it was given, so dropping that form data fails as well
+        const holderPath = indexKeyPath.slice(0, -1);
+        const holder = holderPath.reduce<unknown>((value, key) => (value as GenericObjectType)?.[key], result);
+        const formDataHolder = holderPath.reduce<GenericObjectType>(
+          (value, key) => value[key] as GenericObjectType,
+          formData,
+        );
+        expect(isObject(holder) ? holder : formDataHolder).toEqual(formDataHolder);
       });
       it('should not spread a primitive form data value into an object default', () => {
         const schema: RJSFSchema = { type: 'string', enum: ['a', 'b'], default: { a: 1 } };
