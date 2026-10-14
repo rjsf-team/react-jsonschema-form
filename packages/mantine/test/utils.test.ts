@@ -32,6 +32,6 @@ describe('cleanupOptions()', () => {
   );
 
   it('also removes the extra keys it is given', () => {
-    expect(cleanupOptions({ min: 1, radius: 'md' }, ['min'])).toEqual({ radius: 'md' });
+    expect(cleanupOptions({ min: 1, radius: 'md' }, new Set(['min']))).toEqual({ radius: 'md' });
   });
 });

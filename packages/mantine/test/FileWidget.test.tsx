@@ -63,4 +63,15 @@ describe('FileWidget', () => {
     );
     expect(queryByText('Test description')).not.toBeInTheDocument();
   });
+
+  test('sets the accepted file types from options on the input itself, since cleanupOptions() strips them', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'string', format: 'data-url' }}
+        uiSchema={{ 'ui:options': { accept: '.pdf' } }}
+        validator={validator}
+      />,
+    );
+    expect(container.querySelector('input[type="file"]')).toHaveAttribute('accept', '.pdf');
+  });
 });

@@ -192,13 +192,15 @@ export function useContainerErrors(props: VisibleErrorsProps & { id: string }) {
   return errors ? <Input.Error id={errorId(props.id)}>{errors}</Input.Error> : undefined;
 }
 
+const noExtraKeys: ReadonlySet<string> = new Set();
+
 export function cleanupOptions<T extends object>(
   options: T,
-  extraKeys: readonly string[] = [],
+  extraKeys: ReadonlySet<string> = noExtraKeys,
 ): Omit<T, StrippedOptionName> {
   const result = {} as T;
   for (const key in options) {
-    if (!uiOptionsKeys.has(key) && !extraKeys.includes(key)) {
+    if (!uiOptionsKeys.has(key) && !extraKeys.has(key)) {
       result[key] = options[key];
     }
   }

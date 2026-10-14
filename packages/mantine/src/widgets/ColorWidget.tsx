@@ -7,6 +7,25 @@ import { labelValue } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
+type ColorFormat = NonNullable<ColorInputProps['format']>;
+
+// A record, not a list, so that a format a later Mantine release adds fails typecheck until it is listed here
+const colorFormatRecord: Record<ColorFormat, true> = {
+  hex: true,
+  hexa: true,
+  rgb: true,
+  rgba: true,
+  hsl: true,
+  hsla: true,
+};
+
+/** Whether `format` is one `ColorInput` takes. `format` is also the alt-date widgets' option, so a value meant for them,
+ * such as `DMY`, is left out, and Mantine's default or the theme's applies instead
+ */
+function isColorFormat(format: unknown): format is ColorFormat {
+  return typeof format === 'string' && Object.hasOwn(colorFormatRecord, format);
+}
+
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *
  * @param props - The `WidgetProps` for this component
@@ -69,7 +88,7 @@ export default function ColorWidget<
       name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
-      format={options.format as ColorInputProps['format']}
+      format={isColorFormat(options.format) ? options.format : undefined}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}
