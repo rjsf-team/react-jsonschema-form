@@ -867,12 +867,22 @@ export function getArrayDefaults<
     initialDefaultsGenerated,
     uiSchema,
     uiSchemaDefinitions,
+    _resolvedHere = false,
   }: ComputeDefaultsProps<T, S, F> = {},
   initialDefaults?: T[],
 ): T[] | undefined {
   const { defaultFormStateBehavior } = context;
   let defaults = initialDefaults;
   const schema: S = rawSchema;
+
+  // An item schema THIS level's retrieve or merge resolved from a `$ref` crossed into its definition here, the
+  // way the `$ref` branch of `computeDefaults()` crosses one it expands itself: the reference joins the path the
+  // item's content is computed with, so a `$ref` back to the same definition below it stops there. An item the
+  // schema arrived with keeps the caller's path, and sibling branches of its ref re-derive their own.
+  const itemPath = (schemaItem: S): string[] =>
+    _resolvedHere && refSiblingBranches(schemaItem) === undefined
+      ? enclosingRefPath<S>(schemaItem, _recurseList)
+      : _recurseList;
 
   const arrayMinItemsStateBehavior = defaultFormStateBehavior?.arrayMinItems ?? {};
   const { populate: arrayMinItemsPopulate, mergeExtraDefaults: arrayMergeExtraDefaults } = arrayMinItemsStateBehavior;
@@ -892,7 +902,7 @@ export function getArrayDefaults<
       const itemFormData = Array.isArray(rawFormData) ? rawFormData[idx] : undefined;
       return computeDefaults<T, S, F>(context, schemaItem, {
         rootSchema,
-        _recurseList,
+        _recurseList: itemPath(schemaItem),
         parentDefaults: item,
         rawFormData: itemFormData,
         required,
@@ -913,7 +923,7 @@ export function getArrayDefaults<
       const itemDefaults = rawFormData.map((item: T, idx: number) =>
         computeDefaults<T, S, F>(context, schemaItem, {
           rootSchema,
-          _recurseList,
+          _recurseList: itemPath(schemaItem),
           rawFormData: item,
           parentDefaults: getByPath<T>(defaults, idx),
           required,
@@ -969,7 +979,7 @@ export function getArrayDefaults<
       computeDefaults<unknown, S, F>(context, fillerSchema, {
         parentDefaults: fillerDefault,
         rootSchema,
-        _recurseList,
+        _recurseList: itemPath(fillerSchema),
         required,
         shouldMergeDefaultsIntoFormData,
         initialDefaultsGenerated,
