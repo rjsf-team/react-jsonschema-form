@@ -142,7 +142,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
 
   /** Validates the data `readFormData` returns for a submission or a programmatic validation, committing the errors it
    * reports and calling `onError` with them, or focusing the first one when `focusOnFirstError` asks for it. The data
-   * itself is never installed.
+   * itself is never installed. A form that has unmounted only answers: the errors have no form to show them, and
+   * `onError` would be the last render's, as a change's `onChange` would be.
    *
    * @param props - The props the operation started with
    * @param readFormData - Returns the form data to validate; read again when the validation runs again, see `settled()`
@@ -150,6 +151,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    */
   const runValidation = (props: FormProps<T, S, F>, readFormData: () => T | undefined): boolean => {
     const { hasError, next } = settled((base) => applyValidation(base, props, readFormData()));
+    if (isUnmounted) {
+      return !hasError;
+    }
     const { errors } = commit(next);
     if (!hasError) {
       return true;

@@ -330,6 +330,19 @@ it.each(['layout', 'passive'] as const)(
   },
 );
 
+it('a handle retained past the unmount validates without reporting the errors', () => {
+  const ref = createFormRef();
+  const invalidSchema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 3 } } };
+  const { onError, unmount } = createFormComponent({ ref, schema: invalidSchema, initialFormData: { name: 'a' } });
+  const handle = handleOf(ref);
+  unmount();
+
+  expect(handle.validateForm()).toBe(false);
+  expect(handle.validateFormWithFormData({ name: 'abc' })).toBe(true);
+  expect(handle.validateFormWithFormData({ name: 'a' })).toBe(false);
+  expect(onError).not.toHaveBeenCalled();
+});
+
 it('a draft a widget flushes as its form unmounts does not reach the form that replaces it', async () => {
   function DraftWidget({ onChange, value }: WidgetProps) {
     useEffect(() => () => onChange('draft of A', undefined, 'root_name'), [onChange]);
