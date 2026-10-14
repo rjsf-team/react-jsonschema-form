@@ -5901,6 +5901,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual([{ animal: 'Cat' }]);
         });
 
+        it('should skip the plain property defaults of a nested allOf too', () => {
+          const plainAllOfSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              animalInfo: {
+                type: 'object',
+                properties: { name: { type: 'string', default: 'Tom' } },
+                allOf: [{ properties: { animal: { type: 'string', default: 'Cat' } } }],
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, plainAllOfSchema, undefined, plainAllOfSchema, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ animalInfo: { name: 'Tom' } });
+        });
+
         it("should populate the conditional defaults of the root schema's own allOf, which skipDefaults does not skip", () => {
           expect(
             getDefaultFormState(testValidator, animalInfoSchema, { animal: 'Cat' }, animalInfoSchema, undefined, {
