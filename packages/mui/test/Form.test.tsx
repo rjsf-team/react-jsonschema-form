@@ -107,3 +107,19 @@ describe('the fallback UI', () => {
     expect(screen.getAllByText('An x')).toHaveLength(1);
   });
 });
+
+describe('a checkbox whose presentation gives its description to the template', () => {
+  test('draws the description once, from the template', () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'boolean', title: 'Bee', description: 'Bee description' }}
+        uiSchema={{ 'ui:widget': 'checkbox' }}
+        presentation={{ widgets: { CheckboxWidget: { description: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByText('Bee description')).toHaveLength(1);
+    expect(container.querySelector('#root__description')).toHaveTextContent('Bee description');
+  });
+});

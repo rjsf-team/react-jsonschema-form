@@ -398,4 +398,17 @@ describe('antd specific tests', () => {
 
     expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
   });
+  test('draws the label of a checkbox whose presentation gives it to the template once, from the template', () => {
+    render(
+      <Form
+        schema={{ type: 'boolean', title: 'Bee' }}
+        uiSchema={{ 'ui:widget': 'checkbox' }}
+        presentation={{ widgets: { CheckboxWidget: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByText('Bee')).toHaveLength(1);
+    expect(screen.getByRole('checkbox')).toHaveAccessibleName('Bee');
+  });
 });
