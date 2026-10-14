@@ -45,7 +45,7 @@ describe('render cost of one update', () => {
     expect(onRender).toHaveBeenCalledTimes(1);
   });
 
-  it('publishes a prop change the form state takes in a second commit, which renders no field', () => {
+  it('commits once for a prop change the form state takes, rendering each field once', () => {
     const onRender = vi.fn();
     const widgetRenders = vi.fn();
     function CountingWidget({ id, value }: WidgetProps) {
@@ -69,8 +69,8 @@ describe('render cost of one update', () => {
 
     rerender(element('other'));
 
-    // The store takes the state the render derived once it is on screen, so the second commit renders the same state
-    expect(onRender).toHaveBeenCalledTimes(2);
+    // What the render derives from the new props is not written back to the store, so nothing renders again
+    expect(onRender).toHaveBeenCalledTimes(1);
     expect(widgetRenders.mock.calls).toEqual([['other_name']]);
   });
 

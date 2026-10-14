@@ -315,20 +315,26 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   props: FormProps<T, S, F>,
 ) {
   const { ref } = props;
-  // The model is created once and kept in the render cache, so the form has the one model for as long as it is mounted
-  // Created on the first render through an initializer, as React documents for a value made once, and never replaced,
-  // so there is no setter to name
-  // oxlint-disable-next-line react/hook-use-state
-  const [model] = useState(() => createFormModel(props, initialState(props)));
+  // The model is created once and kept in the render cache, so the form has the one model for as long as it is mounted.
+  // The cache also holds what the last render derived, which React documents as storing information from previous
+  // renders: a render with the same props and no operation since reuses it rather than deriving it again
+  const [cache, setCache] = useState(() => {
+    const state = initialState(props);
+    return { model: createFormModel(props, state), published: state, props, state };
+  });
+  const { model } = cache;
   const { setFormElement } = model;
   // Renders the form after each operation that changed its state. The server snapshot is the store's own: the render
   // that reads it is the one that created the model, so nothing has been committed to it yet
   const published = useSyncExternalStore(model.subscribe, model.getSnapshot, model.getSnapshot);
-  // `deriveState()` hands `published` back when the props change nothing, so the render after the model published a
-  // derivation, see `committed()`, renders the very state it rendered before
-  const state = useMemo(() => deriveState(props, published), [props, published]);
-  // Layout Effects, since what they do is tied to what the form shows: each commit hands the model the props and the
-  // state it rendered once the inputs show them, and the attachment ends when the form unmounts or an `<Activity>`
+  // With no operation since the cached derivation, that derivation is the latest state
+  const base = published === cache.published ? cache.state : published;
+  const state = props === cache.props && base === cache.state ? cache.state : deriveState(props, base);
+  if (state !== cache.state) {
+    setCache({ model, published, props, state });
+  }
+  // Layout Effects, since what they do is tied to what the form shows: each commit tells the model the props and the
+  // state it rendered, which operations start from, and the attachment ends when the form unmounts or an `<Activity>`
   // hides it. A field's own layout Effect runs before the form's, so it still sees the props of the commit before
   useLayoutEffect(() => {
     model.committed(props, state, published);

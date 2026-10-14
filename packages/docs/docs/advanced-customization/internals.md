@@ -149,7 +149,7 @@ function Editor() {
 }
 ```
 
-`submit()` submits the form's current value through the form element, as a submit button does: the browser's constraint validation checks the inputs and, when it passes, schema validation checks the value and `onSubmit` or `onError` is called. An input the browser rejects blocks the submit, and neither is called. When the inputs already show the value, that happens before `submit()` returns. A write followed by `submit()` in the same handler submits the new value once React has rendered it, so the browser checks the inputs as they show the write; `onSubmit` or `onError` is then called after `submit()` returns, before the browser paints. `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
+`submit()` submits the form's current value through the form element before it returns: schema validation checks the value and `onSubmit` or `onError` is called. When the inputs show the value, the browser's constraint validation checks them first, as for a submit button, and an input it rejects blocks the submit. A write followed by `submit()` in the same handler submits the new value at once; the inputs have yet to show the write, so schema validation alone checks it. `validateForm()` checks the current value; `validateFormWithFormData(nextData)` checks a value without storing or submitting it.
 
 ## Change form data programmatically
 

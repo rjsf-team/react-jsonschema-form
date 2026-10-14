@@ -1631,9 +1631,9 @@ describe('a submit in the same tick as an edit', () => {
     expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'x' });
   });
 
-  it('is checked by native validation against the inputs once they show the edit', () => {
+  it('is checked by schema validation alone, before submit() returns, while the inputs have yet to show the edit', () => {
     const ref = createFormRef<Data>();
-    const { container, onSubmit, onError } = createFormComponent({
+    const { onSubmit, onError } = createFormComponent({
       ref,
       schema: { ...schema, required: ['a'] },
       initialFormData: {},
@@ -1642,15 +1642,15 @@ describe('a submit in the same tick as an edit', () => {
     act(() => {
       handleOf(ref).setFieldValue('b', 'y');
       handleOf(ref).submit();
+      // The inputs describe data the form no longer holds, so the browser's checks of them are not run
+      expect(onError).toHaveBeenCalledTimes(1);
     });
 
-    expect(input(container, 'root_b')).toHaveValue('y');
-    expect(input(container, 'root_a')).toBeInvalid();
+    expect(onError.mock.calls[0][0]).toEqual([expect.objectContaining({ property: 'a' })]);
     expect(onSubmit).not.toHaveBeenCalled();
-    expect(onError).not.toHaveBeenCalled();
   });
 
-  it('passes native validation when the edit fills the required input, since the submit waits for React to render it', () => {
+  it('submits an edit that fills the required input before submit() returns', () => {
     const ref = createFormRef<Data>();
     const { onSubmit } = createFormComponent({
       ref,
@@ -1661,11 +1661,25 @@ describe('a submit in the same tick as an edit', () => {
     act(() => {
       handleOf(ref).setFieldValue('a', 'x');
       handleOf(ref).submit();
-      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onSubmit).toHaveBeenCalledTimes(1);
     });
 
-    expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'x' });
+  });
+
+  it('is checked by native validation when the inputs show the data, as for a submit button', () => {
+    const ref = createFormRef<Data>();
+    const { container, onSubmit, onError } = createFormComponent({
+      ref,
+      schema: { ...schema, required: ['a'] },
+      initialFormData: {},
+    });
+
+    act(() => handleOf(ref).submit());
+
+    expect(input(container, 'root_a')).toBeInvalid();
+    expect(onSubmit).not.toHaveBeenCalled();
+    expect(onError).not.toHaveBeenCalled();
   });
 
   it('submits before submit() returns when the inputs already show the data', () => {

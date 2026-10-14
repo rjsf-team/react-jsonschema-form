@@ -57,19 +57,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   initial: FormState<T, S, F>,
 ) {
   let formElement: HTMLElement | null = null;
-  // The props of the last committed render
-  let committedProps = initialProps;
-  // The form's one current state: what the last commit derived from the props, or what an operation has made of it
-  // since. React subscribes to `published`, the state as of the last operation. A commit hands over the state its
-  // render derived (a new registry, live validation of replaced data) without publishing it: that state is already on
-  // screen, and a new snapshot would make `useSyncExternalStore` render and commit a second time.
-  let state = initial;
+  // What operations have made of the form: the store React subscribes to. A render derives what it shows from it and
+  // the props, see `deriveState()`, and nothing a render derives is written back
   let published = initial;
   const listeners = new Set<() => void>();
-  const notify = () => {
-    published = state;
-    listeners.forEach((listener) => listener());
-  };
+  // What the last commit rendered: its props, the state it showed, and the store's state that state was derived from.
+  // Recorded after the commit, so an operation can start from what is on screen
+  let committedProps = initialProps;
+  let rendered = initial;
+  let renderedFrom = initial;
+  // The props the store's state was derived under, by the operation that made it
+  let publishedProps = initialProps;
+  // The state an operation starts from, for the store's and the committed props' present values
+  let derivedCache: { props: FormProps<T, S, F>; from: FormState<T, S, F>; state: FormState<T, S, F> } | undefined;
   // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
   let announced: AnnouncedMove | undefined;
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
@@ -77,10 +77,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // or a call through a handle kept past the unmount. Reported through the `onChange` of the last render, it would be
   // stored as the data of whichever form replaced this one, or of a form the user cannot see
   let isDetached = false;
-  // The data the inputs show, as the last commit rendered it, and whether a `submit()` waits for a commit that
-  // renders the data the form holds
-  let renderedFormData = initial.formData;
-  let isSubmitQueued = false;
   // Development only, for the warning about a `formData` passed after mount, which the form ignores: the prop as the
   // last commit passed it, and every object the form's data has been, since a parent that stores what `onChange`
   // reported passes those back, later ones as well as the latest
@@ -94,18 +90,44 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
   hold(initial.formData);
 
+  /** The form's current state, the one an operation starts from: the store's, under the props of the last commit, and
+   * the state that commit rendered when the store has not changed since. Derived again only for an operation made
+   * since that commit, and shared against what is on screen, so an unchanged member keeps the reference the fields
+   * hold.
+   */
+  const current = (): FormState<T, S, F> => {
+    if (published === renderedFrom) {
+      return rendered;
+    }
+    // An operation's result is derived already, under the props it started from
+    if (publishedProps === committedProps) {
+      return published;
+    }
+    if (derivedCache?.props !== committedProps || derivedCache.from !== published) {
+      const derived = deriveState(committedProps, published);
+      derivedCache = {
+        props: committedProps,
+        from: published,
+        state: derived === published ? published : replaceEqualDeep(rendered, derived),
+      };
+    }
+    return derivedCache.state;
+  };
+
   /** Stores the result of an operation, shared against the current state so an unchanged member keeps the reference
    * the fields hold, and publishes it when it changed. Returns what was stored.
    */
   const commit = (next: FormState<T, S, F>) => {
-    const committed = replaceEqualDeep(state, next);
+    const start = current();
+    const committed = replaceEqualDeep(start, next);
     if (isDevelopment) {
       freezeFormData(committed.formData);
     }
-    if (committed !== state) {
-      state = committed;
-      hold(state.formData);
-      notify();
+    if (committed !== start) {
+      published = committed;
+      publishedProps = committedProps;
+      hold(committed.formData);
+      listeners.forEach((listener) => listener());
     }
     return committed;
   };
@@ -115,24 +137,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * more on top of that, so the result does not put back the data from before the nested operation.
    */
   const settled = <R>(apply: (base: FormState<T, S, F>) => R): R => {
-    const start = state;
-    const result = apply(start);
-    return state === start ? result : apply(state);
+    const before = published;
+    const result = apply(current());
+    return published === before ? result : apply(current());
   };
 
   /** The form's data without the fields the schema does not describe, when `omitExtraData` asks for it: what a submit
    * and `validateForm()` act on
    */
   const withExtraDataOmitted = (props: FormProps<T, S, F>) =>
-    props.omitExtraData === true ? state.schemaUtils.omitExtraData(state.schema, state.formData) : state.formData;
-
-  /** Hands the form element to the browser's submission, which runs native constraint validation on the inputs */
-  const requestSubmit = () => {
-    const view = formWindow();
-    if (view && formElement instanceof view.HTMLFormElement) {
-      formElement.requestSubmit();
-    }
-  };
+    props.omitExtraData === true
+      ? current().schemaUtils.omitExtraData(current().schema, current().formData)
+      : current().formData;
 
   /** The window of the form element, whose classes the element and what it holds are instances of: a form rendered
    * into another document, such as an iframe's, is no instance of this window's `HTMLFormElement`
@@ -277,7 +293,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (isDetached || !((omitExtraData === true && liveOmit === 'onBlur') || isBlurValidated(props))) {
       return;
     }
-    const start = state;
+    const start = current();
     const committed = commit(settled((base) => applyBlur(base, props)));
     // Only the `IChangeEvent` members count; the validator's own results are not among them
     if ((['formData', 'errors', 'errorSchema'] as const).some((key) => start[key] !== committed[key])) {
@@ -303,20 +319,22 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   };
 
   const handle: FormRef<T> = {
-    getFormData: () => toEventFormData(state.formData),
+    getFormData: () => toEventFormData(current().formData),
 
-    /** Submits through the form element, see `FormRef.submit()`: native constraint validation reads the inputs, and
-     * the submit event it dispatches reaches `handleSubmit()`, which submits the data the form holds. While the inputs
-     * have yet to show an edit, the submit waits for the commit that renders it, see `committed()`
+    /** Submits through the form element, see `FormRef.submit()`, whose submit event reaches `handleSubmit()`, which
+     * submits the data the form holds. While the inputs show that data, the browser's constraint validation checks them
+     * first, as for a submit button. While they have yet to show an edit, they describe data the form no longer holds,
+     * so the submit event is dispatched without it, and schema validation alone checks the data
      */
     submit: () => {
-      if (isDetached) {
+      const view = formWindow();
+      if (isDetached || !view || !(formElement instanceof view.HTMLFormElement)) {
         return;
       }
-      if (state.formData === renderedFormData) {
-        requestSubmit();
+      if (current().formData === rendered.formData) {
+        formElement.requestSubmit();
       } else {
-        isSubmitQueued = true;
+        formElement.dispatchEvent(new view.SubmitEvent('submit', { bubbles: true, cancelable: true }));
       }
     },
 
@@ -348,7 +366,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         asFieldValue<T>(newValue),
         targetFieldPath,
         undefined,
-        fieldPathToId(targetFieldPath, state.registry.globalFormOptions),
+        fieldPathToId(targetFieldPath, current().registry.globalFormOptions),
       );
     },
 
@@ -359,7 +377,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
 
     validateFormWithFormData: (formData?: T) => runValidation(committedProps, () => formData),
 
-    validate: (formData: T | undefined) => validateFormData(committedProps, state, formData),
+    validate: (formData: T | undefined) => validateFormData(committedProps, current(), formData),
 
     focusOnError,
   };
@@ -385,7 +403,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       }
     },
     /** The latest value at `path`: an edit made since the form last rendered included */
-    readField: <D>(path: FieldPath) => getAt<D>(state.formData, fieldPathToList(path)),
+    readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
     getSnapshot: () => published,
     subscribe: (listener: () => void) => {
       listeners.add(listener);
@@ -401,29 +419,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       isDetached = false;
       return () => {
         isDetached = true;
-        isSubmitQueued = false;
       };
     },
-    /** Called from a layout Effect of every commit of the form, with what React rendered, once the inputs show it.
-     * Publishes the state the render derived from new props, so the store holds what the form shows, and performs a
-     * queued `submit()` once the inputs show the data the form holds.
+    /** Called from a layout Effect of every commit of the form with what it rendered: its props, the state it showed
+     * and the store's state that was derived from. Only recorded, for the operations that start from it; nothing is
+     * published, since the render already shows it.
      */
-    committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, renderedPublished: FormState<T, S, F>) => {
-      const previousProps = committedProps;
+    committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, from: FormState<T, S, F>) => {
       committedProps = nextProps;
-      renderedFormData = derived.formData;
-      // An operation that committed after this render began, from a field's layout Effect, is not in `derived`; it
-      // started from props this commit may have replaced, so it is derived again under the new ones when it did.
-      // Publishing what the props changed renders the form once more, with the state it already shows
-      if (published === renderedPublished) {
-        commit(derived);
-      } else if (nextProps !== previousProps) {
-        commit(replaceEqualDeep(derived, deriveState(nextProps, state)));
-      }
-      if (isSubmitQueued && !isDetached && state.formData === renderedFormData) {
-        isSubmitQueued = false;
-        requestSubmit();
-      }
+      rendered = derived;
+      renderedFrom = from;
+      derivedCache = undefined;
+      hold(derived.formData);
     },
     /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held
      * nor a copy of the data it holds. Called after the commit that passed it, in development only
@@ -434,7 +441,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       }
       lastFormDataProp = formData;
       const isHeld = typeof formData === 'object' && formData !== null && heldData.has(formData);
-      if (isIgnoredFormDataWarned || formData === undefined || isHeld || deepEquals(formData, state.formData)) {
+      if (isIgnoredFormDataWarned || formData === undefined || isHeld || deepEquals(formData, current().formData)) {
         return;
       }
       isIgnoredFormDataWarned = true;
