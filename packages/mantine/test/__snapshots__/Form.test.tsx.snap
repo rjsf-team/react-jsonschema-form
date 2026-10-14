@@ -8436,7 +8436,7 @@ exports[`single fields > help and error display 1`] = `
         <p
           class="m_8f816625 mantine-InputWrapper-error mantine-TextInput-error"
           data-size="sm"
-          id="root__error"
+          id="root-error"
           style="--input-error-size: calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)));"
         >
           an error
@@ -8444,6 +8444,7 @@ exports[`single fields > help and error display 1`] = `
       </div>
       <div
         class=""
+        id="root__error"
         style="color: var(--mantine-color-red-text); display: none;"
       >
         <ul

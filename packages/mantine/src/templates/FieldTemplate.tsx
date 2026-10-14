@@ -2,6 +2,8 @@ import { Box } from '@mantine/core';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getTemplates, getUiOptions } from '@rjsf/utils';
 
+import { ErrorCopyIdProvider } from '../utils.tsx';
+
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside a `WrapIfAdditional` component.
  *
@@ -37,22 +39,26 @@ export default function FieldTemplate<
     return <Box display='none'>{children}</Box>;
   }
 
+  // The hidden copy of the field's errors in `errors` has the field's error id, which the field's own error elements
+  // below then leave to it, see `useErrorElementId()`
   return (
-    <WrapIfAdditionalTemplate
-      id={id}
-      classNames={classNames}
-      style={style}
-      label={label}
-      displayLabel={displayLabel}
-      rawDescription={rawDescription}
-      schema={schema}
-      uiSchema={uiSchema}
-      registry={registry}
-      {...otherProps}
-    >
-      {children}
-      {errors}
-      {help}
-    </WrapIfAdditionalTemplate>
+    <ErrorCopyIdProvider id={errors ? id : undefined}>
+      <WrapIfAdditionalTemplate
+        id={id}
+        classNames={classNames}
+        style={style}
+        label={label}
+        displayLabel={displayLabel}
+        rawDescription={rawDescription}
+        schema={schema}
+        uiSchema={uiSchema}
+        registry={registry}
+        {...otherProps}
+      >
+        {children}
+        {errors}
+        {help}
+      </WrapIfAdditionalTemplate>
+    </ErrorCopyIdProvider>
   );
 }

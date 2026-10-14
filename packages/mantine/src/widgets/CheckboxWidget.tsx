@@ -2,9 +2,9 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Checkbox, Input } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, errorId, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
 
-import { getDescriptionProps, useVisibleErrors } from '../utils.tsx';
+import { getDescriptionProps, useErrorElementId, useVisibleErrors } from '../utils.tsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -62,6 +62,7 @@ export default function CheckboxWidget<
 
   const { description } = getDescriptionProps(props);
   const errors = useVisibleErrors(props);
+  const errorElementId = useErrorElementId(id);
   return (
     <>
       {description}
@@ -86,14 +87,14 @@ export default function CheckboxWidget<
         onBlur={handleBlur}
         onFocus={handleFocus}
         // Mantine's `Checkbox` would render a message as its own error, with an id derived from the input's rather than
-        // `errorId(id)`, so it only gets a boolean, for the error styling, and the errors are rendered below it. It
-        // doesn't set `aria-invalid` either.
+        // the one `useErrorElementId()` gives, so it only gets a boolean, for the error styling, and the errors are
+        // rendered below it. It doesn't set `aria-invalid` either.
         error={!!errors}
         aria-invalid={!!errors || undefined}
         aria-describedby={ariaDescribedByIds(id)}
       />
       {errors && (
-        <Input.Error id={errorId(id)} mt='calc(var(--mantine-spacing-xs) / 2)'>
+        <Input.Error id={errorElementId} mt='calc(var(--mantine-spacing-xs) / 2)'>
           {errors}
         </Input.Error>
       )}

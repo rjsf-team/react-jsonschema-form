@@ -429,7 +429,7 @@ describe('aria-describedby', () => {
     expect(onFocus).toHaveBeenCalled();
   });
 
-  test('checkbox widget renders its error with the field error id, which it is described by', () => {
+  test('checkbox widget is described by the field error id, which the hidden copy of its error has', () => {
     const { container } = renderField({ type: 'boolean' });
 
     expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('An error');
@@ -716,5 +716,98 @@ describe('aria-describedby', () => {
 
     expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
     expect(container.querySelector(`[id="${errorId('root')}"]`)).toHaveTextContent('Own error');
+  });
+});
+
+describe('the element with a field error id', () => {
+  /** The ids more than one element in `container` has */
+  function duplicateIds(container: HTMLElement) {
+    const counts = new Map<string, number>();
+    for (const element of container.querySelectorAll('[id]')) {
+      counts.set(element.id, (counts.get(element.id) ?? 0) + 1);
+    }
+    return [...counts].filter(([, count]) => count > 1).map(([id]) => id);
+  }
+
+  test('is one per field, whichever component shows the errors', () => {
+    const fieldErrors: ErrorSchema = {
+      text: { __errors: ['Text error'] },
+      flag: { __errors: ['Flag error'] },
+      custom: { __errors: ['Custom error'] },
+      nested: { __errors: ['Nested error'], inner: { __errors: ['Inner error'] } },
+      list: { __errors: ['List error'], 0: { __errors: ['Item error'] } },
+      choice: { __errors: ['Choice error'] },
+    };
+    function CustomWidget({ id }: WidgetProps) {
+      return <input id={id} aria-describedby={ariaDescribedByIds(id)} />;
+    }
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            text: { type: 'string' },
+            flag: { type: 'boolean' },
+            custom: { type: 'string' },
+            nested: { type: 'object', properties: { inner: { type: 'string' } } },
+            list: { type: 'array', items: { type: 'string' } },
+            choice: { oneOf: [{ type: 'string' }, { type: 'number' }] },
+          },
+        }}
+        uiSchema={{ custom: { 'ui:widget': CustomWidget } }}
+        initialFormData={{ list: ['a'] }}
+        validator={validator}
+        extraErrors={fieldErrors}
+        showErrorList={false}
+      />,
+    );
+
+    expect(duplicateIds(container)).toEqual([]);
+    for (const [id, text] of [
+      ['root_text', 'Text error'],
+      ['root_flag', 'Flag error'],
+      ['root_custom', 'Custom error'],
+      ['root_nested', 'Nested error'],
+      ['root_nested_inner', 'Inner error'],
+      ['root_list', 'List error'],
+      ['root_list_0', 'Item error'],
+    ]) {
+      expect(container.querySelector(`[id="${errorId(id)}"]`)).toHaveTextContent(text);
+    }
+    expect(container.querySelector('[id="root_text"]')).toHaveAccessibleDescription('Text error');
+    expect(container.querySelector('[id="root_flag"]')).toHaveAccessibleDescription('Flag error');
+    // A custom widget that shows no errors is described by the hidden copy
+    expect(container.querySelector('[id="root_custom"]')).toHaveAccessibleDescription('Custom error');
+    // Each error is shown once, and its hidden copy is not shown
+    for (const text of ['Text error', 'Flag error', 'Nested error', 'Inner error', 'List error', 'Item error']) {
+      expect(shownWithText(text)).toHaveLength(1);
+    }
+  });
+
+  test('is the error a widget shows under a FieldTemplate of its own, which leaves the hidden copy without it', () => {
+    function PlainFieldTemplate({ children, errors }: { children: ReactNode; errors: ReactNode }) {
+      return (
+        <div>
+          {children}
+          {errors}
+        </div>
+      );
+    }
+    const rootErrors: ErrorSchema = { __errors: ['An error'] };
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'string' }}
+        templates={{ FieldTemplate: PlainFieldTemplate }}
+        validator={validator}
+        extraErrors={rootErrors}
+        showErrorList={false}
+      />,
+    );
+
+    expect(duplicateIds(container)).toEqual([]);
+    const errorElement = container.querySelector(`[id="${errorId('root')}"]`);
+    expect(errorElement).toHaveTextContent('An error');
+    expect(errorElement).toBeVisible();
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('An error');
   });
 });
