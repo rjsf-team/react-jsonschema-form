@@ -1,4 +1,4 @@
-import { createRef, useState } from 'react';
+import { createRef, useRef, useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
@@ -7,10 +7,13 @@ import { userEvent } from '@testing-library/user-event';
 import draft06 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import { createPortal } from 'react-dom';
 
-import type { FormProps } from '../src/index.ts';
+import type { FormProps, FormRef } from '../src/index.ts';
 import Form from '../src/index.ts';
 import {
+  elementOf,
   expectToHaveBeenCalledWithFormData,
+  handleOf,
+  input,
   setupConsoleErrorSuppression,
   submitForm,
   describeRepeated,
@@ -30,22 +33,24 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       },
     };
 
-    /** A parent that stores every edit, and can also replace schema and value from outside */
+    /** A parent that stores every edit, and can also replace the schema, and the value through the form's ref */
     function ReplacingParent({ steps }: { steps: { schema: RJSFSchema; formData: object }[] }) {
       const [step, setStep] = useState(0);
       const [formData, setFormData] = useState<object>(steps[0].formData);
+      const ref = useRef<FormRef<object>>(null);
       return (
         <>
           <button
             type='button'
             onClick={() => {
               setStep(1);
-              setFormData(steps[1].formData);
+              handleOf(ref).setFieldValue('', steps[1].formData);
             }}
             data-testid='replace'
             aria-label='replace'
           />
           <Form
+            ref={ref}
             schema={steps[step].schema}
             validator={validator}
             formData={formData}
@@ -62,7 +67,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       onChange = vi.fn();
     });
 
-    it('should replace state when props remove formData keys', async () => {
+    it('should replace state when the schema and the data are replaced without some keys', async () => {
       const { container } = render(
         <ReplacingParent
           steps={[
@@ -72,16 +77,16 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
         />,
       );
 
-      await user.click(container.querySelector('[data-testid=replace]')!);
+      await user.click(elementOf(container, '[data-testid=replace]'));
       expect(container.querySelector('#root_foo')).toBeNull();
-      // Every edit from here on composes on the replaced value, so the parent must accept it into that value
-      await user.clear(container.querySelector('#root_bar')!);
-      await user.type(container.querySelector('#root_bar')!, 'baz');
+      // Every edit from here on composes on the replaced value
+      await user.clear(input(container, 'root_bar'));
+      await user.type(input(container, 'root_bar'), 'baz');
 
       expectToHaveBeenCalledWithFormData(onChange, { bar: 'baz' }, 'root_bar');
     });
 
-    it('should replace state when props change formData keys', async () => {
+    it('should replace state when the schema and the data are replaced with other keys', async () => {
       const { container } = render(
         <ReplacingParent
           steps={[
@@ -94,10 +99,10 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
         />,
       );
 
-      await user.click(container.querySelector('[data-testid=replace]')!);
+      await user.click(elementOf(container, '[data-testid=replace]'));
       expect(container.querySelector('#root_bar')).toBeNull();
-      await user.clear(container.querySelector('#root_baz')!);
-      await user.type(container.querySelector('#root_baz')!, 'baz');
+      await user.clear(input(container, 'root_baz'));
+      await user.type(input(container, 'root_baz'), 'baz');
 
       expectToHaveBeenCalledWithFormData(onChange, { foo: 'foo', baz: 'baz' }, 'root_baz');
     });

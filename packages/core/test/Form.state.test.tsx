@@ -2,6 +2,7 @@ import type { RefObject } from 'react';
 import { createRef, useState, useCallback } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 
@@ -183,17 +184,13 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       rerender = rerenderFn;
     });
 
-    describe('when the form data is set to null', () => {
-      beforeEach(() =>
-        rerender({
-          ...formProps,
-          formData: null,
-        }),
-      );
-
+    describe('when the form mounts with null form data', () => {
       it('should take the null as no data and render the default without calling onChange', () => {
-        expect(onChangeProp).not.toHaveBeenCalled();
-        expect(handleOf(ref).getFormData()).toBe('foobar');
+        const nullRef = createFormRef();
+        const { onChange } = createFormComponent({ ...formProps, ref: nullRef, formData: null });
+
+        expect(onChange).not.toHaveBeenCalled();
+        expect(handleOf(nullRef).getFormData()).toBe('foobar');
       });
     });
 
@@ -216,42 +213,25 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       });
     });
 
-    describe('when the schema default is changed and formData is changed', () => {
+    describe('when the schema default is changed and the form is reset to a null seed', () => {
       const newSchema: RJSFSchema = {
         type: 'string',
         default: 'the new default',
       };
 
-      beforeEach(() =>
+      beforeEach(() => {
         rerender({
           ...formProps,
           schema: newSchema,
-          formData: 'something else',
-        }),
-      );
-
-      it('should not call onChange', () => {
-        expect(onChangeProp).not.toHaveBeenCalled();
+          formData: undefined,
+          initialFormData: null,
+        });
+        act(() => handleOf(ref).reset());
       });
-    });
 
-    describe('when the schema default is changed and formData is nulled', () => {
-      const newSchema: RJSFSchema = {
-        type: 'string',
-        default: 'the new default',
-      };
-
-      beforeEach(() =>
-        rerender({
-          ...formProps,
-          schema: newSchema,
-          formData: null,
-        }),
-      );
-
-      it('should take the null as no data and render the new default without calling onChange', () => {
-        expect(onChangeProp).not.toHaveBeenCalled();
+      it('should take the null as no data and fill in the new default, reporting it through onChange', () => {
         expect(handleOf(ref).getFormData()).toBe('the new default');
+        expectToHaveBeenCalledWithFormData(onChangeProp, 'the new default');
       });
     });
 
@@ -298,14 +278,11 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         formData: 'initial',
       };
 
-      it('should call submit handler with new formData prop value', async () => {
-        const { node, onSubmit, rerender } = createFormComponent(formProps);
+      it('should call submit handler with the data set through setFieldValue', async () => {
+        const rootRef = createFormRef();
+        const { node, onSubmit } = createFormComponent({ ...formProps, ref: rootRef });
 
-        rerender({
-          ...formProps,
-          onSubmit,
-          formData: 'yo',
-        });
+        act(() => handleOf(rootRef).setFieldValue('', 'yo'));
         await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, 'yo', true);
       });
@@ -316,7 +293,6 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         rerender({
           ...formProps,
           onError,
-          formData: 'yo',
           schema: { type: 'number' },
           // The number field's native `pattern` would block submitting 'yo' before AJV's type check ran
           noHtml5Validate: true,
@@ -337,19 +313,15 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     });
 
     describe('object level', () => {
-      it('should call submit handler with new formData prop value', async () => {
-        const formProps: Omit<FormProps, 'validator'> = {
-          ref: createRef(),
+      it('should call submit handler with the data set through setFieldValue', async () => {
+        const objectRef = createFormRef();
+        const { onSubmit, node } = createFormComponent({
+          ref: objectRef,
           schema: { type: 'object', properties: { foo: { type: 'string' } } },
           formData: {},
-        };
-        const { onSubmit, node, rerender } = createFormComponent(formProps);
-
-        rerender({
-          ...formProps,
-          onSubmit,
-          formData: { foo: 'yo' },
         });
+
+        act(() => handleOf(objectRef).setFieldValue('', { foo: 'yo' }));
 
         await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, { foo: 'yo' }, true);
@@ -357,20 +329,17 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     });
 
     describe('array level', () => {
-      it('should call submit handler with new formData prop value', async () => {
+      it('should call submit handler with the data set through setFieldValue', async () => {
         const schema: RJSFSchema = {
           type: 'array',
           items: {
             type: 'string',
           },
         };
-        const { node, onSubmit, rerender } = createFormComponent({ ref: createRef(), schema, formData: [] });
+        const arrayRef = createFormRef();
+        const { node, onSubmit } = createFormComponent({ ref: arrayRef, schema, formData: [] });
 
-        rerender({
-          schema,
-          onSubmit,
-          formData: ['yo'],
-        });
+        act(() => handleOf(arrayRef).setFieldValue('', ['yo']));
 
         await submitForm(node, user);
         expectToHaveBeenCalledWithFormData(onSubmit, ['yo'], true);

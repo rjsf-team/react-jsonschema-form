@@ -1,4 +1,4 @@
-import { createRef, useEffect, useState } from 'react';
+import { createRef, useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
 import { buttonId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -225,7 +225,7 @@ describe('settled snapshot sanitization', () => {
     expect(log.value?.pet.color).toBe('r');
   });
 
-  it('sanitizes against the settled data after a formData the parent passed crossed a conditional branch (#5250)', async () => {
+  it('sanitizes against the settled data after the data replaced through the handle crossed a conditional branch (#5250)', async () => {
     interface ModeData {
       mode?: string;
       color?: string;
@@ -257,15 +257,18 @@ describe('settled snapshot sanitization', () => {
       ],
     };
     const events: IChangeEvent<ModeData>[] = [];
-    const onChange = (event: IChangeEvent<ModeData>) => events.push(event);
-    const props = {
-      schema,
-      validator,
-      onChange,
-    };
-    // A parent that passes a value of its own, which the form takes without settling it
-    const { container, rerender } = render(<Form<ModeData> {...props} formData={{ mode: 'basic', colors: [] }} />);
-    rerender(<Form<ModeData> {...props} formData={{ mode: 'advanced', color: 'c', colors: ['c'] }} />);
+    const ref = createRef<FormRef<ModeData>>();
+    const { container } = render(
+      <Form<ModeData>
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        initialFormData={{ mode: 'basic', colors: [] }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+    // Data from outside the form's fields, set on the advanced branch
+    act(() => handleOf(ref).setFieldValue('', { mode: 'advanced', color: 'c', colors: ['c'] }));
     await user.selectOptions(elementOf(container, '#root_mode'), ['0']);
     const last = events[events.length - 1].formData;
     expect(last?.color).toBeUndefined();
@@ -381,92 +384,6 @@ describe('settled snapshot sanitization', () => {
     await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
     expect(log.value?.rows).toEqual([{ kind: 'y', tags: [null, null] }]);
-  });
-
-  it('drops the pairing view when a formData the parent passed desynced its length from the data (#5451)', async () => {
-    interface Row {
-      kind?: string;
-      tags?: (string | null)[];
-    }
-    interface PairData {
-      note?: string;
-      rows?: Row[];
-    }
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        note: { type: 'string' },
-        rows: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              kind: { type: 'string', enum: ['x', 'y'] },
-              tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
-            },
-            allOf: [
-              {
-                if: { properties: { kind: { const: 'x' } } },
-                then: { properties: { tags: { items: { enum: ['a'] } } } },
-              },
-              {
-                if: { properties: { kind: { const: 'y' } } },
-                then: { properties: { tags: { items: { enum: ['b'] } } } },
-              },
-            ],
-          },
-        },
-      },
-    };
-    const log = createParentLog<PairData>();
-    const pusher: { push: (value: PairData | undefined) => void } = { push: () => undefined };
-    // A parent that stores each edit, then passes a value of its own
-    function PushingParent() {
-      const [value, setValue] = useState<PairData | undefined>({
-        rows: [
-          { kind: 'x', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-        ],
-      });
-      useEffect(() => {
-        pusher.push = setValue;
-      }, []);
-      Object.assign(log, { value });
-      return (
-        <Form<PairData>
-          schema={schema}
-          validator={validator}
-          formData={value}
-          onChange={(event) => {
-            log.reported.push(event.formData);
-            log.events.push(event);
-            setValue(event.formData);
-          }}
-        />
-      );
-    }
-    const { container } = render(<PushingParent />);
-    // A value the form takes from the parent desyncs the pairing view's length from the data's
-    act(() =>
-      pusher.push({
-        rows: [
-          { kind: 'x', tags: [null, null] },
-          { kind: 'x', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-          { kind: 'y', tags: [null, null] },
-        ],
-      }),
-    );
-    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
-    await user.type(input(container, 'root_note'), 'n');
-    // The desynced length drops only the rows array from the view, so each row pairs with no previous value
-    // and is filtered against its own branch: a stale value is never kept, though the placeholders go with it
-    expect(log.value?.rows).toEqual([
-      { kind: 'x', tags: [] },
-      { kind: 'y', tags: [] },
-      { kind: 'y', tags: [] },
-    ]);
   });
 
   it('keeps an added row paired with its own starting value on the next sibling edit (#5451)', async () => {
@@ -940,95 +857,32 @@ describe('settled snapshot sanitization', () => {
         },
       },
     };
-    const log = createParentLog<PairData>();
-    const { container } = render(
-      <TransformingParent<PairData>
-        schema={schema}
-        initialValue={{
-          rows: [
-            { kind: 'x', tags: [null, null] },
-            { kind: 'y', tags: [null, null] },
-          ],
-        }}
-        log={log}
-        // A parent that declines any change to the leading row's kind, setting the form back to a copy of the
-        // value it already held
-        transform={(reported) =>
-          reported?.rows?.[0]?.kind !== log.value?.rows?.[0]?.kind ? structuredClone(log.value) : reported
-        }
-      />,
-    );
-    // The value set back is not the form's data, so the moved pairing view goes with the reorder: the sibling edit
-    // pairs each row with its own previous value, and both rows keep the placeholders their branches offer
-    await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
-    await user.type(input(container, 'root_note'), 'n');
-    expect(log.value?.rows).toEqual([
+    const rows: Row[] = [
       { kind: 'x', tags: [null, null] },
       { kind: 'y', tags: [null, null] },
-    ]);
-  });
-
-  it('keeps each row paired with its own previous value when the parent stores a reorder with a field of its own (#5451)', async () => {
-    interface Row {
-      kind?: string;
-      tags?: (string | null)[];
-    }
-    interface StampedData {
-      note?: string;
-      stamp?: number;
-      rows?: Row[];
-    }
-    const schema: RJSFSchema = {
-      type: 'object',
-      properties: {
-        note: { type: 'string' },
-        rows: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              kind: { type: 'string', enum: ['x', 'y'] },
-              tags: { type: 'array', items: { type: 'string' }, minItems: 2 },
-            },
-            allOf: [
-              {
-                if: { properties: { kind: { const: 'x' } } },
-                then: { properties: { tags: { items: { enum: ['a'] } } } },
-              },
-              {
-                if: { properties: { kind: { const: 'y' } } },
-                then: { properties: { tags: { items: { enum: ['b'] } } } },
-              },
-            ],
-          },
-        },
-      },
-    };
-    const log = createParentLog<StampedData>();
-    let stamp = 0;
+    ];
+    const ref = createRef<FormRef<PairData>>();
     const { container } = render(
-      <TransformingParent<StampedData>
+      <Form<PairData>
+        ref={ref}
         schema={schema}
-        initialValue={{
-          rows: [
-            { kind: 'x', tags: [null, null] },
-            { kind: 'y', tags: [null, null] },
-          ],
-        }}
-        log={log}
-        // A parent that stores every edit with a field of its own, so the value it passes is never the form's data
-        transform={(reported) => {
-          stamp += 1;
-          return reported === undefined ? reported : { ...reported, stamp };
+        validator={validator}
+        initialFormData={{ rows }}
+        // A parent that declines any change to the leading row's kind by setting the rows back
+        onChange={({ formData }) => {
+          if (formData.rows?.[0]?.kind !== 'x') {
+            handleOf(ref).setFieldValue('rows', rows);
+          }
         }}
       />,
     );
-    // The rows the parent stores are the reordered ones, so they keep the moved pairing view though the root differs
+    // The rows set back are the ones from before the reorder, so the sibling edit pairs each row with its own
+    // previous value, and both rows keep the placeholders their branches offer
     await user.click(elementOf(container, `#${buttonId('root_rows_0', 'moveDown')}`));
     await user.type(input(container, 'root_note'), 'n');
-    expect(log.value?.rows).toEqual([
-      { kind: 'y', tags: [null, null] },
+    expect(handleOf(ref).getFormData().rows).toEqual([
       { kind: 'x', tags: [null, null] },
+      { kind: 'y', tags: [null, null] },
     ]);
   });
 
@@ -1067,38 +921,38 @@ describe('settled snapshot sanitization', () => {
         },
       },
     };
-    const log = createParentLog<PairData>();
+    const ref = createRef<FormRef<PairData>>();
     let appended = false;
     const { container } = render(
-      <TransformingParent<PairData>
+      <Form<PairData>
+        ref={ref}
         schema={schema}
-        initialValue={{
+        validator={validator}
+        initialFormData={{
           rows: [
             { kind: 'x', tags: [null, null] },
             { kind: 'y', tags: [null, null] },
           ],
         }}
-        log={log}
-        // A parent that appends a row of its own, unannounced, on the first note edit
-        transform={(reported) => {
-          if (!appended && reported?.note !== undefined) {
+        // A parent that appends a row of its own on the first note edit
+        onChange={({ formData }) => {
+          if (!appended && formData.note !== undefined) {
             appended = true;
-            return { ...reported, rows: [...(reported.rows ?? []), { kind: 'y', tags: ['a', 'a'] }] };
+            handleOf(ref).setFieldValue('rows', [...(formData.rows ?? []), { kind: 'y', tags: ['a', 'a'] }]);
           }
-          return reported;
         }}
       />,
     );
     await user.type(input(container, 'root_note'), 'n');
     await user.click(elementOf(container, `#${buttonId('root_rows_0', 'remove')}`));
     await user.type(input(container, 'root_note'), 'n');
-    const rows = log.value?.rows;
-    // The desynced length drops only the rows array from the view, so the added row pairs with no
-    // previous value and is filtered against its own branch: the tags 'y' never offered go
+    const { rows } = handleOf(ref).getFormData();
+    // The added row has no previous value of its own, so it is filtered against its own branch: the tags 'y' never
+    // offered go
     expect(rows?.[1]).toEqual({ kind: 'y', tags: [] });
   });
 
-  it('filters a root-level row the parent added after a length desync (#5451)', async () => {
+  it('filters a root-level row the parent added (#5451)', async () => {
     interface Row {
       kind?: string;
       note?: string;
@@ -1125,33 +979,33 @@ describe('settled snapshot sanitization', () => {
         ],
       },
     };
-    const log = createParentLog<Row[]>();
+    const ref = createRef<FormRef<Row[]>>();
     let appended = false;
     const { container } = render(
-      <TransformingParent<Row[]>
+      <Form<Row[]>
+        ref={ref}
         schema={schema}
-        initialValue={[
+        validator={validator}
+        initialFormData={[
           { kind: 'x', tags: [null, null] },
           { kind: 'y', tags: [null, null] },
         ]}
-        log={log}
-        // A parent that appends a row of its own, unannounced, on the first note edit
-        transform={(reported) => {
-          if (!appended && reported?.[0]?.note !== undefined) {
+        // A parent that appends a row of its own on the first note edit
+        onChange={({ formData }) => {
+          if (!appended && formData[0]?.note !== undefined) {
             appended = true;
-            return [...(reported ?? []), { kind: 'y', tags: ['a', 'a'] }];
+            handleOf(ref).setFieldValue('', [...formData, { kind: 'y', tags: ['a', 'a'] }]);
           }
-          return reported;
         }}
       />,
     );
     await user.type(input(container, 'root_0_note'), 'n');
     await user.click(elementOf(container, `#${buttonId('root_0', 'remove')}`));
     await user.type(input(container, 'root_0_note'), 'n');
-    const rows = log.value;
-    // The dropped root view reads as no settled data at all, so the added row pairs with no previous
-    // value and is filtered against its own branch: the tags 'y' never offered go, as on v7
-    expect(rows?.[1]).toEqual({ kind: 'y', tags: [] });
+    const rows = handleOf(ref).getFormData();
+    // The added row has no previous value of its own, so it is filtered against its own branch: the tags 'y' never
+    // offered go, as on v7
+    expect(rows[1]).toEqual({ kind: 'y', tags: [] });
   });
 
   it('keeps each row paired with its own previous value across a reorder at the document root (#5451)', async () => {

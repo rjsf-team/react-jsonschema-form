@@ -1,4 +1,3 @@
-import { createRef } from 'react';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -6,8 +5,10 @@ import { userEvent } from '@testing-library/user-event';
 import {
   createFormComponent,
   createFormRef,
+  elementOf,
   expectToHaveBeenCalledWithFormData,
   getSelectedOptionValue,
+  handleOf,
   submitForm,
 } from './testUtils.tsx';
 
@@ -420,17 +421,17 @@ describe('NumberField', () => {
             const schema: RJSFSchema = {
               type: 'number',
             };
-            // Ownership is decided at mount, so a value set from outside later is only taken by a form mounted with one
-            const { rerender, node } = createFormComponent({
+            const ref = createFormRef();
+            const { node } = createFormComponent({
+              ref,
               schema,
               uiSchema,
-              formData: null,
             });
 
-            const $input = node.querySelector('input')!;
+            const $input = elementOf(node, 'input');
             await user.type($input, typed);
 
-            rerender({ schema, uiSchema, formData });
+            act(() => handleOf(ref).setFieldValue('', formData));
 
             expect($input).toHaveValue(display);
           });
@@ -457,18 +458,19 @@ describe('NumberField', () => {
           type: 'number',
         };
 
-        const { rerender, node } = createFormComponent({
-          ref: createRef(),
+        const ref = createFormRef();
+        const { node } = createFormComponent({
+          ref,
           schema,
           uiSchema,
-          formData: 2.03,
+          initialFormData: 2.03,
         });
 
         const $input = node.querySelector('input');
 
         expect($input).toHaveAttribute('value', '2.03');
 
-        rerender({ schema, formData: 203 });
+        act(() => handleOf(ref).setFieldValue('', 203));
 
         expect($input).toHaveAttribute('value', '203');
       });
@@ -879,20 +881,20 @@ describe('NumberField', () => {
         },
       };
 
-      const { rerender, node } = createFormComponent({
-        ref: createRef(),
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
         uiSchema,
-        formData: null,
       });
 
-      const $input = node.querySelector('input')!;
+      const $input = elementOf(node, 'input');
       // Poison the component's cached "last typed value" with a string that isn't a number
       // but shares every character with '2.5' except the position where '.' would be.
       await user.type($input, '2x5');
 
       // An unrelated, externally-provided value comes in (e.g. a programmatic reset).
-      rerender({ schema, formData: 2.5 });
+      act(() => handleOf(ref).setFieldValue('', 2.5));
 
       // A regex built from '2.5' without escaping the '.' treats it as "any character" and
       // wrongly matches the stale '2x5', redisplaying garbage instead of the locale-formatted number.

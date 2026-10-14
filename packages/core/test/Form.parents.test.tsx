@@ -20,6 +20,7 @@ import {
   handleOf,
   input,
   outsideAct,
+  setupConsoleWarnSuppression,
   submitForm,
 } from './testUtils.tsx';
 
@@ -42,6 +43,8 @@ interface Data {
 }
 
 describe('parent harnesses', () => {
+  const warnings = setupConsoleWarnSuppression();
+
   it('an accepting parent stores each edit and the form renders the stored value', async () => {
     const log = createParentLog<Data>();
     const { container } = render(<AcceptingParent<Data> schema={schema} initialValue={{ name: 'a' }} log={log} />);
@@ -64,7 +67,7 @@ describe('parent harnesses', () => {
     expect(input(container, 'root_name')).toHaveValue('ab');
   });
 
-  it('a transforming parent stores the transformed edit and the form renders it', async () => {
+  it('a transforming parent stores the transformed edit, which the form ignores with a warning', async () => {
     const log = createParentLog<Data>();
     const upper = (edit: Data | undefined) => edit && { ...edit, name: edit.name?.toUpperCase() };
     const { container } = render(
@@ -73,9 +76,10 @@ describe('parent harnesses', () => {
 
     await user.type(input(container, 'root_name'), 'ab');
 
-    expect(log.reported).toEqual([{ name: 'a' }, { name: 'Ab' }]);
+    expect(log.reported).toEqual([{ name: 'a' }, { name: 'ab' }]);
     expect(log.value).toEqual({ name: 'AB' });
-    expect(input(container, 'root_name')).toHaveValue('AB');
+    expect(input(container, 'root_name')).toHaveValue('ab');
+    expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
   });
 
   it('two same-tick changes from mount Effects both reach the parent', async () => {
@@ -325,15 +329,23 @@ describe('a blur in the same event as an edit, under onBlur validation, with a p
     expect(fieldErrorsById(container)).toEqual({});
   });
 
-  it('validates the value at the blur, not the one a transforming parent stores after it', async () => {
+  it('validates the value at the blur, and keeps it over the one a transforming parent stores after it', async () => {
+    const ref = createFormRef<Named>();
+    const log = createParentLog<Named>();
     const { container } = render(
-      <TransformingParent<Named> {...propsFor({ sent: 'ab ' })} transform={(edit) => ({ name: edit?.name?.trim() })} />,
+      <TransformingParent<Named>
+        {...propsFor({ sent: 'ab ' })}
+        ref={ref}
+        log={log}
+        transform={(edit) => ({ name: edit?.name?.trim() })}
+      />,
     );
 
     await user.click(screen.getByRole('button', { name: 'Set from abcd' }));
 
-    // The edit 'ab ' is long enough; the 'ab' the parent stored replaces it and is validated at the next blur
-    expect(screen.getByRole('button', { name: 'Set from ab' })).toBeInTheDocument();
+    // The edit 'ab ' is long enough; the 'ab' the parent stored is its own copy, which the form ignores
+    expect(handleOf(ref).getFormData()).toEqual({ name: 'ab ' });
+    expect(log.value).toEqual({ name: 'ab' });
     expect(fieldErrorsById(container)).toEqual({});
   });
 

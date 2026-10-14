@@ -2,14 +2,14 @@ import { createRef, StrictMode, useEffect, useState } from 'react';
 import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { noop, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, waitFor } from '@testing-library/react';
+import { act, render, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import AnyOfField from '../src/components/fields/MultiSchemaField.tsx';
 import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
 import Form from '../src/index.ts';
 import { getTestRegistry } from '../src/testing.ts';
-import { createFormComponent, getSelectedOptionValue, submitForm } from './testUtils.tsx';
+import { createFormComponent, createFormRef, getSelectedOptionValue, handleOf, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -726,15 +726,16 @@ describe('anyOf', () => {
       },
     };
 
-    const { rerender, node } = createFormComponent({
-      ref: createRef(),
+    const ref = createFormRef();
+    const { node } = createFormComponent({
+      ref,
       schema,
-      formData: {},
+      initialFormData: {},
     });
 
     expect(node.querySelector('select')).toHaveValue('0');
 
-    rerender({ schema, formData: { userId: 'foobarbaz' } });
+    act(() => handleOf(ref).setFieldValue('userId', 'foobarbaz'));
 
     expect(node.querySelector('select')).toHaveValue('1');
   });
@@ -752,12 +753,14 @@ describe('anyOf', () => {
       return null;
     }
 
-    const { rerender } = createFormComponent({
+    const ref = createFormRef();
+    createFormComponent({
+      ref,
       schema,
-      formData: { userId: 5 },
+      initialFormData: { userId: 5 },
       widgets: { TextWidget: CommitProbe },
     });
-    rerender({ schema, formData: { userId: 'foobarbaz' }, widgets: { TextWidget: CommitProbe } });
+    act(() => handleOf(ref).setFieldValue('userId', 'foobarbaz'));
 
     expect(commits).toContainEqual({ type: 'string', value: 'foobarbaz' });
     expect(commits).not.toContainEqual({ type: 'number', value: 'foobarbaz' });

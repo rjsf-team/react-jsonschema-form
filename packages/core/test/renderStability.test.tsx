@@ -20,8 +20,9 @@ import {
   createFormComponent,
   createParentLog,
   ListeningParent,
-  TransformingParent,
   createFormRef,
+  handleOf,
+  input,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -398,23 +399,37 @@ describe('render stability across sibling fields', () => {
       expect(renderCount('root_nested_inner')).toBe(innerBefore);
     });
 
-    it('a transforming parent re-renders only the field whose value it transformed', async () => {
-      const { container } = render(
-        <TransformingParent<FormValue>
-          schema={schema}
-          initialValue={initialFormData()}
-          templates={templates}
-          transform={(edit) => edit && { ...edit, first: edit.first.toUpperCase() }}
-        />,
-      );
+    it('a parent that writes a transform back re-renders only the field whose value it transformed', async () => {
+      const ref = createFormRef<FormValue>();
+      function TransformingWriter() {
+        const [value, setValue] = useState(initialFormData);
+        return (
+          <Form<FormValue>
+            ref={ref}
+            schema={schema}
+            validator={validator}
+            templates={templates}
+            formData={value}
+            onChange={(event) => {
+              const upper = event.formData.first.toUpperCase();
+              if (upper !== event.formData.first) {
+                handleOf(ref).setFieldValue('first', upper);
+                return;
+              }
+              setValue(event.formData);
+            }}
+          />
+        );
+      }
+      const { container } = render(<TransformingWriter />);
       const firstBefore = renderCount('root_first');
       const secondBefore = renderCount('root_second');
       const innerBefore = renderCount('root_nested_inner');
       expect(secondBefore).toBeGreaterThan(0);
 
-      await user.type(container.querySelector('#root_first')!, 'ab');
+      await user.type(input(container, 'root_first'), 'ab');
 
-      expect(container.querySelector('#root_first')).toHaveValue('AB');
+      expect(input(container, 'root_first')).toHaveValue('AB');
       expect(renderCount('root_first')).toBeGreaterThan(firstBefore);
       expect(renderCount('root_second')).toBe(secondBefore);
       expect(renderCount('root_nested_inner')).toBe(innerBefore);

@@ -14,6 +14,8 @@ import {
   fieldErrorsById,
   submitForm,
   createFormRef,
+  input,
+  setupConsoleWarnSuppression,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -100,6 +102,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
   });
 
   describe('Change handler', () => {
+    const warnings = setupConsoleWarnSuppression();
     it('should call provided change handler on form state change with schema and uiSchema', async () => {
       const schema: RJSFSchema = {
         type: 'object',
@@ -603,48 +606,19 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
 
       expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('x');
     });
-    it('should apply a formData prop change from a parent that ignores onChange', async () => {
+    it('should keep the edits, and warn, when a parent that ignores onChange passes another formData', async () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: { name: { type: 'string' }, other: { type: 'string', default: 'defaulted' } },
       };
       const { node, rerender } = createFormComponent({ schema, formData: { name: 'a' }, onChange: () => {} });
 
-      await user.type(node.querySelector<HTMLInputElement>('#root_name')!, 'x');
+      await user.type(input(node, 'root_name'), 'x');
       rerender({ schema, formData: { name: 'loaded' }, onChange: () => {} });
 
-      expect(node.querySelector<HTMLInputElement>('#root_name')).toHaveValue('loaded');
-    });
-    it('should apply a formData prop change matching data reported before the parent took over', async () => {
-      const schema: RJSFSchema = {
-        type: 'object',
-        properties: {
-          other: { type: 'string', title: 'Other' },
-          cfg: {
-            type: 'object',
-            oneOf: [
-              { title: 'Advanced Configuration', type: 'object', properties: { types: { const: 'advanced' } } },
-              { title: 'No Configuration', type: 'null' },
-            ],
-            default: { types: 'advanced' },
-          },
-        },
-      };
-      const props = {
-        schema,
-        defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' } as const,
-        onChange: () => {},
-      };
-      const { node, rerender } = createFormComponent({
-        ...props,
-        formData: { other: 'A', cfg: { types: 'advanced' } },
-      });
-
-      await user.selectOptions(node.querySelector<HTMLSelectElement>('#root_cfg__oneof_select')!, '1');
-      rerender({ ...props, formData: { other: 'B', cfg: { types: 'advanced' } } });
-      rerender({ ...props, formData: { other: 'A' } });
-
-      expect(node.querySelector<HTMLInputElement>('#root_other')).toHaveValue('A');
+      expect(input(node, 'root_name')).toHaveValue('ax');
+      expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
+      expect(warnings.consoleSpy.mock.lastCall?.[0]).toMatch(/`formData` changed after the form mounted/);
     });
     it('should clear the errors when noValidate is turned on', () => {
       const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] };

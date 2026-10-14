@@ -13,7 +13,7 @@ import validator from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import type { FormProps, IChangeEvent } from '../src/index.ts';
+import type { FormProps, FormRef, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
 import {
@@ -26,6 +26,7 @@ import {
   errorListMessages,
   expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
+  handleOf,
   setupConsoleErrorSuppression,
   submitForm,
 } from './testUtils.tsx';
@@ -190,7 +191,7 @@ describe('Live validation onBlur', () => {
     expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
   });
 
-  describe('when the data is replaced from outside the form', () => {
+  describe('when the data is replaced through setFieldValue', () => {
     const objectSchema: RJSFSchema = {
       type: 'object',
       properties: { name: { type: 'string', minLength: 8 }, other: { type: 'string' } },
@@ -201,12 +202,14 @@ describe('Live validation onBlur', () => {
       liveValidate = 'onBlur',
     }: Pick<FormProps, 'extraErrors' | 'liveValidate'>) {
       const [value, setValue] = useState<{ name?: string; other?: string }>({ name: 'longenough', other: 'b' });
+      const ref = useRef<FormRef<{ name?: string; other?: string }>>(null);
       return (
         <>
-          <button type='button' onClick={() => setValue({ name: 'short', other: 'zzz' })}>
+          <button type='button' onClick={() => handleOf(ref).setFieldValue('', { name: 'short', other: 'zzz' })}>
             replace
           </button>
           <Form
+            ref={ref}
             schema={objectSchema}
             validator={validator}
             liveValidate={liveValidate}

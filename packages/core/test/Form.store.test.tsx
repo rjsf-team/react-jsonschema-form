@@ -28,36 +28,41 @@ import {
   handleOf,
   input,
   renderInActivity,
+  setupConsoleWarnSuppression,
 } from './testUtils.tsx';
 
 const user = userEvent.setup();
 const schema: RJSFSchema = { type: 'object', properties: { name: { type: 'string' } } };
 
-it('an abandoned concurrent render does not publish parent data or callbacks to the model', async () => {
-  const ref = createFormRef<{ name: string }>();
+it('an abandoned concurrent render does not publish its schema or callbacks to the model', async () => {
+  const ref = createFormRef<{ name?: string }>();
   const committedCallback = vi.fn();
   const pendingCallback = vi.fn();
   const never = new Promise<void>(() => {});
-  function SuspendingWidget({ value }: WidgetProps) {
-    if (value === 'pending') {
+  const pendingSchema: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string', title: 'pending', default: 'pending default' } },
+  };
+  function SuspendingWidget({ value, schema: fieldSchema }: WidgetProps) {
+    if (fieldSchema.title === 'pending') {
       use(never);
     }
     return <span>{value}</span>;
   }
   function Parent() {
-    const [value, setValue] = useState('committed');
+    const [isPending, setIsPending] = useState(false);
     return (
       <>
-        <button type='button' onClick={() => startTransition(() => setValue('pending'))}>
+        <button type='button' onClick={() => startTransition(() => setIsPending(true))}>
           Suspend
         </button>
         <Suspense fallback={<span>Loading</span>}>
           <Form
             ref={ref}
-            schema={schema}
+            schema={isPending ? pendingSchema : schema}
             validator={validator}
-            formData={{ name: value }}
-            onChange={value === 'pending' ? pendingCallback : committedCallback}
+            initialFormData={{}}
+            onChange={isPending ? pendingCallback : committedCallback}
             widgets={{ TextWidget: SuspendingWidget }}
           />
         </Suspense>
@@ -66,7 +71,8 @@ it('an abandoned concurrent render does not publish parent data or callbacks to 
   }
   render(<Parent />);
   await user.click(screen.getByRole('button', { name: 'Suspend' }));
-  expect(handleOf(ref).getFormData()).toEqual({ name: 'committed' });
+  // The pending schema's default would be in the data had its render been committed
+  expect(handleOf(ref).getFormData()).toEqual({});
   act(() => handleOf(ref).setFieldValue('name', 'event'));
   expectToHaveBeenCalledWithFormData(committedCallback, { name: 'event' }, 'root_name');
   expect(pendingCallback).not.toHaveBeenCalled();
@@ -78,8 +84,14 @@ it('renders seeded data on the server without a browser or effect publishing a s
 });
 
 it('new props are available to the Effects of the commit that renders them', () => {
-  const ref = createFormRef<{ name: string }>();
+  const ref = createFormRef<{ name?: string; extra?: string }>();
   const phases: [string, unknown, unknown][] = [];
+  const before: RJSFSchema = { type: 'object', properties: { name: { type: 'string' }, extra: { type: 'string' } } };
+  // A default the new schema adds is filled into the data as the form renders the schema
+  const after: RJSFSchema = {
+    type: 'object',
+    properties: { name: { type: 'string' }, extra: { type: 'string', default: 'added' } },
+  };
   function ObservingWidget({ value }: WidgetProps) {
     useLayoutEffect(() => {
       phases.push(['layout', value, ref.current?.getFormData()]);
@@ -89,13 +101,13 @@ it('new props are available to the Effects of the commit that renders them', () 
     }, [value]);
     return <span>{value}</span>;
   }
-  const props = { ref, schema, validator, widgets: { TextWidget: ObservingWidget }, onChange: vi.fn() };
-  const { rerender } = render(<Form {...props} formData={{ name: 'before' }} />);
+  const props = { ref, validator, widgets: { TextWidget: ObservingWidget }, onChange: vi.fn() };
+  const { rerender } = render(<Form {...props} schema={before} initialFormData={{ name: 'kept' }} />);
   phases.length = 0;
-  rerender(<Form {...props} formData={{ name: 'after' }} />);
+  rerender(<Form {...props} schema={after} initialFormData={{ name: 'kept' }} />);
   expect(phases).toEqual([
-    ['layout', 'after', { name: 'after' }],
-    ['passive', 'after', { name: 'after' }],
+    ['layout', 'added', { name: 'kept', extra: 'added' }],
+    ['passive', 'added', { name: 'kept', extra: 'added' }],
   ]);
 });
 
@@ -426,37 +438,44 @@ it('a form hidden by Activity shows an edit made while it was hidden, with no re
   expect(input(container, 'root_name')).toHaveValue('later');
 });
 
-it('a form hidden by Activity takes the data its parent passes while it is hidden', () => {
-  interface Record {
-    name?: string;
-    other?: string;
-  }
-  const ref = createFormRef<Record>();
-  const onChange = vi.fn();
-  const { hide, show } = renderInActivity(
-    (formData: Record) => (
-      <Form
-        ref={ref}
-        schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
-        validator={validator}
-        formData={formData}
-        onChange={onChange}
-      />
-    ),
-    { name: 'a', other: 'x' },
-  );
-  const handle = handleOf(ref);
-  hide({ name: 'a', other: 'x' });
+describe('a formData passed to a form hidden by Activity', () => {
+  const warnings = setupConsoleWarnSuppression();
 
-  // The parent loads another record while the form is hidden
-  hide({ name: 'b', other: 'y' });
+  it('is ignored, while data set through the handle is taken', () => {
+    interface Record {
+      name?: string;
+      other?: string;
+    }
+    const ref = createFormRef<Record>();
+    const onChange = vi.fn();
+    const { hide, show } = renderInActivity(
+      (formData: Record) => (
+        <Form
+          ref={ref}
+          schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
+          validator={validator}
+          formData={formData}
+          onChange={onChange}
+        />
+      ),
+      { name: 'a', other: 'x' },
+    );
+    const handle = handleOf(ref);
+    hide({ name: 'a', other: 'x' });
 
-  expect(handle.getFormData()).toEqual({ name: 'b', other: 'y' });
+    // The parent passes another record while the form is hidden, which the form ignores as it would when shown
+    hide({ name: 'b', other: 'y' });
+    expect(handle.getFormData()).toEqual({ name: 'a', other: 'x' });
 
-  act(() => handle.setFieldValue('name', 'edited'));
-  show({ name: 'b', other: 'y' });
+    act(() => handle.setFieldValue('', { name: 'b', other: 'y' }));
+    act(() => handle.setFieldValue('name', 'edited'));
+    show({ name: 'b', other: 'y' });
 
-  expectToHaveBeenCalledWithFormData(onChange, { name: 'edited', other: 'y' }, 'root_name');
+    expect(handle.getFormData()).toEqual({ name: 'edited', other: 'y' });
+    expectToHaveBeenCalledWithFormData(onChange, { name: 'edited', other: 'y' }, 'root_name');
+    // The warning is an Effect's, which waits for the form to be shown
+    expect(warnings.consoleSpy).toHaveBeenCalledTimes(1);
+  });
 });
 
 it('a submit on a form hidden by Activity submits at once, after the change it reports', () => {
@@ -511,7 +530,7 @@ describe('validateForm() from a passive Effect after a prop change (#5034)', () 
         <button type='button' onClick={() => setActiveSchema((previous) => (previous === schemaA ? schemaB : schemaA))}>
           Toggle schema
         </button>
-        <button type='button' onClick={() => setFormData((previous) => (previous === valueA ? valueB : valueA))}>
+        <button type='button' onClick={() => handleOf(ref).setFieldValue('', formData === valueA ? valueB : valueA)}>
           Toggle data
         </button>
       </>
@@ -546,17 +565,16 @@ describe('validateForm() from a passive Effect after a prop change (#5034)', () 
     expect(errorListMessages(container)).toEqual(['must NOT have more than 15 characters']);
   });
 
-  it('renders the data a parent passes after validating only as it mounted, without the errors of the data it replaced', async () => {
+  it('renders the data set through its handle after validating only as it mounted, without the errors of the data it replaced', async () => {
     function ValidatedOnMountParent() {
       const ref = useRef<FormRef<string>>(null);
-      const [formData, setFormData] = useState(valueA);
       useEffect(() => {
         handleOf(ref).validateForm();
       }, []);
       return (
         <>
-          <Form<string> ref={ref} schema={schemaA} validator={validator} formData={formData} readonly onError={noop} />
-          <button type='button' onClick={() => setFormData(valueB)}>
+          <Form<string> ref={ref} schema={schemaA} validator={validator} formData={valueA} readonly onError={noop} />
+          <button type='button' onClick={() => handleOf(ref).setFieldValue('', valueB)}>
             Toggle data
           </button>
         </>

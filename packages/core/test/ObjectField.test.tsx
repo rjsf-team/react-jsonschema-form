@@ -11,20 +11,22 @@ import type {
   ObjectFieldTemplateProps,
   UiSchema,
 } from '@rjsf/utils';
-import { UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
-import { act, render, screen } from '@testing-library/react';
+import { isPlainObject, UI_GLOBAL_OPTIONS_KEY } from '@rjsf/utils';
+import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import ObjectField from '../src/components/fields/ObjectField.tsx';
 import SchemaField from '../src/components/fields/SchemaField.tsx';
+import type { IChangeEvent } from '../src/index.ts';
 import MarkdownTemplate from '../src/markdown.tsx';
 import {
   createFormComponent,
   createFormRef,
-  createParentLog,
+  elementOf,
   expectToHaveBeenCalledWithFormData,
+  handleOf,
+  input,
   submitForm,
-  TransformingParent,
 } from './testUtils.tsx';
 import { TextWidgetTest } from './TextWidgetTest.tsx';
 
@@ -375,9 +377,11 @@ describe('ObjectField', () => {
     });
 
     it('Check that when formData changes, the form should re-validate', async () => {
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
-        formData: {
+        initialFormData: {
           foo: null,
         },
         liveValidate: 'onChange',
@@ -393,7 +397,7 @@ describe('ObjectField', () => {
       const errorMessageContent = node.querySelector('#root_foo__error .text-danger');
       expect(errorMessageContent).toHaveTextContent('must be string');
 
-      rerender({ schema, formData: { foo: 'test' }, liveValidate: 'onChange' });
+      act(() => handleOf(ref).setFieldValue('', { foo: 'test' }));
 
       expect(node.querySelectorAll('#root_foo__error')).toHaveLength(0);
     });
@@ -1201,94 +1205,104 @@ describe('ObjectField', () => {
       expectToHaveBeenCalledWithFormData(onChange, { s_x: 0, newKey: undefined }, 'root');
     });
 
+    /** A form whose parent writes over the data an edit leaves, the way a parent can once the form owns its data: from
+     * `onChange`, through the form's handle. `writeOver` returns the data to write, or `undefined` to keep the edit
+     */
+    function renderWritingParent(
+      schema: RJSFSchema,
+      writeOver: (edit: GenericObjectType) => GenericObjectType | undefined,
+    ) {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema,
+        onChange: ({ formData }: IChangeEvent) => {
+          const written = isPlainObject(formData) ? writeOver(formData) : undefined;
+          if (written) {
+            handleOf(ref).setFieldValue('', written);
+          }
+        },
+      });
+      return { node, readData: () => handleOf(ref).getFormData() };
+    }
+
     it('should keep a value a parent wrote over the seed when the key is renamed', async () => {
       // A parent may write a value of its own over what the add button seeded, and that value is no more the form's
       // to replace on a rename than one the user typed
-      const log = createParentLog<GenericObjectType>();
-      const { container } = render(
-        <TransformingParent<GenericObjectType>
-          schema={{
-            type: 'object',
-            additionalProperties: { type: 'string' },
-            patternProperties: { '^num': { type: 'number' } },
-          }}
-          initialValue={{}}
-          log={log}
-          transform={(edit) => (edit && 'newKey' in edit ? { ...edit, newKey: 'the parent wrote this' } : edit)}
-        />,
+      const { node, readData } = renderWritingParent(
+        {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          patternProperties: { '^num': { type: 'number' } },
+        },
+        (edit) =>
+          'newKey' in edit && edit.newKey !== 'the parent wrote this'
+            ? { ...edit, newKey: 'the parent wrote this' }
+            : undefined,
       );
 
-      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
-      expect(log.value).toEqual({ newKey: 'the parent wrote this' });
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      expect(readData()).toEqual({ newKey: 'the parent wrote this' });
 
-      const keyInput = container.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey-key');
       await user.clear(keyInput);
       await user.type(keyInput, 'num1');
       await user.tab();
 
-      expect(log.value).toEqual({ num1: 'the parent wrote this' });
+      expect(readData()).toEqual({ num1: 'the parent wrote this' });
     });
 
     it('should re-seed an untouched new property after a rename the parent put back', async () => {
       // The record under the old name stays until the data says which of the two names the property holds: a parent
       // that puts the old name back leaves the property, still holding the seed, where it was, and moving the record
       // would leave it with no history to re-seed from
-      const log = createParentLog<GenericObjectType>();
-      const { container } = render(
-        <TransformingParent<GenericObjectType>
-          schema={{ type: 'object', patternProperties: { '^[0-9]+$': { type: 'number' } } }}
-          initialValue={{}}
-          log={log}
-          transform={(edit) => (edit && 'abc' in edit ? { newKey: 'New Value' } : edit)}
-        />,
+      const { node, readData } = renderWritingParent(
+        { type: 'object', patternProperties: { '^[0-9]+$': { type: 'number' } } },
+        (edit) => ('abc' in edit ? { newKey: 'New Value' } : undefined),
       );
 
-      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
-      expect(log.value).toEqual({ newKey: 'New Value' });
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      expect(readData()).toEqual({ newKey: 'New Value' });
 
       const renameTo = async (from: string, to: string) => {
-        const keyInput = container.querySelector(`#root_${from}-key`)!;
+        const keyInput = elementOf(node, `#root_${from}-key`);
         await user.clear(keyInput);
         await user.type(keyInput, to);
         await user.tab();
       };
 
       await renameTo('newKey', 'abc');
-      expect(log.value).toEqual({ newKey: 'New Value' });
+      expect(readData()).toEqual({ newKey: 'New Value' });
 
       await renameTo('newKey', '12');
-      expect(log.value).toEqual({ '12': 0 });
+      expect(readData()).toEqual({ '12': 0 });
     });
 
     it('should re-seed an untouched new property after a change the parent wrote the seed back over', async () => {
       // A parent that writes the seed back over a change leaves the property holding what the add button wrote:
       // nothing else has written to it, so the rename re-seeds it as it would one the user never touched
-      const log = createParentLog<GenericObjectType>();
-      const { container } = render(
-        <TransformingParent<GenericObjectType>
-          schema={{
-            type: 'object',
-            additionalProperties: { type: 'string' },
-            patternProperties: { '^num': { type: 'number' } },
-          }}
-          initialValue={{}}
-          log={log}
-          transform={(edit) => (edit?.newKey !== undefined ? { ...edit, newKey: 'New Value' } : edit)}
-        />,
+      const { node, readData } = renderWritingParent(
+        {
+          type: 'object',
+          additionalProperties: { type: 'string' },
+          patternProperties: { '^num': { type: 'number' } },
+        },
+        (edit) =>
+          edit.newKey !== undefined && edit.newKey !== 'New Value' ? { ...edit, newKey: 'New Value' } : undefined,
       );
 
-      await user.click(container.querySelector('.rjsf-object-property-expand button')!);
-      expect(log.value).toEqual({ newKey: 'New Value' });
+      await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+      expect(readData()).toEqual({ newKey: 'New Value' });
 
-      await user.type(container.querySelector('#root_newKey')!, 'typed');
-      expect(log.value).toEqual({ newKey: 'New Value' });
+      await user.type(input(node, 'root_newKey'), 'typed');
+      expect(readData()).toEqual({ newKey: 'New Value' });
 
-      const keyInput = container.querySelector('#root_newKey-key')!;
+      const keyInput = elementOf(node, '#root_newKey-key');
       await user.clear(keyInput);
       await user.type(keyInput, 'num1');
       await user.tab();
 
-      expect(log.value).toEqual({ num1: 0 });
+      expect(readData()).toEqual({ num1: 0 });
     });
 
     it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {

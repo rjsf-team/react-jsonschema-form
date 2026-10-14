@@ -9,6 +9,7 @@ import type {
 } from '@rjsf/utils';
 import {
   callWithDeferredThrow,
+  deepEquals,
   propertyToPath,
   replaceEqualDeep,
   fieldPathFromList,
@@ -34,7 +35,6 @@ import {
   toEventFormData,
   toIChangeEvent,
   validateFormData,
-  withFormDataProp,
 } from './formState.ts';
 
 /** How a report reaches the consumer's callback: a handle method calls it directly, so a throw reaches the method's
@@ -75,6 +75,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // timer or a file read that finishes late, or a call through a handle kept past the unmount. Reported through the
   // `onChange` of the last render, it would be stored as the data of whichever form replaced this one
   let isUnmounted = false;
+  // Development only, for the warning about a `formData` passed after mount, which the form ignores: the prop as the
+  // last commit passed it, and every object the form's data has been, since a parent that stores what `onChange`
+  // reported passes those back, later ones as well as the latest
+  let lastFormDataProp = initialProps.formData;
+  const heldData = new WeakSet<object>();
+  let isIgnoredFormDataWarned = false;
+  const hold = (data: unknown) => {
+    if (isDevelopment && typeof data === 'object' && data !== null) {
+      heldData.add(data);
+    }
+  };
+  hold(initial.formData);
 
   /** Stores the result of an operation, shared against the current state so an unchanged member keeps the reference
    * the fields hold, and publishes it when it changed. Returns what was stored.
@@ -86,6 +98,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     }
     if (committed !== state) {
       state = committed;
+      hold(state.formData);
       notify();
     }
     return committed;
@@ -361,14 +374,31 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       committedProps = nextProps;
       if (published === renderedPublished) {
         state = derived;
+        hold(state.formData);
         return;
       }
       // An operation that committed after this render began is not in `derived`. A render for it is already
-      // scheduled; until it runs, operations start from its commit derived under the new props. A `formData` that was
-      // the form's own data as the render began is recorded as seen first: the operation has moved the data on, so
-      // the prop would otherwise read as a new value and replace the operation's edit
-      const isOwnData = Object.is(nextProps.formData, renderedPublished.formData);
-      state = replaceEqualDeep(derived, deriveState(nextProps, isOwnData ? withFormDataProp(state, nextProps) : state));
+      // scheduled; until it runs, operations start from its commit derived under the new props
+      state = replaceEqualDeep(derived, deriveState(nextProps, state));
+      hold(state.formData);
+    },
+    /** Warns, once, that the `formData` prop changed after mount to a value the form ignores: neither data it has held
+     * nor a copy of the data it holds. Called after the commit that passed it, in development only
+     */
+    warnIfFormDataIgnored: (formData: T | undefined) => {
+      if (Object.is(formData, lastFormDataProp)) {
+        return;
+      }
+      lastFormDataProp = formData;
+      const isHeld = typeof formData === 'object' && formData !== null && heldData.has(formData);
+      if (isIgnoredFormDataWarned || formData === undefined || isHeld || deepEquals(formData, state.formData)) {
+        return;
+      }
+      isIgnoredFormDataWarned = true;
+      // oxlint-disable-next-line no-console
+      console.warn(
+        "Form: `formData` changed after the form mounted and was ignored. Like `initialFormData`, it seeds the form on mount and on `reset()` only, and the form owns its data after that. To show other data, remount the form with a `key`, or call `setFieldValue('', data)` on its ref.",
+      );
     },
     handle,
     handleSubmit,

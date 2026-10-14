@@ -1,4 +1,3 @@
-import { createRef } from 'react';
 import type {
   FieldProps,
   FieldTemplateProps,
@@ -11,7 +10,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import { noop } from '@rjsf/utils';
-import { screen } from '@testing-library/react';
+import { act, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import SchemaField from '../src/components/fields/SchemaField.tsx';
@@ -1159,20 +1158,16 @@ describe('oneOf', () => {
       },
     };
 
-    const { rerender, node } = createFormComponent({
-      ref: createRef(),
+    const ref = createFormRef();
+    const { node } = createFormComponent({
+      ref,
       schema,
-      formData: {},
+      initialFormData: {},
     });
 
     expect(node.querySelector('select')).toHaveValue('0');
 
-    rerender({
-      schema,
-      formData: {
-        userId: 'foobarbaz',
-      },
-    });
+    act(() => handleOf(ref).setFieldValue('userId', 'foobarbaz'));
 
     expect(node.querySelector('select')).toHaveValue('1');
   });

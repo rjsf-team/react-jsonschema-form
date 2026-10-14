@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type {
   ArrayFieldItemTemplateProps,
   ErrorListProps,
@@ -13,10 +13,10 @@ import type {
 } from '@rjsf/utils';
 import { ErrorSchemaBuilder, optionalControlsId, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import type { FormProps } from '../src/index.ts';
+import type { FormProps, FormRef } from '../src/index.ts';
 import Form from '../src/index.ts';
 import {
   createFormComponent,
@@ -112,15 +112,19 @@ describe('Error state consistency when deriving from new props', () => {
     );
   }
 
-  /** A parent that stores `onChange` back into `formData`, the ordinary setup */
+  /** A parent that stores `onChange` back into `formData`, the ordinary setup, and replaces the data through the
+   * form's ref
+   */
   function EchoingParent({ liveValidate, widgets }: Pick<FormProps, 'liveValidate' | 'widgets'>) {
     const [value, setValue] = useState<{ name?: string; other?: string }>(shortName);
+    const ref = useRef<FormRef<{ name?: string; other?: string }>>(null);
     return (
       <>
-        <button type='button' onClick={() => setValue({ name: 'longenoughvalue' })}>
+        <button type='button' onClick={() => handleOf(ref).setFieldValue('', { name: 'longenoughvalue' })}>
           replace
         </button>
         <Form
+          ref={ref}
           schema={schema}
           validator={validator}
           liveValidate={liveValidate}
@@ -1245,7 +1249,7 @@ describe('Error state consistency when deriving from new props', () => {
     expect(errorListMessages(container)).toEqual([]);
   });
 
-  it('drops the errors of data the parent replaced under onBlur', async () => {
+  it('drops the errors of data replaced through setFieldValue under onBlur', async () => {
     const { container } = render(<EchoingParent liveValidate='onBlur' />);
 
     await user.click(input(container, 'root_name'));
@@ -1279,7 +1283,7 @@ describe('Error state consistency when deriving from new props', () => {
     expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
   });
 
-  describe('when a parent replaces data the last validation reported on (#5034)', () => {
+  describe('when data the last validation reported on is replaced through setFieldValue (#5034)', () => {
     const tooShort = 'must NOT have fewer than 8 characters';
     const leaf: RJSFSchema = { type: 'string', minLength: 8 };
     const list: RJSFSchema = { type: 'array', items: leaf };
@@ -1377,25 +1381,27 @@ describe('Error state consistency when deriving from new props', () => {
       after: unknown;
       remaining: string[];
     }[])('$name', async ({ schema, before, validated, after, remaining }) => {
-      const { container, node, rerender } = createFormComponent({ schema, formData: before });
+      const ref = createFormRef();
+      const { container, node } = createFormComponent({ ref, schema, formData: before });
 
       await submitForm(node, user);
       expect(errorListMessages(container)).toEqual(validated);
 
-      rerender({ schema, formData: after });
+      act(() => handleOf(ref).setFieldValue('', after));
 
       expect(errorListMessages(container)).toEqual(remaining);
     });
 
     it('keeps the error an invalid schema is reported with, which describes no field, when a field changes', async () => {
       const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
-      const { container, node, rerender } = createFormComponent({ schema: invalid, formData: { name: 'a' } });
+      const ref = createFormRef();
+      const { container, node } = createFormComponent({ ref, schema: invalid, formData: { name: 'a' } });
 
       await submitForm(node, user);
       const listed = errorListMessages(container);
       expect(listed).toHaveLength(1);
 
-      rerender({ schema: invalid, formData: { name: 'b' } });
+      act(() => handleOf(ref).setFieldValue('', { name: 'b' }));
 
       expect(errorListMessages(container)).toEqual(listed);
     });
@@ -1411,14 +1417,15 @@ describe('Error state consistency when deriving from new props', () => {
           },
         },
       };
-      const { node, rerender } = createFormComponent({ ...props, formData: 'a' });
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ...props, ref, formData: 'a' });
 
       await submitForm(node, user);
       const validated = shown.mock.lastCall?.[0];
       expect(validated?.errors).toHaveLength(1);
       expect(validated?.errorSchema).not.toEqual({});
 
-      rerender({ ...props, formData: 'b' });
+      act(() => handleOf(ref).setFieldValue('', 'b'));
 
       expect(shown.mock.lastCall?.[0]).toEqual(validated);
     });
@@ -1444,14 +1451,19 @@ describe('Error state consistency when deriving from new props', () => {
       'keeps the error an invalid schema is reported with listed when a transformErrors gave it $name',
       async ({ transformErrors }) => {
         const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
-        const props = { schema: invalid, transformErrors };
-        const { container, node, rerender } = createFormComponent({ ...props, formData: { name: 'a' } });
+        const ref = createFormRef();
+        const { container, node } = createFormComponent({
+          ref,
+          schema: invalid,
+          transformErrors,
+          formData: { name: 'a' },
+        });
 
         await submitForm(node, user);
         const listed = errorListMessages(container);
         expect(listed).toHaveLength(1);
 
-        rerender({ ...props, formData: { name: 'b' } });
+        act(() => handleOf(ref).setFieldValue('', { name: 'b' }));
 
         expect(errorListMessages(container)).toEqual(listed);
       },
@@ -1479,9 +1491,11 @@ describe('Error state consistency when deriving from new props', () => {
 
     it('clears a root error listed with a message and no property from the list as from the root field', async () => {
       const transformErrors: ErrorTransformer = (errors) => [...errors, { message: 'form-level', stack: 'form-level' }];
-      const props = { schema: pair, transformErrors };
-      const { container, node, rerender } = createFormComponent({
-        ...props,
+      const ref = createFormRef();
+      const { container, node } = createFormComponent({
+        ref,
+        schema: pair,
+        transformErrors,
         formData: { name: 'short', other: 'brief' },
       });
 
@@ -1493,7 +1507,7 @@ describe('Error state consistency when deriving from new props', () => {
         root_other: [tooShort],
       });
 
-      rerender({ ...props, formData: { name: 'short', other: 'longenough' } });
+      act(() => handleOf(ref).setFieldValue('', { name: 'short', other: 'longenough' }));
 
       expect(errorListMessages(container)).toEqual([`.name ${tooShort}`]);
       expect(fieldErrorsById(container)).toEqual({ root_name: [tooShort] });
@@ -1505,9 +1519,11 @@ describe('Error state consistency when deriving from new props', () => {
         properties: { $schema: { type: 'string', minLength: 50 }, name: { type: 'string', minLength: 8 } },
       };
       const transformErrors: ErrorTransformer = (errors) => [...errors, { message: 'form-level', stack: 'form-level' }];
-      const props = { schema: named, transformErrors };
-      const { container, node, rerender } = createFormComponent({
-        ...props,
+      const ref = createFormRef();
+      const { container, node } = createFormComponent({
+        ref,
+        schema: named,
+        transformErrors,
         formData: { $schema: 'short', name: 'short' },
       });
 
@@ -1518,13 +1534,13 @@ describe('Error state consistency when deriving from new props', () => {
         'form-level',
       ]);
 
-      rerender({ ...props, formData: { $schema: 'x'.repeat(50), name: 'longenough' } });
+      act(() => handleOf(ref).setFieldValue('', { $schema: 'x'.repeat(50), name: 'longenough' }));
 
       expect(errorListMessages(container)).toEqual([]);
       expect(fieldErrorsById(container)).toEqual({});
     });
 
-    it('leaves no node of a container whose errors a parent cleared for a raise there to read as the validator still reporting', async () => {
+    it('leaves no node of a container whose errors a replacement cleared for a raise there to read as the validator still reporting', async () => {
       const nested: RJSFSchema = {
         type: 'object',
         properties: { foo: { type: 'object', properties: { bar: leaf, baz: { type: 'string' } } } },
@@ -1533,12 +1549,17 @@ describe('Error state consistency when deriving from new props', () => {
       const customValidate = (_: unknown, errors: FormValidation) => errors;
       function ClearingParent() {
         const [value, setValue] = useState<unknown>({ foo: { bar: 'short', baz: 'b' } });
+        const ref = useRef<FormRef>(null);
         return (
           <>
-            <button type='button' onClick={() => setValue({ foo: { bar: 'longenough', baz: 'b' } })}>
+            <button
+              type='button'
+              onClick={() => handleOf(ref).setFieldValue('', { foo: { bar: 'longenough', baz: 'b' } })}
+            >
               replace
             </button>
             <Form
+              ref={ref}
               schema={nested}
               uiSchema={raisingUiSchema}
               validator={validator}
@@ -1575,15 +1596,18 @@ describe('Error state consistency when deriving from new props', () => {
         transformErrors: (errors: RJSFValidationError[]) =>
           errors.map((error) => (error.property === '.name' ? { ...error, message: undefined } : error)),
       };
-      const { container, node, rerender } = createFormComponent({ ...props, formData: { name: 'a', other: 'b' } });
+      const seed = { name: 'a', other: 'b' };
+      const ref = createFormRef();
+      const { container, node, rerender } = createFormComponent({ ...props, ref, formData: seed });
 
       await submitForm(node, user);
-      rerender({ ...props, formData: { name: 'a', other: 'c' } });
+      act(() => handleOf(ref).setFieldValue('', { name: 'a', other: 'c' }));
       expect(errorListMessages(container)).toEqual([`.name ${tooShort}`]);
 
       rerender({
         ...props,
-        formData: { name: 'a', other: 'c' },
+        ref,
+        formData: seed,
         extraErrors: { other: { __errors: ['from the server'] } },
       });
 

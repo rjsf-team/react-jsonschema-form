@@ -1,12 +1,12 @@
 import { Profiler, useLayoutEffect } from 'react';
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import Form from '../src/index.ts';
 import { buildRegistry } from '../src/Theme.ts';
-import { AcceptingParent, ListeningParent, input } from './testUtils.tsx';
+import { AcceptingParent, createFormRef, handleOf, ListeningParent, input } from './testUtils.tsx';
 
 // Spied rather than replaced, so the form builds its real registry and every call is counted
 vi.mock('../src/Theme.ts', { spy: true });
@@ -65,7 +65,7 @@ describe('render cost of one update', () => {
     expect(vi.mocked(buildRegistry).mock.calls.length).toBeLessThanOrEqual(2);
   });
 
-  it('derives once more for an edit a widget makes from a layout Effect of the render of a record', () => {
+  it('derives once more for an edit a widget makes from a layout Effect of the render of a record set through setFieldValue', () => {
     // Normalizes its value as it commits, the way a masked or formatted input does
     function UpperCaseWidget({ id, value, onChange }: WidgetProps) {
       const text = typeof value === 'string' ? value : '';
@@ -76,15 +76,26 @@ describe('render cost of one update', () => {
       }, [text, onChange]);
       return <input id={id} value={text} readOnly />;
     }
-    const props = { schema, validator, uiSchema: { name: { 'ui:widget': UpperCaseWidget } }, onChange: vi.fn() };
-    const { rerender } = render(<Form {...props} formData={{ name: 'AB' }} />);
+    const ref = createFormRef();
+    const onChange = vi.fn();
+    render(
+      <Form
+        ref={ref}
+        schema={schema}
+        validator={validator}
+        uiSchema={{ name: { 'ui:widget': UpperCaseWidget } }}
+        onChange={onChange}
+        formData={{ name: 'AB' }}
+      />,
+    );
     vi.mocked(buildRegistry).mockClear();
 
-    // The parent loads another record and stores nothing back; the widget normalizes it once
-    rerender(<Form {...props} formData={{ name: 'cd' }} />);
+    // Another record is loaded through the ref; the widget normalizes it once
+    act(() => handleOf(ref).setFieldValue('', { name: 'cd' }));
 
-    // Once for the render of the record, once for the edit in `applyChange()`, once for the render of the edit
-    expect(props.onChange).toHaveBeenCalledTimes(1);
-    expect(vi.mocked(buildRegistry).mock.calls.length).toBeLessThanOrEqual(3);
+    // Once for the record's change in `applyChange()` and once for its render, then once for the widget's edit and
+    // once for the render of that; each change reports through `onChange`
+    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(buildRegistry).mock.calls.length).toBeLessThanOrEqual(4);
   });
 });

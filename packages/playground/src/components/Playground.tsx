@@ -252,6 +252,11 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [stylesheet, setStylesheet] = useState<string | null>(initial.stylesheet ?? null);
   const [validator, setValidator] = useState<string>(initial.validator ?? DEFAULT_VALIDATOR);
   const [formKey, setFormKey] = useState(0);
+  // The form owns its data once it has mounted, so data edited in the JSON editor reaches it by remounting it
+  const setEditedFormData = useCallback((data: unknown) => {
+    setFormData(data);
+    setFormKey((key) => key + 1);
+  }, []);
   const [liveSettings, setLiveSettings] = useState<LiveSettings>(initial.liveSettings);
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>(initial.otherFormProps);
 
@@ -349,6 +354,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
       <Box sx={{ width: '100%' }}>
         <Editors
+          formKey={formKey}
           themes={themes}
           theme={theme}
           subtheme={subtheme}
@@ -356,7 +362,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
           setSubtheme={setSubtheme}
           setStylesheet={setStylesheet}
           formData={formData}
-          setFormData={setFormData}
+          setFormData={setEditedFormData}
           schema={schema}
           setSchema={setSchema}
           uiSchema={uiSchema}
@@ -387,7 +393,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
               extraErrors={extraErrors}
               schema={schema}
               uiSchema={uiSchema}
-              formData={formData}
+              initialFormData={formData}
               templates={{ MarkdownTemplate, ...otherFormProps.templates }}
               fields={{
                 ...otherFormProps.fields,
@@ -406,6 +412,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         </ErrorBoundary>
       </Box>
       <OptionsDrawer
+        formKey={formKey}
         schema={schema}
         uiSchema={uiSchema}
         formData={formData}

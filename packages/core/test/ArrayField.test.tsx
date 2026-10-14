@@ -2482,38 +2482,24 @@ describe('ArrayField', () => {
       expect(removeTitles(container)).toEqual(['Remove r (1)', 'Remove r (4)', 'Remove r (3)', 'Remove r (2)']);
     });
 
-    it('can renumber shared names when a parent replaces the data, as arrays.md says', async () => {
-      function Parent() {
-        const [data, setData] = useState<unknown[]>(['r', 'r']);
-        return (
-          <>
-            <Form
-              schema={{ type: 'array', items: { type: 'string' } }}
-              uiSchema={{ 'ui:itemLabel': '.' }}
-              validator={validator}
-              formData={data}
-              onChange={(event) => setData(event.formData)}
-            />
-            <button type='button' onClick={() => setData(['r', 'r'])}>
-              Same length
-            </button>
-            <button type='button' onClick={() => setData(['r', 'r', 'r'])}>
-              New length
-            </button>
-          </>
-        );
-      }
-      const { container } = render(<Parent />);
-      await user.click(container.querySelectorAll('.rjsf-array-item-move-up')[1]);
-      expect(removeTitles(container)).toEqual(['Remove r (2)', 'Remove r (1)']);
+    it('can renumber shared names when the data is replaced from outside the field, as arrays.md says', async () => {
+      const ref = createFormRef<unknown[]>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'array', items: { type: 'string' } },
+        uiSchema: { 'ui:itemLabel': '.' },
+        initialFormData: ['r', 'r'],
+      });
+      await user.click(node.querySelectorAll('.rjsf-array-item-move-up')[1]);
+      expect(removeTitles(node)).toEqual(['Remove r (2)', 'Remove r (1)']);
 
       // Data of the same length keeps the rows, and so the order of the items it replaced
-      await user.click(screen.getByText('Same length'));
-      expect(removeTitles(container)).toEqual(['Remove r (2)', 'Remove r (1)']);
+      act(() => handleOf(ref).setFieldValue('', ['r', 'r']));
+      expect(removeTitles(node)).toEqual(['Remove r (2)', 'Remove r (1)']);
 
       // Data of another length gets fresh rows, numbered in its order
-      await user.click(screen.getByText('New length'));
-      expect(removeTitles(container)).toEqual(['Remove r (1)', 'Remove r (2)', 'Remove r (3)']);
+      act(() => handleOf(ref).setFieldValue('', ['r', 'r', 'r']));
+      expect(removeTitles(node)).toEqual(['Remove r (1)', 'Remove r (2)', 'Remove r (3)']);
     });
 
     it('keeps the numbers of items with a shared name when an item with another name is edited', async () => {
@@ -3964,9 +3950,11 @@ describe('ArrayField', () => {
     });
 
     it('Check that when formData changes, the form should re-validate', async () => {
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
-        formData: [{}],
+        initialFormData: [{}],
         liveValidate: 'onChange',
       });
 
@@ -3980,7 +3968,7 @@ describe('ArrayField', () => {
       const errorMessage = node.querySelector('#root_0_text__error .text-danger');
       expect(errorMessage).toHaveTextContent("must have required property 'text'");
 
-      rerender({ schema, formData: [{ text: 'test' }], liveValidate: 'onChange' });
+      act(() => handleOf(ref).setFieldValue('', [{ text: 'test' }]));
 
       expect(node.querySelectorAll('#root_0_text__error')).toHaveLength(0);
     });
@@ -4602,7 +4590,7 @@ describe('ArrayField', () => {
     });
   });
 
-  describe('External formData replacement', () => {
+  describe('Replacing the formData from outside the field', () => {
     const schema: RJSFSchema = { type: 'array', items: { type: 'string' } };
     const templates = {
       ArrayFieldTemplate: ExposedArrayKeyTemplate,
@@ -4610,11 +4598,12 @@ describe('ArrayField', () => {
     };
 
     it('should keep the row keys and render the new items when the length is unchanged', () => {
-      const { node, rerender } = createFormComponent({ schema, formData: ['foo', 'bar'], templates });
+      const ref = createFormRef<string[]>();
+      const { node } = createFormComponent({ ref, schema, initialFormData: ['foo', 'bar'], templates });
       const startKeys = rowKeys(node);
       expect(startKeys).toHaveLength(2);
 
-      rerender({ schema, formData: ['baz', 'qux'], templates });
+      act(() => handleOf(ref).setFieldValue('', ['baz', 'qux']));
 
       expect(rowKeys(node)).toEqual(startKeys);
       expect(node.querySelector<HTMLInputElement>('#root_0')).toHaveValue('baz');
@@ -4622,10 +4611,11 @@ describe('ArrayField', () => {
     });
 
     it('should regenerate every row key when the length changes', () => {
-      const { node, rerender } = createFormComponent({ schema, formData: ['foo', 'bar'], templates });
+      const ref = createFormRef<string[]>();
+      const { node } = createFormComponent({ ref, schema, initialFormData: ['foo', 'bar'], templates });
       const startKeys = rowKeys(node);
 
-      rerender({ schema, formData: ['foo'], templates });
+      act(() => handleOf(ref).setFieldValue('', ['foo']));
 
       const endKeys = rowKeys(node);
       expect(endKeys).toHaveLength(1);
@@ -4633,10 +4623,11 @@ describe('ArrayField', () => {
     });
 
     it('should regenerate every row key when the replacement is longer', () => {
-      const { node, rerender } = createFormComponent({ schema, formData: ['foo'], templates });
+      const ref = createFormRef<string[]>();
+      const { node } = createFormComponent({ ref, schema, initialFormData: ['foo'], templates });
       const startKeys = rowKeys(node);
 
-      rerender({ schema, formData: ['foo', 'bar'], templates });
+      act(() => handleOf(ref).setFieldValue('', ['foo', 'bar']));
 
       const endKeys = rowKeys(node);
       expect(endKeys).toHaveLength(2);

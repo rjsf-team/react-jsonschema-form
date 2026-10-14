@@ -1,6 +1,7 @@
 import { createRef } from 'react';
 import type { FieldTemplateProps, RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import { JSON_SCHEMA_TYPES } from '@rjsf/utils';
+import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import FallbackField from '../src/components/fields/FallbackField.tsx';
@@ -8,6 +9,8 @@ import Form from '../src/index.ts';
 import type { NoValFormProps } from './testUtils.tsx';
 import {
   createComponent,
+  createFormRef,
+  handleOf,
   createFormComponent as createDirectFormComponent,
   expectToHaveBeenCalledWithFormData,
   setupConsoleErrorSuppression,
@@ -666,13 +669,15 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         type: 'object',
         properties: { val: { type: ['array', 'string'], items: { type: 'string' } } },
       } as RJSFSchema;
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
         useFallbackUiForUnsupportedType: true,
         formData: { val: ['an item'] },
       });
 
-      rerender({ schema, useFallbackUiForUnsupportedType: true, formData: { val: '' } });
+      act(() => handleOf(ref).setFieldValue('', { val: '' }));
 
       // Only an additional property stores a cleared value as the empty string; anywhere else it is a `string` like
       // any other, so the selector must follow it rather than leave the array UI standing over string data
@@ -682,16 +687,18 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
 
     it('gives way to an empty string that replaces the object of an additional property', () => {
       const schema = { type: 'object', additionalProperties: true } as RJSFSchema;
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
         useFallbackUiForUnsupportedType: true,
         formData: { aKey: { a: 1 } },
       });
 
-      rerender({ schema, useFallbackUiForUnsupportedType: true, formData: { aKey: '' } });
+      act(() => handleOf(ref).setFieldValue('', { aKey: '' }));
 
       // An `object` selection starts out as the empty object of its own rather than the empty string a cleared value
-      // is stored as, so this one arrived from outside the form and is `string` data the selector has to follow
+      // is stored as, so this one arrived from outside the field and is `string` data the selector has to follow
       const select = node.querySelector<HTMLSelectElement>('#root_aKey___internal_type_selector')!;
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });
@@ -1043,7 +1050,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
         formData: { aKey: 'a string' },
       };
-      const { node, rerender } = createFormComponent(props);
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
         Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey___internal_type_selector option')).find(
@@ -1051,9 +1059,9 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         );
       expect(selected()).toHaveTextContent('string');
 
-      rerender({ ...props, formData: { aKey: { nested: 'value' } } });
+      act(() => handleOf(ref).setFieldValue('', { aKey: { nested: 'value' } }));
 
-      // Data a parent replaced never went through the selector, so the `string` selection gives way
+      // Data replaced from outside the field never went through the selector, so the `string` selection gives way
       // rather than leaving a text input to render the object as `[object Object]`
       expect(selected()).toHaveTextContent('object');
       expect(node.querySelector<HTMLInputElement>('#root_aKey_nested')).toHaveAttribute('value', 'value');
@@ -1068,7 +1076,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
         formData: { val: { a: 'nested' } },
       };
-      const { node, rerender } = createFormComponent(props);
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
         Array.from(node.querySelectorAll<HTMLOptionElement>('#root_val___internal_type_selector option')).find(
@@ -1076,7 +1085,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         );
       expect(selected()).toHaveTextContent('object');
 
-      rerender({ ...props, formData: { val: 5 } });
+      act(() => handleOf(ref).setFieldValue('', { val: 5 }));
       expect(selected()).toHaveTextContent('number');
       await user.clear(node.querySelector<HTMLInputElement>('#root_val')!);
 
@@ -1259,7 +1268,8 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         useFallbackUiForUnsupportedType: true,
         formData: { aKey: 'text' },
       };
-      const { node, rerender } = createFormComponent(props);
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ...props, ref });
 
       const selected = () =>
         Array.from(node.querySelectorAll<HTMLOptionElement>('#root_aKey___internal_type_selector option')).find(
@@ -1267,7 +1277,7 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
         );
       expect(selected()).toHaveTextContent('string');
 
-      rerender({ ...props, formData: { aKey: null } });
+      act(() => handleOf(ref).setFieldValue('', { aKey: null }));
 
       // An empty text input would hide the `null`, and the next keystroke would silently replace it
       expect(selected()).toHaveTextContent('null');
@@ -1617,17 +1627,19 @@ describeRepeated('Form common: rendering', (createFormComponent) => {
       expect(Array.from(select.options).find((o) => o.selected)?.textContent).toBe('string');
     });
 
-    it('gives way to a ui:emptyValue that replaces the object of a union from outside the form', () => {
+    it('gives way to a ui:emptyValue that replaces the object of a union from outside the field', () => {
       const schema = { type: 'object', properties: { val: { type: ['number', 'object'] } } } as RJSFSchema;
       const uiSchema = { val: { 'ui:options': { emptyValue: 0 } } };
-      const { node, rerender } = createFormComponent({
+      const ref = createFormRef();
+      const { node } = createFormComponent({
+        ref,
         schema,
         uiSchema,
         useFallbackUiForUnsupportedType: true,
         formData: { val: { a: 1 } },
       });
 
-      rerender({ schema, uiSchema, useFallbackUiForUnsupportedType: true, formData: { val: 0 } });
+      act(() => handleOf(ref).setFieldValue('', { val: 0 }));
 
       // An `object` field renders no widget for a `ui:emptyValue` to belong to, so this `0` is not one of its inputs
       // reporting itself cleared: it is `number` data that arrived from outside and the selector has to follow

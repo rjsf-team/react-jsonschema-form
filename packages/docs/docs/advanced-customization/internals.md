@@ -115,7 +115,7 @@ function DraftEditor() {
 }
 ```
 
-`getFormData()` returns the form's current value: the data your props last handed it, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
+`getFormData()` returns the form's current value: the seed your props handed it on mount or at the last `reset()`, filled in with the schema's defaults, and every edit made since, including one React has yet to show in the inputs.
 
 Inside `onChange`, use `event.formData` to read the edit being reported. Treat data from both the event and the handle as read-only.
 
@@ -164,7 +164,7 @@ formRef.current?.setFieldValue(['address', 'city'], 'Paris');
 formRef.current?.setFieldValue('', { address: { city: 'Paris', country: 'France' } });
 ```
 
-The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. You can also replace the whole value by passing a new `formData`; that does not call `onChange`.
+The form stores the edit immediately and reports it through `onChange`. Several calls in one event build on each other, since each reads the form's current value. A `formData` passed after mount does not replace the value: call `setFieldValue('', data)`, or remount the form under a `key`.
 
 ## Command timing
 
@@ -182,7 +182,7 @@ A command issued from the setup of a layout Effect, a callback ref being attache
 
 Do not issue commands while rendering or from a validation function. React may repeat those calls or abandon the render, and an edit made while a validation runs has the operation that ran it validate a second time, on the edited data.
 
-Under `liveValidate: 'onBlur'`, a blur in the same event as an edit validates the edit, and its `onChange` carries the errors found. A value your component stores in its place is validated at the next blur or submit.
+Under `liveValidate: 'onBlur'`, a blur in the same event as an edit validates the edit, and its `onChange` carries the errors found.
 
 Inside `<Activity mode="hidden">`, the form works as it does when shown: `setFieldValue()`, `reset()`, a field's change and `submit()` are applied and reported at once, and the inputs show the result when the form is shown again.
 

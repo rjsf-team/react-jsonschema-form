@@ -562,38 +562,38 @@ function moveSettledArrayAtPath(
   return writeAtPath(moved);
 }
 
-/** The pairing view for a value the form takes in place of its own data: the moved `view` wherever the value holds what
- * the form's data does, since the container writes that moved the view moved those very rows, and the data as it last
- * `settled`, from before those writes, wherever it holds something else, such as a reorder the parent set back. A
- * parent that stores each edit with a field of its own therefore keeps the moves of the arrays it left alone (#5451)
+/** The pairing view of a value written in place of `own` with no move announced, as `setFieldValue()` writes an array
+ * or object: the moved `view` wherever the written value holds what `own` does, since the container writes that moved
+ * the view moved those very rows, and the data as it last `settled`, from before those writes, wherever it holds
+ * something else, such as a reorder set back (#5451)
  *
- * @param taken - The value the form takes
- * @param own - The form's data the value replaces
+ * @param written - The value written
+ * @param own - The data the value replaces
  * @param view - The pairing view of `own`
  * @param settled - The data as it last settled
- * @returns - The pairing view of `taken`
+ * @returns - The pairing view of `written`
  */
-function pairingViewOfTaken(taken: unknown, own: unknown, view: unknown, settled: unknown): unknown {
-  if (deepEquals(taken, own)) {
+function pairingViewOfWrite(written: unknown, own: unknown, view: unknown, settled: unknown): unknown {
+  if (deepEquals(written, own)) {
     return view;
   }
   if (
-    Array.isArray(taken) &&
+    Array.isArray(written) &&
     Array.isArray(own) &&
     Array.isArray(view) &&
-    taken.length === own.length &&
+    written.length === own.length &&
     view.length === own.length
   ) {
     return Array.from(view, (item, index) =>
-      pairingViewOfTaken(taken[index], own[index], item, Array.isArray(settled) ? settled[index] : undefined),
+      pairingViewOfWrite(written[index], own[index], item, Array.isArray(settled) ? settled[index] : undefined),
     );
   }
-  if (isPlainObject(taken) && isPlainObject(own) && isPlainObject(view)) {
+  if (isPlainObject(written) && isPlainObject(own) && isPlainObject(view)) {
     const settledObject = isPlainObject(settled) ? settled : {};
     return Object.fromEntries(
       Object.entries(view).map(([key, value]) => [
         key,
-        pairingViewOfTaken(taken[key], own[key], value, settledObject[key]),
+        pairingViewOfWrite(written[key], own[key], value, settledObject[key]),
       ]),
     );
   }
@@ -1332,15 +1332,12 @@ function detectContextChanges<T, S extends StrictRJSFSchema, F extends FormConte
  * @param current - The state the pass starts from; `undefined` on construction
  * @param inputFormData - The data to derive from
  * @param props - The current props
- * @param [options.isDataPassed] - Whether the props handed the form data, see `FormState.isDataPassed`: by default
- * whether there is a seed on construction, and what `current` says afterwards
  * @returns - The new state, sharing every unchanged subtree with `current`
  */
 function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F> | undefined,
   inputFormData: T | undefined,
   props: FormProps<T, S, F>,
-  { isDataPassed = current ? current.isDataPassed : inputFormData !== undefined }: { isDataPassed?: boolean } = {},
 ): FormState<T, S, F> {
   const {
     formData,
@@ -1354,6 +1351,7 @@ function deriveDataState<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   // Construction validates nothing: the errors of a seed the user has not touched are not shown until they are earned
   const isDataChanged = current !== undefined && formData !== current.formData;
+  const isDataPassed = current ? current.isDataPassed : inputFormData !== undefined;
   const errors = reconcileErrors(current, props, context, formData, {
     isSchemaChanged,
     mustValidate: mustLiveValidate(props, isDataPassed, isDataChanged || isValidationPropChanged),
@@ -1746,6 +1744,25 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
         newArray,
         oldLength,
       );
+    } else if (
+      (isObject(newValue) || Array.isArray(newValue)) &&
+      settledFormDataForPairing !== undefined &&
+      settledFormData === current.settledFormData
+    ) {
+      // A container written with no move announced, as `setFieldValue()` puts a reorder back, may replace rows the view
+      // moved, so where it holds something else than the data did the view is replaced by the data as it last settled
+      const view = getAt<unknown>(settledFormDataForPairing, path);
+      if (view !== undefined) {
+        const viewOfWrite = pairingViewOfWrite(
+          getAt<unknown>(formData, path),
+          getAt<unknown>(current.formData, path),
+          view,
+          getAt<unknown>(settledFormData, path),
+        );
+        settledFormDataForPairing = isRootPath
+          ? viewOfWrite
+          : setByPath(copyAlongPath(settledFormDataForPairing, path), path, viewOfWrite);
+      }
     }
 
     // Re-set to undefined after merging defaults so the user's clear is preserved in
@@ -1919,9 +1936,8 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   };
 }
 
-/** The data the props hand the form: `formData`, which the form takes whenever it is passed a value it has not seen,
- * see `deriveState()`, or else `initialFormData`, which it reads on mount and on `reset()` only. A `null` seeds the
- * same defaults an `undefined` does.
+/** The data the props seed the form with on mount and on `reset()`: `formData`, which is kept as another name for the
+ * seed, or else `initialFormData`. A `null` seeds the same defaults an `undefined` does.
  *
  * @param props - The current props
  * @returns - The seed, or `undefined` when the props pass none
@@ -1936,26 +1952,15 @@ export function initialState<T, S extends StrictRJSFSchema, F extends FormContex
   if (!props.validator) {
     throw new Error('A validator is required for Form functionality to work');
   }
-  return { ...deriveDataState(undefined, seedOf(props), props), formDataProp: props.formData };
+  return deriveDataState(undefined, seedOf(props), props);
 }
 
-/** `state` with the `formData` of `props` recorded as seen, see `deriveState()`. Recorded by identity, which
- * `replaceEqualDeep()` would not keep for a value equal to the one before it
- */
-export function withFormDataProp<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  state: FormState<T, S, F>,
-  props: FormProps<T, S, F>,
-): FormState<T, S, F> {
-  return Object.is(state.formDataProp, props.formData) ? state : { ...state, formDataProp: props.formData };
-}
-
-/** Derives the state to render from the props and the committed `state`, so a `formData` is rendered the moment it
- * arrives, with no stale commit in between. Of the previous props only the `formData` is remembered, as
- * `formDataProp`: every derived member is shared against the committed state, so an unchanged input hands back the
- * reference the fields already hold and a changed one is recognized by the new reference; when nothing changed,
- * `state` itself is handed back. The data is re-derived for a `formData` the form has not seen and for a schema,
- * `ui:emptyValue` or `defaultFormStateBehavior` change; any other prop change re-derives the render context alone,
- * since an unrelated re-render must not rerun value initialization.
+/** Derives the state to render from the props and the committed `state`. Nothing is remembered about the previous
+ * props: every derived member is shared against the committed state, so an unchanged input hands back the reference
+ * the fields already hold and a changed one is recognized by the new reference; when nothing changed, `state` itself
+ * is handed back. The data is the form's own after mount, so a `formData` or `initialFormData` passed later changes
+ * nothing; it is re-derived only for a schema, `ui:emptyValue` or `defaultFormStateBehavior` change, and any other
+ * prop change re-derives the render context alone, since an unrelated re-render must not rerun value initialization.
  *
  * @param props - The current props
  * @param state - The committed state
@@ -1965,32 +1970,6 @@ export function deriveState<T, S extends StrictRJSFSchema, F extends FormContext
   props: FormProps<T, S, F>,
   state: FormState<T, S, F>,
 ): FormState<T, S, F> {
-  return withFormDataProp(replaceEqualDeep(state, deriveFromProps(props, state)), props);
-}
-
-/** The state `deriveState()` derives, before it is shared against `state` and records the `formData` prop */
-function deriveFromProps<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  props: FormProps<T, S, F>,
-  state: FormState<T, S, F>,
-): FormState<T, S, F> {
-  // A `formData` is taken as the form's value the way a controlled `<input>` takes a new `value`, unless the form has
-  // seen it already: as its own data, which a parent storing what `onChange` reported passes back on every edit, or as
-  // the prop of the render before, which a parent that has yet to render an edit, or stores none, passes again. The
-  // data pass derives the render context for the new data itself. `Object.is`, since `NaN !== NaN` would have a root
-  // `NaN` taken again on every pass
-  const isFormDataSeen = Object.is(props.formData, state.formDataProp) || Object.is(props.formData, state.formData);
-  if (props.formData !== undefined && !isFormDataSeen) {
-    const next = deriveDataState(state, props.formData, props, { isDataPassed: true });
-    return {
-      ...next,
-      settledFormDataForPairing: pairingViewOfTaken(
-        props.formData,
-        state.formData,
-        next.settledFormDataForPairing,
-        next.settledFormData,
-      ),
-    };
-  }
   const context = deriveRenderContext(props, state.retrievedSchema, state, resolveSchemaUtils(props, state));
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(state, context);
   // Rebuilt schema utilities are not on their own a reason to rerun value initialization: they are rebuilt for a
@@ -2001,7 +1980,7 @@ function deriveFromProps<T, S extends StrictRJSFSchema, F extends FormContextTyp
   const isEmptyValueChanged =
     context.uiSchema !== state.uiSchema && !deepEquals(emptyValuesOf(context.uiSchema), emptyValuesOf(state.uiSchema));
   if (isSchemaChanged || isEmptyValueChanged || context.defaultsBehavior !== state.defaultsBehavior) {
-    return deriveDataState(state, state.formData, props);
+    return replaceEqualDeep(state, deriveDataState(state, state.formData, props));
   }
   // Resolved only once it is known the data is not re-derived, which resolves it itself
   const resolvedContext = {
@@ -2012,5 +1991,5 @@ function deriveFromProps<T, S extends StrictRJSFSchema, F extends FormContextTyp
     mustValidate: mustLiveValidate(props, state.isDataPassed, isValidationPropChanged),
     validationSchema: context.schemaUtils === state.schemaUtils ? resolvedContext.retrievedSchema : undefined,
   });
-  return { ...state, ...resolvedContext, ...errors };
+  return replaceEqualDeep(state, { ...state, ...resolvedContext, ...errors });
 }

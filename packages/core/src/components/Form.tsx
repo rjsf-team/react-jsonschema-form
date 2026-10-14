@@ -1,5 +1,13 @@
 import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
-import { memo, useImperativeHandle, useInsertionEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import {
+  memo,
+  useEffect,
+  useImperativeHandle,
+  useInsertionEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -24,7 +32,7 @@ import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
 import type { FormRef } from './FormRef.ts';
-import { deriveState, initialState } from './formState.ts';
+import { deriveState, initialState, isDevelopment } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 
 /** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
@@ -47,11 +55,11 @@ export interface FormProps<
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<Uninferred<T>, S, F>;
-  /** The form's data, like `value` on an `<input>`: the form takes it, filled in with the schema's defaults, on mount
-   * and again whenever it is passed a value it has not seen, which is one that is neither its current data nor the
-   * value of the render before. In between, it holds the user's edits and reports each through `onChange`; passing
-   * each value back in as `onChange` reports it is free, since the form recognizes its own data. Pass
-   * `initialFormData` instead for a value created anew on every render, so a re-render does not put it back.
+  /** Another name for `initialFormData`, kept so that a form written for v6 keeps working, and taken over it when both
+   * are passed: the seed of the form's data, read when the form mounts and when `reset()` is called. The form owns its
+   * data after that, so passing back what `onChange` reported changes nothing, and passing another value is ignored,
+   * with a warning in development. To show other data, remount the form with a `key`, or call
+   * `setFieldValue('', data)` on its ref.
    */
   formData?: T;
   /** The seed of the form's data, like `defaultValue` on an `<input>`: read when the form mounts and when `reset()` is
@@ -235,13 +243,8 @@ export interface FormState<
    * changes made since
    */
   formData?: T;
-  /** The `formData` prop as the derivation last saw it, compared by identity, so that a value the form has taken or
-   * handed out already is not taken again: a parent that has not rendered since an edit still passes the one before
-   * it, as does one that stores no edits at all
-   */
-  formDataProp?: T;
-  /** Whether there is data to live-validate when a prop changes: the props handed the form data when it last took
-   * some, rather than leaving it to the schema's defaults
+  /** Whether there is data to live-validate when a prop changes: the props seeded the form with data, rather than
+   * leaving it to the schema's defaults
    */
   isDataPassed: boolean;
   /** The current list of errors for the form, includes `extraErrors` */
@@ -340,6 +343,12 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     model.committed(props, state, published);
   });
   useInsertionEffect(() => model.mounted(), [model]);
+  const { formData: formDataProp } = props;
+  useEffect(() => {
+    if (isDevelopment) {
+      model.warnIfFormDataIgnored(formDataProp);
+    }
+  }, [model, formDataProp]);
   useImperativeHandle(ref, () => model.handle, [model]);
 
   const {
