@@ -22,6 +22,7 @@ import {
   createFormComponent,
   createFormRef,
   delayPromise,
+  elementOf,
   errorListMessages,
   expectToHaveBeenCalledWithFormData,
   fieldErrorsById,
@@ -220,7 +221,7 @@ describe('Live validation onBlur', () => {
     it('does not validate: the errors still wait for a blur', async () => {
       const { container } = render(<ReplacingParent />);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
 
@@ -234,7 +235,7 @@ describe('Live validation onBlur', () => {
       const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
       const { container } = render(<ReplacingParent extraErrors={extraErrors} />);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(errorListMessages(container)).toEqual(['.name from the server']);
     });
@@ -243,7 +244,7 @@ describe('Live validation onBlur', () => {
       const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
       const { container } = render(<ReplacingParent liveValidate='onChange' extraErrors={extraErrors} />);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(errorListMessages(container)).toEqual([
         '.name must NOT have fewer than 8 characters',
@@ -275,7 +276,7 @@ describe('Live validation onBlur', () => {
       }
       const { container } = render(<RestylingParent />);
 
-      await user.click(container.querySelector('button')!);
+      await user.click(elementOf(container, 'button'));
 
       expect(fieldErrorsById(container)).toEqual({ root_name: ['from the server'] });
     });
@@ -1153,7 +1154,7 @@ describe('Deriving state from changed props', () => {
   it('does not validate untouched data when a prop that takes no part in validation changes', async () => {
     const { container } = render(<Parent steps={[{ formContext: { n: 1 } }, { formContext: { n: 2 } }]} />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
   });
@@ -1161,7 +1162,7 @@ describe('Deriving state from changed props', () => {
   it('re-validates unchanged data when a prop that takes part in validation changes', async () => {
     const { container } = render(<Parent steps={[{ transformErrors: identity }, { transformErrors: alsoIdentity }]} />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     expect(container.querySelector('.error-detail li')).toHaveTextContent('must NOT have fewer than 8 characters');
   });
@@ -1186,7 +1187,7 @@ describe('Deriving state from changed props', () => {
     }
     const { container } = render(<Unseeded />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     expect(container.querySelector('output')).toHaveTextContent('1');
     expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
@@ -1205,9 +1206,9 @@ describe('Deriving state from changed props', () => {
     );
     expect(container.querySelector('.error-detail li')).toHaveTextContent('from the server');
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
     expect(container.querySelectorAll('.error-detail li')).toHaveLength(2);
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
     expect(messages).toEqual(['must NOT have fewer than 8 characters']);
@@ -1217,7 +1218,7 @@ describe('Deriving state from changed props', () => {
     const extraErrors: ErrorSchema = { name: { __errors: ['from the server'] } };
     const { container } = render(<Parent steps={[{ extraErrors }, { extraErrors, className: 'x' }]} />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     const messages = [...container.querySelectorAll('.error-detail li')].map((li) => li.textContent);
     expect(messages).toEqual(['from the server']);
@@ -1247,7 +1248,7 @@ describe('Deriving state from changed props', () => {
     const { container } = render(<MergeParent />);
     expect(container.querySelector('label')).toHaveTextContent('A1');
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
 
     expect(container.querySelector('label')).toHaveTextContent('A2');
   });
@@ -1300,7 +1301,7 @@ describe('a form whose customMergeAllOf changes', () => {
     }
     const { container } = render(<MergeParent />);
 
-    await user.click(container.querySelector('button')!);
+    await user.click(elementOf(container, 'button'));
     await user.click(container.querySelector('#root_a')!);
     await user.tab();
 

@@ -314,14 +314,14 @@ describe('form data ownership', () => {
         <Form ref={ref} schema={withDefault} validator={validator} formData={{ a: 'x' }} onChange={onChange} />,
       );
       await act(async () => {
-        ref.current!.validateForm();
+        handleOf(ref).validateForm();
       });
       expect(container.querySelectorAll('.error-detail li')).toHaveLength(1);
-      act(() => ref.current!.setFieldValue('a', 'edited'));
+      act(() => handleOf(ref).setFieldValue('a', 'edited'));
       onChange.mockClear();
 
       act(() => {
-        ref.current!.reset();
+        handleOf(ref).reset();
       });
 
       expect(container.querySelectorAll('.error-detail li')).toHaveLength(0);
@@ -346,7 +346,7 @@ describe('form data ownership', () => {
       );
 
       act(() => {
-        ref.current!.reset();
+        handleOf(ref).reset();
       });
 
       expect(container.querySelector('.error-detail li')).toHaveTextContent('from the server');
@@ -389,7 +389,7 @@ describe('form data ownership', () => {
             <button
               type='button'
               onClick={() => {
-                ref.current!.reset();
+                handleOf(ref).reset();
                 setData({ a: 'replaced' });
               }}
             >
@@ -410,7 +410,7 @@ describe('form data ownership', () => {
       }
       const { container } = render(<Parent />);
       await act(async () => {
-        ref.current!.validateForm();
+        handleOf(ref).validateForm();
       });
       expect(container.querySelectorAll('.error-detail li')).toHaveLength(1);
 
@@ -562,12 +562,12 @@ describe('form data ownership', () => {
       );
 
       expect(onChange).not.toHaveBeenCalled();
-      expect(ref.current!.getFormData()).toEqual({ a: 'A', b: 'seed' });
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'A', b: 'seed' });
     });
 
     it('keeps its data across an unrelated prop change and a new initialFormData', async () => {
       const { node, rerender } = createFormComponent({ schema, initialFormData: { a: 'own' } });
-      await user.clear(node.querySelector('#root_a')!);
+      await user.clear(input(node, 'root_a'));
       await user.paste('edited');
 
       rerender({ schema, initialFormData: { a: 'own' }, className: 'other' });
@@ -579,7 +579,7 @@ describe('form data ownership', () => {
 
     it('a formData passed later replaces the seed and the edits made on it', async () => {
       const { node, rerender } = createFormComponent({ schema, initialFormData: { a: 'own' } });
-      await user.clear(node.querySelector('#root_a')!);
+      await user.clear(input(node, 'root_a'));
       await user.paste('edited');
 
       rerender({ schema, initialFormData: { a: 'own' }, formData: { a: 'late' } });
@@ -594,13 +594,13 @@ describe('form data ownership', () => {
         schema: withDefault,
         initialFormData: { b: 'one' },
       });
-      await user.clear(node.querySelector('#root_b')!);
+      await user.clear(input(node, 'root_b'));
       await user.paste('edited');
       rerender({ ref, schema: withDefault, initialFormData: { b: 'two' } });
       onChange.mockClear();
 
       act(() => {
-        ref.current!.reset();
+        handleOf(ref).reset();
       });
 
       expect(node.querySelector('#root_a')).toHaveValue('A');
@@ -616,7 +616,7 @@ describe('form data ownership', () => {
       rerender({ ref, schema: withDefault, initialFormData: { b: 'kept' } });
 
       expect(node.querySelector('#root_a')).toHaveValue('A');
-      expect(ref.current!.getFormData()).toEqual({ a: 'A', b: 'kept' });
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'A', b: 'kept' });
       expect(onChange).not.toHaveBeenCalled();
     });
   });
@@ -662,8 +662,8 @@ describe('form data ownership', () => {
       const { container } = render(<PolicyParent ref={ref} log={log} />);
 
       await act(async () => {
-        ref.current!.setFieldValue('a', 'first');
-        ref.current!.setFieldValue('b', 'second');
+        handleOf(ref).setFieldValue('a', 'first');
+        handleOf(ref).setFieldValue('b', 'second');
       });
 
       // The second change builds on the first, which React has not rendered yet
@@ -744,7 +744,7 @@ describe('form data ownership', () => {
             onChange={(event) => {
               reported.push(event.formData);
               if (event.formData.a === 'forbidden') {
-                ref.current!.setFieldValue('a', data.a);
+                handleOf(ref).setFieldValue('a', data.a);
                 return;
               }
               setData(event.formData);
@@ -939,7 +939,7 @@ describe('form data ownership', () => {
               reported.push(edit);
               setData(edit);
               if (edit.a === 'first' && edit.b === '') {
-                ref.current!.setFieldValue('b', 'derived');
+                handleOf(ref).setFieldValue('b', 'derived');
               }
             }}
           />
@@ -948,7 +948,7 @@ describe('form data ownership', () => {
       const { container } = render(<ReentrantParent />);
 
       await act(async () => {
-        ref.current!.setFieldValue('a', 'first');
+        handleOf(ref).setFieldValue('a', 'first');
       });
 
       expect(reported).toEqual([
@@ -993,15 +993,15 @@ describe('form data ownership', () => {
       const ref = createFormRef();
       const { rerender } = render(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} />);
       await act(async () => {
-        ref.current!.setFieldValue('a', 'x');
-        ref.current!.setFieldValue('b', 'y');
+        handleOf(ref).setFieldValue('a', 'x');
+        handleOf(ref).setFieldValue('b', 'y');
       });
-      expect(ref.current!.getFormData()).toEqual({ a: 'x', b: 'y' });
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'x', b: 'y' });
       const onChange = vi.fn();
       rerender(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} onChange={onChange} />);
 
       await act(async () => {
-        ref.current!.setFieldValue('a', 'z');
+        handleOf(ref).setFieldValue('a', 'z');
       });
 
       expect(onChange).toHaveBeenCalledTimes(1);
@@ -1014,8 +1014,8 @@ describe('form data ownership', () => {
       render(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} onChange={onChange} />);
 
       await act(async () => {
-        ref.current!.setFieldValue('a', 'x');
-        ref.current!.setFieldValue('b', 'y');
+        handleOf(ref).setFieldValue('a', 'x');
+        handleOf(ref).setFieldValue('b', 'y');
       });
 
       expect(onChange).toHaveBeenCalledTimes(2);
@@ -1059,7 +1059,7 @@ describe('form data ownership', () => {
       await user.click(node.querySelector('#root_a')!);
       await user.paste('x');
 
-      expect(Object.isFrozen(ref.current!.getFormData())).toBe(true);
+      expect(Object.isFrozen(handleOf(ref).getFormData())).toBe(true);
     });
   });
 
@@ -1188,11 +1188,11 @@ describe('form data ownership', () => {
       const passed = createFormRef();
       const value = { a: 'parent' };
       render(<Form ref={passed} schema={schema} validator={validator} formData={value} onChange={noop} />);
-      expect(passed.current!.getFormData()).toBe(value);
+      expect(handleOf(passed).getFormData()).toBe(value);
 
       const owned = createFormRef();
       const { node } = createFormComponent({ ref: owned, schema, initialFormData: { a: 'seed' } });
-      await user.clear(node.querySelector('#root_a')!);
+      await user.clear(input(node, 'root_a'));
       await user.paste('edited');
       expect(owned.current!.getFormData()).toEqual({ a: 'edited' });
     });
@@ -1214,11 +1214,11 @@ describe('form data ownership', () => {
       );
 
       await act(async () => {
-        ref.current!.submit();
+        handleOf(ref).submit();
       });
 
       expect(onSubmit.mock.calls[0][0].formData).toEqual({ a: 'x' });
-      expect(ref.current!.getFormData()).toEqual({ a: 'x' });
+      expect(handleOf(ref).getFormData()).toEqual({ a: 'x' });
       expect(onChange).not.toHaveBeenCalled();
     });
   });
@@ -1391,8 +1391,8 @@ describe('operations in one tick', () => {
     const { onSubmit, getFormData } = createFormComponent({ ref, schema, initialFormData: { a: 'old' } });
 
     act(() => {
-      ref.current!.setFieldValue('a', 'new');
-      ref.current!.submit();
+      handleOf(ref).setFieldValue('a', 'new');
+      handleOf(ref).submit();
     });
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
@@ -1413,7 +1413,7 @@ describe('operations in one tick', () => {
     });
 
     const reported = await reportedBy(() => submitForm(node, user));
-    act(() => ref.current!.setFieldValue('a', 'new'));
+    act(() => handleOf(ref).setFieldValue('a', 'new'));
 
     expect(reported).toEqual([new Error('boom')]);
 
@@ -1428,8 +1428,8 @@ describe('operations in one tick', () => {
           type='button'
           id={`${props.id}-go`}
           onClick={() => {
-            ref.current!.setFieldValue('a', 'edited');
-            ref.current!.submit();
+            handleOf(ref).setFieldValue('a', 'edited');
+            handleOf(ref).submit();
           }}
         >
           go
@@ -1450,7 +1450,7 @@ describe('operations in one tick', () => {
     // The submit runs from the DOM event `submit()` dispatches, whose handler's error React reports to `window`
     expect(await reportedBy(() => user.click(screen.getByRole('button', { name: 'go' })))).toEqual([new Error('boom')]);
     expect(ref.current).not.toBeNull();
-    act(() => ref.current!.setFieldValue('a', 'later'));
+    act(() => handleOf(ref).setFieldValue('a', 'later'));
     expect(getFormData()).toEqual({ a: 'later' });
   });
 
@@ -1472,12 +1472,12 @@ describe('operations in one tick', () => {
     // The handle method validates in the caller's own call, so the throw reaches the caller
     expect(() =>
       act(() => {
-        ref.current!.setFieldValue('a', 'first');
-        ref.current!.setFieldValue('a', 'second');
+        handleOf(ref).setFieldValue('a', 'first');
+        handleOf(ref).setFieldValue('a', 'second');
       }),
     ).toThrow('boom');
     expect(ref.current).not.toBeNull();
-    act(() => ref.current!.setFieldValue('a', 'later'));
+    act(() => handleOf(ref).setFieldValue('a', 'later'));
     expect(getFormData()).toEqual({ a: 'later' });
   });
 
@@ -1611,7 +1611,7 @@ describe('a throwing callback', () => {
 
     expect(() => act(() => handleOf(ref).setFieldValue('a', 'first'))).toThrow('boom');
     expect(ref.current).not.toBeNull();
-    act(() => ref.current!.setFieldValue('a', 'later'));
+    act(() => handleOf(ref).setFieldValue('a', 'later'));
     expect(getFormData()).toEqual({ a: 'later' });
   });
 
@@ -1628,7 +1628,7 @@ describe('a throwing callback', () => {
 
     expect(await reportedBy(() => submitForm(node, user))).toEqual([new Error('boom')]);
     expect(ref.current).not.toBeNull();
-    act(() => ref.current!.setFieldValue('a', 'later'));
+    act(() => handleOf(ref).setFieldValue('a', 'later'));
     expect(getFormData()).toEqual({ a: 'later' });
   });
 
@@ -1652,7 +1652,7 @@ describe('a throwing callback', () => {
 
       expect(await reportedBy(() => submitForm(node, user))).toEqual([new Error('boom')]);
       expect(ref.current).not.toBeNull();
-      act(() => ref.current!.setFieldValue('a', 'later'));
+      act(() => handleOf(ref).setFieldValue('a', 'later'));
       expect(getFormData()).toEqual({ a: 'later' });
     });
 
@@ -1661,7 +1661,7 @@ describe('a throwing callback', () => {
 
       expect(() => act(() => handleOf(ref).validateForm())).toThrow('boom');
       expect(ref.current).not.toBeNull();
-      act(() => ref.current!.setFieldValue('a', 'later'));
+      act(() => handleOf(ref).setFieldValue('a', 'later'));
       expect(getFormData()).toEqual({ a: 'later' });
     });
   });

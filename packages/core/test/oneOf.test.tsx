@@ -19,6 +19,7 @@ import SelectWidget from '../src/components/widgets/SelectWidget.tsx';
 import {
   createFormComponent,
   createFormRef,
+  elementOf,
   getSelectedOptionValue,
   handleOf,
   setupConsoleWarnSuppression,
@@ -4406,7 +4407,7 @@ describe('oneOf', () => {
     });
     refuses = true;
 
-    await user.selectOptions(node.querySelector('select')!, 'Rejected');
+    await user.selectOptions(elementOf(node, 'select'), 'Rejected');
 
     expect(handleOf(ref).getFormData()).toEqual({ status: { by: 'me' } });
     expect(node.querySelector('select')).toHaveValue('0');

@@ -26,7 +26,16 @@ export function handleOf<T>(ref: RefObject<FormRef<T> | null>): FormRef<T> {
   return ref.current;
 }
 
-export function input(container: HTMLElement, id: string) {
+/** The first element `selector` matches in `container`, failing the test when there is none */
+export function elementOf(container: ParentNode, selector: string) {
+  const element = container.querySelector(selector);
+  if (!element) {
+    throw new Error(`Nothing matches ${selector}`);
+  }
+  return element;
+}
+
+export function input(container: ParentNode, id: string) {
   const element = container.querySelector(`#${id}`);
   if (!(element instanceof HTMLInputElement)) {
     throw new Error(`There is no input #${id}`);

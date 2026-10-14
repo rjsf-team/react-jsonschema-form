@@ -21,6 +21,7 @@ import Form from '../src/index.ts';
 import {
   createFormComponent,
   createFormRef,
+  elementOf,
   errorListMessages,
   fieldErrorsById,
   handleOf,
@@ -138,7 +139,7 @@ describe('Error state consistency when deriving from new props', () => {
     await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'x');
     await user.click(container.querySelector('button')!);
 
-    expect(container.querySelector<HTMLInputElement>('#root_name')!.value).toBe('shortx');
+    expect(input(container, 'root_name').value).toBe('shortx');
     expect(fieldErrorsById(container)).toEqual({
       root_name: ['must NOT have fewer than 8 characters', 'from the server'],
     });
@@ -328,7 +329,7 @@ describe('Error state consistency when deriving from new props', () => {
   it('keeps a root-path raise across a later prop change', async () => {
     const { container } = render(<RestylingParent />);
 
-    await submitForm(container.querySelector('form')!, user);
+    await submitForm(elementOf(container, 'form'), user);
     expect(fieldErrorsById(container)).toEqual({ root_name: ['must NOT have fewer than 8 characters'] });
 
     // What a custom root `Field` hands to `onChange`: like a raise at any other path, it replaces every error below it
@@ -507,7 +508,7 @@ describe('Error state consistency when deriving from new props', () => {
       />,
     );
 
-    await submitForm(container.querySelector('form')!, user);
+    await submitForm(elementOf(container, 'form'), user);
     // `FallbackField` clearing the errors of the value its type change replaced
     await raise((field) => field.onChange('a', toFieldPath('street', toFieldPath('addr')), {}));
     // With no validator error left at `addr`, this is a custom error, which a later validation pass keeps
@@ -534,7 +535,7 @@ describe('Error state consistency when deriving from new props', () => {
       return Array.from(container.querySelectorAll('input'), (input) => input.value);
     }
     async function submitAndMoveFirstItemDown(container: HTMLElement) {
-      await submitForm(container.querySelector('form')!, user);
+      await submitForm(elementOf(container, 'form'), user);
       expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
       await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
     }
@@ -742,7 +743,7 @@ describe('Error state consistency when deriving from new props', () => {
       }
       const { container, rerender } = render(<EchoingArrayParent />);
 
-      await submitForm(container.querySelector('form')!, user);
+      await submitForm(elementOf(container, 'form'), user);
       expect(fieldErrorsById(container)).toEqual({ root_arr_0: ['must NOT have fewer than 3 characters'] });
       // The echo hands the form's own data back, so nothing is replaced and the moved errors stay where they went
       await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
@@ -771,7 +772,7 @@ describe('Error state consistency when deriving from new props', () => {
       const { container, rerender } = render(<Parent />);
       const ownErrors = { [id]: ['must NOT have fewer than 4 items'] };
 
-      await submitForm(container.querySelector('form')!, user);
+      await submitForm(elementOf(container, 'form'), user);
       expect(fieldErrorsById(container)).toEqual(ownErrors);
       await user.click(container.querySelectorAll<HTMLButtonElement>('.rjsf-array-item-move-down')[0]);
       expect(fieldErrorsById(container)).toEqual(ownErrors);
@@ -796,10 +797,10 @@ describe('Error state consistency when deriving from new props', () => {
         />,
       );
       const ownErrors = { root: ['must NOT have fewer than 4 items'] };
-      await submitForm(container.querySelector('form')!, user);
+      await submitForm(elementOf(container, 'form'), user);
       expect(fieldErrorsById(container)).toEqual(ownErrors);
 
-      await user.click(container.querySelector(button)!);
+      await user.click(elementOf(container, button));
 
       expect(fieldErrorsById(container)).toEqual(ownErrors);
     });
@@ -817,7 +818,7 @@ describe('Error state consistency when deriving from new props', () => {
     }
     const { container, rerender } = render(<Parent extraErrors={arrayServerErrors} />);
 
-    await submitForm(container.querySelector('form')!, user);
+    await submitForm(elementOf(container, 'form'), user);
     expect(errorListMessages(container)).toEqual(['.arr.0 must NOT have fewer than 3 characters', '.arr.2 server']);
 
     // The reorder moves only the errors the form holds: `server` stays the prop's, at the index the parent gave it
@@ -872,7 +873,7 @@ describe('Error state consistency when deriving from new props', () => {
       }
       const { container, rerender } = render(<Parent extraErrors={addrServerErrors} />);
 
-      await submitForm(container.querySelector('form')!, user);
+      await submitForm(elementOf(container, 'form'), user);
       expect(errorListMessages(container)).toEqual(listed);
 
       await user.click(container.querySelector(`#${optionalControlsId('root_addr', 'Remove')}`)!);
@@ -1210,7 +1211,7 @@ describe('Error state consistency when deriving from new props', () => {
     );
 
     await raise((field) => field.onChange('a', streetPath, { __errors: [minLengthError] }));
-    await submitForm(container.querySelector('form')!, user);
+    await submitForm(elementOf(container, 'form'), user);
     const street: ErrorSchema<string> | undefined = rootField().errorSchema?.addr?.street;
     expect(street).toEqual({ __errors: [minLengthError] });
     await raise((field) => field.onChange('a', streetPath, street));
@@ -1270,7 +1271,7 @@ describe('Error state consistency when deriving from new props', () => {
       />,
     );
 
-    await submitForm(container.querySelector('form')!, user);
+    await submitForm(elementOf(container, 'form'), user);
     expect(errorListMessages(container).filter((stack) => stack === '.other from the server')).toHaveLength(1);
 
     await user.type(container.querySelector<HTMLInputElement>('#root_name')!, 'y');
@@ -1550,7 +1551,7 @@ describe('Error state consistency when deriving from new props', () => {
       }
       const { container } = render(<ClearingParent />);
 
-      await submitForm(container.querySelector('form')!, user);
+      await submitForm(elementOf(container, 'form'), user);
       expect(fieldErrorsById(container)).toEqual({ root_foo_bar: [tooShort] });
       await user.click(screen.getByRole('button', { name: 'replace' }));
       expect(fieldErrorsById(container)).toEqual({});
