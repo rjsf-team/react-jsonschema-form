@@ -25,7 +25,7 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
+import { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
