@@ -6,31 +6,21 @@ import MultiSchemaFieldTemplate from '../src/templates/MultiSchemaFieldTemplate/
 const registry = getTestRegistry({});
 
 describe('MultiSchemaFieldTemplate', () => {
-  test('lays out a row for the selector it is given', () => {
+  // `MultiSchemaField` gives it no selector while an optional field has no data yet (#5401)
+  test.each([
+    ['a row for the selector it is given', <select key='selector' aria-label='Option' />, 2],
+    ['no row for a selector it is not given', undefined, 1],
+  ])('lays out %s', (_, selector, rows) => {
     const { container } = render(
       <MultiSchemaFieldTemplate
-        selector={<select aria-label='Option' />}
+        selector={selector}
         optionSchemaField={<span>option</span>}
         schema={{}}
         registry={registry}
       />,
     );
 
-    expect(container.firstElementChild?.children).toHaveLength(2);
-  });
-
-  // `MultiSchemaField` gives it none while an optional field has no data yet (#5401)
-  test('lays out no row for a selector it is not given', () => {
-    const { container } = render(
-      <MultiSchemaFieldTemplate
-        selector={undefined}
-        optionSchemaField={<span>option</span>}
-        schema={{}}
-        registry={registry}
-      />,
-    );
-
-    expect(container.firstElementChild?.children).toHaveLength(1);
-    expect(container.firstElementChild?.firstElementChild).toHaveTextContent('option');
+    expect(container.firstElementChild?.children).toHaveLength(rows);
+    expect(container.firstElementChild?.lastElementChild).toHaveTextContent('option');
   });
 });
