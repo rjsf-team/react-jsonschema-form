@@ -2282,6 +2282,43 @@ describe('oneOf', () => {
     });
   });
 
+  describe('the selector of a required field', () => {
+    const recordSelectWidget = () => {
+      const selectorProps = vi.fn<(props: WidgetProps) => void>();
+      function RecordingSelectWidget(props: WidgetProps) {
+        if (props.name?.endsWith('__oneof_select')) {
+          selectorProps(props);
+        }
+        return <SelectWidget {...props} />;
+      }
+      return { selectorProps, RecordingSelectWidget };
+    };
+    const pets = (required: string[]): RJSFSchema => ({
+      type: 'object',
+      required,
+      properties: {
+        pet: {
+          oneOf: [
+            { title: 'Cat', type: 'string' },
+            { title: 'Dog', type: 'number' },
+          ],
+        },
+      },
+    });
+
+    it.each([
+      ['the schema requires it', pets(['pet']), {}, true],
+      ['its ui:required is true', pets([]), { pet: { 'ui:required': true } }, true],
+      ['it is optional', pets([]), {}, false],
+    ])('is told it is required when %s (#5527)', (_, schema, uiSchema, required) => {
+      const { selectorProps, RecordingSelectWidget } = recordSelectWidget();
+
+      createFormComponent({ schema, uiSchema, widgets: { SelectWidget: RecordingSelectWidget } });
+
+      expect(selectorProps.mock.lastCall?.[0]?.required).toBe(required);
+    });
+  });
+
   describe('OpenAPI discriminator support', () => {
     const schema: RJSFSchema = {
       type: 'object',
