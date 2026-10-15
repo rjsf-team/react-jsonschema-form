@@ -37,16 +37,21 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
   const { schemaUtils } = registry;
   const rootSchema = schemaUtils.getRootSchema();
   const list = useMemo(() => options && optionListKey<S>(options, rootSchema), [options, rootSchema]);
-  const readStored = () => (list === undefined ? undefined : uiState.selection(fieldPath, list));
-  const selection = useSyncExternalStore(
+  // Only the index is subscribed to: the data a selection holds for changes as the form commits, without changing the
+  // option shown for the data rendered, and a snapshot that changed in the commit would have the field render again
+  const readIndex = () => (list === undefined ? undefined : uiState.selection(fieldPath, list)?.index);
+  const storedIndex = useSyncExternalStore(
     list === undefined ? noSubscription : uiState.subscribe,
-    readStored,
-    readStored,
+    readIndex,
+    readIndex,
   );
-  const selectedOption = useMemo(
-    () => (options ? shownOption<T, S, F>(schemaUtils, selection, options, formData, discriminatorField) : -1),
-    [options, selection, formData, schemaUtils, discriminatorField],
-  );
+  const selectedOption = useMemo(() => {
+    if (!options) {
+      return -1;
+    }
+    const selection = list === undefined || storedIndex === undefined ? undefined : uiState.selection(fieldPath, list);
+    return shownOption<T, S, F>(schemaUtils, selection, options, formData, discriminatorField);
+  }, [options, list, storedIndex, uiState, fieldPath, formData, schemaUtils, discriminatorField]);
   // What the last committed render showed, which the handlers record: they run after it, and read it rather than close
   // over it so that a field's children keep the handlers they were given while the data changes
   const shown = useRef({ index: selectedOption, data: formData });
@@ -83,7 +88,8 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
  * form's own changes leave at the field, so neither an edit inside the field nor a parent declining a switch or an edit
  * changes it. Other data, such as a parent's new `formData`, a reset, or a parent answering a switch with data of its
  * own, is matched again, with the selection preferred where it fits the data as well as any other option, and so is
- * the data after it until the user switches or edits inside the field, which holds the option then shown.
+ * the data after it until the user switches or edits inside the field, which holds the option then shown. Data holding
+ * a value for the declared discriminator is always matched, so an edit to the discriminator switches.
  *
  * Outside a `Form` the selection is kept by the outermost `SchemaField`, or the calling component when there is none,
  * and nothing records the data a switch or an edit leaves, so the data rendered after one counts as arriving from

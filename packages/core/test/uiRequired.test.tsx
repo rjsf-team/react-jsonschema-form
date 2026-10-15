@@ -4,7 +4,7 @@ import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
 import { useOptionSelection } from '../src/index.ts';
-import { describeOwnerships, submitForm } from './testUtils.tsx';
+import { describeOwnerships, elementOf, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -160,7 +160,7 @@ describeOwnerships('ui:required enforcement', (createFormComponent) => {
         fields: { AnyOfField: SecondOption },
         initialFormData: { thing: { aField: 'a' } },
       });
-      await user.click(node.querySelector('#second')!);
+      await user.click(elementOf(node, '#second'));
       expect(node.querySelector('#second')).toHaveTextContent('1');
 
       await submitForm(node, user, true);
@@ -184,7 +184,7 @@ describeOwnerships('ui:required enforcement', (createFormComponent) => {
       await submitForm(node, user, true);
       expect(onSubmit).toHaveBeenCalledTimes(1);
 
-      await user.click(node.querySelector('#root_child-button')!);
+      await user.click(elementOf(node, '#root_child-button'));
       await submitForm(node, user, true);
 
       expect(onSubmit).toHaveBeenCalledTimes(1);

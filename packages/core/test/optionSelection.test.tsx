@@ -7,19 +7,18 @@ import { userEvent } from '@testing-library/user-event';
 
 import Form, { useOptionSelection } from '../src/index.ts';
 import { getTestRegistry } from '../src/testing.ts';
-import { createFormComponent, createFormRef, handleOf, submitForm } from './testUtils.tsx';
+import {
+  createFormComponent,
+  createFormRef,
+  elementOf,
+  errorListMessages,
+  handleOf,
+  submitForm,
+} from './testUtils.tsx';
 
 const user = userEvent.setup();
 
 const ids = (node: ParentNode, selector = '[id]') => [...node.querySelectorAll(selector)].map((element) => element.id);
-
-function elementOf(node: ParentNode, selector: string) {
-  const element = node.querySelector(selector);
-  if (!element) {
-    throw new Error(`There is no ${selector}`);
-  }
-  return element;
-}
 
 function selectOf(node: ParentNode, id: string) {
   const select = node.querySelector(`#${id}`);
@@ -240,6 +239,82 @@ describe('option selection as form state', () => {
 
     expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('1');
     expect(node.querySelector('#root_o_b')).toBeInTheDocument();
+  });
+
+  describe('an edit inside a held option whose data matches only another option', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        { title: 'A', properties: { a: { type: 'string' } } },
+        { title: 'B', properties: { a: { type: 'string', maxLength: 2 }, b: { type: 'string' } } },
+      ],
+    };
+
+    it('keeps the data of the option shown when omitting extra data on change', async () => {
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: {},
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+      await user.type(elementOf(node, '#root_b'), 'z');
+
+      await user.type(elementOf(node, '#root_a'), 'abc');
+      await user.type(elementOf(node, '#root_b'), 'q');
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      expect(onChange.mock.lastCall?.[0].formData).toEqual({ a: 'abc', b: 'zq' });
+    });
+
+    it('enforces ui:required on the option shown under live validation', async () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { b: { 'ui:required': true } },
+        initialFormData: {},
+        liveValidate: 'onChange',
+      });
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+      await user.type(elementOf(node, '#root_a'), 'abc');
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      expect(errorListMessages(node)).toEqual([".b must have required property 'b'"]);
+    });
+  });
+
+  describe('an edit to the property the options are told apart by', () => {
+    const optionsBy = (discriminator: RJSFSchema): RJSFSchema => ({
+      type: 'object',
+      properties: { kind: { type: 'string', enum: ['a', 'b'] } },
+      required: ['kind'],
+      ...discriminator,
+      oneOf: [
+        { title: 'A', properties: { kind: { const: 'a' }, x: { type: 'string' } } },
+        { title: 'B', properties: { kind: { const: 'b' }, y: { type: 'string' } } },
+      ],
+    });
+
+    it('switches to the option the declared discriminator names, as on 6.11.0', async () => {
+      const { node } = createFormComponent({
+        schema: optionsBy({ discriminator: { propertyName: 'kind' } }),
+        initialFormData: { kind: 'a' },
+      });
+
+      await user.selectOptions(selectOf(node, 'root_kind'), 'b');
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      expect(ids(node, 'input, select')).toEqual(['root_kind', 'root__oneof_select', 'root_kind', 'root_y']);
+    });
+
+    it('keeps the option shown without a declared discriminator, as typing inside it does', async () => {
+      const { node } = createFormComponent({ schema: optionsBy({}), initialFormData: { kind: 'a' } });
+
+      await user.selectOptions(selectOf(node, 'root_kind'), 'b');
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('0');
+      expect(ids(node, 'input, select')).toEqual(['root_kind', 'root__oneof_select', 'root_kind', 'root_x']);
+    });
   });
 
   it('moves the selections of array items with the items', async () => {

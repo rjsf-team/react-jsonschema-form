@@ -287,12 +287,14 @@ function mergeErrors<T>(
  *          for the root is the caller's to decide, which is what the separate parameter below is for.
  * @param formData - The form data to validate
  * @param [retrievedSchema] - An optionally pre-resolved schema to validate against instead of the context's `schema`
+ * @param [editedPath] - The path of the edit `formData` carries, if any, see `fieldStateOf()`
  */
 export function validateFormData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   context: RenderContext<T, S, F>,
   formData: T | undefined,
   retrievedSchema?: S,
+  editedPath?: FieldPathList,
 ): ValidationData<T> {
   const { schemaUtils, schema } = context;
   const { customValidate, transformErrors, uiSchema, formContext } = props;
@@ -334,7 +336,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     undefined,
     uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
     formContext ?? ({} as F),
-    fieldStateOf(context.uiState, schemaUtils),
+    fieldStateOf(context.uiState, schemaUtils, editedPath),
   );
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
 }
@@ -353,6 +355,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
  *          schema`, the `oneOf` miss) and may stand in only while it describes the data. Omitting extra data keeps
  *          that true, since the fields it drops are by definition not in the schema that selects the branch; a prop
  *          change does not, which is why the derivation passes it only when nothing that resolves it changed.
+ * @param [editedPath] - The path of the edit `formData` carries, if any, see `fieldStateOf()`
  * @returns - An object containing `errorSchema`, `errors`, `schemaValidationErrors` and `schemaValidationErrorSchema`
  */
 function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -361,8 +364,9 @@ function runLiveValidation<T, S extends StrictRJSFSchema, F extends FormContextT
   formData: T | undefined,
   customErrors?: ErrorSchema<T>,
   retrievedSchema?: S,
+  editedPath?: FieldPathList,
 ) {
-  const schemaValidation = validateFormData(props, context, formData, retrievedSchema);
+  const schemaValidation = validateFormData(props, context, formData, retrievedSchema, editedPath);
   const { errors: schemaValidationErrors, errorSchema: schemaValidationErrorSchema } = schemaValidation;
   const mergedErrors = mergeErrors(schemaValidation, props.extraErrors, customErrors);
   return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
@@ -1144,7 +1148,7 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     newFormData = context.schemaUtils.omitExtraData(
       context.schema,
       formData,
-      fieldStateOf(context.uiState, context.schemaUtils),
+      fieldStateOf(context.uiState, context.schemaUtils, path),
     );
   }
 
@@ -1154,7 +1158,7 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     const customErrors = ownErrorsAfterChange(current, change);
     next = {
       ...next,
-      ...runLiveValidation(props, context, newFormData, customErrors, context.retrievedSchema),
+      ...runLiveValidation(props, context, newFormData, customErrors, context.retrievedSchema, path),
       customErrors,
     };
   } else {
