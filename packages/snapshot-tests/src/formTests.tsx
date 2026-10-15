@@ -1505,14 +1505,14 @@ export function formTests(Form: ComponentType<FormProps>) {
       );
       expect(container.querySelectorAll('.my-field')).toHaveLength(1);
     });
-    test('a global required option does not mark a checkbox required (#5527)', () => {
+    test('a global required option does not mark a checkbox required', () => {
       const schema: RJSFSchema = { type: 'object', properties: { flag: { type: 'boolean', title: 'Flag' } } };
       const { container } = render(
         <Form schema={schema} uiSchema={{ 'ui:globalOptions': { required: true } }} validator={validator} />,
       );
       expect(container.querySelector('[required], [aria-required="true"]')).toBeNull();
     });
-    test('ui:definitions is not passed on to a root field (#5527)', () => {
+    test('ui:definitions is not passed on to a root field', () => {
       const { container } = render(
         <Form schema={{ type: 'string' }} uiSchema={{ 'ui:definitions': {} }} validator={validator} />,
       );

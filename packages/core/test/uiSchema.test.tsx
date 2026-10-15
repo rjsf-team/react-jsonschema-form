@@ -3244,7 +3244,7 @@ describe('uiSchema', () => {
       expect(onSubmit).toHaveBeenCalled();
     });
 
-    describe('a widget gets no options from the global required, ui:definitions or ui:globalOptions (#5527)', () => {
+    describe('a widget gets no options from the global required, ui:definitions or ui:globalOptions', () => {
       function optionsOf(widget: 'CheckboxWidget' | 'SelectWidget' | 'TextWidget', props: Partial<NoValFormProps>) {
         const seen: WidgetProps['options'][] = [];
         function SpyWidget({ options }: WidgetProps) {
@@ -3255,7 +3255,7 @@ describe('uiSchema', () => {
         return seen[seen.length - 1];
       }
 
-      it('a boolean field', () => {
+      it('a boolean field (#5527)', () => {
         const options = optionsOf('CheckboxWidget', {
           schema: { type: 'object', properties: { flag: { type: 'boolean' } } },
           uiSchema: { 'ui:globalOptions': { required: true, inline: true } },
@@ -3264,7 +3264,7 @@ describe('uiSchema', () => {
         expect(options).toHaveProperty('inline', true);
       });
 
-      it("an array field's multi-select", () => {
+      it("an array field's multi-select (#5527)", () => {
         const options = optionsOf('SelectWidget', {
           schema: {
             type: 'object',
@@ -3275,7 +3275,7 @@ describe('uiSchema', () => {
         expect(options).not.toHaveProperty('required');
       });
 
-      it("an anyOf field's option selector", () => {
+      it("an anyOf field's option selector (#5527)", () => {
         const options = optionsOf('SelectWidget', {
           schema: { type: 'object', properties: { pet: { anyOf: [{ type: 'string' }, { type: 'number' }] } } },
           uiSchema: { 'ui:globalOptions': { required: true } },
@@ -3283,12 +3283,12 @@ describe('uiSchema', () => {
         expect(options).not.toHaveProperty('required');
       });
 
-      it('a root field, which carries ui:definitions', () => {
+      it('a root field, which carries ui:definitions (#5527)', () => {
         const options = optionsOf('TextWidget', { uiSchema: { 'ui:definitions': {}, 'ui:placeholder': 'p' } });
         expect(options).not.toHaveProperty('definitions');
       });
 
-      it('a field LayoutGridField renders', () => {
+      it('a field LayoutGridField renders (#5527)', () => {
         const options = optionsOf('TextWidget', {
           schema: { type: 'object', properties: { foo: { type: 'string' } } },
           uiSchema: {

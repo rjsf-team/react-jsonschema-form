@@ -721,18 +721,33 @@ describe('SchemaField', () => {
     });
   });
 
-  describe('a $id names a field as ui:field does (#5391)', () => {
+  describe('a $id names a field as ui:field does', () => {
     function MyField() {
       return <div className='my-field' />;
     }
     const fields = { MyField };
     const anyOfSchema: RJSFSchema = { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] };
 
-    it.each<[string, RJSFSchema, UiSchema]>([
-      ['a $id', { $id: 'MyField', ...anyOfSchema }, {}],
-      ['a ui:field', anyOfSchema, { 'ui:field': 'MyField' }],
-      ['a ui:globalOptions.field', anyOfSchema, { 'ui:globalOptions': { field: 'MyField' } }],
-    ])('renders the field %s names once, beside the option selector', (_, schema, uiSchema) => {
+    it('renders the field a $id names beside a non-select anyOf, where it rendered nothing of the field (#5391)', () => {
+      const { node } = createFormComponent({
+        schema: { $id: 'MyField', type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] },
+        fields,
+      });
+
+      expect(node.querySelectorAll('.my-field')).toHaveLength(1);
+      expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+      expect(node.querySelectorAll('input#root')).toHaveLength(1);
+    });
+
+    it.each<{ spelling: string; schema: RJSFSchema; uiSchema: UiSchema; issue: string }>([
+      { spelling: 'a ui:field', schema: anyOfSchema, uiSchema: { 'ui:field': 'MyField' }, issue: '#5358' },
+      {
+        spelling: 'a ui:globalOptions.field',
+        schema: anyOfSchema,
+        uiSchema: { 'ui:globalOptions': { field: 'MyField' } },
+        issue: '#5358',
+      },
+    ])('renders the field $spelling names once, beside the option selector ($issue)', ({ schema, uiSchema }) => {
       const { node } = createFormComponent({ schema, uiSchema, fields });
 
       expect(node.querySelectorAll('.my-field')).toHaveLength(1);
@@ -740,11 +755,24 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll('input#root')).toHaveLength(1);
     });
 
-    it.each<[string, RJSFSchema, UiSchema]>([
-      ['a $id', { $id: 'MyField', ...anyOfSchema }, { 'ui:fieldReplacesAnyOrOneOf': true }],
-      ['a ui:field', anyOfSchema, { 'ui:field': 'MyField', 'ui:fieldReplacesAnyOrOneOf': true }],
-    ])('renders the field %s names in place of the options under ui:fieldReplacesAnyOrOneOf', (_, schema, uiSchema) => {
-      const { node } = createFormComponent({ schema, uiSchema, fields });
+    it('renders the field a $id names in place of the options under ui:fieldReplacesAnyOrOneOf (#5391)', () => {
+      const { node } = createFormComponent({
+        schema: { $id: 'MyField', ...anyOfSchema },
+        uiSchema: { 'ui:fieldReplacesAnyOrOneOf': true },
+        fields,
+      });
+
+      expect(node.querySelectorAll('.my-field')).toHaveLength(1);
+      expect(node.querySelector('#root__anyof_select')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root')).not.toBeInTheDocument();
+    });
+
+    it('renders the field a ui:field names in place of the options under ui:fieldReplacesAnyOrOneOf', () => {
+      const { node } = createFormComponent({
+        schema: anyOfSchema,
+        uiSchema: { 'ui:field': 'MyField', 'ui:fieldReplacesAnyOrOneOf': true },
+        fields,
+      });
 
       expect(node.querySelectorAll('.my-field')).toHaveLength(1);
       expect(node.querySelector('#root__anyof_select')).not.toBeInTheDocument();

@@ -1980,7 +1980,7 @@ describe('anyOf', () => {
     const uiSchema = {
       'ui:field': () => <div className='custom-field'>Custom field</div>,
     };
-    it('should be rendered once, beside the selected option, which renders its own field (#5391)', () => {
+    it('should be rendered once, beside the selected option, which renders its own field (#5358)', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll('.custom-field');
       expect(fields).toHaveLength(1);
