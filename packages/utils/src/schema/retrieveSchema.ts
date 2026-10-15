@@ -52,6 +52,8 @@ import buildPlan, {
   childSeeds,
   refDefinition,
   schemaFrom,
+  seedsAt,
+  tupleSeeds,
   withoutKeys,
 } from './graph/mergePlan.ts';
 import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePlan.ts';
@@ -196,11 +198,7 @@ function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds:
   return (
     node?.kind === 'schema' &&
     node.ref === undefined &&
-    node.allOf === undefined &&
-    node.if === undefined &&
-    node.dependencies === undefined &&
-    node.anyOf === undefined &&
-    node.oneOf === undefined
+    [ALL_OF_KEY, IF_KEY, DEPENDENCIES_KEY, ANY_OF_KEY, ONE_OF_KEY].every((keyword) => !Object.hasOwn(node.raw, keyword))
   );
 }
 
@@ -355,8 +353,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     Reflect.set(merged, PROPERTIES_KEY, {});
   } else if (isObject(properties)) {
     const entries = Object.entries(properties).map(([key, value]): [string, unknown] => {
-      const declared = plan.children.properties.get(key);
-      if (declared === undefined || (isObject(value) && isDecided(value))) {
+      const declared = seedsAt(plan, PROPERTIES_KEY, key);
+      if (declared.length === 0 || (isObject(value) && isDecided(value))) {
         return [key, value];
       }
       const { seeds: propertySeeds, edge } = childSeeds(plan, key);
@@ -402,20 +400,20 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     Reflect.set(
       merged,
       'items',
-      items.map((entry, index) => item(entry, plan.children.prefixItems[index], 'tupleItem')),
+      items.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem')),
     );
   } else {
-    Reflect.set(merged, 'items', item(items, plan.children.items, 'item'));
+    Reflect.set(merged, 'items', item(items, seedsAt(plan, ITEMS_KEY), 'item'));
   }
   const prefixItems: unknown = Reflect.get(merged, 'prefixItems');
   if (Array.isArray(prefixItems)) {
     Reflect.set(
       merged,
       'prefixItems',
-      prefixItems.map((entry, index) => item(entry, plan.children.prefixItems[index], 'tupleItem')),
+      prefixItems.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem')),
     );
   }
-  Reflect.set(merged, 'additionalItems', item(additionalItems, plan.children.additionalItems, 'item'));
+  Reflect.set(merged, 'additionalItems', item(additionalItems, seedsAt(plan, 'additionalItems'), 'item'));
   for (const keyword of OPTION_KEYWORDS) {
     const options = merged[keyword];
     if (Array.isArray(options)) {

@@ -1,21 +1,11 @@
 import {
-  ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
-  ANY_OF_KEY,
   DEFINITIONS_KEY,
-  DEPENDENCIES_KEY,
-  ELSE_KEY,
   ID_KEY,
-  IF_KEY,
-  ITEMS_KEY,
   JSON_SCHEMA_DRAFT_2019_09,
   JSON_SCHEMA_DRAFT_2020_12,
-  ONE_OF_KEY,
-  PATTERN_PROPERTIES_KEY,
-  PROPERTIES_KEY,
   REF_KEY,
   SCHEMA_KEY,
-  THEN_KEY,
 } from '../../constants.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import { isSubschemaKeyword, keywordShape, normalizeUri, resolveUri } from '../../schemaUri.ts';
@@ -50,18 +40,8 @@ export interface InvalidNode {
   readonly message: string;
 }
 
-/** A `patternProperties` entry: the pattern as written and the subschema keys matching it get */
-export interface PatternEdge {
-  readonly pattern: string;
-  readonly node: NodeId;
-}
-
-/** A `dependencies` entry: a list of names it makes required, or a subschema it merges in */
-export type DependencyEdge = { readonly required: readonly string[] } | { readonly schema: NodeId };
-
-/** An object subschema with its subschema-valued keywords parsed into edges. `raw` is the subschema itself, never a
- * copy, and every edge names the node its keyword's subschema parsed to; a keyword whose value is not a subschema
- * has no edge.
+/** An object subschema. `raw` is the subschema itself, never a copy; the nodes its subschema-valued keywords parsed to
+ * are looked up through `SchemaGraph.child()` and `SchemaGraph.subschemas()`.
  */
 export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   readonly kind: 'schema';
@@ -84,21 +64,6 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
    * `$ref` beside other keywords rather than replacing them
    */
   readonly conjunction?: NodeId;
-  readonly properties?: ReadonlyMap<string, NodeId>;
-  readonly patternProperties?: readonly PatternEdge[];
-  readonly additionalProperties?: NodeId;
-  readonly items?: NodeId;
-  /** `prefixItems`, or the tuple form of `items` */
-  readonly prefixItems?: readonly NodeId[];
-  readonly additionalItems?: NodeId;
-  readonly allOf?: readonly NodeId[];
-  readonly if?: NodeId;
-  readonly then?: NodeId;
-  readonly else?: NodeId;
-  readonly dependencies?: ReadonlyMap<string, DependencyEdge>;
-  readonly oneOf?: readonly NodeId[];
-  readonly anyOf?: readonly NodeId[];
-  readonly discriminator?: string;
 }
 
 export type SchemaNode<S extends StrictRJSFSchema = RJSFSchema> = BooleanNode | InvalidNode | ObjectNode<S>;
@@ -123,6 +88,14 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
   node(id: NodeId): SchemaNode<S>;
   /** The node first found at `pointer`, if one was */
   byPointer(pointer: string): NodeId | undefined;
+  /** The node the subschema `keyword` holds in the object node `id` parsed to, or the one it holds under `key` for a
+   * keyword holding a map or list of subschemas; undefined where it holds no subschema there
+   */
+  child(id: NodeId, keyword: string, key?: string): NodeId | undefined;
+  /** The nodes of the subschemas the map or list `keyword` holds in the object node `id`, by key, in the order they
+   * are written; a value that is not a subschema is left out
+   */
+  subschemas(id: NodeId, keyword: string): [string, NodeId][];
   /** The node parsed from the object subschema `raw`, if one was */
   byObject(raw: object): NodeId | undefined;
   /** The node `ref` resolves to from inside `from`, among those parsed, as a `ui:definitions` key is resolved */
@@ -164,6 +137,10 @@ function escapeToken(token: string): string {
   return token.replaceAll('~', '~0').replaceAll('/', '~1');
 }
 
+function childPointer(pointer: string, tokens: readonly string[]): string {
+  return `${pointer}/${tokens.map(escapeToken).join('/')}`;
+}
+
 function unescapeToken(token: string): string {
   return token.replaceAll('~1', '/').replaceAll('~0', '~');
 }
@@ -196,67 +173,15 @@ function isPureRef(raw: object): boolean {
 
 type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
-/** The edges of an object node, which its subschema-valued keywords parse to */
-type NodeEdges = Mutable<
-  Pick<
-    ObjectNode,
-    | 'properties'
-    | 'patternProperties'
-    | 'additionalProperties'
-    | 'items'
-    | 'prefixItems'
-    | 'additionalItems'
-    | 'allOf'
-    | 'if'
-    | 'then'
-    | 'else'
-    | 'dependencies'
-    | 'oneOf'
-    | 'anyOf'
-    | 'discriminator'
-  >
->;
-
-function listEdge(key: string, ids: NodeId[]): NodeEdges {
-  switch (key) {
-    case ALL_OF_KEY:
-      return { allOf: ids };
-    case ANY_OF_KEY:
-      return { anyOf: ids };
-    case ONE_OF_KEY:
-      return { oneOf: ids };
-    default:
-      // `prefixItems`, or the tuple form of `items`, the other keywords holding a list of subschemas
-      return { prefixItems: ids };
+/** The subschemas the keyword `key` holds as `value`, each with the pointer tokens leading to it from the schema
+ * holding the keyword; a boolean is read as a subschema wherever the keyword holds one
+ */
+function subschemaEntries(key: string, value: unknown): [string[], unknown][] {
+  const shape = keywordShape(key, value);
+  if ((shape === 'map' || shape === 'array') && typeof value === 'object' && value !== null) {
+    return Object.entries(value).map(([name, sub]) => [[key, name], sub]);
   }
-}
-
-function mapEdge(key: string, entries: [string, NodeId][]): NodeEdges {
-  if (key === PROPERTIES_KEY) {
-    return { properties: new Map(entries) };
-  }
-  return key === PATTERN_PROPERTIES_KEY
-    ? { patternProperties: entries.map(([pattern, node]) => ({ pattern, node })) }
-    : {};
-}
-
-function singleEdge(key: string, id: NodeId | undefined): NodeEdges {
-  switch (key) {
-    case ADDITIONAL_PROPERTIES_KEY:
-      return { additionalProperties: id };
-    case ITEMS_KEY:
-      return { items: id };
-    case 'additionalItems':
-      return { additionalItems: id };
-    case IF_KEY:
-      return { if: id };
-    case THEN_KEY:
-      return { then: id };
-    case ELSE_KEY:
-      return { else: id };
-    default:
-      return {};
-  }
+  return shape === 'single' || (typeof value === 'boolean' && isSubschemaKeyword(key)) ? [[[key], value]] : [];
 }
 
 interface WalkStart {
@@ -334,6 +259,33 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
 
   byObject(raw: object): NodeId | undefined {
     return this.objects.get(raw) ?? this.base?.byObject(raw);
+  }
+
+  child(id: NodeId, keyword: string, key?: string): NodeId | undefined {
+    const node = this.node(id);
+    if (node.kind !== 'schema') {
+      return undefined;
+    }
+    const value: unknown = Reflect.get(node.raw, keyword);
+    const entry = subschemaEntries(keyword, value).find(([tokens]) => tokens[1] === key);
+    if (entry === undefined) {
+      return undefined;
+    }
+    const [tokens, sub] = entry;
+    // A boolean has no identity, so it is the node parsed where the keyword holds it
+    if (typeof sub === 'boolean') {
+      return this.byPointer(childPointer(node.pointer, tokens));
+    }
+    return isObject(sub) ? this.byObject(sub) : undefined;
+  }
+
+  subschemas(id: NodeId, keyword: string): [string, NodeId][] {
+    const node = this.node(id);
+    const value: unknown = node.kind === 'schema' ? Reflect.get(node.raw, keyword) : undefined;
+    return subschemaEntries(keyword, value).flatMap(([[, key]]) => {
+      const child = key === undefined ? undefined : this.child(id, keyword, key);
+      return child === undefined ? [] : [[key, child]];
+    });
   }
 
   resolveRef(ref: string, from: NodeId = this.root): NodeId | undefined {
@@ -428,7 +380,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     } else {
       this.register(node);
     }
-    Object.assign(node, this.parseEdges(node));
+    this.visitChildren(node);
     if (stringKeyword(value, REF_KEY) !== undefined) {
       this.pendingRefs.push(node);
     }
@@ -449,57 +401,16 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     }
   }
 
-  private parseEdges(node: ObjectNode<S>): NodeEdges {
-    const child = (value: unknown, ...tokens: string[]) =>
-      this.visit(
-        value,
-        `${node.pointer}/${tokens.map(escapeToken).join('/')}`,
-        node.baseUri,
-        this.dataNodes.has(node.id),
-      );
-    const edges: NodeEdges = {};
+  /** Parses the subschemas `node` holds, in the order they are written, so every node gets the id and pointer of the
+   * place it is first found at
+   */
+  private visitChildren(node: ObjectNode<S>): void {
+    const data = this.dataNodes.has(node.id);
     for (const [key, value] of Object.entries(node.raw)) {
-      if (key === DEPENDENCIES_KEY && isObject(value)) {
-        edges.dependencies = new Map(
-          Object.entries(value).flatMap(([name, dependency]): [string, DependencyEdge][] => {
-            if (Array.isArray(dependency)) {
-              const required = dependency.filter((entry): entry is string => typeof entry === 'string');
-              return [[name, { required }]];
-            }
-            const schema = child(dependency, key, name);
-            return schema === undefined ? [] : [[name, { schema }]];
-          }),
-        );
-      } else if (Array.isArray(value)) {
-        if (keywordShape(key, value) === 'array') {
-          Object.assign(
-            edges,
-            listEdge(
-              key,
-              value.flatMap((sub, index) => child(sub, key, String(index)) ?? []),
-            ),
-          );
-        }
-      } else if (isObject(value)) {
-        const shape = keywordShape(key, value);
-        if (shape === 'map') {
-          const entries = Object.entries(value).flatMap(([name, sub]): [string, NodeId][] => {
-            const id = child(sub, key, name);
-            return id === undefined ? [] : [[name, id]];
-          });
-          Object.assign(edges, mapEdge(key, entries));
-        } else if (shape === 'single') {
-          Object.assign(edges, singleEdge(key, child(value, key)));
-        }
-      } else if (typeof value === 'boolean' && isSubschemaKeyword(key)) {
-        Object.assign(edges, singleEdge(key, child(value, key)));
+      for (const [tokens, sub] of subschemaEntries(key, value)) {
+        this.visit(sub, childPointer(node.pointer, tokens), node.baseUri, data);
       }
     }
-    const discriminator: unknown = Reflect.get(node.raw, 'discriminator');
-    if (isObject(discriminator) && typeof discriminator.propertyName === 'string') {
-      edges.discriminator = discriminator.propertyName;
-    }
-    return edges;
   }
 
   /** Resolves every `$ref` parsed so far, which parses the subschemas they reach outside the walk and the `$ref`s
@@ -536,13 +447,13 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     }
   }
 
-  /** Adds the nodes `conjunction` names for `node`: the `allOf` of `node` without its `$ref`, whose edges are its own,
-   * and of a node holding only the `$ref`. They are placed under a pointer token no JSON pointer has, as
+  /** Adds the nodes `conjunction` names for `node`: the `allOf` of `node` without its `$ref`, whose subschemas are its
+   * own, and of a node holding only the `$ref`. They are placed under a pointer token no JSON pointer has, as
    * `EXTERNAL_POINTER` is.
    */
   private addConjunction(node: ObjectNode<S>): NodeId {
     const pointer = `${node.pointer}/~conjunction`;
-    const siblings: ObjectNode<S> = {
+    const siblings = this.addSynthetic({
       ...node,
       id: this.nextId(),
       pointer: `${pointer}/0`,
@@ -550,9 +461,17 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       ref: undefined,
       conjunction: undefined,
       pureRef: false,
-    };
-    this.add(siblings);
-    const reference: ObjectNode<S> = {
+    });
+    // The booleans the copy holds are the ones `node` holds, found under its pointer
+    for (const [key, value] of Object.entries(siblings.raw)) {
+      for (const [tokens, sub] of subschemaEntries(key, value)) {
+        const known = typeof sub === 'boolean' ? this.pointers.get(childPointer(node.pointer, tokens)) : undefined;
+        if (known !== undefined) {
+          this.pointers.set(childPointer(siblings.pointer, tokens), known);
+        }
+      }
+    }
+    const reference = this.addSynthetic({
       kind: 'schema',
       id: this.nextId(),
       pointer: `${pointer}/1`,
@@ -560,19 +479,22 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       raw: schemaFrom(node.raw, { [REF_KEY]: refOf(node.raw) }),
       pureRef: true,
       ref: node.ref,
-    };
-    this.add(reference);
-    const conjunction: ObjectNode<S> = {
+    });
+    return this.addSynthetic({
       kind: 'schema',
       id: this.nextId(),
       pointer,
       baseUri: node.baseUri,
       raw: schemaFrom(node.raw, { [ALL_OF_KEY]: [siblings.raw, reference.raw] }),
       pureRef: false,
-      allOf: [siblings.id, reference.id],
-    };
-    this.add(conjunction);
-    return conjunction.id;
+    }).id;
+  }
+
+  private addSynthetic(node: ObjectNode<S>): ObjectNode<S> {
+    this.add(node);
+    this.objects.set(node.raw, node.id);
+    this.objectNodes.set(node.id, node);
+    return node;
   }
 
   /** Follows the chain of `$ref`s from `first`, comparing them as written, and returns the error entering it throws

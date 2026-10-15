@@ -54,55 +54,60 @@ describe('parseSchemaGraph()', () => {
       expect(root.literalId).toBe('literal-id');
       expect(root.pureRef).toBe(false);
     });
-    it('parses each subschema-valued keyword into an edge, and skips values that are not subschemas', () => {
-      expect([...(root.properties ?? [])].map(([name, id]) => [name, graph.node(id).pointer])).toEqual([
+    const pointers = (entries: [string, NodeId][]) => entries.map(([key, id]) => [key, graph.node(id).pointer]);
+    const childAt = (keyword: string, key?: string) => graph.node(graph.child(root.id, keyword, key) ?? -1);
+    it('looks up the node each subschema-valued keyword holds, and none for values that are not subschemas', () => {
+      expect(pointers(graph.subschemas(root.id, 'properties'))).toEqual([
         ['a', '/properties/a'],
         ['b', '/properties/b'],
       ]);
-      expect(graph.node(root.properties?.get('b') ?? -1)).toMatchObject({ kind: 'boolean', value: true });
-      expect(root.patternProperties?.map(({ pattern, node }) => [pattern, graph.node(node).pointer])).toEqual([
-        ['^x', '/patternProperties/^x'],
+      expect(childAt('properties', 'b')).toMatchObject({ kind: 'boolean', value: true });
+      expect(graph.child(root.id, 'properties', 'c')).toBeUndefined();
+      expect(pointers(graph.subschemas(root.id, 'patternProperties'))).toEqual([['^x', '/patternProperties/^x']]);
+      expect(childAt('additionalProperties')).toMatchObject({ kind: 'boolean', value: false });
+      expect(pointers(graph.subschemas(root.id, 'allOf'))).toEqual([
+        ['0', '/allOf/0'],
+        ['2', '/allOf/2'],
       ]);
-      expect(graph.node(root.additionalProperties ?? -1)).toMatchObject({ kind: 'boolean', value: false });
-      expect(root.allOf?.map((id) => graph.node(id).pointer)).toEqual(['/allOf/0', '/allOf/2']);
-      expect(root.anyOf?.map((id) => graph.node(id).pointer)).toEqual(['/anyOf/0']);
-      expect(root.oneOf?.map((id) => graph.node(id).pointer)).toEqual(['/oneOf/0']);
-      expect(graph.node(root.if ?? -1)).toMatchObject({ kind: 'boolean', value: true });
-      expect(graph.node(root.then ?? -1).pointer).toBe('/then');
-      expect(graph.node(root.else ?? -1)).toMatchObject({ kind: 'boolean', value: false });
-      expect(root.discriminator).toBe('kind');
-      expect(graph.byPointer('/not')).toBeDefined();
+      expect(pointers(graph.subschemas(root.id, 'anyOf'))).toEqual([['0', '/anyOf/0']]);
+      expect(pointers(graph.subschemas(root.id, 'oneOf'))).toEqual([['0', '/oneOf/0']]);
+      expect(childAt('if')).toMatchObject({ kind: 'boolean', value: true });
+      expect(childAt('then').pointer).toBe('/then');
+      expect(childAt('else')).toMatchObject({ kind: 'boolean', value: false });
+      expect(childAt('not').pointer).toBe('/not');
+      expect(graph.subschemas(root.id, 'then')).toEqual([]);
     });
-    it('normalizes array and schema dependencies', () => {
-      expect([...(root.dependencies ?? [])].map(([key, edge]) => [key, edge])).toEqual([
-        ['a', { required: ['b'] }],
-        ['b', { schema: graph.byPointer('/dependencies/b') }],
-      ]);
+    it('looks up a schema dependency, and none for a list of names', () => {
+      expect(pointers(graph.subschemas(root.id, 'dependencies'))).toEqual([['b', '/dependencies/b']]);
+      expect(graph.child(root.id, 'dependencies', 'a')).toBeUndefined();
     });
-    it('parses the tuple form of items and prefixItems into prefixItems', () => {
+    it('looks up the tuple form of items, and prefixItems', () => {
       const tuple = at(graph, '/definitions/tuple');
-      expect(tuple.prefixItems?.map((id) => graph.node(id).pointer)).toEqual([
+      expect(graph.subschemas(tuple.id, 'items').map(([, id]) => graph.node(id).pointer)).toEqual([
         '/definitions/tuple/items/0',
         '/definitions/tuple/items/1',
       ]);
-      expect(graph.node(tuple.additionalItems ?? -1).pointer).toBe('/definitions/tuple/additionalItems');
-      const list = at(graph, '/$defs/list');
-      expect(list.prefixItems?.map((id) => graph.node(id).pointer)).toEqual(['/$defs/list/prefixItems/0']);
-      expect(graph.node(list.items ?? -1).pointer).toBe('/$defs/list/items');
-    });
-    it('leaves keywords that hold the wrong shape of value without an edge', () => {
-      const odd = parseSchemaGraph(
-        looseSchema({
-          properties: [],
-          allOf: { a: {} },
-          items: 'x',
-          discriminator: { propertyName: 1 },
-        }),
+      expect(graph.child(tuple.id, 'items')).toBeUndefined();
+      expect(graph.node(graph.child(tuple.id, 'additionalItems') ?? -1).pointer).toBe(
+        '/definitions/tuple/additionalItems',
       );
-      expect(objectNode(odd, odd.root)).not.toHaveProperty('properties');
-      expect(objectNode(odd, odd.root)).not.toHaveProperty('allOf');
-      expect(objectNode(odd, odd.root)).not.toHaveProperty('items');
-      expect(objectNode(odd, odd.root)).not.toHaveProperty('discriminator');
+      const list = at(graph, '/$defs/list');
+      expect(graph.subschemas(list.id, 'prefixItems').map(([, id]) => graph.node(id).pointer)).toEqual([
+        '/$defs/list/prefixItems/0',
+      ]);
+      expect(graph.node(graph.child(list.id, 'items') ?? -1).pointer).toBe('/$defs/list/items');
+      expect(graph.child(graph.child(list.id, 'items') ?? -1, 'items')).toBeUndefined();
+    });
+    it('looks up nothing under keywords that hold the wrong shape of value', () => {
+      const odd = parseSchemaGraph(looseSchema({ properties: [{}], allOf: { a: {} }, items: 'x' }));
+      expect(odd.subschemas(odd.root, 'properties')).toEqual([]);
+      expect(odd.child(odd.root, 'properties', '0')).toBeUndefined();
+      expect(odd.subschemas(odd.root, 'allOf')).toEqual([]);
+      expect(odd.child(odd.root, 'items')).toBeUndefined();
+      expect(odd.subschemas(odd.root, 'title')).toEqual([]);
+      const flag = graph.child(root.id, 'properties', 'b') ?? -1;
+      expect(graph.child(flag, 'items')).toBeUndefined();
+      expect(graph.subschemas(flag, 'allOf')).toEqual([]);
     });
     it('finds nodes by object and by pointer, and nothing for what was not parsed', () => {
       expect(graph.byObject(schema)).toBe(graph.root);
@@ -134,7 +139,7 @@ describe('parseSchemaGraph()', () => {
       const looped: RJSFSchema = { type: 'object', properties: {} };
       Reflect.set(looped.properties ?? {}, 'self', looped);
       const graph = parseSchemaGraph(looped);
-      expect(objectNode(graph, graph.root).properties?.get('self')).toBe(graph.root);
+      expect(graph.child(graph.root, 'properties', 'self')).toBe(graph.root);
     });
     it('marks a node that is a $ref and nothing that changes it as pure', () => {
       const graph = parseSchemaGraph({
@@ -279,6 +284,16 @@ describe('parseSchemaGraph()', () => {
           'Definition for #/definitions/deep contains a circular reference through #/definitions/deeper -> #/definitions/deepest -> #/definitions/deep',
       });
     });
+  });
+
+  it('finds the booleans a 2020-12 $ref with keywords beside it holds through the allOf it reads as', () => {
+    const graph = parseSchemaGraph({
+      $schema: JSON_SCHEMA_DRAFT_2020_12,
+      $defs: { base: { type: 'object' }, m: { $ref: '#/$defs/base', properties: { flag: true } } },
+    });
+    const m = at(graph, '/$defs/m');
+    const siblings = graph.child(m.conjunction ?? -1, 'allOf', '0') ?? -1;
+    expect(graph.child(siblings, 'properties', 'flag')).toBe(graph.byPointer('/$defs/m/properties/flag'));
   });
 
   describe('references under a draft 2020-12 root', () => {
@@ -431,7 +446,7 @@ describe('parseSchemaGraph()', () => {
       expect(graph.adopt(external)).toBe(adopted);
       const node = objectNode(adopted.graph, adopted.node);
       expect(node.pointer).toBe(EXTERNAL_POINTER);
-      const refs = (node.allOf ?? []).map((id) => objectNode(adopted.graph, id).ref);
+      const refs = adopted.graph.subschemas(node.id, 'allOf').map(([, id]) => objectNode(adopted.graph, id).ref);
       expect(refs.slice(0, 2)).toEqual([graph.byPointer('/$defs/a'), graph.byPointer('/$defs/a')]);
       expect(adopted.graph.node(refs[2] ?? -1).pointer).toBe('/components/x');
       expect(graph.byPointer('/components/x')).toBeUndefined();
@@ -454,20 +469,20 @@ describe('parseSchemaGraph()', () => {
       const first = graph.adopt({ $ref: '#/$defs/a' });
       const second = first.graph.adopt({ items: { $ref: '#/$defs/broken' } });
       expect(second.graph.base).toBe(first.graph);
-      const items = objectNode(second.graph, objectNode(second.graph, second.node).items);
+      const items = objectNode(second.graph, second.graph.child(second.node, 'items'));
       expect(second.graph.node(items.ref ?? -1)).toMatchObject({ kind: 'invalid', ref: '#/$defs/broken' });
       expect(second.graph.diagnostics).toHaveLength(graph.diagnostics.length + 1);
     });
     it('gives a boolean of an extending graph its own node where the graph it extends has another value', () => {
       const first = graph.adopt({ items: true });
       const second = first.graph.adopt({ items: false, additionalItems: true });
-      const items = objectNode(second.graph, second.node).items ?? -1;
+      const items = second.graph.child(second.node, 'items') ?? -1;
       expect(second.graph.node(items)).toMatchObject({
         kind: 'boolean',
         value: false,
         pointer: `${EXTERNAL_POINTER}/items`,
       });
-      expect(items).not.toBe(objectNode(first.graph, first.node).items);
+      expect(items).not.toBe(first.graph.child(first.node, 'items'));
     });
   });
 });

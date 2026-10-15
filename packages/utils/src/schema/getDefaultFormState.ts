@@ -50,12 +50,14 @@ import buildPlan, {
   asTarget,
   cachedPolicy,
   childSeeds,
-  ownChildren,
+  ownChains,
   schemaFrom,
+  seedsAt,
   seedsKey,
+  tupleSeeds,
   withoutKeys,
 } from './graph/mergePlan.ts';
-import type { MergePlan, OptionChoice, PlanChildren, PlanEntry, PlanPolicy, Seed } from './graph/mergePlan.ts';
+import type { Keywords, MergePlan, OptionChoice, PlanEntry, PlanPolicy, Seed } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
@@ -313,7 +315,8 @@ interface DefaultsView<S extends StrictRJSFSchema> {
   /** The field as settled: an expanded field restarts its seeds */
   readonly field: DefaultsField<S>;
   readonly schema: S;
-  readonly children: PlanChildren;
+  readonly graph: SchemaGraph<S>;
+  readonly chains: readonly Keywords<S>[];
   /** The nodes the field's plan merged, in plan order, none for a schema read as it stands */
   readonly entries: readonly PlanEntry[];
   /** The option lists the field's plan met */
@@ -452,7 +455,8 @@ function planView<S extends StrictRJSFSchema, F extends FormContextType>(
   return {
     field,
     schema,
-    children: plan.children,
+    graph: plan.graph,
+    chains: plan.chains,
     entries: plan.entries,
     choices: plan.choices,
     keywords,
@@ -473,7 +477,8 @@ function ownView<S extends StrictRJSFSchema>(field: DefaultsField<S>, schema: S,
   return {
     field,
     schema,
-    children: ownChildren(field.graph, field.seeds),
+    graph: field.graph,
+    chains: ownChains(field.graph, field.seeds),
     entries: [],
     choices: [],
     keywords: new Set(Object.keys(schema)),
@@ -607,7 +612,8 @@ function qualifiedDependencies<S extends StrictRJSFSchema>(view: DefaultsView<S>
   return view.entries
     .flatMap(({ node: id }) => {
       const node = graph.node(id);
-      const keys = node.kind === 'schema' ? [...(node.dependencies?.keys() ?? [])] : [];
+      const dependencies: unknown = node.kind === 'schema' ? node.raw.dependencies : undefined;
+      const keys = isObject(dependencies) ? Object.keys(dependencies) : [];
       return keys.filter((key) => getByPath(depData, key) !== undefined).map((key) => `${id}:${key}`);
     })
     .join(',');
@@ -941,16 +947,15 @@ function innerItemSeeds<S extends StrictRJSFSchema>(
   idx: number,
 ): { seeds: readonly Seed[]; edge: ContainmentEdge } {
   const { items, additionalItems: additional } = view.schema;
-  const { children } = view;
   if (idx >= 0) {
     if (Array.isArray(items) && idx < items.length && typeof items[idx] !== 'boolean') {
-      return { seeds: children.prefixItems[idx] ?? [], edge: 'tupleItem' };
+      return { seeds: tupleSeeds(view, idx), edge: 'tupleItem' };
     }
   } else if (items && !Array.isArray(items) && typeof items !== 'boolean') {
-    return { seeds: children.items, edge: 'item' };
+    return { seeds: seedsAt(view, 'items'), edge: 'item' };
   }
   if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(additional)) {
-    return { seeds: children.additionalItems, edge: 'item' };
+    return { seeds: seedsAt(view, 'additionalItems'), edge: 'item' };
   }
   return { seeds: [], edge: 'item' };
 }
@@ -1075,7 +1080,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       const computedDefault = foldChild<T, S, F>(
         context,
         `additional:${key}`,
-        defaultsChild(view, view.children.additionalProperties, 'additionalKey', additionalPropertiesSchema),
+        defaultsChild(view, seedsAt(view, ADDITIONAL_PROPERTIES_KEY), 'additionalKey', additionalPropertiesSchema),
         {
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath(defaults, key),

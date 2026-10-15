@@ -22,7 +22,8 @@ import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } fro
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import DataMemo from './dataMemo.ts';
 import KeyedMemo from './keyedMemo.ts';
-import type { DependencyEdge, NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
+import { stringKeyword } from './parseSchemaGraph.ts';
+import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -43,24 +44,18 @@ export interface PlanEntry {
   readonly refPath: RefPath;
 }
 
-/** A `patternProperties` entry of the merged schema: the keys matching `pattern` are seeded by `seeds` */
-export interface PatternSeeds {
-  readonly pattern: string;
-  readonly seeds: readonly Seed[];
+/** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
+export interface Provider<S extends StrictRJSFSchema = RJSFSchema> {
+  readonly node: ObjectNode<S>;
+  readonly refPath: RefPath;
+  /** A property of the node's `properties` the plan leaves out: the one a dependency's `oneOf` option is chosen by */
+  readonly drops?: string;
 }
 
-/** The seeds of a field's children, by the containment keyword declaring them, merged the way the field's schema is:
- * a conjunction lists its members' seeds after the field's own, a branch lists its seeds first, so the first seed
- * of a child is the one whose keywords win
+/** The keywords one chain of `$ref`s supplies to a plan, each with the node providing it: the target's keywords,
+ * overridden by those beside the `$ref`
  */
-export interface PlanChildren {
-  readonly properties: ReadonlyMap<string, readonly Seed[]>;
-  readonly patternProperties: readonly PatternSeeds[];
-  readonly additionalProperties: readonly Seed[];
-  readonly items: readonly Seed[];
-  readonly prefixItems: readonly (readonly Seed[])[];
-  readonly additionalItems: readonly Seed[];
-}
+export type Keywords<S extends StrictRJSFSchema = RJSFSchema> = ReadonlyMap<string | symbol, Provider<S>>;
 
 /** An `anyOf`/`oneOf` a plan met, and the option `PlanPolicy.selectOption` chose from it, if it chose one */
 export interface OptionChoice {
@@ -124,7 +119,10 @@ export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
   readonly setKey: string;
   /** The merged schema, with `RJSF_REF_KEY` naming the `$ref` the field's own node was resolved from */
   readonly schema: S;
-  readonly children: PlanChildren;
+  /** The chains of the plan in the order a child's seeds are merged in: a branch's before the keywords it is merged
+   * into, a conjunction's members after them, so the first seed of a child is the one whose keywords win
+   */
+  readonly chains: readonly Keywords<S>[];
   readonly choices: readonly OptionChoice[];
   /** Whether the plan was built from the data, which it is only where it checked a condition, qualified a dependency or
    * asked for an option; a plan that was not holds for any data
@@ -180,56 +178,10 @@ export function seedsKey(seeds: readonly Seed[]): string {
   return key;
 }
 
-interface MutableChildren {
-  properties: Map<string, Seed[]>;
-  patternProperties: { pattern: string; seeds: Seed[] }[];
-  additionalProperties: Seed[];
-  items: Seed[];
-  prefixItems: Seed[][];
-  additionalItems: Seed[];
-}
-
-function emptyChildren(): MutableChildren {
-  return {
-    properties: new Map(),
-    patternProperties: [],
-    additionalProperties: [],
-    items: [],
-    prefixItems: [],
-    additionalItems: [],
-  };
-}
-
-/** Lists `first`'s seeds of each child before `second`'s */
-function concatChildren(first: MutableChildren, second: MutableChildren): MutableChildren {
-  const properties = new Map(first.properties);
-  for (const [name, seeds] of second.properties) {
-    properties.set(name, [...(properties.get(name) ?? []), ...seeds]);
-  }
-  const length = Math.max(first.prefixItems.length, second.prefixItems.length);
-  return {
-    properties,
-    patternProperties: [...first.patternProperties, ...second.patternProperties],
-    additionalProperties: [...first.additionalProperties, ...second.additionalProperties],
-    items: [...first.items, ...second.items],
-    prefixItems: Array.from({ length }, (_, index) => [
-      ...(first.prefixItems[index] ?? []),
-      ...(second.prefixItems[index] ?? []),
-    ]),
-    additionalItems: [...first.additionalItems, ...second.additionalItems],
-  };
-}
-
-/** A node's merged schema so far and the seeds of its children */
+/** A node's merged schema so far and the chains its children are seeded from */
 interface Part<S extends StrictRJSFSchema> {
   schema: S;
-  children: MutableChildren;
-}
-
-/** The node providing a keyword of a schema reached through `$ref`s, and the ref path at that node */
-interface Provider<S extends StrictRJSFSchema> {
-  readonly node: ObjectNode<S>;
-  readonly refPath: RefPath;
+  chains: readonly Keywords<S>[];
 }
 
 export function withoutKeys<S extends StrictRJSFSchema>(schema: S, ...keys: (string | symbol)[]): S {
@@ -266,34 +218,7 @@ function mergeBranch<S extends StrictRJSFSchema>(part: Part<S>, branch: Part<S>)
   if (ownRef !== undefined) {
     Reflect.set(schema, RJSF_REF_KEY, ownRef);
   }
-  return { schema, children: concatChildren(branch.children, part.children) };
-}
-
-function seedsFrom<S extends StrictRJSFSchema>(
-  provider: Provider<S> | undefined,
-  pick: (node: ObjectNode<S>) => NodeId | undefined,
-): Seed[] {
-  const child = provider === undefined ? undefined : pick(provider.node);
-  return provider === undefined || child === undefined ? [] : [{ node: child, refPath: provider.refPath }];
-}
-
-function childrenOf<S extends StrictRJSFSchema>(keywords: ReadonlyMap<string | symbol, Provider<S>>): MutableChildren {
-  const properties = keywords.get(PROPERTIES_KEY);
-  const patterns = keywords.get(PATTERN_PROPERTIES_KEY);
-  const tuple = [keywords.get('prefixItems'), keywords.get(ITEMS_KEY)].find((provider) => provider?.node.prefixItems);
-  return {
-    properties: new Map(
-      [...(properties?.node.properties ?? [])].map(([name, node]) => [name, seedsFrom(properties, () => node)]),
-    ),
-    patternProperties: (patterns?.node.patternProperties ?? []).map(({ pattern, node }) => ({
-      pattern,
-      seeds: seedsFrom(patterns, () => node),
-    })),
-    additionalProperties: seedsFrom(keywords.get(ADDITIONAL_PROPERTIES_KEY), (node) => node.additionalProperties),
-    items: seedsFrom(keywords.get(ITEMS_KEY), (node) => node.items),
-    prefixItems: (tuple?.node.prefixItems ?? []).map((node) => seedsFrom(tuple, () => node)),
-    additionalItems: seedsFrom(keywords.get('additionalItems'), (node) => node.additionalItems),
-  };
+  return { schema, chains: [...branch.chains, ...part.chains] };
 }
 
 function withRequired<S extends StrictRJSFSchema>(schema: S, required: readonly string[]): S {
@@ -448,7 +373,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   build(seeds: readonly Seed[]): MergePlan<S> {
-    const empty = { schema: schemaFrom(this.graph.rawRoot, {}), children: emptyChildren() };
+    const empty = { schema: schemaFrom(this.graph.rawRoot, {}), chains: [] };
     const [first = empty, ...rest] = seeds.flatMap((seed) => this.expand(seed.node, seed.refPath, 'seed', true) ?? []);
     // Several seeds are merged as the `allOf` of them all, which is how a property is merged with the patterns its name
     // matches, so a `customMergeAllOf` is handed them as it is handed every other conjunction
@@ -461,7 +386,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       set,
       setKey: [...set].sort((a, b) => a - b).join(','),
       schema: merged.schema,
-      children: merged.children,
+      chains: merged.chains,
       choices: this.choices,
       readsData: this.readsData,
     };
@@ -495,7 +420,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     const node = this.graph.node(id);
     if (node.kind !== 'schema') {
-      return { schema: booleanSchema(node, this.graph.rawRoot), children: emptyChildren() };
+      return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
     const keywords = this.flatten(node, refPath);
     if (top && this.allOf === 'if' && keywords.has(IF_KEY)) {
@@ -509,7 +434,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (typeof ref === 'string') {
       Reflect.set(schema, RJSF_REF_KEY, ref);
     }
-    let part: Part<S> = { schema, children: childrenOf(keywords) };
+    let part: Part<S> = { schema, chains: [keywords] };
     if (dependencyKey === undefined) {
       const dependencies = keywords.has(DEPENDENCIES_KEY);
       part = this.applyOption(part, ANY_OF_KEY, keywords.get(ANY_OF_KEY), dependencies);
@@ -530,9 +455,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (provider === undefined || (!this.mergeAllOf && this.branchDepth === 0)) {
       return part;
     }
-    const members = (provider.node.allOf ?? []).flatMap(
-      (member) => this.expand(member, provider.refPath, 'allOf', false, dependencyKey) ?? [],
-    );
+    const members = this.graph
+      .subschemas(provider.node.id, ALL_OF_KEY)
+      .flatMap(([, member]) => this.expand(member, provider.refPath, 'allOf', false, dependencyKey) ?? []);
     return this.conjoin({ ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) }, members);
   }
 
@@ -550,7 +475,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     return {
       schema: merged,
-      children: members.reduce((children, member) => concatChildren(children, member.children), part.children),
+      chains: [...part.chains, ...members.flatMap((member) => member.chains)],
     };
   }
 
@@ -585,10 +510,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     keywords: ReadonlyMap<string | symbol, Provider<S>>,
     dependencyKey: string | undefined,
   ): Part<S> {
-    const condition = keywords.get(IF_KEY)?.node.if;
-    if (!keywords.has(IF_KEY)) {
+    const conditionProvider = keywords.get(IF_KEY);
+    if (conditionProvider === undefined) {
       return part;
     }
+    const condition = this.graph.child(conditionProvider.node.id, IF_KEY);
     const without = { ...part, schema: withoutKeys(part.schema, IF_KEY, THEN_KEY, ELSE_KEY) };
     if (condition === undefined) {
       return without;
@@ -609,7 +535,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (provider === undefined) {
       return undefined;
     }
-    const branch = provider.node[key];
+    const branch = this.graph.child(provider.node.id, key);
     return branch === undefined ? undefined : this.expandBranch(branch, provider.refPath, key, dependencyKey);
   }
 
@@ -640,15 +566,24 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     let next: Part<S> = { ...part, schema: withoutKeys(part.schema, DEPENDENCIES_KEY) };
     const ownProperties: unknown = propertiesProvider && Reflect.get(propertiesProvider.node.raw, PROPERTIES_KEY);
     const declared = isObject(ownProperties) ? new Set(Object.keys(ownProperties)) : undefined;
-    const pending = [...(provider.node.dependencies ?? [])];
-    const qualifies = ([key]: [string, DependencyEdge]) =>
+    const dependencies: unknown = provider.node.raw[DEPENDENCIES_KEY];
+    const pending = Object.entries(isObject(dependencies) ? dependencies : {}).flatMap(
+      ([key, dependency]): [string, string[] | NodeId][] => {
+        if (Array.isArray(dependency)) {
+          return [[key, dependency.filter((entry): entry is string => typeof entry === 'string')]];
+        }
+        const schema = this.graph.child(provider.node.id, DEPENDENCIES_KEY, key);
+        return schema === undefined ? [] : [[key, schema]];
+      },
+    );
+    const qualifies = ([key]: [string, unknown]) =>
       getByPath(this.depData, key) !== undefined && (declared === undefined || declared.has(key));
     for (let index = pending.findIndex(qualifies); index >= 0; index = pending.findIndex(qualifies)) {
       const [[key, dependency]] = pending.splice(index, 1);
-      if ('required' in dependency) {
-        next = { ...next, schema: withRequired(next.schema, dependency.required) };
+      if (Array.isArray(dependency)) {
+        next = { ...next, schema: withRequired(next.schema, dependency) };
       } else {
-        const dependent = this.expandBranch(dependency.schema, provider.refPath, 'dependency', key);
+        const dependent = this.expandBranch(dependency, provider.refPath, 'dependency', key);
         if (dependent !== undefined) {
           Object.keys(dependent.schema.properties ?? {}).forEach((name) => declared?.add(name));
           next = mergeBranch(next, { ...dependent, schema: withoutKeys(dependent.schema, ONE_OF_KEY) });
@@ -667,7 +602,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return undefined;
     }
     if (node.ref === undefined) {
-      const condition = node.properties?.get(key);
+      const condition = this.graph.child(option, PROPERTIES_KEY, key);
       if (condition === undefined) {
         return undefined;
       }
@@ -694,14 +629,17 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (provider === undefined) {
       return part;
     }
-    const valid = (provider.node.oneOf ?? []).filter((option) => {
-      const condition = this.dependencyCondition(option, key);
-      if (!condition) {
-        return false;
-      }
-      const conditionSchema = schemaFrom(this.graph.rawRoot, { type: 'object', properties: { [key]: condition } });
-      return this.holds(`dependency:${option}:${key}`, conditionSchema, this.depData);
-    });
+    const valid = this.graph
+      .subschemas(provider.node.id, ONE_OF_KEY)
+      .map(([, option]) => option)
+      .filter((option) => {
+        const condition = this.dependencyCondition(option, key);
+        if (!condition) {
+          return false;
+        }
+        const conditionSchema = schemaFrom(this.graph.rawRoot, { type: 'object', properties: { [key]: condition } });
+        return this.holds(`dependency:${option}:${key}`, conditionSchema, this.depData);
+      });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
       return part;
@@ -714,8 +652,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     Reflect.deleteProperty(properties, key);
     const schema = { ...chosen.schema };
     Reflect.set(schema, PROPERTIES_KEY, properties);
-    chosen.children.properties.delete(key);
-    return mergeBranch(part, { schema, children: chosen.children });
+    const chains = chosen.chains.map((chain) => {
+      const declaring = chain.get(PROPERTIES_KEY);
+      return declaring === undefined ? chain : new Map(chain).set(PROPERTIES_KEY, { ...declaring, drops: key });
+    });
+    return mergeBranch(part, { schema, chains });
   }
 
   private applyOption(
@@ -724,10 +665,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     provider: Provider<S> | undefined,
     dependencies: boolean,
   ): Part<S> {
-    const options = provider?.node[keyword];
-    if (provider === undefined || options === undefined) {
+    if (provider === undefined || !Array.isArray(provider.node.raw[keyword])) {
       return part;
     }
+    const options = this.graph.subschemas(provider.node.id, keyword).map(([, option]) => option);
     const request = {
       keyword,
       provider: provider.node.id,
@@ -742,7 +683,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       graph: this.graph,
       data: this.data,
       depData: this.depData,
-      discriminator: provider.node.discriminator,
+      discriminator: stringKeyword(Reflect.get(provider.node.raw, 'discriminator'), 'propertyName'),
     });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });
@@ -752,30 +693,24 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 }
 
-/** Returns the children `seeds` declare themselves, each child's seeds carrying the ref path of the seed declaring it.
- * Nothing the seeds reach through a `$ref` or a branch is read, which is what a field the recursion rule collapsed
- * keeps of its own.
+/** Returns the chains of `seeds` read as they stand, each seed's keywords provided by the seed itself: nothing the
+ * seeds reach through a `$ref` or a branch is read, which is what a field the recursion rule collapsed keeps of its
+ * own
  *
  * @param graph - The graph the seeds are in
- * @param seeds - The seeds whose own children are wanted
- * @returns - The children's seeds, by the containment keyword declaring them
+ * @param seeds - The seeds whose own keywords are wanted
+ * @returns - One chain per object seed
  */
-export function ownChildren<S extends StrictRJSFSchema = RJSFSchema>(
+export function ownChains<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
   seeds: readonly Seed[],
-): PlanChildren {
-  return seeds.reduce((children, { node: id, refPath }) => {
+): Keywords<S>[] {
+  return seeds.flatMap(({ node: id, refPath }) => {
     const node = graph.node(id);
-    if (node.kind !== 'schema') {
-      return children;
-    }
-    const keywords = new Map<string | symbol, Provider<S>>(
-      Reflect.ownKeys(node.raw)
-        .filter((key) => key !== REF_KEY)
-        .map((key) => [key, { node, refPath }]),
-    );
-    return concatChildren(children, childrenOf(keywords));
-  }, emptyChildren());
+    return node.kind === 'schema'
+      ? [new Map(Reflect.ownKeys(node.raw).flatMap((key) => (key === REF_KEY ? [] : [[key, { node, refPath }]])))]
+      : [];
+  });
 }
 
 /** The graph each plan was built in, which is how a plan read back from the memo is known to be one of its graph */
@@ -839,26 +774,77 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
   return plan;
 }
 
+/** The graph and chains a field's children are seeded from */
+export interface Seeding<S extends StrictRJSFSchema = RJSFSchema> {
+  readonly graph: SchemaGraph<S>;
+  readonly chains: readonly Keywords<S>[];
+}
+
+/** Returns the seeds of the subschema `keyword` holds, or holds under `key`, in each chain providing the keyword
+ *
+ * @param seeding - The field's graph and chains
+ * @param keyword - The keyword holding the child
+ * @param [key] - The child's key in the map or list the keyword holds
+ * @returns - The child's seeds, in merge order
+ */
+export function seedsAt<S extends StrictRJSFSchema = RJSFSchema>(
+  { graph, chains }: Seeding<S>,
+  keyword: string,
+  key?: string,
+): Seed[] {
+  return chains.flatMap((chain) => {
+    const provider = chain.get(keyword);
+    const node =
+      provider && (key === undefined || provider.drops !== key)
+        ? graph.child(provider.node.id, keyword, key)
+        : undefined;
+    return provider === undefined || node === undefined ? [] : [{ node, refPath: provider.refPath }];
+  });
+}
+
+/** Returns the seeds of a tuple's item at `index`: under `prefixItems`, or under `items` in a chain that holds a list
+ * there
+ *
+ * @param seeding - The array field's graph and chains
+ * @param index - The item's index
+ * @returns - The item's seeds, in merge order
+ */
+export function tupleSeeds<S extends StrictRJSFSchema = RJSFSchema>(seeding: Seeding<S>, index: number): Seed[] {
+  return seeding.chains.flatMap((chain) => {
+    const tuple = ['prefixItems', ITEMS_KEY].find((keyword) => {
+      const provider = chain.get(keyword);
+      return provider !== undefined && Array.isArray(Reflect.get(provider.node.raw, keyword));
+    });
+    return tuple === undefined ? [] : seedsAt({ graph: seeding.graph, chains: [chain] }, tuple, String(index));
+  });
+}
+
 /** Returns the seeds of the child of an object field at `key`, and the containment edge it is reached through: a
  * declared property, merged with each pattern matching its name; else the patterns its name matches; else the
  * additional properties
  *
- * @param plan - The object field's plan
+ * @param seeding - The object field's graph and chains
  * @param key - The child's key
  * @returns - The child's seeds, in merge order, and its edge
  */
 export function childSeeds<S extends StrictRJSFSchema = RJSFSchema>(
-  plan: Pick<MergePlan<S>, 'children'>,
+  seeding: Seeding<S>,
   key: string,
 ): { seeds: readonly Seed[]; edge: 'property' | 'patternKey' | 'additionalKey' } {
-  const patterns = plan.children.patternProperties
-    .filter(({ pattern }) => patternRegExp(pattern).test(key))
-    .flatMap(({ seeds }) => seeds);
-  const declared = plan.children.properties.get(key);
-  if (declared !== undefined) {
+  const patterns = seeding.chains.flatMap((chain) => {
+    const provider = chain.get(PATTERN_PROPERTIES_KEY);
+    return provider === undefined
+      ? []
+      : seeding.graph
+          .subschemas(provider.node.id, PATTERN_PROPERTIES_KEY)
+          .filter(([pattern]) => patternRegExp(pattern).test(key))
+          .map(([, node]) => ({ node, refPath: provider.refPath }));
+  });
+  const declared = seedsAt(seeding, PROPERTIES_KEY, key);
+  if (declared.length > 0) {
     return { seeds: [...declared, ...patterns], edge: 'property' };
   }
   return patterns.length > 0
     ? { seeds: patterns, edge: 'patternKey' }
-    : { seeds: plan.children.additionalProperties, edge: 'additionalKey' };
+    : { seeds: seedsAt(seeding, ADDITIONAL_PROPERTIES_KEY), edge: 'additionalKey' };
 }

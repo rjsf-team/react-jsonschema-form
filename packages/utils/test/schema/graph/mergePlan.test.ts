@@ -7,12 +7,19 @@ import {
   RJSF_REF_KEY,
 } from '../../../src/index.ts';
 import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
-import buildPlan, { childSeeds, ownChildren, refDefinition } from '../../../src/schema/graph/mergePlan.ts';
+import buildPlan, {
+  childSeeds,
+  ownChains,
+  refDefinition,
+  seedsAt,
+  tupleSeeds,
+} from '../../../src/schema/graph/mergePlan.ts';
 import type { MergePlan, PlanPolicy, Seed } from '../../../src/schema/graph/mergePlan.ts';
 import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import looseSchema from './looseSchema.ts';
 import { miniValidator } from './miniValidator.ts';
+import propertyNames from './propertyNames.ts';
 
 interface Options {
   readonly data?: unknown;
@@ -69,7 +76,7 @@ describe('buildPlan()', () => {
         ['', 'seed', []],
         ['/definitions/A', 'ref', ['/definitions/A']],
       ]);
-      expect(seedsOf(plan, plan.children.properties.get('x') ?? [])).toEqual([
+      expect(seedsOf(plan, seedsAt(plan, 'properties', 'x'))).toEqual([
         ['/definitions/A/properties/x', ['/definitions/A']],
       ]);
     });
@@ -256,7 +263,7 @@ describe('buildPlan()', () => {
         ['/then', 'then'],
         ['/definitions/T', 'ref'],
       ]);
-      expect([...plan.children.properties.keys()]).toEqual(['t', 'a']);
+      expect(propertyNames(plan)).toEqual(['t', 'a']);
     });
     it('merges else otherwise, checking {} for no data', () => {
       const validator = miniValidator();
@@ -312,6 +319,12 @@ describe('buildPlan()', () => {
       expect(planOf({ ...schema, required: undefined }, { data: { a: 1 } }).schema.required).toEqual(['b', 'c']);
       expect(planOf(schema, { data: {} }).schema.required).toEqual(['b']);
       expect(planOf(schema).schema).not.toHaveProperty('dependencies');
+    });
+    it('applies nothing for dependencies that hold no map, or an entry that is neither a list nor a subschema', () => {
+      const plan = planOf(looseSchema({ properties: { a: {} }, dependencies: true }), { data: { a: 1 } });
+      expect(keywordsOf(plan)).toEqual({ properties: { a: {} } });
+      const entry = planOf(looseSchema({ properties: { a: {} }, dependencies: { a: 3 } }), { data: { a: 1 } });
+      expect(keywordsOf(entry)).toEqual({ properties: { a: {} } });
     });
     it('merges a schema dependency judged on the dependency data, defaulting to the data', () => {
       const schema: RJSFSchema = {
@@ -377,7 +390,7 @@ describe('buildPlan()', () => {
       it('merges the one option the data satisfies, less the dependency key', () => {
         const plan = planOf(withOptions(options.slice(0, 6)), { data: { kind: 'a' } });
         expect(keywordsOf(plan)).toEqual({ properties: { kind: { type: 'string' }, forA: { type: 'string' } } });
-        expect(seedsOf(plan, plan.children.properties.get('kind') ?? [])).toEqual([['/properties/kind', []]]);
+        expect(seedsOf(plan, seedsAt(plan, 'properties', 'kind'))).toEqual([['/properties/kind', []]]);
       });
       it('follows an option that is a $ref to its properties', () => {
         const plan = planOf(withOptions(options.slice(3, 4)), { data: { kind: 'ref' } });
@@ -532,11 +545,11 @@ describe('buildPlan()', () => {
       const plan = planOf(schema, { seeds: both });
       // The merge applies the first seed's additionalProperties to the property only the second declares
       expect(plan.schema.properties).toEqual({ a: { title: 'first a' }, b: { title: 'additional' } });
-      expect(seedsOf(plan, plan.children.properties.get('a') ?? [])).toEqual([
+      expect(seedsOf(plan, seedsAt(plan, 'properties', 'a'))).toEqual([
         ['/definitions/first/properties/a', ['/definitions/first']],
         ['/definitions/second/properties/a', ['/definitions/second']],
       ]);
-      expect(plan.children.prefixItems.map((seeds) => seedsOf(plan, seeds))).toEqual([
+      expect([0, 1].map((index) => seedsOf(plan, tupleSeeds(plan, index)))).toEqual([
         [
           ['/definitions/first/items/0', ['/definitions/first']],
           ['/definitions/second/prefixItems/0', ['/definitions/second']],
@@ -546,7 +559,7 @@ describe('buildPlan()', () => {
     });
     it('lists tuple seeds of a longer first seed after those of a shorter one', () => {
       const plan = planOf(schema, { seeds: (graph) => both(graph).slice(1, 3) });
-      expect(plan.children.prefixItems.map((seeds) => seedsOf(plan, seeds))).toEqual([
+      expect([0, 1].map((index) => seedsOf(plan, tupleSeeds(plan, index)))).toEqual([
         [
           ['/definitions/second/prefixItems/0', ['/definitions/second']],
           ['/definitions/first/items/0', ['/definitions/first', '/definitions/first']],
@@ -575,13 +588,32 @@ describe('buildPlan()', () => {
     });
     it('names the seeds of an array row: the tuple entries, then the items or additional items', () => {
       const first = planOf(schema, { seeds: (graph) => both(graph).slice(0, 1) });
-      expect(first.children.prefixItems).toHaveLength(1);
-      expect(first.children.items).toEqual([]);
-      expect(seedsOf(first, first.children.additionalItems)).toEqual([
+      expect(tupleSeeds(first, 0)).toHaveLength(1);
+      expect(tupleSeeds(first, 1)).toEqual([]);
+      expect(seedsAt(first, 'items')).toEqual([]);
+      expect(seedsOf(first, seedsAt(first, 'additionalItems'))).toEqual([
         ['/definitions/first/additionalItems', ['/definitions/first']],
       ]);
       const second = planOf(schema, { seeds: (graph) => both(graph).slice(1, 2) });
-      expect(seedsOf(second, second.children.items)).toEqual([['/definitions/second/items', ['/definitions/second']]]);
+      expect(seedsOf(second, seedsAt(second, 'items'))).toEqual([
+        ['/definitions/second/items', ['/definitions/second']],
+      ]);
+    });
+    it('lists a property a branch, the own keywords and an allOf member all declare in merge order, the branch first', () => {
+      const plan = planOf({
+        definitions: { A: { properties: { p: { title: 'target' } } }, M: { properties: { p: { title: 'member' } } } },
+        $ref: D('A'),
+        properties: { p: { title: 'own' } },
+        if: true,
+        then: { properties: { p: { title: 'branch' } } },
+        allOf: [{ $ref: D('M') }],
+      });
+      expect(seedsOf(plan, seedsAt(plan, 'properties', 'p'))).toEqual([
+        ['/then/properties/p', []],
+        ['/properties/p', []],
+        ['/definitions/M/properties/p', ['/definitions/M']],
+      ]);
+      expect(plan.schema.properties).toEqual({ p: { title: 'branch' } });
     });
   });
 
@@ -645,8 +677,8 @@ describe('buildPlan()', () => {
   });
 });
 
-describe('ownChildren()', () => {
-  it('lists the children the seeds declare themselves, past no $ref, and none for a boolean seed', () => {
+describe('ownChains()', () => {
+  it('reads the keywords the seeds declare themselves, past no $ref, and none for a boolean seed', () => {
     const schema: RJSFSchema = {
       definitions: { A: { properties: { a: { type: 'string' } } } },
       $ref: '#/definitions/A',
@@ -655,11 +687,12 @@ describe('ownChildren()', () => {
     const graph = parseSchemaGraph(schema);
     const flag = graph.byPointer('/properties/flag');
     expect(flag).toBeDefined();
-    const children = ownChildren(graph, [
+    const chains = ownChains(graph, [
       { node: graph.root, refPath: [] },
       { node: flag ?? graph.root, refPath: [] },
     ]);
-    expect([...children.properties.keys()]).toEqual(['own', 'flag']);
+    expect(chains).toHaveLength(1);
+    expect(propertyNames({ graph, chains })).toEqual(['own', 'flag']);
   });
 });
 
