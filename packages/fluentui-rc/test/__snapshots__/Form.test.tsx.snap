@@ -104,13 +104,16 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_tasks__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    tasks
+                    <span
+                      id="root_tasks__title"
+                    >
+                      tasks
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -135,13 +138,22 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="___12hmf4e_0000000 f2zxqi febqm8h"
-                            id="root_tasks_0__title"
                           >
                             <h5
                               class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                               style="margin-block: 0px;"
                             >
-                              tasks-1
+                              <span
+                                id="root_tasks_0__title"
+                              >
+                                tasks-1
+                              </span>
+                              <span
+                                aria-hidden="true"
+                                class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                              >
+                                *
+                              </span>
                             </h5>
                             <div
                               aria-orientation="horizontal"
@@ -322,13 +334,22 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="___12hmf4e_0000000 f2zxqi febqm8h"
-                            id="root_tasks_1__title"
                           >
                             <h5
                               class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                               style="margin-block: 0px;"
                             >
-                              tasks-2
+                              <span
+                                id="root_tasks_1__title"
+                              >
+                                tasks-2
+                              </span>
+                              <span
+                                aria-hidden="true"
+                                class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                              >
+                                *
+                              </span>
                             </h5>
                             <div
                               aria-orientation="horizontal"
@@ -589,13 +610,16 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_tags__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    tags
+                    <span
+                      id="root_tags__title"
+                    >
+                      tags
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -1059,13 +1083,16 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_person__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    person
+                    <span
+                      id="root_person__title"
+                    >
+                      person
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -1150,13 +1177,16 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_person_address__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            address
+                            <span
+                              id="root_person_address__title"
+                            >
+                              address
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -1680,13 +1710,16 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_tasks__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    tasks
+                    <span
+                      id="root_tasks__title"
+                    >
+                      tasks
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -1711,13 +1744,22 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="___12hmf4e_0000000 f2zxqi febqm8h"
-                            id="root_tasks_0__title"
                           >
                             <h5
                               class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                               style="margin-block: 0px;"
                             >
-                              tasks-1
+                              <span
+                                id="root_tasks_0__title"
+                              >
+                                tasks-1
+                              </span>
+                              <span
+                                aria-hidden="true"
+                                class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                              >
+                                *
+                              </span>
                             </h5>
                             <div
                               aria-orientation="horizontal"
@@ -1898,13 +1940,22 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                         >
                           <div
                             class="___12hmf4e_0000000 f2zxqi febqm8h"
-                            id="root_tasks_1__title"
                           >
                             <h5
                               class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                               style="margin-block: 0px;"
                             >
-                              tasks-2
+                              <span
+                                id="root_tasks_1__title"
+                              >
+                                tasks-2
+                              </span>
+                              <span
+                                aria-hidden="true"
+                                class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                              >
+                                *
+                              </span>
                             </h5>
                             <div
                               aria-orientation="horizontal"
@@ -2165,13 +2216,16 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_tags__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    tags
+                    <span
+                      id="root_tags__title"
+                    >
+                      tags
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -2515,13 +2569,16 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_person__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    person
+                    <span
+                      id="root_person__title"
+                    >
+                      person
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -2606,13 +2663,16 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_person_address__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            address
+                            <span
+                              id="root_person_address__title"
+                            >
+                              address
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -3761,13 +3821,16 @@ exports[`single fields > Cyclic schema 1`] = `
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            A registration form
+            <span
+              id="root__title"
+            >
+              A registration form
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -3796,13 +3859,16 @@ exports[`single fields > Cyclic schema 1`] = `
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_child__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    A registration form
+                    <span
+                      id="root_child__title"
+                    >
+                      A registration form
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -5242,13 +5308,16 @@ exports[`single fields > optional data controls > does not show optional control
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -5271,13 +5340,16 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObjectOptional__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObjectOptional
+                    <span
+                      id="root_nestedObjectOptional__title"
+                    >
+                      nestedObjectOptional
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -5331,13 +5403,16 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepObjectOptional__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepObjectOptional
+                            <span
+                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                            >
+                              deepObjectOptional
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -5395,13 +5470,22 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepObject__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepObject
+                            <span
+                              id="root_nestedObjectOptional_deepObject__title"
+                            >
+                              deepObject
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                            >
+                              *
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -5459,13 +5543,16 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArrayOptional__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArrayOptional
+                            <span
+                              id="root_nestedObjectOptional_deepArrayOptional__title"
+                            >
+                              deepArrayOptional
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -5522,13 +5609,16 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArrayOptional2__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArrayOptional2
+                            <span
+                              id="root_nestedObjectOptional_deepArrayOptional2__title"
+                            >
+                              deepArrayOptional2
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -5585,13 +5675,22 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArray__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArray
+                            <span
+                              id="root_nestedObjectOptional_deepArray__title"
+                            >
+                              deepArray
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                            >
+                              *
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -5652,13 +5751,16 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArrayOptional__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArrayOptional
+                    <span
+                      id="root_nestedArrayOptional__title"
+                    >
+                      nestedArrayOptional
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -5715,13 +5817,22 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -5779,13 +5890,22 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArray__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArray
+                    <span
+                      id="root_nestedArray__title"
+                    >
+                      nestedArray
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -6120,13 +6240,16 @@ exports[`single fields > optional data controls > does not show optional control
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -6149,13 +6272,16 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObjectOptional__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObjectOptional
+                    <span
+                      id="root_nestedObjectOptional__title"
+                    >
+                      nestedObjectOptional
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -6210,13 +6336,16 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepObjectOptional__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepObjectOptional
+                            <span
+                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                            >
+                              deepObjectOptional
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -6275,13 +6404,22 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepObject__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepObject
+                            <span
+                              id="root_nestedObjectOptional_deepObject__title"
+                            >
+                              deepObject
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                            >
+                              *
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -6340,13 +6478,16 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArrayOptional__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArrayOptional
+                            <span
+                              id="root_nestedObjectOptional_deepArrayOptional__title"
+                            >
+                              deepArrayOptional
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -6404,13 +6545,16 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArrayOptional2__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArrayOptional2
+                            <span
+                              id="root_nestedObjectOptional_deepArrayOptional2__title"
+                            >
+                              deepArrayOptional2
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -6468,13 +6612,22 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArray__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArray
+                            <span
+                              id="root_nestedObjectOptional_deepArray__title"
+                            >
+                              deepArray
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                            >
+                              *
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -6536,13 +6689,16 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArrayOptional__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArrayOptional
+                    <span
+                      id="root_nestedArrayOptional__title"
+                    >
+                      nestedArrayOptional
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -6600,13 +6756,22 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -6665,13 +6830,22 @@ exports[`single fields > optional data controls > does not show optional control
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArray__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArray
+                    <span
+                      id="root_nestedArray__title"
+                    >
+                      nestedArray
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -7008,13 +7182,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -7037,7 +7214,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObjectOptional__title"
                 >
                   <div
                     class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -7049,7 +7225,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                         style="margin-block: 0px;"
                       >
-                        nestedObjectOptional
+                        <span
+                          id="root_nestedObjectOptional__title"
+                        >
+                          nestedObjectOptional
+                        </span>
                       </h5>
                     </div>
                     <div
@@ -7136,7 +7316,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepObjectOptional__title"
                         >
                           <div
                             class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -7148,7 +7327,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                                 style="margin-block: 0px;"
                               >
-                                deepObjectOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                >
+                                  deepObjectOptional
+                                </span>
                               </h5>
                             </div>
                             <div
@@ -7207,13 +7390,22 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepObject__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepObject
+                            <span
+                              id="root_nestedObjectOptional_deepObject__title"
+                            >
+                              deepObject
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                            >
+                              *
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -7271,13 +7463,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArrayOptional__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArrayOptional
+                            <span
+                              id="root_nestedObjectOptional_deepArrayOptional__title"
+                            >
+                              deepArrayOptional
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -7334,7 +7529,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArrayOptional2__title"
                         >
                           <div
                             class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -7346,7 +7540,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                                 style="margin-block: 0px;"
                               >
-                                deepArrayOptional2
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                >
+                                  deepArrayOptional2
+                                </span>
                               </h5>
                             </div>
                             <div
@@ -7405,13 +7603,22 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArray__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArray
+                            <span
+                              id="root_nestedObjectOptional_deepArray__title"
+                            >
+                              deepArray
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                            >
+                              *
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -7472,7 +7679,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArrayOptional__title"
                 >
                   <div
                     class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -7484,7 +7690,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                         style="margin-block: 0px;"
                       >
-                        nestedArrayOptional
+                        <span
+                          id="root_nestedArrayOptional__title"
+                        >
+                          nestedArrayOptional
+                        </span>
                       </h5>
                     </div>
                     <div
@@ -7647,13 +7857,22 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -7711,13 +7930,22 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArray__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArray
+                    <span
+                      id="root_nestedArray__title"
+                    >
+                      nestedArray
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -7784,7 +8012,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <div
                         class="___12hmf4e_0000000 f2zxqi febqm8h"
-                        id="root_optionalObjectWithOneofs__title"
                       >
                         <div
                           class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -7796,7 +8023,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                               style="margin-block: 0px;"
                             >
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h5>
                           </div>
                           <div
@@ -7868,7 +8099,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <div
                         class="___12hmf4e_0000000 f2zxqi febqm8h"
-                        id="root_optionalArrayWithAnyofs__title"
                       >
                         <div
                           class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -7880,7 +8110,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                               style="margin-block: 0px;"
                             >
-                              optionalArrayWithAnyofs
+                              <span
+                                id="root_optionalArrayWithAnyofs__title"
+                              >
+                                optionalArrayWithAnyofs
+                              </span>
                             </h5>
                           </div>
                           <div
@@ -7960,13 +8194,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -7989,13 +8226,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObjectOptional__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObjectOptional
+                    <span
+                      id="root_nestedObjectOptional__title"
+                    >
+                      nestedObjectOptional
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -8050,13 +8290,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepObjectOptional__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepObjectOptional
+                            <span
+                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                            >
+                              deepObjectOptional
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -8088,13 +8331,22 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepObject__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepObject
+                            <span
+                              id="root_nestedObjectOptional_deepObject__title"
+                            >
+                              deepObject
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                            >
+                              *
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -8153,13 +8405,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArrayOptional__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArrayOptional
+                            <span
+                              id="root_nestedObjectOptional_deepArrayOptional__title"
+                            >
+                              deepArrayOptional
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -8217,13 +8472,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArrayOptional2__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArrayOptional2
+                            <span
+                              id="root_nestedObjectOptional_deepArrayOptional2__title"
+                            >
+                              deepArrayOptional2
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -8255,13 +8513,22 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="___12hmf4e_0000000 f2zxqi febqm8h"
-                          id="root_nestedObjectOptional_deepArray__title"
                         >
                           <h5
                             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                             style="margin-block: 0px;"
                           >
-                            deepArray
+                            <span
+                              id="root_nestedObjectOptional_deepArray__title"
+                            >
+                              deepArray
+                            </span>
+                            <span
+                              aria-hidden="true"
+                              class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                            >
+                              *
+                            </span>
                           </h5>
                           <div
                             aria-orientation="horizontal"
@@ -8323,13 +8590,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArrayOptional__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArrayOptional
+                    <span
+                      id="root_nestedArrayOptional__title"
+                    >
+                      nestedArrayOptional
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -8462,13 +8732,22 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -8527,13 +8806,22 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArray__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArray
+                    <span
+                      id="root_nestedArray__title"
+                    >
+                      nestedArray
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -8601,13 +8889,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <div
                         class="___12hmf4e_0000000 f2zxqi febqm8h"
-                        id="root_optionalObjectWithOneofs__title"
                       >
                         <h5
                           class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                           style="margin-block: 0px;"
                         >
-                          optionalObjectWithOneofs
+                          <span
+                            id="root_optionalObjectWithOneofs__title"
+                          >
+                            optionalObjectWithOneofs
+                          </span>
                         </h5>
                         <div
                           aria-orientation="horizontal"
@@ -8652,13 +8943,16 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <div
                         class="___12hmf4e_0000000 f2zxqi febqm8h"
-                        id="root_optionalArrayWithAnyofs__title"
                       >
                         <h5
                           class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                           style="margin-block: 0px;"
                         >
-                          optionalArrayWithAnyofs
+                          <span
+                            id="root_optionalArrayWithAnyofs__title"
+                          >
+                            optionalArrayWithAnyofs
+                          </span>
                         </h5>
                         <div
                           aria-orientation="horizontal"
@@ -8711,13 +9005,16 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -8740,7 +9037,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObjectOptional__title"
                 >
                   <div
                     class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -8752,7 +9048,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                         style="margin-block: 0px;"
                       >
-                        nestedObjectOptional
+                        <span
+                          id="root_nestedObjectOptional__title"
+                        >
+                          nestedObjectOptional
+                        </span>
                       </h5>
                     </div>
                     <div
@@ -8811,7 +9111,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArrayOptional__title"
                 >
                   <div
                     class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -8823,7 +9122,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                         style="margin-block: 0px;"
                       >
-                        nestedArrayOptional
+                        <span
+                          id="root_nestedArrayOptional__title"
+                        >
+                          nestedArrayOptional
+                        </span>
                       </h5>
                     </div>
                     <div
@@ -8882,13 +9185,22 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -8946,13 +9258,22 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArray__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArray
+                    <span
+                      id="root_nestedArray__title"
+                    >
+                      nestedArray
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -9019,7 +9340,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <div
                         class="___12hmf4e_0000000 f2zxqi febqm8h"
-                        id="root_optionalObjectWithOneofs__title"
                       >
                         <div
                           class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -9031,7 +9351,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                               style="margin-block: 0px;"
                             >
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h5>
                           </div>
                           <div
@@ -9103,7 +9427,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <div
                         class="___12hmf4e_0000000 f2zxqi febqm8h"
-                        id="root_optionalArrayWithAnyofs__title"
                       >
                         <div
                           class="fui-Flex ___1gzszts_10anl4a f22iagw"
@@ -9115,7 +9438,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                               style="margin-block: 0px;"
                             >
-                              optionalArrayWithAnyofs
+                              <span
+                                id="root_optionalArrayWithAnyofs__title"
+                              >
+                                optionalArrayWithAnyofs
+                              </span>
                             </h5>
                           </div>
                           <div
@@ -9195,13 +9522,16 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
@@ -9224,13 +9554,16 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObjectOptional__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObjectOptional
+                    <span
+                      id="root_nestedObjectOptional__title"
+                    >
+                      nestedObjectOptional
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -9262,13 +9595,16 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArrayOptional__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArrayOptional
+                    <span
+                      id="root_nestedArrayOptional__title"
+                    >
+                      nestedArrayOptional
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -9300,13 +9636,22 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -9365,13 +9710,22 @@ exports[`single fields > optional data controls > shows "add" optional controls 
               >
                 <div
                   class="___12hmf4e_0000000 f2zxqi febqm8h"
-                  id="root_nestedArray__title"
                 >
                   <h5
                     class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                     style="margin-block: 0px;"
                   >
-                    nestedArray
+                    <span
+                      id="root_nestedArray__title"
+                    >
+                      nestedArray
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      class="___di7pjm0_0000000 f1whyuy6 fruq291"
+                    >
+                      *
+                    </span>
                   </h5>
                   <div
                     aria-orientation="horizontal"
@@ -9439,13 +9793,16 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <div
                         class="___12hmf4e_0000000 f2zxqi febqm8h"
-                        id="root_optionalObjectWithOneofs__title"
                       >
                         <h5
                           class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                           style="margin-block: 0px;"
                         >
-                          optionalObjectWithOneofs
+                          <span
+                            id="root_optionalObjectWithOneofs__title"
+                          >
+                            optionalObjectWithOneofs
+                          </span>
                         </h5>
                         <div
                           aria-orientation="horizontal"
@@ -9490,13 +9847,16 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <div
                         class="___12hmf4e_0000000 f2zxqi febqm8h"
-                        id="root_optionalArrayWithAnyofs__title"
                       >
                         <h5
                           class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
                           style="margin-block: 0px;"
                         >
-                          optionalArrayWithAnyofs
+                          <span
+                            id="root_optionalArrayWithAnyofs__title"
+                          >
+                            optionalArrayWithAnyofs
+                          </span>
                         </h5>
                         <div
                           aria-orientation="horizontal"
@@ -12036,13 +12396,16 @@ exports[`single fields > title field 1`] = `
       >
         <div
           class="___12hmf4e_0000000 f2zxqi febqm8h"
-          id="root__title"
         >
           <h5
             class="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
             style="margin-block: 0px;"
           >
-            Titre 1
+            <span
+              id="root__title"
+            >
+              Titre 1
+            </span>
           </h5>
           <div
             aria-orientation="horizontal"
