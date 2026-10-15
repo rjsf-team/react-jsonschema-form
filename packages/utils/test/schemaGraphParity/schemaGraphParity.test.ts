@@ -9,7 +9,7 @@ import {
   slug,
   toBaselineText,
 } from '../../../../testing/schemaGraphParity/baseline.ts';
-import { parityCorpus, parityFamilies } from '../../../../testing/schemaGraphParity/corpus.ts';
+import { PARITY_SHAPE_TIMEOUT, parityCorpus, parityFamilies } from '../../../../testing/schemaGraphParity/corpus.ts';
 import { pendingSurfaces } from '../../../../testing/schemaGraphParity/pending.ts';
 import type { ParityShape } from '../../../../testing/schemaGraphParity/types.ts';
 import type { DefaultFormStateBehavior, ValidatorType } from '../../src/index.ts';
@@ -110,7 +110,7 @@ describe('schema graph parity corpus', () => {
 
 describe('schema graph parity: retrieveSchema and getDefaultFormState', () => {
   for (const family of parityFamilies) {
-    describe(family, () => {
+    describe(family, { timeout: PARITY_SHAPE_TIMEOUT }, () => {
       const shapes = distinctSchemas(parityCorpus[family]);
       for (const title of pendingTitles(family, shapes, ['retrieveSchema', 'getDefaultFormState'])) {
         // oxlint-disable-next-line vitest/warn-todo -- v7 overflows the stack or runs out of memory here; a later stage enables it

@@ -12,7 +12,7 @@ import {
   slug,
   toBaselineText,
 } from '../../../../testing/schemaGraphParity/baseline.ts';
-import { parityCorpus, parityFamilies } from '../../../../testing/schemaGraphParity/corpus.ts';
+import { PARITY_SHAPE_TIMEOUT, parityCorpus, parityFamilies } from '../../../../testing/schemaGraphParity/corpus.ts';
 import type { ParityShape } from '../../../../testing/schemaGraphParity/types.ts';
 import { createFormComponent } from '../testUtils.tsx';
 
@@ -84,7 +84,7 @@ async function recordRender(shape: ParityShape, interact: boolean) {
 
 describe('schema graph parity: getDefaultFormState under AJV and the rendered Form', () => {
   for (const family of parityFamilies) {
-    describe(family, () => {
+    describe(family, { timeout: PARITY_SHAPE_TIMEOUT }, () => {
       const shapes = parityCorpus[family];
       for (const title of pendingTitles(family, shapes, ['ajv8Defaults', 'render', 'interaction'])) {
         // oxlint-disable-next-line vitest/warn-todo -- v7 overflows the stack or runs out of memory here; a later stage enables it
