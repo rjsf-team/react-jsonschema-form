@@ -168,8 +168,16 @@ export function schemaFrom<S extends StrictRJSFSchema, U>(template: S, source: U
   return Object.assign(schema, source);
 }
 
+/** The keys of the seed lists, which are never changed once made, so a list a plan hands out is keyed once */
+const seedKeys = new WeakMap<readonly Seed[], string>();
+
 export function seedsKey(seeds: readonly Seed[]): string {
-  return seeds.map(({ node, refPath }) => `${node}:${refPath.join('.')}`).join(';');
+  let key = seedKeys.get(seeds);
+  if (key === undefined) {
+    key = seeds.map(({ node, refPath }) => `${node}:${refPath.join('.')}`).join(';');
+    seedKeys.set(seeds, key);
+  }
+  return key;
 }
 
 interface MutableChildren {
@@ -370,27 +378,22 @@ function flattenRef<S extends StrictRJSFSchema>(
   return keywords;
 }
 
-/** Returns the definition a `$ref` names, read from `from` as the plan reads a `$ref` target, its chain of references
- * followed, so that the form and the scoring of options read a reference alike. A boolean definition reads as the
- * empty schema. A subschema no `$ref` of the root reaches is not in the graph, and is left to `findSchemaDefinition()`.
+/** Returns the definition the `$ref` of the node `from` names, read as the plan reads a `$ref` target, its chain of
+ * references followed, so that the form and the scoring of options read a reference alike. A boolean definition reads
+ * as the empty schema, and so does a node holding no `$ref`.
  *
- * @param graph - The graph of the root schema
- * @param ref - The reference
- * @param [from] - The node holding the reference, which a relative reference resolves against
- * @returns - The definition, or undefined when the graph does not hold it
- * @throws - The error `findSchemaDefinition()` throws for a chain of references that loops
+ * @param graph - The graph holding the node
+ * @param from - The node holding the reference
+ * @returns - The definition
+ * @throws - The error `findSchemaDefinition()` throws for a reference that resolves to nothing or a chain that loops
  */
-export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(
-  graph: SchemaGraph<S>,
-  ref: string,
-  from?: NodeId,
-): S | undefined {
-  const id = graph.resolveRef(ref, from);
-  if (id === undefined) {
-    return undefined;
+export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, from: NodeId): S {
+  const node = graph.node(from);
+  const target = node.kind === 'schema' && node.ref !== undefined ? graph.node(node.ref) : undefined;
+  if (target?.kind === 'invalid') {
+    throw new Error(target.message);
   }
-  const target = graph.node(id);
-  if (target.kind !== 'schema') {
+  if (target?.kind !== 'schema') {
     return schemaFrom(graph.rawRoot, {});
   }
   const keywords = flattenRef(graph, asTarget(graph, target), [], () => true);

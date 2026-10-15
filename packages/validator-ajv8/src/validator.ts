@@ -8,7 +8,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, isObject, logOnce, ID_KEY, ROOT_SCHEMA_PREFIX, schemaKey, withIdRefPrefix } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
 import createAjvInstance from './createAjvInstance.ts';
@@ -238,10 +238,13 @@ export default class AJV8Validator<
         this.ajv.addSchema(rootSchema, rootSchemaId);
       }
     } catch {
-      // A root this instance's dialect rejects is left unregistered rather than half-registered under its id, where
-      // every later root would collide with it. A schema validated against it fails only if it refers into it, and
-      // reports that as its own compilation error.
+      // A root this instance's dialect rejects, such as a 2020-12 root under the default draft-07 Ajv, is still
+      // registered, unvalidated, so a `$ref` into its definitions resolves from the first call on. The old root is
+      // dropped first because comparing against it compiles it, which throws for a rejected root.
       this.ajv.removeSchema(rootSchemaId);
+      if (isObject(rootSchema)) {
+        this.ajv.addSchema(rootSchema, rootSchemaId, undefined, false);
+      }
     }
     this.lastSeenRootSchema = rootSchema;
     this.hasRegisteredRootSchema = true;

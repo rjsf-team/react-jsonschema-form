@@ -247,6 +247,21 @@ describe('AJV8Validator', () => {
         addSchemaSpy.mockRestore();
         removeSchemaSpy.mockRestore();
       });
+      it('resolves a $ref into a root whose dialect it rejects from the first call on, and registers the next root', () => {
+        const localValidator = new AJV8Validator({});
+        const rejectedRoot: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $defs: { n: { type: 'object' } },
+          type: 'object',
+        };
+        const nextRoot: RJSFSchema = { definitions: { animal: { const: 'Cat' } } };
+
+        expect(localValidator.isValid({ $ref: '#/$defs/n' }, {}, rejectedRoot)).toBe(true);
+        expect(localValidator.isValid({ $ref: '#/$defs/n' }, 'text', rejectedRoot)).toBe(false);
+        expect(localValidator.isValid({ $ref: '#/$defs/n' }, {}, rejectedRoot)).toBe(true);
+        expect(localValidator.isValid({ $ref: '#/definitions/animal' }, 'Cat', nextRoot)).toBe(true);
+        expect(localValidator.isValid({ $ref: '#/definitions/animal' }, 'Dog', nextRoot)).toBe(false);
+      });
     });
     describe('scoring an option whose $id is the base of a relative $ref', () => {
       const pickOptions: RJSFSchema[] = [

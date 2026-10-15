@@ -62,7 +62,12 @@ import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
-import retrieveSchema, { dependencyOption, resolveOwnRef, stubExistingAdditionalProperties } from './retrieveSchema.ts';
+import retrieveSchema, {
+  dependencyOption,
+  isLeafSchema,
+  resolveOwnRef,
+  stubExistingAdditionalProperties,
+} from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -608,7 +613,23 @@ function qualifiedDependencies<S extends StrictRJSFSchema>(view: DefaultsView<S>
     .join(',');
 }
 
-/** Computes the defaults of the child `child` of a field, memoized across the passes of the field's fixed point */
+/** The defaults last computed for a field seeded by one leaf subschema, by the subschema, and what they were computed
+ * from: such a field reads nothing but its own keywords and its props, and an object field's children are folded again
+ * on every edit of any one of them. Only a value that is not an object is kept, so no caller is handed an object
+ * another holds.
+ */
+const leafDefaults = new WeakMap<object, MemoEntry>();
+
+/** The subschema seeding `field` when it is the field's one seed and a leaf */
+function leafOf<S extends StrictRJSFSchema>(field: DefaultsField<S>): object | undefined {
+  const [seed, ...rest] = field.seeds;
+  const node = seed === undefined || rest.length > 0 ? undefined : field.graph.node(seed.node);
+  return node?.kind === 'schema' && isLeafSchema(node.raw) ? node.raw : undefined;
+}
+
+/** Computes the defaults of the child `child` of a field, memoized across the passes of the field's fixed point, and
+ * across calls for a child seeded by a leaf
+ */
 function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   memoKey: string,
@@ -618,22 +639,31 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
 ): unknown {
   const inputs = [
     context,
+    child.graph,
     seedsKey(child.seeds),
     child.expanded,
     child.fallback,
     props.parentDefaults,
     props.rawFormData,
     props.required,
+    props.requiredAsRoot,
     props.includeUndefinedValues,
+    props.initialDefaultsGenerated,
     props.uiSchema,
+    props.uiSchemaDefinitions,
     props.shouldMergeDefaultsIntoFormData,
   ];
-  const entry = memo?.get(memoKey);
-  if (entry?.inputs.every((input, index) => Object.is(input, inputs[index]))) {
-    return entry.value;
+  const leaf = leafOf(child);
+  for (const entry of [memo?.get(memoKey), leaf && leafDefaults.get(leaf)]) {
+    if (entry?.inputs.every((input, index) => Object.is(input, inputs[index]))) {
+      return entry.value;
+    }
   }
   const { value } = foldField<T, S, F>(context, child, { ...props, memo: undefined });
   memo?.set(memoKey, { inputs, value });
+  if (leaf !== undefined && (typeof value !== 'object' || value === null)) {
+    leafDefaults.set(leaf, { inputs, value });
+  }
   return value;
 }
 

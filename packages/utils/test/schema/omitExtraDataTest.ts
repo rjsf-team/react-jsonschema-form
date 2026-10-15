@@ -969,6 +969,46 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ inner: { name: '' } });
       });
 
+      it('keeps the fields the keywords beside a $ref render, along a draft-07 chain of references, as the form does', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          definitions: {
+            O: { type: 'object', properties: { a: { type: 'string' } } },
+            M: { $ref: '#/definitions/O', properties: { b: { type: 'string' } } },
+          },
+          properties: {
+            v: { $ref: '#/definitions/M' },
+            w: { $ref: '#/definitions/O', properties: { c: { type: 'string' } } },
+          },
+        };
+        const formData = { v: { a: 'x', b: 'y' }, w: { a: 'x', c: 'z' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          v: { b: 'y' },
+          w: { c: 'z' },
+        });
+      });
+
+      it('resolves a $ref under a relative $id against that $id', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            child: {
+              $id: 'child.json',
+              type: 'object',
+              properties: { a: { $ref: '#/$defs/x' } },
+              $defs: { x: { type: 'object', properties: { k: { type: 'string' } } } },
+            },
+          },
+          type: 'object',
+          properties: { c: { $ref: 'child.json' } },
+        };
+        const formData = { c: { a: { k: 'kept', extra: 'drop' }, extra: 'drop' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+          c: { a: { k: 'kept' } },
+        });
+      });
+
       it('uses customMergeAllOf when provided', () => {
         const schema: RJSFSchema = {
           allOf: [

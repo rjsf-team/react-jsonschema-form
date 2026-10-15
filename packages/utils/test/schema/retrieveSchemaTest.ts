@@ -20,6 +20,7 @@ import {
   resolveAnyOrOneOfSchemas,
   resolveCondition,
   resolveDependencies,
+  resolveOwnRef,
   resolveSchema,
   retrieveSchemaInternal,
   stubExistingAdditionalProperties,
@@ -158,6 +159,34 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     it('returns undefined for a schema that says nothing about the type', () => {
       expect(getAdditionalPropertyType({})).toBeUndefined();
       expect(getAdditionalPropertyType({ minLength: 2 })).toBeUndefined();
+    });
+  });
+  describe('resolveOwnRef()', () => {
+    const components = {
+      schemas: {
+        M: { $ref: '#/components/schemas/O', properties: { b: { type: 'string' } } },
+        O: { type: 'object', properties: { a: { type: 'string' } } },
+      },
+    };
+    const option: RJSFSchema = { $ref: '#/components/schemas/M' };
+
+    it('reads a definition no $ref of the root reaches as the form reads it, the keywords beside a chained $ref winning', () => {
+      const unreached: RJSFSchema = { components };
+      const reached: RJSFSchema = { components, properties: { x: { $ref: '#/components/schemas/M' } } };
+      const expected = {
+        type: 'object',
+        properties: { b: { type: 'string' } },
+        [RJSF_REF_KEY]: '#/components/schemas/M',
+      };
+
+      expect(resolveOwnRef(option, unreached)).toEqual(expected);
+      expect(resolveOwnRef(option, reached)).toEqual(expected);
+      expect(retrieveSchema({ validator: testValidator }, option, unreached).properties).toEqual(expected.properties);
+    });
+    it('throws for a $ref that names no definition', () => {
+      expect(() => resolveOwnRef({ $ref: '#/components/schemas/missing' }, { components })).toThrow(
+        'Could not find a definition for #/components/schemas/missing.',
+      );
     });
   });
   describe('retrieveSchema()', () => {

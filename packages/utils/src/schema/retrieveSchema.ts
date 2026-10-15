@@ -6,6 +6,7 @@ import {
 } from '../additionalPropertiesUtils.ts';
 import { combinationsUpTo } from '../combinationsOf.ts';
 import {
+  ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   ALL_OF_KEY,
   ANY_OF_KEY,
@@ -13,6 +14,7 @@ import {
   ELSE_KEY,
   GUESSED_TYPE_FLAG,
   IF_KEY,
+  ITEMS_KEY,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
@@ -20,6 +22,7 @@ import {
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   THEN_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
@@ -87,7 +90,53 @@ export default function retrieveSchema<
     return schemaFrom(schema, {});
   }
   const graph = parseSchemaGraph<S>(rootSchema ?? schemaFrom(schema, {}));
-  return buildView<S, F>(context, graph, fieldOf<S>(graph, schema), rawFormData, resolveAnyOfOrOneOfRefs);
+  const leaf = leafViews.get(schema);
+  if (leaf?.graph === graph && isSchemaObject<S>(leaf.view)) {
+    return leaf.view;
+  }
+  const view = buildView<S, F>(context, graph, fieldOf<S>(graph, schema), rawFormData, resolveAnyOfOrOneOfRefs);
+  if (isLeaf(graph, schema)) {
+    leafViews.set(schema, { graph, view });
+  }
+  return view;
+}
+
+/** The views of the schemas that merge nothing and hold no subschemas, by schema. Such a view reads neither the data nor
+ * the context, and `isSelect()` and `sanitizeDataForNewSchema()` retrieve every property of a form on every edit, so
+ * it is retrieved once per root rather than planned again on each call.
+ */
+const leafViews = new WeakMap<object, { readonly graph: object; readonly view: object }>();
+
+/** The keywords that merge a subschema in, hand one out, or stub the extra keys of the data */
+const NON_LEAF_KEYWORDS: readonly string[] = [
+  REF_KEY,
+  ALL_OF_KEY,
+  IF_KEY,
+  DEPENDENCIES_KEY,
+  ANY_OF_KEY,
+  ONE_OF_KEY,
+  PROPERTIES_KEY,
+  PATTERN_PROPERTIES_KEY,
+  ADDITIONAL_PROPERTIES_KEY,
+  UNEVALUATED_PROPERTIES_KEY,
+  ITEMS_KEY,
+  'prefixItems',
+  'additionalItems',
+];
+
+/** Whether `schema` merges nothing and holds no subschemas, so that what it resolves to depends on nothing but itself
+ *
+ * @param schema - The schema to check
+ * @returns - True when the schema holds none of the keywords that merge a subschema in, hand one out or stub the extra
+ *          keys of the data
+ */
+export function isLeafSchema(schema: object): boolean {
+  return !NON_LEAF_KEYWORDS.some((keyword) => Object.hasOwn(schema, keyword));
+}
+
+/** Whether `schema` is a call root, rather than a schema `retrieveSchema()` handed out, that is a leaf */
+function isLeaf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): boolean {
+  return readProvenance<S>(schema, graph) === undefined && isLeafSchema(schema);
 }
 
 /** The schemas `retrieveSchema()` handed out. A schema found here is one of them as it was handed out, so it is
@@ -227,21 +276,16 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
  * @returns - The schema with its own reference resolved, or the schema itself when it holds none
+ * @throws - The error `findSchemaDefinition()` throws for a reference that resolves to nothing or a chain that loops
  */
 export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): S {
   const ref = schema[REF_KEY];
   if (typeof ref !== 'string') {
     return schema;
   }
-  const root = parseSchemaGraph<S>(rootSchema);
-  const known = root.byObject(schema);
-  const stamped = known === undefined ? readProvenance<S>(schema, root) : undefined;
-  const definition =
-    (stamped === undefined
-      ? refDefinition<S>(root, ref, known)
-      : refDefinition<S>(stamped.graph, ref, stamped.seeds[0].node)) ?? findSchemaDefinition<S>(ref, rootSchema);
+  const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema), schema);
   const { [REF_KEY]: _ref, ...siblings } = schema;
-  return { ...definition, ...siblings, [RJSF_REF_KEY]: ref };
+  return { ...refDefinition<S>(graph, seeds[0].node), ...siblings, [RJSF_REF_KEY]: ref };
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */

@@ -5,7 +5,6 @@ import {
   getAdditionalPropertySchema,
   getMatchingPatternProperties,
 } from '../additionalPropertiesUtils.ts';
-import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
@@ -105,7 +104,7 @@ export default function omitExtraData<
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = resolveRef(sd.$ref);
+          sd = resolveRef(sd);
         }
         // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
         // the names it requires live: read off the wrapper around them it requires nothing, and a required child
@@ -342,23 +341,22 @@ export default function omitExtraData<
    */
   const mergedAllOfSchemas = new WeakMap<object, S>();
 
-  /** Each `$ref` resolved once per call, so that the same reference is the same object everywhere it is read. A `$ref`
-   * with sibling keywords resolves to a wrapper `findSchemaDefinition()` builds fresh on every call, which the
-   * `allOf` merges are remembered under: resolved twice, such a schema is merged twice over for every node of the form
-   * data it describes
+  /** Each schema's `$ref` resolved once per call, so that the same reference is the same object everywhere it is read:
+   * the `allOf` merges are remembered under it, and resolved twice, such a schema would be merged twice over for every
+   * node of the form data it describes
    */
-  const resolvedRefs = new Map<string, S>();
+  const resolvedRefs = new WeakMap<object, S>();
 
-  /** Resolves a `$ref` against this call's `rootSchema`
+  /** Resolves a schema's own `$ref` against this call's `rootSchema`, through the schema graph as the form resolves it
    *
-   * @param ref - The reference to resolve
-   * @returns - The schema it names
+   * @param referring - The schema holding the reference
+   * @returns - The schema it reads as
    */
-  function resolveRef(ref: string): S {
-    let resolved = resolvedRefs.get(ref);
+  function resolveRef(referring: S): S {
+    let resolved = resolvedRefs.get(referring);
     if (resolved === undefined) {
-      resolved = findSchemaDefinition<S>(ref, rootSchema);
-      resolvedRefs.set(ref, resolved);
+      resolved = resolveOwnRef<S>(referring, rootSchema);
+      resolvedRefs.set(referring, resolved);
     }
     return resolved;
   }
@@ -419,7 +417,7 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(resolveRef(ref), source, target, useSourceAsFallback);
+      return omit(resolveRef(localSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
       localSchema = mergeAllOfOnce(localSchema, allOf);

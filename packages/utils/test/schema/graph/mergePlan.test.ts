@@ -679,29 +679,44 @@ describe('refDefinition()', () => {
       alias: { $ref: '#/$defs/alias' },
       pure: { $ref: 'child.json' },
     },
-    properties: { c: { $ref: 'child.json' }, t: { $ref: '#/$defs/t' }, loop: { $ref: '#/$defs/alias' } },
-    components: { unreached: { type: 'string' } },
+    properties: {
+      c: { $ref: 'child.json' },
+      t: { $ref: '#/$defs/t' },
+      loop: { $ref: '#/$defs/alias' },
+      dangling: { $ref: '#/$defs/missing' },
+    },
   };
   const graph = parseSchemaGraph(rootSchema);
-  const node = (pointer: string) => graph.byPointer(pointer);
+  const node = (pointer: string) => {
+    const id = graph.byPointer(pointer);
+    if (id === undefined) {
+      throw new Error(`No node at ${pointer}`);
+    }
+    return id;
+  };
 
   it('resolves a $ref against the base URI of the node holding it, conjoining a chained target', () => {
-    expect(refDefinition(graph, '#/$defs/x', node('/$defs/child/properties/a/anyOf/0'))).toEqual({
+    expect(refDefinition(graph, node('/$defs/child/properties/a/anyOf/0'))).toEqual({
       allOf: [{ title: 'x' }, { $ref: '#/$defs/y' }],
     });
   });
   it('follows a chain of references with nothing beside them to the definition it ends at', () => {
-    expect(refDefinition(graph, '#/$defs/pure')).toEqual(
+    expect(refDefinition(graph, node('/$defs/pure'))).toEqual(
       expect.objectContaining({ $id: 'child.json', type: 'object' }),
     );
   });
-  it('reads a boolean definition as the empty schema', () => {
-    expect(refDefinition(graph, '#/$defs/t')).toEqual({});
-  });
-  it('leaves a subschema the graph does not hold to findSchemaDefinition()', () => {
-    expect(refDefinition(graph, '#/components/unreached')).toBeUndefined();
+  it('reads a boolean definition, and a node holding no $ref, as the empty schema', () => {
+    expect(refDefinition(graph, node('/properties/t'))).toEqual({});
+    expect(refDefinition(graph, graph.root)).toEqual({});
   });
   it('throws the error findSchemaDefinition() throws for a chain of references that loops', () => {
-    expect(() => refDefinition(graph, '#/$defs/alias')).toThrow('Definition for #/$defs/alias is a circular reference');
+    expect(() => refDefinition(graph, node('/properties/loop'))).toThrow(
+      'Definition for #/$defs/alias is a circular reference',
+    );
+  });
+  it('throws the error findSchemaDefinition() throws for a reference that resolves to nothing', () => {
+    expect(() => refDefinition(graph, node('/properties/dangling'))).toThrow(
+      'Could not find a definition for #/$defs/missing.',
+    );
   });
 });
