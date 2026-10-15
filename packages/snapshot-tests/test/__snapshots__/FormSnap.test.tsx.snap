@@ -4988,9 +4988,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             class="panel panel-default panel-body"
           >
             <div
-              class="form-group"
-            />
-            <div
               class="form-group rjsf-field rjsf-field-object"
             >
               <fieldset
@@ -5029,9 +5026,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           <div
             class="panel panel-default panel-body"
           >
-            <div
-              class="form-group"
-            />
             <div
               class="form-group rjsf-field rjsf-field-array"
             >
@@ -5502,9 +5496,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
             class="panel panel-default panel-body"
           >
             <div
-              class="form-group"
-            />
-            <div
               class="form-group rjsf-field rjsf-field-object"
             >
               <fieldset
@@ -5533,9 +5524,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           <div
             class="panel panel-default panel-body"
           >
-            <div
-              class="form-group"
-            />
             <div
               class="form-group rjsf-field rjsf-field-array"
             >
@@ -5751,9 +5739,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             class="panel panel-default panel-body"
           >
             <div
-              class="form-group"
-            />
-            <div
               class="form-group rjsf-field rjsf-field-object"
             >
               <fieldset
@@ -5792,9 +5777,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           <div
             class="panel panel-default panel-body"
           >
-            <div
-              class="form-group"
-            />
             <div
               class="form-group rjsf-field rjsf-field-array"
             >
@@ -6002,9 +5984,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
             class="panel panel-default panel-body"
           >
             <div
-              class="form-group"
-            />
-            <div
               class="form-group rjsf-field rjsf-field-object"
             >
               <fieldset
@@ -6033,9 +6012,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           <div
             class="panel panel-default panel-body"
           >
-            <div
-              class="form-group"
-            />
             <div
               class="form-group rjsf-field rjsf-field-array"
             >

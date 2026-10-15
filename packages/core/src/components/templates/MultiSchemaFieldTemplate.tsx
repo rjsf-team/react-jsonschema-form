@@ -13,7 +13,8 @@ export default function MultiSchemaFieldTemplate<
   const { selector, optionSchemaField } = props;
   return (
     <div className='panel panel-default panel-body'>
-      <div className='form-group'>{selector}</div>
+      {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
+      {selector ? <div className='form-group'>{selector}</div> : null}
       {optionSchemaField}
     </div>
   );
