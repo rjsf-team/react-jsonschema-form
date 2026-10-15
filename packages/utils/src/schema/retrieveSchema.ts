@@ -35,6 +35,7 @@ import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
 import { declaredRef, enclosingRefPath, mergeBranch, resolvedFromRef, resolvedSchemaOf } from '../refOf.ts';
+import setOwn from '../setOwn.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -687,16 +688,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         passCount,
         tally,
       );
-      if (key === '__proto__') {
-        Object.defineProperty(updatedProps, key, {
-          value: resolvedProperty,
-          enumerable: true,
-          writable: true,
-          configurable: true,
-        });
-      } else {
-        updatedProps[key] = resolvedProperty;
-      }
+      setOwn(updatedProps, key, resolvedProperty);
     }
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
   }
@@ -943,7 +935,10 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
   if (type === undefined) {
     return offersOptions ? { ...subSchema } : guessedTypeSchema<S>(formData, subSchema);
   }
-  return { ...(offersOptions ? subSchema : stubbableSchema<S>(subSchema)), type };
+  return {
+    ...(offersOptions ? subSchema : stubbableSchema<S>(subSchema)),
+    type,
+  };
 }
 
 /** Returns the subschemas a `dependencies` entry merges into the schema it belongs to for the `formData` in hand,
@@ -990,7 +985,10 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   // as a `$ref` leaves them behind that reference for `referencedDefinition()` to read as options beside the branch
   // settled here, which strips whatever the referring schema declares itself. Read as options, a name every branch
   // declares counts as one the form renders even where no single branch qualifies and none of the `oneOf` is merged in
-  const withoutOneOf = { ...dependentWithoutOneOf, [ONE_OF_KEY]: [] as S[] } as unknown as S;
+  const withoutOneOf = {
+    ...dependentWithoutOneOf,
+    [ONE_OF_KEY]: [] as S[],
+  } as unknown as S;
   const matching =
     rootSchema === undefined
       ? []
@@ -1009,7 +1007,10 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
           if (!conditionPropertySchema) {
             return false;
           }
-          const conditionSchema = { type: 'object', properties: { [dependencyKey]: conditionPropertySchema } } as S;
+          const conditionSchema = {
+            type: 'object',
+            properties: { [dependencyKey]: conditionPropertySchema },
+          } as S;
           return context.validator.isValid(conditionSchema, formData, rootSchema);
         });
   return matching.length === 1 ? [withoutOneOf, matching[0]] : [withoutOneOf];
@@ -1573,7 +1574,10 @@ export function retrieveSchemaInternal<
         return [{ key, branches }];
       });
       const firstBranches = Object.fromEntries(branchesByKey.map(({ key, branches: [first] }) => [key, first]));
-      const withFirstBranches: S = { ...resolvedSchema, properties: { ...properties, ...firstBranches } };
+      const withFirstBranches: S = {
+        ...resolvedSchema,
+        properties: { ...properties, ...firstBranches },
+      };
       withMergedProperties = [
         withFirstBranches,
         ...branchesByKey.flatMap(({ key, branches }) =>
