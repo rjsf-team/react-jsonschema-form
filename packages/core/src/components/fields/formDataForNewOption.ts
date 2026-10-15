@@ -54,7 +54,8 @@ function renderedOption<S extends StrictRJSFSchema = RJSFSchema>(parentSchema?: 
 }
 
 /** Determines whether `option` declares a value of its own for `key`, resolving the property's schema first.
- * `stalePathsForNewSchema()` applies the same rule to a conditional branch, through the same predicate.
+ * `sanitizeFieldTree()` reads what a conditional branch declares for a key the same way: the key's own `default`, or
+ * the level's `default` object.
  *
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve the property schema with
  * @param option - The option whose declaration is being tested
