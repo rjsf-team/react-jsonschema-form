@@ -1320,19 +1320,6 @@ export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   }
 }
 
-/** The relaxed form of each option that had to be relaxed, memoized by the option it was relaxed from. Relaxing
- * derives an `$id`, which hashes the option, and `omitExtraData()` relaxes the options of a `oneOf` on every call, so
- * without this a large option is serialized on every change to the form data -- and twice over, since the schema it is
- * then scored by derives an `$id` of its own. The relaxed form depends on nothing but the option, and an option is
- * read rather than written wherever it is scored, so an entry stays the relaxation of what it is keyed by.
- *
- * It is keyed by the option as resolution leaves it rather than as the caller declared it, since that is what the
- * relaxation is of, so a call that resolves a `$ref` hands over a new object and misses: an option that is a `$ref`
- * is relaxed once per call. Keying by the declared option instead would hit, but the relaxation of a `$ref` depends
- * on the `rootSchema` it resolves against, which the key would not carry
- */
-const relaxedOptions = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
-
 /** Normalises a list of `oneOf`/`anyOf` options for scoring them only (not for filtering).
  * Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
  * When `resolveRefs` is `true`, each object option has its own `$ref` resolved first
@@ -1358,17 +1345,8 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
       return normalizeBooleanSchema<S>(d);
     }
     const schema = resolveRefs && rootSchema ? resolveOwnRef<S>(d, rootSchema) : d;
-    if (schema.additionalProperties !== false) {
-      return schema;
-    }
-    const memoized = relaxedOptions.get(schema);
-    if (memoized) {
-      return memoized as S;
-    }
     // Relaxing makes a schema the option's `$id` does not name, which a validator would answer with the option's
     // compiled function
-    const relaxed = withVariantId<S>({ ...schema, additionalProperties: true });
-    relaxedOptions.set(schema, relaxed);
-    return relaxed;
+    return schema.additionalProperties === false ? withVariantId<S>({ ...schema, additionalProperties: true }) : schema;
   });
 }

@@ -62,16 +62,17 @@ export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   return { ...schema, [ID_KEY]: variantId(id, withoutId) };
 }
 
-/** Returns the `$ref` naming the subschema at the JSON `pointer` in the root, encoded as `encodeURI()` encodes it. That
- * leaves the characters a fragment may hold, such as the `$` of `$defs`, as they are, and is how @cfworker/json-schema
- * keys the subschemas it looks a `$ref` up in, a `#` included, which Ajv and ata resolve as well.
+/** Returns the `$ref` naming the subschema at the JSON `pointer` in the root, encoded as `encodeURI()` encodes it,
+ * which leaves the characters a fragment may hold, such as the `$` of `$defs`, as they are. A `#` is escaped too:
+ * `encodeURI()` keeps it, and Ajv drops one ending the `$ref` as an empty fragment.
  */
 function refTo(pointer: string): string {
-  return `#${encodeURI(pointer)}`;
+  return `#${encodeURI(pointer).replaceAll('#', '%23')}`;
 }
 
 /** Returns `{ $ref }` naming the node `id` where it sits in the root, which a validator resolves against the root it is
- * given, or undefined for a node with no location there
+ * given, or undefined for a node with no location there or a boolean one, which holds no `$ref` for a pointer to keep
+ * in reach and which ata reads as `true` behind a `$ref`
  *
  * @param graph - The graph of the root
  * @param id - The node to name
@@ -79,14 +80,14 @@ function refTo(pointer: string): string {
  */
 export function pointerTo<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S | undefined {
   const node = graph.node(id);
-  if (node.kind === 'invalid' || NOT_IN_ROOT.test(node.pointer)) {
+  if (node.kind !== 'schema' || NOT_IN_ROOT.test(node.pointer)) {
     return undefined;
   }
   return schemaFrom(graph.rawRoot, { [REF_KEY]: refTo(node.pointer) });
 }
 
 /** Returns what a validator checks the subschema `id` with: `{ $ref }` naming it in the root, or the subschema itself
- * when it has no location there
+ * when `pointerTo()` gives no pointer
  *
  * @param graph - The graph of the root
  * @param id - The node of the subschema
@@ -166,25 +167,48 @@ export function dependencyCondition<S extends StrictRJSFSchema = RJSFSchema>(
   return schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: targetOf(graph, property) } });
 }
 
-function relaxes(node: ObjectNode, relax: boolean): boolean {
+/** Which of the keywords in an option's scope scoring drops: the `required`s with the `dependencies` entries listing
+ * names, and the `additionalProperties: false`s
+ */
+interface Loosening {
+  required: boolean;
+  additionalProperties: boolean;
+}
+
+function loosens(node: ObjectNode, loosening: Loosening): boolean {
   const { raw } = node;
   return (
-    REQUIRED_KEY in raw ||
-    Object.values(isObject(raw[DEPENDENCIES_KEY]) ? raw[DEPENDENCIES_KEY] : {}).some(Array.isArray) ||
-    (relax && raw[ADDITIONAL_PROPERTIES_KEY] === false)
+    (loosening.required &&
+      (REQUIRED_KEY in raw ||
+        Object.values(isObject(raw[DEPENDENCIES_KEY]) ? raw[DEPENDENCIES_KEY] : {}).some(Array.isArray))) ||
+    (loosening.additionalProperties && raw[ADDITIONAL_PROPERTIES_KEY] === false)
   );
 }
 
-/** Returns a copy of the node `id` that asks only that the data fit what it describes: every `required`, and every
- * `dependencies` entry listing names, is dropped from the node and the nodes `scopeOf()` lists, and with `relax`, an
- * `additionalProperties: false` among them is turned into `true`. A `$ref` among them is read as JSON Schema reads
- * one, as an `allOf` entry beside the keywords next to it, since a pointer cannot subtract from what it names. The
- * subschemas under the copy's other keywords stay as they are.
+/** Returns `value` with each subschema the graph holds in it replaced by what `targetOf()` hands a validator for it */
+function pointed<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, value: unknown): unknown {
+  if (Array.isArray(value)) {
+    return value.map((item) => pointed(graph, item));
+  }
+  if (!isObject(value)) {
+    return value;
+  }
+  const id = graph.byObject(value);
+  return id === undefined
+    ? Object.fromEntries(Object.entries(value).map(([key, child]) => [key, pointed(graph, child)]))
+    : targetOf(graph, id);
+}
+
+/** Returns a copy of the node `id` without what `loosening` drops, from the node and from the nodes `scopeOf()` lists,
+ * a dropped `additionalProperties: false` turned into `true`. A `$ref` among them is read as JSON Schema reads one, as an
+ * `allOf` entry beside the keywords next to it, since a pointer cannot subtract from what it names. The subschemas
+ * under the copy's other keywords are named by `pointed()` where they sit in the root, so each `$ref` below them
+ * resolves against the `$id`s above it there, and the copy drops its `$id`, which would rebase them.
  */
 function derive<S extends StrictRJSFSchema>(
   graph: SchemaGraph<S>,
   node: ObjectNode<S>,
-  relax: boolean,
+  loosening: Loosening,
   path: ReadonlySet<NodeId>,
 ): S {
   const { id } = node;
@@ -195,10 +219,11 @@ function derive<S extends StrictRJSFSchema>(
     if (childNode?.kind !== 'schema') {
       return value;
     }
-    return inner.has(childNode.id) ? targetOf(graph, childNode.id) : derive(graph, childNode, relax, inner);
+    return inner.has(childNode.id) ? targetOf(graph, childNode.id) : derive(graph, childNode, loosening, inner);
   };
   const {
-    [REQUIRED_KEY]: _required,
+    [ID_KEY]: _id,
+    [REQUIRED_KEY]: required,
     [REF_KEY]: ref,
     [ALL_OF_KEY]: allOf,
     [THEN_KEY]: then,
@@ -206,13 +231,19 @@ function derive<S extends StrictRJSFSchema>(
     [DEPENDENCIES_KEY]: dependencies,
     ...rest
   }: GenericObjectType = node.raw;
-  const copy: GenericObjectType = rest;
+  const copy: GenericObjectType = Object.fromEntries(
+    Object.entries(rest).map(([key, value]) => [key, pointed(graph, value)]),
+  );
+  if (!loosening.required && required !== undefined) {
+    copy[REQUIRED_KEY] = required;
+  }
   const target = node.ref === undefined ? undefined : graph.node(node.ref);
+  const resolved = target?.kind === 'invalid' ? undefined : target;
   const conjuncts = [
     ...(Array.isArray(allOf) ? allOf.map(sub) : []),
-    ...(target?.kind === 'schema' ? [sub(target.raw)] : []),
+    ...(resolved === undefined ? [] : [resolved.kind === 'schema' ? sub(resolved.raw) : targetOf(graph, resolved.id)]),
   ];
-  if (ref !== undefined && target?.kind !== 'schema') {
+  if (ref !== undefined && resolved === undefined) {
     copy[REF_KEY] = ref;
   }
   if (conjuncts.length > 0) {
@@ -224,23 +255,25 @@ function derive<S extends StrictRJSFSchema>(
   if (otherwise !== undefined) {
     copy[ELSE_KEY] = sub(otherwise);
   }
-  const schemaDependencies = Object.entries(isObject(dependencies) ? dependencies : {}).filter(
-    ([, dependency]) => !Array.isArray(dependency),
+  const keptDependencies = Object.entries(isObject(dependencies) ? dependencies : {}).filter(
+    ([, dependency]) => !loosening.required || !Array.isArray(dependency),
   );
-  if (schemaDependencies.length > 0) {
-    copy[DEPENDENCIES_KEY] = Object.fromEntries(schemaDependencies.map(([key, dependency]) => [key, sub(dependency)]));
+  if (keptDependencies.length > 0) {
+    copy[DEPENDENCIES_KEY] = Object.fromEntries(keptDependencies.map(([key, dependency]) => [key, sub(dependency)]));
   }
-  if (relax && copy[ADDITIONAL_PROPERTIES_KEY] === false) {
+  if (loosening.additionalProperties && copy[ADDITIONAL_PROPERTIES_KEY] === false) {
     copy[ADDITIONAL_PROPERTIES_KEY] = true;
   }
-  return withVariantId(schemaFrom(graph.rawRoot, copy));
+  return schemaFrom(graph.rawRoot, copy);
 }
 
 /** Returns what an `anyOf`/`oneOf` option is scored with: `{ $ref }` naming it in the root, or, where something in its
  * scope states a `required`, lists names under `dependencies` or, with `relax`, sets `additionalProperties: false`,
  * the copy `derive()` makes without them. A user who has yet to fill in a key the option requires is still matched to
- * it. The copy depends on the root, the node and `relax` alone, so a precompiled validator finds it under the key it
- * was compiled under.
+ * it. The `required`s are kept where nothing in the scope declares `properties`: an option such as
+ * `{ required: ['email'] }` describes nothing else for the data to fit, and is chosen by the keys it requires. The
+ * copy depends on the root, the node and `relax` alone, so a precompiled validator finds it under the key it was
+ * compiled under.
  *
  * @param graph - The graph of the root
  * @param id - The option's node
@@ -257,9 +290,15 @@ export function scoringTarget<S extends StrictRJSFSchema = RJSFSchema>(
     return targetOf(graph, id);
   }
   const pointer = pointerTo(graph, id);
-  return pointer !== undefined && !scopeOf(graph, id).some((member) => relaxes(member, relax))
+  const scope = scopeOf(graph, id);
+  const loosening = { required: scope.some(declaresProperties), additionalProperties: relax };
+  return pointer !== undefined && !scope.some((member) => loosens(member, loosening))
     ? pointer
-    : derive(graph, node, relax, new Set());
+    : derive(graph, node, loosening, new Set());
+}
+
+function declaresProperties(node: ObjectNode): boolean {
+  return isObject(node.raw.properties);
 }
 
 /** Returns whether the object `data` holds a key the option `id` declares, which scoring asks on top of the option's

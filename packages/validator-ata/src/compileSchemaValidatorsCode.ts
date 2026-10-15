@@ -3,7 +3,7 @@ import { getByPath, ID_KEY, isObject, REF_KEY, getValidationSchemas } from '@rjs
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
-import type { CompileValidatorOptionsType } from './types.ts';
+import type { CustomValidatorOptionsType } from './types.ts';
 
 /** The keywords whose definitions a `$ref` in a compiled schema can name. ata resolves a `$ref` only to an entry of one
  * of these, in the document it compiles
@@ -50,14 +50,16 @@ function inlineLocalRefs(value: unknown, rootSchema: unknown, inlined: ReadonlyS
   );
 }
 
-/** Returns `schema` as an object schema asserting what it says, since ata compiles neither a boolean schema nor one
- * asserting nothing
+/** Returns `schema` as an object schema asserting what it says, since ata compiles no boolean schema, and no schema
+ * holding no assertion it knows, such as `{ title: 'By email' }`. A `not` is an assertion it knows, so one that always
+ * holds is added where the schema has none, unless it holds a `$ref`, which ata compiles only on its own.
  */
 function compilable(schema: unknown): GenericObjectType {
   if (schema === false) {
     return { not: {} };
   }
-  return isObject(schema) && Object.keys(schema).length > 0 ? schema : { not: { not: {} } };
+  const object = isObject(schema) ? schema : {};
+  return 'not' in object || REF_KEY in object ? object : { ...object, not: { not: {} } };
 }
 
 /** Returns each schema of the `schemaMap` as a document ata compiles on its own. ata names no subschema of another
@@ -91,12 +93,11 @@ function hoistedSchemas<S extends StrictRJSFSchema>(schemaMap: Record<string, S>
  * the schemas so the precompiled validator can look each one up.
  *
  * @param schema - The schema to compile
- * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the options used to build the validator. A
- *        `customMergeAllOf` among them is not read: the schemas compiled do not depend on how `allOf` is merged
+ * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the options used to build the validator
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
-  options: CompileValidatorOptionsType<S> = {},
+  options: CustomValidatorOptionsType = {},
 ) {
   const { customFormats, ataOptionsOverrides = {} } = options;
   const schemaMaps = getValidationSchemas(schema);

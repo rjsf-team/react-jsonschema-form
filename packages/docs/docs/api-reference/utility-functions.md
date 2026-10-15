@@ -2279,12 +2279,10 @@ Two schemas sharing a key must validate the same way, so a schema derived from a
 ### schemaParser&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Deprecated: returns [`getValidationSchemas(rootSchema)`](#getvalidationschemassextendsstrictrjsfschemarjsfschema), and will be removed in v8.
-The `options` are accepted and not read, since the schemas a form validates against no longer depend on how `allOf` is merged.
 
 #### Parameters
 
 - rootSchema: S - The root schema to list the validated schemas of
-- [options={}]: SchemaParserOptions&lt;S> - Not read
 
 #### Returns
 
@@ -2870,7 +2868,8 @@ Always returns the first option if there is nothing that matches.
 Each option is matched as the subschema of the root it stands for — the option itself, or the one [`retrieveSchema()`](#retrieveschematunknownsextendsstrictrjsfschemarjsfschemafextendsformcontexttypeformcontexttype) handed it out for — and as JSON Schema reads it, so the validator is handed a `{ $ref }` naming where the option sits in the root.
 An object option is matched more strictly than it describes itself: the data has to hold a key the option declares, a key named by the `properties` or `patternProperties` of the option, of its `$ref` target, its `allOf` entries, its `then`/`else` or its `dependencies` schemas, which is checked without the validator.
 An option whose `properties` name nothing matches only where it takes keys they don't name, such as one describing a map.
-Every `required` in that scope, and every `dependencies` entry listing names, is dropped for scoring, since a key the user has yet to fill in would fail it: an option stating one is validated as a copy without them, given an `$id` of `<the option's>?rjsf=<its own hash>` where it carries one.
+Where something in that scope declares `properties`, every `required` in the scope, and every `dependencies` entry listing names, is dropped for scoring, since a key the user has yet to fill in would fail it: an option stating one is validated as a copy without them, which names the subschemas below it by `$ref`s into the root and carries no `$id`.
+An option whose scope declares no `properties`, such as `{ required: ['email'] }`, is validated with its `required`, which is what it is chosen by.
 With a `discriminatorField`, an option whose property of that name has a `const` or `enum` holding the data's value matches without the validator, and one whose property says it by other keywords is matched by that property alone.
 
 #### Parameters

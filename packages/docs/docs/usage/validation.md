@@ -64,7 +64,7 @@ compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js', options);
 
 The functions compiled are the ones [`getValidationSchemas()`](../api-reference/utility-functions.md#getvalidationschemassextendsstrictrjsfschemarjsfschema) lists for the schema: the root schema itself, and, for each `if`, `anyOf`/`oneOf` option, discriminator property and dependency condition the form checks, a `$ref` to where it sits in the root, exported as the function compiled for that part of the root.
 An option whose `required` scoring has to drop is compiled as a copy without it.
-The list depends on the root schema alone, never on form data or on how `allOf` is merged, so a `customMergeAllOf` among the options is not read.
+The list depends on the root schema alone, never on form data or on how `allOf` is merged.
 Each function is looked up by the `$id` of the schema it validates, or by a hash of that schema when it has none.
 An `$id` of the empty string names nothing, so a schema carrying one is looked up by its hash instead.
 A schema that a merge makes has no place in the root schema and has no compiled function: an `anyOf`/`oneOf` option a `customMergeAllOf` rewrites, or one made by merging the `oneOf`s of two `patternProperties` that match the same key, throws `No precompiled validator function was found for the given schema` when the form scores it.

@@ -1,4 +1,4 @@
-import type { CustomValidator, RJSFSchema, SchemaParserOptions, ValidatorType } from '../../src/index.ts';
+import type { CustomValidator, RJSFSchema, SchemaContext, ValidatorType } from '../../src/index.ts';
 import {
   createSchemaUtils,
   getClosestMatchingOption,
@@ -37,10 +37,13 @@ import {
  * supplies its own, since they differ only in how the compiled code is loaded.
  *
  * @param rootSchema - The schema to compile the validator functions from
- * @param [options] - The options to compile with, which the precompiled validator is also built with
+ * @param [options] - The form's `customMergeAllOf`, which the precompiled validator is built with
  * @returns - The precompiled validator for the `rootSchema`
  */
-export type BuildPrecompiledValidator = (rootSchema: RJSFSchema, options?: SchemaParserOptions) => ValidatorType;
+export type BuildPrecompiledValidator = (
+  rootSchema: RJSFSchema,
+  options?: Pick<SchemaContext, 'customMergeAllOf'>,
+) => ValidatorType;
 
 /** Runs the suite covering the sub-schemas a form validates against that are not the ones a plain walk of the schema
  * would reach -- the entries a merge leaves in an `allOf`, the options a `customMergeAllOf` rewrites, and the merges a
@@ -252,11 +255,11 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
       };
       expect(() => buildValidator(rootSchema)).not.toThrow();
     });
-    it('compiles and matches a boolean option', () => {
+    it('compiles and matches a boolean option, which is handed over as the schema it stands for', () => {
       const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: [false, true] } } };
       const validator = buildValidator(rootSchema);
-      expect(validator.isValid({ $ref: '#/properties/v/anyOf/0' }, 1, rootSchema)).toBe(false);
-      expect(validator.isValid({ $ref: '#/properties/v/anyOf/1' }, 1, rootSchema)).toBe(true);
+      expect(validator.isValid({ not: {} }, 1, rootSchema)).toBe(false);
+      expect(validator.isValid({}, 1, rootSchema)).toBe(true);
     });
     it('compiles and scores a recursive definition used as an option', () => {
       const rootSchema: RJSFSchema = {

@@ -9,6 +9,7 @@ import type {
 import { createSchemaUtils, ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, getValidationTarget, noop } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
+import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.
@@ -606,12 +607,12 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
     expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
   });
-  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold', () => {
+  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
     const validator = customizeValidator();
     const property: RJSFSchema = { type: 'string' };
-    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h': property } } } };
+    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h#': property } } } };
     const pointer = getValidationTarget(property, rootSchema);
-    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e#f%20g%25h' });
+    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e%23f%20g%25h%23' });
     expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
     expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
   });
@@ -626,3 +627,5 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
     expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
   });
 });
+
+pointerValidationTests(() => customizeValidator());

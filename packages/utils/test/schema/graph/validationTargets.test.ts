@@ -31,8 +31,20 @@ describe('pointerTo()', () => {
     const root: RJSFSchema = { $defs: { 'a$b:c@d+e#f g%h': {} } };
     const graph = parseSchemaGraph(root);
     expect(pointerTo(graph, nodeAt(graph, '/$defs/a$b:c@d+e#f g%h'))).toEqual({
-      $ref: '#/$defs/a$b:c@d+e#f%20g%25h',
+      $ref: '#/$defs/a$b:c@d+e%23f%20g%25h',
     });
+  });
+  it('escapes a # that ends the pointer, which Ajv would drop as an empty fragment', () => {
+    const root: RJSFSchema = { properties: { 'Phone #': {} } };
+    const graph = parseSchemaGraph(root);
+    expect(pointerTo(graph, nodeAt(graph, '/properties/Phone #'))).toEqual({ $ref: '#/properties/Phone%20%23' });
+  });
+  it('hands a boolean subschema over as the schema it stands for, which ata reads as true behind a $ref', () => {
+    const root: RJSFSchema = { anyOf: [false, true] };
+    const graph = parseSchemaGraph(root);
+    expect(pointerTo(graph, nodeAt(graph, '/anyOf/0'))).toBeUndefined();
+    expect(targetOf(graph, nodeAt(graph, '/anyOf/0'))).toEqual({ not: {} });
+    expect(targetOf(graph, nodeAt(graph, '/anyOf/1'))).toEqual({});
   });
   it('names nothing for a schema parsed from outside the root, which is validated as it stands', () => {
     const root: RJSFSchema = { properties: {} };
@@ -74,28 +86,78 @@ describe('scoringTarget()', () => {
       ],
     };
     expect(scored(schema, '/oneOf/0')).toEqual({
-      properties: { a: { type: 'string' } },
-      if: { properties: { a: { const: 'x' } } },
+      properties: { a: { $ref: '#/oneOf/0/properties/a' } },
+      if: { $ref: '#/oneOf/0/if' },
       then: {},
       else: {},
       dependencies: { e: { title: 'e' } },
     });
   });
   it('keeps a boolean allOf entry and a $ref that resolves to nothing as they stand', () => {
-    const schema: RJSFSchema = { oneOf: [{ $ref: '#/definitions/missing', allOf: [true], required: ['a'] }] };
-    expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/definitions/missing', allOf: [true] });
+    const schema: RJSFSchema = {
+      oneOf: [{ $ref: '#/definitions/missing', allOf: [true], properties: {}, required: ['a'] }],
+    };
+    expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/definitions/missing', allOf: [true], properties: {} });
+  });
+  it('reads a $ref to a boolean schema as what the boolean says', () => {
+    const schema: RJSFSchema = {
+      definitions: { never: false },
+      oneOf: [{ $ref: '#/definitions/never', properties: { a: {} }, required: ['a'] }],
+    };
+    expect(scored(schema, '/oneOf/0')).toEqual({
+      properties: { a: { $ref: '#/oneOf/0/properties/a' } },
+      allOf: [{ not: {} }],
+    });
   });
   it('names a subschema it reaches again through its own $ref rather than copying it without end', () => {
-    const schema: RJSFSchema = { oneOf: [{ allOf: [{ $ref: '#/oneOf/0' }], required: ['a'] }] };
-    expect(scored(schema, '/oneOf/0')).toEqual({ allOf: [{ allOf: [{ $ref: '#/oneOf/0' }] }] });
+    const schema: RJSFSchema = { oneOf: [{ allOf: [{ $ref: '#/oneOf/0' }], properties: {}, required: ['a'] }] };
+    expect(scored(schema, '/oneOf/0')).toEqual({ allOf: [{ allOf: [{ $ref: '#/oneOf/0' }] }], properties: {} });
   });
   it('relaxes an additionalProperties: false only when asked to', () => {
     const schema: RJSFSchema = { anyOf: [{ properties: { a: {} }, additionalProperties: false }] };
     expect(scored(schema, '/anyOf/0')).toEqual({ $ref: '#/anyOf/0' });
-    expect(scored(schema, '/anyOf/0', true)).toEqual({ properties: { a: {} }, additionalProperties: true });
+    expect(scored(schema, '/anyOf/0', true)).toEqual({
+      properties: { a: { $ref: '#/anyOf/0/properties/a' } },
+      additionalProperties: true,
+    });
   });
-  it('scores a boolean option by a pointer to it', () => {
-    expect(scored({ anyOf: [true] }, '/anyOf/0')).toEqual({ $ref: '#/anyOf/0' });
+  it('scores a boolean option by what it stands for', () => {
+    expect(scored({ anyOf: [true] }, '/anyOf/0')).toEqual({});
+  });
+  it('keeps the required of an option whose scope declares no properties, which it is chosen by', () => {
+    const schema: RJSFSchema = {
+      properties: { email: {} },
+      oneOf: [
+        { required: ['email'], dependencies: { email: ['phone'] } },
+        { title: 'By email', required: ['email'] },
+      ],
+    };
+    expect(scored(schema, '/oneOf/0')).toEqual({ $ref: '#/oneOf/0' });
+    expect(scored(schema, '/oneOf/1', true)).toEqual({ $ref: '#/oneOf/1' });
+    const strict: RJSFSchema = {
+      oneOf: [{ required: ['email'], dependencies: { a: ['b'] }, additionalProperties: false }],
+    };
+    expect(scored(strict, '/oneOf/0', true)).toEqual({
+      required: ['email'],
+      dependencies: { a: ['b'] },
+      additionalProperties: true,
+    });
+  });
+  it('names the subschemas below a copy where they sit in the root and drops its $id, which would rebase their $refs', () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        {
+          $id: 'http://e.com/A.json',
+          definitions: { s: { const: 'a' } },
+          properties: { kind: { $ref: '#/definitions/s' } },
+          required: ['kind'],
+        },
+      ],
+    };
+    expect(scored(schema, '/oneOf/0')).toEqual({
+      definitions: { s: { $ref: '#/oneOf/0/definitions/s' } },
+      properties: { kind: { $ref: '#/oneOf/0/properties/kind' } },
+    });
   });
 });
 
@@ -114,10 +176,10 @@ describe('holdsDeclaredKey()', () => {
 });
 
 describe('validationTargets()', () => {
-  it('lists {}, the schema SchemaField retrieves a boolean option as, beside the pointer to the option', () => {
+  it('lists {}, the schema SchemaField retrieves a boolean option as, beside what the option stands for', () => {
     const schema: RJSFSchema = { properties: { a: { anyOf: [false, {}] } } };
     const targets = validationTargets(parseSchemaGraph(schema));
-    expect(targets).toContainEqual({ $ref: '#/properties/a/anyOf/0' });
+    expect(targets).toContainEqual({ not: {} });
     expect(targets).toContainEqual({});
   });
   it("leaves out a dependency's oneOf option that declares nothing under the dependency's name", () => {
