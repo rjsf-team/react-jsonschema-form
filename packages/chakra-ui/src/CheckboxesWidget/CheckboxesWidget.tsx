@@ -45,8 +45,8 @@ export default function CheckboxesWidget<
       mb={1}
       disabled={disabled || readonly}
       invalid={hasError}
-      // Ark points the fieldset at a legend id of its own whether or not the legend renders, so the fieldset and the
-      // group inside it are pointed at the legend drawn here, under the field's label id, or at nothing
+      // Ark points the fieldset at a legend id of its own whether or not the legend renders, so it is pointed at the
+      // legend drawn here, under the field's label id, or at nothing
       aria-labelledby={labelledByOrNone(undefined, drawsLabel, labelId)}
       {...chakraProps}
     >
@@ -67,12 +67,13 @@ export default function CheckboxesWidget<
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
               const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
+              const inputId = optionId(id, index);
               return (
                 <Checkbox
                   // oxlint-disable-next-line react/no-array-index-key
                   key={index}
-                  id={optionId(id, index)}
-                  ids={{ hiddenInput: optionId(id, index) }}
+                  id={inputId}
+                  ids={{ hiddenInput: inputId }}
                   name={htmlName || id}
                   value={domValues[index]}
                   disabled={disabled || itemDisabled || readonly}

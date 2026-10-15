@@ -11,6 +11,22 @@ import WrappedForm from './WrappedForm.tsx';
 
 const user = userEvent.setup();
 
+/** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
+ * there
+ */
+function expectReferencesResolve(container: HTMLElement) {
+  container.querySelectorAll('label[for]').forEach((label) => {
+    expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
+  });
+  container.querySelectorAll('[aria-labelledby], [aria-describedby]').forEach((element) => {
+    [element.getAttribute('aria-labelledby'), element.getAttribute('aria-describedby')]
+      .join(' ')
+      .split(/\s+/)
+      .filter(Boolean)
+      .forEach((referencedId) => expect(container.querySelector(`[id="${referencedId}"]`)).toBeInTheDocument());
+  });
+}
+
 function BareFieldTemplate({ children }: { children?: ReactNode }) {
   return <div>{children}</div>;
 }
@@ -75,7 +91,11 @@ describe('chakra-ui AltDateWidget', () => {
 });
 
 describe('chakra-ui SelectWidget', () => {
-  test('points the trigger of a select that draws no label at no label', () => {
+  // The listbox is closed, so it is queried among hidden elements; the trigger isn't, past Ark's hidden native select
+  test.each([
+    ['trigger', 'combobox', false],
+    ['listbox', 'listbox', true],
+  ])('points the %s of a select that draws no label at no label', (_, role, hidden) => {
     const { container } = render(
       <WrappedForm
         schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', enum: ['a', 'b'] } } }}
@@ -84,20 +104,8 @@ describe('chakra-ui SelectWidget', () => {
       />,
     );
 
-    expect(screen.getByRole('combobox')).toHaveAttribute('aria-labelledby', '');
+    expect(screen.getByRole(role, { hidden })).toHaveAttribute('aria-labelledby', '');
     expect(container.querySelector('#root_x__label')).not.toBeInTheDocument();
-  });
-
-  test('points the listbox of a select that draws no label at no label', () => {
-    render(
-      <WrappedForm
-        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', enum: ['a', 'b'] } } }}
-        uiSchema={{ x: { 'ui:label': false } }}
-        validator={validator}
-      />,
-    );
-
-    expect(screen.getByRole('listbox', { hidden: true })).toHaveAttribute('aria-labelledby', '');
   });
 
   test("names an object's option selector by the object's heading", () => {
@@ -198,7 +206,7 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     ['native select', 'combobox', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'NativeSelectWidget' }],
     ['checkbox', 'checkbox', { type: 'boolean' }, {}],
   ])('a %s control is invalid and described only by elements that render', (_, role, schema, uiSchema) => {
-    render(
+    const { container } = render(
       <WrappedForm
         schema={{ type: 'object', properties: { pet: { ...schema, title: 'Pet' } } }}
         uiSchema={{ pet: uiSchema }}
@@ -211,6 +219,7 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     expect(control).toHaveAttribute('aria-invalid', 'true');
     expect(control).toHaveAttribute('aria-describedby', 'root_pet__error');
     expect(control).toHaveAccessibleDescription('too short');
+    expectReferencesResolve(container);
   });
 
   test('focuses the slider thumb under ui:autofocus, as core focuses its range input', () => {
@@ -246,7 +255,7 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
   ] as const)(
     "marks a %s group or each option invalid, and describes each option by the field's errors",
     (widget, color, role, item, invalidGroup) => {
-      render(
+      const { container } = render(
         <WrappedForm
           schema={{ type: 'object', properties: { color } }}
           uiSchema={{ color: { 'ui:widget': widget } }}
@@ -269,6 +278,7 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
         expect(option).toHaveAttribute('aria-describedby', 'root_color__error');
         expect(option).toHaveAccessibleDescription('pick one');
       }
+      expectReferencesResolve(container);
     },
   );
 });
@@ -302,16 +312,7 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     );
 
     expect(screen.getByRole(role, { name: 'X' })).toHaveAttribute('id', 'root_x');
-    container.querySelectorAll('label[for]').forEach((label) => {
-      expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
-    });
-    container.querySelectorAll('[aria-labelledby]').forEach((element) => {
-      element
-        .getAttribute('aria-labelledby')!
-        .split(' ')
-        .filter(Boolean)
-        .forEach((labelId) => expect(container.querySelector(`[id="${labelId}"]`)).toBeInTheDocument());
-    });
+    expectReferencesResolve(container);
   });
 
   test.each(widgets)(
@@ -432,13 +433,7 @@ describe('chakra-ui CheckboxesWidget', () => {
       />,
     );
 
-    container.querySelectorAll('[aria-labelledby]').forEach((element) => {
-      element
-        .getAttribute('aria-labelledby')!
-        .split(' ')
-        .filter(Boolean)
-        .forEach((labelId) => expect(container.querySelector(`[id="${labelId}"]`)).toBeInTheDocument());
-    });
+    expectReferencesResolve(container);
     expect(container.querySelector('#root_y')).toHaveAccessibleName('Y');
   });
 });
@@ -501,6 +496,9 @@ describe('chakra-ui FieldTemplate', () => {
     const label = container.querySelector('label[for="root_foo"]');
     expect(label).toHaveAttribute('id', 'root_foo__label');
     expect(label).toHaveTextContent(marked ? /^Foo\*$/ : /^Foo$/);
+    // The classes each widget's own label and required indicator carry
+    expect(label).toHaveClass('chakra-field__label');
+    expect(label?.querySelectorAll('.chakra-field__requiredIndicator')).toHaveLength(marked ? 1 : 0);
     expect(screen.getByRole('textbox')).toHaveAccessibleName('Foo');
   });
 

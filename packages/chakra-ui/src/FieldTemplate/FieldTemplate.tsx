@@ -25,10 +25,17 @@ interface TemplateLabelProps {
 function TemplateLabel({ id, htmlFor, requiredMarker, disabled, children }: TemplateLabelProps) {
   const fieldStyles = useSlotRecipe({ key: 'field' })();
   return (
-    <chakra.label htmlFor={htmlFor} id={id} data-disabled={disabled ? '' : undefined} css={fieldStyles.label} mb={1.5}>
+    <chakra.label
+      htmlFor={htmlFor}
+      id={id}
+      data-disabled={disabled ? '' : undefined}
+      className='chakra-field__label'
+      css={fieldStyles.label}
+      mb={1.5}
+    >
       {children}
       {requiredMarker && (
-        <chakra.span css={fieldStyles.requiredIndicator} aria-hidden>
+        <chakra.span className='chakra-field__requiredIndicator' css={fieldStyles.requiredIndicator} aria-hidden>
           *
         </chakra.span>
       )}
@@ -109,7 +116,7 @@ export default function FieldTemplate<
         </TemplateLabel>
       )}
       {/* Ark points the fieldset at its legend, which renders only for a description, so it is pointed at the label drawn
-          here instead, or at nothing */}
+          here instead, or at nothing, which leaves a description's legend naming it */}
       <Fieldset.Root
         disabled={disabled}
         invalid={hasError}
