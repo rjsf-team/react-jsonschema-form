@@ -1,5 +1,7 @@
 import type { TitleFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 
+import { RequiredMarker } from '../FieldTemplate/FieldTemplate.tsx';
+
 /** The `TitleField` component renders the title for a form section or field
  * with DaisyUI styling. It displays:
  *
@@ -24,7 +26,7 @@ export default function TitleField<
   let heading = (
     <h2 className='text-3xl font-bold text-primary mb-2'>
       <span id={id}>{title}</span>
-      {required && <span className='text-error ml-1'>*</span>}
+      {required && <RequiredMarker />}
     </h2>
   );
   if (optionalDataControl) {

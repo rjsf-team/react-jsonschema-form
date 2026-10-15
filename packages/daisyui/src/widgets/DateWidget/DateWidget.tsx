@@ -5,7 +5,7 @@ import { format, startOfDay } from 'date-fns';
 
 import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker, windowOf } from '../datePickerHooks.ts';
-import DatePickerTrigger from '../DatePickerTrigger.tsx';
+import DatePickerTrigger, { DatePickerDialog } from '../DatePickerTrigger.tsx';
 
 /** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
 const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
@@ -204,11 +204,7 @@ export default function DateWidget<
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div
-              id={popupId}
-              role='dialog'
-              aria-label={label || registry.translateString(TranslatableString.AriaDateLabel)}
-            >
+            <DatePickerDialog<T, S, F> id={popupId} label={label} registry={registry}>
               <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
                 <DatePickerCalendar
                   selectedDate={displayedDate}
@@ -222,7 +218,7 @@ export default function DateWidget<
                   {registry.translateString(TranslatableString.DoneLabel)}
                 </button>
               </div>
-            </div>
+            </DatePickerDialog>
           </div>
         )}
       </div>

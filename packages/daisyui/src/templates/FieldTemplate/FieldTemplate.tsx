@@ -63,6 +63,11 @@ function widgetRendersOwnLabel<T, S extends StrictRJSFSchema, F extends FormCont
   );
 }
 
+/** The `*` beside the label or heading of a required field */
+export function RequiredMarker() {
+  return <span className='text-error ml-1'>*</span>;
+}
+
 /** The `FieldTemplate` component provides the main layout for each form field
  * with DaisyUI styling. It handles:
  *
@@ -171,7 +176,7 @@ export default function FieldTemplate<
           >
             <span className='label-text font-medium'>
               {label}
-              {templateMarksRequired<T, S, F>(props) && <span className='text-error ml-1'>*</span>}
+              {templateMarksRequired<T, S, F>(props) && <RequiredMarker />}
             </span>
           </label>
         )}

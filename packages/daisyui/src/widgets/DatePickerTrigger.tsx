@@ -1,10 +1,11 @@
-import type { MouseEvent, RefObject } from 'react';
+import type { MouseEvent, ReactNode, RefObject } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FieldPresentation, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getControlAttributes, TranslatableString } from '@rjsf/utils';
+import { getControlAttributes } from '@rjsf/utils';
 
 import { hasLabelToReference } from '../utils.ts';
+import { getDatePickerName } from './datePickerHooks.ts';
 
 interface DatePickerTriggerProps<
   T = unknown,
@@ -78,8 +79,8 @@ export default function DatePickerTrigger<
   registry,
 }: DatePickerTriggerProps<T, S, F>) {
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
-  const prompt = registry.translateString(TranslatableString.AriaDateLabel);
-  const text = formattedValue || placeholder || label || prompt;
+  const fallbackName = getDatePickerName<T, S, F>(label, registry);
+  const text = formattedValue || placeholder || fallbackName;
   const named = !!controlAttributes['aria-labelledby'] || hasLabelToReference({ label, name, hideLabel, presentation });
 
   return (
@@ -100,12 +101,38 @@ export default function DatePickerTrigger<
       aria-haspopup='dialog'
       aria-expanded={isOpen}
       aria-controls={isOpen ? popupId : undefined}
-      aria-label={named ? undefined : label || prompt}
+      aria-label={named ? undefined : fallbackName}
       {...controlAttributes}
       ref={triggerRef}
     >
       <span className={formattedValue ? '' : 'text-base-content/50'}>{text}</span>
       <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
     </button>
+  );
+}
+
+interface DatePickerDialogProps<T, S extends StrictRJSFSchema, F extends FormContextType> {
+  /** The popup's id, which the trigger's `aria-controls` points at while it is open */
+  id: string;
+  /** The field's label, empty when it has no title */
+  label?: string;
+  /** The field's registry, for the translated prompt */
+  registry: Registry<T, S, F>;
+  children: ReactNode;
+}
+
+/** The dialog both picker widgets open their calendar in, which their trigger controls, named as the trigger is
+ *
+ * @param props - The popup's id, the field's label and registry it is named from, and its contents
+ */
+export function DatePickerDialog<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>({ id, label, registry, children }: DatePickerDialogProps<T, S, F>) {
+  return (
+    <div id={id} role='dialog' aria-label={getDatePickerName<T, S, F>(label, registry)}>
+      {children}
+    </div>
   );
 }

@@ -9,6 +9,22 @@ import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/
 
 const user = userEvent.setup();
 
+/** An object with properties beside its options, whose option selector is named by the object's heading */
+const pet: RJSFSchema = {
+  type: 'object',
+  title: 'Pet',
+  properties: { name: { type: 'string' } },
+  anyOf: [
+    { title: 'Dog', properties: { bark: { type: 'string' } } },
+    { title: 'Cat', properties: { meow: { type: 'string' } } },
+  ],
+};
+
+/** The element an option selector is named by, through its `aria-labelledby` */
+function selectorLabel(selector: HTMLElement) {
+  return document.getElementById(selector.getAttribute('aria-labelledby')!);
+}
+
 /** Checks that every id a `for`, an `aria-labelledby` or an `aria-describedby` in `container` names belongs to an element
  * there
  */
@@ -184,16 +200,6 @@ describe('daisyui FieldTemplate', () => {
 });
 
 describe('daisyui TitleField', () => {
-  const pet: RJSFSchema = {
-    type: 'object',
-    title: 'Pet',
-    properties: { name: { type: 'string' } },
-    anyOf: [
-      { title: 'Dog', properties: { bark: { type: 'string' } } },
-      { title: 'Cat', properties: { meow: { type: 'string' } } },
-    ],
-  };
-
   // jsdom leaves a button inside the element a name points at out of the name, but a browser takes its label in too, so
   // the element the selector is named by is checked to hold the heading's text and nothing else
   test("names an optional object's option selector by its heading's text, not by its data control", () => {
@@ -207,7 +213,7 @@ describe('daisyui TitleField', () => {
     );
 
     const selector = document.getElementById('root_pet__anyof_select')!;
-    const heading = document.getElementById(selector.getAttribute('aria-labelledby')!);
+    const heading = selectorLabel(selector);
     expect(heading).toHaveTextContent(/^Pet$/);
     expect(heading?.querySelector('button')).toBeNull();
     expect(selector).toHaveAccessibleName('Pet');
@@ -239,7 +245,7 @@ describe('daisyui TitleField', () => {
     render(<Form schema={{ type: 'object', properties: { pet }, required: ['pet'] }} validator={validator} />);
 
     const selector = document.getElementById('root_pet__anyof_select')!;
-    const title = document.getElementById(selector.getAttribute('aria-labelledby')!);
+    const title = selectorLabel(selector);
     expect(title).toHaveTextContent(/^Pet$/);
     expect(title?.closest('h2')).toHaveTextContent(/^Pet\*$/);
     expect(selector).toHaveAccessibleName('Pet');
@@ -267,16 +273,6 @@ describe('daisyui TitleField', () => {
 });
 
 describe('daisyui headings and optional data controls', () => {
-  const pet: RJSFSchema = {
-    type: 'object',
-    title: 'Pet',
-    properties: { name: { type: 'string' } },
-    anyOf: [
-      { title: 'Dog', properties: { bark: { type: 'string' } } },
-      { title: 'Cat', properties: { meow: { type: 'string' } } },
-    ],
-  };
-
   test("keeps an optional object's data control where ui:label turns its heading off", () => {
     const { container } = render(
       <Form
