@@ -448,6 +448,23 @@ describe('antd specific tests', () => {
     expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
   });
 
+  test("keeps an optional object's data control where ui:label turns its heading off", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
+        formData={{ pet: { a: 'x' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_pet__title')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
+  });
+
   test("draws no heading for an array option whose ui:title repeats its field's label", () => {
     const { container } = render(
       <Form
