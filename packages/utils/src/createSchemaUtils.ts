@@ -19,6 +19,7 @@ import {
 } from './schema/index.ts';
 import type {
   FormContextType,
+  FormFieldState,
   FoundFieldType,
   GenericObjectType,
   GlobalUISchemaOptions,
@@ -287,10 +288,11 @@ class SchemaUtils<
    *
    * @param schema - The schema to use for filtering the `formData`
    * @param [formData] - The formData to filter
+   * @param [fieldState] - The option each field shows
    * @returns The new form data, with any fields not defined in the schema removed
    */
-  omitExtraData(schema: S, formData?: T): T | undefined {
-    return omitExtraData<T, S, F>(this.context, schema, this.rootSchema, formData);
+  omitExtraData(schema: S, formData?: T, fieldState?: FormFieldState<S>): T | undefined {
+    return omitExtraData<T, S, F>(this.context, schema, this.rootSchema, formData, fieldState);
   }
 
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
@@ -336,6 +338,7 @@ class SchemaUtils<
    * @param [uiSchemaDefinitions] - Optional uiSchema fragments keyed by $ref path, resolved via `ui:definitions`
    * @param [globalUiOptions] - Optional global ui:options applied to every field
    * @param [formContext] - Optional formContext passed to the function form of `uiSchema.items`
+   * @param [fieldState] - The option each field shows and the `$ref` cycles the user expanded
    * @returns - An `ErrorSchema` with a required error for every missing `ui:required` field
    */
   getUiRequiredErrorSchema(
@@ -344,6 +347,7 @@ class SchemaUtils<
     uiSchemaDefinitions?: UiSchemaDefinitions<S, F>,
     globalUiOptions?: GlobalUISchemaOptions,
     formContext?: F,
+    fieldState?: FormFieldState<S>,
   ) {
     return getUiRequiredErrorSchema<T, S, F>(
       this.context,
@@ -353,6 +357,7 @@ class SchemaUtils<
       uiSchemaDefinitions,
       globalUiOptions,
       formContext,
+      fieldState,
     );
   }
 
@@ -364,36 +369,11 @@ class SchemaUtils<
    * @param [newSchema] - The new schema for which the data is being sanitized
    * @param [oldSchema] - The old schema from which the data originated
    * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
-   * @param [oldData] - The previous form data, used only to decide whether the enum filter runs; `Form`
-   *      passes the data as it last settled under the current root schema. When omitted, the filter always
-   *      runs. `$ref`s on both sides resolve against the one root schema, so pass `oldData` only when the
-   *      root schema is unchanged
-   * @param [resolvedOldSchema] - `oldSchema` already resolved for `oldData` at the root: the root frame's
-   *      filter chain uses it directly instead of resolving `oldSchema` again
-   * @param [oldDataForPairing] - `oldData` as the container writes since the settle moved it, used only to
-   *      pair an array's rows with their previous values; the old-schema side keeps reading `oldData`.
-   *      Defaults to `oldData`
    * @returns - The new form data, with all the fields uniquely associated with the old schema set
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
-  sanitizeDataForNewSchema(
-    newSchema?: S,
-    oldSchema?: S,
-    data?: any,
-    oldData?: any,
-    resolvedOldSchema?: S,
-    oldDataForPairing?: any,
-  ): T {
-    return sanitizeDataForNewSchema(
-      this.context,
-      this.rootSchema,
-      newSchema,
-      oldSchema,
-      data,
-      oldData,
-      resolvedOldSchema,
-      oldDataForPairing,
-    );
+  sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
+    return sanitizeDataForNewSchema(this.context, this.rootSchema, newSchema, oldSchema, data);
   }
 }
 

@@ -1,4 +1,10 @@
-import type { GenericObjectType, GlobalUISchemaOptions, RJSFSchema, UiSchema } from '../../src/index.ts';
+import type {
+  FormFieldState,
+  GenericObjectType,
+  GlobalUISchemaOptions,
+  RJSFSchema,
+  UiSchema,
+} from '../../src/index.ts';
 import { getUiRequiredErrorSchema, toErrorList } from '../../src/index.ts';
 import getTestValidator from '../testUtils/getTestValidator.ts';
 
@@ -731,6 +737,76 @@ describe('getUiRequiredErrorSchema()', () => {
       });
       expect(toErrorList(errorSchema)).toEqual([]);
     });
+
+    it('walks below a cycle the form state says the user expanded', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        definitions: {
+          Node: {
+            type: 'object',
+            properties: { value: { type: 'string' }, next: { $ref: '#/definitions/Node' } },
+          },
+        },
+        properties: { root: { $ref: '#/definitions/Node' } },
+      };
+      const uiSchema: UiSchema = {
+        'ui:definitions': { '#/definitions/Node': { value: { 'ui:required': true } } },
+      };
+      const expanded: string[] = [];
+      const fieldState: FormFieldState = {
+        selectedOption: () => 0,
+        isExpanded: (fieldPath) => {
+          expanded.push(fieldPath);
+          return expanded.length === 1;
+        },
+      };
+      const errorSchema = getUiRequiredErrorSchema(
+        { validator: testValidator },
+        schema,
+        uiSchema,
+        { root: { value: 'x', next: {} } },
+        undefined,
+        undefined,
+        undefined,
+        fieldState,
+      );
+      expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(['.root.next.value']);
+    });
+  });
+
+  it('walks the option the form state says a field shows', () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          anyOf: [
+            { type: 'object', properties: { a: { type: 'string' } } },
+            { type: 'object', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const uiSchema: UiSchema = { thing: { b: { 'ui:required': true } } };
+    const shown: unknown[] = [];
+    const fieldState: FormFieldState = {
+      selectedOption: (fieldPath, options, formData) => {
+        shown.push([fieldPath, options.length, formData]);
+        return 1;
+      },
+      isExpanded: () => false,
+    };
+    const errorSchema = getUiRequiredErrorSchema(
+      { validator: testValidator },
+      schema,
+      uiSchema,
+      { thing: {} },
+      undefined,
+      undefined,
+      undefined,
+      fieldState,
+    );
+    expect(toErrorList(errorSchema).map(({ property }) => property)).toEqual(['.thing.b']);
+    expect(shown).toEqual([['thing', 2, {}]]);
   });
 
   it('does not treat a primitive value at an object-schema node as satisfying a ui:required child, matching computeDefaults isObject(rawFormData) handling', () => {

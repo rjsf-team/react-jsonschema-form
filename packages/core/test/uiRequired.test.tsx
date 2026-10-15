@@ -1,8 +1,9 @@
-import type { RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { noop, toPath } from '@rjsf/utils';
 import { userEvent } from '@testing-library/user-event';
 import type { MockInstance } from 'vitest';
 
+import { useOptionSelection } from '../src/index.ts';
 import { describeOwnerships, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -129,6 +130,65 @@ describeOwnerships('ui:required enforcement', (createFormComponent) => {
       const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: { thing: { kind: 'a' } } });
       await submitForm(node, user, true);
       expect(onSubmit).not.toHaveBeenCalled();
+    });
+
+    it('enforces ui:required inside the anyOf option shown rather than the one the data matches best', async () => {
+      // Switches to the second option and keeps the data, which matches the first option better
+      function SecondOption({ fieldPath, formData, options, registry }: FieldProps & { options: RJSFSchema[] }) {
+        const { selectedOption, selectOption } = useOptionSelection(registry, fieldPath, options, formData);
+        return (
+          <button id='second' type='button' onClick={() => selectOption(1)}>
+            {selectedOption}
+          </button>
+        );
+      }
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          thing: {
+            anyOf: [
+              { type: 'object', title: 'A', properties: { aField: { type: 'string' } } },
+              { type: 'object', title: 'B', properties: { bField: { type: 'string' } } },
+            ],
+          },
+        },
+      };
+      const uiSchema: UiSchema = { thing: { bField: { 'ui:required': true } } };
+      const { node, onSubmit, onError } = createFormComponent({
+        schema,
+        uiSchema,
+        fields: { AnyOfField: SecondOption },
+        initialFormData: { thing: { aField: 'a' } },
+      });
+      await user.click(node.querySelector('#second')!);
+      expect(node.querySelector('#second')).toHaveTextContent('1');
+
+      await submitForm(node, user, true);
+
+      expect(onSubmit).not.toHaveBeenCalled();
+      expect(onError.mock.lastCall?.[0]).toEqual([
+        expect.objectContaining({ property: '.thing.bField', message: "must have required property 'bField'" }),
+      ]);
+    });
+
+    it('enforces ui:required below a $ref cycle once the user expands it, and not before', async () => {
+      const schema: RJSFSchema = {
+        definitions: {
+          node: { type: 'object', properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } } },
+        },
+        $ref: '#/definitions/node',
+      };
+      const uiSchema: UiSchema = { child: { name: { 'ui:required': true } } };
+      const { node, onSubmit } = createFormComponent({ schema, uiSchema, initialFormData: { name: 'a' } });
+
+      await submitForm(node, user, true);
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+
+      await user.click(node.querySelector('#root_child-button')!);
+      await submitForm(node, user, true);
+
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(node.querySelector('#root_child_name__error')).toHaveTextContent("must have required property 'name'");
     });
 
     it('enforces ui:required on a deeply nested object property', async () => {

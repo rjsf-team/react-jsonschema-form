@@ -3,7 +3,7 @@ import { customizeValidator } from '@rjsf/validator-ajv8';
 import { userEvent } from '@testing-library/user-event';
 
 import { useOptionSelection } from '../src/index.ts';
-import { createFormComponent } from './testUtils.tsx';
+import { createFormComponent, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -316,6 +316,34 @@ describe('option selection as form state', () => {
 
     expect(node.querySelector('#switch')).toHaveTextContent('0');
     expect(node.querySelector('#root_b-key')).toHaveValue('b');
+  });
+});
+
+describe('omitting extra data', () => {
+  it('omits the data the shown option has no field for', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        thing: {
+          anyOf: [
+            { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+            { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+          ],
+        },
+      },
+    };
+    const { node, onSubmit } = createFormComponent({
+      schema,
+      fields: { AnyOfField: FirstOrSecond },
+      initialFormData: { thing: { b: 'v' } },
+      omitExtraData: true,
+    });
+    await user.click(elementOf(node, '#switch'));
+
+    await submitForm(node, user);
+
+    // Without `b`, `thing` is an optional object holding nothing, which omitting prunes as well
+    expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: {} }), expect.anything());
   });
 });
 

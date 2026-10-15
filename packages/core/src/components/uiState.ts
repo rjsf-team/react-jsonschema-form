@@ -1,4 +1,11 @@
-import type { FieldPath, FieldPathList, FormContextType, SchemaUtilsType, StrictRJSFSchema } from '@rjsf/utils';
+import type {
+  FieldPath,
+  FieldPathList,
+  FormContextType,
+  FormFieldState,
+  SchemaUtilsType,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 import { deepEquals, fieldPathFromList, fieldPathToList, getValidationTarget } from '@rjsf/utils';
 
 import type { KeyMove } from './formState.ts';
@@ -71,6 +78,31 @@ export function shownOption<T, S extends StrictRJSFSchema, F extends FormContext
 export function dataOf<T>(value: unknown): T | undefined;
 export function dataOf(value: unknown): unknown {
   return value;
+}
+
+/** The fields `uiState` shows, as the schema utilities' walks read them: the option each field shows and the cycles
+ * the user expanded
+ *
+ * @param uiState - The form's option selections and cycle expansions
+ * @param schemaUtils - The schema utilities the form renders with
+ * @returns - The field state
+ */
+export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiState: UiState,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+): FormFieldState<S> {
+  const rootSchema = schemaUtils.getRootSchema();
+  return {
+    selectedOption: (fieldPath, options, formData, discriminator) =>
+      shownOption<T, S, F>(
+        schemaUtils,
+        uiState.selection(fieldPath, optionListKey<S>(options, rootSchema)),
+        options,
+        dataOf<T>(formData),
+        discriminator,
+      ),
+    isExpanded: (fieldPath) => uiState.isExpanded(fieldPath),
+  };
 }
 
 /** The new path of `path` once the keys of the array or object at `container` moved as `newKeyOf` says, undefined for
