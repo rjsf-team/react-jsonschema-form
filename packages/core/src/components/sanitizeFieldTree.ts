@@ -81,8 +81,9 @@ const DROP = Symbol('drop');
 
 /** The schemas a field renders, outermost first: the field's own, and the selected option's where it has options, which
  * renders at the same path, and so on for an option's own options. None for a collapsed `$ref` cycle that is not
- * expanded, which renders no field beneath its Expand button. Mirrors `SchemaField`, `MultiSchemaField` and
- * `CyclicSchemaField`, which is what makes the tree the one on screen. `retrieved` is `raw` retrieved for `value`, when
+ * expanded, which renders no field beneath its Expand button. Follows `SchemaField`, `MultiSchemaField` and
+ * `CyclicSchemaField` as far as the schema decides them: no `uiSchema` is read, so a field whose `uiSchema` keeps its
+ * options from rendering, as `ui:fieldReplacesAnyOrOneOf` does, is still taken to show one. `retrieved` is `raw` retrieved for `value`, when
  * the caller has it. `shown` maps each option list, by `optionListKey()`, to the option shown from it: an entry is
  * taken in place of the selection, and a list without one is added with the option shown for `value`.
  */

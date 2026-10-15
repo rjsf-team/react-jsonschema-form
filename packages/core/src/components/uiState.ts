@@ -11,7 +11,6 @@ import {
   fieldPathFromList,
   fieldPathToList,
   getByPath,
-  getDiscriminatorFieldFromSchema,
   getValidationTarget,
   getXxxOfKey,
   isConstantOptionList,
@@ -50,10 +49,10 @@ export function optionListKey<S extends StrictRJSFSchema>(options: readonly S[],
 
 /** The option a field shows for `formData`. With no `selection`, the option `getClosestMatchingOption()` picks. A
  * selection holds for the data in its `holdsFor`, and, while `holds` says an edit is being made below the field, for
- * any data unless the edit released it. Other data, from outside the field or from an edit to the object's own
- * properties, is matched again, with the selection preferred where it fits the data as well as any other option. Data
- * holding a value for the declared `discriminator` is always matched: the discriminator names the option, so an edit to
- * it is a switch.
+ * any data unless the edit released it. Other data, from outside the field or from an edit to a property of the
+ * object's own that an option declares too, is matched again, with the selection preferred where it fits the data as
+ * well as any other option. Data holding a value for the declared `discriminator` is always matched: the discriminator
+ * names the option, so an edit to it is a switch.
  *
  * @param schemaUtils - The schema utilities to match with
  * @param selection - The stored selection, if any
@@ -101,8 +100,10 @@ function emptySchema(): StrictRJSFSchema {
   return {};
 }
 
-/** The options a field whose retrieved schema is `view` renders below its selector, each retrieved for `formData` as
- * `SchemaField` retrieves them; undefined where it offers none, or only constants, which a select renders instead
+/** The options of a field whose retrieved schema is `view`, each retrieved for `formData`; undefined where it offers
+ * none, or only constants, which a select renders instead. `SchemaField` retrieves the options it renders with this,
+ * where its `uiSchema` lets them render; the sanitize walk, which reads no `uiSchema`, takes them as rendered wherever
+ * there are any
  */
 export function retrievedOptionsOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   schemaUtils: SchemaUtilsType<T, S, F>,
@@ -119,29 +120,9 @@ export function retrievedOptionsOf<T, S extends StrictRJSFSchema, F extends Form
   );
 }
 
-/** The option the field at `fieldPath`, whose retrieved schema is `view`, shows for `formData`, retrieved for that data,
- * or undefined where it shows none
- */
-export function shownOptionSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  uiState: UiState,
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  fieldPath: FieldPath,
-  view: S,
-  formData: T | undefined,
-): S | undefined {
-  const options = retrievedOptionsOf<T, S, F>(schemaUtils, view, formData);
-  if (!options) {
-    return undefined;
-  }
-  const selection = uiState.selection(fieldPath, optionListKey<S>(options, schemaUtils.getRootSchema()));
-  const index = shownOption<T, S, F>(
-    schemaUtils,
-    selection,
-    options,
-    formData,
-    getDiscriminatorFieldFromSchema<S>(view),
-  );
-  return options[index];
+/** Whether one of `options` declares `property` under its `properties` */
+export function optionsDeclare<S extends StrictRJSFSchema>(options: readonly S[], property: string): boolean {
+  return options.some(({ properties }) => properties !== undefined && Object.hasOwn(properties, property));
 }
 
 function isHeldFor(selection: OptionSelection, data: unknown): boolean {
@@ -246,8 +227,9 @@ export function createUiState() {
         setSelection(path, list, { index, holdsFor: [data] });
       }
     },
-    /** Lets the data an edit to the field's own properties leaves be matched again, as data from outside the field is:
-     * those properties are not the option's, so the edit is no reason to keep it
+    /** Lets the data an edit to a property of the object's own that an option declares too leaves be matched again, as
+     * data from outside the field is: the options can disagree about the property, so the edit may be a choice
+     * between them
      */
     release: (path: FieldPath, list: string) => {
       const current = selections.get(path)?.get(list);

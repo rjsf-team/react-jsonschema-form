@@ -46,11 +46,10 @@ import {
 } from '@rjsf/utils';
 
 import useFieldView from '../../hooks/useFieldView.ts';
-import useUiState from '../../hooks/useUiState.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
-import { dataOf, shownOptionSchema } from '../uiState.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+import { useShownOptionBeside } from './ShownOptionContext.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
  *
@@ -385,7 +384,6 @@ export default function ObjectField<
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
   const view = useFieldView(fieldPath, formData, ObjectField);
-  const { uiState } = useUiState();
   /** Every return renders through this, so a template below never inherits what was said of this field */
   const vouchForProperties = (content: ReactNode) => (
     <RawFormDataContext value={view.readsFormData ? ObjectFieldProperty : undefined}>{content}</RawFormDataContext>
@@ -397,10 +395,13 @@ export default function ObjectField<
   // it would re-render every property beside the one that did. Written once the render it belongs to has committed, so
   // that a render React starts and throws away cannot leave the callbacks answering from a schema resolved for form
   // data the user never saw -- they run from an event handler, which is after the commit either way
+  const shownOption = useShownOptionBeside(fieldPath);
   const schemaRef = useRef(schema);
+  const shownOptionRef = useRef(shownOption);
   useLayoutEffect(() => {
     schemaRef.current = schema;
-  }, [schema]);
+    shownOptionRef.current = shownOption;
+  }, [schema, shownOption]);
   const uiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema, globalUiOptions), [uiSchema, globalUiOptions]);
   const schemaProperties = useMemo(() => schema.properties ?? {}, [schema.properties]);
   const [lastRenamedProperty, setLastRenamedProperty] = useState<{ previousKey: string; currentKey?: string }>({
@@ -507,27 +508,19 @@ export default function ObjectField<
     [uiOptions],
   );
 
-  /** Returns the properties that declare `key`: the object's own, or else those of the `anyOf`/`oneOf` option it shows
-   * beside them, which renders the key in its own field and leaves it unstubbed here; undefined where neither does
+  /** Returns the properties that declare `key`: the object's own, or else those of the `anyOf`/`oneOf` option
+   * `SchemaField` shows beside them, which renders the key in its own field and leaves it unstubbed here; undefined
+   * where neither does
    */
-  const propertiesDeclaring = useCallback(
-    (key: string): NonNullable<S['properties']> | undefined => {
-      const currentSchema = schemaRef.current;
-      const properties = currentSchema.properties ?? {};
-      if (declaresProperty<S>(properties, key)) {
-        return properties;
-      }
-      const optionProperties = shownOptionSchema<T, S, F>(
-        uiState,
-        schemaUtils,
-        fieldPath,
-        currentSchema,
-        dataOf<T>(readData()),
-      )?.properties;
-      return optionProperties && declaresProperty<S>(optionProperties, key) ? optionProperties : undefined;
-    },
-    [uiState, schemaUtils, fieldPath, readData],
-  );
+  const propertiesDeclaring = useCallback((key: string): NonNullable<S['properties']> | undefined => {
+    const properties = schemaRef.current.properties ?? {};
+    if (declaresProperty<S>(properties, key)) {
+      return properties;
+    }
+    const option = shownOptionRef.current;
+    const optionProperties = isSchemaObject<S>(option) ? option.properties : undefined;
+    return optionProperties && declaresProperty<S>(optionProperties, key) ? optionProperties : undefined;
+  }, []);
 
   /** Returns the schema the object says describes `key`: the one it, or the option it shows, declares under that name,
    * where one does, and otherwise what `getAdditionalPropertySchema()` says of a name its `properties` don't name. The
