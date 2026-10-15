@@ -1,13 +1,13 @@
 import { CheckboxGroup, FieldsetRoot, Stack, Text, FieldsetLegend } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupAttributes,
   getOptionValueFormat,
-  hasVisibleErrors,
+  hasWidgetErrors,
   labelValue,
   optionId,
   useOptionFocusHandlers,
@@ -22,7 +22,7 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, disabled, options, value, readonly, onChange, onBlur, onFocus, label } = props;
+  const { id, htmlName, disabled, options, value, readonly, onChange, onBlur, onFocus, label, presentation } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -34,7 +34,11 @@ export default function CheckboxesWidget<
   const selectValue: string[] = enumOptionSelectedValue(value, enumOptions, true, optionValueFormat, []);
 
   const chakraProps = getChakra(options);
-  const hasError = hasVisibleErrors(props);
+  const hasError = hasWidgetErrors<T, S, F>(props);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'group',
+  );
 
   return (
     <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={hasError} {...chakraProps}>
@@ -44,7 +48,7 @@ export default function CheckboxesWidget<
           onChange(enumOptionValueDecoder<S>(option, enumOptions, optionValueFormat, emptyValue))
         }
         value={selectValue}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...groupAttributes}
         readOnly={readonly}
         invalid={hasError}
       >
@@ -62,6 +66,7 @@ export default function CheckboxesWidget<
                   disabled={disabled || itemDisabled || readonly}
                   onBlur={blurHandlers[index]}
                   onFocus={focusHandlers[index]}
+                  inputProps={optionAttributes}
                 >
                   {option.label && <Text>{option.label}</Text>}
                 </Checkbox>

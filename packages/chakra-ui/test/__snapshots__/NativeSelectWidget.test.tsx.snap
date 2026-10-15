@@ -292,7 +292,6 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
               class="chakra-native-select__root emotion-3"
             >
               <select
-                aria-describedby="root__error root__description root__help"
                 class="chakra-native-select__field emotion-4"
                 data-part="select"
                 data-scope="field"
@@ -645,7 +644,6 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
               class="chakra-native-select__root emotion-3"
             >
               <select
-                aria-describedby="root__error root__description root__help"
                 class="chakra-native-select__field emotion-4"
                 data-part="select"
                 data-scope="field"
@@ -1050,7 +1048,6 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                         class="chakra-native-select__root emotion-7"
                       >
                         <select
-                          aria-describedby="root_color__error root_color__description root_color__help"
                           class="chakra-native-select__field emotion-8"
                           data-part="select"
                           data-scope="field"

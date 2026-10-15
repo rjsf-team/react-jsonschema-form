@@ -3,7 +3,7 @@ import type { CheckboxCheckedChangeDetails } from '@chakra-ui/react';
 import { Field as ChakraField, Text } from '@chakra-ui/react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
-  getControlDescribedBy,
+  getControlAttributes,
   getTemplates,
   getUiOptions,
   getWidgetDescription,
@@ -72,7 +72,7 @@ export default function CheckboxWidget<
         onCheckedChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
+        inputProps={getControlAttributes<T, S, F>({ id, presentation })}
       >
         {!hideLabel && label ? (
           <Text>

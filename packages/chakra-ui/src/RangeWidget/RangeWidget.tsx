@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import type { SliderValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue, rangeSpec, widgetDrawsLabel } from '@rjsf/utils';
+import { getControlAttributes, labelValue, rangeSpec, widgetDrawsLabel } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { Slider } from '../components/ui/slider.tsx';
@@ -12,7 +12,7 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, label, id } = props;
+  const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, label, id, presentation } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const handleChange = ({ value: newValue }: SliderValueChangeDetails) =>
     onChange(newValue === undefined ? options.emptyValue : newValue[0]);
@@ -32,7 +32,7 @@ export default function RangeWidget<
         onValueChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        thumbProps={getControlAttributes<T, S, F>({ id, presentation })}
       />
     </Field>
   );

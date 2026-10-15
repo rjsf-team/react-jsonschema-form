@@ -214,7 +214,6 @@ exports[`format iso-date-time 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -459,7 +458,6 @@ exports[`format iso-time 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -1144,7 +1142,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                   title
                                                 </label>
                                                 <input
-                                                  aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                                   class="chakra-input emotion-21"
                                                   data-part="input"
                                                   data-scope="field"
@@ -1396,7 +1393,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                   title
                                                 </label>
                                                 <input
-                                                  aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                                   class="chakra-input emotion-21"
                                                   data-part="input"
                                                   data-scope="field"
@@ -2171,7 +2167,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                         class="chakra-input emotion-16"
                                         data-part="input"
                                         data-required=""
@@ -2325,7 +2320,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                         class="chakra-input emotion-16"
                                         data-part="input"
                                         data-required=""
@@ -2851,7 +2845,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         choices
                       </legend>
                       <div
-                        aria-describedby="root_choices__error root_choices__description root_choices__help"
                         class="emotion-7"
                         data-part="group"
                         data-scope="checkbox"
@@ -3352,7 +3345,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   firstName
                                 </label>
                                 <input
-                                  aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                                   class="chakra-input emotion-13"
                                   data-part="input"
                                   data-scope="field"
@@ -3397,7 +3389,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   lastName
                                 </label>
                                 <input
-                                  aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                                   class="chakra-input emotion-13"
                                   data-part="input"
                                   data-scope="field"
@@ -3473,7 +3464,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             street
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -3518,7 +3508,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             city
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -3901,7 +3890,6 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         option
                       </label>
                       <div
-                        aria-describedby="root_option__error root_option__description root_option__help"
                         aria-labelledby="fieldset::_r_ak_::legend"
                         aria-orientation="vertical"
                         class="chakra-radio-group__root"
@@ -5178,7 +5166,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                         firstName
                       </label>
                       <input
-                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -5223,7 +5210,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                         age
                       </label>
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -5604,7 +5590,6 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                         description
                       </label>
                       <textarea
-                        aria-describedby="root_description__error root_description__description root_description__help"
                         class="chakra-textarea emotion-7"
                         data-part="textarea"
                         data-scope="field"
@@ -6292,7 +6277,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                   title
                                                 </label>
                                                 <input
-                                                  aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                                   class="chakra-input emotion-21"
                                                   data-part="input"
                                                   data-scope="field"
@@ -6544,7 +6528,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                   title
                                                 </label>
                                                 <input
-                                                  aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                                   class="chakra-input emotion-21"
                                                   data-part="input"
                                                   data-scope="field"
@@ -7319,7 +7302,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                         class="chakra-input emotion-16"
                                         data-part="input"
                                         data-required=""
@@ -7473,7 +7455,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                         class="chakra-input emotion-16"
                                         data-part="input"
                                         data-required=""
@@ -7974,7 +7955,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   firstName
                                 </label>
                                 <input
-                                  aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                                   class="chakra-input emotion-13"
                                   data-part="input"
                                   data-scope="field"
@@ -8019,7 +7999,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   lastName
                                 </label>
                                 <input
-                                  aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                                   class="chakra-input emotion-13"
                                   data-part="input"
                                   data-scope="field"
@@ -8095,7 +8074,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                             street
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -8140,7 +8118,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                             city
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -9332,7 +9309,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                         firstName
                       </label>
                       <input
-                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -9377,7 +9353,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                         age
                       </label>
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -9767,7 +9742,6 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               aria-labelledby="fieldset::_r_de_::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
@@ -15975,7 +15949,6 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
               This is a checkbox description
             </sup>
             <label
-              aria-describedby="root__description"
               class="chakra-checkbox__root emotion-4"
               data-part="root"
               data-scope="checkbox"
@@ -15985,6 +15958,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
               id="checkbox:root"
             >
               <input
+                aria-describedby="root__description"
                 aria-invalid="false"
                 aria-labelledby="field::_r_3o_::label"
                 id="_r_3o_"
@@ -16688,7 +16662,6 @@ exports[`single fields > checkbox field with label and description 1`] = `
               test description
             </sup>
             <label
-              aria-describedby="root__description"
               class="chakra-checkbox__root emotion-4"
               data-part="root"
               data-scope="checkbox"
@@ -16698,6 +16671,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
               id="checkbox:root"
             >
               <input
+                aria-describedby="root__description"
                 aria-invalid="false"
                 aria-labelledby="field::_r_3a_::label"
                 id="_r_3a_"
@@ -17058,7 +17032,6 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               </span>
             </sup>
             <label
-              aria-describedby="root__description"
               class="chakra-checkbox__root emotion-4"
               data-part="root"
               data-scope="checkbox"
@@ -17068,6 +17041,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               id="checkbox:root"
             >
               <input
+                aria-describedby="root__description"
                 aria-invalid="false"
                 aria-labelledby="field::_r_3d_::label"
                 id="_r_3d_"
@@ -17454,7 +17428,6 @@ exports[`single fields > checkboxes field 1`] = `
               An enum list rendered as checkboxes
             </legend>
             <div
-              aria-describedby="root__error root__description root__help"
               class="emotion-4"
               data-part="group"
               data-scope="checkbox"
@@ -18039,7 +18012,6 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               Checkbox Group
             </legend>
             <div
-              aria-describedby="root__error root__description root__help"
               class="emotion-7"
               data-part="group"
               data-scope="checkbox"
@@ -18058,6 +18030,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   id="checkbox:root-0"
                 >
                   <input
+                    aria-describedby="root__description root__help"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-0:label"
                     checked=""
@@ -18109,6 +18082,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   id="checkbox:root-1"
                 >
                   <input
+                    aria-describedby="root__description root__help"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-1:label"
                     id="checkbox:root-1:input"
@@ -18155,6 +18129,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   id="checkbox:root-2"
                 >
                   <input
+                    aria-describedby="root__description root__help"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-2:label"
                     id="checkbox:root-2:input"
@@ -18577,7 +18552,6 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               Required Checkbox Group
             </legend>
             <div
-              aria-describedby="root__error root__description root__help"
               class="emotion-6"
               data-part="group"
               data-scope="checkbox"
@@ -18596,6 +18570,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   id="checkbox:root-0"
                 >
                   <input
+                    aria-describedby="root__description"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-0:label"
                     id="checkbox:root-0:input"
@@ -18642,6 +18617,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   id="checkbox:root-1"
                 >
                   <input
+                    aria-describedby="root__description"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-1:label"
                     id="checkbox:root-1:input"
@@ -18688,6 +18664,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   id="checkbox:root-2"
                 >
                   <input
+                    aria-describedby="root__description"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-2:label"
                     id="checkbox:root-2:input"
@@ -19052,7 +19029,7 @@ exports[`single fields > field with description 1`] = `
                         my-field
                       </label>
                       <input
-                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        aria-describedby="root_my-field__description"
                         class="chakra-input emotion-9"
                         data-part="input"
                         data-scope="field"
@@ -19393,7 +19370,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                         my-field
                       </label>
                       <input
-                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        aria-describedby="root_my-field__description"
                         class="chakra-input emotion-9"
                         data-part="input"
                         data-scope="field"
@@ -19740,7 +19717,7 @@ exports[`single fields > field with markdown description 1`] = `
                         my-field
                       </label>
                       <input
-                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        aria-describedby="root_my-field__description"
                         class="chakra-input emotion-9"
                         data-part="input"
                         data-scope="field"
@@ -20081,7 +20058,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                         my-field
                       </label>
                       <input
-                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        aria-describedby="root_my-field__description"
                         class="chakra-input emotion-9"
                         data-part="input"
                         data-scope="field"
@@ -20331,7 +20308,6 @@ exports[`single fields > format color 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -20576,7 +20552,6 @@ exports[`single fields > format date 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -20821,7 +20796,6 @@ exports[`single fields > format datetime 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -21066,7 +21040,6 @@ exports[`single fields > format time 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -21530,7 +21503,7 @@ exports[`single fields > help and error display 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__error root__help"
               aria-invalid="true"
               class="chakra-input emotion-12"
               data-invalid=""
@@ -21964,7 +21937,6 @@ exports[`single fields > hidden label 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -22366,7 +22338,6 @@ exports[`single fields > number field 0 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -22614,7 +22585,6 @@ exports[`single fields > number field 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -23373,7 +23343,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                   class="chakra-input emotion-16"
                                   data-part="input"
                                   data-scope="field"
@@ -23449,7 +23418,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             deepTest
                                           </label>
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                             class="chakra-input emotion-16"
                                             data-part="input"
                                             data-scope="field"
@@ -23530,7 +23498,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             deepTest
                                           </label>
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                             class="chakra-input emotion-16"
                                             data-part="input"
                                             data-scope="field"
@@ -23912,7 +23879,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="chakra-input emotion-16"
                                   data-part="input"
                                   data-scope="field"
@@ -24303,7 +24269,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             name
                                           </label>
                                           <input
-                                            aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                             class="chakra-input emotion-16"
                                             data-part="input"
                                             data-readonly=""
@@ -25394,7 +25359,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                   class="chakra-input emotion-16"
                                   data-part="input"
                                   data-readonly=""
@@ -25478,7 +25442,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             deepTest
                                           </label>
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                             class="chakra-input emotion-16"
                                             data-part="input"
                                             data-readonly=""
@@ -25567,7 +25530,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             deepTest
                                           </label>
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                             class="chakra-input emotion-16"
                                             data-part="input"
                                             data-readonly=""
@@ -25961,7 +25923,6 @@ exports[`single fields > optional data controls > does not show optional control
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="chakra-input emotion-16"
                                   data-part="input"
                                   data-readonly=""
@@ -26377,7 +26338,6 @@ exports[`single fields > optional data controls > does not show optional control
                                             name
                                           </label>
                                           <input
-                                            aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                             class="chakra-input emotion-16"
                                             data-part="input"
                                             data-readonly=""
@@ -27479,7 +27439,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                   class="chakra-input emotion-19"
                                   data-part="input"
                                   data-scope="field"
@@ -27625,7 +27584,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             deepTest
                                           </label>
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                             class="chakra-input emotion-19"
                                             data-part="input"
                                             data-scope="field"
@@ -27985,7 +27943,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                         class="chakra-input emotion-19"
                                         data-part="input"
                                         data-required=""
@@ -28143,7 +28100,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="chakra-input emotion-19"
                                   data-part="input"
                                   data-scope="field"
@@ -29033,7 +28989,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                   class="chakra-input emotion-16"
                                   data-part="input"
                                   data-readonly=""
@@ -29160,7 +29115,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             deepTest
                                           </label>
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                             class="chakra-input emotion-16"
                                             data-part="input"
                                             data-readonly=""
@@ -29462,7 +29416,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                         class="chakra-input emotion-16"
                                         data-part="input"
                                         data-readonly=""
@@ -29630,7 +29583,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="chakra-input emotion-16"
                                   data-part="input"
                                   data-readonly=""
@@ -30547,7 +30499,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="chakra-input emotion-34"
                                   data-part="input"
                                   data-scope="field"
@@ -31364,7 +31315,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   test
                                 </label>
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="chakra-input emotion-28"
                                   data-part="input"
                                   data-scope="field"
@@ -31846,7 +31796,6 @@ exports[`single fields > password field 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -32157,7 +32106,6 @@ exports[`single fields > radio field 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               aria-labelledby="fieldset::_r_4c_::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
@@ -32632,7 +32580,6 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               test
             </label>
             <div
-              aria-describedby="root__error root__description root__help"
               aria-labelledby="fieldset::_r_3q_::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
@@ -32659,6 +32606,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                   id="root-0"
                 >
                   <input
+                    aria-describedby="root__description"
                     aria-labelledby="radio-group:_r_3s_:radio:label:0"
                     data-ownedby="radio-group:_r_3s_"
                     id="radio-group:_r_3s_:radio:input:0"
@@ -32703,6 +32651,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                   id="root-1"
                 >
                   <input
+                    aria-describedby="root__description"
                     aria-labelledby="radio-group:_r_3s_:radio:label:1"
                     data-ownedby="radio-group:_r_3s_"
                     id="radio-group:_r_3s_:radio:input:1"
@@ -33733,7 +33682,7 @@ exports[`single fields > schema examples 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help root__examples"
+              aria-describedby="root__examples"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -33998,7 +33947,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help root__examples"
+              aria-describedby="root__examples"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -36487,7 +36436,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
             data-scope="fieldset"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="emotion-3"
               data-part="group"
               data-scope="checkbox"
@@ -39084,7 +39032,6 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               aria-labelledby="fieldset::_r_1n_::legend"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
@@ -39497,7 +39444,6 @@ exports[`single fields > select field single choice form disabled using radio wi
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               aria-disabled="true"
               aria-labelledby="fieldset::_r_1t_::legend"
               aria-orientation="vertical"
@@ -42160,7 +42106,6 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               aria-disabled="true"
               aria-labelledby="fieldset::_r_1q_::legend"
               aria-orientation="vertical"
@@ -44657,7 +44602,6 @@ exports[`single fields > slider field 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-slider__root emotion-3"
               data-orientation="horizontal"
               data-part="root"
@@ -45052,7 +44996,7 @@ exports[`single fields > string field > field with markdown help and description
               Markdown Help and Description
             </label>
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="chakra-input emotion-7"
               data-part="input"
               data-scope="field"
@@ -45383,7 +45327,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
               Markdown Help Test
             </label>
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="chakra-input emotion-7"
               data-part="input"
               data-scope="field"
@@ -45703,7 +45647,7 @@ exports[`single fields > string field > field with markdown help text without a 
               Raw Help Test
             </label>
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="chakra-input emotion-7"
               data-part="input"
               data-scope="field"
@@ -45949,7 +45893,6 @@ exports[`single fields > string field > format data-url 1`] = `
               role="group"
             >
               <input
-                aria-describedby="root__error root__description root__help"
                 class="chakra-input emotion-3"
                 data-part="input"
                 data-scope="field"
@@ -46195,7 +46138,6 @@ exports[`single fields > string field > format email 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -46440,7 +46382,6 @@ exports[`single fields > string field > format uri 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -46685,7 +46626,6 @@ exports[`single fields > string field > regular 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -47011,7 +46951,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
               Required Field with Markdown Help
             </label>
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="chakra-input emotion-7"
               data-part="input"
               data-scope="field"
@@ -47258,7 +47198,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-readonly=""
@@ -47599,7 +47538,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -47871,7 +47809,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -48116,7 +48053,6 @@ exports[`single fields > textarea field 1`] = `
             role="group"
           >
             <textarea
-              aria-describedby="root__error root__description root__help"
               class="chakra-textarea emotion-3"
               data-part="textarea"
               data-scope="field"
@@ -48455,7 +48391,6 @@ exports[`single fields > title field 1`] = `
                         Titre 2
                       </label>
                       <input
-                        aria-describedby="root_title__error root_title__description root_title__help"
                         class="chakra-input emotion-10"
                         data-part="input"
                         data-scope="field"
@@ -49021,7 +48956,6 @@ exports[`single fields > up/down field 1`] = `
             role="group"
           >
             <div
-              aria-describedby="root__error root__description root__help"
               class="chakra-number-input__root emotion-3"
               data-part="root"
               data-scope="number-input"
@@ -49332,7 +49266,6 @@ exports[`single fields > using custom tagName 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="chakra-input emotion-3"
               data-part="input"
               data-scope="field"
@@ -49577,7 +49510,6 @@ exports[`string field with autocapitalize 1`] = `
             role="group"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               autocapitalize="words"
               class="chakra-input emotion-3"
               data-part="input"

@@ -326,7 +326,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                   name
                                 </label>
                                 <input
-                                  aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                                   class="chakra-input emotion-13"
                                   data-part="input"
                                   data-scope="field"
@@ -402,7 +401,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             street
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -447,7 +445,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             city
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -492,7 +489,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                             country
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -988,7 +984,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                         name
                       </label>
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -1066,7 +1061,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                           customField
                         </label>
                         <input
-                          aria-describedby="root_customField__error root_customField__description root_customField__help"
                           class="chakra-input emotion-7"
                           data-part="input"
                           data-scope="field"
@@ -1762,7 +1756,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         name
                       </label>
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -1807,7 +1800,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                         age
                       </label>
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -1976,7 +1968,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                         class="chakra-input emotion-7"
                                         data-part="input"
                                         data-required=""
@@ -2130,7 +2121,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                         class="chakra-input emotion-7"
                                         data-part="input"
                                         data-required=""
@@ -2576,7 +2566,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                         firstName
                       </label>
                       <input
-                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -2621,7 +2610,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                         lastName
                       </label>
                       <input
-                        aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -2666,7 +2654,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                         age
                       </label>
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -3031,7 +3018,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                   name
                                 </label>
                                 <input
-                                  aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                                   class="chakra-input emotion-13"
                                   data-part="input"
                                   data-scope="field"
@@ -3107,7 +3093,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                             street
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -3152,7 +3137,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                             city
                                           </label>
                                           <input
-                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                             class="chakra-input emotion-13"
                                             data-part="input"
                                             data-scope="field"
@@ -3674,7 +3658,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                         name
                       </label>
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -3719,7 +3702,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                         count
                       </label>
                       <input
-                        aria-describedby="root_count__error root_count__description root_count__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -3812,7 +3794,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
                                         class="chakra-input emotion-7"
                                         data-part="input"
                                         data-required=""
@@ -3966,7 +3947,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                         </span>
                                       </label>
                                       <input
-                                        aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
                                         class="chakra-input emotion-7"
                                         data-part="input"
                                         data-required=""
@@ -4412,7 +4392,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                         firstName
                       </label>
                       <input
-                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -4457,7 +4436,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                         lastName
                       </label>
                       <input
-                        aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -4502,7 +4480,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                         age
                       </label>
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -5024,7 +5001,6 @@ exports[`object fields > additionalProperties 1`] = `
                           foo
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="chakra-input emotion-13"
                           data-part="input"
                           data-scope="field"
@@ -6098,7 +6074,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                           foo
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          aria-describedby="root_foo__description"
                           class="chakra-input emotion-33"
                           data-part="input"
                           data-scope="field"
@@ -7300,7 +7276,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                           foo
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          aria-describedby="root_foo__description"
                           class="chakra-input emotion-15"
                           data-part="input"
                           data-scope="field"
@@ -7887,7 +7863,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                           foo
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="chakra-input emotion-13"
                           data-part="input"
                           data-scope="field"
@@ -8529,7 +8504,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                     foo
                                   </label>
                                   <input
-                                    aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
                                     class="chakra-input emotion-19"
                                     data-part="input"
                                     data-scope="field"
@@ -9573,7 +9547,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                           foo
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="chakra-input emotion-31"
                           data-part="input"
                           data-scope="field"
@@ -10612,7 +10585,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                           foo (deprecated)
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="chakra-input emotion-31"
                           data-part="input"
                           data-scope="field"
@@ -10987,7 +10959,6 @@ exports[`object fields > object 1`] = `
                         A
                       </label>
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -11032,7 +11003,6 @@ exports[`object fields > object 1`] = `
                         B
                       </label>
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -11554,7 +11524,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                           additionalProperty
                         </label>
                         <input
-                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                           class="chakra-input emotion-13"
                           data-part="input"
                           data-scope="field"
@@ -12190,7 +12159,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                           foo
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
@@ -12644,7 +12612,7 @@ exports[`object fields > with title and description > object 1`] = `
                         A
                       </label>
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
+                        aria-describedby="root_a__description"
                         class="chakra-input emotion-13"
                         data-part="input"
                         data-scope="field"
@@ -12702,7 +12670,7 @@ exports[`object fields > with title and description > object 1`] = `
                         B
                       </label>
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
+                        aria-describedby="root_b__description"
                         class="chakra-input emotion-13"
                         data-part="input"
                         data-scope="field"
@@ -13273,7 +13241,6 @@ exports[`object fields > with title and description > show add button and fields
                           additionalProperty
                         </label>
                         <input
-                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                           class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
@@ -13909,7 +13876,6 @@ exports[`object fields > with title and description from both > additionalProper
                           foo
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
@@ -14363,7 +14329,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                         My Item A
                       </label>
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
+                        aria-describedby="root_a__description"
                         class="chakra-input emotion-13"
                         data-part="input"
                         data-scope="field"
@@ -14421,7 +14387,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                         My Item B
                       </label>
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
+                        aria-describedby="root_b__description"
                         class="chakra-input emotion-13"
                         data-part="input"
                         data-scope="field"
@@ -14992,7 +14958,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                           foo
                         </label>
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
@@ -15446,7 +15411,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                         My Item A
                       </label>
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
+                        aria-describedby="root_a__description"
                         class="chakra-input emotion-13"
                         data-part="input"
                         data-scope="field"
@@ -15504,7 +15469,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                         My Item B
                       </label>
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
+                        aria-describedby="root_b__description"
                         class="chakra-input emotion-13"
                         data-part="input"
                         data-scope="field"
@@ -16075,7 +16040,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                           additionalProperty
                         </label>
                         <input
-                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                           class="chakra-input emotion-17"
                           data-part="input"
                           data-scope="field"
@@ -16618,7 +16582,6 @@ exports[`object fields > with title and description with global label off > addi
                         role="group"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="chakra-input emotion-11"
                           data-part="input"
                           data-scope="field"
@@ -16957,7 +16920,6 @@ exports[`object fields > with title and description with global label off > obje
                       role="group"
                     >
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
                         class="chakra-input emotion-6"
                         data-part="input"
                         data-scope="field"
@@ -16993,7 +16955,6 @@ exports[`object fields > with title and description with global label off > obje
                       role="group"
                     >
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
                         class="chakra-input emotion-6"
                         data-part="input"
                         data-scope="field"
@@ -17471,7 +17432,6 @@ exports[`object fields > with title and description with global label off > show
                         role="group"
                       >
                         <input
-                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                           class="chakra-input emotion-11"
                           data-part="input"
                           data-scope="field"

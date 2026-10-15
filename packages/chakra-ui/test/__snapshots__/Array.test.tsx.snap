@@ -623,7 +623,6 @@ exports[`array fields > array icons 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -794,7 +793,6 @@ exports[`array fields > array icons 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -1967,7 +1965,6 @@ exports[`array fields > empty errors array 1`] = `
                         name
                       </label>
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -2264,7 +2261,6 @@ exports[`array fields > fixed array 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -2308,7 +2304,6 @@ exports[`array fields > fixed array 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -2833,7 +2828,7 @@ exports[`array fields > has errors 1`] = `
                         name
                       </label>
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
+                        aria-describedby="root_name__error"
                         aria-invalid="true"
                         class="chakra-input emotion-15"
                         data-invalid=""
@@ -3151,7 +3146,6 @@ exports[`array fields > no errors 1`] = `
                         name
                       </label>
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="chakra-input emotion-7"
                         data-part="input"
                         data-scope="field"
@@ -3655,7 +3649,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         name
                                       </label>
                                       <input
-                                        aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -3700,7 +3693,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         value
                                       </label>
                                       <input
-                                        aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -3869,7 +3861,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         name
                                       </label>
                                       <input
-                                        aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -3914,7 +3905,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                         value
                                       </label>
                                       <input
-                                        aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -4501,7 +4491,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -4639,7 +4628,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -5869,7 +5857,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -5913,7 +5900,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -6461,7 +6447,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             role="group"
                                           >
                                             <input
-                                              aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
                                               class="chakra-input emotion-13"
                                               data-part="input"
                                               data-required=""
@@ -6599,7 +6584,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             role="group"
                                           >
                                             <input
-                                              aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
                                               class="chakra-input emotion-13"
                                               data-part="input"
                                               data-required=""
@@ -6897,7 +6881,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             role="group"
                                           >
                                             <input
-                                              aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
                                               class="chakra-input emotion-13"
                                               data-part="input"
                                               data-required=""
@@ -7035,7 +7018,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             role="group"
                                           >
                                             <input
-                                              aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
                                               class="chakra-input emotion-13"
                                               data-part="input"
                                               data-required=""
@@ -7810,7 +7792,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         name
                                       </label>
                                       <input
-                                        aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -7855,7 +7836,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         value
                                       </label>
                                       <input
-                                        aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -8024,7 +8004,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         name
                                       </label>
                                       <input
-                                        aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -8069,7 +8048,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                         value
                                       </label>
                                       <input
-                                        aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -8656,7 +8634,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -8794,7 +8771,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -9432,7 +9408,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                         name
                                       </label>
                                       <input
-                                        aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -9631,7 +9606,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                         name
                                       </label>
                                       <input
-                                        aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                                         class="chakra-input emotion-12"
                                         data-part="input"
                                         data-scope="field"
@@ -10637,7 +10611,7 @@ exports[`with title and description > array icons 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
+                              aria-describedby="root_0__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -10837,7 +10811,7 @@ exports[`with title and description > array icons 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
+                              aria-describedby="root_1__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -12198,7 +12172,7 @@ exports[`with title and description > fixed array 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
+                              aria-describedby="root_0__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -12271,7 +12245,7 @@ exports[`with title and description > fixed array 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
+                              aria-describedby="root_1__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -13115,7 +13089,7 @@ exports[`with title and description from both > array icons 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
+                              aria-describedby="root_0__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -13315,7 +13289,7 @@ exports[`with title and description from both > array icons 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
+                              aria-describedby="root_1__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -14676,7 +14650,7 @@ exports[`with title and description from both > fixed array 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
+                              aria-describedby="root_0__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -14749,7 +14723,7 @@ exports[`with title and description from both > fixed array 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
+                              aria-describedby="root_1__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -15593,7 +15567,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
+                              aria-describedby="root_0__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -15793,7 +15767,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
+                              aria-describedby="root_1__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -17154,7 +17128,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
+                              aria-describedby="root_0__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -17227,7 +17201,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               </span>
                             </label>
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
+                              aria-describedby="root_1__description"
                               class="chakra-input emotion-16"
                               data-part="input"
                               data-required=""
@@ -17894,7 +17868,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -18065,7 +18038,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -19229,7 +19201,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_0__error root_0__description root_0__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
@@ -19273,7 +19244,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                             role="group"
                           >
                             <input
-                              aria-describedby="root_1__error root_1__description root_1__help"
                               class="chakra-input emotion-8"
                               data-part="input"
                               data-required=""
