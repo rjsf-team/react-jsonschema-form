@@ -1,5 +1,6 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, RJSFSchema } from '@rjsf/utils';
+import { fieldLabelId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -445,6 +446,50 @@ describe('antd specific tests', () => {
     );
 
     expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
+  });
+
+  test("draws no heading for an array option whose ui:title repeats its field's label", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            tags: { type: 'array', items: { type: 'string' }, anyOf: [{ maxItems: 3 }, { minItems: 1 }] },
+          },
+        }}
+        uiSchema={{ tags: { 'ui:title': 'Tags', anyOf: [{ 'ui:title': 'Tags' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector(`#${fieldLabelId('root_tags')}`)).toHaveTextContent('Tags');
+    expect(container.querySelector('#root_tags__title')).not.toBeInTheDocument();
+  });
+
+  test("keeps an optional array option's data control where a field above draws its heading", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            tags: {
+              title: 'Tags',
+              anyOf: [
+                { type: 'array', items: { type: 'string' } },
+                { type: 'array', items: { type: 'number' } },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
+        formData={{ tags: ['a'] }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector(`#${fieldLabelId('root_tags')}`)).toHaveTextContent('Tags');
+    expect(container.querySelector('#root_tags__title')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
   });
 
   // antd draws the `*` as the required label's generated content, which jsdom leaves out of a name but a browser doesn't
