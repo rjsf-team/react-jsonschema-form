@@ -178,8 +178,10 @@ function decodeFragment(fragment: string): string | undefined {
   }
 }
 
-function stringKeyword(raw: object, key: string): string | undefined {
-  const value: unknown = Reflect.get(raw, key);
+/** Returns the string a schema holds under `key`, or `undefined` where it holds none */
+export function stringKeyword(raw: unknown, key: PropertyKey): string | undefined {
+  // `Object()` boxes a boolean schema, which has no keywords to read
+  const value: unknown = Reflect.get(Object(raw), key);
   return typeof value === 'string' ? value : undefined;
 }
 
