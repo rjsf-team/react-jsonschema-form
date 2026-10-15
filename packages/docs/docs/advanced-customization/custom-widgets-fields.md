@@ -552,6 +552,9 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
 ```
 
+A `$id` names the field the way [`ui:field`](../api-reference/uiSchema.md#uifield) does, after the field's own `ui:field` and `ui:globalOptions.field`: the field renders beside an `anyOf`/`oneOf` option selector, or in place of the options with `ui:fieldReplacesAnyOrOneOf`.
+A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names.
+
 ### Wrapping an existing field to customize it
 
 Sometimes you just need to customize the properties that are passed to an existing field.

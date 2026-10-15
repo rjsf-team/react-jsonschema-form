@@ -92,6 +92,19 @@ describe('getUiOptions()', () => {
     expect(getUiOptions(uiSchema.multiOptions)).toEqual(results.multiOptions);
     expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   });
+  it('leaves a global required out, since ui:required is a field option alone (#5527)', () => {
+    expect(getUiOptions({}, { required: true, label: false })).toEqual({ label: false });
+    expect(getUiOptions(undefined, { required: true })).toEqual({});
+    expect(getUiOptions({ 'ui:required': false }, { required: true })).toEqual({ required: false });
+  });
+  it('does not return the root keys ui:definitions and ui:globalOptions as options (#5527)', () => {
+    const rootUiSchema: UiSchema = {
+      'ui:definitions': { '#/definitions/a': { 'ui:title': 'A' } },
+      'ui:globalOptions': { label: false },
+      'ui:title': 'Root',
+    };
+    expect(getUiOptions(rootUiSchema)).toEqual({ title: 'Root' });
+  });
   test.each<[string, Widget]>([
     ['memo()', memo(MyWidget)],
     ['forwardRef()', ForwardedWidget],

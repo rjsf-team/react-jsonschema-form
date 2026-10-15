@@ -1490,4 +1490,33 @@ export function formTests(Form: ComponentType<FormProps>) {
       });
     },
   );
+  describe('named fields and widget options', () => {
+    test('a ui:field naming SchemaField renders the field once (#5377)', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { val: { type: 'string' } } };
+      const { container } = render(
+        <Form schema={schema} uiSchema={{ val: { 'ui:field': 'SchemaField' } }} validator={validator} />,
+      );
+      expect(container.querySelectorAll('input#root_val')).toHaveLength(1);
+    });
+    test('a $id naming a registered field renders it beside the anyOf options (#5391)', () => {
+      const schema: RJSFSchema = { $id: 'MyField', type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] };
+      const { container } = render(
+        <Form schema={schema} fields={{ MyField: () => <div className='my-field' /> }} validator={validator} />,
+      );
+      expect(container.querySelectorAll('.my-field')).toHaveLength(1);
+    });
+    test('a global required option does not mark a checkbox required (#5527)', () => {
+      const schema: RJSFSchema = { type: 'object', properties: { flag: { type: 'boolean', title: 'Flag' } } };
+      const { container } = render(
+        <Form schema={schema} uiSchema={{ 'ui:globalOptions': { required: true } }} validator={validator} />,
+      );
+      expect(container.querySelector('[required], [aria-required="true"]')).toBeNull();
+    });
+    test('ui:definitions is not passed on to a root field (#5527)', () => {
+      const { container } = render(
+        <Form schema={{ type: 'string' }} uiSchema={{ 'ui:definitions': {} }} validator={validator} />,
+      );
+      expect(container.querySelector('[definitions]')).toBeNull();
+    });
+  });
 }
