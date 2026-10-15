@@ -59,8 +59,8 @@ import { pointerTo, withVariantId } from './graph/validationTargets.ts';
  * for the caller to retrieve when it renders that subschema.
  *
  * Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is. A recursive
- * `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`; retrieving a copy with that flag set to
- * `false` expands it by one level. Retrieving a schema this function returned gives the same schema back, and a schema
+ * `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`; `expandRefCycle()` expands such a field by
+ * one level. Retrieving a schema this function returned gives the same schema back, and a schema
  * that carries nothing of the kind is resolved as a field of its own, from the top.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -211,24 +211,16 @@ function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds:
 }
 
 /** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.
- * A copy with `RJSF_REF_CYCLE_KEY` set to `false` is the expansion of the collapsed field it copies: its seeds restart,
- * and so does the guard chain its children are checked against. Any other copy of a handed-out schema, such as an
- * option merged with what it inherits or a custom field's spread with a keyword of its own, is planned from its own
- * keywords, with the ref path and chain of the field it copies: restarting the ref path would let a field that copies
- * its schema at every level recurse without end.
- *
- * @param graph - The graph of the current root
- * @param schema - The schema whose field is wanted
- * @returns - The provenance of the field
+ * A copy of a handed-out schema, such as an option merged with what it inherits or a custom field's spread with a
+ * keyword of its own, is planned from its own keywords, with the ref path and chain of the field it copies: restarting
+ * the ref path would let a field that copies its schema at every level recurse without end. Only `expandRefCycle()`
+ * restarts them.
  */
 export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): Provenance<S> {
   const stamped = readProvenance<S>(schema, graph);
   if (stamped === undefined) {
     const adopted = graph.adopt(schema);
     return rootProvenance(adopted.graph, [{ node: adopted.node, refPath: [] }]);
-  }
-  if (Reflect.get(schema, RJSF_REF_CYCLE_KEY) === false) {
-    return childProvenance(stamped, { seeds: restartSeeds(stamped.seeds) });
   }
   if (isHandedOut(schema)) {
     return stamped;
@@ -256,6 +248,23 @@ function optionNode<S extends StrictRJSFSchema>(
     return node.kind === 'schema' && node.raw === option;
   });
   return provided?.node ?? plan.graph.byObject(option);
+}
+
+/** Returns the expansion of a field `retrieveSchema()` collapsed, flagging it with `RJSF_REF_CYCLE_KEY`: the field
+ * resolved one level further, its seeds' ref paths and the guard chain its children are checked against restarted at
+ * it, so its children collapse again at their next recurrence. The form expands the field at a path the user expanded
+ * with this. A schema `retrieveSchema()` did not hand out is returned without the flag, as the call root it is.
+ *
+ * @param schema - The collapsed field's schema, as `retrieveSchema()` handed it out
+ * @param rootSchema - The root schema it was handed out for
+ * @returns - The schema to retrieve the expanded field from
+ */
+export function expandRefCycle<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): S {
+  const stamped = readProvenance<S>(schema, parseSchemaGraph<S>(rootSchema));
+  const expanded = withoutKeys(schema, RJSF_REF_CYCLE_KEY);
+  return stamped === undefined
+    ? expanded
+    : handOut(expanded, childProvenance(stamped, { seeds: restartSeeds(stamped.seeds) }));
 }
 
 /** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has

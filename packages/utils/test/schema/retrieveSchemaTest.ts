@@ -17,6 +17,7 @@ import {
   noop,
 } from '../../src/index.ts';
 import {
+  expandRefCycle,
   getAdditionalPropertyType,
   getValidationTarget,
   resolveOwnRef,
@@ -2606,7 +2607,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         // Expanding it gives the pattern, as it does any other key
         const expanded = retrieveSchema(
           { validator: testValidator },
-          { ...schemaOf(b.properties?.a), [RJSF_REF_CYCLE_KEY]: false },
+          expandRefCycle(schemaOf(b.properties?.a), rootSchema),
           rootSchema,
           {},
         );
@@ -3649,20 +3650,47 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(retrieved.properties?.child).toEqual({ ...child, [RJSF_REF_CYCLE_KEY]: true });
       });
-      it('expands a collapsed property by one level when retrieved with its cycle flag cleared', () => {
+      it('expands a collapsed property by one level through expandRefCycle()', () => {
         const rootSchema: RJSFSchema = { definitions: { node }, $ref: D('node') };
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(retrieved.properties?.child).toEqual(collapsedChild);
-        const expanded = retrieveSchema(
-          { validator: testValidator },
-          { ...schemaOf(retrieved.properties?.child), [RJSF_REF_CYCLE_KEY]: false },
-          rootSchema,
-        );
-        expect(expanded).toEqual({
+        const expansion = expandRefCycle(schemaOf(retrieved.properties?.child), rootSchema);
+        expect(RJSF_REF_CYCLE_KEY in expansion).toBe(false);
+        expect(retrieveSchema({ validator: testValidator }, expansion, rootSchema)).toEqual({
           ...node,
           properties: { name: { type: 'string' }, child: collapsedChild },
           [RJSF_REF_KEY]: D('node'),
         });
+      });
+      it('reads a copy with its cycle flag cleared as a copy of the collapsed field, without restarting its ref path', () => {
+        const definitions: RJSFSchema['definitions'] = {
+          A: { type: 'object', properties: { b: { $ref: D('B') } } },
+          B: { type: 'object', properties: { a: { $ref: D('A') } } },
+        };
+        const rootSchema: RJSFSchema = { definitions, $ref: D('A') };
+        const b = retrieveProperty(
+          testValidator,
+          retrieveSchema({ validator: testValidator }, rootSchema, rootSchema),
+          'b',
+          rootSchema,
+        );
+        const collapsed = schemaOf(b.properties?.a);
+        const copy = retrieveSchema(
+          { validator: testValidator },
+          { ...collapsed, [RJSF_REF_CYCLE_KEY]: false },
+          rootSchema,
+        );
+        const expanded = retrieveSchema(
+          { validator: testValidator },
+          expandRefCycle(collapsed, rootSchema),
+          rootSchema,
+        );
+        // Expanded, `a` restarts its ref path, so `b` below it renders; the copy keeps the path `b` was reached through
+        expect(expanded.properties?.b).toEqual({ $ref: D('B') });
+        expect(copy.properties?.b).toEqual({ $ref: D('B'), [RJSF_REF_CYCLE_KEY]: true });
+      });
+      it('hands a schema it did not hand out back from expandRefCycle() without the flag', () => {
+        expect(expandRefCycle({ type: 'string', [RJSF_REF_CYCLE_KEY]: true }, {})).toEqual({ type: 'string' });
       });
       it.each<[string, RJSFSchema]>([
         [
