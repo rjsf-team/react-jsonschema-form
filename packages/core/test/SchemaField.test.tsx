@@ -779,6 +779,16 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll('.my-field')).toHaveLength(1);
       expect(node.querySelectorAll('input#root')).toHaveLength(1);
     });
+
+    it('renders the default field where the field registered under the $id is not a component (#5439)', () => {
+      const fieldsWithElement: Record<string, Field> = {};
+      // A JavaScript caller can register a React element, which the registry's type rules out
+      Reflect.set(fieldsWithElement, 'MyField', <MyField />);
+      const { node } = createFormComponent({ schema: { $id: 'MyField', type: 'string' }, fields: fieldsWithElement });
+
+      expect(node.querySelector('.my-field')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root')).toBeInTheDocument();
+    });
   });
 
   describe('label support', () => {
