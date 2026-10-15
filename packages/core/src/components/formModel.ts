@@ -29,7 +29,6 @@ import {
   applySubmit,
   applyValidation,
   getAt,
-  asFieldValue,
   deriveState,
   freezeFormData,
   isBlurValidated,
@@ -39,7 +38,7 @@ import {
   toIChangeEvent,
   validateFormData,
 } from './formState.ts';
-import { fieldStateOf } from './uiState.ts';
+import { asFieldValue, fieldStateOf } from './uiState.ts';
 
 /** How an operation calls the consumer's callback: directly for a handle method, whose caller catches the throw, or
  * through `callWithDeferredThrow()` for a field, which can report from an Effect inside React's commit phase, where a

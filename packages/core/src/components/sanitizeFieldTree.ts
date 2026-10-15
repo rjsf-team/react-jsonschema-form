@@ -20,7 +20,7 @@ import {
 
 import type { KeyMove } from './formState.ts';
 import type { UiState } from './uiState.ts';
-import { dataOf, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
+import { asFieldValue, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
 /** What the tree diff needs that does not change as it descends */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -98,7 +98,7 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
 ): S[] {
   const { uiState } = ctx;
   const rootSchema = schemaUtils.getRootSchema();
-  const data = dataOf<T>(value);
+  const data = asFieldValue<T>(value);
   let schema = raw;
   if (Reflect.get(schema, RJSF_REF_CYCLE_KEY)) {
     if (!uiState.isExpanded(fieldPathFromList(path))) {
@@ -160,12 +160,7 @@ function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknow
   if (!options || !isConstantOptionList<S>(options, true)) {
     return undefined;
   }
-  return options.flatMap((option) => {
-    if (!isObject(option)) {
-      return [];
-    }
-    return CONST_KEY in option ? [option[CONST_KEY]] : (option.enum ?? []);
-  });
+  return options.flatMap((option) => (CONST_KEY in option ? [option[CONST_KEY]] : (option.enum ?? [])));
 }
 
 /** Whether two `type`s name the same types, a list by what it names */
@@ -421,5 +416,5 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
     },
     [],
   );
-  return sanitized === DROP ? undefined : dataOf<T>(sanitized);
+  return sanitized === DROP ? undefined : asFieldValue<T>(sanitized);
 }

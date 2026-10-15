@@ -752,6 +752,21 @@ describe('option selection as form state', () => {
     expect(selectOf(node, 'root_o__oneof_select')).toHaveValue('1');
   });
 
+  it('hands a custom AnyOfField only the option shown and the function that selects one', () => {
+    const results: object[] = [];
+    function Recording({ fieldPath, formData, options, registry }: FieldProps & { options: RJSFSchema[] }) {
+      results.push(useOptionSelection(registry, fieldPath, options, formData));
+      return null;
+    }
+    const schema: RJSFSchema = { anyOf: [{ type: 'string' }, { type: 'number' }] };
+    createFormComponent({ schema, fields: { AnyOfField: Recording } });
+
+    expect(results.length).toBeGreaterThan(0);
+    for (const result of results) {
+      expect(Object.keys(result).sort()).toEqual(['selectOption', 'selectedOption']);
+    }
+  });
+
   it('lets a custom AnyOfField select the option the field stubs its extra keys with', async () => {
     const schema: RJSFSchema = {
       type: 'object',
