@@ -14,6 +14,7 @@ import type {
   UIOptionsType,
 } from '@rjsf/utils';
 import {
+  ADDITIONAL_PROPERTY_FLAG,
   getByPath,
   toPath,
   allowAdditionalItems,
@@ -779,19 +780,37 @@ interface InternalArrayFieldProps<
   handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
 }
 
-/** Gets the heading an array's template draws: under its plan, the field's label where the array draws its own heading,
- * and none where a field above already draws that text, so a theme's template that reads only `title` follows the plan;
- * without a plan, the array's own title
+/** Gets the heading an array's template draws, so a template that reads only `title` draws exactly that heading, and
+ * lays out what it would put beside it elsewhere where it is empty: under its plan, the field's label where the array
+ * draws its own heading, and none where a field above already draws that text; without a plan, its `ui:title` or own
+ * title, and none where `ui:label: false` turns it off
  *
  * @param presentation - The array's plan, if `SchemaField` built one
+ * @param schema - The array's schema
  * @param fieldTitle - The array's own title
+ * @param uiOptions - The array's ui options, read only without a plan
  * @returns - The `title` its template is handed
  */
-function getArrayHeading(presentation: FieldPresentation | undefined, fieldTitle: string): string {
+function getArrayHeading<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  presentation: FieldPresentation | undefined,
+  schema: S,
+  fieldTitle: string,
+  uiOptions: UIOptionsType<T[], S, F>,
+): string {
   if (!presentation) {
-    return fieldTitle;
+    return (uiOptions.label ?? true) ? uiOptions.title || fieldTitle : '';
   }
-  return presentation.label.by === 'self' ? presentation.label.text : '';
+  if (presentation.label.by !== 'self') {
+    return '';
+  }
+  // The key input beside an `additionalProperties` entry already shows its key, which labels the entry, so the heading
+  // the array draws itself takes the `ui:title` or the schema `title` naming such entries where there is one, as an
+  // object's does
+  return (ADDITIONAL_PROPERTY_FLAG in schema && (uiOptions.title || schema.title)) || presentation.label.text;
 }
 
 /** Renders a normal array without any limitations of length
@@ -898,7 +917,7 @@ function NormalArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F ext
     hideError,
     required,
     schema,
-    title: getArrayHeading(presentation, fieldTitle),
+    title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     formData,
     errorSchema,
     rawErrors,
@@ -1033,7 +1052,7 @@ function FixedArray<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     registry,
     schema,
     uiSchema,
-    title: getArrayHeading(presentation, fieldTitle),
+    title: getContainerHeading<T[], S, F>(presentation, schema, uiOptions, uiOptions.title || fieldTitle),
     errorSchema,
     rawErrors,
     optionalDataControl,
