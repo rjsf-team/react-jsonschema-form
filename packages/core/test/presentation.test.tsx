@@ -9,6 +9,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
+import { screen } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
@@ -114,7 +115,7 @@ describe('the plan SchemaField builds', () => {
     expect(plan?.label).toEqual({ text: 'Foo', by: 'above', id: fieldLabelId('root_foo'), requiredMarker: false });
   });
 
-  it("keeps the option's name for its own label, under an option id, where the selector draws the field's", () => {
+  it("labels an untitled option by the field's label, under an option id, where the selector draws the field's", () => {
     const { widgetPlans } = renderPlans(
       { type: 'object', properties: { foo: { title: 'Foo', anyOf: [{ type: 'string' }, { type: 'number' }] } } },
       {
@@ -123,7 +124,7 @@ describe('the plan SchemaField builds', () => {
       },
     );
     expect(widgetPlans.get('root_foo')?.label).toEqual({
-      text: 'foo',
+      text: 'Foo',
       by: 'self',
       id: 'root_foo__optionLabel',
       requiredMarker: false,
@@ -294,6 +295,76 @@ describe('the plan SchemaField builds', () => {
       });
       const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
       expect(selector.hideLabel).toBe(true);
+    });
+  });
+
+  // No selector renders before an optional field has data, so the field's template label has no control to name
+  describe("an optional anyOf field's option before the field has data", () => {
+    const optional: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['array', 'object'] } };
+    const arrays: RJSFSchema[] = [
+      { type: 'array', items: { type: 'string' }, maxItems: 3 },
+      { type: 'array', items: { type: 'string' }, minItems: 1 },
+    ];
+    const objects: RJSFSchema[] = [
+      { type: 'object', properties: { bark: { type: 'string' } } },
+      { type: 'object', properties: { meow: { type: 'string' } } },
+    ];
+
+    it.each([
+      ['an array', arrays],
+      ['an object', objects],
+    ])("draws the field's title as the heading of %s with no title of its own", (_, anyOf) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { pets: { title: 'Pets', anyOf } } },
+        uiSchema: optional,
+      });
+
+      expect(node.querySelector(`#${titleId('root_pets')}`)).toHaveTextContent(/^Pets$/);
+    });
+
+    it('keeps the title of an option that has its own', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { pets: { title: 'Pets', anyOf: [{ ...arrays[0], title: 'Short list' }, arrays[1]] } },
+        },
+        uiSchema: optional,
+      });
+
+      expect(node.querySelector(`#${titleId('root_pets')}`)).toHaveTextContent(/^Short list$/);
+    });
+
+    it.each([
+      ['an array', arrays],
+      ['an object', objects],
+    ])("draws the field's description once, beneath the heading it hands %s", (_, anyOf) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { pets: { title: 'Pets', description: 'Some pets', anyOf } } },
+        uiSchema: optional,
+      });
+
+      const descriptions = screen.getAllByText('Some pets');
+      expect(descriptions).toHaveLength(1);
+      const heading = node.querySelector(`#${titleId('root_pets')}`)!;
+      expect(heading.compareDocumentPosition(descriptions[0])).toBe(Node.DOCUMENT_POSITION_FOLLOWING);
+    });
+  });
+
+  describe('an untitled anyOf option beneath a field whose own component draws its label', () => {
+    it.each([
+      ['ui:title', {}, { pets: { 'ui:title': 'My Pets' } }, 'My Pets'],
+      ['schema title', { title: 'Pets' }, {}, 'Pets'],
+    ])("labels the option's control by the field's %s rather than its property name", (_, field, uiSchema, name) => {
+      createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { pets: { ...field, anyOf: [{ type: 'string' }, { type: 'number' }] } },
+        },
+        uiSchema,
+        presentation: { fields: { AnyOfField: { label: 'self' } } },
+      });
+
+      expect(screen.getByRole('textbox', { name })).toHaveAttribute('id', 'root_pets');
     });
   });
 

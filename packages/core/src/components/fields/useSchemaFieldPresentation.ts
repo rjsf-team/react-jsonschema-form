@@ -170,24 +170,11 @@ export default function useSchemaFieldPresentation<
       rendersControl<T, S, F>(plannedField, widget, registry, schema, uiSchema),
     [plannedField, hidden, widget, registry, schema, uiSchema],
   );
-  return useMemo(
-    () =>
-      declaration &&
-      resolveFieldPresentation({
-        id,
-        componentId,
-        declaration,
-        label,
-        showLabel,
-        description,
-        help,
-        errors,
-        hideError,
-        hasControl,
-        required: controlRequired,
-        inherited,
-      }),
-    [
+  return useMemo(() => {
+    if (!declaration) {
+      return undefined;
+    }
+    const plan = resolveFieldPresentation({
       id,
       componentId,
       declaration,
@@ -198,8 +185,34 @@ export default function useSchemaFieldPresentation<
       errors,
       hideError,
       hasControl,
-      controlRequired,
+      required: controlRequired,
       inherited,
-    ],
-  );
+    });
+    // With the selector withheld, the label has no control to name and the option below draws it as its heading, so the
+    // description goes undrawn here too, for the option to draw beneath that heading rather than the template above it
+    if (xxxOfKey === undefined || !hidden || plan.description.by !== 'template') {
+      return plan;
+    }
+    const descriptionId = plan.description.id;
+    return {
+      ...plan,
+      description: { ...plan.description, by: 'none' as const },
+      describedBy: plan.describedBy.filter((describer) => describer !== descriptionId),
+    };
+  }, [
+    id,
+    componentId,
+    declaration,
+    label,
+    showLabel,
+    description,
+    help,
+    errors,
+    hideError,
+    hasControl,
+    controlRequired,
+    inherited,
+    xxxOfKey,
+    hidden,
+  ]);
 }
