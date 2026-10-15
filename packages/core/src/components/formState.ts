@@ -43,6 +43,7 @@ import { buildRegistry } from '../Theme.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
+import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
 import { createUiState, fieldStateOf } from './uiState.ts';
 
@@ -709,14 +710,21 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       asFieldValue<T>(schemaUtils.getDefaultFormState(rootSchema, data, false, initialDefaultsGenerated, uiSchema)),
     );
   let formData = fill(inputFormData);
+  const treeOf = (data: T | undefined): FieldTree<T, S, F> => ({
+    schemaUtils,
+    formData: data,
+    retrievedSchema: resolveRetrievedSchema(current, schemaUtils, data),
+  });
+  let tree = treeOf(formData);
   if (isSanitized && current) {
     const seen: string[] = [];
-    let previous = { schemaUtils: current.schemaUtils, data: current.formData };
+    let previous: FieldTree<T, S, F> = {
+      schemaUtils: current.schemaUtils,
+      formData: current.formData,
+      retrievedSchema: current.retrievedSchema,
+    };
     for (;;) {
-      const sanitized = replaceEqualDeep(
-        formData,
-        sanitizeFieldTree(previous, schemaUtils, formData, current.uiState, edit),
-      );
+      const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, current.uiState, edit));
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other
       const hash = hashObject({ formData: sanitized });
@@ -725,11 +733,12 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
         break;
       }
       seen.push(hash);
-      previous = { schemaUtils, data: formData };
+      previous = tree;
       formData = fill(sanitized);
+      tree = treeOf(formData);
     }
   }
-  const retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
+  const { retrievedSchema } = tree.formData === formData ? tree : treeOf(formData);
   // Always derived, never skipped on the grounds that the schema utilities were reused: the registry is built from
   // `idPrefix`, `widgets`, `templates`, `fields`, `formContext` and `uiSchema` too, none of which the utilities are
   // resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context keeps every

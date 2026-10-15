@@ -1,6 +1,7 @@
 import { useCallback, useInsertionEffect, useMemo, useRef, useSyncExternalStore } from 'react';
 import type { FieldPath, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
+import type { UiState } from '../components/uiState.ts';
 import { optionListKey, shownOption } from '../components/uiState.ts';
 import useUiState from './useUiState.ts';
 
@@ -26,13 +27,13 @@ const noSubscription = () => () => undefined;
  * children and option
  */
 export function useShownOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiState: UiState,
   registry: Registry<T, S, F>,
   fieldPath: FieldPath,
   options: readonly S[] | undefined,
   formData: T | undefined,
   discriminatorField?: string,
 ): ShownOptionState {
-  const uiState = useUiState();
   const { schemaUtils } = registry;
   const rootSchema = schemaUtils.getRootSchema();
   const list = useMemo(() => options && optionListKey<S>(options, rootSchema), [options, rootSchema]);
@@ -78,13 +79,15 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
  * selected option, and `AnyOfField`/`OneOfField` read and write it, as a custom field rendering the options has to.
  *
  * With no selection, the option is the one `getClosestMatchingOption()` picks for the data, an option whose discriminator
- * holds the data's value first. A selection holds for the data it was made with and the data the form's own changes
- * leave at the field, so neither an edit inside the field nor a parent declining a switch or an edit changes it. Other
- * data, such as a parent's new `formData`, a reset, or a parent answering a switch with data of its own, is matched
- * again, with the selection preferred where it fits the data as well as any other option.
+ * holds the data's value first. A selection holds for the data the form last rendered under it and the data the
+ * form's own changes leave at the field, so neither an edit inside the field nor a parent declining a switch or an edit
+ * changes it. Other data, such as a parent's new `formData`, a reset, or a parent answering a switch with data of its
+ * own, is matched again, with the selection preferred where it fits the data as well as any other option, and so is
+ * the data after it until the user switches or edits inside the field, which holds the option then shown.
  *
- * Outside a `Form` the selection is kept by the calling component, and nothing records the data a switch or an edit
- * leaves, so the data rendered after one counts as arriving from outside.
+ * Outside a `Form` the selection is kept by the outermost `SchemaField`, or the calling component when there is none,
+ * and nothing records the data a switch or an edit leaves, so the data rendered after one counts as arriving from
+ * outside.
  *
  * @param registry - The `registry` of the field
  * @param fieldPath - The path of the field offering the options
@@ -104,7 +107,9 @@ export default function useOptionSelection<
   formData: T | undefined,
   discriminatorField?: string,
 ): OptionSelectionState {
+  const { uiState } = useUiState();
   const { selectedOption, selectOption } = useShownOption<T, S, F>(
+    uiState,
     registry,
     fieldPath,
     options,

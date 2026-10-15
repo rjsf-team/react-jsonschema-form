@@ -13,12 +13,11 @@ import type { KeyMove } from './formState.ts';
 /** The option selected for a field's option list, and the field's data it holds for, see `useOptionSelection()` */
 export interface OptionSelection {
   readonly index: number;
-  /** The field's data as the form last left it there */
-  readonly data: unknown;
-  /** The field's data as it was shown when the option was selected or an edit inside the field began, which a parent
-   * declining the switch or the edit gives back
+  /** The field's data as the form last rendered it under the selection, and the data each change the form proposed
+   * since leaves there: a parent answers a proposal with one of them, the proposal or, declining it, the data before.
+   * Empty once the form rendered other data, which the selection is then only the preference in matching
    */
-  readonly madeWith: unknown;
+  readonly holdsFor: readonly unknown[];
 }
 
 /** The key a field's option list is stored under: the list's place in the root schema, which each option's place
@@ -40,9 +39,9 @@ export function optionListKey<S extends StrictRJSFSchema>(options: readonly S[],
 }
 
 /** The option a field shows for `formData`. With no `selection`, the option `getClosestMatchingOption()` picks. A
- * selection holds for the data the form last left at the field and the data it was made with, and while `holds` says
- * an edit inside the field is being made. Other data arrived from outside the field and is matched again, with the
- * selection preferred where it fits the data as well as any other option.
+ * selection holds for the data in its `holdsFor`, and while `holds` says an edit inside the field is being made. Other
+ * data arrived from outside the field and is matched again, with the selection preferred where it fits the data as
+ * well as any other option.
  *
  * @param schemaUtils - The schema utilities to match with
  * @param selection - The stored selection, if any
@@ -63,14 +62,14 @@ export function shownOption<T, S extends StrictRJSFSchema, F extends FormContext
   if (options.length === 0) {
     return -1;
   }
-  if (
-    selection !== undefined &&
-    selection.index < options.length &&
-    (holds || deepEquals(selection.data, formData) || deepEquals(selection.madeWith, formData))
-  ) {
+  if (selection !== undefined && selection.index < options.length && (holds || isHeldFor(selection, formData))) {
     return selection.index;
   }
   return schemaUtils.getClosestMatchingOption(formData, [...options], selection?.index ?? -1, discriminator);
+}
+
+function isHeldFor(selection: OptionSelection, data: unknown): boolean {
+  return selection.holdsFor.some((held) => deepEquals(held, data));
 }
 
 /** A value of the form's data, in the type the schema utilities take it as */
@@ -153,30 +152,51 @@ export function createUiState() {
     /** Selects option `index` of `list` at `path` for the field's `data` as it is shown */
     select: (path: FieldPath, list: string, index: number, data: unknown) => {
       const current = selections.get(path)?.get(list);
-      setSelection(path, list, { index, data, madeWith: data });
+      setSelection(path, list, { index, holdsFor: [data] });
       if (current?.index !== index) {
         notify();
       }
     },
-    /** Records the option shown for `data` before an edit inside the field, unless the selection already describes that
+    /** Records the option shown for `data` before an edit inside the field, unless the selection already holds for that
      * data: the edit must not change which option the data is shown under
      */
     keep: (path: FieldPath, list: string, index: number, data: unknown) => {
       const current = selections.get(path)?.get(list);
-      if (current === undefined || !deepEquals(current.data, data)) {
-        setSelection(path, list, { index, data, madeWith: data });
+      if (current === undefined || !isHeldFor(current, data)) {
+        setSelection(path, list, { index, holdsFor: [data] });
       }
     },
-    /** Records, for every selection at or above the edited `path`, the data the edit left there */
-    edited: (path: FieldPath, dataAt: (path: FieldPath) => unknown) => {
+    /** Records, for every selection at or above the edited `path`, the data the edit left there: in place of the data
+     * before, unless the edit is a proposal the parent may decline
+     */
+    edited: (path: FieldPath, dataAt: (path: FieldPath) => unknown, isProposal: boolean) => {
       const segments = fieldPathToList(path);
       for (const [at, lists] of selections) {
         if (isAtOrAbove(at, segments)) {
           const data = dataAt(at);
           selections = new Map(selections).set(
             at,
-            new Map([...lists].map(([list, selection]) => [list, { ...selection, data }])),
+            new Map(
+              [...lists].map(([list, { index, holdsFor }]) => [
+                list,
+                { index, holdsFor: isProposal ? [...holdsFor, data] : [data] },
+              ]),
+            ),
           );
+        }
+      }
+    },
+    /** Records the data the form rendered at each selection's field: the one data the selection holds for from now on,
+     * or none where the field showed other data, matched again. It changes no option shown, so nothing is notified
+     */
+    rendered: (dataAt: (path: FieldPath) => unknown) => {
+      for (const [at, lists] of selections) {
+        const data = dataAt(at);
+        for (const [list, selection] of lists) {
+          const holdsFor = isHeldFor(selection, data) ? [data] : [];
+          if (holdsFor.length !== selection.holdsFor.length) {
+            setSelection(at, list, { index: selection.index, holdsFor });
+          }
         }
       }
     },

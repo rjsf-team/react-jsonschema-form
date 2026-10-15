@@ -1,4 +1,5 @@
 import { useCallback, useMemo, memo } from 'react';
+import type { ReactElement } from 'react';
 import type {
   ErrorSchema,
   Field,
@@ -60,6 +61,8 @@ import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
+import useUiState from '../../hooks/useUiState.ts';
+import UiStateContext from '../UiStateContext.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
@@ -560,7 +563,9 @@ function SchemaFieldRender<
   // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
   // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
   // left to it, and any other is described by the object's extra-key keywords and the option's together
+  const { uiState, isOwn: ownsUiState } = useUiState();
   const { selectedOption, keepSelection } = useShownOption<T, S, F>(
+    uiState,
     registry,
     fieldPath,
     xxxOfOptions,
@@ -597,14 +602,17 @@ function SchemaFieldRender<
     [onChange, keepSelection],
   );
 
+  // Outside a `Form` the outermost field's store is the one of the whole tree, so the fields below share its selections
+  const withUiState = (node: ReactElement): ReactElement =>
+    ownsUiState ? <UiStateContext value={uiState}>{node}</UiStateContext> : node;
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
   if (!uiField || !fieldToRender) {
-    return (
+    return withUiState(
       <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
         <CyclicSchemaField {...props} />
-      </RawFormDataContext>
+      </RawFormDataContext>,
     );
   }
   const { ignoredOwnField, ignoredGlobalField } = uiField;
@@ -826,7 +834,7 @@ function SchemaFieldRender<
 
   // The field component and the option field are each vouched for directly: a custom template may pass on a view of
   // the data
-  return (
+  return withUiState(
     <RawFormDataContext value={undefined}>
       <FieldTemplate {...fieldProps}>
         <>
@@ -855,7 +863,7 @@ function SchemaFieldRender<
           )}
         </>
       </FieldTemplate>
-    </RawFormDataContext>
+    </RawFormDataContext>,
   );
 }
 

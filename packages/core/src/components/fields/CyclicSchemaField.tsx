@@ -8,7 +8,7 @@ import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 /** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
  * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further.
  * Which fields are expanded is the form's state, by path, so an expansion outlives the field's components and follows
- * the array moves the form is told of; outside a `Form` it is this component's own.
+ * the array moves the form is told of; outside a `Form` it is the outermost `SchemaField`'s, see `useUiState()`.
  *
  * @param props - The `FieldProps` for this template
  */
@@ -17,7 +17,7 @@ export default function CyclicSchemaField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
-  const uiState = useUiState();
+  const { uiState } = useUiState();
   const readsFormData = useReadsFormData(CyclicSchemaField);
   const { name, registry, schema, uiSchema, id, fieldPath } = props;
   const readExpanded = () => uiState.isExpanded(fieldPath);

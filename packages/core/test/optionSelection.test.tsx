@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { customizeValidator } from '@rjsf/validator-ajv8';
-import { act } from '@testing-library/react';
+import { ROOT_FIELD_PATH } from '@rjsf/utils';
+import validator, { customizeValidator } from '@rjsf/validator-ajv8';
+import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
-import { useOptionSelection } from '../src/index.ts';
+import Form, { useOptionSelection } from '../src/index.ts';
+import { getTestRegistry } from '../src/testing.ts';
 import { createFormComponent, createFormRef, handleOf, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
@@ -64,6 +67,43 @@ describe('option selection as form state', () => {
     // Under A nothing evaluates `b`, so the keyword describing the extra keys renders it, with its key and remove button
     expect(node.querySelector('#root_b-key')).toHaveValue('b');
     expect(ids(node, '#root_b')).toHaveLength(1);
+  });
+
+  it('renders a key the selected option declares once outside a Form, where the outermost field keeps the selection (#5461)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      oneOf: [
+        { title: 'A', properties: { p: { type: 'string' } } },
+        { title: 'B', properties: { p: { type: 'string' }, z: { type: 'number' } } },
+      ],
+    };
+    const registry = getTestRegistry(schema);
+    const { SchemaField } = registry.fields;
+    function Host() {
+      const [formData, setFormData] = useState<unknown>({ p: '1', z: '2' });
+      return (
+        <SchemaField
+          name=''
+          schema={schema}
+          fieldPath={ROOT_FIELD_PATH}
+          id='root'
+          formData={formData}
+          registry={registry}
+          onChange={setFormData}
+          onBlur={() => undefined}
+          onFocus={() => undefined}
+        />
+      );
+    }
+    const { container } = render(<Host />);
+    expect(selectOf(container, 'root__oneof_select')).toHaveValue('0');
+
+    await user.selectOptions(selectOf(container, 'root__oneof_select'), 'B');
+
+    expect(selectOf(container, 'root__oneof_select')).toHaveValue('1');
+    expect(ids(container, '#root_z')).toHaveLength(1);
+    expect(container.querySelector('#root_z-key')).toBeNull();
   });
 
   it("renders a key the selected option allows without describing it as the object's extra-key keyword does (#5462)", () => {
@@ -325,6 +365,58 @@ describe('option selection as form state', () => {
 
     expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
     expect(node.querySelector('#root_b')).toHaveValue('');
+  });
+
+  describe('data from outside equal to the data before a switch the form rendered', () => {
+    // `B` requires `b`, so `{ a: 'x' }` fits `A` alone
+    const schema: RJSFSchema = {
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } }, required: ['b'] },
+      ],
+    };
+
+    /** Accepts every proposal, and pushes `{ a: 'x' }` back when its button is clicked, as an undo would */
+    function UndoingParent() {
+      const [value, setValue] = useState<unknown>({ a: 'x' });
+      return (
+        <>
+          <Form schema={schema} validator={validator} formData={value} onChange={(event) => setValue(event.formData)} />
+          <button id='undo' type='button' onClick={() => setValue({ a: 'x' })}>
+            Undo
+          </button>
+        </>
+      );
+    }
+
+    it('is matched again after a reset, as on 6.11.0', async () => {
+      const ref = createFormRef();
+      const { node } = createFormComponent({ ref, schema, initialFormData: { a: 'x' } });
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+      await user.type(elementOf(node, '#root_b'), 'q');
+
+      act(() => handleOf(ref).reset());
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('0');
+      expect(node.querySelector('#root_a')).toHaveValue('x');
+    });
+
+    it.each([
+      { edits: false, title: 'right after the switch' },
+      { edits: true, title: 'after an edit under the new option' },
+    ])('is matched again when an accepting parent pushes it back, as on 6.11.0, $title', async ({ edits }) => {
+      const { container } = render(<UndoingParent />);
+      await user.selectOptions(selectOf(container, 'root__oneof_select'), 'B');
+      if (edits) {
+        await user.type(elementOf(container, '#root_b'), 'q');
+      }
+      expect(selectOf(container, 'root__oneof_select')).toHaveValue('1');
+
+      await user.click(elementOf(container, '#undo'));
+
+      expect(selectOf(container, 'root__oneof_select')).toHaveValue('0');
+      expect(container.querySelector('#root_a')).toHaveValue('x');
+    });
   });
 
   it('keeps the selection when the schema adds an option to the list', async () => {
