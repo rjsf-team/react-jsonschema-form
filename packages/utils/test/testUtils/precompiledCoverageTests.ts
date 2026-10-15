@@ -256,6 +256,36 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
       };
       expect(() => buildValidator(rootSchema)).not.toThrow();
     });
+    it('compiles and matches an option that is a $ref to the whole root, at every depth', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string' }, child: { anyOf: [{ $ref: '#' }, { type: 'string' }] } },
+      };
+      const validator = buildValidator(rootSchema);
+      const option = { $ref: '#/properties/child/anyOf/0' };
+      expect(validator.isValid(option, { name: 'b', child: 'leaf' }, rootSchema)).toBe(true);
+      expect(validator.isValid(option, { child: { child: { name: 5 } } }, rootSchema)).toBe(false);
+      const child = rootSchema.properties?.child;
+      const options = isObject(child) && Array.isArray(child.anyOf) ? child.anyOf.filter(isObject) : [];
+      const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+      expect(schemaUtils.getFirstMatchingOption({ name: 'b', child: 'leaf' }, options)).toBe(0);
+    });
+    it('compiles a recursive $ref into the root outside its definitions', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          tree: {
+            type: 'object',
+            properties: { name: { type: 'string' }, kids: { type: 'array', items: { $ref: '#/properties/tree' } } },
+          },
+          v: { oneOf: [{ $ref: '#/properties/tree' }, { type: 'number' }] },
+        },
+      };
+      const validator = buildValidator(rootSchema);
+      const option = { $ref: '#/properties/v/oneOf/0' };
+      expect(validator.isValid(option, { kids: [{ kids: [{ name: 'c' }] }] }, rootSchema)).toBe(true);
+      expect(validator.isValid(option, { kids: [{ kids: [{ name: 5 }] }] }, rootSchema)).toBe(false);
+    });
     it('compiles and matches a boolean option, which is handed over as the schema it stands for', () => {
       const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: [false, true] } } };
       const validator = buildValidator(rootSchema);
