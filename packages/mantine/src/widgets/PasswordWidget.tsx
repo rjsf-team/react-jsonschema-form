@@ -4,7 +4,7 @@ import { PasswordInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
 /**
  * The `PasswordWidget` component renders a password input element.
@@ -61,9 +61,9 @@ export default function PasswordWidget<
     [onFocus, id],
   );
 
-  const ariaDescribedByProps = useAriaDescribedByProps('PasswordInput', id, options);
+  const ariaDescribedByProps = useInputAriaProps('PasswordInput', props);
 
-  const error = useVisibleErrors(props);
+  const error = getWidgetError<T, S, F>(props);
   return (
     <PasswordInput
       id={id}

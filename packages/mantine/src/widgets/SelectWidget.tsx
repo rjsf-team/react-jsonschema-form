@@ -17,7 +17,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getWidgetError, useInputAriaProps } from '../utils.tsx';
 
 /** Mantine's default filter keeps a group in the dropdown even when the search matched none of its options, which
  * leaves a bare heading behind, so the groups it emptied are dropped here.
@@ -89,16 +89,10 @@ export default function SelectWidget<
     );
   }, [enumDisabled, enumOptions, optgroups, domValues]);
 
-  // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop
-  const {
-    'aria-label': ariaLabel,
-    'aria-labelledby': labelledBy,
-    'aria-describedby': describedBy,
-  } = widgetAriaProps(props);
-  // A plan describing the select by nothing gives no ids, which isn't a call for the default ones
-  const ariaDescribedByProps = useAriaDescribedByProps(multiple ? 'MultiSelect' : 'Select', id, options, {
-    describedBy: describedBy ?? '',
-  });
+  // Mantine describes the input through its `InputWrapper` context rather than by an `aria-describedby` prop. A plan
+  // describing or naming the select by nothing gives no ids, which isn't a call for the default ones
+  const { 'aria-label': ariaLabel, ...ariaAttributes } = widgetAriaProps(props);
+  const ariaDescribedByProps = useInputAriaProps<T, S, F>(multiple ? 'MultiSelect' : 'Select', props, ariaAttributes);
 
   const sharedProps = {
     id,
@@ -112,7 +106,7 @@ export default function SelectWidget<
     placeholder,
     disabled: disabled || readonly,
     required,
-    error: useVisibleErrors(props),
+    error: getWidgetError<T, S, F>(props),
     searchable: true,
     filter: optionsFilter,
     comboboxProps: { withinPortal: false },
@@ -120,7 +114,6 @@ export default function SelectWidget<
     ...ariaDescribedByProps,
     ...getDescriptionProps(props),
     ...(ariaLabel && { 'aria-label': ariaLabel }),
-    ...(labelledBy && { 'aria-labelledby': labelledBy }),
   };
 
   return (
