@@ -40,6 +40,7 @@ import {
 } from './fieldPath.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
+import getArrayDescription from './getArrayDescription.ts';
 import getChangedFields from './getChangedFields.ts';
 import getControlAttributes from './getControlAttributes.ts';
 import getControlDescribedBy from './getControlDescribedBy.ts';
@@ -262,6 +263,7 @@ export {
   findSchemaDefinition,
   flattenGroupedOptions,
   getAdditionalPropertySchema,
+  getArrayDescription,
   getChangedFields,
   getControlAttributes,
   getControlDescribedBy,

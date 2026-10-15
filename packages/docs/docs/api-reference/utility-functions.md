@@ -802,6 +802,19 @@ A reference followed once on a walk is not followed again, since a recursive opt
 
 - string | undefined: The type the `subSchema` says the property holds, or undefined when only its value can say
 
+### getArrayDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getarraydescription}
+
+Gets the description an array's template draws: the one its plan says the array draws itself, so an option repeating its field's description, which a field above draws, doesn't draw it again.
+An array rendered without a plan draws its `ui:description` or schema `description`.
+
+#### Parameters
+
+- props: Pick&lt;ArrayFieldTemplateProps&lt;T, S, F>, 'schema' | 'uiSchema' | 'presentation'> - The template's `schema`, `uiSchema` and `presentation`
+
+#### Returns
+
+- string | undefined: The description the template draws, or undefined when it draws none
+
 ### getByPath&lt;R = unknown>() {#getbypath}
 
 Gets the value at `path` of `obj`, returning `defaultValue` when the resolved value is `undefined`.
