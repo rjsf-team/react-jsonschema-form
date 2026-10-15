@@ -1,53 +1,23 @@
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getByPath, ID_KEY, isObject, REF_KEY, getValidationSchemas } from '@rjsf/utils';
+import { ALL_OF_KEY, getByPath, ID_KEY, isObject, REF_KEY, getValidationSchemas } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
-/** The keywords whose definitions a `$ref` in a compiled schema can name. ata resolves a `$ref` only to an entry of one
- * of these, in the document it compiles
+/** A `$ref` naming a whole entry of the root's `definitions` or `$defs`, the only `$ref` ata resolves, and only to an
+ * entry of the document it compiles
  */
-const CONTAINERS = ['definitions', '$defs'];
+const DEFINITION_REF = /^#\/(definitions|\$defs)\/([^/]*)$/;
 
-/** A `$ref` into the root that names no whole entry of one of its `CONTAINERS` */
-const LOCAL_REF = /^#(?!\/(definitions|\$defs)\/[^/]*$)/;
-
-/** Returns the subschema at the `$ref` fragment `ref` of `root` */
-function subschemaAt(root: unknown, ref: string): unknown {
-  const tokens = ref
-    .split('/')
-    .slice(1)
-    .map((token) => decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~'));
-  return getByPath(root, tokens);
+function decodeToken(token: string): string {
+  return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
-/** Returns `value` with each `{ $ref }` local to the root that names no whole entry of the `CONTAINERS` replaced by a
- * copy of the subschema it names, treated the same way, since ata would leave it unresolved. A `$ref` met again inside
- * the copy it names is left as it is, there being no finite copy of it.
- *
- * @param value - A schema, or any value inside one
- * @param rootSchema - The root the `$ref`s name
- * @param inlined - The `$ref`s whose copies `value` sits inside
- * @returns - The value with those `$ref`s inlined
- */
-function inlineLocalRefs(value: unknown, rootSchema: unknown, inlined: ReadonlySet<string>): unknown {
-  if (Array.isArray(value)) {
-    return value.map((item) => inlineLocalRefs(item, rootSchema, inlined));
-  }
-  if (!isObject(value)) {
-    return value;
-  }
-  const { [REF_KEY]: ref, ...rest } = value;
-  if (typeof ref === 'string' && Object.keys(rest).length === 0 && LOCAL_REF.test(ref) && !inlined.has(ref)) {
-    const target = subschemaAt(rootSchema, ref);
-    if (target !== undefined) {
-      return inlineLocalRefs(target, rootSchema, new Set(inlined).add(ref));
-    }
-  }
-  return Object.fromEntries(
-    Object.entries(value).map(([key, child]) => [key, inlineLocalRefs(child, rootSchema, inlined)]),
-  );
+/** Returns the subschema at the `$ref` fragment `ref` of `root`, the root itself for `#` */
+function subschemaAt(root: unknown, ref: string): unknown {
+  const tokens = ref.split('/').slice(1).map(decodeToken);
+  return tokens.length === 0 ? root : getByPath(root, tokens);
 }
 
 /** Returns `schema` as an object schema asserting what it says, since ata compiles no boolean schema, and no schema
@@ -62,27 +32,93 @@ function compilable(schema: unknown): GenericObjectType {
   return 'not' in object || REF_KEY in object ? object : { ...object, not: { not: {} } };
 }
 
-/** Returns each schema of the `schemaMap` as a document ata compiles on its own. ata names no subschema of another
- * document and resolves a `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, so every
- * other `$ref` into the root is compiled as a copy of the subschema it names, see `inlineLocalRefs()`, and the root's
- * `definitions` and `$defs` are hoisted beside every schema. A `$ref` outside those that sits beside other keywords, or
- * leads back into itself, leaves ata nothing to compile, which the module reports when the schema is first validated
- * against.
+/** Returns `schema` as a document ata compiles on its own. ata names no subschema of another document and resolves a
+ * `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, so the document carries every
+ * definition of the root it reaches, and every other subschema of the root it reaches through a `$ref` as a
+ * definition of its own, the `$ref` renamed to it. A `$ref` that names nothing in the root, or one into another
+ * document, is left as it is, which leaves ata nothing to compile and the module reporting it when the schema is first
+ * validated against.
  *
- * @param schemaMap - The schemas `getValidationSchemas()` lists
- * @param rootSchema - The root they were listed for
- * @returns - The documents, in the order of the map
+ * @param schema - A schema `getValidationSchemas()` lists
+ * @param rootSchema - The root it was listed for
+ * @returns - The document
  */
-function hoistedSchemas<S extends StrictRJSFSchema>(schemaMap: Record<string, S>, rootSchema: S): GenericObjectType[] {
-  const containers = Object.fromEntries(
-    CONTAINERS.flatMap((key) =>
-      key in rootSchema ? [[key, inlineLocalRefs(Reflect.get(rootSchema, key), rootSchema, new Set())]] : [],
-    ),
-  );
-  return Object.entries(schemaMap).map(([key, listed]) => {
-    const { [ID_KEY]: _id, ...withoutId } = listed;
-    return { ...compilable(inlineLocalRefs(withoutId, rootSchema, new Set())), ...containers, [ID_KEY]: key };
-  });
+function standalone(schema: GenericObjectType, rootSchema: object): GenericObjectType {
+  // ata resolves a `$ref` into one of the two containers of a document only, so the subschemas are carried in the one
+  // the root uses
+  const synthetic = isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions';
+  const taken = new Set([
+    ...Object.keys(getByPath<object>(rootSchema, [synthetic], {})),
+    ...Object.keys(getByPath<object>(schema, [synthetic], {})),
+  ]);
+  const names = new Map<string, string>();
+  const carried = new Set<string>();
+  const pending: [string, string, unknown][] = [];
+  const carry = (container: string, name: string, value: unknown) => {
+    const key = `${container}/${name}`;
+    if (!carried.has(key)) {
+      carried.add(key);
+      pending.push([container, name, value]);
+    }
+  };
+  const nameFor = (target: string, value: unknown) => {
+    const known = names.get(target);
+    if (known !== undefined) {
+      return known;
+    }
+    let name = `rjsf:${names.size}`;
+    while (taken.has(name)) {
+      name += '_';
+    }
+    names.set(target, name);
+    carry(synthetic, name, value);
+    return name;
+  };
+  const renamed = (ref: string): string => {
+    if (!ref.startsWith('#')) {
+      return ref;
+    }
+    const [, container, token] = DEFINITION_REF.exec(ref) ?? [];
+    if (container !== undefined) {
+      const name = decodeToken(token);
+      const definition = getByPath(rootSchema, [container, name]);
+      if (definition !== undefined) {
+        carry(container, name, definition);
+      }
+      return ref;
+    }
+    const subschema = subschemaAt(rootSchema, ref);
+    return subschema === undefined ? ref : `#/${synthetic}/${nameFor(ref, subschema)}`;
+  };
+  const rewrite = (value: unknown): unknown => {
+    if (Array.isArray(value)) {
+      return value.map(rewrite);
+    }
+    if (!isObject(value)) {
+      return value;
+    }
+    const copy = Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewrite(child)]));
+    const ref: unknown = value[REF_KEY];
+    if (typeof ref !== 'string') {
+      return copy;
+    }
+    const { [REF_KEY]: _ref, ...siblings } = copy;
+    const reference = { [REF_KEY]: renamed(ref) };
+    if (Object.keys(siblings).length === 0) {
+      return reference;
+    }
+    // ata compiles no `$ref` beside keywords that assert something, so it is read as an `allOf` entry beside them, as
+    // 2019-09, 2020-12 and Ajv read it
+    const allOf: unknown = siblings[ALL_OF_KEY];
+    return { ...siblings, [ALL_OF_KEY]: [...(Array.isArray(allOf) ? allOf : []), reference] };
+  };
+  const document = compilable(rewrite(schema));
+  for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
+    const [container, name, value] = next;
+    const entries: unknown = document[container];
+    document[container] = { ...(isObject(entries) ? entries : {}), [name]: compilable(rewrite(value)) };
+  }
+  return document;
 }
 
 /** Compiles a schema into a precompiled validator module. ata's
@@ -102,7 +138,10 @@ export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSch
   const { customFormats, ataOptionsOverrides = {} } = options;
   const schemaMaps = getValidationSchemas(schema);
   const keys = Object.keys(schemaMaps);
-  const schemas = hoistedSchemas(schemaMaps, schema);
+  const schemas = Object.entries(schemaMaps).map(([key, listed]) => {
+    const { [ID_KEY]: _id, ...withoutId } = listed;
+    return { ...standalone(withoutId, schema), [ID_KEY]: key };
+  });
 
   // Format checkers are serialized into the standalone module via Function#toString,
   // so they must carry no closure references or build-time instrumentation (a plain

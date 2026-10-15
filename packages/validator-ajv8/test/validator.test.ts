@@ -290,6 +290,17 @@ describe('AJV8Validator', () => {
         expect(defaults).toEqual({ k: 'x', t: 't' });
       });
     });
+    it('replaces a root whose $id ends in an empty fragment with an edited root under the same $id', () => {
+      const localValidator = new AJV8Validator({});
+      const root: RJSFSchema = {
+        $id: 'http://example.com/root.json#',
+        definitions: { x: { type: 'string' } },
+      };
+      const edited: RJSFSchema = { ...root, definitions: { x: { type: 'number' } } };
+      expect(localValidator.isValid({ $ref: '#/definitions/x' }, 's', root)).toBe(true);
+      expect(localValidator.isValid({ $ref: '#/definitions/x' }, 's', edited)).toBe(false);
+      expect(localValidator.isValid({ $ref: '#/definitions/x' }, 1, edited)).toBe(true);
+    });
     describe('scoring an option whose $id is the base of a relative $ref', () => {
       const pickOptions: RJSFSchema[] = [
         { type: 'object', properties: { other: { type: 'number' } }, required: ['other'] },
