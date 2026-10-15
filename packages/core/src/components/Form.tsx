@@ -37,6 +37,7 @@ import type { FormRef } from './FormRef.ts';
 import { deriveState, initialState, isDevelopment } from './formState.ts';
 import type { IChangeEvent } from './IChangeEvent.ts';
 import type { UiState } from './uiState.ts';
+import UiStateContext from './UiStateContext.ts';
 
 /** `T` itself for any concrete type, but not a position TypeScript infers `T` from. `FormProps` wraps the configuration
  * props and handlers in it, so `T` is inferred from `formData`/`initialFormData` (or a typed `ref`) and an unannotated
@@ -458,21 +459,23 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       >
         {showErrorList === 'top' && renderErrors()}
         <RawFormDataContext value={SchemaFieldComponent}>
-          <SchemaFieldComponent
-            name=''
-            schema={schema}
-            uiSchema={uiSchema}
-            errorSchema={errorSchema}
-            fieldPath={ROOT_FIELD_PATH}
-            id={registry.globalFormOptions.idPrefix}
-            formData={formData}
-            onChange={model.handleChange}
-            onBlur={model.handleBlur}
-            onFocus={model.handleFocus}
-            registry={registry}
-            disabled={disabled}
-            readonly={readonly}
-          />
+          <UiStateContext value={model.uiState}>
+            <SchemaFieldComponent
+              name=''
+              schema={schema}
+              uiSchema={uiSchema}
+              errorSchema={errorSchema}
+              fieldPath={ROOT_FIELD_PATH}
+              id={registry.globalFormOptions.idPrefix}
+              formData={formData}
+              onChange={model.handleChange}
+              onBlur={model.handleBlur}
+              onFocus={model.handleFocus}
+              registry={registry}
+              disabled={disabled}
+              readonly={readonly}
+            />
+          </UiStateContext>
         </RawFormDataContext>
 
         {children || submitButton}

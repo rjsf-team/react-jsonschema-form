@@ -2,7 +2,6 @@ import { createContext } from 'react';
 import type { FieldPath } from '@rjsf/utils';
 
 import type { AnnouncedMove } from './formState.ts';
-import type { UiState } from './uiState.ts';
 
 /** Private event access for container fields. A field rendered with the form's own data reads the form's latest edit,
  * which in a parent-owned form is a proposal made since the form last rendered; a field handed a view of that data
@@ -26,8 +25,6 @@ interface FormDataAccess {
    * where a key went.
    */
   sendMove(move: AnnouncedMove, send: () => void): void;
-  /** The option selections and cycle expansions of the form, see `createUiState()` */
-  uiState: UiState;
   /** The latest data at `path`, for a field that renders the form's own data there (see `RawFormDataContext`) */
   readField<D>(path: FieldPath): D;
 }

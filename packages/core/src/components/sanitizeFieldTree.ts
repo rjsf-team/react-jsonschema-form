@@ -37,6 +37,13 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   newKeyOf?: KeyMove;
 }
 
+/** A field tree's schema utilities, its data, and the root schema they retrieve for that data */
+export interface FieldTree<T, S extends StrictRJSFSchema, F extends FormContextType> {
+  schemaUtils: SchemaUtilsType<T, S, F>;
+  formData: T | undefined;
+  retrievedSchema: S;
+}
+
 /** The key of the array or object at `path` that the change moved to `key`, which is where its previous value is */
 function previousKeyOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -81,7 +88,8 @@ function emptySchema(): StrictRJSFSchema {
 /** The schemas a field renders, outermost first: the field's own, and the selected option's where it has options, which
  * renders at the same path, and so on for an option's own options. None for a collapsed `$ref` cycle that is not
  * expanded, which renders no field beneath its Expand button. Mirrors `SchemaField`, `MultiSchemaField` and
- * `CyclicSchemaField`, which is what makes the tree the one on screen.
+ * `CyclicSchemaField`, which is what makes the tree the one on screen. `retrieved` is `raw` retrieved for `value`, when
+ * the caller has it.
  */
 function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -89,6 +97,7 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   raw: S,
   value: unknown,
   path: FieldPathList,
+  retrieved?: S,
 ): S[] {
   const { uiState } = ctx;
   const rootSchema = schemaUtils.getRootSchema();
@@ -100,7 +109,7 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     }
     schema = expandRefCycle<S>(schema, rootSchema);
   }
-  const view = schemaUtils.retrieveSchema(schema, data);
+  const view = retrieved ?? schemaUtils.retrieveSchema(schema, data);
   const xxxOfKey = getXxxOfKey<S>(view);
   const list = xxxOfKey ? view[xxxOfKey] : undefined;
   if (!list || isConstantOptionList<S>(list, true)) {
@@ -253,6 +262,9 @@ interface FieldPair<S> {
   isItem: boolean;
   /** Whether the field was in the data before: a property holding a value, or an item */
   hasOld: boolean;
+  /** `oldRaw` and `newRaw` retrieved for their values, when the caller has them */
+  oldRetrieved?: S;
+  newRetrieved?: S;
 }
 
 function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -260,7 +272,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   pair: FieldPair<S>,
   path: FieldPathList,
 ): unknown {
-  const { oldRaw, newRaw, oldValue, newValue, oldInherited, newInherited, isItem, hasOld } = pair;
+  const { oldRaw, newRaw, oldValue, newValue, oldInherited, newInherited, isItem, hasOld, oldRetrieved, newRetrieved } =
+    pair;
   const edited = isEdited(ctx, path);
   if (oldRaw === undefined || !hasOld || (newValue === undefined && !isItem)) {
     return newValue;
@@ -269,8 +282,8 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!edited && oldRaw === newRaw && oldValue === newValue && Object.is(oldInherited, newInherited)) {
     return newValue;
   }
-  const oldLayers = layersOf(ctx, ctx.oldSchemaUtils, oldRaw, oldValue, path);
-  const newLayers = layersOf(ctx, ctx.schemaUtils, newRaw, newValue, path);
+  const oldLayers = layersOf(ctx, ctx.oldSchemaUtils, oldRaw, oldValue, path, oldRetrieved);
+  const newLayers = layersOf(ctx, ctx.schemaUtils, newRaw, newValue, path, newRetrieved);
   if (newLayers.length === 0) {
     return newValue;
   }
@@ -370,32 +383,39 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * user's, and only what they hold is judged. Both trees show the options the form selects now, so an option switch
  * changes no field's constraints: the data the switch proposes is `formDataForNewOption()`'s.
  *
- * @param previous - The schema utilities the previous tree is built with, and its data
- * @param schemaUtils - The schema utilities the new tree is built with
- * @param data - The data to sanitize
+ * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved
+ *        for that data
+ * @param next - The new tree, likewise, whose data is the data to sanitize
  * @param uiState - The form's option selections and cycle expansions
  * @param [edit] - The change being made, if any: its path, and where it moved the keys of the array or object there,
  *        so each item or property is paired with its own previous value
  * @returns - The sanitized data, sharing everything it left alone with `data`
  */
 export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  previous: { schemaUtils: SchemaUtilsType<T, S, F>; data: T | undefined },
-  schemaUtils: SchemaUtilsType<T, S, F>,
-  data: T | undefined,
+  previous: FieldTree<T, S, F>,
+  next: FieldTree<T, S, F>,
   uiState: UiState,
   edit?: { path: FieldPathList; newKeyOf?: KeyMove },
 ): T | undefined {
   const sanitized = walk(
-    { oldSchemaUtils: previous.schemaUtils, schemaUtils, uiState, editedPath: edit?.path, newKeyOf: edit?.newKeyOf },
+    {
+      oldSchemaUtils: previous.schemaUtils,
+      schemaUtils: next.schemaUtils,
+      uiState,
+      editedPath: edit?.path,
+      newKeyOf: edit?.newKeyOf,
+    },
     {
       oldRaw: previous.schemaUtils.getRootSchema(),
-      newRaw: schemaUtils.getRootSchema(),
-      oldValue: previous.data,
-      newValue: data,
+      newRaw: next.schemaUtils.getRootSchema(),
+      oldValue: previous.formData,
+      newValue: next.formData,
       oldInherited: undefined,
       newInherited: undefined,
       isItem: false,
       hasOld: true,
+      oldRetrieved: previous.retrievedSchema,
+      newRetrieved: next.retrievedSchema,
     },
     [],
   );
