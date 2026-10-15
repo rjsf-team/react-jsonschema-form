@@ -2690,6 +2690,19 @@ Read it rather than `displayLabel`, which stays through v7 only for a template r
 
 - boolean: True when the template draws the label
 
+### templateDrawsPlannedLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatedrawsplannedlabel}
+
+Whether a `FieldTemplate` in a theme whose widgets draw their own label draws the field's label: only where the field's plan gives the label to the template and there is label text to draw.
+Unlike [`templateDrawsLabel()`](#templatedrawslabel), it draws none for a template rendered without a plan: such a theme's widgets then draw their own label, which one drawn from the deprecated `displayLabel` would repeat.
+
+#### Parameters
+
+- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'label' | 'presentation'> - The template's `label` and `presentation`
+
+#### Returns
+
+- boolean: True when the template draws the label
+
 ### templateLabelFor&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatelabelfor}
 
 The `for` of the label a `FieldTemplate` draws: the field's `id`, except where the field's plan names the control through `aria-labelledby`, as for a group of radios or checkboxes, whose wrapper carries the `id` and isn't an element a `for` can label.
