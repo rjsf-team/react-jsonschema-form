@@ -476,3 +476,22 @@ describe("chakra-ui's error and help elements carry the ids their field's plan d
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('pick one or another');
   });
 });
+
+describe('chakra-ui ObjectFieldTemplate', () => {
+  test("keeps an optional object's data control where ui:label turns its heading off", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
+        formData={{ pet: { a: 'x' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
+  });
+});
