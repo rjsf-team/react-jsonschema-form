@@ -91,7 +91,6 @@ exports[`array fields > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -235,7 +234,6 @@ exports[`array fields > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       name="root_1"
@@ -510,7 +508,6 @@ exports[`array fields > empty errors array 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_name"
                     name="root_name"
@@ -569,7 +566,6 @@ exports[`array fields > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -599,7 +595,6 @@ exports[`array fields > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       inputmode="decimal"
@@ -682,7 +677,7 @@ exports[`array fields > has errors 1`] = `
                   class="fui-Input r1oeeo9n ___3k9dro0_uo2dlw0 fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm fs4k3qj fcee079 f1fgmyf4 fmyw78r"
                 >
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
+                    aria-describedby="root_name__error"
                     aria-invalid="true"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_name"
@@ -760,7 +755,6 @@ exports[`array fields > no errors 1`] = `
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
-                    aria-describedby="root_name__error root_name__description root_name__help"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_name"
                     name="root_name"
@@ -838,7 +832,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_0_name"
                               name="root[0][name]"
@@ -870,7 +863,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_0_value"
                               inputmode="decimal"
@@ -1012,7 +1004,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_1_name"
                               name="root[1][name]"
@@ -1044,7 +1035,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_1_value"
                               inputmode="decimal"
@@ -1228,7 +1218,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root[0]"
@@ -1345,7 +1334,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       name="root[1]"
@@ -1589,7 +1577,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root[0]"
@@ -1619,7 +1606,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       inputmode="decimal"
@@ -1678,10 +1664,6 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                         />
                       </svg>
                     </div>
-                    <label
-                      class="fui-Label fui-Checkbox__label ___z217dr0_6ezprl0 fk6fouc f1ym3bx4 fkhj508 f1i3iumi f7nlbp4 fpo1scq fruq291 f1f5q0n8 fjzwpt6 fh6j2fo"
-                      for="root_2"
-                    />
                   </span>
                 </div>
               </div>
@@ -1749,7 +1731,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                             >
                               <input
-                                aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
                                 class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                 id="root_0_0"
                                 name="root[0][0]"
@@ -1866,7 +1847,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                             >
                               <input
-                                aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
                                 class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                 id="root_0_1"
                                 name="root[0][1]"
@@ -2120,7 +2100,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                             >
                               <input
-                                aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
                                 class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                 id="root_1_0"
                                 name="root[1][0]"
@@ -2237,7 +2216,6 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                               class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                             >
                               <input
-                                aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
                                 class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                                 id="root_1_1"
                                 name="root[1][1]"
@@ -2556,7 +2534,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_0_name"
                               name="root.0.name"
@@ -2588,7 +2565,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_0_value"
                               inputmode="decimal"
@@ -2730,7 +2706,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_1_name"
                               name="root.1.name"
@@ -2762,7 +2737,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_1_value"
                               inputmode="decimal"
@@ -2946,7 +2920,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root.0"
@@ -3063,7 +3036,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       name="root.1"
@@ -3260,7 +3232,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_0_name"
                               name="root_0_name"
@@ -3426,7 +3397,6 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                             class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                           >
                             <input
-                              aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
                               class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                               id="root_1_name"
                               name="root_1_name"
@@ -3751,7 +3721,7 @@ exports[`with title and description > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-describedby="root_0__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -3918,7 +3888,7 @@ exports[`with title and description > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-describedby="root_1__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       name="root_1"
@@ -4120,8 +4090,8 @@ exports[`with title and description > checkboxes 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-            for="field-_r_n___control"
-            id="field-_r_n___label"
+            for="root"
+            id="root__label"
           >
             Test field
           </label>
@@ -4131,7 +4101,6 @@ exports[`with title and description > checkboxes 1`] = `
             <button
               aria-describedby="root__description"
               aria-expanded="false"
-              aria-labelledby="field-_r_n___label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -4254,7 +4223,7 @@ exports[`with title and description > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-describedby="root_0__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -4307,7 +4276,7 @@ exports[`with title and description > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-describedby="root_1__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       inputmode="decimal"
@@ -4499,7 +4468,7 @@ exports[`with title and description from both > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-describedby="root_0__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -4666,7 +4635,7 @@ exports[`with title and description from both > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-describedby="root_1__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       name="root_1"
@@ -4868,8 +4837,8 @@ exports[`with title and description from both > checkboxes 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-            for="field-_r_1h___control"
-            id="field-_r_1h___label"
+            for="root"
+            id="root__label"
           >
             My Field
           </label>
@@ -4879,7 +4848,6 @@ exports[`with title and description from both > checkboxes 1`] = `
             <button
               aria-describedby="root__description"
               aria-expanded="false"
-              aria-labelledby="field-_r_1h___label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -5002,7 +4970,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-describedby="root_0__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -5055,7 +5023,7 @@ exports[`with title and description from both > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-describedby="root_1__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       inputmode="decimal"
@@ -5247,7 +5215,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-describedby="root_0__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -5414,7 +5382,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-describedby="root_1__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       name="root_1"
@@ -5616,8 +5584,8 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
         >
           <label
             class="fui-Label fui-Field__label ___uxsood0_w9q9lw0 fk6fouc f19n0e5 fkhj508 f1i3iumi f6nezus f1iqmcbn fclwglc fywfov9 fyacil5"
-            for="field-_r_14___control"
-            id="field-_r_14___label"
+            for="root"
+            id="root__label"
           >
             My Field
           </label>
@@ -5627,7 +5595,6 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             <button
               aria-describedby="root__description"
               aria-expanded="false"
-              aria-labelledby="field-_r_14___label"
               class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
               data-tabster="{"focusable":{"ignoreKeydown":{"Escape":false}}}"
               id="root"
@@ -5750,7 +5717,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
+                      aria-describedby="root_0__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -5803,7 +5770,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
+                      aria-describedby="root_1__description"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       inputmode="decimal"
@@ -5939,7 +5906,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -6083,7 +6049,6 @@ exports[`with title and description with global label off > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       name="root_1"
@@ -6355,7 +6320,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_0__error root_0__description root_0__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -6385,7 +6349,6 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
-                      aria-describedby="root_1__error root_1__description root_1__help"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       inputmode="decimal"

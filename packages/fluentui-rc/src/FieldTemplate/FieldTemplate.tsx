@@ -69,7 +69,9 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <Field validationState={hasError ? 'error' : undefined} required={required}>
+      {/* No `required`, which Fluent hands every control inside the `Field` as its own: each widget marks itself as the
+          plan says, so a checkbox of a required group, or a control holding `false` unchecked, isn't made required */}
+      <Field validationState={hasError ? 'error' : undefined}>
         {children}
         {rawDescription && !leavesPartsToCheckbox ? (
           <Text as='p' block style={{ marginTop: 0, marginBottom: 0 }}>

@@ -10,13 +10,14 @@ import {
   groupEnumOptions,
   hasWidgetErrors,
   isEnumOptionsGroup,
-  labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
 } from '@rjsf/utils';
+
+import { fieldLabelSlot } from '../utils.ts';
 
 function getValue(data: OptionOnSelectData, multiple: boolean) {
   if (multiple) {
@@ -57,6 +58,9 @@ function SelectWidget<
     presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given. A required
+  // field keeps it, since the label is where the required mark is shown
+  const drawsLabel = !hideLabel && (!!label || required);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -89,9 +93,7 @@ function SelectWidget<
 
   return (
     <Field
-      // An empty label element would still name the dropdown, by nothing, over an `aria-label` it is given. A required
-      // field keeps it, since the label is where the required mark is shown
-      label={labelValue(label, hideLabel || (!label && !required))}
+      label={drawsLabel ? fieldLabelSlot(label, id) : undefined}
       validationState={hasWidgetErrors<T, S, F>(props) ? 'error' : undefined}
       required={required}
     >
