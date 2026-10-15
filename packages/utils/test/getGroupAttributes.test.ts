@@ -44,6 +44,37 @@ describe('getGroupAttributes()', () => {
     expect(getGroupAttributes({ id: ID, presentation }, 'group')).toEqual({ group: { role: 'group' }, option: {} });
   });
 
+  it('names a group its plan names no other way by the label the widget draws', () => {
+    const presentation = plan({ declaration: { ...GROUP, label: 'self' } });
+    expect(getGroupAttributes({ id: ID, presentation }, 'radiogroup', `${ID}__label`)).toEqual({
+      group: { role: 'radiogroup', 'aria-labelledby': `${ID}__label` },
+      option: {},
+    });
+  });
+
+  it.each([
+    ['whose label is hidden', { declaration: { ...GROUP, label: 'self' as const }, showLabel: false }],
+    ['whose label the template draws with a for', { declaration: { ...GROUP, labelledBy: 'for' as const } }],
+  ])('names a group %s by no label the widget would draw', (_, inputs) => {
+    expect(getGroupAttributes({ id: ID, presentation: plan(inputs) }, 'group', `${ID}__label`).group).toEqual({
+      role: 'group',
+    });
+  });
+
+  it('names a group by the label its plan points at over the one the widget draws', () => {
+    expect(getGroupAttributes({ id: ID, presentation: plan() }, 'group', 'drawn').group).toEqual({
+      role: 'group',
+      'aria-labelledby': `${ID}__label`,
+    });
+  });
+
+  it('names a group rendered without a plan by the label the widget draws', () => {
+    expect(getGroupAttributes({ id: ID }, 'group', `${ID}__label`).group).toEqual({
+      role: 'group',
+      'aria-labelledby': `${ID}__label`,
+    });
+  });
+
   it('describes each control of a group rendered without a plan by every part id', () => {
     expect(getGroupAttributes({ id: ID }, 'radiogroup')).toEqual({
       group: { role: 'radiogroup' },

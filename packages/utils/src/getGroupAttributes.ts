@@ -11,8 +11,15 @@ export type GroupRole = 'radiogroup' | 'group';
  * on the role it was placed for. `aria-invalid` goes where ARIA supports it: on a `radiogroup`
  * rather than on its radios, and on each control of a `group`, such as its checkboxes, rather than on the group.
  *
+ * A widget that draws its own label for the group, which the plan points nothing at, passes that label's id, so the
+ * group is named by it where the plan names the group by no other label: one rule for every theme whose group widgets
+ * draw their label, rather than a fallback of each theme's own. Under a plan the id is taken only where the plan gives
+ * the widget the label, so a widget can pass it whether or not it draws one: a hidden label, or one the template draws
+ * with a `for`, leaves the group pointing at no label the widget doesn't draw. Without a plan the caller is trusted.
+ *
  * @param props - The widget's `id` and `presentation`
  * @param role - The role of the group's wrapper
+ * @param [drawnLabelId] - The id of the label the widget draws for the group itself, where it draws one
  * @returns - `group`, the `role` and attributes for the group's wrapper, and `option`, those for each control in it
  */
 export default function getGroupAttributes<
@@ -22,11 +29,19 @@ export default function getGroupAttributes<
 >(
   props: Pick<WidgetProps<T, S, F>, 'id' | 'presentation'>,
   role: GroupRole,
+  drawnLabelId?: string,
 ): {
   group: Pick<ControlAttributes, 'aria-labelledby' | 'aria-invalid'> & { role: GroupRole };
   option: Omit<ControlAttributes, 'aria-labelledby' | 'required'>;
 } {
-  const { 'aria-labelledby': labelledBy, 'aria-invalid': invalid, ...described } = getControlAttributes<T, S, F>(props);
+  const {
+    'aria-labelledby': plannedLabelledBy,
+    'aria-invalid': invalid,
+    ...described
+  } = getControlAttributes<T, S, F>(props);
+  const { presentation } = props;
+  const drawsOwnLabel = presentation ? presentation.label.by === 'self' : true;
+  const labelledBy = plannedLabelledBy || (drawsOwnLabel ? drawnLabelId : undefined);
   const group: Pick<ControlAttributes, 'aria-labelledby' | 'aria-invalid'> & { role: GroupRole } = labelledBy
     ? { role, 'aria-labelledby': labelledBy }
     : { role };
