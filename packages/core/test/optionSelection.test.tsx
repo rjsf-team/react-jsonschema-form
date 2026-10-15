@@ -72,6 +72,36 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_foo')).toBeInstanceOf(HTMLSelectElement);
   });
 
+  it('restores the defaults the field declares when switching back from a null option (#5368)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      oneOf: [
+        {
+          title: 'Obj',
+          type: 'object',
+          required: ['kind'],
+          properties: {
+            kind: { const: 'obj' },
+            note: { type: 'string', default: 'from-option' },
+            extra: { type: 'string' },
+          },
+        },
+        { title: 'None', type: 'null' },
+      ],
+      default: { kind: 'obj', extra: 'from-root' },
+    };
+    const { node, getFormData } = createFormComponent({ schema });
+    const mounted = getFormData();
+
+    expect(mounted).toEqual({ kind: 'obj', note: 'from-option', extra: 'from-root' });
+
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'None');
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'Obj');
+
+    expect(getFormData()).toEqual(mounted);
+    expect(node.querySelector('#root_extra')).toHaveValue('from-root');
+  });
+
   it('matches each option list once per level of data, so the matching grows linearly with depth (#4990)', () => {
     const names = ['A', 'B', 'C', 'D', 'E'];
     const definitions = Object.fromEntries(

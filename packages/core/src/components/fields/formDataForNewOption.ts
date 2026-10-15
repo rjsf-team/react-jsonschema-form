@@ -89,9 +89,7 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * A key qualifies only when all of the following hold, which between them keep the deletion from stranding data the
  * user or the caller supplied:
  *
- * - It carried a value over. A key that arrived empty has nothing stale in it, and emptying it further would rob
- *   `Form` of the all-`undefined` payload it reads as a switch away from a `null` option, which is the only way a
- *   default declared above the option is restored.
+ * - It carried a value over. A key that arrived empty has nothing stale in it.
  * - The new option declares a value for it, as a property `default`/`const` or through the option's own `default`
  *   object. The computed defaults say more than an option declares, so honoring them alone would delete a nested
  *   object's leaf defaults, a required array's `[]` or a required boolean's `false` — none of which the option
@@ -112,6 +110,10 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  * that suppresses object defaults. They describe what an earlier switch through here wrote rather than every default
  * the form holds — `Form` fills the root with `includeUndefinedValues: false`. That divergence only stops a key from
  * qualifying, so the worst it costs is that the replacement does not happen.
+ *
+ * A field that held nothing, as after a `null` option, and switches to an option whose defaults are an object gets the
+ * defaults of the field with that option as its only one, so a `default` the field itself declares is restored with
+ * the option's own ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)).
  *
  * Values are matched whole, per top-level key of the option: editing one leaf of a nested object leaves the whole
  * subtree in place, so its other leaves keep the old option's defaults.
@@ -217,6 +219,26 @@ export default function formDataForNewOption<
         (bareDefaults !== undefined && deepEquals(defaultsAsSeeded(bareDefaults), formData))
       );
     };
+    /** Computes what the field holds when it held nothing, for an option whose defaults are an object: the defaults of
+     * the field holding the options with the new option as its only one, so the field's own `default`, which a `null`
+     * option switched away from had replaced, lies beneath the option's, as it does on mount
+     * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)). Undefined for any other option */
+    const fieldDefaultsForNewOption = () => {
+      const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
+      if (!xxxOfKey || !isPlainObject(defaultsForNewOption())) {
+        return undefined;
+      }
+      const fieldUiSchema: GenericObjectType | undefined = newOptionUiSchema && { [xxxOfKey]: [newOptionUiSchema] };
+      const fieldDefaults = schemaUtils.getDefaultFormState(
+        { ...parentSchema, [xxxOfKey]: [newOption] },
+        undefined,
+        'excludeObjectChildren',
+        undefined,
+        fieldUiSchema,
+        uiSchemaDefinitions,
+      );
+      return Array.isArray(fieldDefaults) || !isPlainObject(fieldDefaults) ? undefined : fieldDefaults;
+    };
     if (isPlainObject(newFormData)) {
       const sanitizedData = newFormData;
       const oldData: Record<string, unknown> = isPlainObject(formData) ? formData : {};
@@ -269,6 +291,11 @@ export default function formDataForNewOption<
     // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
     // so that only the root objects themselves are created without adding undefined children properties. With
     // nothing carried over it is the same call the option's own defaults came from, so reuse those
+    const heldNothing = formData === undefined || formData === null;
+    const fieldDefaults = heldNothing ? fieldDefaultsForNewOption() : undefined;
+    if (fieldDefaults !== undefined) {
+      return fieldDefaults;
+    }
     newFormData =
       newFormData === undefined
         ? defaultsForNewOption()

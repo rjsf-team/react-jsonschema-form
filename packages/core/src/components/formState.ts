@@ -1686,18 +1686,9 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     formData = (typeof path[0] === 'number' ? [] : {}) as T;
   }
 
-  // When switching from null to an object option in oneOf, MultiSchemaField sends
-  // an object with property names but undefined values (e.g., {types: undefined, content: undefined}).
-  // In this case, pass undefined to deriveFormData to trigger fresh default computation.
-  // Only do this when the previous formData was null/undefined (switching FROM null).
-  const hasOnlyUndefinedValues =
-    isObject(formData) && Object.keys(formData).length > 0 && Object.values(formData).every((v) => v === undefined);
-  const wasPreviouslyNull = oldFormData === null || oldFormData === undefined;
-  const inputForDefaults = hasOnlyUndefinedValues && wasPreviouslyNull ? undefined : formData;
-
   if (isObject(formData) || Array.isArray(formData)) {
     // Tracks if the user cleared a plain (non-oneOf/anyOf) leaf field.
-    // The key is removed twice: once before deriveFormData so inputForDefaults
+    // The key is removed twice: once before deriveFormData so the data it derives from
     // reflects an empty field for conditional schema resolution, and once after so
     // the user's clear overrides any schema default deriveFormData re-applied (#5125)
     // and AJV never receives { key: undefined } for type:"string" fields (#4518).
@@ -1744,7 +1735,7 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
             isWholeValueSelectAt<T, S, F>(schemaUtils, retrievedSchema, path, changedData)
         : true);
     // Only the data and its context are derived here; the errors are reconciled below
-    const derived = deriveFormData(current, inputForDefaults, { shouldSanitize, changedPath: path }, props);
+    const derived = deriveFormData(current, formData, { shouldSanitize, changedPath: path }, props);
     formData = derived.formData;
     context = derived.context;
     formDataSchema = derived.formDataSchema;
