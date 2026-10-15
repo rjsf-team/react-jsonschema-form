@@ -338,25 +338,35 @@ export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema>(
 
 /** Returns every schema the form hands a validator for the root of `graph`: the root itself; each `if`; each
  * `anyOf`/`oneOf` option, as a pointer and as scored, plain and relaxed, and `{}` where an option is a boolean; the
- * property each option names as its discriminator; and the condition each `oneOf` option of a `dependencies` schema is
- * matched on. Each is named by the graph, so the list depends on the root alone, never on form data.
+ * property each option declares under any `discriminator.propertyName` in the root; and the condition each `oneOf`
+ * option of a `dependencies` schema is matched on. Each is named by the graph, so the list depends on the root alone,
+ * never on form data.
  *
  * @param graph - The graph of the root
  * @returns - The schemas, the root first
  */
 export function validationTargets<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>): S[] {
-  const targets: S[] = [graph.rawRoot];
+  const nodes: ObjectNode<S>[] = [];
   for (let id = 0; id < graph.size; id += 1) {
     const node = graph.node(id);
     if (node.kind === 'schema' && !NOT_IN_ROOT.test(node.pointer)) {
-      targets.push(...nodeTargets(graph, node));
+      nodes.push(node);
     }
   }
-  return targets;
+  // The field reads its discriminator from the schema it retrieves, which takes one declared beside a `$ref` to the
+  // options or in another `allOf` entry, so each option is listed under every name a discriminator anywhere declares
+  const discriminators = new Set(
+    nodes.flatMap((node) => stringKeyword(Reflect.get(node.raw, 'discriminator'), 'propertyName') ?? []),
+  );
+  return [graph.rawRoot, ...nodes.flatMap((node) => nodeTargets(graph, node, discriminators))];
 }
 
 /** Returns the schemas `validationTargets()` lists for the conditions, options and dependencies of one node */
-function nodeTargets<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: ObjectNode<S>): S[] {
+function nodeTargets<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  node: ObjectNode<S>,
+  discriminators: ReadonlySet<string>,
+): S[] {
   const targets: S[] = [];
   const condition = graph.child(node.id, IF_KEY);
   if (condition !== undefined) {
@@ -369,11 +379,11 @@ function nodeTargets<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: Ob
       // `SchemaField` retrieves a boolean option as a schema of its own, `{}`, which has no place in the root
       targets.push(schemaFrom(graph.rawRoot, {}));
     }
-    const discriminatorName = stringKeyword(Reflect.get(node.raw, 'discriminator'), 'propertyName');
-    const discriminator =
-      discriminatorName === undefined ? undefined : declaredProperty(graph, option, discriminatorName);
-    if (discriminator !== undefined) {
-      targets.push(targetOf(graph, discriminator));
+    for (const name of discriminators) {
+      const discriminator = declaredProperty(graph, option, name);
+      if (discriminator !== undefined) {
+        targets.push(targetOf(graph, discriminator));
+      }
     }
   }
   graph.subschemas(node.id, DEPENDENCIES_KEY).forEach(([key, dependency]) => {
