@@ -1,6 +1,6 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { ErrorSchema, RJSFSchema } from '@rjsf/utils';
-import { fieldLabelId } from '@rjsf/utils';
+import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -544,6 +544,45 @@ describe('antd specific tests', () => {
     const label = container.querySelector('label[for="root_foo"]');
     expect(label).toHaveTextContent('Foo');
     expect(label?.classList.contains('ant-form-item-required')).toBe(marked);
+  });
+});
+
+describe("antd's error and help elements carry the ids their field's plan describes its control by", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      pet: {
+        title: 'Pet',
+        anyOf: [
+          { title: 'Dog', type: 'string' },
+          { title: 'Cat', type: 'number' },
+        ],
+      },
+    },
+  };
+
+  test("renders an option's own help as a block under its own id, beside the field's", () => {
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ pet: { 'ui:help': 'Pick a pet', anyOf: [{ 'ui:help': 'Dogs bark' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll(`#${helpId('root_pet')}`)).toHaveLength(1);
+    expect(container.querySelector(`#${helpId('root_pet')}`)).toHaveTextContent('Pick a pet');
+    expect(container.querySelector(`div#${optionHelpId('root_pet')}`)).toHaveTextContent('Dogs bark');
+    expect(container.querySelector('#root_pet')).toHaveAccessibleDescription('Pick a pet Dogs bark');
+  });
+
+  test("renders an anyOf field's errors once, under the id its control is described by", () => {
+    const { container } = render(
+      <Form schema={schema} extraErrors={{ pet: { __errors: ['pick one'] } }} validator={validator} />,
+    );
+
+    expect(container.querySelectorAll(`#${errorId('root_pet')}`)).toHaveLength(1);
+    expect(container.querySelector('#root_pet')).toHaveAccessibleDescription('pick one');
   });
 });
 
