@@ -29,6 +29,45 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
       expect(schemaUtils.getFirstMatchingOption({ phone: '1' }, options)).toBe(1);
       expect(schemaUtils.getClosestMatchingOption({ phone: '1' }, options)).toBe(1);
     });
+    it('matches an option written as a $ref, or composed with an allOf, as the option written in place', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          A: { type: 'object', properties: { a: { type: 'number' } }, required: ['a'] },
+          B: { type: 'object', properties: { b: { type: 'number' } }, required: ['b'] },
+          Base: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] },
+        },
+        type: 'object',
+        properties: {
+          refs: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+          kinds: {
+            oneOf: [
+              { properties: { kind: { const: 'y' } } },
+              { allOf: [{ $ref: '#/definitions/Base' }], properties: { kind: { const: 'x' } } },
+            ],
+          },
+        },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const { refs, kinds } = rootSchema.properties ?? {};
+      expect(schemaUtils.getFirstMatchingOption({ b: 1 }, optionsOf(refs, 'oneOf'))).toBe(1);
+      expect(schemaUtils.getFirstMatchingOption({ kind: 'x' }, optionsOf(kinds, 'oneOf'))).toBe(1);
+    });
+    it('checks an if that is a $ref into a root carrying an $id against that root', () => {
+      const rootSchema: RJSFSchema = {
+        $id: 'http://example.com/root.json',
+        definitions: { I: { properties: { k: { const: 'x' } } } },
+        type: 'object',
+        properties: { k: { type: 'string', default: 'x' } },
+        if: { $ref: '#/definitions/I' },
+        then: { properties: { t: { type: 'string', default: 't' } } },
+        else: { properties: { e: { type: 'string', default: 'e' } } },
+      };
+      const validator = buildValidator(rootSchema);
+      expect(getDefaultFormState({ validator }, { schema: rootSchema, rootSchema, formData: { k: 'x' } })).toEqual({
+        k: 'x',
+        t: 't',
+      });
+    });
     it('applies the dependency oneOf option matched on a property whose name ends in #', () => {
       const rootSchema: RJSFSchema = {
         type: 'object',
