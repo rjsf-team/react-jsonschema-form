@@ -19,14 +19,15 @@ exports[`format iso-date-time 1`] = `
           >
             <button
               aria-expanded="false"
-              aria-haspopup="true"
+              aria-haspopup="dialog"
+              aria-label="Select a date"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
               id="root"
+              role="combobox"
               type="button"
             >
               <span
                 class="text-base-content/50"
-                id="root__value"
               >
                 Select a date
               </span>
@@ -191,7 +192,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                             style="position: relative;"
                                           >
                                             <input
-                                              aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                               class="input input-bordered w-full"
                                               id="root_tasks_0_title"
                                               name="root[tasks][0][title]"
@@ -371,7 +371,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                             style="position: relative;"
                                           >
                                             <input
-                                              aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                               class="input input-bordered w-full"
                                               id="root_tasks_1_title"
                                               name="root[tasks][1][title]"
@@ -625,7 +624,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                     class="input input-bordered w-full"
                                     id="root_tags_0"
                                     name="root[tags][0]"
@@ -743,7 +741,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                     class="input input-bordered w-full"
                                     id="root_tags_1"
                                     name="root[tags][1]"
@@ -1074,7 +1071,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                                   class="input input-bordered w-full"
                                   id="root_person_firstName"
                                   name="root[person][firstName]"
@@ -1114,7 +1110,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                                   class="input input-bordered w-full"
                                   id="root_person_lastName"
                                   name="root[person][lastName]"
@@ -1182,7 +1177,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_street"
                                             name="root[person][address][street]"
@@ -1222,7 +1216,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_city"
                                             name="root[person][address][city]"
@@ -1406,14 +1399,17 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       class="dropdown w-full"
                     >
                       <button
+                        aria-controls="root_color__listbox"
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
                         id="root_color"
+                        role="combobox"
                         tabindex="0"
                         type="button"
                       >
                         <span
                           class="truncate"
-                          id="root_color__value"
                         >
                           color
                         </span>
@@ -1426,6 +1422,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        id="root_color__listbox"
                         role="listbox"
                       >
                         <li
@@ -1539,7 +1536,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                         class="input input-bordered w-full"
                         id="root_firstName"
                         name="root[firstName]"
@@ -1579,7 +1575,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="input input-bordered w-full"
                         id="root_age"
                         inputmode="decimal"
@@ -1808,7 +1803,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                             style="position: relative;"
                                           >
                                             <input
-                                              aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                               class="input input-bordered w-full"
                                               id="root_tasks_0_title"
                                               name="root.tasks.0.title"
@@ -1988,7 +1982,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                             style="position: relative;"
                                           >
                                             <input
-                                              aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                               class="input input-bordered w-full"
                                               id="root_tasks_1_title"
                                               name="root.tasks.1.title"
@@ -2242,7 +2235,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                     class="input input-bordered w-full"
                                     id="root_tags_0"
                                     name="root.tags.0"
@@ -2360,7 +2352,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                     class="input input-bordered w-full"
                                     id="root_tags_1"
                                     name="root.tags.1"
@@ -2573,7 +2564,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                                   class="input input-bordered w-full"
                                   id="root_person_firstName"
                                   name="root.person.firstName"
@@ -2613,7 +2603,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                                   class="input input-bordered w-full"
                                   id="root_person_lastName"
                                   name="root.person.lastName"
@@ -2681,7 +2670,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_street"
                                             name="root.person.address.street"
@@ -2721,7 +2709,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_city"
                                             name="root.person.address.city"
@@ -2804,14 +2791,17 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       class="dropdown w-full"
                     >
                       <button
+                        aria-controls="root_color__listbox"
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
                         id="root_color"
+                        role="combobox"
                         tabindex="0"
                         type="button"
                       >
                         <span
                           class="truncate"
-                          id="root_color__value"
                         >
                           color
                         </span>
@@ -2824,6 +2814,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        id="root_color__listbox"
                         role="listbox"
                       >
                         <li
@@ -2937,7 +2928,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                         class="input input-bordered w-full"
                         id="root_firstName"
                         name="root.firstName"
@@ -2977,7 +2967,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="input input-bordered w-full"
                         id="root_age"
                         inputmode="decimal"
@@ -3164,16 +3153,18 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_region__oneof_select__value"
+                            aria-controls="root_region__oneof_select__listbox"
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             aria-labelledby="root_region__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_region__oneof_select"
+                            role="combobox"
                             tabindex="0"
                             type="button"
                           >
                             <span
                               class="truncate"
-                              id="root_region__oneof_select__value"
                             >
                               Europe
                             </span>
@@ -3186,6 +3177,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            id="root_region__oneof_select__listbox"
                             role="listbox"
                           >
                             <li
@@ -3235,15 +3227,17 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             class="dropdown w-full"
                           >
                             <button
-                              aria-describedby="root_region__value"
+                              aria-controls="root_region__listbox"
+                              aria-expanded="false"
+                              aria-haspopup="listbox"
                               class="btn btn-outline w-full text-left flex justify-between items-center "
                               id="root_region"
+                              role="combobox"
                               tabindex="0"
                               type="button"
                             >
                               <span
                                 class="truncate"
-                                id="root_region__value"
                               >
                                 Germany
                               </span>
@@ -3256,6 +3250,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             </button>
                             <ul
                               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                              id="root_region__listbox"
                               role="listbox"
                             >
                               <li
@@ -3331,14 +3326,18 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Subscribed
               </span>
@@ -3351,6 +3350,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -3403,14 +3403,18 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Once
               </span>
@@ -3423,6 +3427,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -3505,14 +3510,18 @@ exports[`select widget from oneOf boolean constants with a null option without a
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Unknown
               </span>
@@ -3525,6 +3534,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -3607,14 +3617,18 @@ exports[`select widget from oneOf constants without a type 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Bar
               </span>
@@ -3627,6 +3641,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -3694,14 +3709,18 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 No
               </span>
@@ -3714,6 +3733,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -3781,14 +3801,18 @@ exports[`select widget with options sharing a String() in the realValue format (
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 String
               </span>
@@ -3801,6 +3825,7 @@ exports[`select widget with options sharing a String() in the realValue format (
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -4389,6 +4414,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="flex items-center cursor-pointer gap-2"
             >
               <input
+                aria-describedby="root__description root__help"
                 checked=""
                 class="checkbox"
                 data-index="0"
@@ -4407,6 +4433,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="flex items-center cursor-pointer gap-2"
             >
               <input
+                aria-describedby="root__description root__help"
                 class="checkbox"
                 data-index="1"
                 id="root-1"
@@ -4424,6 +4451,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="flex items-center cursor-pointer gap-2"
             >
               <input
+                aria-describedby="root__description root__help"
                 class="checkbox"
                 data-index="2"
                 id="root-2"
@@ -4504,6 +4532,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               class="flex items-center cursor-pointer gap-2"
             >
               <input
+                aria-describedby="root__description"
                 class="checkbox"
                 data-index="0"
                 id="root-0"
@@ -4521,6 +4550,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               class="flex items-center cursor-pointer gap-2"
             >
               <input
+                aria-describedby="root__description"
                 class="checkbox"
                 data-index="1"
                 id="root-1"
@@ -4538,6 +4568,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               class="flex items-center cursor-pointer gap-2"
             >
               <input
+                aria-describedby="root__description"
                 class="checkbox"
                 data-index="2"
                 id="root-2"
@@ -4621,7 +4652,7 @@ exports[`single fields > field with description 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        aria-describedby="root_my-field__description"
                         class="input input-bordered w-full"
                         id="root_my-field"
                         name="root_my-field"
@@ -4704,7 +4735,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        aria-describedby="root_my-field__description"
                         class="input input-bordered w-full"
                         id="root_my-field"
                         name="root_my-field"
@@ -4787,7 +4818,7 @@ exports[`single fields > field with markdown description 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        aria-describedby="root_my-field__description"
                         class="input input-bordered w-full"
                         id="root_my-field"
                         name="root_my-field"
@@ -4876,7 +4907,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                        aria-describedby="root_my-field__description"
                         class="input input-bordered w-full"
                         id="root_my-field"
                         name="root_my-field"
@@ -4933,7 +4964,6 @@ exports[`single fields > format color 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -4976,14 +5006,15 @@ exports[`single fields > format date 1`] = `
           >
             <button
               aria-expanded="false"
-              aria-haspopup="true"
+              aria-haspopup="dialog"
+              aria-label="Select a date"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
               id="root"
+              role="combobox"
               type="button"
             >
               <span
                 class="text-base-content/50"
-                id="root__value"
               >
                 Select a date
               </span>
@@ -5036,14 +5067,15 @@ exports[`single fields > format datetime 1`] = `
           >
             <button
               aria-expanded="false"
-              aria-haspopup="true"
+              aria-haspopup="dialog"
+              aria-label="Select a date"
               class="input input-bordered w-full flex items-center justify-between cursor-pointer "
               id="root"
+              role="combobox"
               type="button"
             >
               <span
                 class="text-base-content/50"
-                id="root__value"
               >
                 Select a date
               </span>
@@ -5141,7 +5173,8 @@ exports[`single fields > help and error display 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__error root__help"
+              aria-invalid="true"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -5244,7 +5277,6 @@ exports[`single fields > hidden label 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -5310,7 +5342,6 @@ exports[`single fields > number field 0 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               inputmode="decimal"
@@ -5355,7 +5386,6 @@ exports[`single fields > number field 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               inputmode="decimal"
@@ -5467,7 +5497,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                   class="input input-bordered w-full"
                                   id="root_nestedObjectOptional_test"
                                   name="root_nestedObjectOptional_test"
@@ -5535,7 +5564,6 @@ exports[`single fields > optional data controls > does not show optional control
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                             class="input input-bordered w-full"
                                             id="root_nestedObjectOptional_deepObjectOptional_deepTest"
                                             name="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -5608,7 +5636,6 @@ exports[`single fields > optional data controls > does not show optional control
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                             class="input input-bordered w-full"
                                             id="root_nestedObjectOptional_deepObject_deepTest"
                                             name="root_nestedObjectOptional_deepObject_deepTest"
@@ -5958,7 +5985,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="input input-bordered w-full"
                                   id="root_nestedObject_test"
                                   name="root_nestedObject_test"
@@ -6077,16 +6103,18 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-controls="root_optionalObjectWithOneofs__oneof_select__listbox"
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalObjectWithOneofs__oneof_select"
+                            role="combobox"
                             tabindex="0"
                             type="button"
                           >
                             <span
                               class="truncate"
-                              id="root_optionalObjectWithOneofs__oneof_select__value"
                             >
                               Option 1
                             </span>
@@ -6099,6 +6127,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            id="root_optionalObjectWithOneofs__oneof_select__listbox"
                             role="listbox"
                           >
                             <li
@@ -6189,7 +6218,6 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="position: relative;"
                                     >
                                       <input
-                                        aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                         class="input input-bordered w-full"
                                         disabled=""
                                         id="root_optionalObjectWithOneofs_name"
@@ -6244,16 +6272,18 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-controls="root_optionalArrayWithAnyofs__anyof_select__listbox"
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center "
                             id="root_optionalArrayWithAnyofs__anyof_select"
+                            role="combobox"
                             tabindex="0"
                             type="button"
                           >
                             <span
                               class="truncate"
-                              id="root_optionalArrayWithAnyofs__anyof_select__value"
                             >
                               Option 1
                             </span>
@@ -6266,6 +6296,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            id="root_optionalArrayWithAnyofs__anyof_select__listbox"
                             role="listbox"
                           >
                             <li
@@ -6480,7 +6511,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                   class="input input-bordered w-full"
                                   disabled=""
                                   id="root_nestedObjectOptional_test"
@@ -6549,7 +6579,6 @@ exports[`single fields > optional data controls > does not show optional control
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                             class="input input-bordered w-full"
                                             disabled=""
                                             id="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -6623,7 +6652,6 @@ exports[`single fields > optional data controls > does not show optional control
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                             class="input input-bordered w-full"
                                             disabled=""
                                             id="root_nestedObjectOptional_deepObject_deepTest"
@@ -6978,7 +7006,6 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="input input-bordered w-full"
                                   disabled=""
                                   id="root_nestedObject_test"
@@ -7099,16 +7126,18 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalObjectWithOneofs__oneof_select__value"
+                            aria-controls="root_optionalObjectWithOneofs__oneof_select__listbox"
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             aria-labelledby="root_optionalObjectWithOneofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalObjectWithOneofs__oneof_select"
+                            role="combobox"
                             tabindex="0"
                             type="button"
                           >
                             <span
                               class="truncate"
-                              id="root_optionalObjectWithOneofs__oneof_select__value"
                             >
                               Option 1
                             </span>
@@ -7121,6 +7150,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            id="root_optionalObjectWithOneofs__oneof_select__listbox"
                             role="listbox"
                           >
                             <li
@@ -7211,7 +7241,6 @@ exports[`single fields > optional data controls > does not show optional control
                                       style="position: relative;"
                                     >
                                       <input
-                                        aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                         class="input input-bordered w-full"
                                         disabled=""
                                         id="root_optionalObjectWithOneofs_name"
@@ -7266,16 +7295,18 @@ exports[`single fields > optional data controls > does not show optional control
                           class="dropdown w-full"
                         >
                           <button
-                            aria-describedby="root_optionalArrayWithAnyofs__anyof_select__value"
+                            aria-controls="root_optionalArrayWithAnyofs__anyof_select__listbox"
+                            aria-expanded="false"
+                            aria-haspopup="listbox"
                             aria-labelledby="root_optionalArrayWithAnyofs__label"
                             class="btn btn-outline w-full text-left flex justify-between items-center btn-disabled"
                             id="root_optionalArrayWithAnyofs__anyof_select"
+                            role="combobox"
                             tabindex="0"
                             type="button"
                           >
                             <span
                               class="truncate"
-                              id="root_optionalArrayWithAnyofs__anyof_select__value"
                             >
                               Option 1
                             </span>
@@ -7288,6 +7319,7 @@ exports[`single fields > optional data controls > does not show optional control
                           </button>
                           <ul
                             class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                            id="root_optionalArrayWithAnyofs__anyof_select__listbox"
                             role="listbox"
                           >
                             <li
@@ -7536,7 +7568,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                   class="input input-bordered w-full"
                                   id="root_nestedObjectOptional_test"
                                   name="root_nestedObjectOptional_test"
@@ -7669,7 +7700,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                             class="input input-bordered w-full"
                                             id="root_nestedObjectOptional_deepObject_deepTest"
                                             name="root_nestedObjectOptional_deepObject_deepTest"
@@ -7971,7 +8001,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                     class="input input-bordered w-full"
                                     id="root_nestedArrayOptional_0"
                                     name="root_nestedArrayOptional_0"
@@ -8104,7 +8133,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="input input-bordered w-full"
                                   id="root_nestedObject_test"
                                   name="root_nestedObject_test"
@@ -8444,7 +8472,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                   class="input input-bordered w-full"
                                   disabled=""
                                   id="root_nestedObjectOptional_test"
@@ -8551,7 +8578,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                             class="input input-bordered w-full"
                                             disabled=""
                                             id="root_nestedObjectOptional_deepObject_deepTest"
@@ -8803,7 +8829,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                     class="input input-bordered w-full"
                                     disabled=""
                                     id="root_nestedArrayOptional_0"
@@ -8939,7 +8964,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="input input-bordered w-full"
                                   disabled=""
                                   id="root_nestedObject_test"
@@ -9353,7 +9377,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="input input-bordered w-full"
                                   id="root_nestedObject_test"
                                   name="root_nestedObject_test"
@@ -9770,7 +9793,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                   class="input input-bordered w-full"
                                   disabled=""
                                   id="root_nestedObject_test"
@@ -10000,7 +10022,6 @@ exports[`single fields > password field 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -10128,6 +10149,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               class="flex items-center cursor-pointer gap-2"
             >
               <input
+                aria-describedby="root__description"
                 class="radio"
                 data-index="0"
                 id="root-0"
@@ -10145,6 +10167,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               class="flex items-center cursor-pointer gap-2"
             >
               <input
+                aria-describedby="root__description"
                 class="radio"
                 data-index="1"
                 id="root-1"
@@ -10339,7 +10362,7 @@ exports[`single fields > schema examples 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help root__examples"
+              aria-describedby="root__examples"
               class="input input-bordered w-full"
               id="root"
               list="root__examples"
@@ -10401,7 +10424,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help root__examples"
+              aria-describedby="root__examples"
               class="input input-bordered w-full"
               id="root"
               inputmode="numeric"
@@ -10460,14 +10483,18 @@ exports[`single fields > select field 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -10480,6 +10507,7 @@ exports[`single fields > select field 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -10547,14 +10575,18 @@ exports[`single fields > select field multiple choice 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -10567,6 +10599,7 @@ exports[`single fields > select field multiple choice 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -10684,14 +10717,18 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -10704,6 +10741,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -10926,14 +10964,18 @@ exports[`single fields > select field multiple choice formData 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 foo, bar
               </span>
@@ -10946,6 +10988,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -11065,14 +11108,18 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -11085,6 +11132,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -11182,14 +11230,18 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -11202,6 +11254,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -11413,14 +11466,18 @@ exports[`single fields > select field single choice formData 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 bar
               </span>
@@ -11433,6 +11490,7 @@ exports[`single fields > select field single choice formData 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -11500,14 +11558,18 @@ exports[`single fields > select field single choice optgroups 1`] = `
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -11520,6 +11582,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -11647,14 +11710,18 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Select ...
               </span>
@@ -11667,6 +11734,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -11878,15 +11946,18 @@ exports[`single fields > select widget with description in schema and FieldTempl
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
               aria-describedby="root__description"
+              aria-expanded="false"
+              aria-haspopup="listbox"
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 test
               </span>
@@ -11899,6 +11970,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -11976,15 +12048,19 @@ exports[`single fields > select widget with selected oneOf option description 1`
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
               aria-describedby="root__selectedOptionDescription"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Foo
               </span>
@@ -11997,6 +12073,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -12074,14 +12151,18 @@ exports[`single fields > select widget with selected oneOf option description an
             class="dropdown w-full"
           >
             <button
+              aria-controls="root__listbox"
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              aria-label="Select ..."
               class="btn btn-outline w-full text-left flex justify-between items-center "
               id="root"
+              role="combobox"
               tabindex="0"
               type="button"
             >
               <span
                 class="truncate"
-                id="root__value"
               >
                 Foo
               </span>
@@ -12094,6 +12175,7 @@ exports[`single fields > select widget with selected oneOf option description an
             </button>
             <ul
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+              id="root__listbox"
               role="listbox"
             >
               <li
@@ -12219,7 +12301,7 @@ exports[`single fields > string field > field with markdown help and description
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12308,7 +12390,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12388,7 +12470,7 @@ exports[`single fields > string field > field with markdown help text without a 
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12447,7 +12529,6 @@ exports[`single fields > string field > format data-url 1`] = `
               style="position: relative;"
             >
               <input
-                aria-describedby="root__error root__description root__help"
                 class="file-input"
                 id="root"
                 name="root"
@@ -12490,7 +12571,6 @@ exports[`single fields > string field > format email 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12532,7 +12612,6 @@ exports[`single fields > string field > format uri 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12574,7 +12653,6 @@ exports[`single fields > string field > regular 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12627,7 +12705,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
+              aria-describedby="root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12691,7 +12769,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               disabled=""
               id="root"
@@ -12734,7 +12811,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12795,7 +12871,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -12911,7 +12986,6 @@ exports[`single fields > title field 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_title__error root_title__description root_title__help"
                         class="input input-bordered w-full"
                         id="root_title"
                         name="root_title"
@@ -12993,7 +13067,6 @@ exports[`single fields > up/down field 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -13036,7 +13109,6 @@ exports[`single fields > using custom tagName 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="input input-bordered w-full"
               id="root"
               name="root"
@@ -13078,7 +13150,6 @@ exports[`string field with autocapitalize 1`] = `
             style="position: relative;"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               autocapitalize="words"
               class="input input-bordered w-full"
               id="root"
@@ -13147,15 +13218,17 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       class="dropdown w-full"
                     >
                       <button
-                        aria-describedby="root_answer__value"
+                        aria-controls="root_answer__listbox"
+                        aria-expanded="false"
+                        aria-haspopup="listbox"
                         class="btn btn-outline w-full text-left flex justify-between items-center "
                         id="root_answer"
+                        role="combobox"
                         tabindex="0"
                         type="button"
                       >
                         <span
                           class="truncate"
-                          id="root_answer__value"
                         >
                           Yes
                         </span>
@@ -13168,6 +13241,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       </button>
                       <ul
                         class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                        id="root_answer__listbox"
                         role="listbox"
                       >
                         <li

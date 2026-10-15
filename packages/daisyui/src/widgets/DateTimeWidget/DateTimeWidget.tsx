@@ -93,6 +93,7 @@ export default function DateTimeWidget<
   const initialDate = useMemo(() => readDateOnly(localValue) ?? readInstant(localValue), [localValue]);
   const {
     isOpen,
+    popupId,
     month,
     displayedDate,
     containerRef,
@@ -165,6 +166,7 @@ export default function DateTimeWidget<
           placeholder={placeholder}
           formattedValue={formattedValue}
           isOpen={isOpen}
+          popupId={popupId}
           disabled={disabled}
           readonly={readonly}
           triggerRef={triggerRef}
@@ -180,19 +182,25 @@ export default function DateTimeWidget<
             className='absolute z-[100] mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
             onClick={handleContainerClick}
           >
-            <MemoizedDateTimePickerPopup
-              id={`${id}-picker`}
-              selectedDate={displayedDate}
-              month={month}
-              timeLabel={registry.translateString(TranslatableString.TimeLabel)}
-              onMonthChange={handleMonthChange}
-              onSelect={handleSelect}
-              onTimeChange={handleTimeChange}
-            />
-            <div className='p-3 flex justify-end border-t border-base-300'>
-              <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
-                {registry.translateString(TranslatableString.DoneLabel)}
-              </button>
+            <div
+              id={popupId}
+              role='dialog'
+              aria-label={label || registry.translateString(TranslatableString.AriaDateLabel)}
+            >
+              <MemoizedDateTimePickerPopup
+                id={`${id}-picker`}
+                selectedDate={displayedDate}
+                month={month}
+                timeLabel={registry.translateString(TranslatableString.TimeLabel)}
+                onMonthChange={handleMonthChange}
+                onSelect={handleSelect}
+                onTimeChange={handleTimeChange}
+              />
+              <div className='p-3 flex justify-end border-t border-base-300'>
+                <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
+                  {registry.translateString(TranslatableString.DoneLabel)}
+                </button>
+              </div>
             </div>
           </div>
         )}

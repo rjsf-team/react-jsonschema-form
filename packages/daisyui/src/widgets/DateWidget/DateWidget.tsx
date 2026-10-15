@@ -95,6 +95,7 @@ export default function DateWidget<
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {
     isOpen,
+    popupId,
     month,
     displayedDate,
     containerRef,
@@ -183,6 +184,7 @@ export default function DateWidget<
           placeholder={placeholder}
           formattedValue={formattedValue}
           isOpen={isOpen}
+          popupId={popupId}
           disabled={disabled}
           readonly={readonly}
           triggerRef={triggerRef}
@@ -202,18 +204,24 @@ export default function DateWidget<
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
-              <DatePickerCalendar
-                selectedDate={displayedDate}
-                month={month}
-                onMonthChange={handleMonthChange}
-                onSelect={handleSelect}
-              />
-            </div>
-            <div className='p-3 flex justify-end border-t border-base-300'>
-              <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
-                {registry.translateString(TranslatableString.DoneLabel)}
-              </button>
+            <div
+              id={popupId}
+              role='dialog'
+              aria-label={label || registry.translateString(TranslatableString.AriaDateLabel)}
+            >
+              <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
+                <DatePickerCalendar
+                  selectedDate={displayedDate}
+                  month={month}
+                  onMonthChange={handleMonthChange}
+                  onSelect={handleSelect}
+                />
+              </div>
+              <div className='p-3 flex justify-end border-t border-base-300'>
+                <button type='button' className='btn btn-sm btn-primary' onClick={handleDone}>
+                  {registry.translateString(TranslatableString.DoneLabel)}
+                </button>
+              </div>
             </div>
           </div>
         )}

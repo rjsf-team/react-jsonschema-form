@@ -1,5 +1,5 @@
 import type { FocusEvent } from 'react';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type {
   EnumOptionsType,
   FormContextType,
@@ -20,13 +20,12 @@ import {
   isEnumOptionsGroup,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
-  triggerValueId,
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { getTriggerDescribedBy } from '../../utils.ts';
+import { hasLabelToReference } from '../../utils.ts';
 
 function getDisplayValue(val: unknown) {
   if (val === undefined || val === null) {
@@ -126,11 +125,14 @@ export default function SelectWidget<
     onBlur,
   });
 
+  // The dropdown opens while focus is inside it, so its trigger is expanded exactly then
+  const [expanded, setExpanded] = useState(false);
   // Focus moves between the button and the options while the dropdown is in use, so only entering or leaving the
   // dropdown as a whole counts as focusing or blurring the widget, which reports the current selection
   const handleBlur = useCallback(
     ({ currentTarget, relatedTarget }: FocusEvent<HTMLDivElement>) => {
       if (!currentTarget.contains(relatedTarget)) {
+        setExpanded(false);
         reportBlur();
       }
     },
@@ -140,6 +142,7 @@ export default function SelectWidget<
   const handleFocus = useCallback(
     ({ currentTarget, relatedTarget }: FocusEvent<HTMLDivElement>) => {
       if (!currentTarget.contains(relatedTarget)) {
+        setExpanded(true);
         reportFocus();
       }
     },
@@ -151,6 +154,14 @@ export default function SelectWidget<
   const selectedLabels = selectedIndexes.map((index) => optionsList[Number(index)].label);
   const hasValue = selectedLabels.length > 0;
   const ariaProps = widgetAriaProps(props);
+  const listboxId = `${id}__listbox`;
+  // A combobox takes no name from its contents, which are its value, so with no label, `aria-label` or plan naming it,
+  // it is named by the field's label, as the label drawn for it would, or, for a field with no title, such as an array
+  // item or an untitled option selector, by the translated prompt, as `DatePickerTrigger` is
+  const named =
+    !!ariaProps['aria-label'] ||
+    !!ariaProps['aria-labelledby'] ||
+    hasLabelToReference({ label, name, hideLabel, presentation });
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const isSelected = selectedIndexes.includes(String(option.index));
@@ -202,35 +213,34 @@ export default function SelectWidget<
           className={`btn btn-outline w-full text-left flex justify-between items-center ${
             disabled || readonly ? 'btn-disabled' : ''
           }`}
-          /* The label, `aria-label` or plan's `aria-labelledby` naming this button replaces its contents as its name, so
-             the option it displays is announced as its description instead — the same split a native control makes
-             between its name and its value, and the same one `DatePickerTrigger` makes, through the predicate both
-             share. The plan points an option selector at its field's label, whose `for` names the field's own control */
-          aria-label={ariaProps['aria-label']}
+          /* A combobox, as a native select is, so it can be `aria-invalid` while its errors show, which a button can't,
+             and announces the option it displays as its value. The plan points an option selector at its field's
+             label, whose `for` names the field's own control */
+          role='combobox'
+          aria-haspopup='listbox'
+          aria-expanded={expanded}
+          aria-controls={listboxId}
+          aria-label={
+            ariaProps['aria-label'] ??
+            (named ? undefined : label || registry.translateString(TranslatableString.SelectPlaceholder))
+          }
           aria-labelledby={ariaProps['aria-labelledby']}
-          aria-describedby={getTriggerDescribedBy({
-            id,
-            label,
-            name,
-            hideLabel,
-            presentation,
-            hasValue,
-            named: !!ariaProps['aria-label'] || !!ariaProps['aria-labelledby'],
-            describedBy: ariaProps['aria-describedby'] ?? '',
-          })}
+          aria-describedby={ariaProps['aria-describedby']}
+          aria-invalid={ariaProps['aria-invalid']}
         >
-          <span id={triggerValueId(id)} className='truncate'>
+          <span className='truncate'>
             {hasValue
               ? selectedLabels.join(', ')
               : placeholder || label || registry.translateString(TranslatableString.SelectPlaceholder)}
           </span>
-          {/* Decoration, and hidden from the name the button's own contents give it where no label points at one —
-              a root field, a `oneOf` option selector — which would otherwise end in the glyph's own spoken name */}
+          {/* Decoration, and hidden from the value the combobox's contents give it, which would otherwise end in the
+              glyph's own spoken name */}
           <span aria-hidden className='ml-2'>
             ▼
           </span>
         </button>
         <ul
+          id={listboxId}
           // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
           role='listbox'
           className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'

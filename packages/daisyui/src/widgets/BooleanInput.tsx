@@ -2,7 +2,7 @@ import type { ChangeEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  getControlDescribedBy,
+  getControlAttributes,
   getFieldTypeForWidget,
   getTemplates,
   getUiOptions,
@@ -59,14 +59,17 @@ export default function BooleanInput<
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   const description = getWidgetDescription<T, S, F>(props);
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
-  // A checkbox already answers a boolean whose schema accepts `false`, so a required one of those is marked no more
-  // than a field the user has already filled in. That is any field `BooleanField` renders, which seeds it with that
-  // `false`, including a `type` list whose widget it renders. On any other field an unchecked box answers nothing, and
-  // this widget's own label is the only one rendered, so the marker has nowhere else to come from. `SchemaField` picks
-  // the field by the field's own `ui:widget` alone, so the `ui:globalOptions` one is left out here too
+  // The plan's marker, which `@rjsf/core` works out the same way. Without a plan, a checkbox already answers a boolean
+  // whose schema accepts `false`, so a required one of those is marked no more than a field the user has already filled
+  // in. That is any field `BooleanField` renders, which seeds it with that `false`, including a `type` list whose widget
+  // it renders. On any other field an unchecked box answers nothing, and this widget's own label is the only one
+  // rendered, so the marker has nowhere else to come from. `SchemaField` picks the field by the field's own `ui:widget`
+  // alone, so the `ui:globalOptions` one is left out here too
   const { widget } = getUiOptions<T, S, F>(uiSchema);
   const isBooleanField = getFieldTypeForWidget<S>(schema, widget) === 'boolean';
-  const marksRequired = required && (trueValueRequired || !isBooleanField);
+  const marksRequired = presentation
+    ? presentation.label.requiredMarker
+    : required && (trueValueRequired || !isBooleanField);
 
   /** Handle change events
    *
@@ -111,7 +114,7 @@ export default function BooleanInput<
       onFocus={handleFocus}
       onBlur={handleBlur}
       className={inputClassName}
-      aria-describedby={getControlDescribedBy<T, S, F>({ id, presentation })}
+      {...getControlAttributes<T, S, F>({ id, presentation })}
     />
   );
 

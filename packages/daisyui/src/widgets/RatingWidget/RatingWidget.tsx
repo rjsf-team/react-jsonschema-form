@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { widgetDrawsLabel } from '@rjsf/utils';
 
-import { getGroupProps } from '../../utils.ts';
+import { getGroupAndOptionProps } from '../../utils.ts';
 
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
  *
@@ -100,12 +100,18 @@ export default function RatingWidget<
     return `bg-${colors[colorIdx]}-400`;
   };
 
+  const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
+    id,
+    label,
+    name,
+    hideLabel,
+    presentation,
+    role: 'radiogroup',
+  });
+
   return (
     <div className='form-control w-full'>
-      <div
-        className={`rating gap-1 ${sizeClass}`}
-        {...getGroupProps({ id, label, name, hideLabel, presentation, role: 'radiogroup' })}
-      >
+      <div className={`rating gap-1 ${sizeClass}`} {...groupProps}>
         {[...Array(numStars)].map((_, index) => {
           const starValue = min + index;
           return (
@@ -124,6 +130,7 @@ export default function RatingWidget<
               required={required}
               autoFocus={autofocus && index === 0}
               aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+              {...optionAttributes}
             />
           );
         })}

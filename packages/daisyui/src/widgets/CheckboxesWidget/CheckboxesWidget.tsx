@@ -12,7 +12,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { getGroupProps, getOptionClassNames } from '../../utils.ts';
+import { getGroupAndOptionProps, getOptionClassNames } from '../../utils.ts';
 
 /** The `CheckboxesWidget` component renders a set of checkboxes for multiple choice selection
  * with DaisyUI styling.
@@ -62,13 +62,19 @@ export default function CheckboxesWidget<
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
+  const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
+    id,
+    label,
+    name,
+    hideLabel,
+    presentation,
+    role: 'group',
+  });
+
   return (
     <div className='form-control'>
       {/* Use a vertical layout with proper spacing */}
-      <div
-        className='flex flex-col gap-2 mt-1'
-        {...getGroupProps({ id, label, name, hideLabel, presentation, role: 'group' })}
-      >
+      <div className='flex flex-col gap-2 mt-1' {...groupProps}>
         {enumOptions?.map((option, index) => {
           const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
           const classNames = getOptionClassNames(optionDisabled);
@@ -90,6 +96,7 @@ export default function CheckboxesWidget<
                 onChange={handleChange}
                 onFocus={focusHandlers[index]}
                 onBlur={blurHandlers[index]}
+                {...optionAttributes}
               />
               <span className={classNames.text}>{option.label}</span>
             </label>
