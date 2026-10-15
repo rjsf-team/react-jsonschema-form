@@ -636,6 +636,21 @@ Return a consistent `id` for the expand button of a cyclic schema's expand contr
 
 - string: The consistent id for the expand button from the given `id`
 
+### expandRefCycle&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the expansion of a field `retrieveSchema()` collapsed as a recursive `$ref`, flagging it with `RJSF_REF_CYCLE_KEY`: the schema to retrieve the field from, one level further, with its `$ref` path and the guard its children are checked against restarted at it, so its children collapse again at their next recurrence.
+`CyclicSchemaField` expands a field the user expanded with it; a custom field rendering collapsed fields does the same.
+A schema `retrieveSchema()` did not hand out is returned without the flag.
+
+#### Parameters
+
+- schema: S - The collapsed field's schema, as `retrieveSchema()` handed it out
+- rootSchema: S - The root schema it was handed out for
+
+#### Returns
+
+- S: The schema to retrieve the expanded field from
+
 ### fieldLabelId()
 
 Return a consistent `id` for the label a theme's `FieldTemplate` renders above a field's control.
@@ -780,16 +795,13 @@ The non-`null` type comes first, as it does for a nullable type: a value of it i
 An `anyOf`/`oneOf` of options that agree on a type has that type whichever option is chosen, each option read by this same function so that an option's own typeless `enum` speaks for it too.
 Options that disagree, or that name no type between them, say nothing here: choosing one is what would settle it, and a type one of them names alone would render a field for that type beside the options.
 
-A schema that says nothing about the type itself is read through the subschemas merged into it — the `allOf` entries it is composed of and the `$ref` it is spelled as, given a `rootSchema` to look the definition up in — since composition is how a schema usually names the object or the enum it is.
-The options are no exception: one of them naming a type is the option's answer, where a merged subschema's is the whole schema's, so a subschema whose options say nothing is still read through the `allOf` and the `$ref` beside them.
-The first of those to name a type answers, the merge holding the value to every entry at once.
-They are looked up rather than the schema resolved: the type is all that is wanted here, where resolving every option of every additional property would cost each render the merges `MultiSchemaField` already pays for the one option on screen.
-A reference followed once on a walk is not followed again, since a recursive option refers back to itself without end, and one naming no definition says nothing, as the option holding it does until it is resolved.
+A schema whose options say nothing is read through its `allOf` entries, the first of them to name a type answering for the merge.
+The schema is read as it stands: a `$ref` is not followed.
+`retrieveSchema()` with `resolveAnyOfOrOneOfRefs` resolves a subschema and its options, which is how the form reads a key's subschema before asking this.
 
 #### Parameters
 
 - subSchema: S - The schema describing the additional property, from `additionalProperties`, a matching pattern or `unevaluatedProperties`
-- [rootSchema]: S - The root schema a `$ref` names a definition of, when there is one to look it up in
 
 #### Returns
 
@@ -1150,6 +1162,7 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 
 Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
 An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
+That field also stubs the extra keys of the data, for the parent and the selected option together (see [`retrieveSchema()`](#retrieveschema)), so the option is rendered without its own `additionalProperties`, `patternProperties` and `unevaluatedProperties`.
 Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
 It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
 The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
@@ -2821,9 +2834,13 @@ Returns the superset of `formData` that includes the given set updated to includ
 ### getClosestMatchingOption&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Determines which of the given `options` provided most closely matches the `formData`.
-Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
+An option whose discriminator property's `const` or `enum` holds the data's value wins outright; otherwise the one option the data matches is returned when exactly one does.
+Otherwise the options the data matches, or all of them when it matches none, are the candidates, and the one scoring best is returned.
+A tie goes to the `selectedOption` when it is a candidate and to the first candidate otherwise, so an option the data does not match is never returned while another matches it.
 
-The closest match is determined using the number of matching properties, and more heavily favors options with matching readOnly, default, or const values.
+The score is the number of matching properties, more heavily favoring options with matching default or const values.
+A property holding an `anyOf`/`oneOf` of its own scores what the option picked among those scores, plus one where the data matches it.
+The pick is remembered per option list and data object, which the form replaces rather than mutates, so a recursion through option lists matches each level once; data mutated in place after a call can be answered as it was before.
 
 #### Parameters
 
@@ -2836,7 +2853,7 @@ The closest match is determined using the number of matching properties, and mor
 
 #### Returns
 
-- number: The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+- number: The index of the option that is the closest match to the `formData`, or the `selectedOption` when there are no options
 
 ### getDisplayLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
@@ -2963,7 +2980,15 @@ When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey(
 
 Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies` and the patterns its properties match merged in for the `rawFormData`, and the additional properties of that data stubbed among its `properties`.
 The schema is resolved one level at a time: a `$ref` under `properties`, `items` or an `anyOf`/`oneOf` option is handed out as it stands, for the caller to retrieve when it renders that subschema.
-Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is: a recursive `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`, retrieving a copy with that flag set to `false` expands it by one level, and retrieving a schema `retrieveSchema()` returned gives the same schema back.
+Every subschema handed out carries where it came from, so retrieving it resolves it as the field it is: a recursive `$ref` under `properties` is handed out flagged with `RJSF_REF_CYCLE_KEY`, [`expandRefCycle()`](#expandrefcycle) expands it by one level, and retrieving a schema `retrieveSchema()` returned gives the same schema back.
+A copy carrying `RJSF_REF_CYCLE_KEY: false` is retrieved like any other copy of the field it was made from.
+
+With a `selectedOption`, the extra keys of the data are stubbed once, for the field and the option selected among the options of the keyword `getXxxOfKey()` reads together.
+A key the option declares is left to the option, which renders it.
+The field takes the option's extra-key keywords beside its own: `additionalProperties` and `unevaluatedProperties` become the `allOf` of the two, one side's where the other declares none or allows any key, and `false` where either is, and the option's `patternProperties` join the field's, a pattern both declare becoming the `allOf` of its two subschemas.
+Every other key is stubbed as those keywords describe it.
+The options themselves are handed out without stubs.
+Without a `selectedOption`, the extra keys are stubbed for the field alone, a key an option declares included.
 
 #### Parameters
 
@@ -2972,6 +2997,7 @@ Every subschema handed out carries where it came from, so retrieving it resolves
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
 - [resolveAnyOfOrOneOfRefs=false]: boolean - Whether to resolve the `anyOf`/`oneOf` options too, each as `retrieveSchema()` resolves it
+- [selectedOption]: number | undefined - The index of the `anyOf`/`oneOf` option selected for the field, whose extra keys are then stubbed with it
 
 #### Returns
 

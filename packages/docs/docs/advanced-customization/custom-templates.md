@@ -486,6 +486,7 @@ The following props are passed to the `BaseInputTemplate`:
 The `CyclicSchemaExpandTemplate` is the template rendered by `CyclicSchemaField` when a circular `$ref` cycle is detected in the schema.
 RJSF automatically detects when a `$ref` would recurse indefinitely (e.g. a schema whose property references its own root) and stops rendering at the cycle boundary.
 At that point `CyclicSchemaField` renders this template, which shows a warning message and an expand button that the user can click to render one additional level of the recursive structure.
+Which fields are expanded is the form's state, by field path, so an expansion survives the field unmounting and mounting again and follows the array moves the form makes; `CyclicSchemaField` renders an expanded field from [`expandRefCycle()`](../api-reference/utility-functions.md#expandrefcycle).
 
 Each theme provides its own implementation.
 You can replace the template globally via the `templates` prop on `Form`, or per-field via `ui:CyclicSchemaExpandTemplate` in the `uiSchema`.
