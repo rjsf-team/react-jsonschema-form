@@ -2,7 +2,7 @@ import { MantineProvider } from '@mantine/core';
 import type * as MantineDates from '@mantine/dates';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps } from '@rjsf/utils';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 // `DateInput`'s `onChange` passes a plain `YYYY-MM-DD` string (Mantine's `DateStringValue`) for the primary
@@ -61,5 +61,24 @@ describe('DateTimeWidget calendar-click onChange', () => {
     await user.click(getByText('pick date'));
 
     expect(onChange).toHaveBeenCalledWith(expect.stringMatching(/^2024-01-1[45]T\d{2}:\d{2}:00(?:\.\d{3})?Z$/));
+  });
+
+  test('keeps the time of the stored value when the calendar passes a date string', async () => {
+    const onChange = vi.fn();
+    render(
+      <MantineProvider>
+        <DateTimeWidget
+          {...makeProps({
+            onChange,
+            value: '2024-01-01T10:30:15',
+            schema: { type: 'string', format: 'iso-date-time' },
+          })}
+        />
+      </MantineProvider>,
+    );
+
+    await user.click(screen.getByText('pick date'));
+
+    expect(onChange).toHaveBeenCalledWith('2024-01-15T10:30:15');
   });
 });

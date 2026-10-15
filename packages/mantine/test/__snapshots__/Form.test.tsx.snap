@@ -27,10 +27,8 @@ exports[`format iso-date-time 1`] = `
         data-size="sm"
       >
         <div
-          class="m_6c018570 mantine-Input-wrapper mantine-DateInput-wrapper"
-          data-size="sm"
-          data-variant="default"
-          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+          class="m_4081bf90 mantine-Group-root"
+          style="--group-gap: var(--mantine-spacing-xs); --group-align: flex-start; --group-justify: flex-start; --group-wrap: nowrap;"
         >
           <input
             autocomplete="off"
@@ -8211,10 +8209,8 @@ exports[`single fields > format datetime 1`] = `
         data-size="sm"
       >
         <div
-          class="m_6c018570 mantine-Input-wrapper mantine-DateInput-wrapper"
-          data-size="sm"
-          data-variant="default"
-          style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
+          class="m_4081bf90 mantine-Group-root"
+          style="--group-gap: var(--mantine-spacing-xs); --group-align: flex-start; --group-justify: flex-start; --group-wrap: nowrap;"
         >
           <input
             autocomplete="off"
@@ -15740,7 +15736,7 @@ exports[`single fields > select field 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_5e_"
+                      id="_r_5n_"
                       role="option"
                       value="0"
                     >
@@ -15752,7 +15748,7 @@ exports[`single fields > select field 1`] = `
                       aria-selected="false"
                       class="m_92253aa5 mantine-Select-option m_390b5f4"
                       data-combobox-option="true"
-                      id="_r_5g_"
+                      id="_r_5p_"
                       role="option"
                       value="1"
                     >
