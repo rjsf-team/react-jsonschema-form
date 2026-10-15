@@ -129,9 +129,9 @@ describe('the recursion rule', () => {
       );
       expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: false }, 'render').chain).toBeDefined();
     });
-    it('restarts the chain of a child the data drives in render, and the ref path of a key the data holds', () => {
+    it('restarts the chain and the ref path of a child the data drives in render', () => {
       expect(childField(graph, parent, { seeds, edge: 'item', inData: true }, 'render')).toEqual({
-        seeds,
+        seeds: [{ node: child, refPath: [] }],
         dataDriven: true,
       });
       expect(childField(graph, parent, { seeds, edge: 'patternKey', inData: true }, 'render')).toEqual({

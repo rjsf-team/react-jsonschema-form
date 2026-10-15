@@ -1406,6 +1406,43 @@ describe('SchemaField', () => {
         expect(node.querySelectorAll('input')).toHaveLength(16);
         expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(33);
       });
+
+      describe('a tree whose array sits in a definition each row enters again', () => {
+        const tree: RJSFSchema = {
+          type: 'object',
+          properties: { v: { type: 'string' }, kids: { $ref: '#/definitions/list' } },
+        };
+        const definitions = { node: tree, list: { type: 'array', items: ref } } satisfies Record<string, RJSFSchema>;
+        const data = { v: 'a', kids: [{ v: 'b', kids: [{ v: 'c', kids: [{ v: 'd' }] }] }] };
+
+        it.each<[string, RJSFSchema]>([
+          ['under a root $ref', { definitions, $ref: '#/definitions/node' }],
+          ['under a root that is not a $ref', { definitions, ...tree }],
+        ])('renders every row the data has, %s', (_, schema) => {
+          const { node } = createFormComponent({ schema, formData: data });
+
+          expect(node.querySelector('#root_kids_0_kids_0_kids_0_v')).toHaveValue('d');
+          expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
+        });
+
+        it('offers an added row its own Add button rather than an Expand Cycle button', async () => {
+          const { node } = createFormComponent({ schema: { definitions, $ref: '#/definitions/node' } });
+
+          const button = (id: string) => {
+            const found = node.querySelector(`#${id}`);
+            if (!(found instanceof HTMLButtonElement)) {
+              throw new Error(`no button #${id}`);
+            }
+            return found;
+          };
+          await user.click(button('root_kids__add'));
+          await user.click(button('root_kids_0_kids__add'));
+
+          expect(node.querySelector('#root_kids_0_kids_0_v')).toBeInTheDocument();
+          expect(node.querySelector('#root_kids_0_kids_0_kids__add')).toBeInTheDocument();
+          expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
+        });
+      });
     });
   });
 });

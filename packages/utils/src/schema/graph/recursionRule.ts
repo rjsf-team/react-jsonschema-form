@@ -118,7 +118,7 @@ export function collapseReason<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Returns `seeds` with their ref paths restarted, so that entering a seed's own `$ref` gives `[target]`: for the
- * expansion of a collapsed field (I2), for the option a field selects, and in render for a key the data holds
+ * expansion of a collapsed field (I2), for the option a field selects, and in render for a row or key the data holds
  *
  * @param seeds - The seeds to restart
  * @returns - The restarted seeds
@@ -145,10 +145,10 @@ export interface ChildField {
   readonly dataDriven: boolean;
 }
 
-/** Returns a child of the field `parent` plans: in render, a child the data drives restarts the guard chain, and a key
- * the data holds also restarts its ref path, as `stubExistingAdditionalProperties()` gives each such key a fresh
- * `$ref`; array rows keep their ref path. Every other child, and every child in the defaults view, extends the chain
- * with the parent's set.
+/** Returns a child of the field `parent` plans: in render, a child the data drives, an array row or a key the data
+ * holds, restarts both the guard chain and its ref path. The data bounds those, and a row keeping its ref path would
+ * collapse a property that re-enters a list or wrapper definition the row's own array came through, hiding the rows the
+ * data has there. Every other child, and every child in the defaults view, extends the chain with the parent's set.
  *
  * @param graph - The graph the plans are of
  * @param parent - The parent's plan and chain
@@ -166,8 +166,7 @@ export function childField<S extends StrictRJSFSchema = RJSFSchema>(
   if (!dataDriven) {
     return { seeds: child.seeds, chain: extendChain(graph, parent.chain, parent.plan.setKey), dataDriven };
   }
-  const keyed = child.edge === 'additionalKey' || child.edge === 'patternKey';
-  return { seeds: keyed ? restartSeeds(child.seeds) : child.seeds, dataDriven };
+  return { seeds: restartSeeds(child.seeds), dataDriven };
 }
 
 /** What `settleField()` decided: the field's plan with the seeds and chain it was planned from, or the collapse */

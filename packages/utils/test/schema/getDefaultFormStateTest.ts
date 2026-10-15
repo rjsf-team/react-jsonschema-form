@@ -1428,6 +1428,31 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        describe('a recursive schema whose anyOf option refers back to it', () => {
+          const nodeWith = (c: RJSFSchema): RJSFSchema => ({
+            definitions: {
+              node: { type: 'object', properties: { name: { type: 'string', default: 'n' }, c } },
+            },
+            $ref: '#/definitions/node',
+          });
+          const ref: RJSFSchema = { $ref: '#/definitions/node' };
+          const formData = { c: { c: { c: { c: {} } } } };
+
+          test.each<[string, RJSFSchema]>([
+            ['as an option', { anyOf: [ref, { type: 'null' }] }],
+            ['as an option of an object', { type: 'object', anyOf: [ref, { properties: { z: { type: 'string' } } }] }],
+            ['as a property', ref],
+          ])('getDefaultFormState stops where the schema does, whatever the data holds below, %s', (_, c) => {
+            const schema = nodeWith(c);
+            expect(getDefaultFormState({ validator: testValidator }, { schema, formData, rootSchema: schema })).toEqual(
+              {
+                name: 'n',
+                c: { name: 'n', c: { c: { c: {} } } },
+              },
+            );
+          });
+        });
+
         describe('a schema resolved from a $ref whose then branch is a $ref to a recursive definition', () => {
           const kid: RJSFSchema = {
             type: 'object',

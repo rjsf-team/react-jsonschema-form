@@ -638,20 +638,35 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
       ? planWith(seeds, true, true, cutRecursion)
       : withoutConditions;
   };
+  return ruledView(context, field, planFor, NO_OPTIONS, data, depData, guards);
+}
+
+/** Plans `field` with `planFor` and applies the recursion rule to the plan. A collapsed field that is not within an
+ * expansion yet is expanded once (I2), restarting its seeds and its chain.
+ */
+function ruledView<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  field: DefaultsField<S>,
+  planFor: (seeds: readonly Seed[], cutRecursion?: boolean) => PlannedField<S>,
+  options: OptionState,
+  data: unknown,
+  depData: unknown,
+  guards: readonly GuardFrame[] = [],
+): DefaultsView<S> {
   const planned = planFor(field.seeds);
   recordGuardCheck(planned.plan.setKey, guards);
   const position: FieldPosition = { edge: field.edge, view: 'defaults', chain: field.chain };
-  if (collapseReason(graph, planned.plan, position) === undefined) {
-    return planView(context, field, planned, NO_OPTIONS, data, depData);
+  if (collapseReason(field.graph, planned.plan, position) === undefined) {
+    return planView(context, field, planned, options, data, depData);
   }
   if (field.expanded) {
     // Only the recursive edges are cut: the field keeps its own keywords, those beside its `$ref` included, and every
     // subschema it merges that does not lead back up its ref path
-    return { ...planView(context, field, planFor(field.seeds, true), NO_OPTIONS, data, depData), collapsed: true };
+    return { ...planView(context, field, planFor(field.seeds, true), options, data, depData), collapsed: true };
   }
   const seeds = restartSeeds(field.seeds);
   const expanded: DefaultsField<S> = { ...field, seeds, chain: undefined, expanded: true };
-  return planView(context, expanded, planFor(seeds), NO_OPTIONS, data, depData);
+  return planView(context, expanded, planFor(seeds), options, data, depData);
 }
 
 /** Returns the child of `view` that `seeds` seed, reached through `edge` */
@@ -1044,21 +1059,28 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const optionNode = choice.options[index];
   const selections = new Map(view.options.selections).set(choice.provider, index);
-  const plan = buildPlan<S, F>({
-    context,
-    graph,
-    seeds: field.seeds,
-    data: view.data,
-    depData: view.depData,
-    policy: policyFor(context, view.allOf, view.conditions, selections),
+  const planWithOption = (seeds: readonly Seed[], cutRecursion = false): PlannedField<S> => ({
+    plan: buildPlan<S, F>({
+      context,
+      graph,
+      seeds,
+      data: view.data,
+      depData: view.depData,
+      policy: policyFor(context, view.allOf, view.conditions, selections, cutRecursion),
+    }),
+    allOf: view.allOf,
+    conditions: view.conditions,
   });
-  const merged = planView(
+  // The rule applies to the field with its option merged, since a recursion through an option enters its `$ref` only
+  // there: the option collapses where the same recursion written as a property does, whatever the data holds below it
+  const merged = ruledView(
     context,
     field,
-    { plan, allOf: view.allOf, conditions: view.conditions },
+    planWithOption,
     { selections, chosen },
     view.data,
     view.depData,
+    props.memo?.guards,
   );
   const optionRaw = graph.node(optionNode);
   const optionChain = refDefaultsOf(graph, optionNode);
@@ -1075,13 +1097,17 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       branchProps,
     );
   }
+  // The option as rendered is planned from where the field's settled plan offers it, and cut where that plan was cut
   const optionAlone = buildPlan<S, F>({
     context,
     graph,
-    seeds: [{ node: optionNode, refPath: choice.refPath }],
+    seeds: merged.choices
+      .filter(({ list }) => list === options)
+      .slice(0, 1)
+      .map(({ refPath }) => ({ node: optionNode, refPath })),
     data: view.data,
     depData: view.depData,
-    policy: policyFor(context, view.allOf, view.conditions, NO_OPTIONS.selections),
+    policy: policyFor(context, view.allOf, view.conditions, NO_OPTIONS.selections, merged.collapsed),
   });
   // An option the field passes nothing on to is rendered as it stands, a `$ref` and all
   const passesNothing =
