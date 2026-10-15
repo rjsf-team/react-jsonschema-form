@@ -226,9 +226,9 @@ export default class CFWorkerValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    // The root is registered under its own `$id`, so a `$ref` made absolute against that `$id` resolves into it as a
-    // local `$ref` that `withIdRefPrefix()` prefixes with it does. An empty `$id` names nothing, so a root without one
-    // is registered under `ROOT_SCHEMA_PREFIX` instead
+    // Registered under its own `$id`, a root is what both its own `$ref`s, which resolve against that `$id`, and the
+    // local `$ref`s `withIdRefPrefix()` prefixes with it resolve into. An empty `$id` names nothing, so a
+    // root without one is registered under `ROOT_SCHEMA_PREFIX` instead
     const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
     const rootWithId =
       rootSchema[ID_KEY] === rootSchemaId
