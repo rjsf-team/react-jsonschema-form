@@ -1,3 +1,4 @@
+import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -427,21 +428,20 @@ describe('DateWidget', () => {
     test('is named by the label once when no date is selected', () => {
       render(<Form schema={dateSchema} validator={validator} />);
 
-      expect(screen.getByRole('button', { name: 'Birthday' })).toHaveAccessibleName('Birthday');
+      expect(screen.getByRole('combobox', { name: 'Birthday' })).toHaveAccessibleName('Birthday');
     });
 
-    // The label names the button through `htmlFor`, which replaces the button's own contents, so the day it displays
-    // would otherwise never be announced
-    test('describes itself with the selected date, which its name replaces', () => {
+    // The label names the combobox through `htmlFor`, and the day it displays is its value
+    test('holds the selected date as its value', () => {
       render(<Form schema={dateSchema} formData={{ birthday: '2020-05-03' }} validator={validator} />);
 
-      const trigger = screen.getByRole('button', { name: 'Birthday' });
-      expect(trigger).toHaveAccessibleName('Birthday');
-      expect(trigger).toHaveAccessibleDescription('May 3, 2020');
+      const trigger = screen.getByRole('combobox', { name: 'Birthday' });
+      expect(trigger).toHaveTextContent('May 3, 2020');
+      expect(trigger).toHaveAccessibleDescription('');
     });
 
     // Naming the trigger by reference instead would point at an id only this theme's `FieldTemplate` renders, leaving
-    // the button named by its own contents — the date alone — under any other one
+    // it unnamed under any other one
     test('is named by the label of a replacement FieldTemplate', () => {
       render(
         <Form
@@ -459,18 +459,18 @@ describe('DateWidget', () => {
         />,
       );
 
-      expect(screen.getByRole('button', { name: 'Birthday' })).toHaveAccessibleDescription('May 3, 2020');
+      expect(screen.getByRole('combobox', { name: 'Birthday' })).toHaveTextContent('May 3, 2020');
     });
 
-    // There is no label element to point at, so the trigger's contents are its whole name. Rendering nothing would
-    // leave a control that is both blank and unnamed
-    test('falls back to the label for its text, and so its name, where the label is hidden', () => {
+    // There is no label element to point at, so the field's label names it, and is its text, which would otherwise be
+    // blank
+    test('falls back to the label for its text and its name where the label is hidden', () => {
       render(
         <Form schema={dateSchema} uiSchema={{ birthday: { 'ui:options': { label: false } } }} validator={validator} />,
       );
 
       expect(screen.queryByText('Birthday', { selector: 'label span' })).not.toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Birthday' })).toHaveTextContent('Birthday');
+      expect(screen.getByRole('combobox', { name: 'Birthday' })).toHaveTextContent('Birthday');
     });
 
     // `<label for>` only associates with a labelable element, so a trigger that is not a real control is named by
@@ -504,21 +504,42 @@ describe('DateWidget', () => {
       expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
     });
 
-    // With no label element the trigger's contents are its own name, so referencing them as well would have the date
-    // announced twice — once as the name and once as the description
-    test('does not describe itself with its own name where there is no label', () => {
+    // With no label, and no title to name it by, the translated prompt names it, and the date is its value
+    test('is named by the translated prompt where nothing else names it', () => {
       const { container } = render(<Form schema={schema} formData='2020-05-03' validator={validator} />);
 
       const trigger = container.querySelector('button[aria-haspopup]')!;
-      expect(trigger).toHaveAccessibleName('May 3, 2020');
+      expect(trigger).toHaveAccessibleName(englishStringTranslator(TranslatableString.AriaDateLabel));
+      expect(trigger).toHaveTextContent('May 3, 2020');
       // Nothing else describes it either, so it carries no `aria-describedby` at all
       expect(trigger).not.toHaveAttribute('aria-describedby');
+    });
+
+    test('is marked invalid and described by its errors while they show', () => {
+      render(<Form schema={dateSchema} validator={validator} extraErrors={{ birthday: { __errors: ['Too late'] } }} />);
+
+      const trigger = screen.getByRole('combobox', { name: 'Birthday' });
+      expect(trigger).toHaveAttribute('aria-invalid', 'true');
+      expect(trigger).toHaveAccessibleDescription('Too late');
+    });
+
+    test('controls the dialog it opens, which is named by its field', async () => {
+      render(<Form schema={dateSchema} validator={validator} />);
+
+      const trigger = screen.getByRole('combobox', { name: 'Birthday' });
+      expect(trigger).toHaveAttribute('aria-haspopup', 'dialog');
+      expect(trigger).not.toHaveAttribute('aria-controls');
+
+      await user.click(trigger);
+
+      expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      expect(trigger).toHaveAttribute('aria-controls', screen.getByRole('dialog', { name: 'Birthday' }).id);
     });
 
     test('shows the label rather than the schema title, which ui:title overrides', () => {
       render(<Form schema={dateSchema} uiSchema={{ birthday: { 'ui:title': 'DOB' } }} validator={validator} />);
 
-      expect(screen.getByRole('button', { name: 'DOB' })).toBeInTheDocument();
+      expect(screen.getByRole('combobox', { name: 'DOB' })).toBeInTheDocument();
     });
   });
 

@@ -294,9 +294,8 @@ describe('DateTimeWidget', () => {
     expect(container.querySelector('button[aria-haspopup]')).not.toHaveTextContent('Apr 17, 2016');
   });
 
-  // A name from outside the element replaces its contents, so the instant on the trigger is only announced where
-  // something points at it
-  test('describes itself with the selected date-time, which its name replaces', () => {
+  // A combobox, whose contents, the instant it holds, are its value rather than its name or description
+  test('holds the selected date-time as its value', () => {
     const { container } = render(
       <DateTimeWidget
         {...makeWidgetMockProps({
@@ -307,7 +306,10 @@ describe('DateTimeWidget', () => {
       />,
     );
 
-    expect(container.querySelector('button[aria-haspopup]')).toHaveAccessibleDescription(/Apr 5, 2016/);
+    const trigger = screen.getByRole('combobox');
+    expect(trigger).toBe(container.querySelector('button[aria-haspopup]'));
+    expect(trigger).toHaveTextContent(/Apr 5, 2016/);
+    expect(trigger).toHaveAccessibleDescription('');
   });
 
   test("translates the Done button and the time input's label", async () => {

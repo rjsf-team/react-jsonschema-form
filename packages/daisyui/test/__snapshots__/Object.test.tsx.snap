@@ -72,7 +72,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                                   class="input input-bordered w-full"
                                   id="root_person_name"
                                   name="root[person][name]"
@@ -140,7 +139,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_street"
                                             name="root[person][address][street]"
@@ -180,7 +178,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_city"
                                             name="root[person][address][city]"
@@ -220,7 +217,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_country"
                                             name="root[person][address][country]"
@@ -303,7 +299,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="input input-bordered w-full"
                         id="root_name"
                         name="root[name]"
@@ -365,7 +360,6 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_customField__error root_customField__description root_customField__help"
                           class="input input-bordered w-full"
                           id="root_customField"
                           name="root[customField]"
@@ -498,7 +492,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="input input-bordered w-full"
                         id="root_name"
                         name="root[name]"
@@ -538,7 +531,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="input input-bordered w-full"
                         id="root_age"
                         inputmode="decimal"
@@ -646,7 +638,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                     class="input input-bordered w-full"
                                     id="root_tags_0"
                                     name="root[tags][0]"
@@ -764,7 +755,6 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                     class="input input-bordered w-full"
                                     id="root_tags_1"
                                     name="root[tags][1]"
@@ -949,7 +939,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                         class="input input-bordered w-full"
                         id="root_firstName"
                         name="root[firstName]"
@@ -989,7 +978,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                         class="input input-bordered w-full"
                         id="root_lastName"
                         name="root[lastName]"
@@ -1029,7 +1017,6 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="input input-bordered w-full"
                         id="root_age"
                         inputmode="decimal"
@@ -1133,7 +1120,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
                                   class="input input-bordered w-full"
                                   id="root_person_name"
                                   name="root.person.name"
@@ -1201,7 +1187,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_street"
                                             name="root.person.address.street"
@@ -1241,7 +1226,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           style="position: relative;"
                                         >
                                           <input
-                                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                             class="input input-bordered w-full"
                                             id="root_person_address_city"
                                             name="root.person.address.city"
@@ -1324,7 +1308,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_name__error root_name__description root_name__help"
                         class="input input-bordered w-full"
                         id="root_name"
                         name="root.name"
@@ -1364,7 +1347,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_count__error root_count__description root_count__help"
                         class="input input-bordered w-full"
                         id="root_count"
                         inputmode="decimal"
@@ -1436,7 +1418,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
                                     class="input input-bordered w-full"
                                     id="root_items_0"
                                     name="root.items.0"
@@ -1554,7 +1535,6 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
                                     class="input input-bordered w-full"
                                     id="root_items_1"
                                     name="root.items.1"
@@ -1739,7 +1719,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                         class="input input-bordered w-full"
                         id="root_firstName"
                         name="root.firstName"
@@ -1779,7 +1758,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
                         class="input input-bordered w-full"
                         id="root_lastName"
                         name="root.lastName"
@@ -1819,7 +1797,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_age__error root_age__description root_age__help"
                         class="input input-bordered w-full"
                         id="root_age"
                         inputmode="decimal"
@@ -1917,7 +1894,6 @@ exports[`object fields > additionalProperties 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -2051,15 +2027,17 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         class="dropdown w-full"
                       >
                         <button
-                          aria-describedby="root_foo-key__value"
+                          aria-controls="root_foo-key__listbox"
+                          aria-expanded="false"
+                          aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
+                          role="combobox"
                           tabindex="0"
                           type="button"
                         >
                           <span
                             class="truncate"
-                            id="root_foo-key__value"
                           >
                             foo
                           </span>
@@ -2072,6 +2050,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                          id="root_foo-key__listbox"
                           role="listbox"
                         >
                           <li
@@ -2144,7 +2123,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          aria-describedby="root_foo__description"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -2492,7 +2471,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
+                          aria-describedby="root_foo__description"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -2657,7 +2636,6 @@ exports[`object fields > additionalProperties, label off 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -2840,7 +2818,6 @@ exports[`object fields > additionalProperties, object type 1`] = `
                                   style="position: relative;"
                                 >
                                   <input
-                                    aria-describedby="root_foo_foo__error root_foo_foo__description root_foo_foo__help"
                                     class="input input-bordered w-full"
                                     id="root_foo_foo"
                                     name="root_foo_foo"
@@ -2979,15 +2956,17 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         class="dropdown w-full"
                       >
                         <button
-                          aria-describedby="root_foo-key__value"
+                          aria-controls="root_foo-key__listbox"
+                          aria-expanded="false"
+                          aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
+                          role="combobox"
                           tabindex="0"
                           type="button"
                         >
                           <span
                             class="truncate"
-                            id="root_foo-key__value"
                           >
                             foo
                           </span>
@@ -3000,6 +2979,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                          id="root_foo-key__listbox"
                           role="listbox"
                         >
                           <li
@@ -3072,7 +3052,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -3206,15 +3185,17 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         class="dropdown w-full"
                       >
                         <button
-                          aria-describedby="root_foo-key__value"
+                          aria-controls="root_foo-key__listbox"
+                          aria-expanded="false"
+                          aria-haspopup="listbox"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
+                          role="combobox"
                           tabindex="0"
                           type="button"
                         >
                           <span
                             class="truncate"
-                            id="root_foo-key__value"
                           >
                             foo
                           </span>
@@ -3227,6 +3208,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         </button>
                         <ul
                           class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                          id="root_foo-key__listbox"
                           role="listbox"
                         >
                           <li
@@ -3299,7 +3281,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -3432,7 +3413,6 @@ exports[`object fields > object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
                         class="input input-bordered w-full"
                         id="root_a"
                         name="root_a"
@@ -3472,7 +3452,6 @@ exports[`object fields > object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
                         class="input input-bordered w-full"
                         id="root_b"
                         inputmode="decimal"
@@ -3570,7 +3549,6 @@ exports[`object fields > show add button and fields if additionalProperties is t
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                           class="input input-bordered w-full"
                           id="root_additionalProperty"
                           name="root_additionalProperty"
@@ -3748,7 +3726,6 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -3904,7 +3881,7 @@ exports[`object fields > with title and description > object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
+                        aria-describedby="root_a__description"
                         class="input input-bordered w-full"
                         id="root_a"
                         name="root_a"
@@ -3954,7 +3931,7 @@ exports[`object fields > with title and description > object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
+                        aria-describedby="root_b__description"
                         class="input input-bordered w-full"
                         id="root_b"
                         inputmode="decimal"
@@ -4085,7 +4062,6 @@ exports[`object fields > with title and description > show add button and fields
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                           class="input input-bordered w-full"
                           id="root_additionalProperty"
                           name="root_additionalProperty"
@@ -4263,7 +4239,6 @@ exports[`object fields > with title and description from both > additionalProper
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -4419,7 +4394,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
+                        aria-describedby="root_a__description"
                         class="input input-bordered w-full"
                         id="root_a"
                         name="root_a"
@@ -4469,7 +4444,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
+                        aria-describedby="root_b__description"
                         class="input input-bordered w-full"
                         id="root_b"
                         inputmode="decimal"
@@ -4600,7 +4575,6 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -4756,7 +4730,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
+                        aria-describedby="root_a__description"
                         class="input input-bordered w-full"
                         id="root_a"
                         name="root_a"
@@ -4806,7 +4780,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
+                        aria-describedby="root_b__description"
                         class="input input-bordered w-full"
                         id="root_b"
                         inputmode="decimal"
@@ -4937,7 +4911,6 @@ exports[`object fields > with title and description from uiSchema > show add but
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                           class="input input-bordered w-full"
                           id="root_additionalProperty"
                           name="root_additionalProperty"
@@ -5071,7 +5044,6 @@ exports[`object fields > with title and description with global label off > addi
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_foo__error root_foo__description root_foo__help"
                           class="input input-bordered w-full"
                           id="root_foo"
                           name="root_foo"
@@ -5193,7 +5165,6 @@ exports[`object fields > with title and description with global label off > obje
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_a__error root_a__description root_a__help"
                         class="input input-bordered w-full"
                         id="root_a"
                         name="root_a"
@@ -5222,7 +5193,6 @@ exports[`object fields > with title and description with global label off > obje
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_b__error root_b__description root_b__help"
                         class="input input-bordered w-full"
                         id="root_b"
                         inputmode="decimal"
@@ -5299,7 +5269,6 @@ exports[`object fields > with title and description with global label off > show
                         style="position: relative;"
                       >
                         <input
-                          aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                           class="input input-bordered w-full"
                           id="root_additionalProperty"
                           name="root_additionalProperty"

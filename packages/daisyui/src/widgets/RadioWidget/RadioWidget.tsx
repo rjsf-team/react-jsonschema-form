@@ -11,7 +11,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { getGroupProps, getOptionClassNames } from '../../utils.ts';
+import { getGroupAndOptionProps, getOptionClassNames } from '../../utils.ts';
 
 /** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
  *
@@ -41,6 +41,7 @@ export default function RadioWidget<
     required,
     disabled,
     readonly,
+    autofocus,
     onChange,
     onFocus,
     onBlur,
@@ -82,13 +83,19 @@ export default function RadioWidget<
     [onChange, enumOptions, optionValueFormat, emptyValue],
   );
 
+  const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
+    id,
+    label,
+    name,
+    hideLabel,
+    presentation,
+    role: 'radiogroup',
+  });
+
   return (
     <div className='form-control'>
       {/* Display the options in a vertical flex layout for better spacing */}
-      <div
-        className='flex flex-col gap-2 mt-1'
-        {...getGroupProps({ id, label, name, hideLabel, presentation, role: 'radiogroup' })}
-      >
+      <div className='flex flex-col gap-2 mt-1' {...groupProps}>
         {enumOptions?.map((option, index) => {
           const optionDisabled = disabled || readonly || enumOptionsIsDisabled(option.value, enumDisabled);
           const classNames = getOptionClassNames(optionDisabled);
@@ -107,10 +114,12 @@ export default function RadioWidget<
                 checked={enumOptionsIsSelected<S>(option.value, value, false)}
                 required={required}
                 disabled={optionDisabled}
+                autoFocus={autofocus && index === 0}
                 data-index={index}
                 onChange={handleChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
+                {...optionAttributes}
               />
               <span className={classNames.text}>{option.label}</span>
             </label>

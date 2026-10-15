@@ -80,7 +80,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                         class="input input-bordered w-full"
                         id="root_person_name_first"
                         name="root_person_name_first"
@@ -122,7 +121,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                         class="input input-bordered w-full"
                         id="root_person_name_middle"
                         name="root_person_name_middle"
@@ -168,7 +166,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                         class="input input-bordered w-full"
                         id="root_person_name_last"
                         name="root_person_name_last"
@@ -220,14 +217,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-expanded="false"
-                        aria-haspopup="true"
+                        aria-haspopup="dialog"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
+                        role="combobox"
                         type="button"
                       >
                         <span
                           class="text-base-content/50"
-                          id="root_person_birth_date__value"
                         >
                           DOB
                         </span>
@@ -289,6 +286,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="0"
                           id="root_person_race-0"
@@ -306,6 +304,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="1"
                           id="root_person_race-1"
@@ -323,6 +322,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="2"
                           id="root_person_race-2"
@@ -340,6 +340,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="3"
                           id="root_person_race-3"
@@ -357,6 +358,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="4"
                           id="root_person_race-4"
@@ -435,7 +437,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_line_1"
                                 name="root_person_address_line_1"
@@ -477,7 +478,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_line_2"
                                 name="root_person_address_line_2"
@@ -523,7 +523,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_city"
                                 name="root_person_address_city"
@@ -573,14 +572,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
+                                  aria-controls="root_person_address_state__listbox"
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
+                                  role="combobox"
                                   tabindex="0"
                                   type="button"
                                 >
                                   <span
                                     class="truncate"
-                                    id="root_person_address_state__value"
                                   >
                                     State
                                   </span>
@@ -593,6 +595,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                                  id="root_person_address_state__listbox"
                                   role="listbox"
                                 >
                                   <li
@@ -1474,7 +1477,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                                   class="input input-bordered w-full"
                                   id="root_person_address_postal_code"
                                   name="root_person_address_postal_code"
@@ -1670,7 +1672,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                         class="input input-bordered w-full"
                         id="root_person_name_first"
                         name="root_person_name_first"
@@ -1712,7 +1713,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                         class="input input-bordered w-full"
                         id="root_person_name_middle"
                         name="root_person_name_middle"
@@ -1758,7 +1758,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                         class="input input-bordered w-full"
                         id="root_person_name_last"
                         name="root_person_name_last"
@@ -1810,14 +1809,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-expanded="false"
-                        aria-haspopup="true"
+                        aria-haspopup="dialog"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
+                        role="combobox"
                         type="button"
                       >
                         <span
                           class="text-base-content/50"
-                          id="root_person_birth_date__value"
                         >
                           DOB
                         </span>
@@ -1879,6 +1878,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="0"
                           id="root_person_race-0"
@@ -1896,6 +1896,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="1"
                           id="root_person_race-1"
@@ -1913,6 +1914,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="2"
                           id="root_person_race-2"
@@ -1930,6 +1932,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="3"
                           id="root_person_race-3"
@@ -1947,6 +1950,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="4"
                           id="root_person_race-4"
@@ -2025,7 +2029,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_line_1"
                                 name="root_person_address_line_1"
@@ -2067,7 +2070,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_line_2"
                                 name="root_person_address_line_2"
@@ -2113,7 +2115,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_city"
                                 name="root_person_address_city"
@@ -2163,14 +2164,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
+                                  aria-controls="root_person_address_state__listbox"
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
+                                  role="combobox"
                                   tabindex="0"
                                   type="button"
                                 >
                                   <span
                                     class="truncate"
-                                    id="root_person_address_state__value"
                                   >
                                     State
                                   </span>
@@ -2183,6 +2187,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                                  id="root_person_address_state__listbox"
                                   role="listbox"
                                 >
                                   <li
@@ -3064,7 +3069,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                                   class="input input-bordered w-full"
                                   id="root_person_address_postal_code"
                                   name="root_person_address_postal_code"
@@ -3260,7 +3264,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                         class="input input-bordered w-full"
                         id="root_person_name_first"
                         name="root_person_name_first"
@@ -3302,7 +3305,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                         class="input input-bordered w-full"
                         id="root_person_name_middle"
                         name="root_person_name_middle"
@@ -3348,7 +3350,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                         class="input input-bordered w-full"
                         id="root_person_name_last"
                         name="root_person_name_last"
@@ -3400,14 +3401,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-expanded="false"
-                        aria-haspopup="true"
+                        aria-haspopup="dialog"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
+                        role="combobox"
                         type="button"
                       >
                         <span
                           class="text-base-content/50"
-                          id="root_person_birth_date__value"
                         >
                           DOB
                         </span>
@@ -3469,6 +3470,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="0"
                           id="root_person_race-0"
@@ -3486,6 +3488,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="1"
                           id="root_person_race-1"
@@ -3503,6 +3506,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="2"
                           id="root_person_race-2"
@@ -3520,6 +3524,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="3"
                           id="root_person_race-3"
@@ -3537,6 +3542,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="4"
                           id="root_person_race-4"
@@ -3615,7 +3621,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_line_1"
                                 name="root_person_address_line_1"
@@ -3657,7 +3662,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_line_2"
                                 name="root_person_address_line_2"
@@ -3703,7 +3707,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_city"
                                 name="root_person_address_city"
@@ -3753,14 +3756,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
+                                  aria-controls="root_person_address_state__listbox"
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
+                                  role="combobox"
                                   tabindex="0"
                                   type="button"
                                 >
                                   <span
                                     class="truncate"
-                                    id="root_person_address_state__value"
                                   >
                                     State
                                   </span>
@@ -3773,6 +3779,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                                  id="root_person_address_state__listbox"
                                   role="listbox"
                                 >
                                   <li
@@ -4654,7 +4661,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                                   class="input input-bordered w-full"
                                   id="root_person_address_postal_code"
                                   name="root_person_address_postal_code"
@@ -4850,7 +4856,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                         class="input input-bordered w-full"
                         id="root_person_name_first"
                         name="root_person_name_first"
@@ -4892,7 +4897,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                         class="input input-bordered w-full"
                         id="root_person_name_middle"
                         name="root_person_name_middle"
@@ -4938,7 +4942,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       style="position: relative;"
                     >
                       <input
-                        aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                         class="input input-bordered w-full"
                         id="root_person_name_last"
                         name="root_person_name_last"
@@ -4990,14 +4993,14 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <button
                         aria-expanded="false"
-                        aria-haspopup="true"
+                        aria-haspopup="dialog"
                         class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                         id="root_person_birth_date"
+                        role="combobox"
                         type="button"
                       >
                         <span
                           class="text-base-content/50"
-                          id="root_person_birth_date__value"
                         >
                           DOB
                         </span>
@@ -5059,6 +5062,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="0"
                           id="root_person_race-0"
@@ -5076,6 +5080,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="1"
                           id="root_person_race-1"
@@ -5093,6 +5098,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="2"
                           id="root_person_race-2"
@@ -5110,6 +5116,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="3"
                           id="root_person_race-3"
@@ -5127,6 +5134,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                         class="flex items-center cursor-pointer gap-2"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="checkbox"
                           data-index="4"
                           id="root_person_race-4"
@@ -5205,7 +5213,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_line_1"
                                 name="root_person_address_line_1"
@@ -5247,7 +5254,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_line_2"
                                 name="root_person_address_line_2"
@@ -5293,7 +5299,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               style="position: relative;"
                             >
                               <input
-                                aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                 class="input input-bordered w-full"
                                 id="root_person_address_city"
                                 name="root_person_address_city"
@@ -5343,14 +5348,17 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 class="dropdown w-full"
                               >
                                 <button
+                                  aria-controls="root_person_address_state__listbox"
+                                  aria-expanded="false"
+                                  aria-haspopup="listbox"
                                   class="btn btn-outline w-full text-left flex justify-between items-center "
                                   id="root_person_address_state"
+                                  role="combobox"
                                   tabindex="0"
                                   type="button"
                                 >
                                   <span
                                     class="truncate"
-                                    id="root_person_address_state__value"
                                   >
                                     State
                                   </span>
@@ -5363,6 +5371,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 </button>
                                 <ul
                                   class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                                  id="root_person_address_state__listbox"
                                   role="listbox"
                                 >
                                   <li
@@ -6244,7 +6253,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 style="position: relative;"
                               >
                                 <input
-                                  aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                                   class="input input-bordered w-full"
                                   id="root_person_address_postal_code"
                                   name="root_person_address_postal_code"
@@ -6433,7 +6441,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                       class="input input-bordered w-full"
                       id="root_person_name_first"
                       name="root_person_name_first"
@@ -6475,7 +6482,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                       class="input input-bordered w-full"
                       id="root_person_name_middle"
                       name="root_person_name_middle"
@@ -6521,7 +6527,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                       class="input input-bordered w-full"
                       id="root_person_name_last"
                       name="root_person_name_last"
@@ -6569,14 +6574,14 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <button
                       aria-expanded="false"
-                      aria-haspopup="true"
+                      aria-haspopup="dialog"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
+                      role="combobox"
                       type="button"
                     >
                       <span
                         class="text-base-content/50"
-                        id="root_person_birth_date__value"
                       >
                         DOB
                       </span>
@@ -6638,6 +6643,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="0"
                         id="root_person_race-0"
@@ -6655,6 +6661,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="1"
                         id="root_person_race-1"
@@ -6672,6 +6679,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="2"
                         id="root_person_race-2"
@@ -6689,6 +6697,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="3"
                         id="root_person_race-3"
@@ -6706,6 +6715,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="4"
                         id="root_person_race-4"
@@ -6767,7 +6777,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                       class="input input-bordered w-full"
                       id="root_person_address_line_1"
                       name="root_person_address_line_1"
@@ -6809,7 +6818,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                       class="input input-bordered w-full"
                       id="root_person_address_line_2"
                       name="root_person_address_line_2"
@@ -6855,7 +6863,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                       class="input input-bordered w-full"
                       id="root_person_address_city"
                       name="root_person_address_city"
@@ -6902,14 +6909,17 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="dropdown w-full"
                   >
                     <button
+                      aria-controls="root_person_address_state__listbox"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
                       class="btn btn-outline w-full text-left flex justify-between items-center "
                       id="root_person_address_state"
+                      role="combobox"
                       tabindex="0"
                       type="button"
                     >
                       <span
                         class="truncate"
-                        id="root_person_address_state__value"
                       >
                         State
                       </span>
@@ -6922,6 +6932,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     </button>
                     <ul
                       class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                      id="root_person_address_state__listbox"
                       role="listbox"
                     >
                       <li
@@ -7862,7 +7873,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                       class="input input-bordered w-full"
                       id="root_person_name_first"
                       name="root_person_name_first"
@@ -7904,7 +7914,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                       class="input input-bordered w-full"
                       id="root_person_name_middle"
                       name="root_person_name_middle"
@@ -7950,7 +7959,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                       class="input input-bordered w-full"
                       id="root_person_name_first"
                       name="root_person_name_first"
@@ -7998,14 +8006,14 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <button
                       aria-expanded="false"
-                      aria-haspopup="true"
+                      aria-haspopup="dialog"
                       class="input input-bordered w-full flex items-center justify-between cursor-pointer "
                       id="root_person_birth_date"
+                      role="combobox"
                       type="button"
                     >
                       <span
                         class="text-base-content/50"
-                        id="root_person_birth_date__value"
                       >
                         DOB
                       </span>
@@ -8067,6 +8075,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="0"
                         id="root_person_race-0"
@@ -8084,6 +8093,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="1"
                         id="root_person_race-1"
@@ -8101,6 +8111,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="2"
                         id="root_person_race-2"
@@ -8118,6 +8129,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="3"
                         id="root_person_race-3"
@@ -8135,6 +8147,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                       class="flex items-center cursor-pointer gap-2"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="checkbox"
                         data-index="4"
                         id="root_person_race-4"
@@ -8196,7 +8209,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                       class="input input-bordered w-full"
                       id="root_person_address_line_1"
                       name="root_person_address_line_1"
@@ -8238,7 +8250,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                       class="input input-bordered w-full"
                       id="root_person_address_line_2"
                       name="root_person_address_line_2"
@@ -8284,7 +8295,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     style="position: relative;"
                   >
                     <input
-                      aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                       class="input input-bordered w-full"
                       id="root_person_address_city"
                       name="root_person_address_city"
@@ -8331,14 +8341,17 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="dropdown w-full"
                   >
                     <button
+                      aria-controls="root_person_address_state__listbox"
+                      aria-expanded="false"
+                      aria-haspopup="listbox"
                       class="btn btn-outline w-full text-left flex justify-between items-center "
                       id="root_person_address_state"
+                      role="combobox"
                       tabindex="0"
                       type="button"
                     >
                       <span
                         class="truncate"
-                        id="root_person_address_state__value"
                       >
                         State
                       </span>
@@ -8351,6 +8364,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     </button>
                     <ul
                       class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+                      id="root_person_address_state__listbox"
                       role="listbox"
                     >
                       <li

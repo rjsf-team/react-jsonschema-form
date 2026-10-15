@@ -1,8 +1,10 @@
 import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import Form from '../src/index.ts';
 import SelectWidget from '../src/widgets/SelectWidget/SelectWidget.tsx';
 import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
@@ -214,7 +216,7 @@ describe('SelectWidget', () => {
         />,
       );
 
-      expect(screen.getByRole('button')).toHaveTextContent('Two');
+      expect(screen.getByRole('combobox')).toHaveTextContent('Two');
     },
   );
 
@@ -241,6 +243,60 @@ describe('SelectWidget', () => {
     expect(onChange).toHaveBeenLastCalledWith([]);
   });
 
+  test('is a combobox expanded while focus is inside its dropdown, which it controls', async () => {
+    render(
+      <>
+        <SelectWidget {...makeWidgetMockProps({ options: { enumOptions } })} />
+        <button type='button'>After select</button>
+      </>,
+    );
+
+    const combobox = screen.getByRole('combobox');
+    expect(combobox).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
+    expect(combobox).toHaveAttribute('aria-expanded', 'false');
+
+    await user.click(combobox);
+    expect(combobox).toHaveAttribute('aria-expanded', 'true');
+
+    await user.click(screen.getByRole('button', { name: 'After select' }));
+    expect(combobox).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  // A combobox takes no name from the option it displays, so the field's label names it where no label is drawn
+  test("is named by the field's label where no label is drawn for it", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } } }}
+        uiSchema={{ color: { 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByText('Color', { selector: 'label *' })).not.toBeInTheDocument();
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Color');
+  });
+
+  test.each<[string, RJSFSchema, unknown]>([
+    ['a root select', { type: 'string', enum: ['a', 'b'] }, undefined],
+    ['an array item select', { type: 'array', items: { type: 'string', enum: ['a', 'b'] } }, ['a']],
+    [
+      "an untitled root field's option selector",
+      {
+        oneOf: [
+          { title: 'A', type: 'string' },
+          { title: 'B', type: 'number' },
+        ],
+      },
+      undefined,
+    ],
+  ])('names %s with no title by the translated prompt', (_, schema, formData) => {
+    render(<Form schema={schema} initialFormData={formData} validator={validator} />);
+
+    expect(screen.getAllByRole('combobox')[0]).toHaveAccessibleName(
+      englishStringTranslator(TranslatableString.SelectPlaceholder),
+    );
+  });
+
   test('reports focus and blur for the dropdown as a whole, with the current value', async () => {
     const onFocus = vi.fn();
     const onBlur = vi.fn();
@@ -251,7 +307,7 @@ describe('SelectWidget', () => {
       </>,
     );
 
-    await user.click(screen.getByRole('button', { name: /Bar/ }));
+    await user.click(screen.getByRole('combobox'));
     expect(onFocus).toHaveBeenCalledWith('test-id', 'bar');
 
     await user.click(screen.getByRole('option', { name: 'Baz' }));
@@ -274,7 +330,7 @@ describe('SelectWidget', () => {
       </>,
     );
 
-    await user.click(screen.getAllByRole('button')[0]);
+    await user.click(screen.getByRole('combobox'));
     await user.click(screen.getByRole('button', { name: 'After select' }));
 
     expect(onFocus).toHaveBeenCalledWith('test-id', null);
@@ -366,7 +422,7 @@ describe('SelectWidget', () => {
     render(<SelectWidget {...props} />);
 
     expect(screen.getByRole('option', { name: 'a' })).toHaveAttribute('aria-selected', 'true');
-    expect(within(screen.getByRole('button')).getByText('a')).toBeInTheDocument();
+    expect(within(screen.getByRole('combobox')).getByText('a')).toBeInTheDocument();
     await user.click(screen.getByRole('option', { name: 'b' }));
 
     expect(onChange).toHaveBeenLastCalledWith(['a', 'b']);
