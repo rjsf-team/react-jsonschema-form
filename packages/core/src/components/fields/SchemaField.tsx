@@ -20,6 +20,7 @@ import {
   ANY_OF_KEY,
   descriptionId,
   fieldPathToId,
+  fieldPathToList,
   getByPath,
   getDeprecatedHandling,
   getDiscriminatorFieldFromSchema,
@@ -47,7 +48,6 @@ import {
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
-  isObject,
   toConstant,
   toFieldPath,
   TranslatableString,
@@ -62,9 +62,11 @@ import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import useUiState from '../../hooks/useUiState.ts';
+import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
+import ShownOptionContext from './ShownOptionContext.ts';
 
 /** The map of component type to FieldName */
 const COMPONENT_TYPES: Record<string, string> = {
@@ -546,25 +548,18 @@ function SchemaFieldRender<
   // type in effect — and only the inner one would follow the type the user chose
   const retrievesOptions =
     fieldToRender !== undefined && fieldToRender.rendersOptionSelector && !fieldToRender.rendersOptionsItself;
-  // `xxxOfKey` is what `rendersOptionSelector` was decided from, so it is set whenever that is, which the narrowing
-  // here restates for the lookup below. This is the one place the options are retrieved: `MultiSchemaField` renders
-  // what it is handed. Memoized so a re-render that changed neither the schema nor the data hands it the same array,
-  // which its callbacks key on
+  // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
+  // the data hands it the same array, which its callbacks key on
   const xxxOfOptions = useMemo(
-    () =>
-      retrievesOptions && xxxOfKey !== undefined
-        ? schema[xxxOfKey]?.map((xxxOfSchema) =>
-            schemaUtils.retrieveSchema(isObject(xxxOfSchema) ? (xxxOfSchema as S) : ({} as S), formData),
-          )
-        : undefined,
-    [retrievesOptions, xxxOfKey, schema, schemaUtils, formData],
+    () => (retrievesOptions ? retrievedOptionsOf<T, S, F>(schemaUtils, schema, formData) : undefined),
+    [retrievesOptions, schema, schemaUtils, formData],
   );
 
   // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
   // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
   // left to it, and any other is described by the object's extra-key keywords and the option's together
   const { uiState, isOwn: ownsUiState } = useUiState();
-  const { selectedOption, keepSelection, releaseSelection } = useShownOption<T, S, F>(
+  const { selectedOption, keepSelection, editOwnProperty } = useShownOption<T, S, F>(
     uiState,
     registry,
     fieldPath,
@@ -580,20 +575,25 @@ function SchemaFieldRender<
     [xxxOfOptions, selectedOption, schema, schemaUtils, _schema, formData],
   );
   const hasOptions = xxxOfOptions !== undefined;
+  const shownOption = useMemo(
+    () => (xxxOfOptions && selectedOption >= 0 ? { fieldPath, option: xxxOfOptions[selectedOption] } : undefined),
+    [xxxOfOptions, selectedOption, fieldPath],
+  );
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
-   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit to the object's
-   * own properties beside its options is matched again, as 6.11.0 matched every edit: only the option's own fields
-   * hold it
+   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit to a property
+   * of the object's own that an option declares too, such as one whose `const` tells the options apart, is matched
+   * again, as 6.11.0 matched every edit. Any other edit holds the option shown, as an edit inside the option does: no
+   * option says anything of the property, so the edit cannot be a choice between them
    */
   const handleFieldComponentChange = useCallback(
     (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       if (hasOptions) {
-        releaseSelection();
+        editOwnProperty(fieldPathToList(changedFieldPath)[fieldPathToList(fieldPath).length]);
       }
       onChange(newFormData, changedFieldPath, newErrorSchema, id || fieldId);
     },
-    [fieldId, onChange, hasOptions, releaseSelection],
+    [fieldId, fieldPath, onChange, hasOptions, editOwnProperty],
   );
   const handleOptionFieldChange = useCallback(
     (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
@@ -735,7 +735,9 @@ function SchemaFieldRender<
   );
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
   const field = (
-    <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+    <ShownOptionContext value={shownOption}>
+      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+    </ShownOptionContext>
   );
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.

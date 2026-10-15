@@ -128,6 +128,30 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_count-key')).toBeNull();
   });
 
+  it('seeds a renamed key from the extra-key keyword when a ui:field replaces the options (#5461)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      anyOf: [
+        { title: 'A', properties: { count: { type: 'number' } } },
+        { title: 'B', properties: { count: { type: 'number' }, b: { type: 'string' } } },
+      ],
+    };
+    const uiSchema: UiSchema = { 'ui:field': 'ObjectField', 'ui:fieldReplacesAnyOrOneOf': true };
+    const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
+    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    const keyInput = elementOf(node, '#root_newKey-key');
+
+    await user.clear(keyInput);
+    await user.type(keyInput, 'count');
+    await user.tab();
+
+    expect(node.querySelector('#root__anyof_select')).toBeNull();
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { count: 'New Value' } }), 'root');
+    expect(elementOf(node, '#root_count-key')).toHaveValue('count');
+    expect(elementOf(node, '#root_count')).toHaveValue('New Value');
+  });
+
   it("renders a key the selected option allows without describing it as the object's extra-key keyword does (#5462)", () => {
     const schema: RJSFSchema = {
       type: 'object',
@@ -180,6 +204,30 @@ describe('option selection as form state', () => {
 
     expect(getFormData()).toEqual(mounted);
     expect(node.querySelector('#root_extra')).toHaveValue('from-root');
+  });
+
+  it.each([
+    ['a null option', null],
+    ['another object option', {}],
+  ])('writes the empty object of an object property switching from %s (#5368)', async (_from, p) => {
+    const options: RJSFSchema[] = [
+      { title: 'Other', type: 'object', properties: { z: { type: 'string' } } },
+      {
+        title: 'Obj',
+        type: 'object',
+        properties: { meta: { type: 'object', properties: { a: { type: 'string' } } }, d: { default: 'D' } },
+      },
+      { title: 'None', type: 'null' },
+    ];
+    const schema: RJSFSchema = { type: 'object', properties: { p: { oneOf: options } } };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { p } });
+
+    await user.selectOptions(selectOf(node, 'root_p__oneof_select'), 'Obj');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { p: { d: 'D', meta: {} } } }),
+      'root_p__oneof_select',
+    );
   });
 
   it('restores the defaults an ancestor declares for the field when switching back from a null option (#5368)', async () => {
@@ -402,6 +450,39 @@ describe('option selection as form state', () => {
 
       expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
       expect(ids(node, 'input, select')).toEqual(['root_name', 'root__oneof_select', 'root_a', 'root_b']);
+    });
+
+    it('keeps an option held through an edit inside it when a property no option declares is edited', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          {
+            title: 'B',
+            properties: { a: { type: 'string', maxLength: 2 }, b: { type: 'string' } },
+            required: ['b'],
+          },
+        ],
+      };
+      const { node, onChange } = createFormComponent({
+        schema,
+        initialFormData: {},
+        omitExtraData: true,
+        liveOmit: 'onChange',
+      });
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+      await user.type(elementOf(node, '#root_b'), 'z');
+      await user.type(elementOf(node, '#root_a'), 'abc');
+
+      await user.type(elementOf(node, '#root_name'), 'n');
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      expect(ids(node, 'input, select')).toEqual(['root_name', 'root__oneof_select', 'root_a', 'root_b']);
+      expect(onChange).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { a: 'abc', b: 'z', name: 'n' } }),
+        'root_name',
+      );
     });
   });
 

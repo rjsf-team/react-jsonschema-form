@@ -2,7 +2,7 @@ import { useCallback, useInsertionEffect, useMemo, useRef, useSyncExternalStore 
 import type { FieldPath, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import type { UiState } from '../components/uiState.ts';
-import { optionListKey, shownOption } from '../components/uiState.ts';
+import { optionListKey, optionsDeclare, shownOption } from '../components/uiState.ts';
 import useUiState from './useUiState.ts';
 
 /** The option an `anyOf`/`oneOf` field shows, and how to select another */
@@ -19,13 +19,16 @@ export interface ShownOptionState extends OptionSelectionState {
    * under
    */
   keepSelection: () => void;
-  /** Lets the data an edit to the object's own properties leaves be matched again, as data from outside the field is */
-  releaseSelection: () => void;
+  /** Called before an edit to `property` of the object's own, beside its options: where an option declares the property
+   * too, such as one whose `const` tells the options apart, the data the edit leaves is matched again, as data from
+   * outside the field is; otherwise the option shown is kept, as for an edit inside it
+   */
+  editOwnProperty: (property: string | number | undefined) => void;
 }
 
 const noSubscription = () => () => undefined;
 
-/** `useOptionSelection()` with `keepSelection()` and `releaseSelection()`, which `SchemaField` calls from the
+/** `useOptionSelection()` with `keepSelection()` and `editOwnProperty()`, which `SchemaField` calls from the
  * `onChange` it hands the option and the field's own children
  */
 export function useShownOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -56,10 +59,10 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
   }, [options, list, storedIndex, uiState, fieldPath, formData, schemaUtils, discriminatorField]);
   // What the last committed render showed, which the handlers record: they run after it, and read it rather than close
   // over it so that a field's children keep the handlers they were given while the data changes
-  const shown = useRef({ index: selectedOption, data: formData });
+  const shown = useRef({ index: selectedOption, data: formData, options });
   useInsertionEffect(() => {
-    shown.current = { index: selectedOption, data: formData };
-  }, [selectedOption, formData]);
+    shown.current = { index: selectedOption, data: formData, options };
+  }, [selectedOption, formData, options]);
   const selectOption = useCallback(
     (index: number) => {
       if (list !== undefined) {
@@ -73,14 +76,22 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
       uiState.keep(fieldPath, list, shown.current.index, shown.current.data);
     }
   }, [list, uiState, fieldPath]);
-  const releaseSelection = useCallback(() => {
-    if (list !== undefined) {
-      uiState.release(fieldPath, list);
-    }
-  }, [list, uiState, fieldPath]);
+  const editOwnProperty = useCallback(
+    (property: string | number | undefined) => {
+      const { options: shownOptions } = shown.current;
+      if (typeof property === 'string' && shownOptions && optionsDeclare<S>(shownOptions, property)) {
+        if (list !== undefined) {
+          uiState.release(fieldPath, list);
+        }
+      } else {
+        keepSelection();
+      }
+    },
+    [list, uiState, fieldPath, keepSelection],
+  );
   return useMemo(
-    () => ({ selectedOption, selectOption, keepSelection, releaseSelection }),
-    [selectedOption, selectOption, keepSelection, releaseSelection],
+    () => ({ selectedOption, selectOption, keepSelection, editOwnProperty }),
+    [selectedOption, selectOption, keepSelection, editOwnProperty],
   );
 }
 
@@ -92,11 +103,12 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
  *
  * With no selection, the option is the one `getClosestMatchingOption()` picks for the data, an option whose discriminator
  * holds the data's value first. A selection holds for the data the form last rendered under it and the data the
- * form's own changes leave at the field, so neither an edit inside the option nor a parent declining a switch or an
- * edit changes it. Other data, such as a parent's new `formData`, a reset, a parent answering a switch with data of its
- * own, or an edit to the object's own properties, is matched again, with the selection preferred where it fits the data
- * as well as any other option, and so is the data after it until the user switches or edits inside the option, which
- * holds the option then shown. Data holding a value for the declared discriminator is always matched, so an edit to the
+ * form's own changes leave at the field, so neither an edit inside the option, an edit to a property of the object's
+ * own that no option declares, nor a parent declining a switch or an edit changes it. Other data, such as a parent's
+ * new `formData`, a reset, a parent answering a switch with data of its own, or an edit to a property of the object's
+ * own that an option declares too, is matched again, with the selection preferred where it fits the data as well as
+ * any other option, and so is the data after it until the user switches or makes an edit that holds the option then
+ * shown. Data holding a value for the declared discriminator is always matched, so an edit to the
  * discriminator switches.
  *
  * Outside a `Form` the selection is kept by the outermost `SchemaField`, or the calling component when there is none,
