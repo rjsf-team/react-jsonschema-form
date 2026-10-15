@@ -1273,7 +1273,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -1330,7 +1329,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -1380,7 +1378,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -1441,7 +1438,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -1499,7 +1495,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 >
                   <label
                     class="MuiFormLabel-root MuiFormLabel-colorPrimary Mui-required emotion-47"
-                    for="root_person_race"
+                    id="root_person_race__label"
                   >
                     Race
                     <span
@@ -1510,17 +1506,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     </span>
                   </label>
                   <div
+                    aria-labelledby="root_person_race__label"
                     class="MuiFormGroup-root emotion-49"
                     id="root_person_race"
+                    role="group"
                   >
                     <label
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-0"
@@ -1550,10 +1548,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-1"
@@ -1583,10 +1581,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-2"
@@ -1616,10 +1614,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-3"
@@ -1649,10 +1647,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-4"
@@ -1718,7 +1716,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -1775,7 +1772,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -1825,7 +1821,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -1969,7 +1964,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                             class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                           >
                             <div
-                              aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                               class="MuiFormControl-root MuiTextField-root emotion-11"
                             >
                               <label
@@ -2038,7 +2032,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
                         class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-132"
                         id="root_employment"
                         role="radiogroup"
@@ -2196,7 +2189,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_business__error root_employment_business__description root_employment_business__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -2253,7 +2245,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -2303,7 +2294,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -3728,7 +3718,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -3785,7 +3774,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -3835,7 +3823,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -3896,7 +3883,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -3954,7 +3940,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 >
                   <label
                     class="MuiFormLabel-root MuiFormLabel-colorPrimary Mui-required emotion-47"
-                    for="root_person_race"
+                    id="root_person_race__label"
                   >
                     Race
                     <span
@@ -3965,17 +3951,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     </span>
                   </label>
                   <div
+                    aria-labelledby="root_person_race__label"
                     class="MuiFormGroup-root emotion-49"
                     id="root_person_race"
+                    role="group"
                   >
                     <label
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-0"
@@ -4005,10 +3993,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-1"
@@ -4038,10 +4026,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-2"
@@ -4071,10 +4059,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-3"
@@ -4104,10 +4092,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-4"
@@ -4173,7 +4161,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -4230,7 +4217,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -4280,7 +4266,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -4424,7 +4409,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                             class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                           >
                             <div
-                              aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                               class="MuiFormControl-root MuiTextField-root emotion-11"
                             >
                               <label
@@ -4493,7 +4477,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
                         class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-132"
                         id="root_employment"
                         role="radiogroup"
@@ -4651,7 +4634,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_district__error root_employment_district__description root_employment_district__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -4701,7 +4683,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_school__error root_employment_school__description root_employment_school__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -4758,7 +4739,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -4808,7 +4788,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -6387,7 +6366,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -6444,7 +6422,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -6494,7 +6471,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -6555,7 +6531,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -6613,7 +6588,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                 >
                   <label
                     class="MuiFormLabel-root MuiFormLabel-colorPrimary Mui-required emotion-47"
-                    for="root_person_race"
+                    id="root_person_race__label"
                   >
                     Race
                     <span
@@ -6624,17 +6599,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                     </span>
                   </label>
                   <div
+                    aria-labelledby="root_person_race__label"
                     class="MuiFormGroup-root emotion-49"
                     id="root_person_race"
+                    role="group"
                   >
                     <label
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-0"
@@ -6664,10 +6641,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-1"
@@ -6697,10 +6674,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-2"
@@ -6730,10 +6707,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-3"
@@ -6763,10 +6740,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-4"
@@ -6832,7 +6809,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -6889,7 +6865,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -6939,7 +6914,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -7083,7 +7057,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                             class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                           >
                             <div
-                              aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                               class="MuiFormControl-root MuiTextField-root emotion-11"
                             >
                               <label
@@ -7152,7 +7125,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
                         class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-132"
                         id="root_employment"
                         role="radiogroup"
@@ -7310,7 +7282,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_description__error root_employment_description__description root_employment_description__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -8658,7 +8629,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -8715,7 +8685,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -8765,7 +8734,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -8826,7 +8794,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                 >
                   <div
-                    aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                     class="MuiFormControl-root MuiTextField-root emotion-11"
                   >
                     <label
@@ -8884,7 +8851,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 >
                   <label
                     class="MuiFormLabel-root MuiFormLabel-colorPrimary Mui-required emotion-47"
-                    for="root_person_race"
+                    id="root_person_race__label"
                   >
                     Race
                     <span
@@ -8895,17 +8862,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     </span>
                   </label>
                   <div
+                    aria-labelledby="root_person_race__label"
                     class="MuiFormGroup-root emotion-49"
                     id="root_person_race"
+                    role="group"
                   >
                     <label
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-0"
@@ -8935,10 +8904,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-1"
@@ -8968,10 +8937,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-2"
@@ -9001,10 +8970,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-3"
@@ -9034,10 +9003,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-50"
                     >
                       <span
-                        aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                         class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-51"
                       >
                         <input
+                          aria-describedby="root_person_race__description"
                           class="PrivateSwitchBase-input emotion-52"
                           data-indeterminate="false"
                           id="root_person_race-4"
@@ -9103,7 +9072,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -9160,7 +9128,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -9210,7 +9177,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                           class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                         >
                           <div
-                            aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                             class="MuiFormControl-root MuiTextField-root emotion-11"
                           >
                             <label
@@ -9354,7 +9320,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                             class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                           >
                             <div
-                              aria-describedby="root_person_address_postal_code__error root_person_address_postal_code__description root_person_address_postal_code__help"
                               class="MuiFormControl-root MuiTextField-root emotion-11"
                             >
                               <label
@@ -9423,7 +9388,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
                         class="MuiFormGroup-root MuiFormGroup-row MuiRadioGroup-root MuiRadioGroup-row emotion-132"
                         id="root_employment"
                         role="radiogroup"
@@ -9581,7 +9545,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_business__error root_employment_business__description root_employment_business__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -9638,7 +9601,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_title__error root_employment_title__description root_employment_title__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -9688,7 +9650,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
                     >
                       <div
-                        aria-describedby="root_employment_location_city__error root_employment_location_city__description root_employment_location_city__help"
                         class="MuiFormControl-root MuiTextField-root emotion-11"
                       >
                         <label
@@ -10866,7 +10827,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -10923,7 +10883,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -10973,7 +10932,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_name_last__error root_person_name_last__description root_person_name_last__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -11030,7 +10988,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -11088,7 +11045,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
               >
                 <label
                   class="MuiFormLabel-root MuiFormLabel-colorPrimary Mui-required emotion-44"
-                  for="root_person_race"
+                  id="root_person_race__label"
                 >
                   Race
                   <span
@@ -11099,17 +11056,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                   </span>
                 </label>
                 <div
+                  aria-labelledby="root_person_race__label"
                   class="MuiFormGroup-root emotion-46"
                   id="root_person_race"
+                  role="group"
                 >
                   <label
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-0"
@@ -11139,10 +11098,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-1"
@@ -11172,10 +11131,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-2"
@@ -11205,10 +11164,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-3"
@@ -11238,10 +11197,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-4"
@@ -11291,7 +11250,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -11348,7 +11306,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -11398,7 +11355,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -12550,7 +12506,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -12607,7 +12562,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_name_middle__error root_person_name_middle__description root_person_name_middle__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -12657,7 +12611,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_name_first__error root_person_name_first__description root_person_name_first__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -12714,7 +12667,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_birth_date__error root_person_birth_date__description root_person_birth_date__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -12772,7 +12724,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
               >
                 <label
                   class="MuiFormLabel-root MuiFormLabel-colorPrimary Mui-required emotion-44"
-                  for="root_person_race"
+                  id="root_person_race__label"
                 >
                   Race
                   <span
@@ -12783,17 +12735,19 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                   </span>
                 </label>
                 <div
+                  aria-labelledby="root_person_race__label"
                   class="MuiFormGroup-root emotion-46"
                   id="root_person_race"
+                  role="group"
                 >
                   <label
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-0"
@@ -12823,10 +12777,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-1"
@@ -12856,10 +12810,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-2"
@@ -12889,10 +12843,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-3"
@@ -12922,10 +12876,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                     class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-47"
                   >
                     <span
-                      aria-describedby="root_person_race__error root_person_race__description root_person_race__help"
                       class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium emotion-48"
                     >
                       <input
+                        aria-describedby="root_person_race__description"
                         class="PrivateSwitchBase-input emotion-49"
                         data-indeterminate="false"
                         id="root_person_race-4"
@@ -12975,7 +12929,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_address_line_1__error root_person_address_line_1__description root_person_address_line_1__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -13032,7 +12985,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_address_line_2__error root_person_address_line_2__description root_person_address_line_2__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label
@@ -13082,7 +13034,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
                 class="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
               >
                 <div
-                  aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                   class="MuiFormControl-root MuiTextField-root emotion-9"
                 >
                   <label

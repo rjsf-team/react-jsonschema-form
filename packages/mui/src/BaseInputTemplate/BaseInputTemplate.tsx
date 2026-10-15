@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import type { InputProps as MuiInputProps } from '@mui/material/Input';
 import InputAdornment from '@mui/material/InputAdornment';
 import type { InputLabelProps as MuiInputLabelProps } from '@mui/material/InputLabel';
-import type { TextFieldProps } from '@mui/material/TextField';
+import type { TextFieldOwnerState, TextFieldProps } from '@mui/material/TextField';
 import TextField from '@mui/material/TextField';
 import { SchemaExamples } from '@rjsf/core';
 import type {
@@ -14,8 +14,8 @@ import type {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
@@ -24,7 +24,10 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import type { MuiSlotProps } from '../util.ts';
+import { describeByHelperText, getMuiProps, resolveSlotProps } from '../util.ts';
+
+type HtmlInputAttributes = React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
 
 /** Properties available for the MUI `ui:options` of the BaseInputTemplate.
  *  Unlike RJSF templates, `slotProps` here maps directly to MUI's native `TextField` `slotProps`,
@@ -32,8 +35,9 @@ import { getMuiProps } from '../util.ts';
 export interface BaseInputTemplateMuiProps extends GenericObjectType {
   /** Native MUI `TextField` slotProps for targeting specific sub-components. */
   slotProps?: {
-    /** Props applied to the base native HTML `<input>` or `<textarea>` element. */
-    htmlInput?: React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
+    /** Props applied to the base native HTML `<input>` or `<textarea>` element, as an object or as MUI's
+     * `(ownerState) => props` */
+    htmlInput?: MuiSlotProps<HtmlInputAttributes, TextFieldOwnerState>;
     /** Props applied to the MUI `Input` element, useful for `endAdornment`/`startAdornment`. */
     input?: MuiInputProps;
     /** Props applied to the MUI `InputLabel` element. */
@@ -83,7 +87,7 @@ export default function BaseInputTemplate<
     InputLabelProps,
     InputProps,
     slotProps,
-    presentation, // remove this from textFieldProps
+    presentation,
     ...textFieldProps
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
@@ -95,23 +99,38 @@ export default function BaseInputTemplate<
   const muiProps = getMuiProps<T, S, F, BaseInputTemplateMuiProps>(options);
   const { slotProps: muiSlotProps, ...otherMuiProps } = muiProps;
 
-  const callerHtmlInput = { ...slotProps?.htmlInput, ...muiSlotProps?.htmlInput };
-
   const exampleSuggestions = getExampleSuggestions<S>(schema);
   const hasExamples = exampleSuggestions.length > 0;
-  // The derived attributes come first so a caller's `slotProps.htmlInput` overrides any of them. The title explains
-  // the derived `pattern`, so a caller replacing that pattern drops it rather than describing a rule no longer in force
-  const htmlInputProps = {
-    title: 'pattern' in callerHtmlInput ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString),
-    step,
-    min,
-    max,
-    accept,
-    inputMode,
-    pattern,
-    autoCapitalize,
-    ...callerHtmlInput,
-    ...(hasExamples ? { list: examplesId(id) } : undefined),
+  const textFieldOverrides = { ...otherMuiProps, ...textFieldProps } as TextFieldProps;
+  const controlAttributes = describeByHelperText(
+    getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : []),
+    textFieldOverrides.id ?? id,
+    textFieldOverrides.helperText,
+  );
+  const numericTitle = getNumericInputTitle(derivedInputProps, registry.translateString);
+  // The derived attributes and the field's plan come first so a caller's `slotProps.htmlInput` overrides any of them.
+  // The plan goes on the `<input>` a user focuses rather than on the `TextField`'s root, where its own props go. The
+  // title explains the derived `pattern`, so a caller replacing that pattern drops it rather than describing a rule no
+  // longer in force. A caller may give `htmlInput` as MUI's `(ownerState) => props`, so the slot is handed on in that
+  // form, for MUI to resolve
+  const htmlInputProps = (ownerState: TextFieldOwnerState) => {
+    const callerHtmlInput = {
+      ...resolveSlotProps<HtmlInputAttributes, TextFieldOwnerState>(slotProps?.htmlInput, ownerState),
+      ...resolveSlotProps(muiSlotProps?.htmlInput, ownerState),
+    };
+    return {
+      title: 'pattern' in callerHtmlInput ? undefined : numericTitle,
+      step,
+      min,
+      max,
+      accept,
+      inputMode,
+      pattern,
+      autoCapitalize,
+      ...controlAttributes,
+      ...callerHtmlInput,
+      ...(hasExamples ? { list: examplesId(id) } : undefined),
+    };
   };
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLInputElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);
@@ -168,8 +187,7 @@ export default function BaseInputTemplate<
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        {...({ ...otherMuiProps, ...textFieldProps } as TextFieldProps)}
-        aria-describedby={ariaDescribedByIds(id, hasExamples)}
+        {...textFieldOverrides}
       />
       <SchemaExamples id={id} schema={schema} suggestions={exampleSuggestions} />
     </>

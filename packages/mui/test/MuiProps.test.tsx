@@ -1,6 +1,6 @@
 import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 
 import type { BaseInputTemplateMuiProps } from '../src/BaseInputTemplate/BaseInputTemplate.tsx';
 import Form from '../src/index.ts';
@@ -213,5 +213,52 @@ describe('MUI Theme-Specific Props', () => {
 
     const select = container.querySelector('.MuiFilledInput-root');
     expect(select).toBeInTheDocument();
+  });
+
+  it("should apply a caller's slotProps.htmlInput given as MUI's (ownerState) => props", () => {
+    const schema: RJSFSchema = { type: 'object', properties: { price: { type: 'number' } } };
+    const uiSchema: UiSchema = {
+      price: {
+        'ui:options': {
+          mui: { slotProps: { htmlInput: () => ({ 'data-testid': 'price', pattern: '[0-9]+', step: 5 }) } },
+        },
+      },
+    };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    const input = screen.getByTestId('price');
+    expect(input).toHaveAttribute('id', 'root_price');
+    expect(input).toHaveAttribute('pattern', '[0-9]+');
+    expect(input).toHaveAttribute('step', '5');
+    // As for an object, the title goes with the derived pattern the caller replaces
+    expect(input).not.toHaveAttribute('title');
+  });
+
+  // MUI links its helper text through the `aria-describedby` that the field's plan, which knows only RJSF's parts,
+  // replaces on the control
+  it.each<[string, RJSFSchema, string]>([
+    ['text input', { type: 'string' }, 'textbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox'],
+  ])("should describe a %s by MUI's helper text as well as by the field's parts", (_, foo, role) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo: { ...foo, description: 'About foo' } } };
+    const uiSchema: UiSchema = { foo: { 'ui:options': { mui: { helperText: 'A hint' } } } };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole(role)).toHaveAccessibleDescription('About foo A hint');
+  });
+
+  // MUI builds the helper text's id from the `TextField`'s id, which an `id` in `ui:options.mui` replaces
+  it.each<[string, RJSFSchema, string]>([
+    ['text input', { type: 'string' }, 'textbox'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, 'combobox'],
+  ])("should describe a %s by MUI's helper text under an id the form author gives it", (_, foo, role) => {
+    const schema: RJSFSchema = { type: 'object', properties: { foo } };
+    const uiSchema: UiSchema = { foo: { 'ui:options': { mui: { id: 'custom', helperText: 'A hint' } } } };
+
+    render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />);
+
+    expect(screen.getByRole(role)).toHaveAccessibleDescription('A hint');
   });
 });
