@@ -798,7 +798,7 @@ function getArrayHeading<
   uiOptions: UIOptionsType<T[], S, F>,
 ): string {
   if (!presentation) {
-    return (uiOptions.label ?? true) ? uiOptions.title || fieldTitle : '';
+    return (uiBooleanOption(uiOptions.label) ?? true) ? uiOptions.title || fieldTitle : '';
   }
   if (presentation.label.by !== 'self') {
     return '';

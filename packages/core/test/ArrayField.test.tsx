@@ -5250,5 +5250,16 @@ describe('ArrayField', () => {
       expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
       expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
     });
+
+    it('keeps the control of an array rendered without a plan whose JSON ui:label is null', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { ...optionalArrays, tags: { 'ui:field': NoPlanArrayField, 'ui:label': null } },
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+    });
   });
 });
