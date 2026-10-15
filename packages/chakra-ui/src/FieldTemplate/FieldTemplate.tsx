@@ -1,6 +1,30 @@
-import { Fieldset } from '@chakra-ui/react';
+import type { ReactNode } from 'react';
+import { chakra, Fieldset, useSlotRecipe } from '@chakra-ui/react';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel, templateLabelFor } from '@rjsf/utils';
+
+interface TemplateLabelProps {
+  id: string;
+  htmlFor?: string;
+  requiredMarker: boolean;
+  disabled?: boolean;
+  children: ReactNode;
+}
+
+/** The label the template draws, styled by the `field` recipe as the label each widget draws inside its `Field` is */
+function TemplateLabel({ id, htmlFor, requiredMarker, disabled, children }: TemplateLabelProps) {
+  const fieldStyles = useSlotRecipe({ key: 'field' })();
+  return (
+    <chakra.label htmlFor={htmlFor} id={id} data-disabled={disabled ? '' : undefined} css={fieldStyles.label} mb={1.5}>
+      {children}
+      {requiredMarker && (
+        <chakra.span css={fieldStyles.requiredIndicator} aria-hidden>
+          *
+        </chakra.span>
+      )}
+    </chakra.label>
+  );
+}
 
 export default function FieldTemplate<
   T = unknown,
@@ -62,6 +86,18 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
+      {/* Only under a plan, as for a widget declared to leave its label to the template: without one, `displayLabel`
+          falls back to the deprecated prop, and this theme's widgets draw their own label beside it */}
+      {presentation && displayLabel && label && (
+        <TemplateLabel
+          htmlFor={templateLabelFor<T, S, F>(props)}
+          id={presentation.label.id}
+          requiredMarker={presentation.label.requiredMarker}
+          disabled={disabled || readonly}
+        >
+          {label}
+        </TemplateLabel>
+      )}
       <Fieldset.Root disabled={disabled} invalid={hasError}>
         {rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
         {help}
