@@ -166,6 +166,7 @@ import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription
 import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
 import templateDrawsDescription from './templateDrawsDescription.ts';
 import templateDrawsLabel from './templateDrawsLabel.ts';
+import templateLabelFor from './templateLabelFor.ts';
 import titleDrawsOptionalDataControl from './titleDrawsOptionalDataControl.ts';
 import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
@@ -377,6 +378,7 @@ export {
   sortedJSONStringify,
   templateDrawsDescription,
   templateDrawsLabel,
+  templateLabelFor,
   titleDrawsOptionalDataControl,
   titleId,
   toConstant,
