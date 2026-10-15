@@ -22,7 +22,6 @@ export default function RangeWidget<
     onFocus,
     placeholder,
     readonly,
-    required,
     schema,
     value,
     presentation,
@@ -65,10 +64,10 @@ export default function RangeWidget<
       {...extraProps}
       // The slider's handle is what takes focus, and it takes no `aria-describedby` or `aria-invalid`, nor a
       // `handleRender` to add them, so it is only named, by the label a `for` can't reach or by the text of one
-      // `ui:label: false` hides, and marked required
+      // `ui:label: false` hides. It isn't marked required: a slider always holds a value, and ARIA allows no
+      // `aria-required` on one
       ariaLabelledByForHandle={ariaLabelledBy}
       ariaLabelForHandle={ariaLabel}
-      ariaRequired={required}
     />
   );
 }

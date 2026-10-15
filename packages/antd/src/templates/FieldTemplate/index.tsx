@@ -66,20 +66,12 @@ export default function FieldTemplate<
   // check to see if there is rawDescription(string) before using description(ReactNode)
   // to prevent showing a blank description area
   const descriptionNode = rawDescription ? description : undefined;
-  const descriptionProps: GenericObjectType = {};
   // antd draws a tooltip only beside a label, and its popup only while it is open, so the tooltip is rendered from the
   // start, kept hidden, for the description the control's `aria-describedby` names to exist, and a field with no label
   // shows its description below instead. Its icon sits in the label column a control named through `aria-labelledby`
-  // takes its name from, so it is hidden from that name
-  if (descriptionLocation === 'tooltip' && shownLabel) {
-    descriptionProps.tooltip = descriptionNode && {
-      title: descriptionNode,
-      forceRender: true,
-      icon: TOOLTIP_ICON,
-    };
-  } else {
-    descriptionProps.extra = descriptionNode;
-  }
+  // takes its name from, so it is hidden from that name. antd's Tooltip turns on the shared tooltip of a
+  // `ConfigProvider tooltip={{ unique: true }}`, which renders the popup only while it is open, so it is turned off here
+  const inTooltip = descriptionLocation === 'tooltip' && !!shownLabel;
   // Help and errors share antd's only below-field slot, and antd draws an empty explain block for a node that renders
   // nothing, so each one is gated on whether it has anything to say
   const helpNode = rawHelp ? help : undefined;
@@ -107,7 +99,12 @@ export default function FieldTemplate<
         style={wrapperStyle}
         validateStatus={hasError ? 'error' : undefined}
         wrapperCol={wrapperCol}
-        {...descriptionProps}
+        tooltip={
+          inTooltip && descriptionNode
+            ? { title: descriptionNode, forceRender: true, unique: false, icon: TOOLTIP_ICON }
+            : undefined
+        }
+        extra={inTooltip ? undefined : descriptionNode}
       >
         {children}
       </Form.Item>

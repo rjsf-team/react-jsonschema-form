@@ -4,7 +4,7 @@ import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
-import { theme } from 'antd';
+import { ConfigProvider, theme } from 'antd';
 
 import Form, { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 
@@ -278,6 +278,20 @@ describe('antd specific tests', () => {
     expect(container.querySelector('#root_name')).toHaveAccessibleDescription('Your name');
   });
 
+  test("descriptionLocation tooltip describes a field from its closed tooltip under antd's shared tooltip", () => {
+    const { container } = render(
+      <ConfigProvider tooltip={{ unique: true }}>
+        <Form
+          schema={{ type: 'object', properties: { name: { type: 'string', title: 'Name', description: 'Your name' } } }}
+          validator={validator}
+          formContext={{ descriptionLocation: 'tooltip' }}
+        />
+      </ConfigProvider>,
+    );
+
+    expect(container.querySelector('#root_name')).toHaveAccessibleDescription('Your name');
+  });
+
   test("names a radio group by its label's text, without the icon of the tooltip it describes it by", () => {
     render(
       <Form
@@ -446,26 +460,6 @@ describe('antd specific tests', () => {
     );
 
     expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
-  });
-
-  test.each<[string, string, RJSFSchema]>([
-    ['radio', 'radiogroup', { type: 'string', title: 'Color', enum: ['red', 'blue'] }],
-    [
-      'checkboxes',
-      'group',
-      { type: 'array', title: 'Color', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
-    ],
-  ])("draws a %s group's label with no for, which would name the group's wrapper", (widget, role, color) => {
-    const { container } = render(
-      <Form
-        schema={{ type: 'object', properties: { color } }}
-        uiSchema={{ color: { 'ui:widget': widget } }}
-        validator={validator}
-      />,
-    );
-
-    expect(container.querySelector('#root_color__label label')).not.toHaveAttribute('for');
-    expect(screen.getByRole(role, { name: 'Color' })).toBeInTheDocument();
   });
 
   test("keeps an optional object's data control where ui:label turns its heading off", () => {
@@ -688,13 +682,20 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
 
   const colors: RJSFSchema = { type: 'string', title: 'Color', enum: ['red', 'blue'] };
   // ARIA supports `aria-invalid` on a `radiogroup` but not on a `group`, so a radio group carries it in place of its
-  // radios while each checkbox carries its own
+  // radios while each checkbox carries its own. The label names the group with no `for`, which would name its wrapper
   test.each([
-    ['radio', colors, 'radiogroup', 'radio', true],
-    ['checkboxes', { type: 'array', title: 'Color', items: colors, uniqueItems: true }, 'group', 'checkbox', false],
+    ['radio', colors, 'radiogroup', 'radio', 'true', null],
+    [
+      'checkboxes',
+      { type: 'array', title: 'Color', items: colors, uniqueItems: true },
+      'group',
+      'checkbox',
+      null,
+      'true',
+    ],
   ] as const)(
     "names a %s group by its label, marks the group or each option invalid, and describes each option by the field's errors",
-    (widget, color, role, item, invalidGroup) => {
+    (widget, color, role, item, groupInvalid, optionInvalid) => {
       const { container } = render(
         <Form
           schema={{ type: 'object', properties: { color } }}
@@ -704,27 +705,21 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
         />,
       );
 
-      expect(container.querySelector('#root_color')).toHaveRole(role);
-      expect(container.querySelector('#root_color')).toHaveAccessibleName('Color');
-      if (invalidGroup) {
-        expect(container.querySelector('#root_color')).toHaveAttribute('aria-invalid', 'true');
-      } else {
-        expect(container.querySelector('#root_color')).not.toHaveAttribute('aria-invalid');
-      }
+      const group = container.querySelector('#root_color');
+      expect(group).toHaveRole(role);
+      expect(group).toHaveAccessibleName('Color');
+      expect(group?.getAttribute('aria-invalid')).toBe(groupInvalid);
+      expect(container.querySelector('#root_color__label label')).not.toHaveAttribute('for');
       for (const option of screen.getAllByRole(item)) {
-        if (invalidGroup) {
-          expect(option).not.toHaveAttribute('aria-invalid');
-        } else {
-          expect(option).toHaveAttribute('aria-invalid', 'true');
-        }
+        expect(option.getAttribute('aria-invalid')).toBe(optionInvalid);
         expect(option).toHaveAccessibleDescription('pick one');
       }
       expectReferencesResolve(container);
     },
   );
 
-  test("names a required range's slider by its label, which a for can't reach, and marks it required", () => {
-    render(
+  test("names a required range's slider by its label, which a for can't reach", () => {
+    const { container } = render(
       <Form
         schema={{
           type: 'object',
@@ -737,7 +732,8 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
     );
 
     expect(screen.getByRole('slider')).toHaveAccessibleName('Volume');
-    expect(screen.getByRole('slider')).toHaveAttribute('aria-required', 'true');
+    expect(screen.getByRole('slider')).not.toHaveAttribute('aria-required');
+    expect(container.querySelector('#root_volume__label label')).not.toHaveAttribute('for');
   });
 
   test("names a range's slider by the text of the label ui:label: false hides", () => {
