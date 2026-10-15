@@ -13,7 +13,7 @@ import type {
 } from '@rjsf/utils';
 import { ANY_OF_KEY, getPresentationDeclaration, resolveFieldPresentation, schemaRequiresTrueValue } from '@rjsf/utils';
 
-import getFieldWidget from './fieldWidgetUtils.ts';
+import getFieldWidget, { displaysLabel, withoutDescribers } from './fieldWidgetUtils.ts';
 
 /** The fields of core's that render no control for a template label to name: a container, whose label is its own
  * heading, and `NullField`, which renders nothing. `ArrayField` is one only when it renders no widget
@@ -85,7 +85,7 @@ function rendersControl<
   schema: S,
   uiSchema: UiSchema<T, S, F>,
 ) {
-  const { fields, globalFormOptions, schemaUtils, globalUiOptions } = registry;
+  const { fields, globalFormOptions } = registry;
   if (field === fields.ArrayField) {
     return widget !== undefined;
   }
@@ -93,8 +93,7 @@ function rendersControl<
     // The fallback UI labels its value from outside by the same call it makes to decide that, and otherwise leaves the
     // value field to draw its own heading or label
     return (
-      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) &&
-      schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions)
+      Boolean(globalFormOptions.useFallbackUiForUnsupportedType) && displaysLabel<T, S, F>(registry, schema, uiSchema)
     );
   }
   return !CONTROLLESS_FIELD_KEYS.some((key) => fields[key] === field);
