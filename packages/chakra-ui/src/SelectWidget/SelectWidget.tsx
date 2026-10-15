@@ -130,11 +130,9 @@ export default function SelectWidget<
         value={formValue}
         positioning={{ placement: 'bottom' }}
       >
-        <ChakraSelect.Control>
-          <SelectTrigger {...widgetAriaProps(props)}>
-            <SelectValueText placeholder={placeholder} />
-          </SelectTrigger>
-        </ChakraSelect.Control>
+        <SelectTrigger {...widgetAriaProps(props)}>
+          <SelectValueText placeholder={placeholder} />
+        </SelectTrigger>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
           <ChakraSelect.Content>
             {groupedOptions.map((option) =>

@@ -108,3 +108,12 @@ describe('SelectWidget focus and blur', () => {
     },
   );
 });
+
+describe('SelectWidget control', () => {
+  test("renders the select's control once, so its id appears once", () => {
+    const { container } = render(<Form schema={{ type: 'string', enum: ['foo', 'bar'] }} validator={validator} />);
+
+    expect(container.querySelectorAll('[id="select:root:control"]')).toHaveLength(1);
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
+  });
+});
