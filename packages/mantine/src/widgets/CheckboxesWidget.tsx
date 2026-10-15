@@ -11,7 +11,7 @@ import {
   useOptionFocusHandlers,
 } from '@rjsf/utils';
 
-import { cleanupOptions, getDescriptionProps, GroupOptions, useGroupAriaProps } from '../utils.tsx';
+import { cleanupOptions, getDescriptionProps, getErrorsTemplate, GroupOptions, useGroupAriaProps } from '../utils.tsx';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -80,5 +80,7 @@ export default function CheckboxesWidget<
         </GroupOptions>
       </Flex>
     </Checkbox.Group>
-  ) : null;
+  ) : (
+    getErrorsTemplate<T, S, F>(props)
+  );
 }
