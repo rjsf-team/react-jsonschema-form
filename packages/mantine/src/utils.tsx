@@ -2,6 +2,7 @@ import type { ReactElement, ReactNode } from 'react';
 import { createContext, Fragment, use, useCallback, useMemo } from 'react';
 import type { BoxProps, ElementProps, InputWrapperFactory, InputWrapperProps, StylesApiProps } from '@mantine/core';
 import {
+  Box,
   extractStyleProps,
   filterProps,
   Input,
@@ -169,6 +170,17 @@ export function errorLines(errors: readonly ReactNode[]): ReactNode {
         </Fragment>
       ))
     : undefined;
+}
+
+/** The `*` a title template marks a required object's or array's heading with, styled as Mantine marks a required
+ * label's, outside the element carrying the title's id, so an option selector named by that id isn't named "Pet *"
+ */
+export function RequiredMarker() {
+  return (
+    <Box component='span' aria-hidden c='var(--input-asterisk-color, var(--mantine-color-error))'>
+      {' *'}
+    </Box>
+  );
 }
 
 /** The props a widget, or a template drawing a container's own errors, reads its errors from */

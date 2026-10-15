@@ -5627,10 +5627,13 @@ exports[`with title and description > array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h4>
         </legend>
         <p
@@ -5742,10 +5745,13 @@ exports[`with title and description > array icons 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h4>
         </legend>
         <p
@@ -6536,10 +6542,13 @@ exports[`with title and description > fixed array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            Test field
+            <span
+              id="root__title"
+            >
+              Test field
+            </span>
           </h4>
         </legend>
         <p
@@ -6809,10 +6818,13 @@ exports[`with title and description from both > array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
@@ -6924,10 +6936,13 @@ exports[`with title and description from both > array icons 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
@@ -7718,10 +7733,13 @@ exports[`with title and description from both > fixed array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
@@ -7991,10 +8009,13 @@ exports[`with title and description from uiSchema > array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
@@ -8106,10 +8127,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p
@@ -8900,10 +8924,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
           <h4
             class="m_8a5d1357 mantine-Title-root"
             data-order="4"
-            id="root__title"
             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
           >
-            My Field
+            <span
+              id="root__title"
+            >
+              My Field
+            </span>
           </h4>
         </legend>
         <p

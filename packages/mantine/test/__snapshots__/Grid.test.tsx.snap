@@ -70,10 +70,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <h3
                         class="m_8a5d1357 mantine-Title-root"
                         data-order="3"
-                        id="root_person__title"
                         style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                       >
-                        Person Info
+                        <span
+                          id="root_person__title"
+                        >
+                          Person Info
+                        </span>
                       </h3>
                     </div>
                   </div>
@@ -2958,10 +2961,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <h3
                         class="m_8a5d1357 mantine-Title-root"
                         data-order="3"
-                        id="root_person__title"
                         style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                       >
-                        Person Info
+                        <span
+                          id="root_person__title"
+                        >
+                          Person Info
+                        </span>
                       </h3>
                     </div>
                   </div>
@@ -5889,10 +5895,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <h3
                         class="m_8a5d1357 mantine-Title-root"
                         data-order="3"
-                        id="root_person__title"
                         style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                       >
-                        Person Info
+                        <span
+                          id="root_person__title"
+                        >
+                          Person Info
+                        </span>
                       </h3>
                     </div>
                   </div>
@@ -7872,10 +7881,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       <h3
                         class="m_8a5d1357 mantine-Title-root"
                         data-order="3"
-                        id="root_person__title"
                         style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                       >
-                        Person Info
+                        <span
+                          id="root_person__title"
+                        >
+                          Person Info
+                        </span>
                       </h3>
                     </div>
                   </div>
@@ -10743,10 +10755,13 @@ exports[`Three even column grid > renders person and address in three columns, n
                 <h3
                   class="m_8a5d1357 mantine-Title-root"
                   data-order="3"
-                  id="root_person__title"
                   style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                 >
-                  Person Info
+                  <span
+                    id="root_person__title"
+                  >
+                    Person Info
+                  </span>
                 </h3>
               </div>
             </div>
@@ -12294,10 +12309,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
                 <h3
                   class="m_8a5d1357 mantine-Title-root"
                   data-order="3"
-                  id="root_person__title"
                   style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                 >
-                  Person Info
+                  <span
+                    id="root_person__title"
+                  >
+                    Person Info
+                  </span>
                 </h3>
               </div>
             </div>

@@ -14,10 +14,11 @@ const labelledByWidgetKeys: ReadonlySet<string> = new Set(['RangeWidget', 'AltDa
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: every widget draws its
  * own label and description, the option selector of an `anyOf`/`oneOf` names and describes the field and the fallback
- * UI's value field labels itself, since this theme's template draws neither, and an object's own template draws its
- * errors. This theme's widgets, and the `@rjsf/core` widgets it renders through its `BaseInputTemplate`, draw their
- * errors in Mantine's error slot; any other widget, such as `@rjsf/core`'s `RatingWidget` or one of your own, leaves
- * them to the template, since a widget that draws none would otherwise lose them
+ * UI's value field labels itself, since this theme's template draws a label and description only for a widget declared
+ * to leave them there, and an object's own template draws its errors. This theme's widgets, and the `@rjsf/core`
+ * widgets it renders through its `BaseInputTemplate`, draw their errors in Mantine's error slot; any other widget, such
+ * as `@rjsf/core`'s `RatingWidget` or one of your own, leaves them to the template, since a widget that draws none
+ * would otherwise lose them
  *
  * @param widgetKeys - The keys this theme registers its own widgets under
  */
