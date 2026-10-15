@@ -41,9 +41,12 @@ function CheckboxesWidget<
 
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
 
-  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>({ id, presentation });
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'group',
+  );
   return (
-    <div className='checkboxes' id={id} role='group' {...groupAttributes}>
+    <div className='checkboxes' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
