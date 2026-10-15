@@ -9,7 +9,9 @@ import type {
 } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX, getValidationTarget, isObject } from '@rjsf/utils';
 
-import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
+import pointerValidationTests, {
+  absoluteRefValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import * as pkg from '../src/index.ts';
@@ -359,3 +361,4 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
 });
 
 pointerValidationTests(() => customizeValidator());
+absoluteRefValidationTests(() => customizeValidator());

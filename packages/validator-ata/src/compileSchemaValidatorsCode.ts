@@ -5,11 +5,6 @@ import { Validator } from 'ata-validator';
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
 import type { CustomValidatorOptionsType } from './types.ts';
 
-/** A `$ref` naming a whole entry of the root's `definitions` or `$defs`, the only `$ref` ata resolves, and only to an
- * entry of the document it compiles
- */
-const DEFINITION_REF = /^#\/(definitions|\$defs)\/([^/]*)$/;
-
 function decodeToken(token: string): string {
   return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
 }
@@ -32,10 +27,13 @@ function compilable(schema: unknown): GenericObjectType {
   return 'not' in object || REF_KEY in object ? object : { ...object, not: { not: {} } };
 }
 
-/** Returns `schema` as a document ata compiles on its own. ata names no subschema of another document and resolves a
- * `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, so the document carries every
- * definition of the root it reaches, and every other subschema of the root it reaches through a `$ref` as a
- * definition of its own, the `$ref` renamed to it. A `$ref` that names nothing in the root, or one into another
+/** Returns `schema` as a document ata compiles on its own. ata names no subschema of another document, resolves a
+ * `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, does not percent-decode it, and
+ * compiles nothing for a document holding both containers. So every subschema of the root the document reaches
+ * through a `$ref`, a definition or not, is carried in a single container of the document under a generated name the
+ * `$ref` is renamed to, and the document's own containers, which only the renamed `$ref`s could name, are dropped. A
+ * `$ref` the root names nothing at is read against the document, which is where the copy of an option with an `$id` of
+ * its own, listed without that `$id`, holds its definitions. One that names nothing in either, or one into another
  * document, is left as it is, which leaves ata nothing to compile and the module reporting it when the schema is first
  * validated against.
  *
@@ -44,51 +42,21 @@ function compilable(schema: unknown): GenericObjectType {
  * @returns - The document
  */
 function standalone(schema: GenericObjectType, rootSchema: object): GenericObjectType {
-  // ata resolves a `$ref` into one of the two containers of a document only, so the subschemas are carried in the one
-  // the root uses
-  const synthetic = isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions';
-  const taken = new Set([
-    ...Object.keys(getByPath<object>(rootSchema, [synthetic], {})),
-    ...Object.keys(getByPath<object>(schema, [synthetic], {})),
-  ]);
+  const container = isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions';
   const names = new Map<string, string>();
-  const carried = new Set<string>();
-  const pending: [string, string, unknown][] = [];
-  const carry = (container: string, name: string, value: unknown) => {
-    const key = `${container}/${name}`;
-    if (!carried.has(key)) {
-      carried.add(key);
-      pending.push([container, name, value]);
-    }
-  };
-  const nameFor = (target: string, value: unknown) => {
-    const known = names.get(target);
-    if (known !== undefined) {
-      return known;
-    }
-    let name = `rjsf:${names.size}`;
-    while (taken.has(name)) {
-      name += '_';
-    }
-    names.set(target, name);
-    carry(synthetic, name, value);
-    return name;
-  };
+  const pending: [string, unknown][] = [];
   const renamed = (ref: string): string => {
-    if (!ref.startsWith('#')) {
+    const subschema = ref.startsWith('#') ? (subschemaAt(rootSchema, ref) ?? subschemaAt(schema, ref)) : undefined;
+    if (subschema === undefined) {
       return ref;
     }
-    const [, container, token] = DEFINITION_REF.exec(ref) ?? [];
-    if (container !== undefined) {
-      const name = decodeToken(token);
-      const definition = getByPath(rootSchema, [container, name]);
-      if (definition !== undefined) {
-        carry(container, name, definition);
-      }
-      return ref;
+    let name = names.get(ref);
+    if (name === undefined) {
+      name = `rjsf:${names.size}`;
+      names.set(ref, name);
+      pending.push([name, subschema]);
     }
-    const subschema = subschemaAt(rootSchema, ref);
-    return subschema === undefined ? ref : `#/${synthetic}/${nameFor(ref, subschema)}`;
+    return `#/${container}/${name}`;
   };
   const rewrite = (value: unknown): unknown => {
     if (Array.isArray(value)) {
@@ -112,13 +80,13 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     const allOf: unknown = siblings[ALL_OF_KEY];
     return { ...siblings, [ALL_OF_KEY]: [...(Array.isArray(allOf) ? allOf : []), reference] };
   };
-  const document = compilable(rewrite(schema));
+  const { definitions: _definitions, $defs: _defs, ...document } = compilable(rewrite(schema));
+  const carried: GenericObjectType = {};
   for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
-    const [container, name, value] = next;
-    const entries: unknown = document[container];
-    document[container] = { ...(isObject(entries) ? entries : {}), [name]: compilable(rewrite(value)) };
+    const [name, value] = next;
+    carried[name] = compilable(rewrite(value));
   }
-  return document;
+  return names.size === 0 ? document : { ...document, [container]: carried };
 }
 
 /** Compiles a schema into a precompiled validator module. ata's

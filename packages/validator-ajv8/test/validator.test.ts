@@ -25,7 +25,9 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
-import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
+import pointerValidationTests, {
+  absoluteRefValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
@@ -3548,3 +3550,4 @@ describe('AJV8Validator validating a subschema by its place in the root', () => 
 });
 
 pointerValidationTests(() => customizeValidator());
+absoluteRefValidationTests(() => customizeValidator());
