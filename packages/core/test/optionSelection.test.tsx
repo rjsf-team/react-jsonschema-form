@@ -234,7 +234,7 @@ describe('option selection as form state', () => {
   it.each([
     ['a null option', null],
     ['another object option', {}],
-  ])('writes the empty object of an object property switching from %s (#5368)', async (_from, p) => {
+  ])('writes the empty object of an object property switching from %s', async (_from, p) => {
     const options: RJSFSchema[] = [
       { title: 'Other', type: 'object', properties: { z: { type: 'string' } } },
       {
@@ -843,7 +843,7 @@ describe('omitting extra data', () => {
   });
 });
 
-describe('a condition swapped inside the selected option (#5465)', () => {
+describe('a condition swapped inside the selected option', () => {
   const cfgFor = (name: string): RJSFSchema => ({
     type: 'object',
     default: { name },
@@ -871,7 +871,7 @@ describe('a condition swapped inside the selected option (#5465)', () => {
     },
   };
 
-  it("replaces the old branch's default with the new branch's", async () => {
+  it("replaces the old branch's default with the new branch's (#5465)", async () => {
     const { node, onChange } = createFormComponent({
       schema,
       initialFormData: { thing: { mode: 'a', cfg: { name: 'a' } } },
@@ -901,7 +901,7 @@ describe('a condition swapped inside the selected option (#5465)', () => {
     );
   });
 
-  it('reads the option the user selected, not the one the data matches best', async () => {
+  it('reads the option the user selected, not the one the data matches best (#5465)', async () => {
     const shared: RJSFSchema = { type: 'object', properties: { mode: { type: 'string', enum: ['a', 'b'] } } };
     const selected: RJSFSchema = {
       ...optionWithDependency,

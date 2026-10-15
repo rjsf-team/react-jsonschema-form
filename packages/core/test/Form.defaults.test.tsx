@@ -1034,7 +1034,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
     // Each `if` requires `cfg`, so a branch declares its default only while the key holds a value. The new default is
     // written in place, so the key is never empty and the branch declaring it keeps applying
-    it('writes the new default in place where the branch declaring it requires the key', async () => {
+    it('writes the new default in place where the branch declaring it requires the key (#5480)', async () => {
       const { node, onChange } = createFormComponent({
         schema: {
           type: 'object',
@@ -1050,6 +1050,33 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
             {
               if: { properties: { mode: { const: 'b' } }, required: ['mode', 'cfg'] },
               then: { properties: { cfg: cfgFor('b') } },
+            },
+          ],
+        },
+        formData: { mode: 'a', cfg: { name: 'a' } },
+      });
+
+      await selectMode(node, 'b');
+
+      expectToHaveBeenCalledWithFormData(onChange, { mode: 'b', cfg: { name: 'b' } }, 'root_mode');
+    });
+
+    // `hint` is declared only while `cfg` is absent. The replacement for `cfg` is written in place, so no fill ever
+    // sees the key absent and writes a `hint` the settled schema does not declare
+    it('writes no default an else declares for the replaced key being absent (#5480)', async () => {
+      const { node, onChange } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+          allOf: [
+            {
+              if: { properties: { mode: { const: 'a' } } },
+              then: { properties: { cfg: cfgFor('a') } },
+              else: { properties: { cfg: cfgFor('b') } },
+            },
+            {
+              if: { required: ['cfg'] },
+              else: { properties: { hint: { type: 'string', default: 'no cfg' } } },
             },
           ],
         },
