@@ -9,7 +9,8 @@ export default function MultiSchemaFieldTemplate<
 
   return (
     <div>
-      <div>{selector}</div>
+      {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
+      {selector ? <div>{selector}</div> : null}
       {optionSchemaField}
     </div>
   );
