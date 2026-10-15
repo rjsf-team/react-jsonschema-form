@@ -8,6 +8,7 @@ import {
   enumOptionValueDecoder,
   getOptionValueFormat,
   optionId,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { getGroupProps, getOptionClassNames } from '../../utils.ts';
@@ -28,22 +29,23 @@ export default function RadioWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  name,
-  options,
-  value,
-  label,
-  hideLabel,
-  presentation,
-  required,
-  disabled,
-  readonly,
-  onChange,
-  onFocus,
-  onBlur,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    name,
+    options,
+    value,
+    label,
+    presentation,
+    required,
+    disabled,
+    readonly,
+    onChange,
+    onFocus,
+    onBlur,
+  } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);

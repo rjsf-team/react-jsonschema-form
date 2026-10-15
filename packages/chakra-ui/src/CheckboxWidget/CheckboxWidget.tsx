@@ -8,6 +8,7 @@ import {
   getUiOptions,
   getWidgetDescription,
   schemaRequiresTrueValue,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { Checkbox } from '../components/ui/checkbox.tsx';
@@ -29,7 +30,6 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
     label,
-    hideLabel,
     presentation,
     registry,
     options,
@@ -37,6 +37,7 @@ export default function CheckboxWidget<
     schema,
     required,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // The plan says which description this widget draws; without a plan, a template rendering the `checkbox` alias draws
   // the description itself

@@ -16,6 +16,7 @@ import {
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -32,7 +33,6 @@ export default function SelectWidget<
     htmlName,
     options,
     label,
-    hideLabel,
     placeholder,
     multiple,
     required,
@@ -43,6 +43,7 @@ export default function SelectWidget<
     onChange,
     schema,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = useMemo(

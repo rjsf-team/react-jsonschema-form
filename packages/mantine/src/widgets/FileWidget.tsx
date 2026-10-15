@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { FileInput, Pill } from '@mantine/core';
 import type { FormContextType, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue, useFileWidgetProps } from '@rjsf/utils';
+import { labelValue, useFileWidgetProps, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
@@ -25,11 +25,11 @@ export default function FileWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     multiple,
     onChange,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { filesInfo, handleChange, handleRemove } = useFileWidgetProps(value, onChange, multiple);
   const themeProps = cleanupOptions(options);
 

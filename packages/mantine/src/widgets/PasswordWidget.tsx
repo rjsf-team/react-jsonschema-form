@@ -2,7 +2,7 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { PasswordInput } from '@mantine/core';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { labelValue } from '@rjsf/utils';
+import { labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
@@ -26,12 +26,12 @@ export default function PasswordWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     onChange,
     onBlur,
     onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { emptyValue } = options;
   const themeProps = cleanupOptions(options);

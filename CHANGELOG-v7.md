@@ -73,6 +73,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Declares `FallbackField` as drawing its own label, so the fallback UI's value is labelled by its own widget, which no template label did before ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `CheckboxWidget` carries the native `required` attribute only where its schema demands `true`, so a required `boolean` left unchecked submits as `false` ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388), [#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `SelectWidget`'s trigger takes the plan's `aria-labelledby`, which `SelectTrigger` used to leave on the control around it, so an object's option selector is named by the object's heading ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `TextareaWidget` takes its error state from `hasWidgetErrors()`, so an `anyOf`/`oneOf` option's control is styled invalid while the field above draws its errors ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/core
 
@@ -327,6 +328,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `SelectWidget`'s button takes the `aria-labelledby` its plan gives it, so an `anyOf`/`oneOf` option selector is named by its field's label, or an object's heading, and describes the option it displays, where it used to be named by that option alone ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - Declares its toggle `uncheckedIsFalse`, so a required boolean it renders is planned as required only where its schema demands `true` ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388), [#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `SelectWidget` hands `SelectedOptionDescription` its `hideLabel` and plan, so the selected option's description renders under the id the select is described by ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `getGroupProps()` takes the group's `role` and, under a plan, `aria-invalid` from `getGroupAttributes()`, so `RadioWidget` and `RatingWidget` mark their `radiogroup` invalid while the field has errors ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/fluentui-rc
 
@@ -344,6 +346,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `FieldHelpTemplate` renders under the help id of its field's plan, so an `anyOf`/`oneOf` option's own `ui:help` no longer repeats the field's id ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - Declares `FallbackField` as drawing its own label, so the fallback UI's value is labelled by its own widget, which no template label did before ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `SelectWidget` hands `SelectedOptionDescription` its `hideLabel` and plan, so the selected option's description renders under the id the select is described by ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `SelectWidget` takes its error state from `hasWidgetErrors()`, so an `anyOf`/`oneOf` option's control is styled invalid while the field above draws its errors ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/mantine
 
@@ -405,6 +408,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `FieldHelpTemplate` renders under the help id of its field's plan, so an `anyOf`/`oneOf` option's own `ui:help` no longer repeats the field's id ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - Declares `FallbackField` as drawing its own label, so the fallback UI's value is labelled by its own widget, which no template label did before ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `SelectWidget` hands the plan's `aria-labelledby` to MUI's select as its `labelId`, the only way MUI names its combobox, so an object's option selector is named by the object's heading ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `BaseInputTemplate` and `SelectWidget` take their error state from `hasWidgetErrors()`, so an `anyOf`/`oneOf` option's control is styled invalid while the field above draws its errors ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/react-bootstrap
 
@@ -423,6 +427,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `FieldTemplate`'s label carries `fieldLabelId()`, which an `anyOf`/`oneOf` option selector is named by ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `FieldHelpTemplate` renders under the help id of its field's plan, so an `anyOf`/`oneOf` option's own `ui:help` no longer repeats the field's id ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `SelectWidget` hands `SelectedOptionDescription` its `hideLabel` and plan, so the selected option's description renders under the id the select is described by ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `BaseInputTemplate` and `SelectWidget` take their error state from `hasWidgetErrors()`, so an `anyOf`/`oneOf` option's control is styled invalid while the field above draws its errors ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/shadcn
 
@@ -446,6 +451,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `FieldTemplate`'s label carries `fieldLabelId()`, and `SelectWidget` gives its button the `aria-labelledby` of its plan, through `FancySelect`'s new `ariaLabelledby`, so an `anyOf`/`oneOf` option selector is named by its field's label rather than by the option it displays ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `CheckboxWidget` carries the native `required` attribute only where its schema demands `true`, so a required `boolean` left unchecked submits as `false` ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388), [#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `SelectWidget` hands `SelectedOptionDescription` its `hideLabel` and plan, so the selected option's description renders under the id the select is described by ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `BaseInputTemplate` and `SelectWidget` take their error state from `hasWidgetErrors()`, so an `anyOf`/`oneOf` option's control is styled invalid while the field above draws its errors ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/snapshot-tests
 
@@ -630,6 +636,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `DateElement` takes its field's `presentation` and hands its `SelectWidget` a plan of its own, so each date part of an `AltDateWidget` is described by the field's parts that render, rather than by `ariaDescribedByIds()`, whose ids no element may have, and is `aria-invalid` while the field's errors show, while keeping the name `dateElementAriaLabel()` gives it. `widgetAriaProps()` adds the ids a caller passes to its plan's, keeping the plan's other attributes, rather than replacing them, and replaces only the `ariaDescribedByIds()` a select rendered without a plan falls back to, which an empty `aria-describedby` from its caller now replaces too, where it used to fall back to it ([#5542](https://github.com/rjsf-team/react-jsonschema-form/issues/5542), [#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - Added `enumOptionsAutofocusIndex()`, the index of the option a `RadioWidget` or `CheckboxesWidget` focuses under `ui:autofocus`: a radio group's checked option, given its value, where Tab into the group lands, else the first one `ui:enumDisabled` leaves enabled, so `@rjsf/core`'s and every theme's radio and checkboxes widgets read that rule from one place ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - Added `getLabelId()`, the id of a field's label: the one its plan gives it, whoever draws it, numbered with `optionLabelId()` beneath a label a field above draws, or `fieldLabelId()` without a plan, so a widget that draws its own label draws it under the id its plan points `aria-labelledby` at. `getGroupLabelling()`'s `labelId` is that id even where the template draws the label, rather than `fieldLabelId()`, so a widget that hands it to its own label slot points at the label the template draws ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- **BREAKING CHANGE:** `FieldTemplateProps.displayLabel` and `rawErrors`, `WidgetProps.hideLabel` and `rawErrors`, `getDisplayLabel()` and `SchemaUtilsType.getDisplayLabel()` are tagged `@deprecated`, kept through v7 for a template, widget or field rendered without a plan; `@rjsf/core` and every theme read them only through `templateDrawsLabel()`, `hasTemplateErrors()`, `widgetDrawsLabel()` and `hasWidgetErrors()`, or where they keep one out of the props they spread onto an element. With a plan, the plan wins: `@rjsf/core`'s and every theme's templates and widgets ignore one of these props handed alongside a `presentation`, so a custom field that hides a widget's label with `hideLabel` while passing its plan hands it a plan whose label isn't the widget's instead ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/validator-ajv8
 

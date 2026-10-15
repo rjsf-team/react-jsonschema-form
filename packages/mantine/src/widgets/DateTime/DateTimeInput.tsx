@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { DateInput } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, labelValue } from '@rjsf/utils';
+import { getDateTimeLocalValue, labelValue, widgetDrawsLabel } from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
@@ -65,7 +65,6 @@ export default function DateTimeInput<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     onChange,
     onBlur,
@@ -74,6 +73,7 @@ export default function DateTimeInput<
     displayFormat,
     schema,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
   const themeProps = cleanupOptions(options);

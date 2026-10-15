@@ -209,6 +209,7 @@ const mockFileReader = {
 } as unknown as FileReader;
 
 describe('ArrayField', () => {
+  // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated prop a component without a plan reads
   const CustomComponent = (props: WidgetProps) => <div id='custom'>{props.rawErrors}</div>;
 
   const CustomSelectComponent = (props: WidgetProps) => (

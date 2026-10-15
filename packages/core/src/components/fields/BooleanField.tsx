@@ -25,7 +25,7 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
-import { getBooleanFieldWidget, getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import { getBooleanFieldWidget, getWidgetErrorProps, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 
 /** Whether `ui:enumOrder` would reorder or drop any of the constant `options` if it applied to them
  *
@@ -208,7 +208,7 @@ function BooleanField<
       registry={registry}
       autofocus={autofocus}
       placeholder={placeholder}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
       presentation={presentation}
       htmlName={fieldPathToName(fieldPath, registry.globalFormOptions)}
     />

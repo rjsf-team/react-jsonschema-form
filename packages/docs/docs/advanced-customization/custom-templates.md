@@ -835,7 +835,7 @@ The following props are passed to a custom field template component:
 - `rawDescription`: The description the template draws, from the schema or a `ui:description`, or empty where the plan leaves it to the field or its widget.
 - `children`: The field or widget component instance for this field row.
 - `errors`: A component instance listing any encountered errors for this field, when the field's plan says the template draws them.
-- `rawErrors`: An array of strings listing the generated error messages this field is displaying, `undefined` while `ui:hideError` is in effect. Deprecated: read `presentation.errors.messages`, which has `ui:hideError` applied, for the messages, [`hasTemplateErrors()`](../api-reference/utility-functions.md#hastemplateerrors), which reads them and falls back to `rawErrors` for a template rendered without a plan, for whether there are any to show, and `presentation.errors.by` for whether this template draws them, instead.
+- `rawErrors`: An array of strings listing the generated error messages this field is displaying, `undefined` while `ui:hideError` is in effect. Deprecated, and kept through v7 for a template rendered without a plan: read `presentation.errors.messages`, which has `ui:hideError` applied, and `presentation.errors.by` for whether this template draws them, instead, or [`hasTemplateErrors()`](../api-reference/utility-functions.md#hastemplateerrors), which falls back to `rawErrors` without a plan.
 - `errorSchema`: The tree of errors for this field and its children, carrying every error whatever `hideError` says.
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined, when the field's plan says the template draws it.
 - `rawHelp`: The `ui:help` uiSchema directive as it was given, a `string` or a `ReactElement`, resolved the same way as the `help` component that renders it, so it is a truthy check for whether the field has any help at all.
@@ -844,7 +844,7 @@ The following props are passed to a custom field template component:
 - `readonly`: A boolean value stating if the field is read-only.
 - `hideError`: A boolean value stating if the field is hiding its errors
 - `disabled`: A boolean value stating if the field is disabled.
-- `displayLabel`: A boolean value stating if the template renders the label: true only where the field's plan says the template draws it, so it is false where the widget draws its own label, and where `ui:label: false` turns it off. Deprecated: read [`templateDrawsLabel()`](../api-reference/utility-functions.md#templatedrawslabel), which reads `presentation.label.by === 'template'` and falls back to `displayLabel` for a template rendered without a plan, instead.
+- `displayLabel`: A boolean value stating if the template renders the label: true only where the field's plan says the template draws it, so it is false where the widget draws its own label, and where `ui:label: false` turns it off. Deprecated, and kept through v7 for a template rendered without a plan: read `presentation.label.by === 'template'` instead, or [`templateDrawsLabel()`](../api-reference/utility-functions.md#templatedrawslabel), which falls back to `displayLabel` without a plan.
 - `presentation`: The field's plan, built by `SchemaField`: who draws its label, description, help and errors, under which ids, and the attributes its control carries. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.

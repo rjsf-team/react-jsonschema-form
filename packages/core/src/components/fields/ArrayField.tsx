@@ -42,6 +42,7 @@ import {
   displaysLabel,
   getArrayFieldMode,
   getContainerHeading,
+  getWidgetErrorProps,
   getWidgetLabelProps,
   withFallbackItems,
 } from './fieldWidgetUtils.ts';
@@ -262,7 +263,7 @@ function ArrayAsMultiSelect<
       {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
       presentation={presentation}
       htmlName={htmlName}
     />
@@ -319,7 +320,7 @@ function ArrayAsCustomWidget<
       {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
       presentation={presentation}
       htmlName={htmlName}
     />
@@ -379,7 +380,7 @@ function ArrayAsFiles<
       required={required}
       registry={registry}
       autofocus={autofocus}
-      rawErrors={rawErrors}
+      {...getWidgetErrorProps<T, S, F>(rawErrors)}
       presentation={presentation}
       {...labelProps}
       placeholder={placeholder}

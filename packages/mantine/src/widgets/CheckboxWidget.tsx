@@ -2,7 +2,7 @@ import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
 import { Checkbox, Input } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, errorId, labelValue, schemaRequiresTrueValue } from '@rjsf/utils';
+import { ariaDescribedByIds, errorId, labelValue, schemaRequiresTrueValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { getDescriptionProps, useVisibleErrors } from '../utils.tsx';
 
@@ -25,12 +25,12 @@ export default function CheckboxWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     schema,
     onChange,
     onBlur,
     onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const trueValueRequired = schemaRequiresTrueValue(schema) && required;
   const handleCheckboxChange = useCallback(

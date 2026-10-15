@@ -28,6 +28,7 @@ import {
   isObject,
   labelValue,
   titleId,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 /** The keys `T` declares. `keyof T` is `string` for a type with an index signature, as `UIOptionsType` and
@@ -571,7 +572,8 @@ export function useFieldWrapperProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(widgetProps: WidgetProps<T, S, F>, containerOnInputs = false) {
-  const { id, label, hideLabel, required, options } = widgetProps;
+  const { id, label, required, options } = widgetProps;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const { description } = getDescriptionProps(widgetProps);
   const { labelElement, wrapperProps: inputWrapperProps } = useInputProps(
     'InputWrapper',
@@ -696,7 +698,8 @@ export function useGroupAriaProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(component: 'CheckboxGroup' | 'RadioGroup', widgetProps: WidgetProps<T, S, F>) {
-  const { id, label, hideLabel, required, options } = widgetProps;
+  const { id, label, required, options } = widgetProps;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(widgetProps);
   const props = useProps<GenericObjectType>(component, {}, pickOptions(options, groupPickedKeys));
   const wrapperObject = asObject(props.wrapperProps);
   // A group spreads its own props after `wrapperProps`, the reverse of an input, then `Input.Wrapper` falls back to

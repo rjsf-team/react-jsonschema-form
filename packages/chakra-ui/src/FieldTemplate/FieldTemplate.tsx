@@ -1,6 +1,6 @@
 import { Fieldset } from '@chakra-ui/react';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasVisibleErrors } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel } from '@rjsf/utils';
 
 export default function FieldTemplate<
   T = unknown,
@@ -13,7 +13,6 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
     presentation,
     hidden,
     label,
@@ -25,8 +24,6 @@ export default function FieldTemplate<
     readonly,
     registry,
     required,
-    rawErrors,
-    hideError,
     errors,
     help,
     description,
@@ -34,8 +31,9 @@ export default function FieldTemplate<
     schema,
     uiSchema,
   } = props;
+  const displayLabel = templateDrawsLabel<T, S, F>(props);
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
   if (hidden) {
@@ -50,6 +48,7 @@ export default function FieldTemplate<
       id={id}
       label={label}
       keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
       presentation={presentation}
       rawDescription={rawDescription}

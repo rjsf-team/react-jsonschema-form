@@ -8,7 +8,7 @@ import {
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  hasVisibleErrors,
+  hasWidgetErrors,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
@@ -16,28 +16,27 @@ export default function BaseInputTemplate<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  placeholder,
-  required,
-  readonly,
-  disabled,
-  type,
-  value,
-  onChange,
-  onChangeOverride,
-  onBlur,
-  onFocus,
-  autofocus,
-  options,
-  schema,
-  rawErrors,
-  hideError,
-  children,
-  extraProps,
-  registry,
-}: BaseInputTemplateProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    placeholder,
+    required,
+    readonly,
+    disabled,
+    type,
+    value,
+    onChange,
+    onChangeOverride,
+    onBlur,
+    onFocus,
+    autofocus,
+    options,
+    schema,
+    children,
+    extraProps,
+    registry,
+  } = props;
   const { ClearButton } = registry.templates.ButtonTemplates;
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
   // `pattern` and `inputMode` are the two derived props a caller can also mean to set, so `extraProps` keeps either one
@@ -76,7 +75,7 @@ export default function BaseInputTemplate<
         disabled={disabled}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         readOnly={readonly}
-        className={hasVisibleErrors({ rawErrors, hideError }) ? 'is-invalid' : ''}
+        className={hasWidgetErrors<T, S, F>(props) ? 'is-invalid' : ''}
         list={hasExamples ? examplesId(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ''}

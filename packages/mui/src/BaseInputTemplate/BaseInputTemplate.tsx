@@ -19,8 +19,9 @@ import {
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
-  hasVisibleErrors,
+  hasWidgetErrors,
   labelValue,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
@@ -63,8 +64,9 @@ export default function BaseInputTemplate<
     disabled,
     type,
     label,
-    hideLabel,
-    hideError,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
+    hideLabel: _hideLabel,
+    hideError: _hideError,
     value,
     onChange,
     onChangeOverride,
@@ -74,7 +76,8 @@ export default function BaseInputTemplate<
     options,
     schema,
     uiSchema,
-    rawErrors,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
+    rawErrors: _rawErrors,
     errorSchema,
     registry,
     InputLabelProps,
@@ -83,6 +86,7 @@ export default function BaseInputTemplate<
     presentation, // remove this from textFieldProps
     ...textFieldProps
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const derivedInputProps = getInputProps<T, S, F>(schema, type, options);
@@ -160,7 +164,7 @@ export default function BaseInputTemplate<
         }}
         {...rest}
         value={value || value === 0 ? value : ''}
-        error={hasVisibleErrors({ rawErrors, hideError })}
+        error={hasWidgetErrors<T, S, F>(props)}
         onChange={onChangeOverride ?? handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

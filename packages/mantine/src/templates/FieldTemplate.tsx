@@ -19,7 +19,6 @@ export default function FieldTemplate<
     label,
     errors,
     help,
-    displayLabel,
     description,
     rawDescription,
     hidden,
@@ -43,7 +42,6 @@ export default function FieldTemplate<
       classNames={classNames}
       style={style}
       label={label}
-      displayLabel={displayLabel}
       rawDescription={rawDescription}
       schema={schema}
       uiSchema={uiSchema}

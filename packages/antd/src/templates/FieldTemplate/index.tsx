@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, GenericObjectType } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasVisibleErrors, isWholeValueSelect } from '@rjsf/utils';
+import { getTemplates, getUiOptions, hasTemplateErrors, isWholeValueSelect, templateDrawsLabel } from '@rjsf/utils';
 import { Form } from 'antd';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -18,7 +18,6 @@ export default function FieldTemplate<
   const {
     children,
     description,
-    displayLabel,
     errors,
     help,
     rawHelp,
@@ -26,14 +25,13 @@ export default function FieldTemplate<
     id,
     label,
     presentation,
-    rawErrors,
-    hideError,
     rawDescription,
     registry,
     required,
     schema,
     uiSchema,
   } = props;
+  const displayLabel = templateDrawsLabel<T, S, F>(props);
   const { formContext } = registry;
   const {
     colon,
@@ -44,7 +42,7 @@ export default function FieldTemplate<
   } = formContext as GenericObjectType;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const hasError = hasVisibleErrors({ rawErrors, hideError });
+  const hasError = hasTemplateErrors<T, S, F>(props);
 
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
@@ -65,8 +63,8 @@ export default function FieldTemplate<
       descriptionProps.extra = descriptionNode;
       break;
   }
-  // The plan's `displayLabel` already says whether a checkbox draws its own label; the guess by the `checkbox` alias
-  // is left for a template rendered without one, so a label the plan gives the template isn't dropped
+  // The plan already says whether a checkbox draws its own label; the guess by the `checkbox` alias is left for a
+  // template rendered without one, so a label the plan gives the template isn't dropped
   const leavesPartsToCheckbox = !presentation && uiOptions.widget === 'checkbox';
   // Help and errors share antd's only below-field slot, and antd draws an empty explain block for a node that renders
   // nothing, so each one is gated on whether it has anything to say

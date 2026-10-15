@@ -1,7 +1,7 @@
 import type { ChangeEvent } from 'react';
 import { memo, useCallback, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, TranslatableString } from '@rjsf/utils';
+import { getDateTimeLocalValue, TranslatableString, widgetDrawsLabel } from '@rjsf/utils';
 import { format, isValid } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
@@ -77,20 +77,8 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    value,
-    label,
-    name,
-    hideLabel,
-    presentation,
-    placeholder,
-    options,
-    disabled,
-    readonly,
-    schema,
-    registry,
-  } = props;
+  const { id, value, label, name, presentation, placeholder, options, disabled, readonly, schema, registry } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { localValue } = getDateTimeLocalValue(schema, value);
   const formatDate = useDateFormatter<S>(schema, 'date-time');
   // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to

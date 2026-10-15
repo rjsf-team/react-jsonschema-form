@@ -2986,6 +2986,7 @@ describe('oneOf', () => {
       // `getDisplayLabel()` hides the label of a `boolean` that has no `ui:widget`, so the inferred `select` is the
       // only reason this field still has one. A theme's FieldTemplate is where that label gets rendered, because the
       // select widget has none of its own
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       const FieldTemplate = ({ displayLabel, label, children }: FieldTemplateProps) => (
         <div>
           {displayLabel && <span className='shown-label'>{label}</span>}
@@ -3044,6 +3045,7 @@ describe('oneOf', () => {
     it('should keep the label when the caller spells the widget as a ui:option', () => {
       // `getDisplayLabel()` only reads `ui:widget`, so a widget named the other way has to reach it as that key or a
       // boolean loses the title that inferring the widget exists to preserve
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       const FieldTemplate = ({ displayLabel, label, children }: FieldTemplateProps) => (
         <div>
           {displayLabel && <span className='shown-label'>{label}</span>}

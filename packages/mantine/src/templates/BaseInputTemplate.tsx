@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { TextInput, NumberInput } from '@mantine/core';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema } from '@rjsf/utils';
-import { examplesId, getExampleSuggestions, getInputProps, labelValue } from '@rjsf/utils';
+import { examplesId, getExampleSuggestions, getInputProps, labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
 
@@ -30,7 +30,6 @@ export default function BaseInputTemplate<
     readonly,
     autofocus,
     label,
-    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
@@ -39,6 +38,7 @@ export default function BaseInputTemplate<
     children,
     registry,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);

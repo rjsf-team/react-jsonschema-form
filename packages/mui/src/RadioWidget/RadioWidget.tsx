@@ -16,6 +16,7 @@ import {
   getOptionValueFormat,
   labelValue,
   optionId,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
@@ -43,8 +44,8 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, options, value, required, disabled, readonly, label, hideLabel, onChange, onBlur, onFocus } =
-    props;
+  const { id, htmlName, options, value, required, disabled, readonly, label, onChange, onBlur, onFocus } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);

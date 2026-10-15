@@ -13,5 +13,6 @@ export default function templateDrawsLabel<
   F extends FormContextType = FormContextType,
 >(props: Pick<FieldTemplateProps<T, S, F>, 'displayLabel' | 'presentation'>): boolean {
   const { presentation } = props;
+  // oxlint-disable-next-line typescript/no-deprecated -- the fallback for a template rendered without a plan
   return presentation ? presentation.label.by === 'template' : Boolean(props.displayLabel);
 }
