@@ -9,10 +9,27 @@ function decodeToken(token: string): string {
   return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
-/** Returns the subschema at the `$ref` fragment `ref` of `root`, the root itself for `#` */
-function subschemaAt(root: unknown, ref: string): unknown {
-  const tokens = ref.split('/').slice(1).map(decodeToken);
-  return tokens.length === 0 ? root : getByPath(root, tokens);
+/** Returns the `$id` that makes `value` a resource of its own, which the `#` fragment of a `$ref` below it is read
+ * against. A draft-07 `$id` that is only a fragment names an anchor in the resource around it instead.
+ */
+function resourceIdOf(value: unknown): string | undefined {
+  const id = isObject(value) ? value[ID_KEY] : undefined;
+  return typeof id === 'string' && !id.startsWith('#') ? id : undefined;
+}
+
+/** Returns the subschema at the `$ref` fragment `ref` of `resource`, the resource itself for `#`, and the innermost
+ * resource the path to it passes through, which the `$ref`s below the subschema are read against
+ */
+function locate(resource: unknown, ref: string): [unknown, unknown] {
+  let node = resource;
+  let base = resource;
+  for (const token of ref.split('/').slice(1).map(decodeToken)) {
+    if (resourceIdOf(node) !== undefined) {
+      base = node;
+    }
+    node = getByPath(node, [token]);
+  }
+  return [node, base];
 }
 
 /** Returns `schema` as an object schema asserting what it says, since ata compiles no boolean schema, and no schema
@@ -28,14 +45,14 @@ function compilable(schema: unknown): GenericObjectType {
 }
 
 /** Returns `schema` as a document ata compiles on its own. ata names no subschema of another document, resolves a
- * `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, does not percent-decode it, and
- * compiles nothing for a document holding both containers. So every subschema of the root the document reaches
- * through a `$ref`, a definition or not, is carried in a single container of the document under a generated name the
- * `$ref` is renamed to, and the document's own containers, which only the renamed `$ref`s could name, are dropped. A
- * `$ref` the root names nothing at is read against the document, which is where the copy of an option with an `$id` of
- * its own, listed without that `$id`, holds its definitions. One that names nothing in either, or one into another
- * document, is left as it is, which leaves ata nothing to compile and the module reporting it when the schema is first
- * validated against.
+ * `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, does not percent-decode it,
+ * compiles nothing for a document holding both containers, and compiles nothing for one whose container holds an entry
+ * carrying an `$id`. So every subschema of the root the document reaches through a `$ref`, a definition or not, is
+ * carried in a single container of the document under a generated name the `$ref` is renamed to, without an `$id` of
+ * its own, and the document's own containers, which only the renamed `$ref`s could name, are dropped. A `$ref` is read
+ * against the innermost resource around it, an option with an `$id` of its own included, which is why a carried
+ * subschema can go without its `$id`. One that names nothing there, or one into another document, is left as it is,
+ * which leaves ata nothing to compile and the module reporting it when the schema is first validated against.
  *
  * @param schema - A schema `getValidationSchemas()` lists
  * @param rootSchema - The root it was listed for
@@ -43,35 +60,40 @@ function compilable(schema: unknown): GenericObjectType {
  */
 function standalone(schema: GenericObjectType, rootSchema: object): GenericObjectType {
   const container = isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions';
-  const names = new Map<string, string>();
-  const pending: [string, unknown][] = [];
-  const renamed = (ref: string): string => {
-    const subschema = ref.startsWith('#') ? (subschemaAt(rootSchema, ref) ?? subschemaAt(schema, ref)) : undefined;
+  const names = new Map<unknown, Map<string, string>>();
+  const pending: [string, unknown, unknown][] = [];
+  let count = 0;
+  const renamed = (ref: string, base: unknown): string => {
+    const [subschema, subschemaBase] = ref.startsWith('#') ? locate(base, ref) : [];
     if (subschema === undefined) {
       return ref;
     }
-    let name = names.get(ref);
+    const known = names.get(base) ?? new Map<string, string>();
+    names.set(base, known);
+    let name = known.get(ref);
     if (name === undefined) {
-      name = `rjsf:${names.size}`;
-      names.set(ref, name);
-      pending.push([name, subschema]);
+      name = `rjsf:${count}`;
+      count += 1;
+      known.set(ref, name);
+      pending.push([name, subschema, subschemaBase]);
     }
     return `#/${container}/${name}`;
   };
-  const rewrite = (value: unknown): unknown => {
+  const rewrite = (value: unknown, base: unknown): unknown => {
     if (Array.isArray(value)) {
-      return value.map(rewrite);
+      return value.map((item) => rewrite(item, base));
     }
     if (!isObject(value)) {
       return value;
     }
-    const copy = Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewrite(child)]));
+    const inner = resourceIdOf(value) === undefined ? base : value;
+    const copy = Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewrite(child, inner)]));
     const ref: unknown = value[REF_KEY];
     if (typeof ref !== 'string') {
       return copy;
     }
     const { [REF_KEY]: _ref, ...siblings } = copy;
-    const reference = { [REF_KEY]: renamed(ref) };
+    const reference = { [REF_KEY]: renamed(ref, inner) };
     if (Object.keys(siblings).length === 0) {
       return reference;
     }
@@ -80,13 +102,15 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     const allOf: unknown = siblings[ALL_OF_KEY];
     return { ...siblings, [ALL_OF_KEY]: [...(Array.isArray(allOf) ? allOf : []), reference] };
   };
-  const { definitions: _definitions, $defs: _defs, ...document } = compilable(rewrite(schema));
+  const { definitions: _definitions, $defs: _defs, ...document } = compilable(rewrite(schema, rootSchema));
   const carried: GenericObjectType = {};
   for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
-    const [name, value] = next;
-    carried[name] = compilable(rewrite(value));
+    const [name, value, base] = next;
+    const entry = compilable(rewrite(value, base));
+    const { [ID_KEY]: _id, ...withoutId } = entry;
+    carried[name] = resourceIdOf(entry) === undefined ? entry : withoutId;
   }
-  return names.size === 0 ? document : { ...document, [container]: carried };
+  return count === 0 ? document : { ...document, [container]: carried };
 }
 
 /** Compiles a schema into a precompiled validator module. ata's

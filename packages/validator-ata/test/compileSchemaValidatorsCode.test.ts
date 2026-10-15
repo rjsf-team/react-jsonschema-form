@@ -145,7 +145,7 @@ describe('compileSchemaValidatorsCode', () => {
     expect(validator.isValid(option, { a: 1 }, rootSchema)).toBe(false);
     expect(validator.isValid(option, { b: 'x' }, rootSchema)).toBe(false);
   });
-  test('leaves a $ref that names no subschema of the root as it is, which ata does not compile', () => {
+  test('reads a $ref below an option with an $id of its own against that option', () => {
     const rootSchema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -156,6 +156,24 @@ describe('compileSchemaValidatorsCode', () => {
               type: 'object',
               properties: { j: { type: 'string' }, k: { $ref: '#/properties/j' } },
             },
+            true,
+          ],
+        },
+      },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    const option = { $ref: '#/properties/v/anyOf/0' };
+    expect(validator.isValid(option, { k: 'x' }, rootSchema)).toBe(true);
+    expect(validator.isValid(option, { k: 1 }, rootSchema)).toBe(false);
+  });
+  test('leaves a $ref that names no subschema of the resource around it as it is, which ata does not compile', () => {
+    const rootSchema: RJSFSchema = {
+      definitions: { j: { type: 'string' } },
+      type: 'object',
+      properties: {
+        v: {
+          anyOf: [
+            { $id: 'http://example.com/A.json', type: 'object', properties: { k: { $ref: '#/definitions/j' } } },
             true,
           ],
         },
