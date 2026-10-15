@@ -211,7 +211,7 @@ export default function SelectWidget<
             hideLabel,
             hasValue,
             named: !!ariaProps['aria-label'],
-            describedBy: ariaProps['aria-describedby'],
+            describedBy: ariaProps['aria-describedby'] ?? '',
           })}
         >
           <span id={triggerValueId(id)} className='truncate'>

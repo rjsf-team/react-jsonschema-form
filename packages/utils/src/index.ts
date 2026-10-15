@@ -59,6 +59,7 @@ import getFieldLabel from './getFieldLabel.ts';
 import getFreePropertyNames from './getFreePropertyNames.ts';
 import getGroupAttributes from './getGroupAttributes.ts';
 import type { GroupRole } from './getGroupAttributes.ts';
+import getGroupLabelling from './getGroupLabelling.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
@@ -283,6 +284,7 @@ export {
   getFieldTypeForWidget,
   getFreePropertyNames,
   getGroupAttributes,
+  getGroupLabelling,
   getInputProps,
   getItemUiSchemaForItem,
   getMatchingPatternProperties,

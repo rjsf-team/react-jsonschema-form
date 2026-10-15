@@ -74,6 +74,7 @@ export default function WrapIfAdditionalTemplate<
                 id={`${id}-key`}
                 label={keyLabel}
                 hideLabel
+                labelledByTemplate={displayLabel}
                 value={keyName}
                 propertyNamesEnum={propertyNamesEnum}
                 onKeyRename={onKeyRename}

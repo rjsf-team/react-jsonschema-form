@@ -1791,7 +1791,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                       foo Key
                     </label>
                     <select
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       class="form-select"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2638,7 +2637,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                       foo Key
                     </label>
                     <select
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       class="form-select"
                       id="root_foo-key"
                       name="root_foo-key"
@@ -2795,7 +2793,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                       foo (deprecated) Key
                     </label>
                     <select
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       class="form-select"
                       id="root_foo-key"
                       name="root_foo-key"

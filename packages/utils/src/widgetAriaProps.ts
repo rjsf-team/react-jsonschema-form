@@ -22,7 +22,10 @@ export type WidgetAriaPropsInput<
  * Otherwise the id is left out: no element has it, and it may be another field's description id, as
  * `root_when_year__description` is for both the year select of `when` and a `when_year` property. A select its field's
  * plan reaches, with no ids from its caller, takes the attributes `getControlAttributes()` gives its control, the
- * selected option's description among its describers while it renders.
+ * selected option's description among its describers while it renders. A caller passing an empty `aria-describedby`
+ * describes the select by nothing but that description, as `AdditionalPropertyKeySelect` does for a key, which has no
+ * description, help or errors of its own, rather than leaving a select rendered without a plan to `ariaDescribedByIds()`,
+ * whose ids no element has.
  *
  * @param props - The widget's props, of which `id`, `presentation`, `aria-label`, `aria-describedby` and those
  *   `SelectedOptionDescription` reads are used
@@ -36,11 +39,11 @@ export default function widgetAriaProps<
   const { 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy } = props;
   const selected = getSelectedOptionDescription<T, S, F>(props);
   const ownDescribedBy = selected ? [selected.id] : [];
-  if (!callerDescribedBy) {
+  if (callerDescribedBy === undefined) {
     return { 'aria-label': ariaLabel, ...getControlAttributes<T, S, F>(props, ownDescribedBy) };
   }
   return {
     'aria-label': ariaLabel,
-    'aria-describedby': uniqueIds([...callerDescribedBy.split(' '), ...ownDescribedBy]).join(' '),
+    'aria-describedby': uniqueIds([...callerDescribedBy.split(' '), ...ownDescribedBy]).join(' ') || undefined,
   };
 }

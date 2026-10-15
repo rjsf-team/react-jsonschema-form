@@ -51,6 +51,10 @@ A component that renders the key of an `additionalProperties` property as the th
 the key names the parent schema's [`propertyNames.enum`](../json-schema/objects.md#constraining-key-names-with-propertynames) allows.
 A theme's `WrapIfAdditionalTemplate` renders it in place of its free-text key input whenever the `propertyNamesEnum`
 prop it is given is defined, so each theme only has to choose where the dropdown goes.
+The key has no description, help or errors of its own, so the `SelectWidget` is given a plan of its own that describes
+it by none, leaves it named by the key's label its template draws beside it where `labelledByTemplate` says so, draws
+that label where `hideLabel` leaves it to the select, or else names the select by that label's text through
+`aria-label`.
 
 #### Props
 
@@ -63,6 +67,7 @@ prop it is given is defined, so each theme only has to choose where the dropdown
 - [className]: string - Optional class name given to the rendered widget, for a theme that styles the key control itself
 - [disabled]: boolean - Optional flag, if true, the widget is disabled
 - [hideLabel]: boolean - Optional flag, if true, the widget renders no label of its own, for themes that render one themselves
+- [labelledByTemplate]: boolean - Optional flag, if true, the template draws the key's label beside the widget, with a `for` naming its `id`, so the widget is given no `aria-label` over it
 - [readonly]: boolean - Optional flag, if true, the widget is read-only
 - [required]: boolean - Optional flag, if true, the widget is required
 
@@ -1134,14 +1139,30 @@ return (
 );
 ```
 
-A widget that draws its own label for the group draws it with no `for`, which can't name the group's wrapper, under the id it passes:
+A widget that draws its own label for the group draws it with no `for`, which can't name the group's wrapper, under the id it passes; [getGroupLabelling()](#getgrouplabelling) builds both.
+
+### getGroupLabelling&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgrouplabelling}
+
+Gets what a widget rendering a group of controls, such as radios or checkboxes, needs to draw its own label for the group and to label the group by it: whether it draws one, the id it draws it under, [fieldLabelId()](#fieldlabelid), and the attributes [getGroupAttributes()](#getgroupattributes) gives the group and each control in it, given that label's id where the widget draws one.
+The label is drawn with no `for`, which can't name the group's wrapper, so the group points `aria-labelledby` at it instead, where its field's plan names the group by no other label.
+A widget draws the label where [widgetDrawsLabel()](#widgetdrawslabel) says it does and it has text, so a group whose label is hidden, or has none, is left unnamed rather than named by a label that isn't drawn.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'label' | 'hideLabel' | 'presentation'> - The widget's `id`, `label`, `hideLabel` and `presentation`
+- role: GroupRole - The role of the group's wrapper, `'radiogroup'` for radios and `'group'` for anything else
+
+#### Returns
+
+- \{ drawsLabel: boolean, labelId: string, group, option }: whether the widget draws the label and the id it draws it under, and the `group` and `option` attributes [getGroupAttributes()](#getgroupattributes) returns
+
+#### Example
 
 ```tsx
-const labelId = fieldLabelId(id);
-const { group, option } = getGroupAttributes({ id, presentation }, 'radiogroup', labelId);
+const { drawsLabel, labelId, group, option } = getGroupLabelling(props, 'radiogroup');
 return (
   <>
-    {widgetDrawsLabel(props) && label && <label id={labelId}>{label}</label>}
+    {drawsLabel && <label id={labelId}>{label}</label>}
     <div id={id} {...group}>
       {enumOptions.map((opt, i) => (
         <input key={i} type='radio' id={optionId(id, i)} {...option} />
