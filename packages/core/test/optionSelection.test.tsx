@@ -153,6 +153,30 @@ describe('option selection as form state', () => {
     expect(elementOf(node, '#root_count')).toHaveValue('New Value');
   });
 
+  it('renders and edits the extra keys of an option a field offers without an object field of its own beside it', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        v: {
+          oneOf: [
+            { type: 'object', properties: { id: { type: 'string' } }, additionalProperties: { type: 'string' } },
+            { type: 'number' },
+          ],
+        },
+      },
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { v: { id: 'a', extra: 'x' } } });
+    expect(elementOf(node, '#root_v_extra-key')).toHaveValue('extra');
+    expect(ids(node, '#root_v_extra')).toHaveLength(1);
+
+    await user.type(elementOf(node, '#root_v_extra'), 'y');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { v: { id: 'a', extra: 'xy' } } }),
+      'root_v_extra',
+    );
+  });
+
   it("renders a key the selected option allows without describing it as the object's extra-key keyword does (#5462)", () => {
     const schema: RJSFSchema = {
       type: 'object',
