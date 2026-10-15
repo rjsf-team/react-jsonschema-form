@@ -369,6 +369,40 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     expect(screen.getByRole('checkbox', { name: 'a' })).toHaveFocus();
   });
 
+  test("marks a slider's label invalid while its errors show, and read-only for a read-only field", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { x: { type: 'number', title: 'X' }, y: { type: 'number', title: 'Y' } },
+        }}
+        uiSchema={{ x: { 'ui:widget': 'range' }, y: { 'ui:widget': 'range', 'ui:readonly': true } }}
+        extraErrors={{ x: { __errors: ['bad'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_x__label')).toHaveAttribute('data-invalid');
+    expect(container.querySelector('#root_y__label')).toHaveAttribute('data-readonly');
+  });
+
+  test("marks a required slider's label and dims a disabled one's", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { x: { type: 'number', title: 'X' }, y: { type: 'number', title: 'Y' } },
+          required: ['x'],
+        }}
+        uiSchema={{ x: { 'ui:widget': 'range' }, y: { 'ui:widget': 'range', 'ui:disabled': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_x__label')).toHaveTextContent(/^X\*$/);
+    expect(container.querySelector('#root_y__label')).toHaveAttribute('data-disabled');
+  });
+
   test("names an additional property's key input by its label", () => {
     render(
       <WrappedForm
