@@ -1,0 +1,404 @@
+import type { FieldPathList, FormContextType, SchemaUtilsType, StrictRJSFSchema } from '@rjsf/utils';
+import {
+  CONST_KEY,
+  deepEquals,
+  DEFAULT_KEY,
+  expandRefCycle,
+  fieldPathFromList,
+  getDiscriminatorFieldFromSchema,
+  getRenderedOptionSchema,
+  getXxxOfKey,
+  GUESSED_TYPE_FLAG,
+  isConstantOptionList,
+  isObject,
+  isPlainObject,
+  isSchemaObject,
+  isWholeValueSelect,
+  rendersOwnFieldBesideOption,
+  RJSF_REF_CYCLE_KEY,
+} from '@rjsf/utils';
+
+import type { KeyMove } from './formState.ts';
+import type { UiState } from './uiState.ts';
+import { dataOf, optionListKey, shownOption } from './uiState.ts';
+
+/** What the tree diff needs that does not change as it descends */
+interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
+  /** The schema utilities the previous tree is built with */
+  oldSchemaUtils: SchemaUtilsType<T, S, F>;
+  /** The schema utilities the new tree is built with */
+  schemaUtils: SchemaUtilsType<T, S, F>;
+  uiState?: UiState;
+  /** The path of the change being made, if there is one: the value there is the user's, and the selections at or
+   * above it hold
+   */
+  editedPath?: FieldPathList;
+  /** Where the change moved the keys of the array or object at `editedPath`, if it moved any */
+  newKeyOf?: KeyMove;
+}
+
+/** The key of the array or object at `path` that the change moved to `key`, which is where its previous value is */
+function previousKeyOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  path: FieldPathList,
+  previous: unknown,
+  key: string,
+): string | undefined {
+  const { newKeyOf, editedPath } = ctx;
+  if (!newKeyOf || path.length !== editedPath?.length || !isEdited(ctx, path)) {
+    return key;
+  }
+  return isObject(previous) || Array.isArray(previous)
+    ? Object.keys(previous).find((oldKey) => newKeyOf(oldKey) === key)
+    : undefined;
+}
+
+/** Whether `path` is the edited path or one of its ancestors */
+function isEdited<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  path: FieldPathList,
+): boolean {
+  const { editedPath } = ctx;
+  return editedPath !== undefined && path.length <= editedPath.length && path.every((key, i) => editedPath[i] === key);
+}
+
+/** The value `container` holds under `key`, if any */
+function valueAt(container: unknown, key: string | undefined): unknown {
+  return key !== undefined && (isObject(container) || Array.isArray(container)) && Object.hasOwn(container, key)
+    ? Reflect.get(container, key)
+    : undefined;
+}
+
+/** A value the diff removes from the data */
+const DROP = Symbol('drop');
+
+/** A `true` option is any value, which a field renders as the empty schema */
+function emptySchema<S extends StrictRJSFSchema>(): S;
+function emptySchema(): StrictRJSFSchema {
+  return {};
+}
+
+/** The schemas a field renders, outermost first: the field's own, and the selected option's where it has options, which
+ * renders at the same path, and so on for an option's own options. None for a collapsed `$ref` cycle that is not
+ * expanded, which renders no field beneath its Expand button. Mirrors `SchemaField`, `MultiSchemaField` and
+ * `CyclicSchemaField`, which is what makes the tree the one on screen.
+ */
+function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  raw: S,
+  value: unknown,
+  path: FieldPathList,
+): S[] {
+  const { uiState } = ctx;
+  const rootSchema = schemaUtils.getRootSchema();
+  const data = dataOf<T>(value);
+  let schema = raw;
+  if (Reflect.get(schema, RJSF_REF_CYCLE_KEY)) {
+    if (!uiState?.isExpanded(fieldPathFromList(path))) {
+      return [];
+    }
+    schema = expandRefCycle<S>(schema, rootSchema);
+  }
+  const view = schemaUtils.retrieveSchema(schema, data);
+  const xxxOfKey = getXxxOfKey<S>(view);
+  const list = xxxOfKey ? view[xxxOfKey] : undefined;
+  if (!list || isConstantOptionList<S>(list, true)) {
+    return [view];
+  }
+  const options = list.map((option) =>
+    schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), data),
+  );
+  const fieldPath = fieldPathFromList(path);
+  const index = shownOption<T, S, F>(
+    schemaUtils,
+    uiState?.selection(fieldPath, optionListKey<S>(options, rootSchema)),
+    options,
+    data,
+    getDiscriminatorFieldFromSchema<S>(view),
+    isEdited(ctx, path),
+  );
+  if (index < 0) {
+    return [view];
+  }
+  const own = rendersOwnFieldBesideOption<S>(view) ? schemaUtils.retrieveSchema(schema, data, false, index) : view;
+  return [own, ...layersOf(ctx, schemaUtils, getRenderedOptionSchema<S>(view, options[index]), value, path)];
+}
+
+/** The innermost layer's `keyword`, which is the one the value is rendered under */
+function keywordOf<S extends StrictRJSFSchema>(layers: readonly S[], keyword: string): unknown {
+  for (let i = layers.length - 1; i >= 0; i -= 1) {
+    if (Object.hasOwn(layers[i], keyword)) {
+      return Reflect.get(layers[i], keyword);
+    }
+  }
+  return undefined;
+}
+
+/** A type guessed from an extra key's data describes the data rather than the schema, so it is no type */
+function typeOf<S extends StrictRJSFSchema>(layers: readonly S[]): unknown {
+  return layers.some((layer) => GUESSED_TYPE_FLAG in layer) ? undefined : keywordOf(layers, 'type');
+}
+
+/** The values a field offers: its `enum`, or the constants of options that are all constants */
+function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknown[] | undefined {
+  const enumValues = keywordOf(layers, 'enum');
+  if (Array.isArray(enumValues) && enumValues.length > 0) {
+    const values: unknown[] = enumValues;
+    return values;
+  }
+  const last = layers[layers.length - 1];
+  const xxxOfKey = last && getXxxOfKey<S>(last);
+  const options = xxxOfKey ? last[xxxOfKey] : undefined;
+  if (!options || !isConstantOptionList<S>(options, true)) {
+    return undefined;
+  }
+  return options.flatMap((option) => {
+    if (!isObject(option)) {
+      return [];
+    }
+    return CONST_KEY in option ? [option[CONST_KEY]] : (option.enum ?? []);
+  });
+}
+
+/** Whether two `type`s name the same types, a list by what it names */
+function isSameType(oldType: unknown, newType: unknown): boolean {
+  if (Array.isArray(oldType) && Array.isArray(newType)) {
+    return oldType.length === newType.length && oldType.every((type) => newType.includes(type));
+  }
+  return oldType === newType;
+}
+
+/** What a field's value is judged by: the keywords whose change can make the value one the field no longer holds */
+function constraintsOf<S extends StrictRJSFSchema>(layers: readonly S[], declaredDefault: unknown) {
+  return {
+    type: typeOf(layers),
+    const: keywordOf(layers, CONST_KEY),
+    values: offeredValues(layers),
+    maxItems: keywordOf(layers, 'maxItems'),
+    declaredDefault,
+  };
+}
+
+/** Re-judges a value whose field's constraints changed. A value equal to the default the old schema declared for it
+ * is that schema's, so it becomes the new schema's default; a value of another type, or one the new `const` or `enum`
+ * rejects, is replaced as `sanitizeDataForNewSchema()` replaces it, or dropped.
+ *
+ * @returns - The value to hold, `DROP` to remove it, or `undefined` to keep it and judge what it holds
+ */
+function judge<S extends StrictRJSFSchema>(
+  oldLayers: readonly S[],
+  newLayers: readonly S[],
+  value: unknown,
+  oldDefault: unknown,
+  newDefault: unknown,
+  isItem: boolean,
+): unknown {
+  const before = constraintsOf(oldLayers, oldDefault);
+  const now = constraintsOf(newLayers, newDefault);
+  if (deepEquals(before, now)) {
+    return undefined;
+  }
+  if (oldDefault !== undefined && newDefault !== undefined && deepEquals(oldDefault, value)) {
+    return deepEquals(newDefault, value) ? undefined : structuredClone(newDefault);
+  }
+  if (before.type !== undefined && !isSameType(before.type, now.type)) {
+    return DROP;
+  }
+  if (now.const !== undefined && !deepEquals(now.const, value)) {
+    return deepEquals(before.const, value) ? now.const : DROP;
+  }
+  const { values } = now;
+  if (values && !values.some((offered) => deepEquals(offered, value))) {
+    if (isItem) {
+      return DROP;
+    }
+    if (values.some((offered) => deepEquals(offered, newDefault))) {
+      return structuredClone(newDefault);
+    }
+    return values.length === 1 ? values[0] : DROP;
+  }
+  return undefined;
+}
+
+/** The subschemas the properties of a field are rendered with, an option's over the field's own */
+function propertiesOf<S extends StrictRJSFSchema>(layers: readonly S[]): Map<string, S> {
+  const properties = new Map<string, S>();
+  for (const layer of layers) {
+    for (const [key, property] of Object.entries(layer.properties ?? {})) {
+      if (isSchemaObject<S>(property)) {
+        properties.set(key, property);
+      }
+    }
+  }
+  return properties;
+}
+
+/** The subschema the item at `index` is rendered with */
+function itemOf<S extends StrictRJSFSchema>(layers: readonly S[], index: number): S | undefined {
+  const items = keywordOf(layers, 'items');
+  const item = Array.isArray(items) ? (items[index] ?? keywordOf(layers, 'additionalItems')) : items;
+  return isSchemaObject<S>(item) ? item : undefined;
+}
+
+/** One field of both trees: its subschema and value on each side, and the default its parent declares for it */
+interface FieldPair<S> {
+  oldRaw: S | undefined;
+  newRaw: S;
+  oldValue: unknown;
+  newValue: unknown;
+  oldInherited: unknown;
+  newInherited: unknown;
+  /** Whether the field is an array item, whose `null` or `undefined` is a placeholder the item's schema judges */
+  isItem: boolean;
+  /** Whether the field was in the data before: a property holding a value, or an item */
+  hasOld: boolean;
+}
+
+function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  ctx: TreeContext<T, S, F>,
+  pair: FieldPair<S>,
+  path: FieldPathList,
+): unknown {
+  const { oldRaw, newRaw, oldValue, newValue, oldInherited, newInherited, isItem, hasOld } = pair;
+  const edited = isEdited(ctx, path);
+  if (oldRaw === undefined || !hasOld || (newValue === undefined && !isItem)) {
+    return newValue;
+  }
+  // Nothing a field's subtree is built from differs, so neither does the subtree
+  if (!edited && oldRaw === newRaw && oldValue === newValue && Object.is(oldInherited, newInherited)) {
+    return newValue;
+  }
+  const oldLayers = layersOf(ctx, ctx.oldSchemaUtils, oldRaw, oldValue, path);
+  const newLayers = layersOf(ctx, ctx.schemaUtils, newRaw, newValue, path);
+  if (newLayers.length === 0) {
+    return newValue;
+  }
+  const oldDefault = keywordOf(oldLayers, DEFAULT_KEY) ?? oldInherited;
+  const newDefault = keywordOf(newLayers, DEFAULT_KEY) ?? newInherited;
+  // The edited value and the values holding it are the user's
+  if (!edited) {
+    const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem);
+    if (judged !== undefined) {
+      return judged;
+    }
+  }
+  if (newLayers.some((layer) => isWholeValueSelect<S>(layer))) {
+    return newValue;
+  }
+  if (isPlainObject(newValue)) {
+    const oldProperties = propertiesOf(oldLayers);
+    const newProperties = propertiesOf(newLayers);
+    const oldOwnDefault = keywordOf(oldLayers, DEFAULT_KEY);
+    const newOwnDefault = keywordOf(newLayers, DEFAULT_KEY);
+    let result: Record<string, unknown> = newValue;
+    for (const key of Object.keys(newValue)) {
+      const childPath = [...path, key];
+      const newChild = newProperties.get(key);
+      let next: unknown = newValue[key];
+      if (newChild !== undefined) {
+        const previousValue = valueAt(oldValue, previousKeyOf(ctx, path, oldValue, key));
+        next = walk(
+          ctx,
+          {
+            oldRaw: oldProperties.get(key),
+            newRaw: newChild,
+            oldValue: previousValue,
+            newValue: newValue[key],
+            oldInherited: isPlainObject(oldOwnDefault) ? oldOwnDefault[key] : undefined,
+            newInherited: isPlainObject(newOwnDefault) ? newOwnDefault[key] : undefined,
+            isItem: false,
+            hasOld: previousValue !== undefined,
+          },
+          childPath,
+        );
+      } else if (oldProperties.has(key) && !isEdited(ctx, childPath)) {
+        // The field left the tree
+        next = DROP;
+      }
+      if (next !== newValue[key]) {
+        if (result === newValue) {
+          result = { ...newValue };
+        }
+        if (next === DROP) {
+          delete result[key];
+        } else {
+          result[key] = next;
+        }
+      }
+    }
+    return result;
+  }
+  if (Array.isArray(newValue)) {
+    const items = newValue.map((item: unknown, index) => {
+      const newItem = itemOf(newLayers, index);
+      const previousIndex = previousKeyOf(ctx, path, oldValue, String(index));
+      return newItem === undefined
+        ? item
+        : walk(
+            ctx,
+            {
+              oldRaw: itemOf(oldLayers, index),
+              newRaw: newItem,
+              oldValue: valueAt(oldValue, previousIndex),
+              newValue: item,
+              oldInherited: undefined,
+              newInherited: undefined,
+              isItem: true,
+              hasOld: Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length,
+            },
+            [...path, index],
+          );
+    });
+    const kept = items.filter((item) => item !== DROP);
+    const maxItems = keywordOf(newLayers, 'maxItems');
+    const isNewBound = !edited && !deepEquals(keywordOf(oldLayers, 'maxItems'), maxItems);
+    const bounded =
+      isNewBound && typeof maxItems === 'number' && kept.length > maxItems ? kept.slice(0, maxItems) : kept;
+    return bounded.length === newValue.length && bounded.every((item, index) => item === newValue[index])
+      ? newValue
+      : bounded;
+  }
+  return newValue;
+}
+
+/** Sanitizes `data` for the field tree it builds, against the tree `previous` built: the diff of the two trees, field
+ * by field, as each is rendered (the selected option, the expanded `$ref` cycles). A field that left the tree loses its
+ * value. A field whose constraints changed (`type`, `const`, `enum`, `maxItems`, or the default declared for it on its
+ * own schema or on its parent's) has its value judged again, see `judge()`: a value still holding the default the old
+ * schema declared takes the new one, written in place. A field whose constraints did not change keeps its value, so an
+ * edit elsewhere never re-judges it. The value of the field being edited, and of the fields holding it, is the
+ * user's, and only what they hold is judged. Both trees show the options the form selects now, so an option switch
+ * changes no field's constraints: the data the switch proposes is `formDataForNewOption()`'s.
+ *
+ * @param previous - The schema utilities the previous tree is built with, and its data
+ * @param schemaUtils - The schema utilities the new tree is built with
+ * @param data - The data to sanitize
+ * @param uiState - The form's option selections and cycle expansions
+ * @param [edit] - The change being made, if any: its path, and where it moved the keys of the array or object there,
+ *        so each item or property is paired with its own previous value
+ * @returns - The sanitized data, sharing everything it left alone with `data`
+ */
+export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  previous: { schemaUtils: SchemaUtilsType<T, S, F>; data: T | undefined },
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  data: T | undefined,
+  uiState: UiState | undefined,
+  edit?: { path: FieldPathList; newKeyOf?: KeyMove },
+): T | undefined {
+  const sanitized = walk(
+    { oldSchemaUtils: previous.schemaUtils, schemaUtils, uiState, editedPath: edit?.path, newKeyOf: edit?.newKeyOf },
+    {
+      oldRaw: previous.schemaUtils.getRootSchema(),
+      newRaw: schemaUtils.getRootSchema(),
+      oldValue: previous.data,
+      newValue: data,
+      oldInherited: undefined,
+      newInherited: undefined,
+      isItem: false,
+      hasOld: true,
+    },
+    [],
+  );
+  return sanitized === DROP ? undefined : dataOf<T>(sanitized);
+}

@@ -1,9 +1,10 @@
 import { use, useCallback, useInsertionEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
 import type { FieldPath, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { deepEquals, getValidationTarget } from '@rjsf/utils';
+import { deepEquals } from '@rjsf/utils';
 
 import FormDataContext from '../components/FormDataContext.ts';
 import type { OptionSelection } from '../components/uiState.ts';
+import { optionListKey, shownOption } from '../components/uiState.ts';
 
 /** The option an `anyOf`/`oneOf` field shows, and how to select another */
 export interface OptionSelectionState {
@@ -58,39 +59,16 @@ export default function useOptionSelection<
   const uiState = use(FormDataContext)?.uiState;
   const { schemaUtils } = registry;
   const rootSchema = schemaUtils.getRootSchema();
-  const list = useMemo(
-    () =>
-      options
-        ?.map((option) => {
-          const ref = getValidationTarget<S>(option, rootSchema).$ref;
-          return typeof ref === 'string' ? ref : '';
-        })
-        .join('\n'),
-    [options, rootSchema],
-  );
+  const list = useMemo(() => options && optionListKey<S>(options, rootSchema), [options, rootSchema]);
   const [local, setLocal] = useState<{ list: string; selection: OptionSelection } | undefined>(undefined);
   const readStored = () => (uiState && list !== undefined ? uiState.selection(fieldPath, list) : undefined);
   const stored = useSyncExternalStore(uiState?.subscribe ?? noSubscription, readStored, readStored);
   const localSelection = local !== undefined && local.list === list ? local.selection : undefined;
   const selection = uiState ? stored : localSelection;
-  const selectedOption = useMemo(() => {
-    if (!options || options.length === 0) {
-      return -1;
-    }
-    const matched = (preferred: number) =>
-      schemaUtils.getClosestMatchingOption(formData, [...options], preferred, discriminatorField);
-    if (selection === undefined || selection.index >= options.length) {
-      return matched(-1);
-    }
-    const { index, data } = selection;
-    if (Object.is(data, formData) || deepEquals(data, formData)) {
-      return index;
-    }
-    const isValid = schemaUtils
-      .getValidator()
-      .isValid(getValidationTarget<S>(options[index], rootSchema), formData, rootSchema);
-    return isValid ? index : matched(index);
-  }, [options, selection, formData, schemaUtils, discriminatorField, rootSchema]);
+  const selectedOption = useMemo(
+    () => (options ? shownOption<T, S, F>(schemaUtils, selection, options, formData, discriminatorField) : -1),
+    [options, selection, formData, schemaUtils, discriminatorField],
+  );
   // What the last committed render showed, which the handlers record: they run after it, and read it rather than close
   // over it so that a field's children keep the handlers they were given while the data changes
   const shown = useRef({ index: selectedOption, data: formData });

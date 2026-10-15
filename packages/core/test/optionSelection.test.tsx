@@ -25,6 +25,23 @@ function selectOf(node: ParentNode, id: string) {
   return select;
 }
 
+/** An `AnyOfField` that switches between the first two options without changing the data */
+function FirstOrSecond({ fieldPath, formData, options, registry, onChange }: FieldProps & { options: RJSFSchema[] }) {
+  const { selectedOption, selectOption } = useOptionSelection(registry, fieldPath, options, formData);
+  return (
+    <button
+      id='switch'
+      type='button'
+      onClick={() => {
+        selectOption(1 - selectedOption);
+        onChange(formData, fieldPath);
+      }}
+    >
+      {selectedOption}
+    </button>
+  );
+}
+
 describe('option selection as form state', () => {
   it('renders a key the selected option declares once, and one only another option declares as an extra key (#5461)', async () => {
     const schema: RJSFSchema = {
@@ -279,27 +296,6 @@ describe('option selection as form state', () => {
   });
 
   it('lets a custom AnyOfField select the option the field stubs its extra keys with', async () => {
-    function FirstOrSecond({
-      fieldPath,
-      formData,
-      options,
-      registry,
-      onChange,
-    }: FieldProps & { options: RJSFSchema[] }) {
-      const { selectedOption, selectOption } = useOptionSelection(registry, fieldPath, options, formData);
-      return (
-        <button
-          id='switch'
-          type='button'
-          onClick={() => {
-            selectOption(1 - selectedOption);
-            onChange(formData, fieldPath);
-          }}
-        >
-          {selectedOption}
-        </button>
-      );
-    }
     const schema: RJSFSchema = {
       type: 'object',
       additionalProperties: { type: 'string' },
@@ -320,6 +316,86 @@ describe('option selection as form state', () => {
 
     expect(node.querySelector('#switch')).toHaveTextContent('0');
     expect(node.querySelector('#root_b-key')).toHaveValue('b');
+  });
+});
+
+describe('a condition swapped inside the selected option (#5465)', () => {
+  const cfgFor = (name: string): RJSFSchema => ({
+    type: 'object',
+    default: { name },
+    properties: { name: { type: 'string' } },
+  });
+  const optionWithDependency: RJSFSchema = {
+    title: 'X',
+    type: 'object',
+    properties: { mode: { type: 'string', enum: ['a', 'b'], default: 'a' } },
+    dependencies: {
+      mode: {
+        oneOf: [
+          { properties: { mode: { const: 'a' }, cfg: cfgFor('a') } },
+          { properties: { mode: { const: 'b' }, cfg: cfgFor('b') } },
+        ],
+      },
+    },
+  };
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      thing: {
+        oneOf: [optionWithDependency, { title: 'Y', type: 'object', properties: { other: { type: 'string' } } }],
+      },
+    },
+  };
+
+  it("replaces the old branch's default with the new branch's", async () => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { thing: { mode: 'a', cfg: { name: 'a' } } },
+    });
+
+    await user.selectOptions(selectOf(node, 'root_thing_mode'), 'b');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { thing: { mode: 'b', cfg: { name: 'b' } } } }),
+      'root_thing_mode',
+    );
+  });
+
+  it('keeps a value the user edited away from the old default', async () => {
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { thing: { mode: 'a', cfg: { name: 'a' } } },
+    });
+    await user.clear(elementOf(node, '#root_thing_cfg_name'));
+    await user.type(elementOf(node, '#root_thing_cfg_name'), 'mine');
+
+    await user.selectOptions(selectOf(node, 'root_thing_mode'), 'b');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { thing: { mode: 'b', cfg: { name: 'mine' } } } }),
+      'root_thing_mode',
+    );
+  });
+
+  it('reads the option the user selected, not the one the data matches best', async () => {
+    const shared: RJSFSchema = { type: 'object', properties: { mode: { type: 'string', enum: ['a', 'b'] } } };
+    const selected: RJSFSchema = {
+      ...optionWithDependency,
+      title: 'Z',
+      properties: { mode: { type: 'string', enum: ['a', 'b'] } },
+    };
+    const { node, onChange } = createFormComponent({
+      schema: { type: 'object', properties: { thing: { anyOf: [{ title: 'W', ...shared }, selected] } } },
+      initialFormData: { thing: { mode: 'a' } },
+    });
+    await user.selectOptions(selectOf(node, 'root_thing__anyof_select'), 'Z');
+
+    await user.selectOptions(selectOf(node, 'root_thing_mode'), 'b');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { thing: { mode: 'b', cfg: { name: 'b' } } } }),
+      'root_thing_mode',
+    );
   });
 });
 
