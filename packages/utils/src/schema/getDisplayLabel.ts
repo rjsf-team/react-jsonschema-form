@@ -25,6 +25,8 @@ import isMultiSelect from './isMultiSelect.ts';
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
  * @returns - True if the label should be displayed or false if it should not
+ * @deprecated Kept through v7 for a field rendered without a plan: a field's plan, from `resolveFieldPresentation()`,
+ *   says what draws its label
  */
 export default function getDisplayLabel<
   T = unknown,

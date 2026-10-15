@@ -17,5 +17,6 @@ export default function hasTemplateErrors<
   if (presentation) {
     return presentation.errors.messages.length > 0;
   }
+  // oxlint-disable-next-line typescript/no-deprecated -- the fallback for a template rendered without a plan
   return hasVisibleErrors({ rawErrors: props.rawErrors, hideError });
 }

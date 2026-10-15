@@ -39,8 +39,10 @@ export default function BaseInputTemplate<
     schema,
     uiSchema,
     registry,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     rawErrors,
     type,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     hideLabel, // remove this from ...rest
     hideError, // remove this from ...rest
     presentation, // remove this from ...rest

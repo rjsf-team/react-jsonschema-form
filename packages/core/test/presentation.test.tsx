@@ -259,6 +259,7 @@ describe('the plan SchemaField builds', () => {
       });
       const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
       expect(node.querySelector('#custom')).toHaveTextContent('Foo');
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(true);
       expect(selector.presentation?.label.by).toBe('none');
       expect(selector.presentation?.description.by).toBe('none');
@@ -294,6 +295,7 @@ describe('the plan SchemaField builds', () => {
         presentation: { fields: { AnyOfField: { label: 'self' } } },
       });
       const selector = selectorProps.find((props) => props.id === 'root_foo__anyof_select')!;
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(true);
     });
   });
@@ -555,6 +557,7 @@ describe('the plan SchemaField builds', () => {
       });
 
       const selector = selectorProps.find((props) => props.id === 'root_opt__anyof_select')!;
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(selector.hideLabel).toBe(false);
       expect(selector.label).toBe('Parent title');
       expect(selector.presentation?.description).toMatchObject({ by: 'self', text: 'Parent description' });

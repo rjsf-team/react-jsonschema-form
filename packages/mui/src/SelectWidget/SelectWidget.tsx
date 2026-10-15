@@ -19,13 +19,14 @@ import {
   enumOptionsDomValues,
   getOptionValueFormat,
   groupEnumOptions,
-  hasVisibleErrors,
+  hasWidgetErrors,
   isEnumOptionsGroup,
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
@@ -60,7 +61,8 @@ export default function SelectWidget<
     htmlName,
     options,
     label,
-    hideLabel,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
+    hideLabel: _hideLabel,
     required,
     disabled,
     placeholder,
@@ -72,16 +74,18 @@ export default function SelectWidget<
     onBlur,
     onFocus,
     errorSchema,
-    rawErrors,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
+    rawErrors: _rawErrors,
     registry,
     uiSchema,
-    hideError,
+    hideError: _hideError,
     // Given to the combobox below, so kept off the field's root, where `textFieldProps` are spread
     'aria-label': _ariaLabel,
     'aria-describedby': _ariaDescribedBy,
     presentation: _presentation,
     ...textFieldProps
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -130,7 +134,7 @@ export default function SelectWidget<
         autoFocus={autofocus}
         autoComplete={autocomplete}
         placeholder={placeholder}
-        error={hasVisibleErrors({ rawErrors, hideError })}
+        error={hasWidgetErrors<T, S, F>(props)}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

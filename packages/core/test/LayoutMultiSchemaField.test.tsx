@@ -785,6 +785,7 @@ describe('LayoutMultiSchemaField', () => {
   ] satisfies [string, boolean, string[]][])('%s', (_, hidden, expectedVisibleErrors) => {
     const { templateProps } = renderRecording({ errorSchema: NESTED_ERROR_SCHEMA, hideError: hidden });
 
+    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
     expect(templateProps?.rawErrors).toEqual(hidden ? undefined : ['first error', 'second error']);
     expect(templateProps?.hideError).toBe(hidden);
     expect(getVisibleErrors(templateProps!)).toEqual(expectedVisibleErrors);
@@ -874,7 +875,9 @@ describe('LayoutMultiSchemaField', () => {
 
       expect(templateProps?.presentation).toBeDefined();
       expect(widgetProps?.presentation).toBe(templateProps?.presentation);
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(templateProps?.displayLabel).toBe(true);
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(widgetProps?.hideLabel).toBe(true);
     });
     test('hands its template the same plan across a render that changes nothing it reads', () => {
@@ -950,7 +953,9 @@ describe('LayoutMultiSchemaField', () => {
     test('has a widget a theme declares as drawing its label draw it, with the template drawing none', () => {
       const { templateProps, widgetProps } = renderRecording({}, { widgets: { RadioWidget: { label: 'self' } } });
 
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(templateProps?.displayLabel).toBe(false);
+      // oxlint-disable-next-line typescript/no-deprecated -- the deprecated prop core still hands a component that doesn't read the plan
       expect(widgetProps?.hideLabel).toBe(false);
       expect(widgetProps?.presentation?.label.by).toBe('self');
     });

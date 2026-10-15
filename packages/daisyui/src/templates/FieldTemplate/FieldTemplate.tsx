@@ -7,7 +7,14 @@ import type {
   Widget,
   WidgetAliasFor,
 } from '@rjsf/utils';
-import { DEFAULT_BOOLEAN_WIDGET, fieldLabelId, getTemplates, getUiOptions, getWidgetType } from '@rjsf/utils';
+import {
+  DEFAULT_BOOLEAN_WIDGET,
+  fieldLabelId,
+  getTemplates,
+  getUiOptions,
+  getWidgetType,
+  templateDrawsLabel,
+} from '@rjsf/utils';
 
 import { getDaisy } from '../../utils.ts';
 
@@ -83,6 +90,7 @@ export default function FieldTemplate<
     formData,
     help,
     hideError,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     displayLabel,
     onKeyRename,
     onKeyRenameBlur,
@@ -96,6 +104,7 @@ export default function FieldTemplate<
     registry,
     // Destructure props we don't want to pass to div
     description,
+    // oxlint-disable-next-line typescript/no-deprecated -- kept out of the props this spreads onto the element
     rawErrors,
     errorSchema,
     rawHelp,
@@ -115,7 +124,7 @@ export default function FieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   // The checkbox and the toggle render their own label after the input, and their own description, so this template
   // renders neither for them
-  // The plan's `displayLabel` already says whether the widget draws the label; the guess is left for a template rendered
+  // The plan already says whether the widget draws the label; the guess is left for a template rendered
   // without one
   const widgetRendersLabel =
     !presentation && widgetRendersOwnLabel<T, S, F>(schema, uiOptions.widget, registry.widgets);
@@ -130,6 +139,7 @@ export default function FieldTemplate<
       id={id}
       label={label}
       keyName={keyName}
+      // oxlint-disable-next-line typescript/no-deprecated -- handed on to a `WrapIfAdditionalTemplate` rendered without a plan, which labels the key by it
       displayLabel={displayLabel}
       presentation={presentation}
       onKeyRename={onKeyRename}
@@ -151,7 +161,7 @@ export default function FieldTemplate<
         {...divProps}
         style={daisy.style}
       >
-        {displayLabel && !widgetRendersLabel && !!label && (
+        {templateDrawsLabel<T, S, F>(props) && !widgetRendersLabel && !!label && (
           <label id={fieldLabelId(id)} htmlFor={id} className='label'>
             <span className='label-text font-medium'>
               {label}

@@ -18,6 +18,7 @@ import {
   labelValue,
   optionId,
   useOptionFocusHandlers,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { getMuiProps } from '../util.ts';
@@ -45,21 +46,9 @@ export default function CheckboxesWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    label,
-    hideLabel,
-    id,
-    htmlName,
-    disabled,
-    options,
-    value,
-    autofocus,
-    readonly,
-    required,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
+  const { label, id, htmlName, disabled, options, value, autofocus, readonly, required, onChange, onBlur, onFocus } =
+    props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);

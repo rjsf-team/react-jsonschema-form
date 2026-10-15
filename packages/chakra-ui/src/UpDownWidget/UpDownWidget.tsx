@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, hasVisibleErrors, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, hasVisibleErrors, labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
@@ -12,7 +12,8 @@ export default function UpDownWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, required } = props;
+  const { id, readonly, disabled, label, value, onChange, onBlur, onFocus, required } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
   // The handlers sit on the root, so the target may be an increment/decrement trigger rather than the input

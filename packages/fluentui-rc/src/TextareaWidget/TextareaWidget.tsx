@@ -1,7 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import { Label, Textarea, makeStyles } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, labelValue } from '@rjsf/utils';
+import { ariaDescribedByIds, labelValue, widgetDrawsLabel } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {
@@ -29,7 +29,6 @@ export default function TextareaWidget<
     disabled,
     value,
     label,
-    hideLabel,
     onChange,
     onChangeOverride,
     onBlur,
@@ -37,6 +36,7 @@ export default function TextareaWidget<
     autofocus,
     options,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const classes = useStyles();
   const handleChange = ({ target: { value: newValue } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(newValue === '' ? options.emptyValue : newValue);

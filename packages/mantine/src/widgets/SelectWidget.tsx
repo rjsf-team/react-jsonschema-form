@@ -14,6 +14,7 @@ import {
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { cleanupOptions, getDescriptionProps, useAriaDescribedByProps, useVisibleErrors } from '../utils.tsx';
@@ -44,12 +45,12 @@ export default function SelectWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     multiple,
     schema,
     options,
     onChange,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);

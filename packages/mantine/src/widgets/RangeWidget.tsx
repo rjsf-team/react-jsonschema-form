@@ -12,7 +12,7 @@ import type {
 } from '@mantine/core';
 import { Slider, Input, useProps } from '@mantine/core';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlDescribedBy, rangeSpec, titleId } from '@rjsf/utils';
+import { getControlDescribedBy, rangeSpec, titleId, widgetDrawsLabel } from '@rjsf/utils';
 
 import type { OwnKeys } from '../utils.tsx';
 import { cleanupOptions, useFieldWrapperProps, useHiddenTitle, useShownSuccessId } from '../utils.tsx';
@@ -128,7 +128,6 @@ export default function RangeWidget<
     readonly,
     autofocus,
     label,
-    hideLabel,
     options,
     onChange,
     onBlur,
@@ -136,6 +135,7 @@ export default function RangeWidget<
     schema,
     presentation,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const themeProps = cleanupOptions(options, sliderExcludedKeys);
   const { min, max, step } = rangeSpec(schema);

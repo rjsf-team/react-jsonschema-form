@@ -1,5 +1,12 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, dateElementId, dateElementLabel, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import {
+  DateElement,
+  dateElementId,
+  dateElementLabel,
+  TranslatableString,
+  useAltDateWidgetProps,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
 import { getGroupProps } from '../../utils.ts';
 
@@ -29,12 +36,12 @@ export default function AltDateWidget<
     id,
     name,
     label,
-    hideLabel,
     presentation,
     registry,
     onBlur,
     onFocus,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { translateString } = registry;
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 

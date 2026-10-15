@@ -12,6 +12,7 @@ import {
   labelValue,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -36,7 +37,6 @@ export default function NativeSelectWidget<
     id,
     options,
     label,
-    hideLabel,
     placeholder,
     multiple,
     required,
@@ -49,6 +49,7 @@ export default function NativeSelectWidget<
     onFocus,
     schema,
   } = props;
+  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
 
   const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) =>

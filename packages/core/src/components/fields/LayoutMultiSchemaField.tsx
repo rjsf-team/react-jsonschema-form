@@ -42,7 +42,12 @@ import {
 } from '@rjsf/utils';
 
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { getDeprecatedTemplateProps, getTemplateParts, getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import {
+  getDeprecatedTemplateProps,
+  getTemplateParts,
+  getWidgetErrorProps,
+  getWidgetLabelProps,
+} from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 
 /** Gets the index of the selected option in the list of `options`, the way `getSelectedOption()` finds the option
@@ -403,7 +408,7 @@ export default function LayoutMultiSchemaField<
         required={required}
         registry={registry}
         multiple={false}
-        rawErrors={rawErrors}
+        {...getWidgetErrorProps<T, S, F>(rawErrors)}
         hideError={hideFieldError}
         {...getWidgetLabelProps<T, S, F>(presentation, presentation.label.text, () => true)}
         presentation={presentation}
