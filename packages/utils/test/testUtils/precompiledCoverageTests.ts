@@ -3,6 +3,7 @@ import {
   createSchemaUtils,
   getClosestMatchingOption,
   getDefaultFormState,
+  getDiscriminatorFieldFromSchema,
   isObject,
   omitExtraData,
   retrieveSchema,
@@ -72,7 +73,7 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
     it.each([
       ['without it', undefined],
       ['with it', customMergeAllOf],
-    ])('has no function for an option the custom merge rewrites, compiled %s', (_compiled, merge) => {
+    ])('has no function for an option the custom merge rewrites, built %s', (_built, merge) => {
       // The rewritten option is a schema the merge made, with no place in the root for the compile list to name
       const validator = buildValidator(rootSchema, merge && { customMergeAllOf: merge });
       expect(() => scoreRenderedChoice(validator)).toThrow(
@@ -92,7 +93,7 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
     it.each([
       ['on submit, against the root schema', false],
       ['under live validation, against the root schema the form resolved', true],
-    ])('validates %s with a customValidate when compiled with it', (_when, resolveRoot) => {
+    ])('validates %s with a customValidate when built with it', (_when, resolveRoot) => {
       const validator = buildValidator(rootSchema, { customMergeAllOf });
       const context = { validator, customMergeAllOf };
       const invalidFormData = { p: { choice: 'b', x: 5 } };
@@ -303,6 +304,39 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
         a: 'q',
         q: 'Q',
       });
+    });
+    const discriminatedOptions: RJSFSchema[] = [
+      { properties: { kind: { type: 'string', const: 'a' }, a: { type: 'string' } } },
+      { properties: { kind: { type: 'string', const: 'b' }, b: { type: 'string' } } },
+    ];
+    const discriminator = { propertyName: 'kind' };
+    const discriminatorOnly: RJSFSchema = { discriminator };
+    it.each<[string, RJSFSchema, RJSFSchema]>([
+      ['beside the oneOf', { definitions: {} }, { discriminator, oneOf: discriminatedOptions }],
+      [
+        'beside a $ref to the oneOf',
+        { definitions: { S: { oneOf: discriminatedOptions } } },
+        { $ref: '#/definitions/S', discriminator },
+      ],
+      [
+        'beside an allOf holding the oneOf',
+        { definitions: {} },
+        { discriminator, allOf: [{ oneOf: discriminatedOptions }] },
+      ],
+      [
+        'in an allOf beside the oneOf',
+        { definitions: {} },
+        { allOf: [discriminatorOnly], oneOf: discriminatedOptions },
+      ],
+    ])('matches the options of a field whose discriminator is declared %s', (_where, base, field) => {
+      const rootSchema: RJSFSchema = { ...base, type: 'object', properties: { s: field } };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const formData = { b: 'q' };
+      const retrieved = schemaUtils.retrieveSchema(field, formData);
+      const options = (retrieved.oneOf ?? []).filter(isObject);
+      expect(
+        schemaUtils.getClosestMatchingOption(formData, options, 0, getDiscriminatorFieldFromSchema(retrieved)),
+      ).toBe(1);
     });
     it.each(['http://example.com/root.json#', 'http://example.com/root.json'])(
       'checks a condition and an option of a root whose $id is %s',

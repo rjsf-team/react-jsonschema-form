@@ -158,6 +158,21 @@ describe('getValidationSchemas()', () => {
     );
   });
 
+  it('lists the discriminator property of the options a $ref beside the discriminator reaches', () => {
+    const field: RJSFSchema = { $ref: '#/definitions/S', discriminator: { propertyName: 'kind' } };
+    const schema: RJSFSchema = {
+      definitions: {
+        S: {
+          oneOf: [{ properties: { kind: { type: 'string', const: 'a' } } }, { properties: { b: { type: 'string' } } }],
+        },
+      },
+      type: 'object',
+      properties: { s: field },
+    };
+    const kinds = listed(schema).filter(({ $ref }) => typeof $ref === 'string' && $ref.endsWith('/kind'));
+    expect(kinds).toEqual([{ $ref: '#/definitions/S/oneOf/0/properties/kind' }]);
+  });
+
   it("lists the condition each option of a dependency's oneOf is matched on", () => {
     const schema: RJSFSchema = {
       definitions: { refOption: { properties: { pet: { const: 'cat' } } } },

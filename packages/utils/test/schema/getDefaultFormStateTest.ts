@@ -7490,6 +7490,30 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         });
       });
+      it("applies a dependency's oneOf option that declares the property in an allOf entry", () => {
+        testValidator.setReturnValues({ isValid: [false, true] });
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { k: { type: 'string', enum: ['a', 'b'] } },
+          dependencies: {
+            k: {
+              oneOf: [
+                {
+                  allOf: [{ properties: { k: { enum: ['a'] } } }],
+                  properties: { ka: { type: 'string', default: 'A' } },
+                },
+                {
+                  allOf: [{ properties: { k: { enum: ['b'] } } }],
+                  properties: { kb: { type: 'string', default: 'B' } },
+                },
+              ],
+            },
+          },
+        };
+        expect(
+          getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { k: 'b' } }),
+        ).toEqual({ k: 'b', kb: 'B' });
+      });
       it('should populate defaults for nested dependencies in arrays when matching enum values in oneOf', () => {
         // Mock isValid so that withExactlyOneSubschema works as expected
         testValidator.setReturnValues({
