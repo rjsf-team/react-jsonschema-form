@@ -1,5 +1,5 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { ErrorSchema, RJSFSchema } from '@rjsf/utils';
+import type { ErrorSchema, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -448,6 +448,26 @@ describe('antd specific tests', () => {
     expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
   });
 
+  test.each<[string, string, RJSFSchema]>([
+    ['radio', 'radiogroup', { type: 'string', title: 'Color', enum: ['red', 'blue'] }],
+    [
+      'checkboxes',
+      'group',
+      { type: 'array', title: 'Color', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
+    ],
+  ])("draws a %s group's label with no for, which would name the group's wrapper", (widget, role, color) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_color__label label')).not.toHaveAttribute('for');
+    expect(screen.getByRole(role, { name: 'Color' })).toBeInTheDocument();
+  });
+
   test("keeps an optional object's data control where ui:label turns its heading off", () => {
     const { container } = render(
       <Form
@@ -603,6 +623,44 @@ describe("antd's error and help elements carry the ids their field's plan descri
   });
 });
 
+describe('antd focusOnFirstError', () => {
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['text input', { type: 'string' }, {}, '#root_x'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, '#root_x'],
+    ['checkbox', { type: 'boolean' }, {}, '#root_x'],
+    ['number input', { type: 'number' }, { 'ui:widget': 'updown' }, '#root_x'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, '#root_x'],
+    ['date picker', { type: 'string', format: 'date' }, {}, '#root_x'],
+    // A group's wrapper carries the field's id but isn't focusable, so its first control is focused
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, '#root_x-0'],
+    [
+      'checkboxes group',
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      '#root_x-0',
+    ],
+    // The slider's root carries the field's id but isn't focusable, so the handle inside it is focused
+    ['slider', { type: 'number' }, { 'ui:widget': 'range' }, '#root_x [role="slider"]'],
+  ])('moves focus to a %s with errors', async (_, x, ui, focused) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+        focusOnFirstError
+        customValidate={(_: unknown, errors: FormValidation<{ x?: unknown }>) => {
+          errors.x?.addError('bad');
+          return errors;
+        }}
+      />,
+    );
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(container.querySelector(focused)).toHaveFocus();
+  });
+});
+
 describe("antd widgets carry their field's plan on the element a user focuses", () => {
   test.each([
     ['text', { type: 'string' }, {}],
@@ -665,7 +723,7 @@ describe("antd widgets carry their field's plan on the element a user focuses", 
     },
   );
 
-  test("names a required range's slider by its label, which the label's for can't reach, and marks it required", () => {
+  test("names a required range's slider by its label, which a for can't reach, and marks it required", () => {
     render(
       <Form
         schema={{

@@ -1530,7 +1530,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                             >
                               <label
                                 class=""
-                                for="root_choices"
                                 title="choices"
                               >
                                 choices
@@ -2092,7 +2091,6 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                             >
                               <label
                                 class=""
-                                for="root_option"
                                 title="option"
                               >
                                 option
@@ -6093,7 +6091,6 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <label
               class=""
-              for="root"
               title="An enum list rendered as checkboxes"
             >
               An enum list rendered as checkboxes
@@ -6246,7 +6243,6 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           >
             <label
               class=""
-              for="root"
               title="Checkbox Group"
             >
               Checkbox Group
@@ -6405,7 +6401,6 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           >
             <label
               class=""
-              for="root"
               title="Required Checkbox Group"
             >
               Required Checkbox Group
@@ -15226,7 +15221,6 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           >
             <label
               class=""
-              for="root"
               title="test"
             >
               test
