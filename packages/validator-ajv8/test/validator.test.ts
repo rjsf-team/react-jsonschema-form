@@ -8,7 +8,14 @@ import type {
   UiSchema,
   ValidatorType,
 } from '@rjsf/utils';
-import { createSchemaUtils, ErrorSchemaBuilder, getFirstMatchingOption, noop, retrieveSchema } from '@rjsf/utils';
+import {
+  createSchemaUtils,
+  ErrorSchemaBuilder,
+  getDefaultFormState,
+  getFirstMatchingOption,
+  noop,
+  retrieveSchema,
+} from '@rjsf/utils';
 import type { Ajv } from 'ajv';
 import ajvI18n from 'ajv-i18n';
 import { Ajv2019 } from 'ajv/dist/2019.js';
@@ -261,6 +268,22 @@ describe('AJV8Validator', () => {
         expect(localValidator.isValid({ $ref: '#/$defs/n' }, {}, rejectedRoot)).toBe(true);
         expect(localValidator.isValid({ $ref: '#/definitions/animal' }, 'Cat', nextRoot)).toBe(true);
         expect(localValidator.isValid({ $ref: '#/definitions/animal' }, 'Dog', nextRoot)).toBe(false);
+      });
+      it('picks the then of an if that is a $ref into such a root on the first call, so the defaults take it', () => {
+        const rootSchema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $defs: { I: { properties: { k: { const: 'x' } } } },
+          type: 'object',
+          properties: { k: { type: 'string', default: 'x' } },
+          if: { $ref: '#/$defs/I' },
+          then: { properties: { t: { type: 'string', default: 't' } } },
+          else: { properties: { e: { type: 'string', default: 'e' } } },
+        };
+        const defaults = getDefaultFormState(
+          { validator: new AJV8Validator({}) },
+          { schema: rootSchema, rootSchema, formData: { k: 'x' } },
+        );
+        expect(defaults).toEqual({ k: 'x', t: 't' });
       });
     });
     describe('scoring an option whose $id is the base of a relative $ref', () => {
