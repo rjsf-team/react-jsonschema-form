@@ -414,6 +414,29 @@ A field component will always be passed the following props:
   );
   ```
 
+The option a union field shows is the form's state, not the field's: `SchemaField` reads it too, to stub the extra keys of an object once, with the selected option, and it outlives the field's components and follows the array moves the form makes.
+A custom `AnyOfField` or `OneOfField` reads and writes it with `useOptionSelection()` from `@rjsf/core`, rather than keeping its own, and sends the data for a newly selected option through `onChange` as before:
+
+```tsx
+import { useOptionSelection } from '@rjsf/core';
+
+function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
+  const { fieldPath, formData, options, registry, schema } = props;
+  const { selectedOption, selectOption } = useOptionSelection(
+    registry,
+    fieldPath,
+    options,
+    formData,
+    getDiscriminatorFieldFromSchema(schema),
+  );
+  // render the selector on `selectedOption`; on a pick, `selectOption(index)` and then `onChange(newData, fieldPath)`
+}
+```
+
+With no selection, the option shown is the one `getClosestMatchingOption()` picks for the data.
+A selection holds while the data is what the form left at the field, whatever the edits inside the field made of it; data arriving from outside the field, such as a parent's new `formData` or a parent declining the switch, keeps it while it validates against the option and is matched again otherwise.
+A condition that swaps the option list the field offers starts the choice over, and finds it again when it swaps back.
+
 ## The `registry` object
 
 The `registry` is an object containing the registered core, theme and custom fields and widgets as well as the root schema, form context, schema utils.
