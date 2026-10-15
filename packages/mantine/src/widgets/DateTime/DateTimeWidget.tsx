@@ -7,7 +7,7 @@ import DateTimeInput from './DateTimeInput.tsx';
  * produced by the `iso-date-time` `DateTimeWidget`s in `@rjsf/core`, `@rjsf/antd`, and `@rjsf/daisyui`, so the
  * same schema behaves consistently across themes. `format: "date-time"`/`"datetime"` bypass `valueFormat` for
  * the committed value (it's only used as the calendar's typing format), so its default keeps the original,
- * more human-readable separator.
+ * more human-readable separator. `withTime` adds a time picker beside the date input.
  *
  * @param props - The `WidgetProps` for this component
  */
@@ -26,6 +26,7 @@ export default function DateTimeWidget<
       options={otherOptions}
       valueFormat={valueFormat}
       displayFormat={displayFormat || valueFormat}
+      withTime
     />
   );
 }
