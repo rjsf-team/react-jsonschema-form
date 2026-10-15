@@ -570,3 +570,44 @@ describe('the plan SchemaField builds', () => {
     expect(titles).toEqual(['']);
   });
 });
+
+describe('a widget rendering a group of controls', () => {
+  it('names its radiogroup by the label and marks the radiogroup invalid rather than its radios', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'string', title: 'Foo', enum: ['a', 'b'] } } },
+      uiSchema: { foo: { 'ui:widget': 'radio' } },
+      extraErrors: { foo: { __errors: ['is wrong'] } },
+    });
+    const group = node.querySelector('#root_foo')!;
+    expect(group).toHaveAttribute('role', 'radiogroup');
+    expect(group).toHaveAttribute('aria-labelledby', fieldLabelId('root_foo'));
+    expect(group).toHaveAttribute('aria-invalid', 'true');
+    const radios = node.querySelectorAll('input[type=radio]');
+    expect(radios).toHaveLength(2);
+    radios.forEach((radio) => {
+      expect(radio).not.toHaveAttribute('aria-invalid');
+      expect(radio.getAttribute('aria-describedby')!.split(' ')).toContain(errorId('root_foo'));
+    });
+  });
+
+  it('names its group by the label and marks each checkbox invalid rather than the group', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { foo: { type: 'array', title: 'Foo', items: { enum: ['a', 'b'] }, uniqueItems: true } },
+      },
+      uiSchema: { foo: { 'ui:widget': 'checkboxes' } },
+      extraErrors: { foo: { __errors: ['is wrong'] } },
+    });
+    const group = node.querySelector('#root_foo')!;
+    expect(group).toHaveAttribute('role', 'group');
+    expect(group).toHaveAttribute('aria-labelledby', fieldLabelId('root_foo'));
+    expect(group).not.toHaveAttribute('aria-invalid');
+    const checkboxes = node.querySelectorAll('input[type=checkbox]');
+    expect(checkboxes).toHaveLength(2);
+    checkboxes.forEach((checkbox) => {
+      expect(checkbox).toHaveAttribute('aria-invalid', 'true');
+      expect(checkbox.getAttribute('aria-describedby')!.split(' ')).toContain(errorId('root_foo'));
+    });
+  });
+});

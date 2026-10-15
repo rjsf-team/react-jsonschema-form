@@ -50,9 +50,12 @@ function RadioWidget<
     [onFocus, enumOptions, emptyValue, id, optionValueFormat],
   );
 
-  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>({ id, presentation });
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
   return (
-    <div className='field-radio-group' id={id} role='radiogroup' {...groupAttributes}>
+    <div className='field-radio-group' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value, false);
