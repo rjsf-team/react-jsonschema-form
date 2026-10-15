@@ -9360,10 +9360,6 @@ exports[`single fields > optional data controls > does not show optional control
                     <div
                       class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                       style="padding-inline: 12px;"
-                    />
-                    <div
-                      class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                      style="padding-inline: 12px;"
                     >
                       <div
                         class="rjsf-field rjsf-field-object"
@@ -9410,10 +9406,6 @@ exports[`single fields > optional data controls > does not show optional control
                                           style="margin-block: 1px;"
                                         />
                                       </div>
-                                      <div
-                                        class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                        style="padding-inline: 12px;"
-                                      />
                                       <div
                                         class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                         style="padding-inline: 12px;"
@@ -9521,10 +9513,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                             style="margin-block: 1px;"
                                                           />
                                                         </div>
-                                                        <div
-                                                          class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                          style="padding-inline: 12px;"
-                                                        />
                                                         <div
                                                           class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                           style="padding-inline: 12px;"
@@ -9641,10 +9629,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                             style="margin-block: 1px;"
                                                           />
                                                         </div>
-                                                        <div
-                                                          class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                          style="padding-inline: 12px;"
-                                                        />
                                                         <div
                                                           class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                           style="padding-inline: 12px;"
@@ -10225,10 +10209,6 @@ exports[`single fields > optional data controls > does not show optional control
                                       <div
                                         class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                         style="padding-inline: 12px;"
-                                      />
-                                      <div
-                                        class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                        style="padding-inline: 12px;"
                                       >
                                         <div
                                           class="rjsf-field rjsf-field-string"
@@ -10516,10 +10496,6 @@ exports[`single fields > optional data controls > does not show optional control
                                                     class="ant-row css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                     style="margin-inline: -12px;"
                                                   >
-                                                    <div
-                                                      class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                      style="padding-inline: 12px;"
-                                                    />
                                                     <div
                                                       class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                       style="padding-inline: 12px;"
@@ -12392,10 +12368,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <div
                       class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                       style="padding-inline: 12px;"
-                    />
-                    <div
-                      class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                      style="padding-inline: 12px;"
                     >
                       <div
                         class="rjsf-field rjsf-field-object"
@@ -12621,10 +12593,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                             style="margin-block: 1px;"
                                                           />
                                                         </div>
-                                                        <div
-                                                          class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                                          style="padding-inline: 12px;"
-                                                        />
                                                         <div
                                                           class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                                           style="padding-inline: 12px;"
@@ -13265,10 +13233,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           style="margin-block: 1px;"
                                         />
                                       </div>
-                                      <div
-                                        class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                        style="padding-inline: 12px;"
-                                      />
                                       <div
                                         class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                         style="padding-inline: 12px;"
@@ -14494,10 +14458,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <div
                       class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                       style="padding-inline: 12px;"
-                    />
-                    <div
-                      class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                      style="padding-inline: 12px;"
                     >
                       <div
                         class="rjsf-field rjsf-field-object"
@@ -14681,10 +14641,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                           style="margin-block: 1px;"
                                         />
                                       </div>
-                                      <div
-                                        class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
-                                        style="padding-inline: 12px;"
-                                      />
                                       <div
                                         class="ant-col ant-col-24 css-dev-only-do-not-override-oc1rc0 css-var-root"
                                         style="padding-inline: 12px;"
