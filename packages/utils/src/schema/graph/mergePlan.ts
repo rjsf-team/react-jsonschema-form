@@ -1,3 +1,5 @@
+import type { JSONSchema7Definition } from 'json-schema';
+
 import { patternRegExp } from '../../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
@@ -202,6 +204,27 @@ export function schemaFrom<S extends StrictRJSFSchema, U>(template: S, source: U
     Reflect.deleteProperty(schema, key);
   }
   return Object.assign(schema, source);
+}
+
+/** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
+ * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise, which merges an `allOf` holding a
+ * `false` to that `false`. A `customMergeAllOf` may reject subschemas it considers irreconcilable, so this never
+ * throws: it warns once and returns the schema without its `allOf`.
+ *
+ * The entries are expected to have their `$ref`s resolved already. The shallow merge hoists an entry's `$ref` onto the
+ * merged schema rather than following it, so an unresolved entry loses the referenced schema's properties and hands a
+ * `customMergeAllOf` a `$ref` the form's own merge never sees.
+ */
+export function mergeAllOf<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  schema: S,
+): S | JSONSchema7Definition {
+  try {
+    return context.customMergeAllOf ? context.customMergeAllOf(schema) : shallowAllOfMerge(schema);
+  } catch (error) {
+    logOnce('could not merge subschemas in allOf:\n', 'warn', error);
+    return withoutKeys(schema, ALL_OF_KEY);
+  }
 }
 
 /** The keys of the seed lists, which are never changed once made, so a list a plan hands out is keyed once */
@@ -618,14 +641,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   private mergeAll(schema: S): S {
-    try {
-      return this.context.customMergeAllOf
-        ? this.context.customMergeAllOf(schema)
-        : schemaFrom(schema, shallowAllOfMerge(schema));
-    } catch (error) {
-      logOnce('could not merge subschemas in allOf:\n', 'warn', error);
-      return withoutKeys(schema, ALL_OF_KEY);
-    }
+    const merged = mergeAllOf(this.context, schema);
+    return isSchemaObject<S>(merged) && this.context.customMergeAllOf ? merged : schemaFrom(schema, merged);
   }
 
   private holds(key: string, condition: S, data: unknown): boolean {

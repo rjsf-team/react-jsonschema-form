@@ -27,7 +27,6 @@ import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
-import logOnce from '../logOnce.ts';
 import { getByPath } from '../pathUtils.ts';
 import type {
   FormContextType,
@@ -58,7 +57,6 @@ import type { GuardChain, Provenance } from './graph/provenance.ts';
 import { childField, collapses, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
 import { declaredProperty, dependencyCondition, pointerTo, withVariantId } from './graph/validationTargets.ts';
-import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 /** Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies`
  * and patterns merged in for the `rawFormData`, and the extra keys of that data stubbed among its `properties`. The
@@ -1264,33 +1262,4 @@ export function stubExistingAdditionalProperties<
   }
 
   return schema;
-}
-
-/** Merges an `allOf` schema into a single flat schema, delegating to the context's `customMergeAllOf` when it has one
- * and falling back to @x0k/json-schema-merge's shallow `allOf` merge otherwise. A `customMergeAllOf` may reject
- * subschemas it considers irreconcilable, so this never throws: it warns once and returns the schema without its
- * `allOf`, reporting the failure through `merged` for a caller that has to react to it.
- *
- * The entries are expected to have their `$ref`s resolved already. The shallow merge hoists an entry's `$ref` onto the
- * merged schema rather than following it, so an unresolved entry loses the referenced schema's properties and hands a
- * `customMergeAllOf` a `$ref` the form's own merge never sees.
- *
- * @param context - The `SchemaContext` whose `customMergeAllOf`, if any, does the merging
- * @param schema - The schema containing an `allOf` keyword
- * @returns The merged schema and whether the merge succeeded; on failure the schema is the one given, less its `allOf`
- */
-export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
-  context: SchemaContext<S, F>,
-  schema: S,
-): { schema: S; merged: boolean } {
-  try {
-    return {
-      schema: context.customMergeAllOf ? context.customMergeAllOf(schema) : (shallowAllOfMerge(schema) as S),
-      merged: true,
-    };
-  } catch (e) {
-    logOnce('could not merge subschemas in allOf:\n', 'warn', e);
-    const { allOf, ...schemaWithoutAllOf } = schema;
-    return { schema: schemaWithoutAllOf as S, merged: false };
-  }
 }

@@ -13,9 +13,9 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import { schemaFrom } from './graph/mergePlan.ts';
+import { mergeAllOf, schemaFrom } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { getValidationTarget, mergeAllOf, resolveOwnRef } from './retrieveSchema.ts';
+import { getValidationTarget, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -111,10 +111,7 @@ export default function omitExtraData<
         // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
         // the names it requires live: read off the wrapper around them it requires nothing, and a required child
         // holding an empty value would take the whole object down with it
-        if (sd.allOf) {
-          sd = mergeAllOfOnce(sd, sd.allOf);
-        }
-        const innerRequired = new Set(sd.required ?? []);
+        const innerRequired = new Set((sd.allOf ? mergeAllOfOnce(sd, sd.allOf) : sd)?.required);
         // Drop this optional object when every key in v is both optional in the inner schema
         // and has an empty value. Vacuously true for {} so empty objects are always dropped.
         const shouldDrop = Object.entries(v).every(([k, val]) => !innerRequired.has(k) && isValueEmpty(val));
@@ -342,7 +339,7 @@ export default function omitExtraData<
    * object property: a 200-row array merged the same schema once a row. Keyed on the schema, so it is only valid for
    * this call's `rootSchema`, which is why it lives here rather than at module scope
    */
-  const mergedAllOfSchemas = new WeakMap<object, S>();
+  const mergedAllOfSchemas = new WeakMap<object, S | JSONSchema7Definition>();
 
   /** Resolves the reference of one `allOf` entry. Only its own `$ref` needs resolving: the merge would hoist it rather
    * than follow it, where the ones below are resolved as `omit()` reaches them
@@ -363,15 +360,15 @@ export default function omitExtraData<
    *
    * @param schemaDef - The schema carrying the `allOf`, which is what the merge is remembered under
    * @param allOf - The `allOf` entries to merge into it
-   * @returns - The merged schema
+   * @returns - The merged schema, or `undefined` for an `allOf` merged to `false`
    */
-  function mergeAllOfOnce(schemaDef: S, allOf: NonNullable<S['allOf']>): S {
+  function mergeAllOfOnce(schemaDef: S, allOf: NonNullable<S['allOf']>): S | undefined {
     let merged = mergedAllOfSchemas.get(schemaDef);
     if (merged === undefined) {
-      merged = mergeAllOf<S, F>(context, { ...schemaDef, allOf: allOf.map(resolveAllOfEntry) }).schema;
+      merged = mergeAllOf<S, F>(context, { ...schemaDef, allOf: allOf.map(resolveAllOfEntry) });
       mergedAllOfSchemas.set(schemaDef, merged);
     }
-    return merged;
+    return isSchemaObject<S>(merged) ? merged : undefined;
   }
 
   /** Core recursive filter. Resolves `$ref`s, merges `allOf`, then delegates to the type-specific
@@ -403,14 +400,15 @@ export default function omitExtraData<
       return omit(resolveOwnRef<S>(localSchema, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
-      localSchema = mergeAllOfOnce(localSchema, allOf);
+      const merged = mergeAllOfOnce(localSchema, allOf);
       // An `allOf` holding a `false` merges to that `false`, the one boolean a merge yields — a `true` entry merges to
       // `{}` — and no value satisfies it. The keyword handlers below read nothing off a boolean, so the value would
       // otherwise reach the fallback that returns `source`, keeping even the keys the entries beside the `false`
       // describe nothing about
-      if (!isSchemaObject<S>(localSchema)) {
+      if (merged === undefined) {
         return undefined;
       }
+      localSchema = merged;
       // Schemas whose allOf entries contain if/then/else keywords may not fully merge: the merger
       // can only hoist one if/then/else triple to the parent level, so additional entries stay in
       // allOf. Process any that remain so their conditional properties are not silently dropped.
