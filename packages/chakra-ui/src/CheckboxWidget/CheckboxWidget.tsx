@@ -42,7 +42,7 @@ export default function CheckboxWidget<
   const handleFocus = ({ target }: FocusEvent<HTMLElement>) =>
     onFocus(id, isInputElement(target) ? target.checked : undefined);
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(options);
 
   return (
     <Field mb={1} required={required} {...chakraProps}>

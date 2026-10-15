@@ -1072,6 +1072,19 @@ describe('StringField', () => {
         expectShown(renderWithFormData(1e15), 1e15);
       });
 
+      it.each([Date.UTC(10000, 6, 1), 1e15])(
+        'should store an edit of the epoch %s, whose local year has five digits, instead of null',
+        async (initialFormData) => {
+          const { node, onChange } = createFormComponent({ ...formProps, initialFormData });
+          const input = node.querySelector<HTMLInputElement>('[type=datetime-local]')!;
+          // A minute later, as `utcToLocal()` writes it: a five-digit year with no sign, which `Date` alone can't read
+          const edited = initialFormData + 60_000;
+          await user.clear(input);
+          await user.paste(utcToLocal(edited));
+          expectToHaveBeenCalledWithFormData(onChange, new Date(edited).toJSON(), 'root');
+        },
+      );
+
       it('should render an empty value for an invalid Date', () => {
         expectEmpty(renderWithFormData(new Date(NaN)));
       });

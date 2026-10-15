@@ -1,9 +1,10 @@
+import { ROOT_FIELD_PATH } from './fieldPath.ts';
 import getSchemaType from './getSchemaType.ts';
 import getUiOptions from './getUiOptions.ts';
 import getXxxOfOptions from './getXxxOfOptions.ts';
 import isObject from './isObject.ts';
-import isRootSchema from './isRootSchema.ts';
 import type {
+  FieldPath,
   FormContextType,
   GlobalUISchemaOptions,
   Registry,
@@ -46,13 +47,14 @@ export function getOptionalDataControlsType<S extends StrictRJSFSchema = RJSFSch
  * Data Controls UI on for. A field whose `anyOf`/`oneOf` options name several types is never one of them, while a
  * `type` list counts as the type `getSchemaType()` resolves it to.
  *
- * @param schema - The schema for the field
+ * @param schema - The schema for the field, or a function building it, called only once the uiSchema turns the Optional
+ *        Data Controls UI on for some type, which by default it does for none
  * @param [uiSchema] - The uiSchema for the field
  * @param [globalUiOptions] - The global UI options, from the `registry`
  * @returns - True if the Optional Data Controls UI is enabled for the type of the field, otherwise false
  */
 export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  schema: S,
+  schema: S | (() => S),
   uiSchema?: UiSchema<T, S, F>,
   globalUiOptions?: GlobalUISchemaOptions,
 ): boolean {
@@ -60,28 +62,36 @@ export function isOptionalDataControlsType<T, S extends StrictRJSFSchema, F exte
   if (enableOptionalDataFieldForType.length === 0) {
     return false;
   }
-  const schemaType = getOptionalDataControlsType<S>(schema);
+  const schemaType = getOptionalDataControlsType<S>(typeof schema === 'function' ? schema() : schema);
   return typeof schemaType === 'string' && enableOptionalDataFieldForType.some((val) => val === schemaType);
 }
 
 /** Determines whether the field information from the combination of `schema` and `required` along with the
  * `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
- * should be rendered with the Optional Data Controls UI.
+ * should be rendered with the Optional Data Controls UI. The root field never is: it is the form itself, which has no
+ * parent to leave it out of.
  *
  * @param registry - The `registry` object
  * @param schema - The schema for the field
  * @param required - Flag indicating whether the field is required
- * @param [uiSchema] - The uiSchema for the field
+ * @param uiSchema - The uiSchema for the field, if any
+ * @param fieldPath - The `FieldPath` of the field, which is `ROOT_FIELD_PATH` for the root field
  * @return - True if the field should be rendered with the optional field UI, otherwise false
  */
 export default function shouldRenderOptionalField<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(registry: Registry<T, S, F>, schema: S, required: boolean, uiSchema?: UiSchema<T, S, F>): boolean {
+>(
+  registry: Registry<T, S, F>,
+  schema: S,
+  required: boolean,
+  uiSchema: UiSchema<T, S, F> | undefined,
+  fieldPath: FieldPath,
+): boolean {
   return (
+    fieldPath !== ROOT_FIELD_PATH &&
     !required &&
-    isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions) &&
-    !isRootSchema<T, S, F>(registry, schema)
+    isOptionalDataControlsType<T, S, F>(schema, uiSchema, registry.globalUiOptions)
   );
 }

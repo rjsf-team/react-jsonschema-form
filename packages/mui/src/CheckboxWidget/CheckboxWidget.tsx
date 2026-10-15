@@ -52,7 +52,7 @@ export default function CheckboxWidget<
   // "const" or "enum" keywords
   const trueValueRequired = schemaRequiresTrueValue<S>(schema) && required;
 
-  const handleChange = (_: any, checked: boolean) => onChange(checked);
+  const handleChange: NonNullable<CheckboxProps['onChange']> = (_, checked) => onChange(checked);
   const handleBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
   const handleFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
   const description = options.description ?? schema.description;

@@ -48,7 +48,6 @@ export default function NativeSelectWidget<
     onBlur,
     onFocus,
     schema,
-    uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
 
@@ -72,7 +71,7 @@ export default function NativeSelectWidget<
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, false);
   const formValue = typeof selectedIndex !== 'undefined' ? selectedIndex.toString() : '';
 
-  const chakraProps = getChakra({ uiSchema });
+  const chakraProps = getChakra(options);
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     return (

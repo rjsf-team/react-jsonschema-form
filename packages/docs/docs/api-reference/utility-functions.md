@@ -232,6 +232,21 @@ Given a `formData` object, recursively creates a `FormValidation` error handling
 
 - FormValidation&lt;T>: A `FormValidation` object based on the `formData` structure
 
+### createRootSchemaGuard&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Returns a guard that throws when the `schema` it is given is neither the `rootSchema` a precompiled validator was compiled from nor that schema's resolution for the `formData`.
+A schema is compared once per object: one the guard accepted before is accepted again without comparing, including when it was changed since or, for a resolution, the data differs from the data it was resolved for.
+A form validates with the same schema object until its schema changes, and passes the resolution for the data being validated, so the comparison runs once per schema rather than on every validation.
+
+#### Parameters
+
+- schemaContext: SchemaContext&lt;S, F> - The context to resolve the `rootSchema` with: the validator itself and the merge its schemas were compiled with
+- rootSchema: S - The root schema the validator was compiled from
+
+#### Returns
+
+- (schema: S, formData?: unknown) => void: A function that takes the `schema` to validate with and the `formData` the schema may have been resolved for, and throws when the schema is neither the `rootSchema` nor its resolution
+
 ### dataURItoBlob()
 
 Given the `FileReader.readAsDataURL()` based `dataURI` extracts that data into an actual Blob along with the name
@@ -922,7 +937,9 @@ A finite epoch number or a valid `Date` is an exact instant. It is converted to 
 Returns the suggestions a text input offers for `schema`: its `examples` and `default`, as the strings a user could pick from a `<datalist>`.
 Examples and a default that share a `String()` are one suggestion, e.g. `["5432", 5432]` with a default of `5432` is the single suggestion `'5432'`.
 A schema without `examples` has no suggestions, and neither has one whose examples and default are all `null`, `undefined`, objects or arrays.
-A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop so they are computed once.
+A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `aria-describedby` only when there are suggestions, since `SchemaExamples` renders no `<datalist>` otherwise, and passes them to `SchemaExamples` as its `suggestions` prop, so both read the same list.
+The same schema object gets the same array back each time, which is frozen since every caller shares it.
+The suggestions are read once per schema object, so `examples` or a `default` edited in place afterwards is not seen: pass a new schema object to change them.
 
 #### Parameters
 
@@ -930,7 +947,7 @@ A `BaseInputTemplate` sets its input's `list` and adds the examples id to its `a
 
 #### Returns
 
-- string[]: The distinct suggestions, in the order of `examples` followed by the `default`
+- readonly string[]: The distinct suggestions, in the order of `examples` followed by the `default`
 
 ### getFieldClassNames&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -1131,6 +1148,33 @@ Callers treat the properties of a schema as schemas of the same type `S`, which 
 #### Returns
 
 - S: The sub-schema for `property`, or an empty schema when it is not declared
+
+### getRenderedOptionSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the schema an `anyOf`/`oneOf` option of `parent` is rendered with. It is the one place that decides what an option inherits from the schema holding it, so `MultiSchemaField`, `getUiRequiredErrorSchema()` and the defaults `getDefaultFormState()` computes for a field that is not an object read the same option ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+An object parent renders its own `ObjectField` beside the option, which shows the parent's properties and other keywords, so the option takes only the parent's `required` list and its type.
+Every other parent renders nothing of its own and leaves the whole field to the option, so the option takes each of the parent's keywords that describes the value, such as an array's `items` and `uniqueItems` or a string's `format`.
+It leaves the parent's `anyOf`, `oneOf`, `discriminator`, `title`, `description`, `deprecated`, `default`, the identifiers `$id`, `$anchor`, `$dynamicAnchor`, `$schema` and `$vocabulary`, `$comment`, `$defs` and `definitions` on the parent, along with any Symbol-keyed marker.
+The two are met keyword by keyword, so an option's `items` adds to the parent's rather than replacing them.
+A bound both declare (`minItems`, `maxItems`, `minLength`, `maxLength`, `minProperties`, `maxProperties`, `minimum`, `maximum`, `exclusiveMinimum` or `exclusiveMaximum`) keeps the stricter of the two, since a value has to meet both.
+It does so within each subschema keyword both declare, such as `items` or a property, and position by position within a tuple, but not within a keyword holding a value rather than a schema, such as a `const`, or one JSON Schema does not define.
+`uniqueItems` holds when either asks for it, and two `required` lists ask for every name either does.
+An option's `true` subschema, such as `items: true`, adds nothing to meet, so it leaves the parent's subschema in place, a tuple included, rather than replacing it.
+A parent's `false` subschema, which nothing meets, likewise stays in place of the option's.
+An option's `items` schema beside the parent's tuple applies to each of its positions, and to the items past it where the tuple declares `additionalItems`, as the parent's beside the option's tuple does; a tuple declaring none stays at its length, as `ArrayField` offers it no Add.
+A `not`, or a conditional (`if`, `then` and `else` together), that the option declares replaces the parent's as a whole: `not: true` rejects every value, and one schema's `if` with the other's `then` is a condition neither declared.
+Any other keyword both declare, such as a `format`, a `pattern`, a `multipleOf`, an `enum` or a `const` or `default` object, is the option's. An `enum` is the option's list as it stands, since its `ui:enumNames` are read by position against it, so a value the parent doesn't list stays, for validation to reject.
+A pair of subschemas either of which holds a `$ref` is returned as an `allOf` of the two, since the `$ref` is resolved only where the subschema is rendered, against the root schema, and the keywords met in beside it would be layered over the ones it names; the field's `allOf` merge meets them once it is resolved.
+An option naming no `type` takes the parent's, every type of a type list included, and an object parent that names none, such as one with only `properties`, passes on `object`.
+
+#### Parameters
+
+- parent: S - The schema holding the `anyOf`/`oneOf`, with its `$ref`s and `allOf` resolved
+- option: S - The option, with its own `$ref` resolved
+
+#### Returns
+
+- S: The option as it is rendered, or `option` itself when the parent has nothing to pass on
 
 ### getSchemaOwnTypes()
 
@@ -1675,23 +1719,6 @@ A boolean or missing subschema describes no value of its own, so it has nothing 
 
 - boolean: True when the definition is a schema object rather than a boolean shorthand or absent, narrowing it to `S`
 
-### isRootSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
-
-Helper to check whether a JSON schema object is the root schema. The schema is a root schema with root `properties`
-key or a root `$ref` key. If the `schemaToCompare` has a root `oneOf` property, the function will
-return false. Else if `schemaToCompare` and `rootSchema` are the same object or equal, the function will return
-`true`. Else if the `rootSchema` has a $ref, it will be resolved using `schemaUtils.resolveSchema` utility. If the
-resolved schema matches the `schemaToCompare` the function will return `true`. Otherwise, it will return false.
-
-#### Parameters
-
-- registry: Registry&lt;T, S, F> - The `Registry` used to get the `rootSchema` and `schemaUtils`
-- schemaToCompare: S - The JSON schema object to check. If `schemaToCompare` is an root schema, the function will return true.
-
-#### Returns
-
-- boolean: True if the `uiSchema` describes a custom widget, false otherwise
-
 ### isValueEmpty()
 
 Returns true when a form value is considered empty: `null`, `undefined`, or `''` (empty string), an empty array (`[]`), or a plain object whose every own value is itself empty (checked recursively). Scalar values such as `0` and `false` are not considered empty.
@@ -1754,11 +1781,11 @@ Converts a local Date string into a UTC date string
 
 #### Parameters
 
-- dateString: string - The string representation of a date as accepted by the `Date()` constructor
+- dateString: unknown - The string representation of a date as accepted by the `Date()` constructor, or a `datetime-local` value whose year has five or six digits. The input writes such a year as plain digits, `10000-07-01T00:01`, which `Date` reads only in the signed six-digit form, so it is expanded to `+010000-07-01T00:01` before parsing; any other text goes to `Date` as written
 
 #### Returns
 
-- string | undefined: A UTC date string if `dateString` is truthy, otherwise undefined
+- string | null | undefined: A UTC date string if `dateString` is truthy and names a valid date; `undefined` for an empty value, and `null` for a value `Date` can't read, as `toJSON()` gives for an invalid date. Years 1-9999 are the supported range, as in `getDateTimeLocalValue()`; a five or six digit year is read all the same, up to the last instant `Date` holds, 275760-09-13T00:00Z, so the string it gives keeps that year and fails `date-time` validation instead of `null` wiping the value
 
 ### logOnce()
 
@@ -1805,14 +1832,16 @@ When merging defaults and form data, we want to merge in this specific way:
 - arrays are merged in such a way that:
   - when the array is set in form data, only array entries set in form data are deeply merged; additional entries from the defaults are ignored unless `mergeExtraArrayDefaults` is true, in which case the extras are appended onto the end of the form data
   - when the array is not set in form data, the default is copied over
-- scalars are overwritten/set by form data
+- scalars are overwritten/set by form data unless the form data is `undefined` or `null` and there is a default, or is `NaN`, AND `defaultSupercedesUndefined` is true, or unless `overrideFormDataWithDefaults` is true and the form data is neither `undefined` nor `null`, in which case the default replaces it
+- a non-object default is ignored when form data is an object, whatever the flags, so `mergeDefaultsWithFormData('x', { b: 2 })` returns `{ b: 2 }`
 
 #### Parameters
 
 - [defaults]: T | undefined - The defaults to merge
 - [formData]: T | undefined - The form data into which the defaults will be merged
 - [mergeExtraArrayDefaults=false]: boolean - If true, any additional default array entries are appended onto the formData
-- [defaultSupercedesUndefined=false]: boolean - If true, an explicit undefined value will be overwritten by the default value
+- [defaultSupercedesUndefined=false]: boolean - If true, an `undefined` or `null` form data value with a default, or a `NaN` one, will be overwritten by the default value
+- [overrideFormDataWithDefaults=false]: boolean - If true, the default value will overwrite the form data value, except that an `undefined` or `null` form data value is kept unless `defaultSupercedesUndefined` is true, a form data key or array entry that doesn't exist in the defaults keeps its value, and object or array form data is never replaced, only merged with a default of the same kind. A default that is present but `undefined` still replaces a scalar form data value. This is useful when we have already merged formData with defaults and want to add an additional field from formData that does not exist in defaults.
 
 #### Returns
 
@@ -2027,6 +2056,20 @@ Extracts the range spec information `{ step?: number, min?: number, max?: number
 
 - RangeSpecType: A range specification from the schema
 
+### rendersOwnFieldBesideOption&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Whether the field of `schema` renders a field of its own beside its selected `anyOf`/`oneOf` option, as an object's `ObjectField` does ([#5359](https://github.com/rjsf-team/react-jsonschema-form/issues/5359)).
+Such a field shows its own properties and other keywords, so its option is read merged with the whole field; every other field leaves the whole field to the option as [getRenderedOptionSchema()](#getrenderedoptionschema) renders it.
+`getRenderedOptionSchema()`, the defaults `getDefaultFormState()` computes, the `getUiRequiredErrorSchema()` walk and `MultiSchemaField` all read it to choose between the two, so none of them renders one option and seeds or walks another.
+
+#### Parameters
+
+- schema: S - The schema holding the options
+
+#### Returns
+
+- boolean: True when the field renders a field of its own beside the option
+
 ### replaceEqualDeep&lt;T>()
 
 Returns `next` with every subtree that is deeply equal to the corresponding subtree of `prev` replaced by the `prev` instance, so consumers comparing by reference (such as `React.memo` with shallow comparison) see unchanged data as unchanged.
@@ -2235,14 +2278,15 @@ setByPath({}, 'a.b', 1); // { 'a.b': 1 }, a bare string is one literal key
 
 Determines whether the field information from the combination of `schema` and `required` along with the
 `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
-should be rendered with the Optional Data Controls UI.
+should be rendered with the Optional Data Controls UI. The root field never is.
 
 #### Parameters
 
 - registry: Registry&lt;T, S, F> - The `registry` object
 - schema: S - The schema for the field
 - required - Flag indicating whether the field is required
-- [uiSchema]: UiSchema&lt;T, S, F> - The optional uiSchema for the field
+- uiSchema: UiSchema&lt;T, S, F> | undefined - The uiSchema for the field, if any
+- fieldPath: FieldPath - The `FieldPath` of the field, which is `ROOT_FIELD_PATH` for the root field
 
 #### Returns
 

@@ -10,6 +10,7 @@ import asNumber from './asNumber.ts';
 import callWithDeferredThrow from './callWithDeferredThrow.ts';
 import canExpand from './canExpand.ts';
 import createErrorHandler from './createErrorHandler.ts';
+import createRootSchemaGuard from './createRootSchemaGuard.ts';
 import createSchemaUtils from './createSchemaUtils.ts';
 import dataURItoBlob from './dataURItoBlob.ts';
 import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
@@ -56,6 +57,7 @@ import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscr
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
+import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from './getRenderedOptionSchema.ts';
 import getSchemaOwnTypes from './getSchemaOwnTypes.ts';
 import getSchemaType from './getSchemaType.ts';
 import getSchemaTypeForValue from './getSchemaTypeForValue.ts';
@@ -108,7 +110,6 @@ import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
-import isRootSchema from './isRootSchema.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
 import labelValue from './labelValue.ts';
 import localTimeToOffsetTime from './localTimeToOffsetTime.ts';
@@ -200,6 +201,7 @@ export {
   callWithDeferredThrow,
   canExpand,
   createErrorHandler,
+  createRootSchemaGuard,
   createSchemaUtils,
   DateElement,
   dataURItoBlob,
@@ -249,6 +251,7 @@ export {
   getOptionUiSchema,
   getPropertySchema,
   getOptionValueFormat,
+  getRenderedOptionSchema,
   getSchemaOwnTypes,
   getSchemaType,
   getSchemaTypeForValue,
@@ -286,7 +289,6 @@ export {
   isFormDataAvailable,
   isObject,
   isPlainObject,
-  isRootSchema,
   isSchemaObject,
   isWholeValueSelect,
   labelValue,
@@ -309,6 +311,7 @@ export {
   padTimeSeconds,
   parseDateString,
   rangeSpec,
+  rendersOwnFieldBesideOption,
   replaceEqualDeep,
   replaceStringParameters,
   resetLogOnce,

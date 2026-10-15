@@ -777,7 +777,7 @@ export function formTests(Form: ComponentType<FormProps>) {
         'ui:help': 'help me!',
       };
       const errors: string[] = ['an error'];
-      const extraErrors = { __errors: errors } as ErrorSchema;
+      const extraErrors: ErrorSchema = { __errors: errors };
       const { asFragment } = render(
         <Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />,
       );
@@ -803,7 +803,7 @@ export function formTests(Form: ComponentType<FormProps>) {
       let schema: RJSFSchema;
       let uiSchema: UiSchema;
       let defaultFormStateBehavior: DefaultFormStateBehavior;
-      let formData: any;
+      let formData: { nestedObjectOptional: { test: string }; nestedArrayOptional: string[] };
       beforeAll(() => {
         schema = {
           title: 'test',

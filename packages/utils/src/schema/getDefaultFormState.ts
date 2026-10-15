@@ -18,6 +18,7 @@ import findSchemaDefinition from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getOptionUiSchema from '../getOptionUiSchema.ts';
 import getPropertySchema from '../getPropertySchema.ts';
+import getRenderedOptionSchema, { rendersOwnFieldBesideOption } from '../getRenderedOptionSchema.ts';
 import getSchemaType from '../getSchemaType.ts';
 import getSchemaTypeForValue from '../getSchemaTypeForValue.ts';
 import getStaticItemsUiSchema from '../getStaticItemsUiSchema.ts';
@@ -34,6 +35,7 @@ import mergeObjects from '../mergeObjects.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
+import { enclosingRefPath, resolvedFromRef } from '../refOf.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
 import toConstant from '../toConstant.ts';
 import type {
@@ -272,6 +274,18 @@ interface ComputeDefaultsProps<
   shouldMergeDefaultsIntoFormData?: boolean;
 }
 
+/** Returns the option of a field that is not an object as `getRenderedOptionSchema()` renders it, carrying the
+ * `default` of the parent it was rendered from. The rendered option leaves the parent's `default` on the parent, but
+ * the option's defaults are seeded from it, so the two are merged as `mergeSchemas()` merges them for an object.
+ *
+ * @param parent - The schema holding the options, without them
+ * @param renderedOption - The selected option as it is rendered
+ * @returns - The rendered option with the parent's `default` merged into its own
+ */
+function withDefaultOf(parent: GenericObjectType, renderedOption: GenericObjectType): GenericObjectType {
+  return DEFAULT_KEY in parent ? mergeSchemas({ [DEFAULT_KEY]: parent[DEFAULT_KEY] }, renderedOption) : renderedOption;
+}
+
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
  * each level of the schema, recursively, to fill out every level of defaults provided by the schema.
  *
@@ -373,11 +387,19 @@ export function computeDefaults<
         : getDefaultBasedOnSchemaType(context, schema, computeDefaultsProps, defaults);
     const objectDefaults: GenericObjectType = isObject(schemaDefaults) ? schemaDefaults : {};
     const defaultFormData: T = { ...objectDefaults, ...formData };
-    const resolvedSchema = resolveDependencies<T, S, F>(context, schema, rootSchema, false, [], defaultFormData);
+    const resolvedSchema = resolveDependencies<T, S, F>(
+      context,
+      schema,
+      rootSchema,
+      false,
+      enclosingRefPath<S>(schema, _recurseList, DEPENDENCIES_KEY),
+      defaultFormData,
+    );
     [schemaToCompute] = resolvedSchema; // pick the first element from resolve dependencies
-  } else if (isFixedItems(schema) && !preferParentDefaults) {
+  } else if (isFixedItems(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
-    // Then construct defaults from defaults of array items.
+    // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
+    // option, which it is met into below, so its defaults are those of the option as rendered
     defaults = (schema.items! as S[]).map((itemSchema: S, idx: number) =>
       computeDefaults<T, S, F>(context, itemSchema, {
         rootSchema,
@@ -438,15 +460,59 @@ export function computeDefaults<
         defaults = toConstant<S>(options[optionIndex]) as T;
       }
     } else {
-      schemaToCompute = mergeSchemas(remaining, options[optionIndex]) as S;
+      const option = options[optionIndex];
+      // An object's defaults are those of its own properties as well as the option's, so the option is merged with the
+      // whole object. Any other field renders only the option, so its defaults are those of the option as rendered,
+      // with a boolean option read as the empty schema `SchemaField` retrieves it as. An option written as a `$ref`
+      // that inherits something is met with it once the reference is followed, as `SchemaField` resolves it: met as it
+      // is, the `$ref` would be followed alone below, dropping all it inherits. Only the reference is followed, so an
+      // `allOf` within it is still left to the `allOf` defaults behavior. One that inherits nothing, or whose `$ref` is
+      // already being followed, is left to the `$ref` branch below, which also ends the cycle. Which of the two the
+      // field is gets asked of it with its `allOf` merged, as the fields ask it, since its `type` can come through one.
+      // A field naming one type already has it, which an `allOf` can't change, so it is spared the merge
+      const fieldSchema =
+        ALL_OF_KEY in remaining && typeof getSchemaType<S>(remaining as S) !== 'string'
+          ? retrieveSchema<T, S, F>(context, remaining as S, rootSchema, rawFormData)
+          : remaining;
+      if (rendersOwnFieldBesideOption<S>(fieldSchema as S)) {
+        schemaToCompute = mergeSchemas(remaining, option) as S;
+      } else {
+        const optionSchema = isObject(option) ? option : ({} as S);
+        let renderedOption = getRenderedOptionSchema<S>(remaining as S, optionSchema);
+        const optionRef = optionSchema[REF_KEY];
+        if (renderedOption !== optionSchema && optionRef !== undefined && !_recurseList.includes(optionRef)) {
+          updatedRecurseList = _recurseList.concat(optionRef);
+          const { [REF_KEY]: _ref, ...besideRef } = optionSchema;
+          const referenced = findSchemaDefinition<S>(optionRef, rootSchema);
+          renderedOption = getRenderedOptionSchema<S>(remaining as S, { ...referenced, ...besideRef });
+        }
+        schemaToCompute = withDefaultOf(remaining, renderedOption) as S;
+      }
       branchUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, optionIndex);
     }
   } else if (shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) && getSchemaType<S>(schema) !== 'object') {
     // `allOf` on an object schema is already resolved by `getObjectDefaults()`. On any other schema
     // nothing resolves it, so the defaults of the subschemas are lost. This happens, for instance,
     // for a single-element `allOf` wrapping a `$ref` to a string, which is equivalent to using the
-    // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well.
-    schemaToCompute = retrieveSchema<T, S, F>(context, schema, rootSchema, rawFormData);
+    // `$ref` directly. Merge the `allOf` here so those defaults are picked up as well. An `allOf` that stood beside the
+    // schema's own `$ref` is not part of the definition, so the ref stays off the path the merge is seeded with, as
+    // the resolver leaves it off
+    const pathWithOwnRef = enclosingRefPath<S>(schema, _recurseList, ALL_OF_KEY);
+    [schemaToCompute] = retrieveSchemaInternal<T, S, F>(
+      context,
+      schema,
+      rootSchema,
+      rawFormData,
+      false,
+      pathWithOwnRef,
+    );
+    // The merge expands a `$ref` among the subschemas the way the `$ref` branch above expands one, so the ref it
+    // expanded joins the path the retrieve was seeded with, for a `$ref` back to either further down to stop at.
+    // `getObjectDefaults()` leaves the schema's own ref off that path and this keeps it on, so a recursion under an
+    // `allOf` stops one level sooner here: followed once more, a `$ref` back to the schema leads to its definition
+    // with the `allOf` unmerged, where the entry already on the path collapses and the level takes the defaults of
+    // the other entries alone
+    updatedRecurseList = enclosingRefPath<S>(schemaToCompute, pathWithOwnRef);
   }
 
   if (schemaToCompute) {
@@ -601,9 +667,27 @@ export function getObjectDefaults<
     const shouldRetrieveSchema =
       shouldPopulateAllOfDefaults(schema, defaultFormStateBehavior) ||
       (defaultFormStateBehavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in schema);
-    const retrievedSchema = shouldRetrieveSchema
-      ? retrieveSchema<T, S, F>(context, schema, rootSchema, formData)
-      : schema;
+    const [retrievedSchema] = shouldRetrieveSchema
+      ? retrieveSchemaInternal<T, S, F>(
+          context,
+          schema,
+          rootSchema,
+          formData,
+          false,
+          // No branch keyword is named: the retrieve resolves the schema's `if` as well as its `allOf`, and it leaves
+          // a `$ref` under either's `properties` unexpanded, for `childRecurseList` below to decide
+          enclosingRefPath<S>(schema, _recurseList),
+        )
+      : [schema];
+    // A `$ref` the retrieve expanded out of an `allOf` or a `then`/`else` of a schema that was not itself resolved from
+    // one joins the path of everything below, the way one the `$ref` branch of `computeDefaults()` expands does. The
+    // ref `schema` was itself resolved from does not: it seeds the retrieve above, but one more `$ref` back to it is
+    // still followed, as it is without the retrieve. Such a schema keeps its own ref through the merge of a branch,
+    // so a recursion inside a branch that was a `$ref` is stopped by the cycle flag the retrieve left on it instead
+    const childRecurseList =
+      resolvedFromRef<S>(retrievedSchema) === resolvedFromRef<S>(schema)
+        ? _recurseList
+        : enclosingRefPath<S>(retrievedSchema, _recurseList);
     const parentConst = retrievedSchema[CONST_KEY];
     const objectDefaults = Object.keys(retrievedSchema.properties ?? {}).reduce(
       (acc: GenericObjectType, key: string) => {
@@ -623,7 +707,7 @@ export function getObjectDefaults<
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(context, propertySchema, {
           rootSchema,
-          _recurseList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
@@ -678,7 +762,7 @@ export function getObjectDefaults<
       keys.forEach((key) => {
         const computedDefault = computeDefaults(context, additionalPropertiesSchema as S, {
           rootSchema,
-          _recurseList,
+          _recurseList: childRecurseList,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath<T>(defaults, key),
           rawFormData: getByPath<T>(formData, key),
