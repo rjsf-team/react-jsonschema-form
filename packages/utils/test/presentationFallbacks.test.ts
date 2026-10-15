@@ -5,6 +5,7 @@ import {
   templateDrawsDescription,
   templateDrawsLabel,
   templateLabelFor,
+  templateMarksRequired,
   widgetDrawsLabel,
 } from '../src/index.ts';
 
@@ -43,6 +44,18 @@ describe('templateDrawsDescription()', () => {
   it('follows displayLabel without a plan, as the label does', () => {
     expect(templateDrawsDescription({ displayLabel: true })).toBe(true);
     expect(templateDrawsDescription({ displayLabel: false })).toBe(false);
+  });
+});
+
+describe('templateMarksRequired()', () => {
+  it("follows the plan's marker, whatever required says", () => {
+    expect(templateMarksRequired({ presentation: plan({ required: true }), required: false })).toBe(true);
+    expect(templateMarksRequired({ presentation: plan({ required: false }), required: true })).toBe(false);
+  });
+
+  it('follows required without a plan', () => {
+    expect(templateMarksRequired({ required: true })).toBe(true);
+    expect(templateMarksRequired({})).toBe(false);
   });
 });
 

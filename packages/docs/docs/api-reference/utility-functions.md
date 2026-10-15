@@ -2108,7 +2108,7 @@ A part declared `undefined` is left to the layers beneath it, and a part no laye
 A layer's `default` is layered beneath that layer's own entry for every widget key any layer declares, and the layered `default`s are what a widget no layer declares draws.
 So a theme's or the `Form` props' `default` overrides the parts it declares in the layers beneath it, even under a key one of them declares, while parts it doesn't declare keep theirs.
 The layers' `fieldDefault`s are layered over one another only, since the field default sits beneath the merged field entries.
-Neither a `default` nor a `fieldDefault` keeps an `uncheckedIsFalse` its layer gives it anyway, as a theme written in JavaScript can, since it describes one control and is declared under that widget's key.
+Neither a `default` nor a `fieldDefault` keeps an `uncheckedIsFalse` its layer gives it anyway, as a theme written in JavaScript can, since it describes one control and is declared under the key of the widget, or of a field drawing the control itself.
 
 #### Parameters
 
@@ -2647,6 +2647,18 @@ That label names the control through its own `presentation.label.id` instead.
 #### Returns
 
 - string | undefined: The `for` of the template's label, or undefined when it should have none
+
+### templateMarksRequired&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatemarksrequired}
+
+Whether a `FieldTemplate` marks the label it draws as required: where the field's plan says so, which leaves the marker off a control declared `uncheckedIsFalse` whose schema doesn't demand `true` ([#5388](https://github.com/rjsf-team/react-jsonschema-form/issues/5388)), or, for a template rendered without a plan, where the field is `required`.
+
+#### Parameters
+
+- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'required' | 'presentation'> - The template's `required` and `presentation`
+
+#### Returns
+
+- boolean: True when the template's label carries the required marker
 
 ### titleDrawsOptionalDataControl&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#titledrawsoptionaldatacontrol}
 

@@ -833,10 +833,12 @@ export interface PresentationDeclaration<Owner extends PartOwner = PartOwner> {
    * label's `fieldLabelId(id)`, which a group of controls needs since `for` names a single element
    */
   labelledBy?: 'for' | 'aria-labelledby';
-  /** Whether the control, left alone, already holds `false`, as an unchecked checkbox or switch does. A native
-   * `required` would then fail a value the schema accepts, so `@rjsf/core` plans the control as required only where the
-   * schema demands `true` (#5388). A fact about one control, so it is declared under that widget's key, and the
-   * blanket `default` and `fieldDefault` of a `ThemePresentation` take none
+  /** Whether the control, left alone, already holds `false`, as an unchecked checkbox or switch does where its field
+   * renders a `boolean`, which `getDefaultFormState()` seeds a required one with. A native `required` would then fail a
+   * value the schema accepts, so `@rjsf/core` plans the control as required only where the schema demands `true`
+   * (#5388), and as any other control where its field renders another type, as a `type` list's string field renders a
+   * switch. A fact about one control, so it is declared under the key of the widget, or of a field drawing the control
+   * itself, and the blanket `default` and `fieldDefault` of a `ThemePresentation` take none
    */
   uncheckedIsFalse?: boolean;
 }
@@ -1006,7 +1008,9 @@ export type FieldTemplateProps<
   rawHelp?: string | ReactElement;
   /** A boolean value stating if the field should be hidden */
   hidden?: boolean;
-  /** A boolean value stating if the field is required */
+  /** A boolean value stating if the field is required. The label the template draws is marked from
+   * `templateMarksRequired()`, which follows the field's plan, so a checkbox the schema lets be `false` isn't marked
+   */
   required?: boolean;
   /** A boolean value stating if the field is read-only */
   readonly: boolean;
