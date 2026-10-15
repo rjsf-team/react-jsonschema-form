@@ -29,6 +29,17 @@ describe('widgetAriaProps()', () => {
   it("follows the caller's ids with the description of the selected option", () => {
     expect(widgetAriaProps(colorProps)['aria-describedby']).toBe('ext root_color__description');
   });
+  it('describes the widget by nothing when its caller passes an empty string, rather than by ids no element has', () => {
+    expect(widgetAriaProps({ ...colorProps, 'aria-describedby': '', value: 'b' })).toEqual({
+      'aria-label': undefined,
+      'aria-describedby': undefined,
+    });
+  });
+  it('describes the widget by the selected option alone when its caller passes an empty string', () => {
+    expect(widgetAriaProps({ ...colorProps, 'aria-describedby': '' })['aria-describedby']).toBe(
+      'root_color__description',
+    );
+  });
   it('lists the description of the selected option once when its caller already passed it', () => {
     expect(
       widgetAriaProps({ ...colorProps, 'aria-describedby': 'ext root_color__description' })['aria-describedby'],

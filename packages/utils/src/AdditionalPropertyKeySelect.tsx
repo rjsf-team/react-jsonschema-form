@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo } from 'react';
 
+import getNestedControlPresentation from './getNestedControlPresentation.ts';
 import { resolveWidget } from './getWidget.tsx';
 import noop from './noop.ts';
 import optionsList from './optionsList.ts';
@@ -15,6 +16,10 @@ export type AdditionalPropertyKeySelectProps<
 > = Pick<WidgetProps<T, S, F>, 'className' | 'disabled' | 'id' | 'label' | 'readonly' | 'registry' | 'required'> & {
   /** Whether the select leaves its label off, as it does where the template labels the key beside it */
   hideLabel?: boolean;
+  /** Whether the template draws the key's label beside the select, with a `for` naming its `id`, so the select needs no
+   * `aria-label` of its own
+   */
+  labelledByTemplate?: boolean;
   /** The current key of the `additionalProperties` property, which is the selected option */
   value: string;
   /** The key names the property is allowed to take, from the parent schema's `propertyNames.enum`. A current `value`
@@ -36,8 +41,8 @@ export default function AdditionalPropertyKeySelect<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: AdditionalPropertyKeySelectProps<T, S, F>) {
-  const { id, propertyNamesEnum, onKeyRename, registry, ...selectProps } = props;
-  const { disabled, readonly, value } = selectProps;
+  const { id, propertyNamesEnum, onKeyRename, registry, labelledByTemplate, ...selectProps } = props;
+  const { disabled, readonly, value, label, hideLabel, required } = selectProps;
   /** A key the schema no longer allows — one `propertyNames` has since stopped enumerating, or one a `newKey` from
    * before the enum was there still holds — has no option of its own, which would leave the dropdown blank and the
    * key unreadable. It gets one, disabled, so the key stays visible without becoming a name to pick.
@@ -72,6 +77,14 @@ export default function AdditionalPropertyKeySelect<
     },
     [disabled, onKeyRename, propertyNamesEnum, readonly],
   );
+  /** The key has no description, help or errors of its own, so its plan describes the select by none, rather than by
+   * the ids a widget rendered without a plan falls back to, which no element has. It names the select by the key's
+   * label where neither the select nor its template draws that label
+   */
+  const presentation = useMemo(
+    () => getNestedControlPresentation({ id, label, showLabel: !hideLabel, labelledByTemplate, required }),
+    [id, label, hideLabel, labelledByTemplate, required],
+  );
   const { Widget: SelectWidget } = resolveWidget<T, S, F>(schema, 'SelectWidget', registry.widgets);
 
   return (
@@ -79,6 +92,7 @@ export default function AdditionalPropertyKeySelect<
       {...selectProps}
       id={id}
       name={id}
+      presentation={presentation}
       schema={schema}
       options={{ enumOptions, enumDisabled: allowsCurrentKey ? undefined : [value] }}
       onChange={handleChange}

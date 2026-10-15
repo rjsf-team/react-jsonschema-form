@@ -1949,7 +1949,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                     class="fui-Dropdown form-control ___y35djy0_1vjl6qf ft85np5 f1ewtqcl ftuwxu6 fy77jfu f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv fly5x3f"
                   >
                     <button
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-labelledby="field-_r_q___label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
@@ -2862,7 +2861,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                     class="fui-Dropdown form-control ___y35djy0_1vjl6qf ft85np5 f1ewtqcl ftuwxu6 fy77jfu f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv fly5x3f"
                   >
                     <button
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-labelledby="field-_r_m___label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"
@@ -3065,7 +3063,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                     class="fui-Dropdown form-control ___y35djy0_1vjl6qf ft85np5 f1ewtqcl ftuwxu6 fy77jfu f10pi13n fmrv4ls f14a1fxs f3e99gv fhljsf7 f1gw3sf2 f13zj6fq f1mdlcz9 f1a7op3 f1gboi2j f1cjjd47 ffyw7fx f1kp91vd f1ibwz09 f1mnjydx f13evtba f1yk9hq fhwpy7i f14ee0xe f1xhbsuh fsrmcvb f1t3k7v9 fjw5xc1 f1xdyd5c fatpbeo fb7uyps fx04xgm f1c7in40 f1ibeo51 f18qfb8s f1m082s7 fxugw4r f1c1zstj fhz96rm fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi fvs00aa f1assf6x f1z0osm6 f4ruux4 f1b473iu f381qr8 f1qzcrsd ft4skwv fly5x3f"
                   >
                     <button
-                      aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                       aria-expanded="false"
                       aria-labelledby="field-_r_u___label"
                       class="fui-Dropdown__button ___12pyx89_1vewwra f122n59 f1c21dwh f3bhgqh f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f14ev680"

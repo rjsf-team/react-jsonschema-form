@@ -2325,7 +2325,6 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                         class="dropdown w-full"
                       >
                         <button
-                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
                           tabindex="0"
@@ -3352,7 +3351,6 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                         class="dropdown w-full"
                       >
                         <button
-                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
                           tabindex="0"
@@ -3593,7 +3591,6 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                         class="dropdown w-full"
                       >
                         <button
-                          aria-describedby="root_foo-key__error root_foo-key__description root_foo-key__help"
                           class="btn btn-outline w-full text-left flex justify-between items-center "
                           id="root_foo-key"
                           tabindex="0"
