@@ -697,6 +697,28 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll('.wrapper')).toHaveLength(2);
       expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
     });
+
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['ui:field', { type: 'string' }, { 'ui:field': 'Inner' }],
+      ['$id', { $id: 'Inner', type: 'string' }, {}],
+    ])("applies the root field a nested Form's %s names below an outer root field", (_, innerSchema, innerUiSchema) => {
+      function InnerField() {
+        return <div className='inner-field' />;
+      }
+      function EmbeddingField() {
+        return (
+          <Form schema={innerSchema} uiSchema={innerUiSchema} fields={{ Inner: InnerField }} validator={validator} />
+        );
+      }
+      const { node } = createFormComponent({
+        schema: { type: 'object' },
+        uiSchema: { 'ui:field': 'Embedding' },
+        fields: { Embedding: EmbeddingField },
+      });
+
+      expect(node.querySelectorAll('.inner-field')).toHaveLength(1);
+      expect(node.querySelector('input')).not.toBeInTheDocument();
+    });
   });
 
   describe('a $id names a field as ui:field does (#5391)', () => {
@@ -727,6 +749,24 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll('.my-field')).toHaveLength(1);
       expect(node.querySelector('#root__anyof_select')).not.toBeInTheDocument();
       expect(node.querySelector('input#root')).not.toBeInTheDocument();
+    });
+
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['its own ui:field', anyOfSchema, { 'ui:field': 'MyField', anyOf: [{ 'ui:field': 'OptionField' }, {}] }],
+      [
+        'its own $id',
+        { type: 'string', anyOf: [{ $id: 'OptionField', minLength: 2 }, { maxLength: 5 }] },
+        { 'ui:field': 'MyField' },
+      ],
+    ])('renders the default field for an option naming %s below a named field', (_, schema, uiSchema) => {
+      function OptionField() {
+        return <div className='option-field' />;
+      }
+      const { node } = createFormComponent({ schema, uiSchema, fields: { MyField, OptionField } });
+
+      expect(node.querySelectorAll('.my-field')).toHaveLength(1);
+      expect(node.querySelector('.option-field')).not.toBeInTheDocument();
+      expect(node.querySelectorAll('input#root')).toHaveLength(1);
     });
 
     it('does not render a ui:globalOptions.field again for an option with a uiSchema of its own', () => {

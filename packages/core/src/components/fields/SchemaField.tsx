@@ -251,9 +251,8 @@ function resolveNamedField<
 }
 
 /** Returns `uiSchema` with the field it names shadowed in each spelling, for what renders at the same data path as the
- * named field: shadowed rather than deleted, for the reason `FallbackField` shadows the same key, since
- * `getUiOptions()` layers a `ui:globalOptions.field` under the local entry, so deleting the local one alone leaves the
- * global showing through
+ * named field: shadowed rather than deleted, since `getUiOptions()` layers a `ui:globalOptions.field` under the local
+ * entry, so deleting the local one alone leaves the global showing through
  *
  * @param uiSchema - The field's `uiSchema`
  * @param globalField - The `field` from `ui:globalOptions`
@@ -534,14 +533,6 @@ function SchemaFieldRender<
     ? undefined
     : resolveNamedField<T, S, F>(ownUiOptions, globalUiOptions?.field, namedAbove ? undefined : schema.$id, fields);
   const namesField = uiField?.namedField !== undefined;
-  // The `uiSchema` the `anyOf`/`oneOf` options render against. A field named here is rendered, or declined, once for
-  // this data path, so the options, which render at the same path, don't inherit it. Memoized, since `MultiSchemaField`
-  // derives its per-option `uiSchema` array from this one and hands that array to a `useCallback`: a new object per
-  // render would rebuild both and re-render the option selector on every keystroke
-  const xxxOfUiSchema = useMemo(
-    () => (namesField ? withoutNamedField<T, S, F>(uiSchema, globalUiOptions?.field) : uiSchema),
-    [namesField, uiSchema, globalUiOptions],
-  );
   const fieldToRender =
     uiField &&
     getFieldComponent<T, S, F>(
@@ -764,14 +755,20 @@ function SchemaFieldRender<
 
   // The field of the selected option renders a description in that case, its own or, where it declares none, this
   // field's, so the template, which may render the description of a field it leaves unlabelled, is handed none. Decided
-  // from the uiSchema the `XxxOfField` is handed, as it decides whether to render it, since a shadowed `ui:field` no
+  // from the uiSchema the option renders with, below a field named here, since the `ui:field` it no longer sees no
   // longer turns its label off
   const description =
     XxxOfField &&
     optionRendersFieldLabel<S>(
       schema,
       uiOptions.label,
-      xxxOfUiSchema === uiSchema ? isLabelled : schemaUtils.getDisplayLabel(schema, xxxOfUiSchema, globalUiOptions),
+      namesField
+        ? schemaUtils.getDisplayLabel(
+            schema,
+            withoutNamedField<T, S, F>(uiSchema, globalUiOptions?.field),
+            globalUiOptions,
+          )
+        : isLabelled,
     )
       ? ''
       : uiOptions.description || props.schema.description || schema.description || '';
@@ -870,7 +867,7 @@ function SchemaFieldRender<
                     registry={registry}
                     required={effectiveRequired}
                     schema={schema}
-                    uiSchema={xxxOfUiSchema}
+                    uiSchema={uiSchema}
                   />
                 </RawFormDataContext>
               </ShownOptionContext>

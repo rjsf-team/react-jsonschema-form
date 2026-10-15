@@ -173,14 +173,14 @@ Specify either the name of a field that is used to look up an implementation fro
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md#custom-field-components) for more information about how to use this property.
 
 A field's own `ui:field` comes first, then `ui:globalOptions.field`, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
-The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named.
+The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named, the option's own `ui:field` or `$id` included.
 
 ### `ui:fieldReplacesAnyOrOneOf`
 
 By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or `OneOfField` component.
 This default behavior may be undesirable if your custom field already handles behavior related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
 By providing a `true` value for this flag in association with a custom `ui:field`, or a field named by the schema's `$id`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
-If the flag is omitted or set to `false`, your custom field is rendered beside the `AnyOfField`/`OneOfField`, whose selected option renders its own field rather than the custom one again.
+If the flag is omitted or set to `false`, your custom field is rendered beside the `AnyOfField`/`OneOfField`, whose selected option renders the default field for its schema rather than the custom one again.
 
 The flag needs a `ui:field`, or a `$id`, that resolves to a field.
 A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
