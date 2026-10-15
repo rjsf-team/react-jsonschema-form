@@ -1,7 +1,7 @@
 import type { FocusEvent } from 'react';
 import type { NumberInputValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, hasVisibleErrors, labelValue, widgetDrawsLabel } from '@rjsf/utils';
+import { getControlAttributes, hasWidgetErrors, labelValue, widgetDrawsLabelText } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { NumberInputRoot } from '../components/ui/number-input.tsx';
@@ -12,7 +12,7 @@ export default function UpDownWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, readonly, disabled, label, value, onChange, onBlur, onFocus, required } = props;
+  const { id, readonly, disabled, label, value, onChange, onBlur, onFocus, required, presentation } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
   const handleChange = ({ value: newValue }: NumberInputValueChangeDetails) => onChange(newValue);
@@ -29,7 +29,7 @@ export default function UpDownWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      invalid={hasVisibleErrors(props)}
+      invalid={hasWidgetErrors<T, S, F>(props)}
       label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
     >
@@ -38,7 +38,7 @@ export default function UpDownWidget<
         onValueChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        inputProps={getControlAttributes<T, S, F>({ id, presentation })}
         id={id}
         name={id}
       />

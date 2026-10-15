@@ -2,11 +2,11 @@ import type { ChangeEvent, FocusEvent } from 'react';
 import { Stack } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupAttributes,
   getOptionValueFormat,
   labelValue,
   optionId,
@@ -22,7 +22,21 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, options, value, required, disabled, readonly, label, onChange, onBlur, onFocus } = props;
+  const {
+    id,
+    htmlName,
+    options,
+    value,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    label,
+    onChange,
+    onBlur,
+    onFocus,
+    presentation,
+  } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
@@ -39,6 +53,10 @@ export default function RadioWidget<
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null);
 
   const chakraProps = getChakra(options);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
 
   return (
     <Field
@@ -55,7 +73,7 @@ export default function RadioWidget<
         onFocus={handleFocus}
         value={selectValue}
         name={htmlName || id}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...groupAttributes}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
@@ -69,6 +87,7 @@ export default function RadioWidget<
                   key={index}
                   id={optionId(id, index)}
                   disabled={disabled || itemDisabled || readonly}
+                  inputProps={{ ...optionAttributes, autoFocus: autofocus && index === 0 }}
                 >
                   {option.label}
                 </Radio>

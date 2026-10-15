@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
+import type { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -102,4 +103,77 @@ describe('chakra-ui SelectWidget', () => {
 
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Color');
   });
+});
+
+describe("chakra-ui widgets carry their field's plan on the element a user focuses", () => {
+  test.each<[string, string, RJSFSchema, UiSchema]>([
+    ['text', 'textbox', { type: 'string' }, {}],
+    ['textarea', 'textbox', { type: 'string' }, { 'ui:widget': 'textarea' }],
+    ['updown', 'spinbutton', { type: 'number' }, { 'ui:widget': 'updown' }],
+    ['range', 'slider', { type: 'number' }, { 'ui:widget': 'range' }],
+    ['select', 'combobox', { type: 'string', enum: ['a', 'b'] }, {}],
+    ['native select', 'combobox', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'NativeSelectWidget' }],
+    ['checkbox', 'checkbox', { type: 'boolean' }, {}],
+  ])('a %s control is invalid and described only by elements that render', (_, role, schema, uiSchema) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { pet: { ...schema, title: 'Pet' } } }}
+        uiSchema={{ pet: uiSchema }}
+        extraErrors={{ pet: { __errors: ['too short'] } }}
+        validator={validator}
+      />,
+    );
+
+    const control = screen.getByRole(role);
+    expect(control).toHaveAttribute('aria-invalid', 'true');
+    expect(control).toHaveAttribute('aria-describedby', 'root_pet__error');
+    expect(control).toHaveAccessibleDescription('too short');
+  });
+
+  test("focuses a radio group's first radio under ui:autofocus, as core does", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', enum: ['a', 'b'] } } }}
+        uiSchema={{ x: { 'ui:widget': 'radio', 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole('radio')[0]).toHaveFocus();
+  });
+
+  const colors: RJSFSchema = { type: 'string', title: 'Color', enum: ['red', 'blue'] };
+  // ARIA supports `aria-invalid` on a `radiogroup` but not on a `group`, so a radio group carries it while each checkbox
+  // carries its own. Ark marks each radio invalid too, from the group's state, so that isn't asserted either way
+  test.each([
+    ['radio', colors, 'radiogroup', 'radio', true],
+    ['checkboxes', { type: 'array', title: 'Color', items: colors, uniqueItems: true }, 'group', 'checkbox', false],
+  ] as const)(
+    "marks a %s group or each option invalid, and describes each option by the field's errors",
+    (widget, color, role, item, invalidGroup) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { color } }}
+          uiSchema={{ color: { 'ui:widget': widget } }}
+          extraErrors={{ color: { __errors: ['pick one'] } }}
+          validator={validator}
+        />,
+      );
+
+      // The group closest to the options, since each fieldset around them is a `group` too
+      const group = screen.getAllByRole(item)[0].closest(`[role="${role}"]`);
+      if (invalidGroup) {
+        expect(group).toHaveAttribute('aria-invalid', 'true');
+      } else {
+        expect(group).not.toHaveAttribute('aria-invalid');
+      }
+      for (const option of screen.getAllByRole(item)) {
+        if (!invalidGroup) {
+          expect(option).toHaveAttribute('aria-invalid', 'true');
+        }
+        expect(option).toHaveAttribute('aria-describedby', 'root_color__error');
+        expect(option).toHaveAccessibleDescription('pick one');
+      }
+    },
+  );
 });
