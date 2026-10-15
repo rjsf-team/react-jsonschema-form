@@ -14,13 +14,13 @@ import type {
   UiSchema,
 } from './types.ts';
 
-/** Narrows a uiSchema key to the `ui:` namespace, so indexing resolves against that index signature */
-function isUiKey(key: string): key is `ui:${string}` {
-  return key.startsWith('ui:');
-}
-
 /** The root uiSchema's own keys, which configure the form rather than any one field */
 const FORM_KEYS: readonly string[] = [UI_DEFINITIONS_KEY, UI_GLOBAL_OPTIONS_KEY];
+
+/** Narrows a uiSchema key to a field's own `ui:` key, so indexing resolves against that index signature */
+function isOptionKey(key: string): key is `ui:${string}` {
+  return key.startsWith('ui:') && !FORM_KEYS.includes(key);
+}
 
 /** Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:`
  * stripped off. Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
@@ -43,10 +43,7 @@ export default function getUiOptions<
   if (!uiSchema) {
     return options;
   }
-  const optionKeys = Object.keys(uiSchema)
-    .filter(isUiKey)
-    .filter((key) => !FORM_KEYS.includes(key));
-  for (const key of optionKeys) {
+  for (const key of Object.keys(uiSchema).filter(isOptionKey)) {
     const value = uiSchema[key];
     // `memo()`, `forwardRef()` and `lazy()` return objects too, so only an object that isn't a component is taken for the
     // removed `{ component, options }` form
