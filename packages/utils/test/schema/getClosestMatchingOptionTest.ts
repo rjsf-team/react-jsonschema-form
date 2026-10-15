@@ -120,8 +120,13 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     });
     it('scores a nested oneOf holding a falsy value the way it scores a truthy one', () => {
       const schema: RJSFSchema = { properties: { value: { oneOf: [{ type: 'string' }, { type: 'number' }] } } };
-      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 0 })).toEqual(1);
-      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 5 })).toEqual(1);
+      // The number option matches and its type is the value's: one for each, rather than its index
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 0 })).toEqual(2);
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 5 })).toEqual(2);
+    });
+    it('scores nothing for a nested oneOf with no options', () => {
+      const schema: RJSFSchema = { properties: { value: { oneOf: [] } } };
+      expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { value: 5 })).toEqual(0);
     });
     it('does not score a nested oneOf against a null value', () => {
       const schema: RJSFSchema = {
@@ -142,14 +147,27 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     it('oneOfSchema, oneOfData data, no options, returns -1', () => {
       expect(schemaUtils.getClosestMatchingOption(oneOfData, [])).toEqual(-1);
     });
-    it('oneOfSchema, no data, 2 options, returns -1', () => {
-      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }])).toEqual(-1);
+    it('oneOfSchema, no data, 2 options, returns the first option', () => {
+      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }])).toEqual(0);
     });
     it('oneOfSchema, oneOfData, no options, selectedOption 2, returns 2', () => {
       expect(schemaUtils.getClosestMatchingOption(oneOfData, [], 2)).toEqual(2);
     });
-    it('oneOfSchema, no data, 2 options, returns -1', () => {
-      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }], 2)).toEqual(2);
+    it('oneOfSchema, no data, 2 options, selectedOption 2 past the options, returns the first option', () => {
+      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }], 2)).toEqual(0);
+    });
+    it('keeps a selected option that ties with the others, where it is one of the candidates', () => {
+      expect(schemaUtils.getClosestMatchingOption(undefined, [{ type: 'string' }, { type: 'number' }], 1)).toEqual(1);
+    });
+    it('never returns a selected option the data does not match while another option matches it', () => {
+      // The second and third options match, and score the same, where the selected first one does not match
+      testValidator.setReturnValues({ isValid: [true, true] });
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+        { type: 'object', properties: { b: { type: 'string' } } },
+        { type: 'object', properties: { c: { type: 'string' } } },
+      ];
+      expect(schemaUtils.getClosestMatchingOption({ b: 'x', c: 'y' }, options, 0)).toEqual(1);
     });
     it('returns the first option, which kind of matches the data', () => {
       expect(
@@ -334,9 +352,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         oneOf: [{ $ref: '#/definitions/Foo' }, { $ref: '#/definitions/Bar' }],
       };
       const options = [schema.definitions!.Foo, schema.definitions!.Bar] as RJSFSchema[];
-      expect(getClosestMatchingOption({ validator: testValidator }, schema, undefined, options, -1, 'code')).toEqual(
-        -1,
-      );
+      expect(getClosestMatchingOption({ validator: testValidator }, schema, undefined, options, -1, 'code')).toEqual(0);
     });
     it('should return Bar when schema has discriminator for bar', () => {
       // Mock isValid to pass the second value
@@ -400,9 +416,9 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         testValidator.setReturnValues({ isValid: [] });
       });
       it('terminates when the recursion runs out of form data', () => {
-        // Neither option matches `{ child: 5 }` and both score 0, so the tie falls back to the selectedOption
+        // Neither option matches `{ child: 5 }` and both score 0, so the tie falls to the first option
         testValidator.setReturnValues({ isValid: [false] });
-        expect(getClosestMatchingOption({ validator: testValidator }, schema, { child: 5 }, options)).toEqual(-1);
+        expect(getClosestMatchingOption({ validator: testValidator }, schema, { child: 5 }, options)).toEqual(0);
       });
       it('scores the recursive option as deep as the form data goes', () => {
         // The recursive option scores `name` at both levels, the flat one only at the top
