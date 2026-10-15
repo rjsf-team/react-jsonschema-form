@@ -13,8 +13,9 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
+import { schemaFrom } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { getValidationTarget, mergeAllOf, normalizeBooleanSchema, resolveOwnRef } from './retrieveSchema.ts';
+import { getValidationTarget, mergeAllOf, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -277,7 +278,7 @@ export default function omitExtraData<
     const winning: unknown = oneOf[bestIndex];
     const resolved: S = isSchemaObject<S>(winning)
       ? resolveOwnRef<S>(winning, rootSchema)
-      : normalizeBooleanSchema<S>(Boolean(winning));
+      : schemaFrom(rootSchema, winning ? {} : { not: {} });
     return omit(resolved, source, target, false);
   }
 

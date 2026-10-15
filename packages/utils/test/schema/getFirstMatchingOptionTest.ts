@@ -257,7 +257,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       expect(getFirstMatchingOption({ validator: testValidator }, null, options, schema, 'code')).toEqual(0);
     });
 
-    // simple in the sense of getOptionMatchingSimpleDiscriminator
+    // simple: the discriminator property is a string enum
     it('should return Bar when schema has simple discriminator for bar', () => {
       // Mock isValid to pass the second value
       testValidator.setReturnValues({ isValid: [false, true] });
@@ -292,7 +292,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       expect(schemaUtils.getFirstMatchingOption(formData, options, 'code')).toEqual(1);
     });
 
-    // simple in the sense of getOptionMatchingSimpleDiscriminator
+    // non-simple: the discriminator property is an array
     it('should return Bar when schema has non-simple discriminator for bar', () => {
       const consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(noop);
       // Mock isValid to pass the second value

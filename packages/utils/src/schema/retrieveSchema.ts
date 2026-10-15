@@ -529,15 +529,6 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   return view;
 }
 
-/** Converts boolean schemas to equivalent object schemas for APIs that operate on `StrictRJSFSchema` objects.
- *
- * @param schema - The schema or boolean schema to normalize
- * @returns - The original schema or an equivalent object schema
- */
-export function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: boolean): S {
-  return (schema ? {} : { not: {} }) as S;
-}
-
 /** Returns the type an additional property described by `subSchema` holds, or `undefined` for a schema that leaves the
  * type to the value the property comes to hold. It is what `retrieveSchema()` stubs such a property with and what
  * `ObjectField` seeds a new one from, so the value the add button writes is one the field it renders can show.
@@ -1302,35 +1293,4 @@ export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     const { allOf, ...schemaWithoutAllOf } = schema;
     return { schema: schemaWithoutAllOf as S, merged: false };
   }
-}
-
-/** Normalises a list of `oneOf`/`anyOf` options for scoring them only (not for filtering).
- * Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
- * When `resolveRefs` is `true`, each object option has its own `$ref` resolved first
- * so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
- * Any option whose `additionalProperties` is `false` is widened to `true` so that
- * `validator.isValid()` does not produce false negatives when the form data contains keys not listed in `properties`.
- * The library's own option scoring does not call it: `getClosestMatchingOption()` relaxes the whole scope of an
- * option itself, from where the option sits in the root.
- *
- * @param options - The raw `oneOf`/`anyOf` array, which may contain boolean schemas
- * @param [resolveRefs=false] - When `true`, resolve `$ref`s in each option before relaxing; pass
- *   `rootSchema` as well. Set `false` (default) when refs are already resolved at the call site.
- * @param [rootSchema] - Required when `resolveRefs` is `true`; the root schema used to look up `$ref`s
- * @returns - A new array of plain schema objects with `additionalProperties` relaxed where needed
- */
-export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
-  options: (S | boolean)[],
-  resolveRefs = false,
-  rootSchema?: S,
-): S[] {
-  return options.map((d) => {
-    if (!isObject(d)) {
-      return normalizeBooleanSchema<S>(d);
-    }
-    const schema = resolveRefs && rootSchema ? resolveOwnRef<S>(d, rootSchema) : d;
-    // Relaxing makes a schema the option's `$id` does not name, which a validator would answer with the option's
-    // compiled function
-    return schema.additionalProperties === false ? withVariantId<S>({ ...schema, additionalProperties: true }) : schema;
-  });
 }

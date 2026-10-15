@@ -7,6 +7,7 @@ import {
   scoringTarget,
   targetOf,
   validationTargets,
+  withVariantId,
 } from '../../../src/schema/graph/validationTargets.ts';
 
 function nodeAt(graph: SchemaGraph, pointer: string): number {
@@ -190,5 +191,22 @@ describe('validationTargets()', () => {
     expect(validationTargets(parseSchemaGraph(schema))).not.toContainEqual(
       expect.objectContaining({ type: 'object', properties: expect.anything() }),
     );
+  });
+});
+
+describe('withVariantId()', () => {
+  it('returns a schema without an $id as it is', () => {
+    const schema: RJSFSchema = { type: 'object' };
+    expect(withVariantId(schema)).toBe(schema);
+  });
+  it('derives the $id from its own, leaving out the empty fragment the newer drafts reject in it', () => {
+    const derived = withVariantId({ $id: 'http://e.com/a.json#', type: 'object' });
+    expect(derived.$id).toMatch(/^http:\/\/e\.com\/a\.json\?rjsf=[^#?]+$/);
+    expect(derived.type).toBe('object');
+  });
+  it('replaces the suffix of a derived $id rather than adding another', () => {
+    const derived = withVariantId({ $id: 'http://e.com/a.json', type: 'object' });
+    expect(derived.$id).toMatch(/^http:\/\/e\.com\/a\.json\?rjsf=[^#?]+$/);
+    expect(withVariantId(derived).$id).toBe(derived.$id);
   });
 });

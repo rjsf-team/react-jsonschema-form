@@ -54,7 +54,6 @@ import getFreePropertyNames from './getFreePropertyNames.ts';
 import getInputProps from './getInputProps.ts';
 import getItemUiSchemaForItem from './getItemUiSchemaForItem.ts';
 import getNumericInputTitle from './getNumericInputTitle.ts';
-import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator.ts';
 import getOptionUiSchema, { selectOptionUiSchema } from './getOptionUiSchema.ts';
 import getOptionValueFormat from './getOptionValueFormat.ts';
 import getPropertySchema from './getPropertySchema.ts';
@@ -250,8 +249,6 @@ export {
   getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
-  // oxlint-disable-next-line typescript/no-deprecated -- still exported until v8
-  getOptionMatchingSimpleDiscriminator,
   getOptionUiSchema,
   getPropertySchema,
   getOptionValueFormat,
