@@ -100,6 +100,7 @@ import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify }
 import hasTemplateErrors from './hasTemplateErrors.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
+import hasWidgetErrors from './hasWidgetErrors.ts';
 import {
   ariaDescribedByIds,
   buttonId,
@@ -320,6 +321,7 @@ export {
   hasTemplateErrors,
   hasVisibleErrors,
   hasWidget,
+  hasWidgetErrors,
   hashForSchema,
   hashObject,
   hashString,
