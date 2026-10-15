@@ -355,6 +355,8 @@ An explicit schema `default`, a parent default and an existing `formData` value 
 #### Example
 
 In the following example, `agree` is required but has no `default`. By default it would start as `false`, so [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically) would return `{ agree: false }` before the user touched it. With `requiredBooleanDefault` set to `skip`, the data stays `{}` until the user answers, and validation reports `agree` as missing until then. This is the behavior to choose when a boolean question is rendered with an explicit "unanswered" state, for example a `- - -` / Yes / No select, rather than a checkbox.
+A checkbox under `skip` is not marked required, by its `*` or a native `required`: it has no unanswered state to show, and a native `required` would block the `false` a user gives by checking and then unchecking it, so validation alone reports it missing.
+The same holds wherever [`emptyObjectFields`](#emptyobjectfields) leaves a required boolean unset: under `skipDefaults`, and under `populateRequiredDefaults` where the object holding it is optional.
 
 ```tsx
 import { Form } from '@rjsf/core';

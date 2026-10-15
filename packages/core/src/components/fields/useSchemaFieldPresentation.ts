@@ -13,6 +13,7 @@ import type {
 } from '@rjsf/utils';
 import {
   ANY_OF_KEY,
+  getFieldTypeForUiSchema,
   getPresentationDeclaration,
   getSchemaType,
   isObject,
@@ -225,8 +226,17 @@ export default function useSchemaFieldPresentation<
   }, [registry, schema, plannedField, plannedKey, widget, xxxOfKey, handsLabelDown, rendersUnsupportedTemplate]);
   // A control holding `false` left alone, as an unchecked checkbox does, would fail the browser's own check of a native
   // `required` for a value the schema accepts, so it is required, by its attribute and its marker alike, only where the
-  // schema demands `true` (#5388)
-  const controlRequired = required && (!declaration?.uncheckedIsFalse || schemaRequiresTrueValue<S>(schema));
+  // schema demands `true` (#5388). It holds that `false` only where `getDefaultFormState()` seeds it, which it does by
+  // the type the field renders: rendered as another type, as a `type` list's string field renders one, an unchecked
+  // box answers nothing
+  const controlRequired = useMemo(
+    () =>
+      required &&
+      (!declaration?.uncheckedIsFalse ||
+        getFieldTypeForUiSchema<T, S, F>(schema, uiSchema) !== 'boolean' ||
+        schemaRequiresTrueValue<S>(schema)),
+    [required, declaration, schema, uiSchema],
+  );
   return useMemo(() => {
     if (!declaration) {
       return undefined;

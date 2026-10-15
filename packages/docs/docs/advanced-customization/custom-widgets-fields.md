@@ -197,7 +197,7 @@ The following props are passed to custom widget components:
 - `uiSchema`: The uiSchema for this widget;
 - `value`: The current value for this widget;
 - `placeholder`: The placeholder for the widget, if any;
-- `required`: The required status of this widget. A widget its theme declares `uncheckedIsFalse`, as `@rjsf/core` declares `CheckboxWidget`, is required only where the schema demands `true` when `BooleanField` renders it, since left alone it already holds the `false` a required `boolean` accepts;
+- `required`: The required status of this widget. A widget its theme declares `uncheckedIsFalse`, as `@rjsf/core` declares `CheckboxWidget`, is required only where the schema demands `true` when its field renders a `boolean`, since left alone it then holds the `false` `getDefaultFormState()` seeds a required `boolean` with, which the schema accepts. Rendered as another type, as a `type` list's string field renders a switch, it answers nothing unchecked, so it is required as any other widget is;
 - `disabled`: A boolean value stating if the widget is disabled;
 - `readonly`: A boolean value stating if the widget is read-only;
 - `autofocus`: A boolean value stating if the widget should autofocus;
