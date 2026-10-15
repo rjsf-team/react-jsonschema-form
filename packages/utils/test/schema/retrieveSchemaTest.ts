@@ -4845,6 +4845,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(retrieved.properties?.child).toEqual({ allOf: [{ $ref: D('node') }], [RJSF_REF_CYCLE_KEY]: true });
       });
+      it('collapses a recursion reached through a then on the property (#5501)', () => {
+        const child: RJSFSchema = { type: 'object', if: {}, then: { $ref: D('node') } };
+        const rootSchema: RJSFSchema = {
+          definitions: { node: { type: 'object', properties: { name: { type: 'string' }, child } } },
+          $ref: D('node'),
+        };
+        const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
+        expect(retrieved.properties?.child).toEqual({ ...child, [RJSF_REF_CYCLE_KEY]: true });
+      });
       it('expands a collapsed property by one level when retrieved with its cycle flag cleared', () => {
         const rootSchema: RJSFSchema = { definitions: { node }, $ref: D('node') };
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
@@ -5109,6 +5118,26 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const p = retrieveSchema({ validator: testValidator }, { $ref: 'lib.json' }, schema, { k: 1 });
         const k = retrieveSchema({ validator: testValidator }, schemaOf(p.properties?.k), schema, 1);
         expect(k.type).toBe('number');
+      });
+      it("resolves the additionalProperties $ref of a nested resource under a relative root $id to the resource's own definition (#5529)", () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'schemas/root.json',
+          $defs: {
+            x: { type: 'number' },
+            child: {
+              $id: 'nested/child.json',
+              $defs: { x: { type: 'string' } },
+              additionalProperties: { $ref: '#/$defs/x' },
+            },
+          },
+          properties: { c: { $ref: '#/$defs/child' } },
+        };
+        const utils = createSchemaUtils({ validator: testValidator }, schema);
+        const child = schemaOf(utils.getRootSchema().$defs?.child);
+        const additionalProperties = schemaOf(child.additionalProperties);
+        expect(additionalProperties).toEqual({ $ref: '#/$defs/x' });
+        expect(utils.retrieveSchema(additionalProperties)).toEqual({ type: 'string', [RJSF_REF_KEY]: '#/$defs/x' });
       });
       it('resolves a $ref under an inline nested $id that properties reach (#5529)', () => {
         const schema: RJSFSchema = {

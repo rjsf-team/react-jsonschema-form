@@ -267,14 +267,9 @@ describe('getDefaultFormState() on recursive schemas', () => {
       undefined,
       { name: 'n', child: { x: 'x', y: { name: 'n', child: { x: 'x' } } } },
     ],
+    ['an allOf that is the recursive $ref', nodeWith({ allOf: [ref] }), populate, { name: 'n', child: { name: 'n' } }],
     [
-      'an allOf that is the recursive $ref (#5501)',
-      nodeWith({ allOf: [ref] }),
-      populate,
-      { name: 'n', child: { name: 'n' } },
-    ],
-    [
-      'a then that is the recursive $ref (#5501)',
+      'a then that is the recursive $ref',
       nodeWith({ type: 'object', if: {}, then: ref }),
       undefined,
       { name: 'n', child: { name: 'n' } },

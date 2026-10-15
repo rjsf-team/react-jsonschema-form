@@ -1541,6 +1541,17 @@ describe('SchemaField', () => {
             [],
             'root_y_x_y_x-button',
           ],
+          [
+            'an allOf entry declaring a recursive property its own pattern matches (#5452 b)',
+            rootOf({
+              type: 'object',
+              allOf: [{ properties: { child: ref, name: named }, patternProperties: { '^child': { title: 'Child' } } }],
+            }),
+            ['root_name'],
+            'root_child-button',
+            ['root_child_name', 'root_name'],
+            'root_child_child-button',
+          ],
         ])(
           'renders a recursion through %s, one level per click',
           async (_, schema, before, button, after, next, populate) => {
@@ -1684,6 +1695,51 @@ describe('SchemaField', () => {
           });
           expect(controls(relative)).toEqual(['root_p_w']);
           expect(relative.querySelector('#root_p_w')).toHaveValue('w');
+        });
+
+        it('renders and edits a field whose $ref sits under a relative nested $id (#5467)', async () => {
+          const schema: RJSFSchema = {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $id: 'https://example.com/root.json',
+            $defs: {
+              child: {
+                $id: 'child.json',
+                properties: { a: { $ref: '#/$defs/x' } },
+                $defs: { x: { type: 'string', title: 'Child x' } },
+              },
+            },
+            type: 'object',
+            properties: { c: { $ref: 'child.json' } },
+          };
+          const { node, onChange } = createFormComponent({ schema });
+          expect(controls(node)).toEqual(['root_c_a']);
+
+          await user.type(screen.getByRole('textbox', { name: 'Child x' }), 'hi');
+
+          expect(onChange).toHaveBeenLastCalledWith(
+            expect.objectContaining({ formData: { c: { a: 'hi' } } }),
+            'root_c_a',
+          );
+        });
+
+        it("renders an additional key of a nested resource under a relative root $id with the resource's own definition (#5529)", () => {
+          const schema: RJSFSchema = {
+            $schema: 'https://json-schema.org/draft/2020-12/schema',
+            $id: 'schemas/root.json',
+            $defs: {
+              x: { type: 'number' },
+              child: {
+                $id: 'nested/child.json',
+                $defs: { x: { type: 'string' } },
+                additionalProperties: { $ref: '#/$defs/x' },
+              },
+            },
+            type: 'object',
+            properties: { c: { $ref: '#/$defs/child' } },
+          };
+          const { node } = createFormComponent({ schema, formData: { c: { k: 'text' } } });
+          expect(node.querySelector('#root_c_k')).toHaveAttribute('type', 'text');
+          expect(node.querySelector('#root_c_k')).toHaveValue('text');
         });
 
         it('expands a definition two others share at the first path that reaches it, and collapses it at the second', () => {
