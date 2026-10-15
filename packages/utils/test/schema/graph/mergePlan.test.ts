@@ -1,13 +1,19 @@
 import type { JSONSchema7Definition } from 'json-schema';
 
-import { ADDITIONAL_PROPERTY_FLAG, RJSF_REF_KEY } from '../../../src/index.ts';
+import {
+  ADDITIONAL_PROPERTY_FLAG,
+  JSON_SCHEMA_DRAFT_2019_09,
+  JSON_SCHEMA_DRAFT_2020_12,
+  RJSF_REF_KEY,
+} from '../../../src/index.ts';
 import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
-import buildPlan, { childSeeds, itemSeeds, ownChildren } from '../../../src/schema/graph/mergePlan.ts';
+import buildPlan, { childSeeds, ownChildren, refDefinition } from '../../../src/schema/graph/mergePlan.ts';
 import type { MergePlan, PlanPolicy, Seed } from '../../../src/schema/graph/mergePlan.ts';
 import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import looseSchema from './looseSchema.ts';
 import { miniValidator } from './miniValidator.ts';
+import { itemSeeds } from './walk.ts';
 
 interface Options {
   readonly data?: unknown;
@@ -80,6 +86,43 @@ describe('buildPlan()', () => {
         ['/definitions/C', 'ref', ['/definitions/B', '/definitions/C']],
       ]);
     });
+    it.each([JSON_SCHEMA_DRAFT_2019_09, JSON_SCHEMA_DRAFT_2020_12])(
+      'under %s, conjoins a target reached through a $ref with its own target, as findSchemaDefinition() reads it',
+      (dialect) => {
+        const definitions = {
+          Pet: { type: 'object', properties: { kind: { type: 'string' } }, required: ['kind'] },
+          Cat: { $ref: D('Pet'), properties: { meow: { type: 'boolean' } } },
+        } satisfies RJSFSchema['definitions'];
+        const plan = planOf({ $schema: dialect, definitions, $ref: D('Cat') });
+        expect(keywordsOf(plan)).toEqual({
+          $schema: dialect,
+          type: 'object',
+          properties: { meow: { type: 'boolean' }, kind: { type: 'string' } },
+          required: ['kind'],
+        });
+        expect(entriesOf(plan)).toEqual([
+          ['', 'seed', []],
+          ['/definitions/Cat', 'ref', ['/definitions/Cat']],
+          ['/definitions/Cat/~conjunction/0', 'allOf', ['/definitions/Cat']],
+          ['/definitions/Cat/~conjunction/1', 'allOf', ['/definitions/Cat']],
+          ['/definitions/Pet', 'ref', ['/definitions/Cat', '/definitions/Pet']],
+        ]);
+        expect(Reflect.get(plan.schema, RJSF_REF_KEY)).toBe(D('Cat'));
+        // Where the `allOf`s are not merged, the conjunction stays one, as the `allOf` `findSchemaDefinition()` returns
+        const unmerged = planOf({ $schema: dialect, definitions, $ref: D('Cat') }, { policy: { allOf: false } });
+        expect(keywordsOf(unmerged)).toEqual({
+          $schema: dialect,
+          allOf: [{ properties: { meow: { type: 'boolean' } } }, { $ref: D('Pet') }],
+        });
+        // The keywords beside the $ref the field itself holds still override its target
+        expect(keywordsOf(planOf({ $schema: dialect, definitions, $ref: D('Pet'), properties: {} }))).toEqual({
+          $schema: dialect,
+          type: 'object',
+          properties: {},
+          required: ['kind'],
+        });
+      },
+    );
     it('throws the error findSchemaDefinition() throws for a $ref that resolves to nothing', () => {
       expect(() => planOf({ $ref: D('missing') })).toThrow('Could not find a definition for #/definitions/missing.');
       expect(() => planOf({ definitions: { a: { $ref: D('a') } }, $ref: D('a') })).toThrow(
@@ -618,5 +661,47 @@ describe('ownChildren()', () => {
       { node: flag ?? graph.root, refPath: [] },
     ]);
     expect([...children.properties.keys()]).toEqual(['own', 'flag']);
+  });
+});
+
+describe('refDefinition()', () => {
+  const rootSchema: RJSFSchema = {
+    $schema: JSON_SCHEMA_DRAFT_2020_12,
+    $id: 'https://example.com/root.json',
+    $defs: {
+      child: {
+        $id: 'child.json',
+        type: 'object',
+        properties: { a: { anyOf: [{ $ref: '#/$defs/x' }, { type: 'number' }] } },
+        $defs: { x: { $ref: '#/$defs/y', title: 'x' }, y: { type: 'string' } },
+      },
+      t: true,
+      alias: { $ref: '#/$defs/alias' },
+      pure: { $ref: 'child.json' },
+    },
+    properties: { c: { $ref: 'child.json' }, t: { $ref: '#/$defs/t' }, loop: { $ref: '#/$defs/alias' } },
+    components: { unreached: { type: 'string' } },
+  };
+  const graph = parseSchemaGraph(rootSchema);
+  const node = (pointer: string) => graph.byPointer(pointer);
+
+  it('resolves a $ref against the base URI of the node holding it, conjoining a chained target', () => {
+    expect(refDefinition(graph, '#/$defs/x', node('/$defs/child/properties/a/anyOf/0'))).toEqual({
+      allOf: [{ title: 'x' }, { $ref: '#/$defs/y' }],
+    });
+  });
+  it('follows a chain of references with nothing beside them to the definition it ends at', () => {
+    expect(refDefinition(graph, '#/$defs/pure')).toEqual(
+      expect.objectContaining({ $id: 'child.json', type: 'object' }),
+    );
+  });
+  it('reads a boolean definition as the empty schema', () => {
+    expect(refDefinition(graph, '#/$defs/t')).toEqual({});
+  });
+  it('leaves a subschema the graph does not hold to findSchemaDefinition()', () => {
+    expect(refDefinition(graph, '#/components/unreached')).toBeUndefined();
+  });
+  it('throws the error findSchemaDefinition() throws for a chain of references that loops', () => {
+    expect(() => refDefinition(graph, '#/$defs/alias')).toThrow('Definition for #/$defs/alias is a circular reference');
   });
 });

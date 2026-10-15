@@ -43,21 +43,22 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
+  ValidatorType,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import buildPlan, { childSeeds, ownChildren, schemaFrom, seedsKey, withoutKeys } from './graph/mergePlan.ts';
-import type {
-  MergePlan,
-  OptionChoice,
-  OptionRequest,
-  PlanChildren,
-  PlanEntry,
-  PlanPolicy,
-  Seed,
+import buildPlan, {
+  asTarget,
+  cachedPolicy,
+  childSeeds,
+  ownChildren,
+  schemaFrom,
+  seedsKey,
+  withoutKeys,
 } from './graph/mergePlan.ts';
+import type { MergePlan, OptionChoice, PlanChildren, PlanEntry, PlanPolicy, Seed } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
-import { collapseReason, restartSeeds } from './graph/recursionRule.ts';
+import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
@@ -138,15 +139,6 @@ function hasContent(value: unknown): boolean {
     return Object.keys(value).length > 0;
   }
   return false;
-}
-
-/** Checks whether form data is undefined or an empty object.
- *
- * @param formData - The form data to inspect
- * @returns - True if there is no existing form data
- */
-function isEmptyFormData(formData: unknown): boolean {
-  return formData === undefined || (isObject(formData) && Object.keys(formData).length === 0);
 }
 
 /** Checks if the given `schema` contains the `null` type along with another type AND if the `default` contained within
@@ -373,45 +365,31 @@ interface ViewProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   track: (view: DefaultsView<S>) => void;
 }
 
-/** The policies each context's fields are planned with, by the options selected */
-const policies = new WeakMap<object, Map<string, unknown>>();
-
-function isPolicyFor<S extends StrictRJSFSchema>(value: unknown): value is PlanPolicy<S> {
-  return typeof value === 'object' && value !== null && 'allOf' in value;
-}
-
 /** Returns the policy fields are planned with: which `allOf`s and `if`s are merged, and which options. An option beside
- * `dependencies` is merged as the one the data and the defaults so far match first, as `resolveDependencies()` merges
- * it; an option the fold selected is merged as selected. Every other option list is left on the schema for the fold to
- * select from. One per context and settings, since a plan is memoized under its policy.
+ * `dependencies` is merged as the one the data and the defaults so far match first; an option the fold selected is
+ * merged as selected. Every other option list is left on the schema for the fold to select from.
  */
 function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
+  validator: ValidatorType<S, F>,
   allOf: boolean | 'if',
   conditions: boolean,
   selections: ReadonlyMap<NodeId, number>,
   cutRecursion = false,
 ): PlanPolicy<S> {
-  let cache = policies.get(context);
-  if (cache === undefined) {
-    cache = new Map();
-    policies.set(context, cache);
-  }
-  let key = `${allOf}|${conditions}|${cutRecursion}`;
+  let key = `defaults|${allOf}|${conditions}|${cutRecursion}`;
   for (const [provider, index] of selections) {
     key += `|${provider}:${index}`;
   }
-  const cached = cache.get(key);
-  if (isPolicyFor<S>(cached)) {
-    return cached;
-  }
-  const selectOption = (request: OptionRequest<S>) =>
-    selections.get(request.provider) ?? dependencyOption(context, request, request.depData);
-  // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would restart
-  // it at every level of a recursion through an option chosen without data, which nothing then bounds
-  const policy: PlanPolicy<S> = { allOf, conditions, cutRecursion, selectOption, optionsInheritRefPath: true };
-  cache.set(key, policy);
-  return policy;
+  return cachedPolicy<S>(validator, key, () => ({
+    allOf,
+    conditions,
+    cutRecursion,
+    selectOption: (request) =>
+      selections.get(request.provider) ?? dependencyOption(validator, request, request.depData),
+    // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
+    // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
+    optionsInheritRefPath: true,
+  }));
 }
 
 /** The keywords the field's own nodes declare: its seeds and the targets of their `$ref`s */
@@ -420,15 +398,16 @@ function ownKeywords<S extends StrictRJSFSchema>(plan: MergePlan<S>): Set<string
   for (const { node: id, edge } of plan.entries) {
     const node = plan.graph.node(id);
     if ((edge === 'seed' || edge === 'ref') && node.kind === 'schema') {
-      Object.keys(node.raw).forEach((key) => keywords.add(key));
+      const own = edge === 'ref' ? asTarget(plan.graph, node) : node;
+      Object.keys(own.raw).forEach((key) => keywords.add(key));
     }
   }
   return keywords;
 }
 
-/** Whether a field with these keywords stubs the extra keys of its data, as `getObjectDefaults()` did where it
- * retrieved the schema: for an `allOf` it merges under `allOf: 'populateDefaults'`, and for an `if`, unless
- * `emptyObjectFields` is `skipEmptyDefaults`
+/** Whether a field with these keywords stubs the extra keys of its data: one that is resolved whole, one with an
+ * `allOf` it merges under `allOf: 'populateDefaults'`, and one with an `if`, unless `emptyObjectFields` is
+ * `skipEmptyDefaults`
  */
 function stubsFor<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -532,7 +511,7 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
     conditions: boolean,
     cutRecursion: boolean,
   ): PlannedField<S> => {
-    const policy = policyFor(context, allOf, conditions, options.selections, cutRecursion);
+    const policy = policyFor(context.validator, allOf, conditions, options.selections, cutRecursion);
     return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions };
   };
   const planFor = (seeds: readonly Seed[], cutRecursion = false): PlannedField<S> => {
@@ -551,7 +530,7 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
       : withoutConditions;
   };
   const planned = planFor(field.seeds);
-  if (collapseReason(graph, planned.plan, { edge: field.edge, view: 'defaults' }) === undefined) {
+  if (!collapses(graph, planned.plan, { edge: field.edge, view: 'defaults' })) {
     return planView(context, field, planned, options, data, depData);
   }
   if (field.expanded) {
@@ -564,24 +543,24 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   return planView(context, expanded, planFor(seeds), options, data, depData);
 }
 
-/** Returns the child of `view` that `seeds` seed, reached through `edge` */
-function childField<S extends StrictRJSFSchema>(
+/** Returns the child of `view` that `seeds` seed, reached through `edge`. A subschema the schema's own keywords stand
+ * in for, `fallback`, such as the stub of a key whose type is guessed from its data where `additionalProperties` is
+ * `true`, is read as it stands where no seed is more than a boolean.
+ */
+function defaultsChild<S extends StrictRJSFSchema>(
   view: DefaultsView<S>,
   seeds: readonly Seed[],
   edge: ContainmentEdge,
-  fallback?: S,
+  fallback?: unknown,
 ): DefaultsField<S> {
   const { graph, expanded } = view.field;
-  const nonBoolean = seeds.filter(({ node }) => graph.node(node).kind !== 'boolean');
-  // A subschema the schema's own keywords stand in for, such as the stub of a key whose type is guessed from its data
-  // where `additionalProperties` is `true`, is read as it stands
-  const useFallback = fallback !== undefined && nonBoolean.length === 0;
+  const useFallback = isObject(fallback) && seeds.every(({ node }) => graph.node(node).kind === 'boolean');
   return {
     graph,
     seeds: useFallback ? [] : seeds,
     expanded,
     edge,
-    fallback: useFallback ? fallback : undefined,
+    fallback: useFallback ? schemaFrom(graph.rawRoot, fallback) : undefined,
   };
 }
 
@@ -913,7 +892,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       .map(({ refPath }) => ({ node: optionNode, refPath })),
     data: view.data,
     depData: view.depData,
-    policy: policyFor(context, view.allOf, view.conditions, NO_OPTIONS.selections, merged.collapsed),
+    policy: policyFor(context.validator, view.allOf, view.conditions, NO_OPTIONS.selections, merged.collapsed),
   });
   const rendered = getRenderedOptionSchema<S>(remaining, optionAlone.schema);
   return foldView<T, S, F>(
@@ -953,7 +932,7 @@ function itemField<S extends StrictRJSFSchema>(
   idx = -1,
 ): DefaultsField<S> {
   const { seeds, edge } = innerItemSeeds(view, additionalItems, idx);
-  return childField(view, seeds, edge, getInnerSchemaForArrayItem<S>(view.schema, additionalItems, idx));
+  return defaultsChild(view, seeds, edge, getInnerSchemaForArrayItem<S>(view.schema, additionalItems, idx));
 }
 
 /** Computes the default value for objects.
@@ -984,7 +963,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
   const formData = isObject(rawFormData) ? rawFormData : {};
   const rootSchema = view.field.graph.rawRoot;
   // A field resolved the way `retrieveSchema()` resolves a schema has the extra keys of its data stubbed among its
-  // `properties`, as the schema `getObjectDefaults()` retrieved did
+  // `properties`
   const schema =
     view.stubs && allowsAdditionalProperties<S>(view.schema)
       ? stubExistingAdditionalProperties<unknown, S, F>(context, view.schema, rootSchema, formData)
@@ -1006,12 +985,11 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
     const addedByAdditionalProperty =
       isObject(propertySchema) && Boolean(Reflect.get(propertySchema, ADDITIONAL_PROPERTY_FLAG));
     const { seeds, edge } = childSeeds(view, key);
-    const fallback = isObject(propertySchema) ? schemaFrom(rootSchema, propertySchema) : undefined;
     // Compute the defaults for this node, with the parent defaults we might have from a previous run: defaults[key].
     const computedDefault = foldChild<T, S, F>(
       context,
       `property:${key}`,
-      childField(view, seeds, edge, fallback),
+      defaultsChild(view, seeds, edge, propertySchema),
       {
         includeUndefinedValues: includeUndefinedValues === true,
         parentDefaults: getByPath(defaults, key),
@@ -1067,7 +1045,7 @@ function objectDefaults<T, S extends StrictRJSFSchema, F extends FormContextType
       const computedDefault = foldChild<T, S, F>(
         context,
         `additional:${key}`,
-        childField(view, view.children.additionalProperties, 'additionalKey', additionalPropertiesSchema),
+        defaultsChild(view, view.children.additionalProperties, 'additionalKey', additionalPropertiesSchema),
         {
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: getByPath(defaults, key),
@@ -1323,8 +1301,9 @@ function callRoot<S extends StrictRJSFSchema>(rootSchema: S | undefined, rawSche
   return { graph: adopted.graph, seeds: [{ node: adopted.node, refPath: [] }], expanded: false, edge: 'root' };
 }
 
-/** The view the exported helpers read `rawSchema` through: the schema as it stands, or, where `getObjectDefaults()`
- * retrieved it, resolved as `retrieveSchema()` resolves it
+/** The view the exported helpers read `rawSchema` through: the schema as it stands, or, for one with an `if` (unless
+ * `emptyObjectFields` is `skipEmptyDefaults`) or an `allOf` merged under `allOf: 'populateDefaults'`, resolved as
+ * `retrieveSchema()` resolves it
  */
 function helperView<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1517,9 +1496,7 @@ export default function getDefaultFormState<
   if (!isObject(theSchema)) {
     throw new Error(`Invalid schema: ${String(theSchema)}`);
   }
-  // Called without a `rootSchema`, the schema is its own root only while there is no form data, as it has been: with
-  // data, its conditions are validated against an empty root, which a validator for another dialect accepts
-  const root = rootSchema ?? (isEmptyFormData(formData) ? theSchema : schemaFrom(theSchema, {}));
+  const root = rootSchema ?? theSchema;
   // The root is resolved as `retrieveSchema()` resolves it, its `allOf` merged and the extra keys of its data stubbed
   const field: DefaultsField<S> = { ...callRoot<S>(root, theSchema), retrieves: true };
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.

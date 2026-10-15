@@ -8,6 +8,7 @@ import {
   ID_KEY,
   IF_KEY,
   ITEMS_KEY,
+  JSON_SCHEMA_DRAFT_2019_09,
   JSON_SCHEMA_DRAFT_2020_12,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
@@ -19,6 +20,7 @@ import {
 import { isSubschemaKeyword, keywordShape, normalizeUri, resolveUri } from '../../findSchemaDefinition.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
+import { schemaFrom } from './mergePlan.ts';
 
 /** A subschema's handle in a `SchemaGraph`. Plans, ref paths and provenance compare subschemas by it, so two spellings
  * of a `$ref` that reach the same subschema are one target.
@@ -77,6 +79,11 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   readonly pureRef: boolean;
   /** The node the `$ref` resolves to, which is an `InvalidNode` when it resolves to nothing */
   readonly ref?: NodeId;
+  /** Under draft 2019-09 or 2020-12, for a `$ref` with keywords beside it that resolves: the node it reads as where
+   * another `$ref` reaches it, the `allOf` of those keywords and of the `$ref` alone, which is how
+   * `findSchemaDefinition()` reads a chained reference in those dialects
+   */
+  readonly conjunction?: NodeId;
   readonly properties?: ReadonlyMap<string, NodeId>;
   readonly patternProperties?: readonly PatternEdge[];
   readonly additionalProperties?: NodeId;
@@ -125,6 +132,11 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
    * spread over its parent, is such a schema: its `$ref`s resolve against the root like any other.
    */
   adopt(raw: S): AdoptedSchema<S>;
+  /** Returns the node `raw` parsed to, `raw` being a copy a caller made of the schema `of` stands for, such as a spread
+   * of it with a keyword of its own made on every render: a copy whose keywords are those of the last copy adopted for
+   * `of` is not parsed again, so the plans made for one are made for the other
+   */
+  adoptCopy(raw: S, of: object): AdoptedSchema<S>;
 }
 
 /** A schema's node and the graph holding it: the graph `adopt()` was called on when the schema was parsed with it, or
@@ -253,6 +265,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
    * under any other a `$ref` is a JSON pointer into the root, as it is there
    */
   private readonly scoped: boolean;
+  private readonly conjoinsChainedRefs: boolean;
   private readonly rootBase: string;
   private readonly offset: number;
   private readonly own: SchemaNode<S>[] = [];
@@ -263,11 +276,13 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   private readonly anchors = new Map<string, NodeId>();
   private readonly pendingRefs: Mutable<ObjectNode<S>>[] = [];
   private readonly overlays = new WeakMap<object, AdoptedSchema<S>>();
+  private readonly copies = new WeakMap<object, { readonly raw: S; readonly adopted: AdoptedSchema<S> }>();
 
   constructor(rawRoot: S, base?: Graph<S>) {
     this.rawRoot = rawRoot;
     this.base = base;
     this.scoped = rawRoot[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12;
+    this.conjoinsChainedRefs = this.scoped || rawRoot[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2019_09;
     const rootId = stringKeyword(rawRoot, ID_KEY);
     this.rootBase = this.scoped && rootId !== undefined ? resolveUri('', rootId) : '';
     this.offset = base === undefined ? 0 : base.offset + base.own.length;
@@ -309,6 +324,16 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       adopted = { graph: overlay, node: overlay.parse(raw, EXTERNAL_POINTER).id };
       this.overlays.set(raw, adopted);
     }
+    return adopted;
+  }
+
+  adoptCopy(raw: S, of: object): AdoptedSchema<S> {
+    const last = this.copies.get(of);
+    if (last !== undefined && sameKeywords(last.raw, raw)) {
+      return last.adopted;
+    }
+    const adopted = this.adopt(raw);
+    this.copies.set(of, { raw, adopted });
     return adopted;
   }
 
@@ -457,6 +482,9 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       const failure = this.chainFailure(ref, node.id, hops);
       if (failure === undefined) {
         node.ref = hops.get(node.id);
+        if (this.conjoinsChainedRefs && Object.keys(node.raw).some((key) => key !== REF_KEY)) {
+          node.conjunction = this.addConjunction(node);
+        }
       } else {
         const invalid: InvalidNode = {
           kind: 'invalid',
@@ -470,6 +498,45 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
         this.diagnostics.push({ node: node.id, ref, ...failure });
       }
     }
+  }
+
+  /** Adds the nodes `conjunction` names for `node`: the `allOf` of `node` without its `$ref`, whose edges are its own,
+   * and of a node holding only the `$ref`. They are placed under a pointer token no JSON pointer has, as
+   * `EXTERNAL_POINTER` is.
+   */
+  private addConjunction(node: ObjectNode<S>): NodeId {
+    const pointer = `${node.pointer}/~conjunction`;
+    const siblings: ObjectNode<S> = {
+      ...node,
+      id: this.nextId(),
+      pointer: `${pointer}/0`,
+      raw: schemaFrom(node.raw, Object.fromEntries(Object.entries(node.raw).filter(([key]) => key !== REF_KEY))),
+      ref: undefined,
+      conjunction: undefined,
+      pureRef: false,
+    };
+    this.add(siblings);
+    const reference: ObjectNode<S> = {
+      kind: 'schema',
+      id: this.nextId(),
+      pointer: `${pointer}/1`,
+      baseUri: node.baseUri,
+      raw: schemaFrom(node.raw, { [REF_KEY]: refOf(node.raw) }),
+      pureRef: true,
+      ref: node.ref,
+    };
+    this.add(reference);
+    const conjunction: ObjectNode<S> = {
+      kind: 'schema',
+      id: this.nextId(),
+      pointer,
+      baseUri: node.baseUri,
+      raw: schemaFrom(node.raw, { [ALL_OF_KEY]: [siblings.raw, reference.raw] }),
+      pureRef: false,
+      allOf: [siblings.id, reference.id],
+    };
+    this.add(conjunction);
+    return conjunction.id;
   }
 
   /** Follows the chain of `$ref`s from `first` as `findSchemaDefinitionRecursive()` does, comparing them as written, and
@@ -571,6 +638,14 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     }
     return typeof current === 'boolean' ? this.byPointer(pointer) : undefined;
   }
+}
+
+function sameKeywords(a: object, b: object): boolean {
+  const keys = Reflect.ownKeys(a);
+  return (
+    keys.length === Reflect.ownKeys(b).length &&
+    keys.every((key) => Object.hasOwn(b, key) && Object.is(Reflect.get(a, key), Reflect.get(b, key)))
+  );
 }
 
 function refOf(raw: object): string {

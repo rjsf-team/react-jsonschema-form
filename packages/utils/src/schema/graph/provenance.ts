@@ -180,21 +180,6 @@ export function stamp<S extends StrictRJSFSchema = RJSFSchema>(schema: S, proven
   return { ...schema, [PROVENANCE]: provenance };
 }
 
-/** Returns `value` without the stamp `stamp()` put on it, or `value` itself when it carries none. Only tests need it:
- * the stamp is private, so an expected schema written out by hand cannot name it
- *
- * @param value - The value to strip
- * @returns - A shallow copy without the stamp, or `value`
- */
-export function withoutProvenance(value: unknown): unknown {
-  if (typeof value !== 'object' || value === null || !Object.hasOwn(value, PROVENANCE)) {
-    return value;
-  }
-  const copy = { ...value };
-  Reflect.deleteProperty(copy, PROVENANCE);
-  return copy;
-}
-
 /** Returns the provenance `schema` was stamped with, when it was planned in `graph` or in a graph extending it. A
  * stamp from another graph is one from an earlier root, so the schema is a call root of this one.
  *

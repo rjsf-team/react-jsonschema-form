@@ -6,7 +6,7 @@ import type { NodeId } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import { extendChain } from '../../../src/schema/graph/provenance.ts';
 import {
   childField,
-  collapseReason,
+  collapses,
   count2Hit,
   firstEnteredRefHit,
   ownRefTargets,
@@ -78,27 +78,30 @@ describe('the recursion rule', () => {
     });
   });
 
-  describe('collapseReason()', () => {
+  describe('collapses()', () => {
     const recursive = plan([{ node: child, refPath: [pl] }]);
     const twice = plan([{ node: at('/definitions/toMixin'), refPath: [pl, pl] }]);
     const fresh = plan([{ node: child, refPath: [] }]);
     const chain = extendChain(graph, undefined, fresh.setKey);
 
     it('never collapses the call root', () => {
-      expect(collapseReason(graph, recursive, { edge: 'root', view: 'defaults', chain })).toBeUndefined();
+      expect(collapses(graph, recursive, { edge: 'root', view: 'defaults', chain })).toBe(false);
     });
     it('applies the ref-path checks to object properties in render, and to every edge in defaults', () => {
-      expect(collapseReason(graph, recursive, { edge: 'property', view: 'render' })).toBe('firstEntered');
-      expect(collapseReason(graph, recursive, { edge: 'item', view: 'render' })).toBeUndefined();
-      expect(collapseReason(graph, recursive, { edge: 'item', view: 'defaults' })).toBe('firstEntered');
+      expect(firstEnteredRefHit(graph, recursive)).toBe(true);
+      expect(collapses(graph, recursive, { edge: 'property', view: 'render' })).toBe(true);
+      expect(collapses(graph, recursive, { edge: 'item', view: 'render' })).toBe(false);
+      expect(collapses(graph, recursive, { edge: 'item', view: 'defaults' })).toBe(true);
       expect(firstEnteredRefHit(graph, twice)).toBe(false);
-      expect(collapseReason(graph, twice, { edge: 'additionalKey', view: 'defaults' })).toBe('count2');
+      expect(count2Hit(twice)).toBe(true);
+      expect(collapses(graph, twice, { edge: 'additionalKey', view: 'defaults' })).toBe(true);
     });
-    it('applies the set-equality guard to every field but one the data drives in render', () => {
-      expect(collapseReason(graph, fresh, { edge: 'property', view: 'render', chain })).toBe('guard');
-      expect(collapseReason(graph, fresh, { edge: 'item', view: 'render', chain, dataDriven: true })).toBeUndefined();
-      expect(collapseReason(graph, fresh, { edge: 'item', view: 'defaults', chain, dataDriven: true })).toBe('guard');
-      expect(collapseReason(graph, fresh, { edge: 'property', view: 'render' })).toBeUndefined();
+    it('applies the set-equality guard where a chain is given, but not to a field the data drives', () => {
+      expect(firstEnteredRefHit(graph, fresh) || count2Hit(fresh)).toBe(false);
+      expect(collapses(graph, fresh, { edge: 'property', view: 'render', chain })).toBe(true);
+      expect(collapses(graph, fresh, { edge: 'item', view: 'render', chain, dataDriven: true })).toBe(false);
+      expect(collapses(graph, fresh, { edge: 'item', view: 'defaults', chain })).toBe(true);
+      expect(collapses(graph, fresh, { edge: 'property', view: 'render' })).toBe(false);
     });
   });
 
@@ -115,24 +118,25 @@ describe('the recursion rule', () => {
     }
     const seeds = [{ node: child, refPath: [pl] }];
 
-    it('extends the chain with the parent set for a property, and for every child in defaults', () => {
-      const field = childField(graph, parent, { seeds, edge: 'property', inData: true }, 'render');
+    it('extends the chain with the parent set for a property, and for a child the data does not hold', () => {
+      const field = childField(graph, parent, { seeds, edge: 'property', inData: true });
       expect(field).toEqual({ seeds, chain: extendChain(graph, parent.chain, parent.plan.setKey), dataDriven: false });
-      expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: true }, 'defaults').dataDriven).toBe(
-        false,
-      );
-      expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: false }, 'render').chain).toBeDefined();
+      expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: false })).toEqual({
+        seeds,
+        chain: extendChain(graph, parent.chain, parent.plan.setKey),
+        dataDriven: false,
+      });
     });
-    it('restarts the chain and the ref path of a child the data drives in render', () => {
-      expect(childField(graph, parent, { seeds, edge: 'item', inData: true }, 'render')).toEqual({
+    it('restarts the chain and the ref path of a child the data drives', () => {
+      expect(childField(graph, parent, { seeds, edge: 'item', inData: true })).toEqual({
         seeds: [{ node: child, refPath: [] }],
         dataDriven: true,
       });
-      expect(childField(graph, parent, { seeds, edge: 'patternKey', inData: true }, 'render')).toEqual({
+      expect(childField(graph, parent, { seeds, edge: 'patternKey', inData: true })).toEqual({
         seeds: [{ node: child, refPath: [] }],
         dataDriven: true,
       });
-      expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: true }, 'render').seeds).toEqual([
+      expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: true }).seeds).toEqual([
         { node: child, refPath: [] },
       ]);
     });
@@ -153,7 +157,7 @@ describe('the recursion rule', () => {
     });
     it('reports a collapse that may not expand, with the plan of the field', () => {
       const settled = settleField(graph, recursive, { edge: 'property', view: 'render' }, false, plan);
-      expect(settled).toEqual({ collapsed: true, plan: plan(recursive.seeds), reason: 'firstEntered' });
+      expect(settled).toEqual({ collapsed: true, plan: plan(recursive.seeds) });
     });
     it('expands a collapse once, restarting its ref paths and its chain (I2)', () => {
       const chain = extendChain(graph, undefined, 'x');

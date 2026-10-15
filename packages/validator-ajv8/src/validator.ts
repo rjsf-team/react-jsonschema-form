@@ -230,11 +230,18 @@ export default class AJV8Validator<
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // if schema validator instance doesn't exist, add it.
     // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
-    if (this.ajv.getSchema(rootSchemaId) === undefined) {
-      this.ajv.addSchema(rootSchema, rootSchemaId);
-    } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
+    try {
+      if (this.ajv.getSchema(rootSchemaId) === undefined) {
+        this.ajv.addSchema(rootSchema, rootSchemaId);
+      } else if (!deepEquals(rootSchema, this.ajv.getSchema(rootSchemaId)?.schema)) {
+        this.ajv.removeSchema(rootSchemaId);
+        this.ajv.addSchema(rootSchema, rootSchemaId);
+      }
+    } catch {
+      // A root this instance's dialect rejects is left unregistered rather than half-registered under its id, where
+      // every later root would collide with it. A schema validated against it fails only if it refers into it, and
+      // reports that as its own compilation error.
       this.ajv.removeSchema(rootSchemaId);
-      this.ajv.addSchema(rootSchema, rootSchemaId);
     }
     this.lastSeenRootSchema = rootSchema;
     this.hasRegisteredRootSchema = true;

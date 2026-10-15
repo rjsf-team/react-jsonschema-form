@@ -39,15 +39,24 @@ import type {
   RJSFSchema,
   SchemaContext,
   StrictRJSFSchema,
+  ValidatorType,
 } from '../types.ts';
 import getFirstMatchingOption, { withVariantId } from './getFirstMatchingOption.ts';
-import buildPlan, { booleanSchema, childSeeds, schemaFrom, withoutKeys } from './graph/mergePlan.ts';
+import KeyedMemo from './graph/keyedMemo.ts';
+import buildPlan, {
+  booleanSchema,
+  cachedPolicy,
+  childSeeds,
+  refDefinition,
+  schemaFrom,
+  withoutKeys,
+} from './graph/mergePlan.ts';
 import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
 import type { Provenance } from './graph/provenance.ts';
-import { childField, collapseReason, restartSeeds } from './graph/recursionRule.ts';
+import { childField, collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
@@ -92,17 +101,58 @@ const OPTION_KEYWORDS: readonly ('anyOf' | 'oneOf')[] = [ANY_OF_KEY, ONE_OF_KEY]
 /** The keywords whose subschemas describe array rows, which a view drops where it handed out nothing for them */
 const ITEM_KEYWORDS: readonly ('items' | 'additionalItems')[] = ['items', 'additionalItems'];
 
-/** The policy each validator's views are planned with */
-const policies = new WeakMap<object, unknown>();
-
-function isPolicyFor<S extends StrictRJSFSchema>(value: unknown): value is PlanPolicy<S> {
-  return typeof value === 'object' && value !== null && 'allOf' in value;
-}
-
 function handOut<S extends StrictRJSFSchema>(schema: S, provenance: Provenance<S>): S {
   const stamped = stamp(schema, provenance);
   handedOut.add(stamped);
   return stamped;
+}
+
+/** The subschema last handed out for a field as it stands, by the field's provenance */
+const stubs = new WeakMap<object, { readonly value: unknown; readonly stub: object }>();
+
+/** Returns `value`, the subschema of the field `provenance` describes, handed out as it stands. It depends on nothing
+ * else, so the same object is handed out again while the field's subschema is the same.
+ */
+function stubOf<S extends StrictRJSFSchema>(rawRoot: S, value: unknown, provenance: Provenance<S>): S {
+  const cached = stubs.get(provenance);
+  if (cached !== undefined && cached.value === value && isSchemaObject<S>(cached.stub)) {
+    return cached.stub;
+  }
+  const stub = handOut(schemaFrom(rawRoot, value), provenance);
+  stubs.set(provenance, { value, stub });
+  return stub;
+}
+
+/** The stubs handed out for the properties of a field that merge nothing, by field, plan and key */
+const plainProperties = new KeyedMemo<unknown>();
+
+/** A view, with the values of the data's keys it read: those of the properties whose own plan read their data */
+interface MemoizedView {
+  readonly view: object;
+  readonly reads: readonly (readonly [string, unknown])[];
+}
+
+/** The views that read the data only through some of its keys, by field, plan, whether options are resolved and
+ * whether there is data: an object field's data is a new object on every edit, which leaves the values of the keys
+ * the edit did not touch as they were, so such a view is the same until one of the keys it read changes. A key holding
+ * an object is not read for a memoized view, since a caller may mutate that object in place, as `DataMemo` explains.
+ */
+const views = new KeyedMemo<MemoizedView>();
+
+/** Whether a field seeded by `seeds` merges nothing into its one subschema: a field that does, through a `$ref`, an
+ * `allOf`, a condition, `dependencies` or options, is the only kind the recursion rule can collapse
+ */
+function mergesNothing<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, seeds: readonly Seed[]): boolean {
+  const node = seeds.length === 1 ? graph.node(seeds[0].node) : undefined;
+  return (
+    node?.kind === 'schema' &&
+    node.ref === undefined &&
+    node.allOf === undefined &&
+    node.if === undefined &&
+    node.dependencies === undefined &&
+    node.anyOf === undefined &&
+    node.oneOf === undefined
+  );
 }
 
 /** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.
@@ -124,7 +174,7 @@ function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): 
   if (handedOut.has(schema)) {
     return stamped;
   }
-  const adopted = stamped.graph.adopt(schema);
+  const adopted = stamped.graph.adoptCopy(schema, stamped);
   return childProvenance(
     stamped,
     { seeds: [{ node: adopted.node, refPath: stamped.seeds[0].refPath }], chain: stamped.chain },
@@ -134,33 +184,28 @@ function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): 
 
 /** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has
  * `dependencies`, the one case resolution merges the option the data matches rather than leaving the choice to
- * `MultiSchemaField`. One per validator, since a plan is memoized under its policy and the options are matched by the
- * validator alone.
+ * `MultiSchemaField`
  */
 function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
+  validator: ValidatorType<S, F>,
 ): PlanPolicy<S> {
-  const cached = policies.get(context.validator);
-  if (isPolicyFor<S>(cached)) {
-    return cached;
-  }
-  const selectOption = (request: OptionRequest<S>) => dependencyOption(context, request, request.data);
-  const policy: PlanPolicy<S> = { allOf: true, selectOption };
-  policies.set(context.validator, policy);
-  return policy;
+  return cachedPolicy<S>(validator, 'render', () => ({
+    allOf: true,
+    selectOption: (request) => dependencyOption(validator, request, request.data),
+  }));
 }
 
-/** Returns the option of a list beside `dependencies` that `data` matches first, which resolution merges into the
- * schema as `resolveDependencies()` merged it, rather than leaving the choice to `MultiSchemaField`; none for any other
- * list. Each option is matched with its own `$ref` resolved, a boolean option as the object it reads as.
+/** Returns the option of a list beside `dependencies` that `data` matches first, which is merged into the schema
+ * rather than left to `MultiSchemaField` to choose; none for any other list. Each option is matched with its own `$ref`
+ * resolved, a boolean option as the object it reads as.
  *
- * @param context - The `SchemaContext` the options are matched in
+ * @param validator - The validator the options are matched with
  * @param request - The option list the plan met
  * @param data - The data the option is matched against
  * @returns - The index of the matching option, or undefined
  */
 export function dependencyOption<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
+  validator: ValidatorType<S, F>,
   { graph, options, dependencies, discriminator }: OptionRequest<S>,
   data: unknown,
 ): number | undefined {
@@ -171,11 +216,12 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
     const node = graph.node(option);
     return node.kind === 'schema' ? resolveOwnRef<S>(node.raw, graph.rawRoot) : booleanSchema(node, graph.rawRoot);
   });
-  return getFirstMatchingOption(context, data, resolved, graph.rawRoot, discriminator);
+  return getFirstMatchingOption({ validator }, data, resolved, graph.rawRoot, discriminator);
 }
 
 /** Returns a schema's own `$ref` resolved, the definition overridden by the keywords beside the reference and marked
- * with it, as a schema an option's `$ref` stands for is scored and validated. Only that reference is followed: the
+ * with it, as a schema an option's `$ref` stands for is scored and validated. The reference is resolved through the
+ * schema graph, from where the schema sits in the root, as the form resolves it. Only that reference is followed: the
  * validator follows those below it against the root schema.
  *
  * @param schema - The schema whose own `$ref` is to be resolved
@@ -187,8 +233,15 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   if (typeof ref !== 'string') {
     return schema;
   }
+  const root = parseSchemaGraph<S>(rootSchema);
+  const known = root.byObject(schema);
+  const stamped = known === undefined ? readProvenance<S>(schema, root) : undefined;
+  const definition =
+    (stamped === undefined
+      ? refDefinition<S>(root, ref, known)
+      : refDefinition<S>(stamped.graph, ref, stamped.seeds[0].node)) ?? findSchemaDefinition<S>(ref, rootSchema);
   const { [REF_KEY]: _ref, ...siblings } = schema;
-  return { ...findSchemaDefinition<S>(ref, rootSchema), ...siblings, [RJSF_REF_KEY]: ref };
+  return { ...definition, ...siblings, [RJSF_REF_KEY]: ref };
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */
@@ -214,10 +267,19 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   planned?: MergePlan<S>,
 ): S {
   const { graph, seeds } = field;
-  const policy = renderPolicy(context);
+  const policy = renderPolicy(context.validator);
   const planOf = (seedsToPlan: readonly Seed[], dataToPlan: unknown) =>
     buildPlan({ context, graph, seeds: seedsToPlan, data: dataToPlan, policy });
   const plan = planned ?? planOf(seeds, data);
+  const viewKey = [field, plan, resolveOptions, data === undefined];
+  const memoized = views.peek(viewKey);
+  if (
+    memoized?.reads.every(([key, value]) => Object.is(valueOf(data, key), value)) &&
+    isSchemaObject<S>(memoized.view)
+  ) {
+    return memoized.view;
+  }
+  const reads: [string, unknown][] = [];
   const seedNode = graph.node(seeds[0].node);
   if (field.optionOf !== undefined && seedNode.kind === 'schema' && addsNothing(plan, field, field.optionOf)) {
     // An option such as a `$ref` back to the schema offering it: merged in, it would render that schema again inside
@@ -233,7 +295,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     }
   }
   const child = (seedsOfChild: readonly Seed[], edge: ContainmentEdge, inData: boolean) => {
-    const next = childField(graph, { plan, chain: field.chain }, { seeds: seedsOfChild, edge, inData }, 'render');
+    const next = childField(graph, { plan, chain: field.chain }, { seeds: seedsOfChild, edge, inData });
     return {
       next,
       provenance: childProvenance(field, { seeds: next.seeds, chain: next.chain }),
@@ -259,11 +321,21 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       if (!patterned && !isSchemaObject<S>(value)) {
         return [key, value];
       }
-      const own = valueOf(data, key);
+      if (!patterned && isSchemaObject<S>(value) && mergesNothing(graph, propertySeeds)) {
+        // A property never restarts its seeds, so the stub is the same for the same field and plan
+        const stub = plainProperties.get([field, plan, key], () =>
+          handOut(schemaFrom(graph.rawRoot, value), child(propertySeeds, edge, false).provenance),
+        );
+        return [key, stub];
+      }
       const { next, provenance } = child(propertySeeds, edge, isObject(data) && Object.hasOwn(data, key));
+      const own = valueOf(data, key);
       const childPlan = planOf(next.seeds, own);
+      if (childPlan.readsData || patterned) {
+        reads.push([key, own]);
+      }
       const position: FieldPosition = { edge, view: 'render', dataDriven: next.dataDriven, chain: next.chain };
-      if (collapseReason(graph, childPlan, position) !== undefined) {
+      if (collapses(graph, childPlan, position)) {
         // A boolean property collapses as the empty schema it stands for
         const collapsed = isSchemaObject<S>(value) ? value : schemaFrom(graph.rawRoot, {});
         return [key, handOut({ ...collapsed, [RJSF_REF_CYCLE_KEY]: true }, provenance)];
@@ -272,7 +344,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
         key,
         patterned
           ? buildView(context, root, provenance, own, false, childPlan)
-          : handOut(schemaFrom(graph.rawRoot, value), provenance),
+          : stubOf(graph.rawRoot, value, provenance),
       ];
     });
     Reflect.set(merged, PROPERTIES_KEY, Object.fromEntries(entries));
@@ -330,10 +402,17 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       Reflect.deleteProperty(merged, key);
     }
   }
-  const view = allowsAdditionalProperties<S>(merged)
-    ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data)
-    : merged;
-  return handOut(view, field);
+  const stubsExtraKeys = allowsAdditionalProperties<S>(merged);
+  const view = handOut(
+    stubsExtraKeys ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data) : merged,
+    field,
+  );
+  // A view whose own plan read the data, or whose options or extra keys were resolved for it, holds for that data alone
+  const readsObject = reads.some(([, value]) => typeof value === 'object' && value !== null);
+  if (!plan.readsData && !resolveOptions && !stubsExtraKeys && !readsObject) {
+    views.set(viewKey, { view, reads });
+  }
+  return view;
 }
 
 /** Converts boolean schemas to equivalent object schemas for APIs that operate on `StrictRJSFSchema` objects.

@@ -79,8 +79,8 @@ describe('AJV8Validator', () => {
 
         const isValid = expectWarn(
           () => validator.isValid(schema, { foo: 'bar' }, schema),
-          // The throw happens before the schema's id is known, so there is no schema to name
-          'Error encountered compiling schema:',
+          // A root that won't register is skipped, so the schema itself is what fails to compile, by its key
+          expect.stringMatching(/^Error encountered compiling schema "\w+":$/),
           expect.any(Error),
         );
         expect(isValid).toBe(false);
@@ -877,7 +877,7 @@ describe('AJV8Validator', () => {
 
         const isValid = expectWarn(
           () => validator.isValid(schema, { foo: 'bar' }, schema),
-          'Error encountered compiling schema:',
+          expect.stringMatching(/^Error encountered compiling schema "\w+":$/),
           expect.any(Error),
         );
         expect(isValid).toBe(false);
@@ -1402,10 +1402,21 @@ describe('AJV8Validator', () => {
 
         const isValid = expectWarn(
           () => validator.isValid(schema, { foo: 'bar' }, schema),
-          'Error encountered compiling schema:',
+          expect.stringMatching(/^Error encountered compiling schema "\w+":$/),
           expect.any(Error),
         );
         expect(isValid).toBe(false);
+      });
+      it('checks a schema against a root its dialect rejects, and registers the next root as usual', () => {
+        // A draft-07 tuple: under 2020-12 `items` must be a single subschema
+        const rejectedRoot: RJSFSchema = { type: 'array', items: [{ type: 'string' }] };
+        const condition: RJSFSchema = { properties: { animal: { const: 'Cat' } } };
+        const nextRoot: RJSFSchema = { definitions: { animal: { const: 'Cat' } } };
+
+        expect(validator.isValid(condition, { animal: 'Cat' }, rejectedRoot)).toBe(true);
+        expect(validator.isValid(condition, { animal: 'Dog' }, rejectedRoot)).toBe(false);
+        expect(validator.isValid({ $ref: '#/definitions/animal' }, 'Cat', nextRoot)).toBe(true);
+        expect(validator.isValid({ $ref: '#/definitions/animal' }, 'Dog', nextRoot)).toBe(false);
       });
       it('should return true if the data is valid against the schema including refs to rootSchema', () => {
         const schema: RJSFSchema = {

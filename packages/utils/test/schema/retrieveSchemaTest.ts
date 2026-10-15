@@ -4886,6 +4886,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.objectContaining({ type: 'string' }),
         );
       });
+      it("resolves an option's $ref under a relative $id against that $id, for the defaults and option scoring (#5467)", () => {
+        const rootSchema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            child: {
+              $id: 'child.json',
+              type: 'object',
+              properties: { a: { anyOf: [{ $ref: '#/$defs/x' }, { type: 'number' }] } },
+              $defs: { x: { type: 'string', default: 'dx' } },
+            },
+          },
+          type: 'object',
+          properties: { c: { $ref: 'child.json' } },
+        };
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+        const root = schemaUtils.getRootSchema();
+        expect(schemaUtils.getDefaultFormState(root)).toEqual({ c: { a: 'dx' } });
+        const c = schemaUtils.retrieveSchema(schemaOf(schemaUtils.retrieveSchema(root).properties?.c));
+        const a = schemaUtils.retrieveSchema(schemaOf(c.properties?.a), 's');
+        const handedOut = (a.anyOf ?? []).map(schemaOf);
+        const raw = root.$defs?.child;
+        const rawOptions = isObject(raw) && isObject(raw.properties?.a) ? (raw.properties.a.anyOf ?? []) : [];
+        expect(schemaUtils.getClosestMatchingOption('s', handedOut, 1)).toBe(0);
+        expect(schemaUtils.getClosestMatchingOption('s', rawOptions.map(schemaOf), 1)).toBe(0);
+      });
     });
     describe('retrieveSchema() with resolveAnyOfOrOneOfRefs', () => {
       it('resolves simple ref with no anyOf or oneOfs when false', () => {

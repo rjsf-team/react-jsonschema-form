@@ -412,6 +412,16 @@ describe('parseSchemaGraph()', () => {
       expect(adopted.graph.node(graph.root).pointer).toBe('');
       expect(adopted.graph.diagnostics).toEqual(graph.diagnostics);
     });
+    it('parses a copy once while each copy for the same key has the keywords of the last', () => {
+      const of = {};
+      const keywords = { $ref: '#/$defs/a', title: 'T' };
+      const adopted = graph.adoptCopy({ ...keywords }, of);
+      expect(graph.adoptCopy({ ...keywords }, of)).toBe(adopted);
+      expect(graph.adoptCopy({ ...keywords }, {})).not.toBe(adopted);
+      const retitled = graph.adoptCopy({ ...keywords, title: 'U' }, of);
+      expect(retitled).not.toBe(adopted);
+      expect(graph.adoptCopy({ ...keywords, title: 'U', description: 'D' }, of)).not.toBe(retitled);
+    });
     it('extends an extending graph in turn', () => {
       const first = graph.adopt({ $ref: '#/$defs/a' });
       const second = first.graph.adopt({ items: { $ref: '#/$defs/broken' } });

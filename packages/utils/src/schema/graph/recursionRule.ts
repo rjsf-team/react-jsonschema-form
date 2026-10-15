@@ -10,9 +10,6 @@ export type ContainmentEdge = 'root' | 'property' | 'item' | 'tupleItem' | 'addi
 /** Which view the rule decides for: the rendered form, or the defaults `getDefaultFormState()` fills in */
 export type RuleView = 'render' | 'defaults';
 
-/** Which check collapsed a field */
-export type CollapseReason = 'firstEntered' | 'count2' | 'guard';
-
 /** Where a field sits, which decides which checks apply to it */
 export interface FieldPosition {
   readonly edge: ContainmentEdge;
@@ -93,37 +90,29 @@ export function count2Hit<S extends StrictRJSFSchema = RJSFSchema>(plan: MergePl
   );
 }
 
-/** Returns why a field collapses, if it does. The call root never does. The ref-path checks apply to every edge in
- * the defaults view, where `computeDefaults()` stops at any `$ref` already followed, and only to object properties in
- * render, the one render edge the data does not bound. The set-equality guard applies everywhere except to a field
- * the data drives in render; it is a safety net, not what makes the rule terminate.
+/** Returns whether a field collapses. The call root never does. The ref-path checks apply to every edge in the defaults
+ * view, where `computeDefaults()` stops at any `$ref` already followed, and only to object properties in render, the
+ * one render edge the data does not bound. The set-equality guard applies where a chain is given, which only render
+ * gives, and never to a field the data drives there; it is a safety net, not what makes the rule terminate.
  *
  * @param graph - The graph the plan is of
  * @param plan - The field's plan
  * @param position - Where the field sits
- * @returns - The check that collapses the field, or undefined when none does
+ * @returns - Whether one of the checks collapses the field
  */
-export function collapseReason<S extends StrictRJSFSchema = RJSFSchema>(
+export function collapses<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
   plan: MergePlan<S>,
   position: FieldPosition,
-): CollapseReason | undefined {
+): boolean {
   const { edge, view, dataDriven = false, chain } = position;
   if (edge === 'root') {
-    return undefined;
+    return false;
   }
-  if (view === 'defaults' || edge === 'property') {
-    if (firstEnteredRefHit(graph, plan)) {
-      return 'firstEntered';
-    }
-    if (count2Hit(plan)) {
-      return 'count2';
-    }
+  if ((view === 'defaults' || edge === 'property') && (firstEnteredRefHit(graph, plan) || count2Hit(plan))) {
+    return true;
   }
-  if (view === 'render' && dataDriven) {
-    return undefined;
-  }
-  return chain?.has(plan.setKey) ? 'guard' : undefined;
+  return !dataDriven && chain?.has(plan.setKey) === true;
 }
 
 /** Returns `seeds` with their ref paths restarted, so that entering a seed's own `$ref` gives `[target]`: for the
@@ -143,24 +132,22 @@ export interface ChildField {
   readonly dataDriven: boolean;
 }
 
-/** Returns a child of the field `parent` plans: in render, a child the data drives, an array row or a key the data
+/** Returns a child of the field `parent` plans in render: a child the data drives, an array row or a key the data
  * holds, restarts both the guard chain and its ref path. The data bounds those, and a row keeping its ref path would
  * collapse a property that re-enters a list or wrapper definition the row's own array came through, hiding the rows the
- * data has there. Every other child, and every child in the defaults view, extends the chain with the parent's set.
+ * data has there. Every other child extends the chain with the parent's set.
  *
  * @param graph - The graph the plans are of
  * @param parent - The parent's plan and chain
  * @param child - The child's seeds and edge, and whether the data holds it
- * @param view - The view the rule decides for
  * @returns - The child's seeds and chain, and whether the data drives it
  */
 export function childField<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
   parent: { readonly plan: MergePlan<S>; readonly chain?: GuardChain },
   child: { readonly seeds: readonly Seed[]; readonly edge: ContainmentEdge; readonly inData: boolean },
-  view: RuleView,
 ): ChildField {
-  const dataDriven = view === 'render' && child.edge !== 'property' && child.inData;
+  const dataDriven = child.edge !== 'property' && child.inData;
   if (!dataDriven) {
     return { seeds: child.seeds, chain: extendChain(graph, parent.chain, parent.plan.setKey), dataDriven };
   }
