@@ -1710,6 +1710,19 @@ Without a plan, as for a template rendered outside `SchemaField`, it follows `di
 
 - boolean: True when the key input is labelled
 
+### hasTemplateErrors&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Whether the field a template renders has errors to show, for the template's error state, such as a red outline or an invalid status: the messages its field's plan shows, with `ui:hideError` applied, or, for a template rendered without a plan, as one rendered outside `SchemaField` is, the deprecated `rawErrors` while `hideError` is off.
+Read it rather than `rawErrors`, which stays through v7 only for a template rendered without a plan.
+
+#### Parameters
+
+- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'rawErrors' | 'hideError' | 'presentation'> - The template's `rawErrors`, `hideError` and `presentation`
+
+#### Returns
+
+- boolean: True when the field has errors to show
+
 ### hasVisibleErrors()
 
 Determines whether a widget or template has any errors to surface in its own UI, which is never the case while `ui:hideError` is in effect.
@@ -2581,6 +2594,31 @@ Stringifies an `object`, sorts object fields in consistent order before stringif
 
 - string: The stringified object with keys sorted in a consistent order
 
+### templateDrawsDescription&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatedrawsdescription}
+
+Whether a `FieldTemplate` draws the description it is handed: where the field's plan says the template draws it, or, for a template rendered without a plan, as one rendered outside `SchemaField` is, where it draws the label, since the deprecated `displayLabel` gates both there.
+
+#### Parameters
+
+- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'displayLabel' | 'presentation'> - The template's `displayLabel` and `presentation`
+
+#### Returns
+
+- boolean: True when the template draws the description
+
+### templateDrawsLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Whether a `FieldTemplate` draws its field's label: where the field's plan says the template draws it, or, for a template rendered without a plan, as one rendered outside `SchemaField` is, where the deprecated `displayLabel` says so.
+Read it rather than `displayLabel`, which stays through v7 only for a template rendered without a plan.
+
+#### Parameters
+
+- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'displayLabel' | 'presentation'> - The template's `displayLabel` and `presentation`
+
+#### Returns
+
+- boolean: True when the template draws the label
+
 ### titleId()
 
 Return a consistent `id` for the field title element.
@@ -2914,6 +2952,20 @@ widgetAriaProps(props); // { 'aria-label': undefined, 'aria-describedby': 'root_
 // `partProps` are those of the year select of an `AltDateWidget`, which its `DateElement` names and describes
 widgetAriaProps(partProps); // { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error root_when__description root_when__help' }
 ```
+
+### widgetDrawsLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+
+Whether a widget draws its field's label itself: where the field's plan says the widget draws it, or, for a widget rendered without a plan, unless the deprecated `hideLabel` turns it off.
+Read it rather than `hideLabel`, which stays through v7 only for a widget rendered without a plan.
+A field with no label can still leave its description to the widget, so a widget that draws its own description takes it from [getWidgetDescription()](#getwidgetdescription) rather than gating it on this.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'hideLabel' | 'presentation'> - The widget's `hideLabel` and `presentation`
+
+#### Returns
+
+- boolean: True when the widget draws the label
 
 ### withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
