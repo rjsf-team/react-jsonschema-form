@@ -1,3 +1,4 @@
+import templateDrawsLabel from './templateDrawsLabel.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WrapIfAdditionalTemplateProps } from './types.ts';
 
 /** Whether the key input of an `additionalProperties` entry is labelled, which it is wherever the entry's value is,
@@ -11,6 +12,7 @@ export default function hasAdditionalKeyLabel<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ displayLabel, presentation }: Pick<WrapIfAdditionalTemplateProps<T, S, F>, 'displayLabel' | 'presentation'>) {
-  return presentation ? presentation.label.by !== 'none' : Boolean(displayLabel);
+>(props: Pick<WrapIfAdditionalTemplateProps<T, S, F>, 'displayLabel' | 'presentation'>) {
+  const { presentation } = props;
+  return presentation ? presentation.label.by !== 'none' : templateDrawsLabel<T, S, F>(props);
 }

@@ -1,5 +1,6 @@
 import { descriptionId } from './idGenerators.ts';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from './types.ts';
+import widgetDrawsLabel from './widgetDrawsLabel.ts';
 
 /** Gets the description a widget draws itself, as a checkbox does: the one its field's plan says the widget draws, under
  * the id the plan gives it. A widget rendered without a plan draws its `ui:description` or schema `description` unless
@@ -15,19 +16,14 @@ export default function getWidgetDescription<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  options,
-  schema,
-  hideLabel,
-  presentation,
-}: Pick<WidgetProps<T, S, F>, 'id' | 'options' | 'schema' | 'hideLabel' | 'presentation'>):
-  | { text: string; id: string }
-  | undefined {
+>(
+  props: Pick<WidgetProps<T, S, F>, 'id' | 'options' | 'schema' | 'hideLabel' | 'presentation'>,
+): { text: string; id: string } | undefined {
+  const { id, options, schema, presentation } = props;
   if (presentation) {
     const { description } = presentation;
     return description.by === 'self' && description.text ? { text: description.text, id: description.id } : undefined;
   }
   const text = options.description || schema.description;
-  return !hideLabel && text ? { text, id: descriptionId(id) } : undefined;
+  return widgetDrawsLabel<T, S, F>(props) && text ? { text, id: descriptionId(id) } : undefined;
 }

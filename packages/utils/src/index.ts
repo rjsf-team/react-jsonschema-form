@@ -95,6 +95,7 @@ import groupEnumOptions from './groupEnumOptions.ts';
 import guessType from './guessType.ts';
 import hasAdditionalKeyLabel from './hasAdditionalKeyLabel.ts';
 import hashForSchema, { hashObject, hashString, schemaKey, sortedJSONStringify } from './hashForSchema.ts';
+import hasTemplateErrors from './hasTemplateErrors.ts';
 import hasVisibleErrors from './hasVisibleErrors.ts';
 import hasWidget from './hasWidget.ts';
 import {
@@ -161,6 +162,8 @@ import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
+import templateDrawsDescription from './templateDrawsDescription.ts';
+import templateDrawsLabel from './templateDrawsLabel.ts';
 import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
 import toErrorList from './toErrorList.ts';
@@ -181,6 +184,7 @@ import utcToLocal from './utcToLocal.ts';
 import validationDataMerge from './validationDataMerge.ts';
 import type { WidgetAriaPropsInput } from './widgetAriaProps.ts';
 import widgetAriaProps from './widgetAriaProps.ts';
+import widgetDrawsLabel from './widgetDrawsLabel.ts';
 import withIdRefPrefix from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
@@ -306,6 +310,7 @@ export {
   guessType,
   hasAdditionalKeyLabel,
   hasByPath,
+  hasTemplateErrors,
   hasVisibleErrors,
   hasWidget,
   hashForSchema,
@@ -365,6 +370,8 @@ export {
   selectOptionUiSchema,
   shouldRenderOptionalField,
   sortedJSONStringify,
+  templateDrawsDescription,
+  templateDrawsLabel,
   titleId,
   toConstant,
   toDateString,
@@ -392,6 +399,7 @@ export {
   validationDataMerge,
   WIDGET_FIELD_PRESENTATION,
   widgetAriaProps,
+  widgetDrawsLabel,
   withIdRefPrefix,
   bracketNameGenerator,
   dotNotationNameGenerator,

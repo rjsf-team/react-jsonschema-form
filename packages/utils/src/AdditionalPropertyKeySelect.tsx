@@ -12,10 +12,9 @@ export type AdditionalPropertyKeySelectProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
-> = Pick<
-  WidgetProps<T, S, F>,
-  'className' | 'disabled' | 'hideLabel' | 'id' | 'label' | 'readonly' | 'registry' | 'required'
-> & {
+> = Pick<WidgetProps<T, S, F>, 'className' | 'disabled' | 'id' | 'label' | 'readonly' | 'registry' | 'required'> & {
+  /** Whether the select leaves its label off, as it does where the template labels the key beside it */
+  hideLabel?: boolean;
   /** The current key of the `additionalProperties` property, which is the selected option */
   value: string;
   /** The key names the property is allowed to take, from the parent schema's `propertyNames.enum`. A current `value`
