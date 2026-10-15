@@ -342,10 +342,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_tasks__title"
                                           title="tasks"
                                         >
-                                          tasks
+                                          <span
+                                            id="root_tasks__title"
+                                          >
+                                            tasks
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -396,10 +399,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                             >
                                                               <label
                                                                 class="ant-form-item-required"
-                                                                id="root_tasks_0__title"
                                                                 title="tasks-1"
                                                               >
-                                                                tasks-1
+                                                                <span
+                                                                  id="root_tasks_0__title"
+                                                                >
+                                                                  tasks-1
+                                                                </span>
                                                               </label>
                                                               <div
                                                                 class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -665,10 +671,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                             >
                                                               <label
                                                                 class="ant-form-item-required"
-                                                                id="root_tasks_1__title"
                                                                 title="tasks-2"
                                                               >
-                                                                tasks-2
+                                                                <span
+                                                                  id="root_tasks_1__title"
+                                                                >
+                                                                  tasks-2
+                                                                </span>
                                                               </label>
                                                               <div
                                                                 class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -1041,10 +1050,13 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_tags__title"
                                           title="tags"
                                         >
-                                          tags
+                                          <span
+                                            id="root_tags__title"
+                                          >
+                                            tags
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -1702,10 +1714,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_person__title"
                                           title="person"
                                         >
-                                          person
+                                          <span
+                                            id="root_person__title"
+                                          >
+                                            person
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -1862,10 +1877,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_person_address__title"
                                                             title="address"
                                                           >
-                                                            address
+                                                            <span
+                                                              id="root_person_address__title"
+                                                            >
+                                                              address
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -2750,10 +2768,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_tasks__title"
                                           title="tasks"
                                         >
-                                          tasks
+                                          <span
+                                            id="root_tasks__title"
+                                          >
+                                            tasks
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -2804,10 +2825,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                             >
                                                               <label
                                                                 class="ant-form-item-required"
-                                                                id="root_tasks_0__title"
                                                                 title="tasks-1"
                                                               >
-                                                                tasks-1
+                                                                <span
+                                                                  id="root_tasks_0__title"
+                                                                >
+                                                                  tasks-1
+                                                                </span>
                                                               </label>
                                                               <div
                                                                 class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -3073,10 +3097,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                             >
                                                               <label
                                                                 class="ant-form-item-required"
-                                                                id="root_tasks_1__title"
                                                                 title="tasks-2"
                                                               >
-                                                                tasks-2
+                                                                <span
+                                                                  id="root_tasks_1__title"
+                                                                >
+                                                                  tasks-2
+                                                                </span>
                                                               </label>
                                                               <div
                                                                 class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -3449,10 +3476,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_tags__title"
                                           title="tags"
                                         >
-                                          tags
+                                          <span
+                                            id="root_tags__title"
+                                          >
+                                            tags
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -3942,10 +3972,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_person__title"
                                           title="person"
                                         >
-                                          person
+                                          <span
+                                            id="root_person__title"
+                                          >
+                                            person
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -4102,10 +4135,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_person_address__title"
                                                             title="address"
                                                           >
-                                                            address
+                                                            <span
+                                                              id="root_person_address__title"
+                                                            >
+                                                              address
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -5533,10 +5569,13 @@ exports[`single fields > Cyclic schema 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="A registration form"
                       >
-                        A registration form
+                        <span
+                          id="root__title"
+                        >
+                          A registration form
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -5579,10 +5618,13 @@ exports[`single fields > Cyclic schema 1`] = `
                                       >
                                         <label
                                           class=""
-                                          id="root_child__title"
                                           title="A registration form"
                                         >
-                                          A registration form
+                                          <span
+                                            id="root_child__title"
+                                          >
+                                            A registration form
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7849,10 +7891,13 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="test"
                       >
-                        test
+                        <span
+                          id="root__title"
+                        >
+                          test
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7895,10 +7940,13 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class=""
-                                          id="root_nestedObjectOptional__title"
                                           title="nestedObjectOptional"
                                         >
-                                          nestedObjectOptional
+                                          <span
+                                            id="root_nestedObjectOptional__title"
+                                          >
+                                            nestedObjectOptional
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7998,10 +8046,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepObjectOptional__title"
                                                             title="deepObjectOptional"
                                                           >
-                                                            deepObjectOptional
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                                                            >
+                                                              deepObjectOptional
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8110,10 +8161,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            id="root_nestedObjectOptional_deepObject__title"
                                                             title="deepObject"
                                                           >
-                                                            deepObject
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepObject__title"
+                                                            >
+                                                              deepObject
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8223,10 +8277,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepArrayOptional__title"
                                                             title="deepArrayOptional"
                                                           >
-                                                            deepArrayOptional
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArrayOptional__title"
+                                                            >
+                                                              deepArrayOptional
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8332,10 +8389,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepArrayOptional2__title"
                                                             title="deepArrayOptional2"
                                                           >
-                                                            deepArrayOptional2
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                                            >
+                                                              deepArrayOptional2
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8441,10 +8501,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            id="root_nestedObjectOptional_deepArray__title"
                                                             title="deepArray"
                                                           >
-                                                            deepArray
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArray__title"
+                                                            >
+                                                              deepArray
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8559,10 +8622,13 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class=""
-                                          id="root_nestedArrayOptional__title"
                                           title="nestedArrayOptional"
                                         >
-                                          nestedArrayOptional
+                                          <span
+                                            id="root_nestedArrayOptional__title"
+                                          >
+                                            nestedArrayOptional
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8667,10 +8733,13 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
-                                          nestedObject
+                                          <span
+                                            id="root_nestedObject__title"
+                                          >
+                                            nestedObject
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8780,10 +8849,13 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
-                                          nestedArray
+                                          <span
+                                            id="root_nestedArray__title"
+                                          >
+                                            nestedArray
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -9271,10 +9343,13 @@ exports[`single fields > optional data controls > does not show optional control
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="test"
                       >
-                        test
+                        <span
+                          id="root__title"
+                        >
+                          test
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -9321,10 +9396,13 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class=""
-                                          id="root_nestedObjectOptional__title"
                                           title="nestedObjectOptional"
                                         >
-                                          nestedObjectOptional
+                                          <span
+                                            id="root_nestedObjectOptional__title"
+                                          >
+                                            nestedObjectOptional
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -9429,10 +9507,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepObjectOptional__title"
                                                             title="deepObjectOptional"
                                                           >
-                                                            deepObjectOptional
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                                                            >
+                                                              deepObjectOptional
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -9546,10 +9627,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            id="root_nestedObjectOptional_deepObject__title"
                                                             title="deepObject"
                                                           >
-                                                            deepObject
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepObject__title"
+                                                            >
+                                                              deepObject
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -9664,10 +9748,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepArrayOptional__title"
                                                             title="deepArrayOptional"
                                                           >
-                                                            deepArrayOptional
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArrayOptional__title"
+                                                            >
+                                                              deepArrayOptional
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -9774,10 +9861,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepArrayOptional2__title"
                                                             title="deepArrayOptional2"
                                                           >
-                                                            deepArrayOptional2
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                                            >
+                                                              deepArrayOptional2
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -9884,10 +9974,13 @@ exports[`single fields > optional data controls > does not show optional control
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            id="root_nestedObjectOptional_deepArray__title"
                                                             title="deepArray"
                                                           >
-                                                            deepArray
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArray__title"
+                                                            >
+                                                              deepArray
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -10003,10 +10096,13 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class=""
-                                          id="root_nestedArrayOptional__title"
                                           title="nestedArrayOptional"
                                         >
-                                          nestedArrayOptional
+                                          <span
+                                            id="root_nestedArrayOptional__title"
+                                          >
+                                            nestedArrayOptional
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -10112,10 +10208,13 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
-                                          nestedObject
+                                          <span
+                                            id="root_nestedObject__title"
+                                          >
+                                            nestedObject
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -10230,10 +10329,13 @@ exports[`single fields > optional data controls > does not show optional control
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
-                                          nestedArray
+                                          <span
+                                            id="root_nestedArray__title"
+                                          >
+                                            nestedArray
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -10729,10 +10831,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="test"
                       >
-                        test
+                        <span
+                          id="root__title"
+                        >
+                          test
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -10782,10 +10887,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           >
                                             <label
                                               class=""
-                                              id="root_nestedObjectOptional__title"
                                               title="nestedObjectOptional"
                                             >
-                                              nestedObjectOptional
+                                              <span
+                                                id="root_nestedObjectOptional__title"
+                                              >
+                                                nestedObjectOptional
+                                              </span>
                                             </label>
                                           </div>
                                           <div
@@ -10930,10 +11038,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                             >
                                                               <label
                                                                 class=""
-                                                                id="root_nestedObjectOptional_deepObjectOptional__title"
                                                                 title="deepObjectOptional"
                                                               >
-                                                                deepObjectOptional
+                                                                <span
+                                                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                                                >
+                                                                  deepObjectOptional
+                                                                </span>
                                                               </label>
                                                             </div>
                                                             <div
@@ -11026,10 +11137,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            id="root_nestedObjectOptional_deepObject__title"
                                                             title="deepObject"
                                                           >
-                                                            deepObject
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepObject__title"
+                                                            >
+                                                              deepObject
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -11139,10 +11253,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepArrayOptional__title"
                                                             title="deepArrayOptional"
                                                           >
-                                                            deepArrayOptional
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArrayOptional__title"
+                                                            >
+                                                              deepArrayOptional
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -11255,10 +11372,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                             >
                                                               <label
                                                                 class=""
-                                                                id="root_nestedObjectOptional_deepArrayOptional2__title"
                                                                 title="deepArrayOptional2"
                                                               >
-                                                                deepArrayOptional2
+                                                                <span
+                                                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                                                >
+                                                                  deepArrayOptional2
+                                                                </span>
                                                               </label>
                                                             </div>
                                                             <div
@@ -11356,10 +11476,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            id="root_nestedObjectOptional_deepArray__title"
                                                             title="deepArray"
                                                           >
-                                                            deepArray
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArray__title"
+                                                            >
+                                                              deepArray
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -11481,10 +11604,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           >
                                             <label
                                               class=""
-                                              id="root_nestedArrayOptional__title"
                                               title="nestedArrayOptional"
                                             >
-                                              nestedArrayOptional
+                                              <span
+                                                id="root_nestedArrayOptional__title"
+                                              >
+                                                nestedArrayOptional
+                                              </span>
                                             </label>
                                           </div>
                                           <div
@@ -11732,10 +11858,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
-                                          nestedObject
+                                          <span
+                                            id="root_nestedObject__title"
+                                          >
+                                            nestedObject
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -11845,10 +11974,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
-                                          nestedArray
+                                          <span
+                                            id="root_nestedArray__title"
+                                          >
+                                            nestedArray
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -11980,10 +12112,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_optionalObjectWithOneofs__title"
                                                             title="optionalObjectWithOneofs"
                                                           >
-                                                            optionalObjectWithOneofs
+                                                            <span
+                                                              id="root_optionalObjectWithOneofs__title"
+                                                            >
+                                                              optionalObjectWithOneofs
+                                                            </span>
                                                           </label>
                                                         </div>
                                                         <div
@@ -12111,10 +12246,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_optionalArrayWithAnyofs__title"
                                                             title="optionalArrayWithAnyofs"
                                                           >
-                                                            optionalArrayWithAnyofs
+                                                            <span
+                                                              id="root_optionalArrayWithAnyofs__title"
+                                                            >
+                                                              optionalArrayWithAnyofs
+                                                            </span>
                                                           </label>
                                                         </div>
                                                         <div
@@ -12239,10 +12377,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="test"
                       >
-                        test
+                        <span
+                          id="root__title"
+                        >
+                          test
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -12289,10 +12430,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class=""
-                                          id="root_nestedObjectOptional__title"
                                           title="nestedObjectOptional"
                                         >
-                                          nestedObjectOptional
+                                          <span
+                                            id="root_nestedObjectOptional__title"
+                                          >
+                                            nestedObjectOptional
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -12397,10 +12541,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepObjectOptional__title"
                                                             title="deepObjectOptional"
                                                           >
-                                                            deepObjectOptional
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                                                            >
+                                                              deepObjectOptional
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -12462,10 +12609,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            id="root_nestedObjectOptional_deepObject__title"
                                                             title="deepObject"
                                                           >
-                                                            deepObject
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepObject__title"
+                                                            >
+                                                              deepObject
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -12580,10 +12730,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepArrayOptional__title"
                                                             title="deepArrayOptional"
                                                           >
-                                                            deepArrayOptional
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArrayOptional__title"
+                                                            >
+                                                              deepArrayOptional
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -12690,10 +12843,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_nestedObjectOptional_deepArrayOptional2__title"
                                                             title="deepArrayOptional2"
                                                           >
-                                                            deepArrayOptional2
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                                            >
+                                                              deepArrayOptional2
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -12756,10 +12912,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                         >
                                                           <label
                                                             class="ant-form-item-required"
-                                                            id="root_nestedObjectOptional_deepArray__title"
                                                             title="deepArray"
                                                           >
-                                                            deepArray
+                                                            <span
+                                                              id="root_nestedObjectOptional_deepArray__title"
+                                                            >
+                                                              deepArray
+                                                            </span>
                                                           </label>
                                                           <div
                                                             class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -12875,10 +13034,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class=""
-                                          id="root_nestedArrayOptional__title"
                                           title="nestedArrayOptional"
                                         >
-                                          nestedArrayOptional
+                                          <span
+                                            id="root_nestedArrayOptional__title"
+                                          >
+                                            nestedArrayOptional
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -13091,10 +13253,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
-                                          nestedObject
+                                          <span
+                                            id="root_nestedObject__title"
+                                          >
+                                            nestedObject
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -13209,10 +13374,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
-                                          nestedArray
+                                          <span
+                                            id="root_nestedArray__title"
+                                          >
+                                            nestedArray
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -13338,10 +13506,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     >
                                                       <label
                                                         class=""
-                                                        id="root_optionalObjectWithOneofs__title"
                                                         title="optionalObjectWithOneofs"
                                                       >
-                                                        optionalObjectWithOneofs
+                                                        <span
+                                                          id="root_optionalObjectWithOneofs__title"
+                                                        >
+                                                          optionalObjectWithOneofs
+                                                        </span>
                                                       </label>
                                                       <div
                                                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -13431,10 +13602,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                                     >
                                                       <label
                                                         class=""
-                                                        id="root_optionalArrayWithAnyofs__title"
                                                         title="optionalArrayWithAnyofs"
                                                       >
-                                                        optionalArrayWithAnyofs
+                                                        <span
+                                                          id="root_optionalArrayWithAnyofs__title"
+                                                        >
+                                                          optionalArrayWithAnyofs
+                                                        </span>
                                                       </label>
                                                       <div
                                                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -13524,10 +13698,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="test"
                       >
-                        test
+                        <span
+                          id="root__title"
+                        >
+                          test
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -13577,10 +13754,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                           >
                                             <label
                                               class=""
-                                              id="root_nestedObjectOptional__title"
                                               title="nestedObjectOptional"
                                             >
-                                              nestedObjectOptional
+                                              <span
+                                                id="root_nestedObjectOptional__title"
+                                              >
+                                                nestedObjectOptional
+                                              </span>
                                             </label>
                                           </div>
                                           <div
@@ -13681,10 +13861,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                           >
                                             <label
                                               class=""
-                                              id="root_nestedArrayOptional__title"
                                               title="nestedArrayOptional"
                                             >
-                                              nestedArrayOptional
+                                              <span
+                                                id="root_nestedArrayOptional__title"
+                                              >
+                                                nestedArrayOptional
+                                              </span>
                                             </label>
                                           </div>
                                           <div
@@ -13781,10 +13964,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
-                                          nestedObject
+                                          <span
+                                            id="root_nestedObject__title"
+                                          >
+                                            nestedObject
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -13894,10 +14080,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
-                                          nestedArray
+                                          <span
+                                            id="root_nestedArray__title"
+                                          >
+                                            nestedArray
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -14029,10 +14218,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_optionalObjectWithOneofs__title"
                                                             title="optionalObjectWithOneofs"
                                                           >
-                                                            optionalObjectWithOneofs
+                                                            <span
+                                                              id="root_optionalObjectWithOneofs__title"
+                                                            >
+                                                              optionalObjectWithOneofs
+                                                            </span>
                                                           </label>
                                                         </div>
                                                         <div
@@ -14160,10 +14352,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                         >
                                                           <label
                                                             class=""
-                                                            id="root_optionalArrayWithAnyofs__title"
                                                             title="optionalArrayWithAnyofs"
                                                           >
-                                                            optionalArrayWithAnyofs
+                                                            <span
+                                                              id="root_optionalArrayWithAnyofs__title"
+                                                            >
+                                                              optionalArrayWithAnyofs
+                                                            </span>
                                                           </label>
                                                         </div>
                                                         <div
@@ -14288,10 +14483,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="test"
                       >
-                        test
+                        <span
+                          id="root__title"
+                        >
+                          test
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -14338,10 +14536,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class=""
-                                          id="root_nestedObjectOptional__title"
                                           title="nestedObjectOptional"
                                         >
-                                          nestedObjectOptional
+                                          <span
+                                            id="root_nestedObjectOptional__title"
+                                          >
+                                            nestedObjectOptional
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -14404,10 +14605,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class=""
-                                          id="root_nestedArrayOptional__title"
                                           title="nestedArrayOptional"
                                         >
-                                          nestedArrayOptional
+                                          <span
+                                            id="root_nestedArrayOptional__title"
+                                          >
+                                            nestedArrayOptional
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -14469,10 +14673,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedObject__title"
                                           title="nestedObject"
                                         >
-                                          nestedObject
+                                          <span
+                                            id="root_nestedObject__title"
+                                          >
+                                            nestedObject
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -14587,10 +14794,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                       >
                                         <label
                                           class="ant-form-item-required"
-                                          id="root_nestedArray__title"
                                           title="nestedArray"
                                         >
-                                          nestedArray
+                                          <span
+                                            id="root_nestedArray__title"
+                                          >
+                                            nestedArray
+                                          </span>
                                         </label>
                                         <div
                                           class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -14716,10 +14926,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                     >
                                                       <label
                                                         class=""
-                                                        id="root_optionalObjectWithOneofs__title"
                                                         title="optionalObjectWithOneofs"
                                                       >
-                                                        optionalObjectWithOneofs
+                                                        <span
+                                                          id="root_optionalObjectWithOneofs__title"
+                                                        >
+                                                          optionalObjectWithOneofs
+                                                        </span>
                                                       </label>
                                                       <div
                                                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -14809,10 +15022,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                                     >
                                                       <label
                                                         class=""
-                                                        id="root_optionalArrayWithAnyofs__title"
                                                         title="optionalArrayWithAnyofs"
                                                       >
-                                                        optionalArrayWithAnyofs
+                                                        <span
+                                                          id="root_optionalArrayWithAnyofs__title"
+                                                        >
+                                                          optionalArrayWithAnyofs
+                                                        </span>
                                                       </label>
                                                       <div
                                                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -18204,10 +18420,13 @@ exports[`single fields > title field 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Titre 1"
                       >
-                        Titre 1
+                        <span
+                          id="root__title"
+                        >
+                          Titre 1
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"

@@ -446,6 +446,28 @@ describe('antd specific tests', () => {
 
     expect(container.querySelector('input#root__anyof_select')).toHaveAccessibleName('Pet');
   });
+
+  // antd draws the `*` as the required label's generated content, which jsdom leaves out of a name but a browser doesn't
+  test("names a required object's option selector by its heading's text, outside the label antd marks required", () => {
+    const pet: RJSFSchema = {
+      type: 'object',
+      title: 'Pet',
+      properties: { name: { type: 'string' } },
+      anyOf: [
+        { title: 'Dog', properties: { bark: { type: 'string' } } },
+        { title: 'Cat', properties: { meow: { type: 'string' } } },
+      ],
+    };
+    const { container } = render(
+      <Form schema={{ type: 'object', properties: { pet }, required: ['pet'] }} validator={validator} />,
+    );
+
+    const heading = container.querySelector('#root_pet_XxxOf__title');
+    expect(heading).toHaveTextContent(/^Pet$/);
+    expect(heading).not.toHaveClass('ant-form-item-required');
+    expect(heading?.closest('label')).toHaveClass('ant-form-item-required');
+    expect(container.querySelector('input#root_pet__anyof_select')).toHaveAccessibleName('Pet');
+  });
   test('draws the label of a checkbox whose presentation gives it to the template once, from the template', () => {
     render(
       <Form
