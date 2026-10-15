@@ -5697,6 +5697,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
       };
       const animalInfoArraySchema: RJSFSchema = { type: 'array', items: animalInfoSchema };
+      const rootAllOfSchema: RJSFSchema = {
+        ...animalInfoObjectSchema,
+        allOf: [{ properties: { name: { type: 'string' } } }],
+      };
       const [animalCondition] = animalInfoSchema.allOf as RJSFSchema[];
       const fishFirstAnimalInfoSchema: RJSFSchema = {
         properties: { animal: { type: 'string', default: 'Cat', enum: ['Cat', 'Fish', 'Dog'] } },
@@ -6044,10 +6048,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             );
             return { ...merged, properties } as RJSFSchema;
           };
-          const rootAllOfSchema: RJSFSchema = {
-            ...animalInfoObjectSchema,
-            allOf: [{ properties: { name: { type: 'string' } } }],
-          };
           const formData = { animalInfo: { animal: 'Cat' } };
           expect(
             getDefaultFormState(
@@ -6074,10 +6074,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it("should populate a property's allOf conditional defaults with @x0k/json-schema-merge's createDeepAllOfMerge", () => {
-          const rootAllOfSchema: RJSFSchema = {
-            ...animalInfoObjectSchema,
-            allOf: [{ properties: { name: { type: 'string' } } }],
-          };
           expect(
             getDefaultFormState(
               testValidator,
