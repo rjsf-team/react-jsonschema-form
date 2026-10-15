@@ -1,11 +1,14 @@
 import { MantineProvider } from '@mantine/core';
 import { getTestRegistry } from '@rjsf/core/testing';
 import type { WidgetProps, RJSFSchema } from '@rjsf/utils';
-import { render } from '@testing-library/react';
+import { ariaDescribedByIds } from '@rjsf/utils';
+import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
+import dayjs from 'dayjs';
 
 import Templates from '../src/templates/index.ts';
 import DateTimeWidget from '../src/widgets/DateTime/DateTimeWidget.tsx';
+import DateWidget from '../src/widgets/DateTime/DateWidget.tsx';
 
 const user = userEvent.setup();
 const schema: RJSFSchema = { type: 'string', format: 'date-time' };
@@ -108,5 +111,106 @@ describe('DateTimeWidget', () => {
       },
     });
     expect(queryByText('Test description')).not.toBeInTheDocument();
+  });
+
+  describe('time picker', () => {
+    test.each(['date-time', 'datetime', 'iso-date-time'])('renders a labelled time group for format=%s', (format) => {
+      renderWidget({ schema: { type: 'string', format } });
+
+      const group = screen.getByRole('group', { name: 'DateTime time' });
+      expect(group).toBeInTheDocument();
+      for (const name of ['Hours', 'Minutes', 'Seconds']) {
+        expect(screen.getByRole('spinbutton', { name })).toBeInTheDocument();
+      }
+    });
+
+    test('is not rendered by the DateWidget', () => {
+      render(
+        <MantineProvider>
+          <DateWidget {...makeProps({ schema: { type: 'string', format: 'date' } })} />
+        </MantineProvider>,
+      );
+
+      expect(screen.queryByRole('group', { name: 'DateTime time' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('spinbutton', { name: 'Hours' })).not.toBeInTheDocument();
+    });
+
+    test('shows the time of the stored value', () => {
+      renderWidget({ value: '2024-01-01T10:30:15', schema: { type: 'string', format: 'iso-date-time' } });
+
+      expect(screen.getByRole('spinbutton', { name: 'Hours' })).toHaveValue('10');
+      expect(screen.getByRole('spinbutton', { name: 'Minutes' })).toHaveValue('30');
+      expect(screen.getByRole('spinbutton', { name: 'Seconds' })).toHaveValue('15');
+    });
+
+    test('commits the stored date with the picked time for format=iso-date-time', async () => {
+      const onChange = vi.fn();
+      renderWidget({ onChange, value: '2024-01-01T10:30:00', schema: { type: 'string', format: 'iso-date-time' } });
+
+      await user.click(screen.getByRole('spinbutton', { name: 'Hours' }));
+      await user.keyboard('11');
+
+      expect(onChange).toHaveBeenLastCalledWith('2024-01-01T11:30:00');
+    });
+
+    test('commits the stored date with the picked time, with a timezone offset, for format=date-time', async () => {
+      const onChange = vi.fn();
+      renderWidget({ onChange, value: dayjs('2024-01-01 10:30:00').toISOString() });
+
+      await user.click(screen.getByRole('spinbutton', { name: 'Hours' }));
+      await user.keyboard('11');
+
+      expect(onChange).toHaveBeenLastCalledWith(dayjs('2024-01-01 11:30:00').toISOString());
+    });
+
+    test('holds a time picked before there is a date without committing it', async () => {
+      const onChange = vi.fn();
+      renderWidget({ onChange, schema: { type: 'string', format: 'iso-date-time' } });
+
+      await user.click(screen.getByRole('spinbutton', { name: 'Hours' }));
+      await user.keyboard('083015');
+
+      expect(onChange).not.toHaveBeenCalled();
+      expect(screen.getByRole('spinbutton', { name: 'Hours' })).toHaveValue('08');
+      expect(screen.getByRole('spinbutton', { name: 'Seconds' })).toHaveValue('15');
+    });
+
+    test('describes the hours input by the field ids and marks it invalid when there are errors', () => {
+      renderWidget({
+        options: { description: 'Test description' },
+        rawErrors: ['An error'],
+      });
+
+      const hours = screen.getByRole('spinbutton', { name: 'Hours' });
+      expect(hours).toHaveAttribute('aria-describedby', ariaDescribedByIds('root'));
+      expect(hours).toHaveAttribute('aria-invalid', 'true');
+      expect(hours).toHaveAccessibleDescription(/Test description/);
+    });
+
+    test('names the time group without a label', () => {
+      renderWidget({ label: '' });
+
+      expect(screen.getByRole('group', { name: 'Date time' })).toBeInTheDocument();
+    });
+
+    test.each([
+      ['disabled', { disabled: true }],
+      ['readonly', { readonly: true }],
+    ])('can not be changed when %s', async (_, props) => {
+      const onChange = vi.fn();
+      renderWidget({
+        onChange,
+        value: '2024-01-01T10:30:00',
+        schema: { type: 'string', format: 'iso-date-time' },
+        ...props,
+      });
+
+      const hours = screen.getByRole('spinbutton', { name: 'Hours' });
+      await user.click(hours);
+      await user.keyboard('11');
+
+      expect(hours).toHaveValue('10');
+      expect(onChange).not.toHaveBeenCalled();
+    });
   });
 });

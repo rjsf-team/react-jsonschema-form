@@ -94,7 +94,7 @@ describe('aria-describedby', () => {
     ['file', { type: 'string', format: 'data-url' }],
     ['time', { type: 'string', format: 'time' }],
     ['date', { type: 'string', format: 'date' }],
-    ['date-time', { type: 'string', format: 'date-time' }],
+    ['date-time', { type: 'string', format: 'date-time' }, {}, 2],
     ['alt-date', { type: 'string' }, { 'ui:widget': 'alt-date' }, 3],
     ['alt-datetime', { type: 'string' }, { 'ui:widget': 'alt-datetime' }, 6],
   ])(

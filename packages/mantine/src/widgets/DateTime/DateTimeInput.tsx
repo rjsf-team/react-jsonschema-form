@@ -1,8 +1,10 @@
-import { useCallback, useMemo } from 'react';
-import { DateInput } from '@mantine/dates';
+import type { ReactNode } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { Box, Group } from '@mantine/core';
+import { DateInput, TimePicker } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
-import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, labelValue } from '@rjsf/utils';
+import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ariaDescribedByIds, getDateTimeLocalValue, labelValue } from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
@@ -19,7 +21,7 @@ const dateParser = (input: string | undefined, format: string) => {
   return d.isValid() ? d.toDate() : null;
 };
 
-const dateFormat = (date?: DateStringValue | null, format?: string) => {
+const dateFormat = (date?: DateStringValue | Date | null, format?: string) => {
   if (!date || !dayjs(date).isValid()) {
     return '';
   }
@@ -42,11 +44,23 @@ const offsetValueFormatter = (value?: DateStringValue | Date | null) => {
   return value && d.isValid() ? d.toISOString() : '';
 };
 
+const TIME_FORMAT = 'HH:mm:ss';
+const DATE_ONLY_FORMAT = 'YYYY-MM-DD';
+const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
+
+const withTimeOfDay = (date: DateStringValue | Date, time: string) =>
+  dayjs(`${dayjs(date).format(DATE_ONLY_FORMAT)} ${time}`, `${DATE_ONLY_FORMAT} ${TIME_FORMAT}`).toDate();
+
 /** The `DateTimeInput` is a base component that used by other Date-Time widget components. When `schema.format` is
  * `date-time` (or `datetime`), the value is converted to/from a UTC ISO string instead of the naive `valueFormat`
  * string, since that format requires a timezone offset (unlike `date` and `iso-date-time`, whose timezone is
  * either not applicable or optional). For `iso-date-time`, a stored value that happens to carry an offset anyway
  * is stripped before being parsed, so it displays as the naive wall-clock time it represents.
+ *
+ * When `withTime` is set, a `TimePicker` is rendered beside the `DateInput`, inside the same field wrapper, so the
+ * time can be picked as well as typed. A calendar click passes a date-only value, so the current time of day is kept
+ * on it. A time picked before there is a date is held until one is picked, since the value can't be committed without
+ * a date. The hours segment, the only one in the tab order, is described by the field's ids like the date input.
  *
  * @param props - The `WidgetProps` for this component
  */
@@ -72,17 +86,49 @@ export default function DateTimeInput<
     onFocus,
     valueFormat,
     displayFormat,
+    withTime,
     schema,
   } = props;
 
   const { requiresOffset, localValue } = useMemo(() => getDateTimeLocalValue(schema, value), [schema, value]);
-  const themeProps = cleanupOptions(options);
+  const themeProps = cleanupOptions(options, ['timePickerProps']);
+  const { timePickerProps } = options;
+  const [pendingTime, setPendingTime] = useState('');
 
-  const handleChange = useCallback(
-    (nextValue: DateStringValue | null) => {
+  const parsedValue =
+    requiresOffset || typeof value !== 'string'
+      ? offsetValueParser(localValue)
+      : dateParser(localValue, valueFormat as string);
+  const timeValue = parsedValue ? dayjs(parsedValue).format(TIME_FORMAT) : pendingTime;
+
+  const commit = useCallback(
+    (nextValue: DateStringValue | Date | null) => {
       onChange(requiresOffset ? offsetValueFormatter(nextValue) : dateFormat(nextValue, valueFormat as string));
     },
     [onChange, valueFormat, requiresOffset],
+  );
+
+  const handleChange = useCallback(
+    (nextValue: DateStringValue | Date | null) => {
+      const isDateOnly = typeof nextValue === 'string' && DATE_ONLY_PATTERN.test(nextValue);
+      commit(withTime && nextValue && isDateOnly ? withTimeOfDay(nextValue, timeValue || '00:00:00') : nextValue);
+    },
+    [commit, withTime, timeValue],
+  );
+
+  const handleTimeChange = useCallback(
+    (nextTime: string) => {
+      // `TimePicker` passes an empty string while a segment is incomplete, which shouldn't wipe the stored value
+      if (!nextTime) {
+        return;
+      }
+      if (parsedValue) {
+        commit(withTimeOfDay(parsedValue, nextTime));
+      } else {
+        setPendingTime(nextTime);
+      }
+    },
+    [commit, parsedValue],
   );
 
   const handleBlur = useCallback(() => {
@@ -97,13 +143,61 @@ export default function DateTimeInput<
     }
   }, [onFocus, id, value]);
 
-  const parsedValue =
-    requiresOffset || typeof value !== 'string'
-      ? offsetValueParser(localValue)
-      : dateParser(localValue, valueFormat as string);
-
   const ariaDescribedByProps = useAriaDescribedByProps('DateInput', id, options);
   const error = useVisibleErrors(props);
+
+  const ariaContainer = ariaDescribedByProps.inputContainer;
+  const timeContainer = useCallback(
+    (children: ReactNode) =>
+      ariaContainer(
+        <Group gap='xs' wrap='nowrap' align='flex-start'>
+          <Box flex={1}>{children}</Box>
+          <TimePicker
+            value={timeValue}
+            onChange={handleTimeChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            withSeconds
+            disabled={disabled}
+            readOnly={readonly}
+            error={!!error}
+            role='group'
+            aria-label={`${label || 'Date'} time`}
+            hoursInputLabel='Hours'
+            minutesInputLabel='Minutes'
+            secondsInputLabel='Seconds'
+            amPmInputLabel='AM/PM'
+            hoursInputProps={{
+              id: `${id}-time`,
+              'aria-describedby': ariaDescribedByIds(id),
+              'aria-invalid': !!error || undefined,
+            }}
+            popoverProps={{ withinPortal: false }}
+            {...(timePickerProps as GenericObjectType | undefined)}
+          />
+        </Group>,
+      ),
+    [
+      ariaContainer,
+      id,
+      timeValue,
+      handleTimeChange,
+      handleFocus,
+      handleBlur,
+      disabled,
+      readonly,
+      error,
+      label,
+      timePickerProps,
+    ],
+  );
+  const containerProps = withTime
+    ? {
+        ...ariaDescribedByProps,
+        inputContainer: timeContainer,
+        wrapperProps: { ...ariaDescribedByProps.wrapperProps, inputContainer: timeContainer },
+      }
+    : ariaDescribedByProps;
 
   return (
     <DateInput
@@ -121,11 +215,12 @@ export default function DateTimeInput<
       onFocus={handleFocus}
       error={error}
       {...themeProps}
-      {...ariaDescribedByProps}
+      {...containerProps}
       {...getDescriptionProps(props)}
       popoverProps={{ withinPortal: false }}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
       valueFormat={displayFormat}
+      withTime={!!withTime}
     />
   );
 }
