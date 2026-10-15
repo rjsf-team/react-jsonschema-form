@@ -114,7 +114,8 @@ interface OptionUiSchemas<T, S extends StrictRJSFSchema, F extends FormContextTy
  *
  * A field that held nothing, as after a `null` option, and switches to an option whose defaults are an object gets the
  * defaults of the field with that option as its only one, so a `default` the field itself declares is restored with
- * the option's own ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)).
+ * the option's own, and a `default` an ancestor declares for the field fills the keys they leave
+ * ([#5368](https://github.com/rjsf-team/react-jsonschema-form/issues/5368)).
  *
  * Values are matched whole, per top-level key of the option: editing one leaf of a nested object leaves the whole
  * subtree in place, so its other leaves keep the old option's defaults.
@@ -230,10 +231,12 @@ export default function formDataForNewOption<
         return undefined;
       }
       const fieldUiSchema: GenericObjectType | undefined = newOptionUiSchema && { [xxxOfKey]: [newOptionUiSchema] };
+      // A field that held nothing has no key a user cleared, so it holds no `undefined` key either: one would keep the
+      // `default` an ancestor declares for that key from reaching it when `Form` fills the data in
       const fieldDefaults = schemaUtils.getDefaultFormState(
         { ...parentSchema, [xxxOfKey]: [newOption] },
         undefined,
-        'excludeObjectChildren',
+        false,
         undefined,
         fieldUiSchema,
         uiSchemaDefinitions,
