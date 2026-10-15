@@ -27,6 +27,7 @@ export default function RatingWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     label,
     name,
@@ -119,7 +120,7 @@ export default function RatingWidget<
               // oxlint-disable-next-line react/no-array-index-key
               key={index}
               type='radio'
-              name={id}
+              name={htmlName || id}
               value={starValue}
               checked={value === starValue}
               onChange={handleChange}

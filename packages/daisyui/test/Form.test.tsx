@@ -234,6 +234,36 @@ describe('daisyui TitleField', () => {
     expect(container.querySelector('#root_pet__title')).toHaveTextContent(/^Animal \(deprecated\)$/);
     expect(container.querySelector('#root_none__title')).toHaveTextContent(/^Nada \(deprecated\)$/);
   });
+
+  test("marks a required object's heading, outside the text its option selector is named by", () => {
+    render(<Form schema={{ type: 'object', properties: { pet }, required: ['pet'] }} validator={validator} />);
+
+    const selector = document.getElementById('root_pet__anyof_select')!;
+    const title = document.getElementById(selector.getAttribute('aria-labelledby')!);
+    expect(title).toHaveTextContent(/^Pet$/);
+    expect(title?.closest('h2')).toHaveTextContent(/^Pet\*$/);
+    expect(selector).toHaveAccessibleName('Pet');
+  });
+
+  test.each([
+    ['a required', ['tags'], /^Tags\*$/],
+    ['an optional', [], /^Tags$/],
+  ])("marks %s array's heading only where it is required, outside its title's text", (_, required, heading) => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } },
+          required,
+        }}
+        validator={validator}
+      />,
+    );
+
+    const title = document.getElementById('root_tags__title');
+    expect(title).toHaveTextContent(/^Tags$/);
+    expect(title?.closest('h3')).toHaveTextContent(heading);
+  });
 });
 
 describe('daisyui headings and optional data controls', () => {

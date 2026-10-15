@@ -5,6 +5,7 @@ import type { TitleFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType } f
  *
  * - Large heading with primary color
  * - Divider element below the title for visual separation
+ * - A `*` beside the title of a required section
  * - The title it is handed, as `@rjsf/core`'s draws it, so a heading its field's plan decorates keeps the decoration
  *
  * This component is typically used at the top of form sections to provide clear visual hierarchy.
@@ -16,12 +17,14 @@ export default function TitleField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: TitleFieldProps<T, S, F>) {
-  const { id, title, optionalDataControl } = props;
+  const { id, title, required, optionalDataControl } = props;
 
-  // The id names an object's option selector, so it is on the title's text alone, not on the optional data control
+  // The id names an object's option selector, so it is on the title's text alone, not on its required marker or the
+  // optional data control
   let heading = (
     <h2 className='text-3xl font-bold text-primary mb-2'>
       <span id={id}>{title}</span>
+      {required && <span className='text-error ml-1'>*</span>}
     </h2>
   );
   if (optionalDataControl) {

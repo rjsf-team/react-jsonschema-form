@@ -165,20 +165,22 @@ export default function SelectWidget<
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const isSelected = selectedIndexes.includes(String(option.index));
+    // A disabled or readonly field's options can't be chosen, though they stay reachable, so its value stays readable
+    const optionDisabled = disabled || readonly || option.disabled;
     return (
       <li
         key={option.index}
         // oxlint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
         role='option'
         aria-selected={isSelected}
-        aria-disabled={option.disabled || undefined}
+        aria-disabled={optionDisabled || undefined}
         tabIndex={option.disabled ? -1 : 0}
-        className={`px-4 py-2 ${option.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-base-200 cursor-pointer'} ${
+        className={`px-4 py-2 ${optionDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:bg-base-200 cursor-pointer'} ${
           isSelected ? 'bg-primary/10' : ''
         }`}
-        onClick={option.disabled ? undefined : handleOptionClick}
+        onClick={optionDisabled ? undefined : handleOptionClick}
         onKeyDown={(e) =>
-          !option.disabled &&
+          !optionDisabled &&
           (e.key === 'Enter' || e.key === ' ') &&
           handleOptionClick(e as unknown as React.MouseEvent<HTMLLIElement>)
         }
@@ -227,6 +229,7 @@ export default function SelectWidget<
           aria-labelledby={ariaProps['aria-labelledby']}
           aria-describedby={ariaProps['aria-describedby']}
           aria-invalid={ariaProps['aria-invalid']}
+          aria-disabled={disabled || readonly || undefined}
         >
           <span className='truncate'>
             {hasValue
