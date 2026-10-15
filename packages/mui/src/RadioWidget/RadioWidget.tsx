@@ -8,18 +8,16 @@ import type { RadioGroupProps } from '@mui/material/RadioGroup';
 import RadioGroup from '@mui/material/RadioGroup';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionSelectedValue,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  getGroupLabelling,
   getOptionValueFormat,
-  labelValue,
   optionId,
-  widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { getMuiProps } from '../util.ts';
+import { getMuiProps, withInputSlot } from '../util.ts';
 
 /** Properties available for the `rjsfSlotProps` target of the RadioWidget. */
 export interface RadioWidgetMuiProps extends GenericObjectType {
@@ -44,8 +42,8 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, htmlName, options, value, required, disabled, readonly, label, onChange, onBlur, onFocus } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { id, htmlName, options, value, required, disabled, readonly, autofocus, label, onChange, onBlur, onFocus } =
+    props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -60,15 +58,24 @@ export default function RadioWidget<
   const row = options ? options.inline : false;
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, '');
 
+  const {
+    drawsLabel,
+    labelId,
+    group: groupAttributes,
+    option: optionAttributes,
+  } = getGroupLabelling<T, S, F>(props, 'radiogroup');
+
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, RadioWidgetMuiProps>(options);
+  // `required` goes on the `<input>` rather than the `Radio`, whose `FormControlLabel` would mark each option's label `*`
+  const radioSlotProps = withInputSlot({ ...optionAttributes, required }, muiSlotProps?.radio?.slotProps);
 
   return (
     <>
-      {labelValue(
-        <FormLabel required={required} htmlFor={id}>
-          {label || undefined}
-        </FormLabel>,
-        hideLabel,
+      {/* No `for`, which can't name the group's wrapper: the group points its `aria-labelledby` at the label instead */}
+      {drawsLabel && (
+        <FormLabel id={labelId} required={required}>
+          {label}
+        </FormLabel>
       )}
       <RadioGroup
         {...otherMuiProps}
@@ -80,7 +87,7 @@ export default function RadioWidget<
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        aria-describedby={ariaDescribedByIds(id)}
+        {...groupAttributes}
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
@@ -89,7 +96,14 @@ export default function RadioWidget<
               <FormControlLabel
                 {...muiSlotProps?.formControlLabel}
                 control={
-                  <Radio {...muiSlotProps?.radio} name={htmlName || id} id={optionId(id, index)} color='primary' />
+                  <Radio
+                    {...muiSlotProps?.radio}
+                    name={htmlName || id}
+                    id={optionId(id, index)}
+                    autoFocus={autofocus && index === 0}
+                    color='primary'
+                    slotProps={radioSlotProps}
+                  />
                 }
                 label={option.label}
                 value={domValues[index]}
