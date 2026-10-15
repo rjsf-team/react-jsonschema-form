@@ -10,7 +10,7 @@ See the [Validation documentation](../usage/validation.md) for examples of using
 - AJV-only options (`AjvClass`, `ajvFormatOptions`, `ajvOptionsOverrides`) are not accepted. The closest equivalent is `ataOptionsOverrides`, which is spread on top of the default `ata-validator` options.
 - The `ata-validator` format set is always installed, so there is no opt-in flag for formats.
 - `ata-validator`'s error params are frozen, so the pre-quote pass that `validator-ajv8` runs for `ajv-i18n` is unnecessary. Localizers that mutate `message` in place still work as-is.
-- Precompiled validators (`compileSchemaValidators` / `createPrecompiledValidator`) are supported. `ata-validator`'s `bundleStandalone` output is adapted into the validator function map the precompiled consumer expects. Error output matches the non-precompiled validator, including per-field errors for schema-valued `additionalProperties` (with `ata-validator` `>= 0.17.4`); an invalid `anyOf` reports a single error on the field, the same as the runtime path. One constraint carries over from the standalone (AOT) path: custom formats must be a RegExp or pre-anchored string pattern, since a function checker cannot be serialized into the bundle and is rejected at compile time.
+- Precompiled validators (`compileSchemaValidators` / `createPrecompiledValidator`) are supported. `ata-validator`'s `bundleStandalone` output is adapted into the validator function map the precompiled consumer expects. Error output matches the non-precompiled validator, including per-field errors for schema-valued `additionalProperties` (with `ata-validator` `>= 0.17.4`); an invalid `anyOf` reports a single error on the field, the same as the runtime path. One constraint carries over from the standalone (AOT) path: custom formats must be a RegExp or pre-anchored string pattern, since a function checker cannot be serialized into the bundle and is rejected at compile time. `ata-validator` compiles each schema as a document of its own and resolves a `$ref` only to an entry of the `definitions` or `$defs` in it, so a `$ref` into the root is compiled as a copy of the subschema it names, with the root's `definitions` and `$defs` hoisted beside it; a subtree whose `$ref`s name anything else, such as a property, has no compiled function and throws `was not compiled to a standalone validator` when the form validates against it.
 
 ## Types
 
@@ -49,7 +49,7 @@ Under the hood this calls `ata-validator`'s `bundleStandalone` and wraps the res
 
 - schema: S - The schema to be compiled into a set of precompiled validator functions
 - output: string - The name of the file into which the precompiled validator functions are generated
-- [options={}]: CompileValidatorOptionsType&lt;S> - The options used to alter the validator that compiles the schema, plus the `customMergeAllOf` the schema is parsed with, which must merge the same way as the one the `Form` is given or the form can validate against sub-schemas that were not compiled
+- [options={}]: CompileValidatorOptionsType&lt;S> - The options used to alter the validator that compiles the schema. A `customMergeAllOf` among them is not read: the schemas compiled are the ones [`getValidationSchemas()`](utility-functions.md#getvalidationschemassextendsstrictrjsfschemarjsfschema) lists
 
 ### createPrecompiledValidator&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
