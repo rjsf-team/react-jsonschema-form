@@ -427,4 +427,41 @@ describe('SelectWidget', () => {
 
     expect(onChange).toHaveBeenLastCalledWith(['a', 'b']);
   });
+
+  test.each(['disabled', 'readonly'] as const)(
+    'a %s select opens for reading but commits no option chosen by pointer or keyboard',
+    async (state) => {
+      const onChange = vi.fn();
+      render(
+        <SelectWidget
+          {...makeWidgetMockProps({
+            value: 'a',
+            schema: { type: 'string', enum: ['a', 'b'] },
+            options: {
+              enumOptions: [
+                { value: 'a', label: 'a' },
+                { value: 'b', label: 'b' },
+              ],
+            },
+            [state]: true,
+            onChange,
+          })}
+        />,
+      );
+
+      const combobox = screen.getByRole('combobox');
+      expect(combobox).toHaveAttribute('aria-disabled', 'true');
+      for (const option of screen.getAllByRole('option')) {
+        expect(option).toHaveAttribute('aria-disabled', 'true');
+      }
+      await user.tab();
+      expect(combobox).toHaveFocus();
+      await user.tab();
+      expect(screen.getByRole('option', { name: 'a' })).toHaveFocus();
+      await user.keyboard('{Enter}');
+      await user.click(screen.getByRole('option', { name: 'b' }));
+
+      expect(onChange).not.toHaveBeenCalled();
+    },
+  );
 });

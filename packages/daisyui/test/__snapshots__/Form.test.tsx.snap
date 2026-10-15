@@ -127,9 +127,12 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_tasks__title"
                     >
-                      tasks
+                      <span
+                        id="root_tasks__title"
+                      >
+                        tasks
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -159,6 +162,11 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       id="root_tasks_0__title"
                                     >
                                       tasks-1
+                                    </span>
+                                    <span
+                                      class="text-error ml-1"
+                                    >
+                                      *
                                     </span>
                                   </h2>
                                   <div
@@ -341,6 +349,11 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       id="root_tasks_1__title"
                                     >
                                       tasks-2
+                                    </span>
+                                    <span
+                                      class="text-error ml-1"
+                                    >
+                                      *
                                     </span>
                                   </h2>
                                   <div
@@ -588,9 +601,12 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_tags__title"
                     >
-                      tags
+                      <span
+                        id="root_tags__title"
+                      >
+                        tags
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -1748,9 +1764,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_tasks__title"
                     >
-                      tasks
+                      <span
+                        id="root_tasks__title"
+                      >
+                        tasks
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -1780,6 +1799,11 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       id="root_tasks_0__title"
                                     >
                                       tasks-1
+                                    </span>
+                                    <span
+                                      class="text-error ml-1"
+                                    >
+                                      *
                                     </span>
                                   </h2>
                                   <div
@@ -1962,6 +1986,11 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       id="root_tasks_1__title"
                                     >
                                       tasks-2
+                                    </span>
+                                    <span
+                                      class="text-error ml-1"
+                                    >
+                                      *
                                     </span>
                                   </h2>
                                   <div
@@ -2209,9 +2238,12 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_tags__title"
                     >
-                      tags
+                      <span
+                        id="root_tags__title"
+                      >
+                        tags
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -5638,6 +5670,11 @@ exports[`single fields > optional data controls > does not show optional control
                                   >
                                     deepObject
                                   </span>
+                                  <span
+                                    class="text-error ml-1"
+                                  >
+                                    *
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -5704,9 +5741,12 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArrayOptional__title"
                               >
-                                deepArrayOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                                >
+                                  deepArrayOptional
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -5772,9 +5812,12 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArrayOptional2__title"
                               >
-                                deepArrayOptional2
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                >
+                                  deepArrayOptional2
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -5840,9 +5883,17 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArray__title"
                               >
-                                deepArray
+                                <span
+                                  id="root_nestedObjectOptional_deepArray__title"
+                                >
+                                  deepArray
+                                </span>
+                                <span
+                                  class="text-error ml-1"
+                                >
+                                  *
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -5913,9 +5964,12 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArrayOptional__title"
                     >
-                      nestedArrayOptional
+                      <span
+                        id="root_nestedArrayOptional__title"
+                      >
+                        nestedArrayOptional
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -5990,6 +6044,11 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           nestedObject
                         </span>
+                        <span
+                          class="text-error ml-1"
+                        >
+                          *
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -6056,9 +6115,17 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArray__title"
                     >
-                      nestedArray
+                      <span
+                        id="root_nestedArray__title"
+                      >
+                        nestedArray
+                      </span>
+                      <span
+                        class="text-error ml-1"
+                      >
+                        *
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -6669,6 +6736,11 @@ exports[`single fields > optional data controls > does not show optional control
                                   >
                                     deepObject
                                   </span>
+                                  <span
+                                    class="text-error ml-1"
+                                  >
+                                    *
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -6736,9 +6808,12 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArrayOptional__title"
                               >
-                                deepArrayOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                                >
+                                  deepArrayOptional
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -6805,9 +6880,12 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArrayOptional2__title"
                               >
-                                deepArrayOptional2
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                >
+                                  deepArrayOptional2
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -6874,9 +6952,17 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArray__title"
                               >
-                                deepArray
+                                <span
+                                  id="root_nestedObjectOptional_deepArray__title"
+                                >
+                                  deepArray
+                                </span>
+                                <span
+                                  class="text-error ml-1"
+                                >
+                                  *
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -6948,9 +7034,12 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArrayOptional__title"
                     >
-                      nestedArrayOptional
+                      <span
+                        id="root_nestedArrayOptional__title"
+                      >
+                        nestedArrayOptional
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -7026,6 +7115,11 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           nestedObject
                         </span>
+                        <span
+                          class="text-error ml-1"
+                        >
+                          *
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -7093,9 +7187,17 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArray__title"
                     >
-                      nestedArray
+                      <span
+                        id="root_nestedArray__title"
+                      >
+                        nestedArray
+                      </span>
+                      <span
+                        class="text-error ml-1"
+                      >
+                        *
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -7182,6 +7284,7 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <button
                             aria-controls="root_optionalObjectWithOneofs__oneof_select__listbox"
+                            aria-disabled="true"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_optionalObjectWithOneofs__label"
@@ -7209,8 +7312,9 @@ exports[`single fields > optional data controls > does not show optional control
                             role="listbox"
                           >
                             <li
+                              aria-disabled="true"
                               aria-selected="true"
-                              class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                              class="px-4 py-2 opacity-50 cursor-not-allowed bg-primary/10"
                               data-value="0"
                               role="option"
                               tabindex="0"
@@ -7224,8 +7328,9 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-disabled="true"
                               aria-selected="false"
-                              class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                              class="px-4 py-2 opacity-50 cursor-not-allowed "
                               data-value="1"
                               role="option"
                               tabindex="0"
@@ -7239,8 +7344,9 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-disabled="true"
                               aria-selected="false"
-                              class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                              class="px-4 py-2 opacity-50 cursor-not-allowed "
                               data-value="2"
                               role="option"
                               tabindex="0"
@@ -7351,6 +7457,7 @@ exports[`single fields > optional data controls > does not show optional control
                         >
                           <button
                             aria-controls="root_optionalArrayWithAnyofs__anyof_select__listbox"
+                            aria-disabled="true"
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-labelledby="root_optionalArrayWithAnyofs__label"
@@ -7378,8 +7485,9 @@ exports[`single fields > optional data controls > does not show optional control
                             role="listbox"
                           >
                             <li
+                              aria-disabled="true"
                               aria-selected="true"
-                              class="px-4 py-2 hover:bg-base-200 cursor-pointer bg-primary/10"
+                              class="px-4 py-2 opacity-50 cursor-not-allowed bg-primary/10"
                               data-value="0"
                               role="option"
                               tabindex="0"
@@ -7393,8 +7501,9 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-disabled="true"
                               aria-selected="false"
-                              class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                              class="px-4 py-2 opacity-50 cursor-not-allowed "
                               data-value="1"
                               role="option"
                               tabindex="0"
@@ -7408,8 +7517,9 @@ exports[`single fields > optional data controls > does not show optional control
                               </div>
                             </li>
                             <li
+                              aria-disabled="true"
                               aria-selected="false"
-                              class="px-4 py-2 hover:bg-base-200 cursor-pointer "
+                              class="px-4 py-2 opacity-50 cursor-not-allowed "
                               data-value="2"
                               role="option"
                               tabindex="0"
@@ -7732,6 +7842,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   >
                                     deepObject
                                   </span>
+                                  <span
+                                    class="text-error ml-1"
+                                  >
+                                    *
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -7798,9 +7913,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArrayOptional__title"
                               >
-                                deepArrayOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                                >
+                                  deepArrayOptional
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -7869,9 +7987,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               >
                                 <h3
                                   class="text-2xl font-bold"
-                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
                                 >
-                                  deepArrayOptional2
+                                  <span
+                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                  >
+                                    deepArrayOptional2
+                                  </span>
                                 </h3>
                               </div>
                               <div
@@ -7924,9 +8045,17 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArray__title"
                               >
-                                deepArray
+                                <span
+                                  id="root_nestedObjectOptional_deepArray__title"
+                                >
+                                  deepArray
+                                </span>
+                                <span
+                                  class="text-error ml-1"
+                                >
+                                  *
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -8000,9 +8129,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     >
                       <h3
                         class="text-2xl font-bold"
-                        id="root_nestedArrayOptional__title"
                       >
-                        nestedArrayOptional
+                        <span
+                          id="root_nestedArrayOptional__title"
+                        >
+                          nestedArrayOptional
+                        </span>
                       </h3>
                     </div>
                     <div
@@ -8168,6 +8300,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         >
                           nestedObject
                         </span>
+                        <span
+                          class="text-error ml-1"
+                        >
+                          *
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -8234,9 +8371,17 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArray__title"
                     >
-                      nestedArray
+                      <span
+                        id="root_nestedArray__title"
+                      >
+                        nestedArray
+                      </span>
+                      <span
+                        class="text-error ml-1"
+                      >
+                        *
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -8394,9 +8539,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           >
                             <h3
                               class="text-2xl font-bold"
-                              id="root_optionalArrayWithAnyofs__title"
                             >
-                              optionalArrayWithAnyofs
+                              <span
+                                id="root_optionalArrayWithAnyofs__title"
+                              >
+                                optionalArrayWithAnyofs
+                              </span>
                             </h3>
                           </div>
                           <div
@@ -8622,6 +8770,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   >
                                     deepObject
                                   </span>
+                                  <span
+                                    class="text-error ml-1"
+                                  >
+                                    *
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -8689,9 +8842,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArrayOptional__title"
                               >
-                                deepArrayOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                                >
+                                  deepArrayOptional
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -8758,9 +8914,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArrayOptional2__title"
                               >
-                                deepArrayOptional2
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                >
+                                  deepArrayOptional2
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -8792,9 +8951,17 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <h3
                                 class="text-2xl font-bold"
-                                id="root_nestedObjectOptional_deepArray__title"
                               >
-                                deepArray
+                                <span
+                                  id="root_nestedObjectOptional_deepArray__title"
+                                >
+                                  deepArray
+                                </span>
+                                <span
+                                  class="text-error ml-1"
+                                >
+                                  *
+                                </span>
                               </h3>
                               <div
                                 class="flex flex-col gap-4"
@@ -8866,9 +9033,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArrayOptional__title"
                     >
-                      nestedArrayOptional
+                      <span
+                        id="root_nestedArrayOptional__title"
+                      >
+                        nestedArrayOptional
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -9011,6 +9181,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         >
                           nestedObject
                         </span>
+                        <span
+                          class="text-error ml-1"
+                        >
+                          *
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -9078,9 +9253,17 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArray__title"
                     >
-                      nestedArray
+                      <span
+                        id="root_nestedArray__title"
+                      >
+                        nestedArray
+                      </span>
+                      <span
+                        class="text-error ml-1"
+                      >
+                        *
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -9209,9 +9392,12 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         >
                           <h3
                             class="text-2xl font-bold"
-                            id="root_optionalArrayWithAnyofs__title"
                           >
-                            optionalArrayWithAnyofs
+                            <span
+                              id="root_optionalArrayWithAnyofs__title"
+                            >
+                              optionalArrayWithAnyofs
+                            </span>
                           </h3>
                           <div
                             class="flex flex-col gap-4"
@@ -9366,9 +9552,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     >
                       <h3
                         class="text-2xl font-bold"
-                        id="root_nestedArrayOptional__title"
                       >
-                        nestedArrayOptional
+                        <span
+                          id="root_nestedArrayOptional__title"
+                        >
+                          nestedArrayOptional
+                        </span>
                       </h3>
                     </div>
                     <div
@@ -9429,6 +9618,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           id="root_nestedObject__title"
                         >
                           nestedObject
+                        </span>
+                        <span
+                          class="text-error ml-1"
+                        >
+                          *
                         </span>
                       </h2>
                       <div
@@ -9496,9 +9690,17 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArray__title"
                     >
-                      nestedArray
+                      <span
+                        id="root_nestedArray__title"
+                      >
+                        nestedArray
+                      </span>
+                      <span
+                        class="text-error ml-1"
+                      >
+                        *
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -9656,9 +9858,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           >
                             <h3
                               class="text-2xl font-bold"
-                              id="root_optionalArrayWithAnyofs__title"
                             >
-                              optionalArrayWithAnyofs
+                              <span
+                                id="root_optionalArrayWithAnyofs__title"
+                              >
+                                optionalArrayWithAnyofs
+                              </span>
                             </h3>
                           </div>
                           <div
@@ -9807,9 +10012,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArrayOptional__title"
                     >
-                      nestedArrayOptional
+                      <span
+                        id="root_nestedArrayOptional__title"
+                      >
+                        nestedArrayOptional
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -9850,6 +10058,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           id="root_nestedObject__title"
                         >
                           nestedObject
+                        </span>
+                        <span
+                          class="text-error ml-1"
+                        >
+                          *
                         </span>
                       </h2>
                       <div
@@ -9920,9 +10133,17 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_nestedArray__title"
                     >
-                      nestedArray
+                      <span
+                        id="root_nestedArray__title"
+                      >
+                        nestedArray
+                      </span>
+                      <span
+                        class="text-error ml-1"
+                      >
+                        *
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -10055,9 +10276,12 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         >
                           <h3
                             class="text-2xl font-bold"
-                            id="root_optionalArrayWithAnyofs__title"
                           >
-                            optionalArrayWithAnyofs
+                            <span
+                              id="root_optionalArrayWithAnyofs__title"
+                            >
+                              optionalArrayWithAnyofs
+                            </span>
                           </h3>
                           <div
                             class="flex flex-col gap-4"

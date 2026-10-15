@@ -602,9 +602,12 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_tags__title"
                     >
-                      tags
+                      <span
+                        id="root_tags__title"
+                      >
+                        tags
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -1388,9 +1391,12 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   >
                     <h3
                       class="text-2xl font-bold"
-                      id="root_items__title"
                     >
-                      items
+                      <span
+                        id="root_items__title"
+                      >
+                        items
+                      </span>
                     </h3>
                     <div
                       class="flex flex-col gap-4"
@@ -2287,9 +2293,12 @@ exports[`object fields > additionalProperties, array type 1`] = `
                     >
                       <h3
                         class="text-2xl font-bold"
-                        id="root_foo__title"
                       >
-                        foo
+                        <span
+                          id="root_foo__title"
+                        >
+                          foo
+                        </span>
                       </h3>
                       <div
                         class="flex flex-col gap-4"

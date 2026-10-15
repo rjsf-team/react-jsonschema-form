@@ -90,7 +90,9 @@ export default function ArrayFieldTemplate<
         <div className='rjsf-array-item-list'>
           {items}
           {items && items.length === 0 && canAdd && (
-            <div className='text-center italic text-base-content/70'>{TranslatableString.EmptyArray}</div>
+            <div className='text-center italic text-base-content/70'>
+              {registry.translateString(TranslatableString.EmptyArray)}
+            </div>
           )}
         </div>
         {canAdd && (
