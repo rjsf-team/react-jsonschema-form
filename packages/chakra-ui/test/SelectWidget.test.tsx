@@ -114,6 +114,6 @@ describe('SelectWidget control', () => {
     const { container } = render(<Form schema={{ type: 'string', enum: ['foo', 'bar'] }} validator={validator} />);
 
     expect(container.querySelectorAll('[id="select:root:control"]')).toHaveLength(1);
-    expect(screen.getByRole('combobox')).toBeInTheDocument();
+    expect(screen.getAllByRole('combobox')).toHaveLength(1);
   });
 });
