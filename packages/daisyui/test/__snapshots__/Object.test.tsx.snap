@@ -31,12 +31,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_person__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        person
+                        <span
+                          id="root_person__title"
+                        >
+                          person
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -98,12 +101,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_person_address__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  address
+                                  <span
+                                    id="root_person_address__title"
+                                  >
+                                    address
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -1079,12 +1085,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_person__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        person
+                        <span
+                          id="root_person__title"
+                        >
+                          person
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -1146,12 +1155,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_person_address__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  address
+                                  <span
+                                    id="root_person_address__title"
+                                  >
+                                    address
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -2777,12 +2789,15 @@ exports[`object fields > additionalProperties, object type 1`] = `
                     >
                       <div
                         class="title-field mb-6"
-                        id="root_foo__title"
                       >
                         <h2
                           class="text-3xl font-bold text-primary mb-2"
                         >
-                          foo
+                          <span
+                            id="root_foo__title"
+                          >
+                            foo
+                          </span>
                         </h2>
                         <div
                           class="divider divider-primary my-0"
@@ -3653,12 +3668,15 @@ exports[`object fields > with title and description > additionalProperties 1`] =
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              Test field
+              <span
+                id="root__title"
+              >
+                Test field
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -3830,12 +3848,15 @@ exports[`object fields > with title and description > object 1`] = `
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              Test field
+              <span
+                id="root__title"
+              >
+                Test field
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -3989,12 +4010,15 @@ exports[`object fields > with title and description > show add button and fields
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              Test field
+              <span
+                id="root__title"
+              >
+                Test field
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -4166,12 +4190,15 @@ exports[`object fields > with title and description from both > additionalProper
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -4343,12 +4370,15 @@ exports[`object fields > with title and description from both > object 1`] = `
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -4502,12 +4532,15 @@ exports[`object fields > with title and description from uiSchema > additionalPr
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -4679,12 +4712,15 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -4838,12 +4874,15 @@ exports[`object fields > with title and description from uiSchema > show add but
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              My Field
+              <span
+                id="root__title"
+              >
+                My Field
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"

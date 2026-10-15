@@ -1,4 +1,5 @@
 import type { FieldProps, RJSFSchema, ThemePresentation, UiSchema, WidgetProps } from '@rjsf/utils';
+import { fieldLabelId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
@@ -6,11 +7,11 @@ import Form from '../src/index.ts';
 import DaisyCheckboxWidget from '../src/widgets/CheckboxWidget/CheckboxWidget.tsx';
 import DaisyToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget.tsx';
 
-/** The label `FieldTemplate` renders above the control. It is the only one pointing at the field's own id: a widget's
- * own label (`CheckboxWidget`, `ToggleWidget`) has no `htmlFor`, and `AltDateWidget`'s point at their sub-controls
+/** The label `FieldTemplate` renders above the control, found by the `fieldLabelId()` it alone carries: a widget's own
+ * label (`CheckboxWidget`, `ToggleWidget`) has no id, and a group's label has no `htmlFor` to find it by
  */
-function templateLabelFor(container: HTMLElement, id: string) {
-  return container.querySelector(`label[for="${id}"]`);
+function fieldLabel(container: HTMLElement, id: string) {
+  return container.querySelector(`label#${fieldLabelId(id)}`);
 }
 
 const agree: RJSFSchema = { type: 'boolean', title: 'Agree' };
@@ -37,7 +38,7 @@ function renderForm(
   );
   return {
     container,
-    templateLabel: () => templateLabelFor(container, 'root_agree'),
+    templateLabel: () => fieldLabel(container, 'root_agree'),
   };
 }
 
@@ -362,7 +363,7 @@ describe('FieldTemplate', () => {
         />,
       );
 
-      expect(templateLabelFor(container, 'root_foo')).toHaveTextContent('foo');
+      expect(fieldLabel(container, 'root_foo')).toHaveTextContent('foo');
       expect(screen.getByRole('radiogroup')).toHaveAccessibleName('foo');
     });
 
@@ -563,7 +564,7 @@ describe('FieldTemplate', () => {
         <Form schema={{ type: 'boolean' }} uiSchema={{ 'ui:widget': 'radio' }} validator={validator} />,
       );
 
-      expect(templateLabelFor(container, 'root')).toBeNull();
+      expect(fieldLabel(container, 'root')).toBeNull();
       expect(screen.getByRole('radiogroup')).not.toHaveAttribute('aria-labelledby');
     });
 
@@ -572,7 +573,7 @@ describe('FieldTemplate', () => {
         <Form schema={{ type: 'array', items: { type: 'string' } }} formData={['first']} validator={validator} />,
       );
 
-      expect(templateLabelFor(container, 'root_0')).toBeNull();
+      expect(fieldLabel(container, 'root_0')).toBeNull();
       expect(screen.queryByText('*')).not.toBeInTheDocument();
     });
   });

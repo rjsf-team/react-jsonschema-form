@@ -29,12 +29,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="title-field mb-6"
-                    id="root_person__title"
                   >
                     <h2
                       class="text-3xl font-bold text-primary mb-2"
                     >
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h2>
                     <div
                       class="divider divider-primary my-0"
@@ -259,7 +262,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="label"
-                    for="root_person_race"
                     id="root_person_race__label"
                   >
                     <span
@@ -1621,12 +1623,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="title-field mb-6"
-                    id="root_person__title"
                   >
                     <h2
                       class="text-3xl font-bold text-primary mb-2"
                     >
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h2>
                     <div
                       class="divider divider-primary my-0"
@@ -1851,7 +1856,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="label"
-                    for="root_person_race"
                     id="root_person_race__label"
                   >
                     <span
@@ -3213,12 +3217,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="title-field mb-6"
-                    id="root_person__title"
                   >
                     <h2
                       class="text-3xl font-bold text-primary mb-2"
                     >
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h2>
                     <div
                       class="divider divider-primary my-0"
@@ -3443,7 +3450,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="label"
-                    for="root_person_race"
                     id="root_person_race__label"
                   >
                     <span
@@ -4805,12 +4811,15 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <div
                     class="title-field mb-6"
-                    id="root_person__title"
                   >
                     <h2
                       class="text-3xl font-bold text-primary mb-2"
                     >
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h2>
                     <div
                       class="divider divider-primary my-0"
@@ -5035,7 +5044,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 >
                   <label
                     class="label"
-                    for="root_person_race"
                     id="root_person_race__label"
                   >
                     <span
@@ -6394,12 +6402,15 @@ exports[`Three even column grid > renders person and address in three columns, n
               >
                 <div
                   class="title-field mb-6"
-                  id="root_person__title"
                 >
                   <h2
                     class="text-3xl font-bold text-primary mb-2"
                   >
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h2>
                   <div
                     class="divider divider-primary my-0"
@@ -6616,7 +6627,6 @@ exports[`Three even column grid > renders person and address in three columns, n
               >
                 <label
                   class="label"
-                  for="root_person_race"
                   id="root_person_race__label"
                 >
                   <span
@@ -7826,12 +7836,15 @@ exports[`Two even column grid > renders person and address in two columns, no em
               >
                 <div
                   class="title-field mb-6"
-                  id="root_person__title"
                 >
                   <h2
                     class="text-3xl font-bold text-primary mb-2"
                   >
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h2>
                   <div
                     class="divider divider-primary my-0"
@@ -8048,7 +8061,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
               >
                 <label
                   class="label"
-                  for="root_person_race"
                   id="root_person_race__label"
                 >
                   <span
