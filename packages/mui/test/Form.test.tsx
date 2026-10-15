@@ -2,6 +2,7 @@ import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -569,5 +570,97 @@ describe('mui labels the core widgets that draw no label of their own', () => {
     container.querySelectorAll('label[for]').forEach((labelFor) => {
       expect(container.querySelector(`[id="${labelFor.getAttribute('for')}"]`)).toBeInTheDocument();
     });
+  });
+});
+
+describe('mui ArrayFieldTemplate', () => {
+  test("draws no heading for an array option whose ui:title repeats its field's label", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            tags: { type: 'array', items: { type: 'string' }, anyOf: [{ maxItems: 3 }, { minItems: 1 }] },
+          },
+        }}
+        uiSchema={{ tags: { 'ui:title': 'Tags', anyOf: [{ 'ui:title': 'Tags' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Tags');
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+  });
+
+  test("keeps an optional array's data control where it draws no heading", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } }}
+        uiSchema={{ tags: { 'ui:label': false }, 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
+        formData={{ tags: ['a'] }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+  });
+});
+
+describe('mui ObjectFieldTemplate', () => {
+  test("keeps an optional object's data control where ui:label turns its heading off", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
+        formData={{ pet: { a: 'x' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
+  });
+});
+
+describe("mui's error and help elements carry the ids their field's plan describes its control by", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      pet: {
+        title: 'Pet',
+        anyOf: [
+          { title: 'Dog', type: 'string' },
+          { title: 'Cat', type: 'number' },
+        ],
+      },
+    },
+  };
+
+  test("renders an option's own help under its own id, beside the field's", () => {
+    const { container } = render(
+      <Form
+        schema={schema}
+        uiSchema={{ pet: { 'ui:help': 'Pick a pet', anyOf: [{ 'ui:help': 'Dogs bark' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll(`#${helpId('root_pet')}`)).toHaveLength(1);
+    expect(container.querySelector(`#${helpId('root_pet')}`)).toHaveTextContent('Pick a pet');
+    expect(container.querySelector(`#${optionHelpId('root_pet')}`)).toHaveTextContent('Dogs bark');
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Pick a pet Dogs bark');
+  });
+
+  test("renders an anyOf field's errors once, under the id its control is described by", () => {
+    const { container } = render(
+      <Form schema={schema} extraErrors={{ pet: { __errors: ['pick one', 'or another'] } }} validator={validator} />,
+    );
+
+    expect(container.querySelectorAll(`#${errorId('root_pet')}`)).toHaveLength(1);
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('pick one or another');
   });
 });
