@@ -202,7 +202,7 @@ The following props are passed to custom widget components:
 - `readonly`: A boolean value stating if the widget is read-only;
 - `autofocus`: A boolean value stating if the widget should autofocus;
 - `label`: The computed label for this widget, as a string
-- `hideLabel`: A boolean value, if true, tells the widget not to draw its label, because the field's plan has the template, or a field above rendering the same id, draw it, or `label` in the `UiSchema` turns it off. A widget that draws its own description should take it from [`getWidgetDescription()`](../api-reference/utility-functions.md#getwidgetdescription) rather than decide from `hideLabel`. Deprecated: read `presentation.label.by === 'self'` instead;
+- `hideLabel`: A boolean value, if true, tells the widget not to draw its label, because the field's plan has the template, or a field above rendering the same id, draw it, or `label` in the `UiSchema` turns it off. A widget that draws its own description should take it from [`getWidgetDescription()`](../api-reference/utility-functions.md#getwidgetdescription) rather than decide from `hideLabel`. Deprecated: read [`widgetDrawsLabel()`](../api-reference/utility-functions.md#widgetdrawslabel), which reads `presentation.label.by === 'self'` and falls back to `hideLabel` for a widget rendered without a plan, instead;
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
 - `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;

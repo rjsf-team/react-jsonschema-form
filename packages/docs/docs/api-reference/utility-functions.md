@@ -1089,25 +1089,28 @@ A `propertyNames` written as a `$ref` reads as the former, since resolving one n
 
 - string[] | undefined: The allowed names nothing has taken, or undefined when the schema enumerates none
 
-### getGroupAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### getGroupAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgroupattributes}
 
 Gets the ARIA attributes a widget rendering a group of controls, such as radios or checkboxes, spreads onto the group's wrapper and onto each control in it.
-A label's `for` reaches a single control rather than the element wrapping a group, so the wrapper takes the `aria-labelledby` its field's plan gives the control, and each control the `aria-describedby` and `aria-invalid` [getControlAttributes()](#getcontrolattributes) gives it.
+A label's `for` reaches a single control rather than the element wrapping a group, so the wrapper takes the `aria-labelledby` its field's plan gives the control, and each control the `aria-describedby` [getControlAttributes()](#getcontrolattributes) gives it.
+`aria-invalid` goes where ARIA supports it: on a `radiogroup` rather than on its radios, and on each control of a `group`, such as its checkboxes, rather than on the group.
+The wrapper takes the `role` as well, so `aria-invalid` always lands on the role it was placed for; spread `group` rather than setting the role separately.
 
 #### Parameters
 
 - props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'presentation'> - The widget's `id` and `presentation`
+- role: GroupRole - The role of the group's wrapper, `'radiogroup'` for radios and `'group'` for anything else
 
 #### Returns
 
-- \{ group: Pick&lt;ControlAttributes, 'aria-labelledby'>, option: Omit&lt;ControlAttributes, 'aria-labelledby' | 'required'> }: `group`, the attributes for the group's wrapper, and `option`, those for each control in it
+- \{ group: Pick&lt;ControlAttributes, 'aria-labelledby' | 'aria-invalid'> & \{ role: GroupRole }, option: Omit&lt;ControlAttributes, 'aria-labelledby' | 'required'> }: `group`, the `role` and attributes for the group's wrapper, and `option`, those for each control in it
 
 #### Example
 
 ```tsx
-const { group, option } = getGroupAttributes({ id, presentation });
+const { group, option } = getGroupAttributes({ id, presentation }, 'radiogroup');
 return (
-  <div id={id} role='radiogroup' {...group}>
+  <div id={id} {...group}>
     {enumOptions.map((opt, i) => (
       <input key={i} type='radio' id={optionId(id, i)} {...option} />
     ))}
@@ -1710,7 +1713,7 @@ Without a plan, as for a template rendered outside `SchemaField`, it follows `di
 
 - boolean: True when the key input is labelled
 
-### hasTemplateErrors&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### hasTemplateErrors&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#hastemplateerrors}
 
 Whether the field a template renders has errors to show, for the template's error state, such as a red outline or an invalid status: the messages its field's plan shows, with `ui:hideError` applied, or, for a template rendered without a plan, as one rendered outside `SchemaField` is, the deprecated `rawErrors` while `hideError` is off.
 Read it rather than `rawErrors`, which stays through v7 only for a template rendered without a plan.
@@ -2606,7 +2609,7 @@ Whether a `FieldTemplate` draws the description it is handed: where the field's 
 
 - boolean: True when the template draws the description
 
-### templateDrawsLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### templateDrawsLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatedrawslabel}
 
 Whether a `FieldTemplate` draws its field's label: where the field's plan says the template draws it, or, for a template rendered without a plan, as one rendered outside `SchemaField` is, where the deprecated `displayLabel` says so.
 Read it rather than `displayLabel`, which stays through v7 only for a template rendered without a plan.
@@ -2953,7 +2956,7 @@ widgetAriaProps(props); // { 'aria-label': undefined, 'aria-describedby': 'root_
 widgetAriaProps(partProps); // { 'aria-label': 'When, year', 'aria-describedby': 'root_when__error root_when__description root_when__help' }
 ```
 
-### widgetDrawsLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
+### widgetDrawsLabel&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#widgetdrawslabel}
 
 Whether a widget draws its field's label itself: where the field's plan says the widget draws it, or, for a widget rendered without a plan, unless the deprecated `hideLabel` turns it off.
 Read it rather than `hideLabel`, which stays through v7 only for a widget rendered without a plan.
