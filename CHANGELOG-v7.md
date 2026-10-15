@@ -94,6 +94,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `FieldErrorTemplate` renders a field's errors in one element under `errorId()`, each message on its own line, where it rendered each message under that same id, so a field with two errors repeated it ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `ObjectFieldTemplate` lays out the optional data control with the properties where it draws no heading, as under `ui:label: false`, rather than dropping it with the heading, as core's does, and renders no empty grid item where there is no control ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `SelectWidget` renders its select's control once: it wrapped `SelectTrigger`, which renders a `Select.Control` of its own, in another, so `select:<id>:control` appeared twice on the page ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `FieldTemplate`'s fieldset no longer points `aria-labelledby` at a legend that renders only for a description: it names the label the template draws, where it draws one, and nothing otherwise, so a field with a description is still named by its legend ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/core
 
