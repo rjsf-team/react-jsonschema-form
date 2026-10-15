@@ -5972,6 +5972,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
 
         it('should drop the whole allOf when a custom merger throws on the conflicting then defaults', () => {
+          consoleWarnSpy.mockClear();
           const conflict = new Error('conflicting food defaults');
           const mergeAllOfUnlessFoodDefaultsConflict: Experimental_CustomMergeAllOf = (schema) => {
             const foodDefaults = new Set(
