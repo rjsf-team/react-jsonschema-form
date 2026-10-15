@@ -6088,37 +6088,35 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
         });
 
-        it("should populate a property's allOf conditional defaults with createDeepAllOfMerge in array items whose schema also has a direct if", () => {
-          const deepMerge = createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf;
-          const directIfItemsSchema: RJSFSchema = {
-            type: 'array',
-            items: { ...rootAllOfSchema, if: { properties: { x: { const: 1 } } }, then: {} },
-          };
-          const allOfItemsSchema: RJSFSchema = { type: 'array', items: rootAllOfSchema };
-          const formData = [{ animalInfo: { animal: 'Cat' } }];
-          expect(
-            getDefaultFormState(
-              testValidator,
-              directIfItemsSchema,
-              formData,
-              directIfItemsSchema,
-              undefined,
-              { allOf: 'skipDefaults' },
-              deepMerge,
-            ),
-          ).toEqual([{ animalInfo: { animal: 'Cat', food: 'meat' } }]);
-          expect(
-            getDefaultFormState(
-              testValidator,
-              allOfItemsSchema,
-              formData,
-              allOfItemsSchema,
-              undefined,
-              { allOf: 'skipDefaults' },
-              deepMerge,
-            ),
-          ).toEqual(formData);
-        });
+        it.each([
+          {
+            where: 'array items',
+            wrap: (schema: RJSFSchema): RJSFSchema => ({ type: 'array', items: schema }),
+            wrapData: (data: object) => [data],
+          },
+          {
+            where: 'an object property',
+            wrap: (schema: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { nested: schema } }),
+            wrapData: (data: object) => ({ nested: data }),
+          },
+        ])(
+          "should populate a property's allOf conditional defaults with createDeepAllOfMerge in $where whose schema also has a direct if",
+          ({ wrap, wrapData }) => {
+            const deepMerge = createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf;
+            const directIfSchema = wrap({ ...rootAllOfSchema, if: { properties: { x: { const: 1 } } }, then: {} });
+            const allOfSchema = wrap(rootAllOfSchema);
+            const formData = wrapData({ animalInfo: { animal: 'Cat' } });
+            const getDefaults = (schema: RJSFSchema, behavior: Experimental_DefaultFormStateBehavior) =>
+              getDefaultFormState(testValidator, schema, formData, schema, undefined, behavior, deepMerge);
+            expect(getDefaults(directIfSchema, { allOf: 'skipDefaults' })).toEqual(
+              wrapData({ animalInfo: { animal: 'Cat', food: 'meat' } }),
+            );
+            expect(getDefaults(allOfSchema, { allOf: 'skipDefaults' })).toEqual(formData);
+            expect(
+              getDefaults(directIfSchema, { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' }),
+            ).toEqual(formData);
+          },
+        );
 
         it('should populate the conditional defaults of an allOf in array items whose schema also has a direct if', () => {
           expect(

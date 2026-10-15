@@ -224,7 +224,7 @@ This is specific to `allOf`:
 - An `if-then-else` placed directly in a nested object schema is resolved with either value. For example, under `skipDefaults`, `items: { type: 'object', if, then }` fills in the `then` default, while `items: { type: 'object', allOf: [{ if, then }] }` does not.
 - Adding a direct `if` to that `items` schema resolves its whole `allOf` too.
 - With an `experimental_customMergeAllOf` built on a deep merger, such as `createDeepAllOfMerge` from `@x0k/json-schema-merge` given a shallow merge built with that library's `createMerger` and `createShallowAllOfMerge`, merging an `allOf` also turns a property's `allOf: [{ if, then }]` into a direct `if-then-else`, so that property's `then` default is filled in under `skipDefaults`. That happens wherever an `allOf` is merged: the root's own `allOf`, or the `allOf` of an object or `items` schema that also has a direct `if`, but not a nested `allOf` on its own.
-- When `emptyObjectFields` is `skipEmptyDefaults`, a direct `if` in a nested object schema is not resolved, so none of the cases above applies.
+- When `emptyObjectFields` is `skipEmptyDefaults`, a direct `if` in a nested object schema is not resolved, including the one a deep merger makes from a property's `allOf`, so none of the cases above applies.
 
 ```tsx
 import { Form } from '@rjsf/core';
