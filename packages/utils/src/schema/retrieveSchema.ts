@@ -56,10 +56,10 @@ import buildPlan, {
 } from './graph/mergePlan.ts';
 import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
-import type { SchemaGraph } from './graph/parseSchemaGraph.ts';
+import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
 import type { Provenance } from './graph/provenance.ts';
-import { childField, collapses, restartSeeds } from './graph/recursionRule.ts';
+import { childField, collapses, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
@@ -659,13 +659,14 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
   subSchema: S,
   rootSchema?: S,
 ): string | undefined {
-  return additionalPropertyType<S>(subSchema, rootSchema, new Set<string>());
+  return additionalPropertyType<S>(subSchema, rootSchema, new Set<NodeId>());
 }
 
 /** Returns the definition a `schema` is spelled as a `$ref` to, as far as one can be named without resolving the
  * schema. It is how a subschema says what it is without saying it in keywords of its own, and the lookup is what lets a
  * reader that only asks a question about the subschema -- what type it holds, what names it declares -- ask it of the
- * schema the reference names.
+ * schema the reference names. The reference is resolved through the schema graph from where the schema sits in the
+ * root, as the form resolves it.
  *
  * Only the keywords the referring schema leaves to it are read off the definition. Resolution reads a reference as
  * `{ ...definition, ...schema }`, so a keyword the referring schema declares itself replaces the
@@ -675,38 +676,32 @@ export function getAdditionalPropertyType<S extends StrictRJSFSchema = RJSFSchem
  *
  * @param schema - The schema whose reference is to be looked up
  * @param rootSchema - The root schema the reference names a definition of, when there is one to look it up in
- * @param followedRefs - The references already followed on this walk, which this one is added to
+ * @param followed - The referring schemas already followed on this walk, which this one is added to
  * @returns - The definition the reference names, less the keywords the referring schema shadows, or undefined where
  *          there is none to name or it was followed already
  */
 function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S | undefined,
-  followedRefs: Set<string>,
+  followed: Set<NodeId>,
 ): S | undefined {
-  const $ref = schema[REF_KEY];
-  if (rootSchema === undefined || $ref === undefined || followedRefs.has($ref)) {
+  if (rootSchema === undefined || schema[REF_KEY] === undefined) {
     return undefined;
   }
-  followedRefs.add($ref);
-  let definition: unknown;
+  const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema), schema);
+  const [{ node }] = seeds;
+  const target = ownRefTargets(graph, node).at(-1);
+  if (target === undefined || graph.node(target).kind === 'boolean' || followed.has(node)) {
+    return undefined;
+  }
+  followed.add(node);
   try {
-    definition = findSchemaDefinition<S>($ref, rootSchema);
+    return withoutKeys(refDefinition<S>(graph, node), ...Object.keys(schema));
   } catch {
     // A reference that names no definition says nothing about the property, as the subschema holding it does until it
     // is resolved: whatever resolves that subschema to render it reports the broken reference on its own
     return undefined;
   }
-  if (!isObject(definition)) {
-    return undefined;
-  }
-  const unshadowed = { ...definition };
-  for (const keyword of Object.keys(schema)) {
-    if (keyword !== REF_KEY) {
-      delete unshadowed[keyword];
-    }
-  }
-  return unshadowed as S;
 }
 
 /** Reads the type for `getAdditionalPropertyType()`, carrying the references followed so far across the options and the
@@ -720,7 +715,7 @@ function referencedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
 function additionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(
   subSchema: S,
   rootSchema: S | undefined,
-  followedRefs: Set<string>,
+  followedRefs: Set<NodeId>,
 ): string | undefined {
   const ownTypes = getSchemaOwnTypes<S>(subSchema);
   if (ownTypes) {
@@ -1100,7 +1095,7 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   // dependency before it takes the `oneOf` off, so the branch is settled from the data for that spelling too. Read
   // without following the reference it offers no branches, and a name the matching branch declares would be stubbed
   // beside the field that branch renders it with, which is what the inline spelling no longer does
-  const oneOf = ownOneOf ?? referencedDefinition<S>(dependent, rootSchema, new Set<string>())?.[ONE_OF_KEY];
+  const oneOf = ownOneOf ?? referencedDefinition<S>(dependent, rootSchema, new Set<NodeId>())?.[ONE_OF_KEY];
   if (!Array.isArray(oneOf)) {
     return [dependent];
   }
@@ -1122,7 +1117,7 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
           // branch renders it with. `referencedDefinition()` strips whatever the branch shadows, which is how
           // resolution reads a reference, so a `properties` the branch declares itself answers on its own
           const branchProperties =
-            branch[PROPERTIES_KEY] ?? referencedDefinition<S>(branch, rootSchema, new Set<string>())?.[PROPERTIES_KEY];
+            branch[PROPERTIES_KEY] ?? referencedDefinition<S>(branch, rootSchema, new Set<NodeId>())?.[PROPERTIES_KEY];
           const conditionPropertySchema = branchProperties?.[dependencyKey];
           if (!conditionPropertySchema) {
             return false;
@@ -1170,7 +1165,7 @@ function declaredPropertyNames<S extends StrictRJSFSchema = RJSFSchema, F extend
   schema: S,
   rootSchema: S | undefined,
   formData: GenericObjectType,
-  followedRefs: Set<string>,
+  followedRefs: Set<NodeId>,
   matchedOptionOnly: boolean,
 ): string[] | undefined {
   const merged: (S | boolean | undefined)[] = Array.isArray(schema[ALL_OF_KEY])
@@ -1238,7 +1233,7 @@ function namesOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends F
   option: S,
   rootSchema: S | undefined,
   formData: GenericObjectType,
-  followedRefs: Set<string>,
+  followedRefs: Set<NodeId>,
   matchedOptionOnly: boolean,
 ): Set<string> | undefined {
   if (allowsAdditionalProperties<S>(option)) {
@@ -1305,7 +1300,7 @@ function namesTheOptionsRender<S extends StrictRJSFSchema = RJSFSchema, F extend
   schema: S,
   rootSchema: S | undefined,
   formData: GenericObjectType,
-  followedRefs: Set<string>,
+  followedRefs: Set<NodeId>,
   matchedOptionOnly: boolean,
 ): Set<string> | undefined {
   const options = getXxxOfOptions<S>(schema)?.options ?? [];
@@ -1409,7 +1404,7 @@ function namesRenderedElsewhere<S extends StrictRJSFSchema = RJSFSchema, F exten
     schema,
     rootSchema,
     formData,
-    new Set<string>(),
+    new Set<NodeId>(),
     matchedOptionOnly,
   );
   if (optionNames === undefined) {
@@ -1418,7 +1413,7 @@ function namesRenderedElsewhere<S extends StrictRJSFSchema = RJSFSchema, F exten
   // A subschema merged into this object that takes keys of its own is this object taking them, which is the case the
   // stub is for rather than one to leave to another schema, so the walk saying so names nothing rendered elsewhere
   const declaredNames =
-    declaredPropertyNames<S, F>(context, schema, rootSchema, formData, new Set<string>(), matchedOptionOnly) ?? [];
+    declaredPropertyNames<S, F>(context, schema, rootSchema, formData, new Set<NodeId>(), matchedOptionOnly) ?? [];
   return new Set([...declaredNames, ...optionNames]);
 }
 

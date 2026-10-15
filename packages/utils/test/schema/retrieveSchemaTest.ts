@@ -1788,6 +1788,30 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             });
           });
         });
+        describe('with oneOf in an allOf entry or a branch of the dependency', () => {
+          const typedInput: RJSFSchema = {
+            oneOf: [
+              { properties: { a: { enum: ['int'] }, b: { type: 'integer' } } },
+              { properties: { a: { enum: ['bool'] }, b: { type: 'boolean' } } },
+            ],
+          };
+          const cases: [string, RJSFSchema, boolean[]][] = [
+            ['an allOf entry', { allOf: [typedInput] }, [false, true]],
+            ['the then of an if', { if: true, then: typedInput }, [true, false, true]],
+          ];
+          it.each(cases)('applies the option the data matches from %s', (_, dependency, isValid) => {
+            testValidator.setReturnValues({ isValid });
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: { a: { type: 'string', enum: ['int', 'bool'] } },
+              dependencies: { a: dependency },
+            };
+            expect(retrieveSchema({ validator: testValidator }, schema, schema, { a: 'bool' }).properties).toEqual({
+              a: { type: 'string', enum: ['int', 'bool'] },
+              b: { type: 'boolean' },
+            });
+          });
+        });
       });
     });
     describe('allOf', () => {
@@ -3403,6 +3427,35 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           ...schema,
           properties: { other: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true } },
         });
+      });
+      it("resolves an option's $ref under a nested $id against that $id for the names the option declares", () => {
+        const rootSchema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            child: {
+              $id: 'child.json',
+              type: 'object',
+              additionalProperties: { type: 'number' },
+              anyOf: [{ $ref: '#/$defs/x', additionalProperties: false }],
+              $defs: { x: { type: 'object', properties: { a: { type: 'string' } } } },
+            },
+          },
+          type: 'object',
+          properties: { c: { $ref: 'child.json' } },
+        };
+        expect(retrieveProperty(testValidator, rootSchema, 'c', rootSchema, { a: 'hi' }).properties).toEqual({});
+      });
+      it('reads a $ref to a boolean definition as naming nothing', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { yes: true },
+          type: 'object',
+          additionalProperties: { type: 'number' },
+          anyOf: [{ $ref: '#/definitions/yes', properties: { b: { type: 'string' } } }],
+        };
+        expect(
+          stubExistingAdditionalProperties({ validator: testValidator }, rootSchema, rootSchema, { a: 1 }).properties,
+        ).toEqual({ a: { type: 'number', [ADDITIONAL_PROPERTY_FLAG]: true } });
       });
       it("has an option declaring a name through the branch a dependency's oneOf settles on the data", () => {
         const schema: RJSFSchema = {

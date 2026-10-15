@@ -517,18 +517,21 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     }
     part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY), keywords.get(PROPERTIES_KEY));
     if (this.conditions) {
-      part = this.applyCondition(part, keywords);
+      part = this.applyCondition(part, keywords, dependencyKey);
     }
-    part = this.applyAllOf(part, keywords.get(ALL_OF_KEY));
+    part = this.applyAllOf(part, keywords.get(ALL_OF_KEY), dependencyKey);
     return dependencyKey === undefined ? part : this.applyExactlyOne(part, dependencyKey, keywords.get(ONE_OF_KEY));
   }
 
-  private applyAllOf(part: Part<S>, provider: Provider<S> | undefined): Part<S> {
+  /** Merges the `allOf` entries in. Inside a dependency, each entry's own `oneOf` is applied as the dependency's is,
+   * since the entries are part of the dependency's schema
+   */
+  private applyAllOf(part: Part<S>, provider: Provider<S> | undefined, dependencyKey: string | undefined): Part<S> {
     if (provider === undefined || (!this.mergeAllOf && this.branchDepth === 0)) {
       return part;
     }
     const members = (provider.node.allOf ?? []).flatMap(
-      (member) => this.expand(member, provider.refPath, 'allOf', false) ?? [],
+      (member) => this.expand(member, provider.refPath, 'allOf', false, dependencyKey) ?? [],
     );
     return this.conjoin({ ...part, schema: withoutKeys(part.schema, ALL_OF_KEY) }, members);
   }
@@ -574,8 +577,14 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return holds;
   }
 
-  /** Applies the `then` or `else` the `if` chooses on the field's own data, `{}` standing in for none */
-  private applyCondition(part: Part<S>, keywords: ReadonlyMap<string | symbol, Provider<S>>): Part<S> {
+  /** Applies the `then` or `else` the `if` chooses on the field's own data, `{}` standing in for none. Inside a
+   * dependency, the branch's own `oneOf` is applied as the dependency's is.
+   */
+  private applyCondition(
+    part: Part<S>,
+    keywords: ReadonlyMap<string | symbol, Provider<S>>,
+    dependencyKey: string | undefined,
+  ): Part<S> {
     const condition = keywords.get(IF_KEY)?.node.if;
     if (!keywords.has(IF_KEY)) {
       return part;
@@ -588,16 +597,20 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const conditionSchema =
       conditionNode.kind === 'schema' ? conditionNode.raw : booleanSchema(conditionNode, this.graph.rawRoot);
     const branchKey = this.holds(`if:${condition}`, conditionSchema, this.data ?? NO_DATA) ? THEN_KEY : ELSE_KEY;
-    const branchPart = this.branch(keywords.get(branchKey), branchKey);
+    const branchPart = this.branch(keywords.get(branchKey), branchKey, dependencyKey);
     return branchPart === undefined ? without : mergeBranch(without, branchPart);
   }
 
-  private branch(provider: Provider<S> | undefined, key: 'then' | 'else'): Part<S> | undefined {
+  private branch(
+    provider: Provider<S> | undefined,
+    key: 'then' | 'else',
+    dependencyKey: string | undefined,
+  ): Part<S> | undefined {
     if (provider === undefined) {
       return undefined;
     }
     const branch = provider.node[key];
-    return branch === undefined ? undefined : this.expandBranch(branch, provider.refPath, key);
+    return branch === undefined ? undefined : this.expandBranch(branch, provider.refPath, key, dependencyKey);
   }
 
   private expandBranch(id: NodeId, refPath: RefPath, edge: PlanEdge, dependencyKey?: string): Part<S> | undefined {
