@@ -2,7 +2,14 @@ import type { FocusEvent } from 'react';
 import { useEffect, useRef } from 'react';
 import type { SliderValueChangeDetails } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { fieldLabelId, getControlAttributes, labelValue, rangeSpec, widgetDrawsLabel } from '@rjsf/utils';
+import {
+  fieldLabelId,
+  getControlAttributes,
+  hasWidgetErrors,
+  labelValue,
+  rangeSpec,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
 import { Slider } from '../components/ui/slider.tsx';
@@ -13,8 +20,21 @@ export default function RangeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { value, readonly, disabled, autofocus, onBlur, onFocus, options, schema, onChange, label, id, presentation } =
-    props;
+  const {
+    value,
+    readonly,
+    disabled,
+    required,
+    autofocus,
+    onBlur,
+    onFocus,
+    options,
+    schema,
+    onChange,
+    label,
+    id,
+    presentation,
+  } = props;
   const thumbRef = useRef<HTMLDivElement>(null);
   const focusOnMount = useRef(autofocus);
   // React focuses a form control marked `autoFocus` as it mounts, but not the thumb, which is a <div>. Like
@@ -37,7 +57,17 @@ export default function RangeWidget<
   const drawsLabel = !hideLabel && !!label;
 
   return (
-    <Field mb={1} label={labelValue(label, !drawsLabel)} ids={{ label: labelId }} labelNamesNoControl {...chakraProps}>
+    <Field
+      mb={1}
+      disabled={disabled || readonly}
+      required={required}
+      readOnly={readonly}
+      invalid={hasWidgetErrors<T, S, F>(props)}
+      label={labelValue(label, !drawsLabel)}
+      ids={{ label: labelId }}
+      labelNamesNoControl
+      {...chakraProps}
+    >
       <Slider
         {...rangeSpec<S>(schema)}
         id={id}
