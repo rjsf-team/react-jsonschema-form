@@ -6,12 +6,10 @@ import {
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
-  fieldLabelId,
-  getGroupAttributes,
+  getGroupLabelling,
   getOptionValueFormat,
   labelValue,
   optionId,
-  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field.tsx';
@@ -23,22 +21,8 @@ export default function RadioWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    htmlName,
-    options,
-    value,
-    required,
-    disabled,
-    readonly,
-    autofocus,
-    label,
-    onChange,
-    onBlur,
-    onFocus,
-    presentation,
-  } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { id, htmlName, options, value, required, disabled, readonly, autofocus, label, onChange, onBlur, onFocus } =
+    props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -54,15 +38,12 @@ export default function RadioWidget<
   const selectValue = enumOptionSelectedValue(value, enumOptions, false, optionValueFormat, null);
 
   const chakraProps = getChakra(options);
-  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
-    { id, presentation },
-    'radiogroup',
-  );
-  // The group is pointed at the label this widget draws, where the plan names it by no other. With no label to point at,
-  // it is left unnamed: Ark otherwise points it at a label id of its own that no element has, and ignores an undefined
-  // override, so only an empty one stops it
-  const labelId = fieldLabelId(id);
-  const drawsLabel = !hideLabel && !!label;
+  const {
+    drawsLabel,
+    labelId,
+    group: groupAttributes,
+    option: optionAttributes,
+  } = getGroupLabelling<T, S, F>(props, 'radiogroup');
   const optionIndexes = new Map(domValues.map((domValue, index) => [domValue, index]));
 
   return (
@@ -85,7 +66,9 @@ export default function RadioWidget<
         value={selectValue}
         name={htmlName || id}
         {...groupAttributes}
-        aria-labelledby={groupAttributes['aria-labelledby'] ?? (drawsLabel ? labelId : '')}
+        // Named by the label this widget draws, where the plan names it by no other, or by nothing where none is drawn:
+        // Ark ignores an undefined override and would point the group at a label that isn't rendered
+        aria-labelledby={groupAttributes['aria-labelledby'] ?? ''}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&

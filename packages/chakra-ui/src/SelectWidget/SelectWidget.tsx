@@ -22,7 +22,7 @@ import {
 
 import { Field } from '../components/ui/field.tsx';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, labelledByOrNone } from '../utils.ts';
 
 export default function SelectWidget<
   T = unknown,
@@ -49,7 +49,7 @@ export default function SelectWidget<
   const drawsLabel = !hideLabel && !!label;
   const ariaProps = widgetAriaProps(props);
   // With no label drawn, an empty one stops Ark pointing the trigger and the listbox at the missing label
-  const labelledBy = ariaProps['aria-labelledby'] ?? (drawsLabel ? undefined : '');
+  const labelledBy = labelledByOrNone(ariaProps['aria-labelledby'], drawsLabel);
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = useMemo(

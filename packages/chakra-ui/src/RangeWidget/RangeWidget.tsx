@@ -13,7 +13,7 @@ import {
 
 import { Field } from '../components/ui/field.tsx';
 import { Slider } from '../components/ui/slider.tsx';
-import { getChakra } from '../utils.ts';
+import { getChakra, labelledByOrNone } from '../utils.ts';
 
 export default function RangeWidget<
   T = unknown,
@@ -51,6 +51,7 @@ export default function RangeWidget<
   const chakraProps = getChakra(options);
   const labelId = fieldLabelId(id);
   const drawsLabel = !hideLabel && !!label;
+  const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
 
   return (
     <Field
@@ -68,8 +69,7 @@ export default function RangeWidget<
         {...rangeSpec<S>(schema)}
         id={id}
         // The thumb, which a user focuses, carries the field's id, and is named by the label through
-        // `aria-labelledby`, since a `for` can't name it. With no label drawn, an empty one stops Ark pointing it at the
-        // missing label, as Ark ignores an undefined override
+        // `aria-labelledby`, since a `for` can't name it
         ids={{ thumb: () => id, label: labelId }}
         name={id}
         disabled={disabled || readonly}
@@ -79,8 +79,8 @@ export default function RangeWidget<
         onFocus={handleFocus}
         thumbProps={{
           ref: thumbRef,
-          ...(!drawsLabel && { 'aria-labelledby': '' }),
-          ...getControlAttributes<T, S, F>({ id, presentation }),
+          ...controlAttributes,
+          'aria-labelledby': labelledByOrNone(controlAttributes['aria-labelledby'], drawsLabel),
         }}
       />
     </Field>
