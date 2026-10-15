@@ -20,7 +20,7 @@ import {
 
 import type { KeyMove } from './formState.ts';
 import type { UiState } from './uiState.ts';
-import { dataOf, optionListKey, shownOption } from './uiState.ts';
+import { dataOf, optionListKey, retrievedOptionsOf, shownOption } from './uiState.ts';
 
 /** What the tree diff needs that does not change as it descends */
 interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> {
@@ -79,12 +79,6 @@ function valueAt(container: unknown, key: string | undefined): unknown {
 /** A value the diff removes from the data */
 const DROP = Symbol('drop');
 
-/** A `true` option is any value, which a field renders as the empty schema */
-function emptySchema<S extends StrictRJSFSchema>(): S;
-function emptySchema(): StrictRJSFSchema {
-  return {};
-}
-
 /** The schemas a field renders, outermost first: the field's own, and the selected option's where it has options, which
  * renders at the same path, and so on for an option's own options. None for a collapsed `$ref` cycle that is not
  * expanded, which renders no field beneath its Expand button. Mirrors `SchemaField`, `MultiSchemaField` and
@@ -112,14 +106,10 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
     schema = expandRefCycle<S>(schema, rootSchema);
   }
   const view = retrieved ?? schemaUtils.retrieveSchema(schema, data);
-  const xxxOfKey = getXxxOfKey<S>(view);
-  const optionList = xxxOfKey ? view[xxxOfKey] : undefined;
-  if (!optionList || isConstantOptionList<S>(optionList, true)) {
+  const options = retrievedOptionsOf<T, S, F>(schemaUtils, view, data);
+  if (!options) {
     return [view];
   }
-  const options = optionList.map((option) =>
-    schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), data),
-  );
   const list = optionListKey<S>(options, rootSchema);
   const given = list === '' ? undefined : shown.get(list);
   const index =

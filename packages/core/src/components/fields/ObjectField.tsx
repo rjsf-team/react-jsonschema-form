@@ -46,8 +46,10 @@ import {
 } from '@rjsf/utils';
 
 import useFieldView from '../../hooks/useFieldView.ts';
+import useUiState from '../../hooks/useUiState.ts';
 import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
+import { dataOf, shownOptionSchema } from '../uiState.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** Returns a flag indicating whether the `name` field is required in the object schema
@@ -383,6 +385,7 @@ export default function ObjectField<
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
   const view = useFieldView(fieldPath, formData, ObjectField);
+  const { uiState } = useUiState();
   /** Every return renders through this, so a template below never inherits what was said of this field */
   const vouchForProperties = (content: ReactNode) => (
     <RawFormDataContext value={view.readsFormData ? ObjectFieldProperty : undefined}>{content}</RawFormDataContext>
@@ -504,38 +507,58 @@ export default function ObjectField<
     [uiOptions],
   );
 
-  /** Returns the schema the object says describes `key`: the one it declares under that name, where it declares one,
-   * and otherwise what `getAdditionalPropertySchema()` says of a name its `properties` don't name. The key input is
-   * free text, so a property can be renamed onto a declared name, and the field that name then renders is the declared
-   * property's -- reading the keywords for the undeclared names instead would seed a value that field cannot show.
-   *
-   * `declaresProperty()` is what tells the two apart, as it does for the `uiSchema` entry below and for the one the
-   * property's field is rendered with, so none of them can disagree about whose name it is.
+  /** Returns the properties that declare `key`: the object's own, or else those of the `anyOf`/`oneOf` option it shows
+   * beside them, which renders the key in its own field and leaves it unstubbed here; undefined where neither does
    */
-  const schemaForKey = useCallback((key: string): S | boolean => {
-    const currentSchema = schemaRef.current;
-    const properties = currentSchema.properties ?? {};
-    if (declaresProperty<S>(properties, key)) {
-      return properties[key] as S | boolean;
-    }
-    return getAdditionalPropertySchema<S>(currentSchema, key);
-  }, []);
+  const propertiesDeclaring = useCallback(
+    (key: string): NonNullable<S['properties']> | undefined => {
+      const currentSchema = schemaRef.current;
+      const properties = currentSchema.properties ?? {};
+      if (declaresProperty<S>(properties, key)) {
+        return properties;
+      }
+      const optionProperties = shownOptionSchema<T, S, F>(
+        uiState,
+        schemaUtils,
+        fieldPath,
+        currentSchema,
+        dataOf<T>(readData()),
+      )?.properties;
+      return optionProperties && declaresProperty<S>(optionProperties, key) ? optionProperties : undefined;
+    },
+    [uiState, schemaUtils, fieldPath, readData],
+  );
 
-  /** Returns the `uiSchema` entry the field for `key` is rendered with: the one under that name where the object
-   * declares it, and the `additionalProperties` entry otherwise, read the same way the property's `SchemaField` is
-   * handed its own below. A rename onto a declared name brings up the declared property's field, which reads the entry
-   * under that name, so seeding from the `additionalProperties` entry instead would hand that field a
+  /** Returns the schema the object says describes `key`: the one it, or the option it shows, declares under that name,
+   * where one does, and otherwise what `getAdditionalPropertySchema()` says of a name its `properties` don't name. The
+   * key input is free text, so a property can be renamed onto a declared name, and the field that name then renders is
+   * the declared property's -- reading the keywords for the undeclared names instead would seed a value that field
+   * cannot show.
+   *
+   * `propertiesDeclaring()` is what tells the two apart, as it does for the `uiSchema` entry below, so they cannot
+   * disagree about whose name it is.
+   */
+  const schemaForKey = useCallback(
+    (key: string): S | boolean => {
+      const declared = propertiesDeclaring(key)?.[key];
+      if (typeof declared === 'boolean' || isSchemaObject<S>(declared)) {
+        return declared;
+      }
+      return getAdditionalPropertySchema<S>(schemaRef.current, key);
+    },
+    [propertiesDeclaring],
+  );
+
+  /** Returns the `uiSchema` entry the field for `key` is rendered with: the one under that name where the object or the
+   * option it shows declares it, and the `additionalProperties` entry otherwise, read the same way the property's
+   * `SchemaField` is handed its own below. A rename onto a declared name brings up the declared property's field, which
+   * reads the entry under that name, so seeding from the `additionalProperties` entry instead would hand that field a
    * `ui:initialValue` written for a different schema.
    */
   const uiSchemaForKey = useCallback(
-    (key: string) => {
-      const properties = schemaRef.current.properties ?? {};
-      return getByPath<UiSchema<T, S, F> | undefined>(
-        uiSchema,
-        declaresProperty<S>(properties, key) ? key : ADDITIONAL_PROPERTIES_KEY,
-      );
-    },
-    [uiSchema],
+    (key: string) =>
+      getByPath<UiSchema<T, S, F> | undefined>(uiSchema, propertiesDeclaring(key) ? key : ADDITIONAL_PROPERTIES_KEY),
+    [uiSchema, propertiesDeclaring],
   );
 
   /** Returns the value a property added or renamed to `key` starts out holding, read from the very schema the object

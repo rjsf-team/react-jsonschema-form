@@ -105,6 +105,29 @@ describe('option selection as form state', () => {
     expect(container.querySelector('#root_z-key')).toBeNull();
   });
 
+  it('seeds a new key renamed onto a name the selected option declares from that option (#5461)', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: { type: 'string' },
+      anyOf: [
+        { title: 'A', properties: { count: { type: 'number' } } },
+        { title: 'B', properties: { count: { type: 'number' }, b: { type: 'string' } } },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
+    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    const keyInput = elementOf(node, '#root_newKey-key');
+
+    await user.clear(keyInput);
+    await user.type(keyInput, 'count');
+    await user.tab();
+
+    expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { count: 0 } }), 'root');
+    expect(ids(node, '#root_count')).toHaveLength(1);
+    expect(elementOf(node, '#root_count')).toHaveValue('0');
+    expect(node.querySelector('#root_count-key')).toBeNull();
+  });
+
   it("renders a key the selected option allows without describing it as the object's extra-key keyword does (#5462)", () => {
     const schema: RJSFSchema = {
       type: 'object',
