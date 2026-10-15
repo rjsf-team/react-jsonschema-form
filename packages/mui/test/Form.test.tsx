@@ -1,6 +1,7 @@
+import Switch from '@mui/material/Switch';
 import { withTheme } from '@rjsf/core';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { FieldProps, FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
+import type { FieldProps, FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -432,5 +433,171 @@ describe('mui CheckboxWidget', () => {
     );
 
     expect(screen.queryByText('X')).not.toBeInTheDocument();
+  });
+});
+
+describe('mui FieldTemplate', () => {
+  const TextWidget = ({ id }: WidgetProps) => <input id={id} />;
+
+  test.each([
+    ['a required', ['foo'], true],
+    ['an optional', [], false],
+  ])("draws the label of %s field whose widget's declaration leaves it to the template", (_, required, marked) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { foo: { type: 'string', title: 'Foo' } }, required }}
+        uiSchema={{ foo: { 'ui:widget': 'TextWidget' } }}
+        widgets={{ TextWidget }}
+        presentation={{ widgets: { TextWidget: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    const label = container.querySelector('label[for="root_foo"]');
+    expect(label).toHaveAttribute('id', 'root_foo__label');
+    expect(label).toHaveTextContent(marked ? /^Foo\s*\*$/ : /^Foo$/);
+    expect(screen.getByRole('textbox')).toHaveAccessibleName('Foo');
+  });
+
+  // MUI's `FormControl` hands its `required` to a `FormLabel` inside it that doesn't set its own
+  test('marks a switch declared to hold false unchecked only where the schema demands true', () => {
+    const SwitchWidget = ({ id }: WidgetProps) => <Switch id={id} />;
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { foo: { type: 'boolean', title: 'Foo' } }, required: ['foo'] }}
+        uiSchema={{ foo: { 'ui:widget': 'SwitchWidget' } }}
+        widgets={{ SwitchWidget }}
+        presentation={{ widgets: { SwitchWidget: { label: 'template', uncheckedIsFalse: true } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('label[for="root_foo"]')).toHaveTextContent(/^Foo$/);
+    expect(screen.getByRole('switch')).not.toBeRequired();
+  });
+
+  test("draws the template's label for a radio group with no for, which would name the group's wrapper", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['red', 'blue'] } } }}
+        uiSchema={{ color: { 'ui:widget': 'radio' } }}
+        presentation={{ widgets: { RadioWidget: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_color__label')).not.toHaveAttribute('for');
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Color');
+  });
+
+  test("names a select declared to leave its label to the template by that label, through MUI's labelId", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { color: { type: 'string', title: 'Color', enum: ['a', 'b'] } } }}
+        presentation={{ widgets: { SelectWidget: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { name: 'Color' })).toBeInTheDocument();
+    expectReferencesResolve(container);
+  });
+
+  // The plan gives a template label no part where there is no control to name, as while an optional field has no data
+  test('draws no label for an optional anyOf field with no data, though it leaves its label to the template', () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            pet: {
+              type: 'object',
+              title: 'Pet',
+              anyOf: [
+                { title: 'Dog', properties: { name: { type: 'string' } } },
+                { title: 'Cat', properties: { lives: { type: 'number' } } },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
+        presentation={{ fields: { AnyOfField: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_pet__label')).not.toBeInTheDocument();
+    expect(screen.queryByText('Pet', { selector: 'label' })).not.toBeInTheDocument();
+  });
+
+  test('draws no label for a widget that draws its own', () => {
+    const { container } = render(<Form schema={{ type: 'string', title: 'Foo' }} validator={validator} />);
+
+    // MUI's outlined input repeats its label's text in the hidden `<legend>` of its notch
+    expect(screen.getAllByText('Foo', { selector: 'label' })).toHaveLength(1);
+    expect(container.querySelector('#root__label')).not.toBeInTheDocument();
+  });
+});
+
+describe('mui TitleField', () => {
+  test("names an object's option selector by its heading's text, without the marker or optional data control", () => {
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            pet: {
+              type: 'object',
+              title: 'Pet',
+              properties: { name: { type: 'string' } },
+              anyOf: [
+                { title: 'Dog', properties: { bark: { type: 'string' } } },
+                { title: 'Cat', properties: { meow: { type: 'string' } } },
+              ],
+            },
+          },
+          required: ['pet'],
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
+        initialFormData={{ pet: { name: 'Rex' } }}
+        validator={validator}
+      />,
+    );
+
+    const heading = screen.getByRole('heading', { name: 'Pet' });
+    expect(heading).toHaveTextContent(/^Pet\s*\*$/);
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
+  });
+});
+
+describe('mui labels the core widgets that draw no label of their own', () => {
+  test("labels core's RatingWidget from the template, naming its radiogroup", () => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { score: { type: 'integer', title: 'Score', maximum: 3 } } }}
+        uiSchema={{ score: { 'ui:widget': 'RatingWidget' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Score');
+    expectReferencesResolve(container);
+  });
+
+  test.each(['alt-date', 'alt-datetime'])('labels a %s field from the template, with no `for`', (widget) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+        uiSchema={{ when: { 'ui:widget': widget } }}
+        validator={validator}
+      />,
+    );
+
+    const label = document.getElementById('root_when__label');
+    expect(label).toHaveTextContent('When');
+    expect(label).not.toHaveAttribute('for');
+    container.querySelectorAll('label[for]').forEach((labelFor) => {
+      expect(container.querySelector(`[id="${labelFor.getAttribute('for')}"]`)).toBeInTheDocument();
+    });
   });
 });
