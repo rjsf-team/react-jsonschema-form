@@ -2032,9 +2032,11 @@ export interface SchemaUtilsType<
    * @param schema - The schema for which retrieving a schema is desired
    * @param [formData] - The current formData, if any, to assist retrieving a schema
    * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
+   * @param [selectedOption] - The index of the `anyOf`/`oneOf` option selected for the field, whose declared
+   *        properties are left to it and whose extra-key keywords describe the extra keys with the field's own
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
+  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean, selectedOption?: number): S;
   /** Returns an `ErrorSchema` holding a required error for every field marked `ui:required: true` (via
    * `ui:options.required` or its shorthand) in `uiSchema` whose value is missing from `formData`.
    *
