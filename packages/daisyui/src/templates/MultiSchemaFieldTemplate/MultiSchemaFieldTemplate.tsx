@@ -8,7 +8,7 @@ export default function MultiSchemaFieldTemplate<
   const { optionSchemaField, selector } = props;
   return (
     <div className='p-4 border rounded-sm shadow-sm'>
-      <div className='mb-4'>{selector}</div>
+      {selector ? <div className='mb-4'>{selector}</div> : null}
       {optionSchemaField}
     </div>
   );

@@ -5211,10 +5211,10 @@ exports[`single fields > help and error display 1`] = `
         </div>
         <div
           class="rjsf-field-error-template text-red-600"
+          id="root__error"
         >
           <ul
             class="list-disc list-inside"
-            id="root__error"
           >
             <li>
               an error
@@ -8301,9 +8301,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="p-4 border rounded-sm shadow-sm"
                   >
                     <div
-                      class="mb-4"
-                    />
-                    <div
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
@@ -8383,9 +8380,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <div
                     class="p-4 border rounded-sm shadow-sm"
                   >
-                    <div
-                      class="mb-4"
-                    />
                     <div
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
@@ -9152,9 +9146,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     class="p-4 border rounded-sm shadow-sm"
                   >
                     <div
-                      class="mb-4"
-                    />
-                    <div
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
@@ -9207,9 +9198,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   <div
                     class="p-4 border rounded-sm shadow-sm"
                   >
-                    <div
-                      class="mb-4"
-                    />
                     <div
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
@@ -9575,9 +9563,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     class="p-4 border rounded-sm shadow-sm"
                   >
                     <div
-                      class="mb-4"
-                    />
-                    <div
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
@@ -9657,9 +9642,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   <div
                     class="p-4 border rounded-sm shadow-sm"
                   >
-                    <div
-                      class="mb-4"
-                    />
                     <div
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
@@ -10007,9 +9989,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     class="p-4 border rounded-sm shadow-sm"
                   >
                     <div
-                      class="mb-4"
-                    />
-                    <div
                       class="flex-grow rjsf-field rjsf-field-object"
                     >
                       <div
@@ -10064,9 +10043,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   <div
                     class="p-4 border rounded-sm shadow-sm"
                   >
-                    <div
-                      class="mb-4"
-                    />
                     <div
                       class="flex-grow rjsf-field rjsf-field-array"
                     >
