@@ -484,6 +484,40 @@ describe('option selection as form state', () => {
         'root_name',
       );
     });
+
+    it("matches the option again after an edit to a property only an option's required names, as on 6.11.0", async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' }, b: { type: 'string' } },
+        oneOf: [
+          { title: 'A', required: ['a'] },
+          { title: 'B', required: ['b'] },
+        ],
+      };
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'q' } });
+      await user.clear(elementOf(node, '#root_a'));
+
+      await user.type(elementOf(node, '#root_b'), 'x');
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { b: 'x' } }), 'root_b');
+    });
+
+    it('matches the option again after an edit to a property options tell apart by their number of keys, as on 6.11.0', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' }, b: { type: 'string' } },
+        anyOf: [
+          { title: 'Few', maxProperties: 1 },
+          { title: 'Many', minProperties: 2 },
+        ],
+      };
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'x' } });
+
+      await user.type(elementOf(node, '#root_b'), 'y');
+
+      expect(selectOf(node, 'root__anyof_select')).toHaveValue('1');
+    });
   });
 
   it('moves the selections of array items with the items', async () => {

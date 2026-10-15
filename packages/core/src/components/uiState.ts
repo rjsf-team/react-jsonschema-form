@@ -14,7 +14,10 @@ import {
   getValidationTarget,
   getXxxOfKey,
   isConstantOptionList,
+  isObject,
   isSchemaObject,
+  PROPERTIES_KEY,
+  REQUIRED_KEY,
 } from '@rjsf/utils';
 
 import type { KeyMove } from './formState.ts';
@@ -50,7 +53,7 @@ export function optionListKey<S extends StrictRJSFSchema>(options: readonly S[],
 /** The option a field shows for `formData`. With no `selection`, the option `getClosestMatchingOption()` picks. A
  * selection holds for the data in its `holdsFor`, and, while `holds` says an edit is being made below the field, for
  * any data unless the edit released it. Other data, from outside the field or from an edit to a property of the
- * object's own that an option declares too, is matched again, with the selection preferred where it fits the data as
+ * object's own that the options can disagree about, is matched again, with the selection preferred where it fits the data as
  * well as any other option. Data holding a value for the declared `discriminator` is always matched: the discriminator
  * names the option, so an edit to it is a switch.
  *
@@ -120,9 +123,49 @@ export function retrievedOptionsOf<T, S extends StrictRJSFSchema, F extends Form
   );
 }
 
-/** Whether one of `options` declares `property` under its `properties` */
-export function optionsDeclare<S extends StrictRJSFSchema>(options: readonly S[], property: string): boolean {
-  return options.some(({ properties }) => properties !== undefined && Object.hasOwn(properties, property));
+/** The keywords of an option that cannot tell apart data that differs at one property: the annotations, which
+ * validate nothing, and `type`, since an edit to a property leaves the data the object it was
+ */
+const KEYWORDS_READING_NO_PROPERTY = new Set([
+  '$comment',
+  '$id',
+  '$schema',
+  'default',
+  'deprecated',
+  'description',
+  'examples',
+  'readOnly',
+  'title',
+  'type',
+  'writeOnly',
+]);
+
+/** Whether `keyword` of an option, with `value`, can tell data apart by what it holds at `property`. `properties` and
+ * `required` can only where they name the property; any other keyword that validates, such as `minProperties` or
+ * `not`, reads the object whole
+ */
+function keywordReads(keyword: string, value: unknown, property: string): boolean {
+  if (keyword === PROPERTIES_KEY) {
+    return !isObject(value) || Object.hasOwn(value, property);
+  }
+  if (keyword === REQUIRED_KEY) {
+    return !Array.isArray(value) || value.includes(property);
+  }
+  return !KEYWORDS_READING_NO_PROPERTY.has(keyword);
+}
+
+/** Whether `options` can disagree about the object's `property`: whether one of them has a keyword that can tell data
+ * apart by what it holds there, so an edit to the property may be a choice between them. Undefined is an edit to the
+ * object as a whole
+ */
+export function optionsMayDisagreeAbout<S extends StrictRJSFSchema>(
+  options: readonly S[],
+  property: string | number | undefined,
+): boolean {
+  return (
+    typeof property !== 'string' ||
+    options.some((option) => Object.entries(option).some(([keyword, value]) => keywordReads(keyword, value, property)))
+  );
 }
 
 function isHeldFor(selection: OptionSelection, data: unknown): boolean {
@@ -227,9 +270,8 @@ export function createUiState() {
         setSelection(path, list, { index, holdsFor: [data] });
       }
     },
-    /** Lets the data an edit to a property of the object's own that an option declares too leaves be matched again, as
-     * data from outside the field is: the options can disagree about the property, so the edit may be a choice
-     * between them
+    /** Lets the data an edit to a property of the object's own that the options can disagree about leaves be matched
+     * again, as data from outside the field is: the edit may be a choice between them
      */
     release: (path: FieldPath, list: string) => {
       const current = selections.get(path)?.get(list);

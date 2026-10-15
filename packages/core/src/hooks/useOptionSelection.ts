@@ -2,7 +2,7 @@ import { useCallback, useInsertionEffect, useMemo, useRef, useSyncExternalStore 
 import type { FieldPath, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 import type { UiState } from '../components/uiState.ts';
-import { optionListKey, optionsDeclare, shownOption } from '../components/uiState.ts';
+import { optionListKey, optionsMayDisagreeAbout, shownOption } from '../components/uiState.ts';
 import useUiState from './useUiState.ts';
 
 /** The option an `anyOf`/`oneOf` field shows, and how to select another */
@@ -19,9 +19,10 @@ export interface ShownOptionState extends OptionSelectionState {
    * under
    */
   keepSelection: () => void;
-  /** Called before an edit to `property` of the object's own, beside its options: where an option declares the property
-   * too, such as one whose `const` tells the options apart, the data the edit leaves is matched again, as data from
-   * outside the field is; otherwise the option shown is kept, as for an edit inside it
+  /** Called before an edit to `property` of the object's own, beside its options: where the options can disagree about
+   * it, such as through a `const` or a `required` naming it or a keyword reading the object whole like
+   * `minProperties`, the data the edit leaves is matched again, as data from outside the field is; otherwise the option
+   * shown is kept, as for an edit inside it
    */
   editOwnProperty: (property: string | number | undefined) => void;
 }
@@ -79,7 +80,7 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
   const editOwnProperty = useCallback(
     (property: string | number | undefined) => {
       const { options: shownOptions } = shown.current;
-      if (typeof property === 'string' && shownOptions && optionsDeclare<S>(shownOptions, property)) {
+      if (shownOptions && optionsMayDisagreeAbout<S>(shownOptions, property)) {
         if (list !== undefined) {
           uiState.release(fieldPath, list);
         }
@@ -104,11 +105,11 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
  * With no selection, the option is the one `getClosestMatchingOption()` picks for the data, an option whose discriminator
  * holds the data's value first. A selection holds for the data the form last rendered under it and the data the
  * form's own changes leave at the field, so neither an edit inside the option, an edit to a property of the object's
- * own that no option declares, nor a parent declining a switch or an edit changes it. Other data, such as a parent's
- * new `formData`, a reset, a parent answering a switch with data of its own, or an edit to a property of the object's
- * own that an option declares too, is matched again, with the selection preferred where it fits the data as well as
- * any other option, and so is the data after it until the user switches or makes an edit that holds the option then
- * shown. Data holding a value for the declared discriminator is always matched, so an edit to the
+ * own that the options cannot disagree about, nor a parent declining a switch or an edit changes it. Other data, such
+ * as a parent's new `formData`, a reset, a parent answering a switch with data of its own, or an edit to a property of
+ * the object's own that they can disagree about, is matched again, with the selection preferred where it fits the data
+ * as well as any other option, and so is the data after it until the user switches or makes an edit that holds the
+ * option then shown. Data holding a value for the declared discriminator is always matched, so an edit to the
  * discriminator switches.
  *
  * Outside a `Form` the selection is kept by the outermost `SchemaField`, or the calling component when there is none,
