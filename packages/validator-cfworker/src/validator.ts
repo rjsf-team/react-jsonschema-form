@@ -107,7 +107,8 @@ export default class CFWorkerValidator<
    */
   private readonly validators = new Map<string, CachedValidator>();
 
-  /** The root schema registered under `ROOT_SCHEMA_PREFIX`, used to resolve prefixed `$ref` values.
+  /** The root schema registered under its `$id`, or `ROOT_SCHEMA_PREFIX` without one, used to resolve prefixed `$ref`
+   * values.
    *
    * @private
    */
@@ -225,9 +226,10 @@ export default class CFWorkerValidator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    // `withIdRefPrefix()` rewrites local refs to ROOT_SCHEMA_PREFIX, so the
-    // root must be registered under that alias even when it has its own $id.
-    const rootSchemaId = ROOT_SCHEMA_PREFIX;
+    // The root is registered under its own `$id`, so a `$ref` made absolute against that `$id` resolves into it as a
+    // local `$ref` that `withIdRefPrefix()` prefixes with it does. An empty `$id` names nothing, so a root without one
+    // is registered under `ROOT_SCHEMA_PREFIX` instead
+    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
     const rootWithId =
       rootSchema[ID_KEY] === rootSchemaId
         ? (rootSchema as object)
@@ -254,7 +256,9 @@ export default class CFWorkerValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withCfworkerRefs(withIdRefPrefix<S>(schema));
+      const schemaWithIdRefPrefix = withCfworkerRefs(
+        withIdRefPrefix<S>(schema, rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX),
+      );
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;

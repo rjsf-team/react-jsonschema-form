@@ -9,7 +9,9 @@ import type {
 import { createSchemaUtils, ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, getValidationTarget, noop } from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
-import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
+import pointerValidationTests, {
+  absoluteRefValidationTests,
+} from '../../utils/test/testUtils/pointerValidationTests.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 // Static import of the package surface so its top-level evaluation
 // (`export default customizeValidator()`) is included in coverage.
@@ -629,3 +631,4 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
 });
 
 pointerValidationTests(() => customizeValidator());
+absoluteRefValidationTests(() => customizeValidator());
