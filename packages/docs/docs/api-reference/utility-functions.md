@@ -2635,6 +2635,19 @@ Read it rather than `displayLabel`, which stays through v7 only for a template r
 
 - boolean: True when the template draws the label
 
+### titleDrawsOptionalDataControl&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#titledrawsoptionaldatacontrol}
+
+Whether an `ArrayFieldTemplate` or `ObjectFieldTemplate` lays out its optional data control in its heading, the one it draws for the `title` its field hands it.
+A readonly or disabled container, and one drawing no heading, as under `ui:label: false` or where a field above draws the text, lays the control out with its items or properties instead, so the control isn't dropped with the heading.
+
+#### Parameters
+
+- props: Pick&lt;ContainerFieldTemplateProps&lt;T, S, F>, 'title' | 'readonly' | 'disabled'> - The template's `title`, `readonly` and `disabled`
+
+#### Returns
+
+- boolean: True when the heading lays out the optional data control
+
 ### titleId()
 
 Return a consistent `id` for the field title element.
