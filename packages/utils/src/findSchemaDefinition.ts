@@ -39,16 +39,29 @@ function pointerTokens(pointer: string): string[] | undefined {
     .map((token) => token.replaceAll('~1', '/').replaceAll('~0', '~'));
 }
 
-/** Resolves an RFC 6901 JSON pointer against `obj`: the empty pointer is `obj` itself. Through `getByPath()` only own
- * properties resolve, so `/__proto__` finds nothing rather than `Object.prototype`, unless it is a genuine own data
- * key.
+/** Resolves the reference `tokens` of a JSON pointer against `obj`: no tokens is `obj` itself. Through `getByPath()`
+ * only own properties resolve, so `/__proto__` finds nothing rather than `Object.prototype`, unless it is a genuine
+ * own data key.
  */
-function getByPointer<R>(obj: R, pointer: string): R | undefined {
-  const tokens = pointerTokens(pointer);
-  if (tokens === undefined || tokens.length === 0) {
-    return tokens && obj;
+function getByPointerTokens<R>(obj: R, tokens: string[]): R | undefined {
+  if (tokens.length === 0) {
+    return obj;
   }
   return getByPath<R>(obj, tokens);
+}
+
+/** The `$id` of `schema` when it starts a resource. A fragment-only `$id` is a draft-07 plain-name anchor, which names
+ * a location in its resource rather than starting one. Every walk that rebases on an `$id` reads it through this.
+ */
+function resourceId(schema: GenericObjectType): string | undefined {
+  const id: unknown = schema[ID_KEY];
+  return typeof id === 'string' && !id.startsWith('#') ? id : undefined;
+}
+
+/** Rebases `baseURI` on the `$id` of `schema` when it starts a resource */
+function rebasedOn(baseURI: string | undefined, schema: GenericObjectType): string | undefined {
+  const id = resourceId(schema);
+  return id === undefined ? baseURI : resolveUri(baseURI ?? '', id);
 }
 
 /** RFC 3986 §5.1.4 lets an implementation assume a default base URI when a schema has none; `createSchemaUtils()`
@@ -65,8 +78,10 @@ const SYNTHETIC_BASE = `${SYNTHETIC_ORIGIN}/`;
 /** Percent-encoded unreserved characters (RFC 3986 §6.2.2.2: `ALPHA / DIGIT / "-" / "." / "_" / "~"`) */
 const ENCODED_UNRESERVED = /%(?:2[de]|5f|7e|3\d|4[1-9a-f]|5[0-9a]|6[1-9a-f]|7[0-9a])/gi;
 
-/** Resolves `ref` against `base`, returning `ref` as written for a base the parser rejects (e.g. an opaque `urn:` base
- * with a relative-path ref), so lookups keep working instead of throwing. What the synthetic base contributed is read
+/** Resolves `ref` against `base`, returning the URI normalized but for its percent-encoded unreserved characters. A
+ * base the parser rejects (e.g. an opaque `urn:` base with a relative-path ref) has no path the ref can resolve
+ * against, so the ref stays relative, normalized as it would be against no base at all, and lookups keep working
+ * instead of throwing. What the synthetic base contributed is read
  * off the parsed result: a real scheme means the base was absolute; the synthetic scheme with another host means the
  * base or the ref was a network-path reference, which keeps its `//host` and loses only the scheme; the synthetic host
  * means both were paths, which stay rooted when either started with `/` and relative otherwise
@@ -87,7 +102,8 @@ function resolveUri(base: string, ref: string): string {
     const rooted = ref.startsWith('/') || base.startsWith('/');
     return resolved.href.slice(rooted ? SYNTHETIC_ORIGIN.length : SYNTHETIC_BASE.length);
   } catch {
-    return ref;
+    // Against no base, only the ref itself can be what the parser rejects, so this recursion ends
+    return base === '' ? ref : resolveUri('', ref);
   }
 }
 
@@ -204,12 +220,13 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(
   baseURI = '',
   targets = refTargets(ref),
 ): [S, string] | undefined {
-  const schemaId = schema[ID_KEY];
+  const schemaId = resourceId(schema);
   let currentURI = baseURI;
-  if (typeof schemaId === 'string') {
+  if (schemaId !== undefined) {
     currentURI = resolveUri(baseURI, schemaId);
-    const candidateURI = currentURI.replace(/#$/, '');
-    if (targets.has(candidateURI) || targets.has(normalizeUri(candidateURI))) {
+    // `resolveUri()` has already normalized everything but the percent-encoded unreserved characters
+    const candidateURI = currentURI.replace(/#$/, '').replace(ENCODED_UNRESERVED, decodeURIComponent);
+    if (targets.has(candidateURI)) {
       return [schema, currentURI];
     }
   }
@@ -222,18 +239,18 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(
   return undefined;
 }
 
-/** Returns the base a relative `$ref` in the schema a JSON `pointer` names inside `resource` resolves against: the
- * resource's own `baseURI`, rebased on each `$id` the pointer passes through or ends on at a schema position. An `$id`
- * under a keyword that holds no subschemas is data rather than an identifier, as the walks above read it, and a
+/** Returns the base a relative `$ref` in the schema a JSON pointer's `tokens` name inside `resource` resolves against:
+ * the resource's own `baseURI`, rebased on each `$id` the pointer passes through or ends on at a schema position. An
+ * `$id` under a keyword that holds no subschemas is data rather than an identifier, as the walks above read it, and a
  * fragment-only `$id` is a draft-07 plain-name anchor, so neither starts a resource.
  */
-function baseAlongPointer(resource: unknown, pointer: string, baseURI: string | undefined): string | undefined {
+function baseAlongPointer(resource: unknown, tokens: string[], baseURI: string | undefined): string | undefined {
   let base = baseURI;
   let node = resource;
   // Whether `node` is a schema, a map or array of subschemas, or data no keyword reads as schemas
   let position: 'schema' | 'container' | 'data' = 'schema';
-  // Only called with a pointer `getByPointer()` resolved, so it has tokens and every one names an own property
-  for (const token of pointerTokens(pointer)!) {
+  // Only called with tokens `getByPointerTokens()` resolved, so every one names an own property
+  for (const token of tokens) {
     const next = getByPath(node, token);
     if (position === 'container') {
       position = 'schema';
@@ -246,22 +263,17 @@ function baseAlongPointer(resource: unknown, pointer: string, baseURI: string | 
       }
     }
     if (position === 'schema' && isObject(next)) {
-      base = rebasedOn(base, next[ID_KEY]);
+      base = rebasedOn(base, next);
     }
     node = next;
   }
   return base;
 }
 
-/** Rebases `baseURI` on a schema's `$id`. A fragment-only `$id` is a draft-07 plain-name anchor, which names a location
- * in its resource rather than starting one.
- */
-function rebasedOn(baseURI: string | undefined, id: unknown): string | undefined {
-  return typeof id === 'string' && !id.startsWith('#') ? resolveUri(baseURI ?? '', id) : baseURI;
-}
-
 /** Returns the base the `$ref` of `schema` and the keywords beside it resolve against: `baseURI`, rebased on the
- * schema's own `$id` in a 2020-12 bundle, the only kind of root in which a lookup finds a resource by its `$id`.
+ * schema's own `$id` in a 2020-12 bundle, the only kind of root in which a lookup finds a resource by its `$id`. The
+ * walk that met `schema` cannot tell whether it sits at a schema position, and an `$id` under a keyword that holds no
+ * subschemas, such as `components`, is data that no lookup finds, so the base only moves to an `$id` a lookup finds.
  *
  * @param schema - The schema whose `$ref` is being resolved
  * @param rootSchema - The root schema the `$ref` is looked up in
@@ -273,7 +285,11 @@ export function ownBaseURI<S extends StrictRJSFSchema = RJSFSchema>(
   rootSchema: S,
   baseURI: string | undefined = rootSchema[ID_KEY],
 ): string | undefined {
-  return rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12 ? rebasedOn(baseURI, schema[ID_KEY]) : baseURI;
+  const ownURI = rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12 ? rebasedOn(baseURI, schema) : baseURI;
+  if (ownURI === baseURI || ownURI === undefined) {
+    return baseURI;
+  }
+  return findEmbeddedSchemaRecursive(rootSchema, ownURI) === undefined ? baseURI : ownURI;
 }
 
 /** Looks up a `$ref` that names a resource embedded in a JSON Schema bundle, resolved to `resolvedRef`, along with
@@ -288,9 +304,12 @@ function findEmbeddedDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   if (found === undefined || refAnchor.length === 0) {
     return found;
   }
-  const pointer = decodeURIComponent(refAnchor.join('#'));
-  const definition = getByPointer(found[0], pointer);
-  return definition === undefined ? undefined : [definition, baseAlongPointer(found[0], pointer, found[1])];
+  const tokens = pointerTokens(decodeURIComponent(refAnchor.join('#')));
+  if (tokens === undefined) {
+    return undefined;
+  }
+  const definition = getByPointerTokens(found[0], tokens);
+  return definition === undefined ? undefined : [definition, baseAlongPointer(found[0], tokens, found[1])];
 }
 
 /** Applies `fn` to the direct subschemas of `schema` (following the keyword shapes above), rebuilding only
@@ -356,8 +375,8 @@ function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(
  * @param baseURI - The base URI to be used for resolving relative references
  */
 export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
-  const schemaId = schema[ID_KEY];
-  const currentURI = typeof schemaId === 'string' ? resolveUri(baseURI, schemaId) : baseURI;
+  const schemaId = resourceId(schema);
+  const currentURI = schemaId === undefined ? baseURI : resolveUri(baseURI, schemaId);
   const ref = schema[REF_KEY];
   // The mapped subschemas never touch the `$ref` data key, so its rewrite is computed up front and
   // passed to the rebuild as `extraChanges`.
@@ -420,10 +439,13 @@ export function findSchemaDefinitionWithBase<S extends StrictRJSFSchema = RJSFSc
     } else if (isBundle) {
       resource = findEmbeddedSchemaRecursive<S>(rootSchema, baseURI);
     }
-    const definition = resource && getByPointer(resource[0], decodedRef);
-    if (resource !== undefined && definition !== undefined) {
-      // Only a 2020-12 bundle looks a base up again, so only there does a pointer into an embedded resource rebase
-      found = [definition, isBundle ? baseAlongPointer(resource[0], decodedRef, resource[1]) : baseURI];
+    const tokens = pointerTokens(decodedRef);
+    if (resource !== undefined && tokens !== undefined) {
+      const definition = getByPointerTokens(resource[0], tokens);
+      if (definition !== undefined) {
+        // Only a 2020-12 bundle looks a base up again, so only there does a pointer into an embedded resource rebase
+        found = [definition, isBundle ? baseAlongPointer(resource[0], tokens, resource[1]) : baseURI];
+      }
     }
   } else if (isBundle) {
     const resolvedRef = baseURI ? resolveUri(baseURI, ref) : ref;

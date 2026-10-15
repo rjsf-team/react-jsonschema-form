@@ -338,6 +338,10 @@ describe('findSchemaDefinition()', () => {
       expect(() => findSchemaDefinition(ref, rfc6901, rfc6901.$id)).toThrow(`Could not find a definition for ${ref}`);
     });
   });
+  it('throws for a bundled ref whose fragment is not a JSON pointer', () => {
+    const ref = 'https://example.com/bundled.ref.json#foo';
+    expect(() => findSchemaDefinition(ref, bundledSchema)).toThrow(`Could not find a definition for ${ref}`);
+  });
   it('resolves refs against a base URI that differs from the `$id` only by case and default port', () => {
     expect(findSchemaDefinition('#/properties/num', bundledSchema, 'HTTPS://Example.com:443/bundled.ref.json')).toBe(
       internalSchema.properties!.num,
@@ -484,6 +488,19 @@ describe('findSchemaDefinition()', () => {
       } as unknown as RJSFSchema;
       const utils = createSchemaUtils({ validator: getTestValidator({}) }, bundle);
       expect(utils.retrieveSchema(utils.getRootSchema()).properties!.a).toMatchObject({ type: 'string' });
+    });
+    it('does not rebase on an `$id` beside a `$ref` under a keyword that holds no subschemas', () => {
+      const bundle = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        properties: { a: { $ref: '#/components/Pet' } },
+        components: {
+          Pet: { type: 'object', properties: { n: { $id: 'n.json', $ref: '#/components/Base' } } },
+          Base: { type: 'string' },
+        },
+      } as unknown as RJSFSchema;
+      const utils = createSchemaUtils({ validator: getTestValidator({}) }, bundle);
+      const a = utils.retrieveSchema(utils.getRootSchema()).properties!.a as RJSFSchema;
+      expect(a.properties!.n).toMatchObject({ $id: 'n.json', type: 'string' });
     });
     it('reads a circular reference the caller already followed under the base it passes', () => {
       const bundle = bundleUnder('https://example.com/root.json');
@@ -688,6 +705,17 @@ describe('findSchemaDefinition()', () => {
     expect(() => findSchemaDefinition('relative.json', urnSchema)).toThrow(
       'Could not find a definition for relative.json',
     );
+  });
+  it('keeps a relative `$id` and `$ref` under a `urn:` base relative, without their dot segments', () => {
+    const child: RJSFSchema = { $id: './child.json', type: 'string' };
+    const urnSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'urn:example:root',
+      properties: { a: { $ref: './child.json' } },
+      $defs: { child },
+    };
+    expect(findSchemaDefinition('child.json', urnSchema)).toBe(child);
+    expect(makeAllReferencesAbsolute(urnSchema, '#').properties!.a).toStrictEqual({ $ref: 'child.json' });
   });
   it('resolves refs whose `$id`s use an internationalized host name, a network-path ref or a `file:` scheme', () => {
     const hostSchema: RJSFSchema = {
