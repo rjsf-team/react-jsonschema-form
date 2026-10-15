@@ -55,7 +55,7 @@ function isSameType(oldType: unknown, newType: unknown): boolean {
   return oldTypes.size === newTypes.size && oldType.every((type) => newTypes.has(type));
 }
 
-function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: any) {
+function replacementForInvalidEnumValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S, formValue: unknown) {
   const enumValues = enumValuesForSchema(schema);
   if (!enumValues || enumValues.some((value) => deepEquals(value, formValue))) {
     return NO_VALUE;
@@ -309,11 +309,13 @@ function sanitizeDataForNewSchemaInternal<
       // The previous data only feeds the enum filter decision below; field removal, the type check and the
       // default/const swap all read the schema as the current data resolves it
       const oldKeyedSchema = retrieveSchema<T, S, F>(context, oldRawKeyedSchema, rootSchema, formValue);
-      // The old and new raw schema for a key are usually identical (most keys aren't touched by whatever changed),
-      // so skip resolving (and re-running any oneOf/dependency validity checks) a second time in that common case.
-      const newKeyedSchema = deepEquals(oldRawKeyedSchema, newRawKeyedSchema)
-        ? oldKeyedSchema
-        : retrieveSchema<T, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
+      // The old and new raw schema for a key are usually the same object (most keys aren't touched by whatever
+      // changed, and a schema `Form` re-resolves keeps the subschemas that did not change), so skip resolving (and
+      // re-running any oneOf/dependency validity checks) a second time in that common case.
+      const newKeyedSchema =
+        oldRawKeyedSchema === newRawKeyedSchema
+          ? oldKeyedSchema
+          : retrieveSchema<T, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
       // Now get types and see if they are the same. A type that was guessed from the data of an `additionalProperties`
       // entry the schema puts no constraint on describes what that data was rather than what the schema requires, so
       // it is treated as no type at all: the data changing type is a change of data, not a change of schema. That only
@@ -492,10 +494,9 @@ function sanitizeDataForNewSchemaInternal<
       // `resolveOldSchemaPrev()` already memoizes, so this stays a plain read of it
       const resolveOldSchemaItemsPrevRaw = () => resolveOldSchemaPrev()?.[ITEMS_KEY] as S | undefined;
       oldSchemaItems = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data as T);
-      // The old and new raw items schema are usually identical, so skip resolving a second time in that
-      // common case. The raw comparison does not change per element, so it is computed once here rather
-      // than inside the per-element loop below
-      const sameRawItemsSchema = deepEquals(oldSchemaItemsRaw, newSchemaItemsRaw);
+      // The old and new raw items schema are usually the same object, so skip resolving a second time in that common
+      // case
+      const sameRawItemsSchema = oldSchemaItemsRaw === newSchemaItemsRaw;
       newSchemaItems = sameRawItemsSchema
         ? oldSchemaItems
         : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data as T);
@@ -555,7 +556,7 @@ function sanitizeDataForNewSchemaInternal<
           // The comparison runs only when some item would actually be dropped, since it can cost a resolve
           const newItemEnumValues = enumValuesForSchema(newSchemaItems as S);
           const filtered = newItemEnumValues
-            ? data.filter((item: any) => newItemEnumValues.some((v: any) => deepEquals(v, item)))
+            ? data.filter((item: unknown) => newItemEnumValues.some((v) => deepEquals(v, item)))
             : data;
           const filteredData =
             newItemEnumValues &&
@@ -565,7 +566,7 @@ function sanitizeDataForNewSchemaInternal<
               // The committed side, as the scalar path compares it: a push or reset can cross a
               // conditional branch without settling, leaving the chain on the new side's branch while
               // the committed items schema still holds the branch the data came from (#5250). Where the
-              // raw items schemas agree the resolved ones are the same object, so this costs nothing
+              // raw items schemas are the same object the resolved ones are too, so this costs nothing
               // and the filter still skips (#5451)
               !deepEquals(oldSchemaItems, newSchemaItems) ||
               constraintMayHaveChanged<T, S, F>(

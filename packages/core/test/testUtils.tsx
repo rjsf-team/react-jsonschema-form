@@ -1,14 +1,16 @@
 import type { ComponentType, ReactNode, RefObject } from 'react';
 import { Activity, createRef, useEffect, useState } from 'react';
 import type { GenericObjectType, ValidatorType, WidgetProps } from '@rjsf/utils';
-import { createSchemaUtils, noop } from '@rjsf/utils';
+import { createSchemaUtils } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, fireEvent } from '@testing-library/react';
 import type { UserEvent } from '@testing-library/user-event';
-import type { Mock, MockInstance } from 'vitest';
+import type { Mock } from 'vitest';
 
 import type { FormRef, FormProps, IChangeEvent } from '../src/index.ts';
 import Form from '../src/index.ts';
+
+export { setupConsoleErrorSuppression, setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 
 export type NoValFormProps = Omit<FormProps, 'validator'>;
 
@@ -123,9 +125,6 @@ export interface FormComponentResult {
   unmount: () => void;
   /** The data the form renders, read through its handle; the way to check the defaults a seed was filled with */
   getFormData: () => unknown;
-}
-export interface ConsoleSuppressionResult {
-  readonly consoleSpy: MockInstance;
 }
 
 /** What a controlled parent has done so far: the value it currently renders and every proposal the form sent it.
@@ -380,71 +379,4 @@ export async function delayPromise(delay = 100) {
 
 export function actWrappedDelayPromise(delay = 100) {
   return act(async () => delayPromise(delay));
-}
-
-// React's invokeGuardedCallback (dev mode) re-throws render errors by dispatching a synthetic
-// DOM event on a fake node. jsdom catches that throw and calls reportException(), which fires
-// an ErrorEvent on window and — if unhandled — forwards it to the virtualConsole, producing
-// "Error: ..." lines in vitest's stderr. Calling event.preventDefault() marks the error as
-// handled, stopping both the virtualConsole output and any uncaughtException emission.
-//
-// We also keep a file-level console.error spy so individual tests can assert on React's
-// "The above error occurred in the <Component> component" messages without creating per-test
-// spies that call mockRestore() — which would silently kill the file-level spy for every
-// subsequent test in the file.
-//
-// Call this once at the top of a test file or describe block (not inside a test).
-// The returned object's `consoleSpy` getter is safe to access inside test bodies.
-export function setupConsoleErrorSuppression(): ConsoleSuppressionResult {
-  let spy: MockInstance;
-
-  function handleWindowError(event: ErrorEvent): void {
-    if (event.error instanceof Error) {
-      event.preventDefault();
-    }
-  }
-
-  beforeAll(() => {
-    spy = vi.spyOn(console, 'error').mockImplementation(noop);
-    window.addEventListener('error', handleWindowError);
-  });
-  beforeEach(() => {
-    spy.mockClear();
-  });
-  afterAll(() => {
-    window.removeEventListener('error', handleWindowError);
-    spy.mockRestore();
-  });
-
-  return {
-    get consoleSpy() {
-      return spy;
-    },
-  };
-}
-
-// Companion to setupConsoleErrorSuppression for tests that produce expected console.warn
-// output. console.warn calls go directly through the spy (no jsdom/window involvement),
-// so no window event listener is needed here.
-//
-// Call this once at the top of a test file or describe block (not inside a test).
-// The returned object's `consoleSpy` getter is safe to access inside test bodies.
-export function setupConsoleWarnSuppression(): ConsoleSuppressionResult {
-  let spy: MockInstance;
-
-  beforeAll(() => {
-    spy = vi.spyOn(console, 'warn').mockImplementation(noop);
-  });
-  beforeEach(() => {
-    spy.mockClear();
-  });
-  afterAll(() => {
-    spy.mockRestore();
-  });
-
-  return {
-    get consoleSpy() {
-      return spy;
-    },
-  };
 }

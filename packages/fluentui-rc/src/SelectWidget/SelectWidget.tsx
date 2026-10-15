@@ -1,4 +1,5 @@
 import type { OptionOnSelectData } from '@fluentui/react-combobox';
+import type { DropdownProps } from '@fluentui/react-components';
 import { Dropdown, Field, Option, OptionGroup } from '@fluentui/react-components';
 import type { FormContextType, IndexedEnumOptionType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
@@ -66,14 +67,12 @@ function SelectWidget<
   const selectedOptionsWithIndex =
     matchedIndexes === undefined || !enumOptions
       ? []
-      : ([] as string[])
-          .concat(matchedIndexes)
-          .map((index) => ({ index: Number(index), ...enumOptions[Number(index)] }));
+      : [matchedIndexes].flat().map((index) => ({ index: Number(index), ...enumOptions[Number(index)] }));
   const dropdownValue = selectedOptionsWithIndex.map((option) => option.label).join(', ');
   const selectedOptions = selectedOptionsWithIndex.map((option) => domValues[option.index]);
 
   const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
-  const handleChange = (_: any, data: OptionOnSelectData) => {
+  const handleChange: NonNullable<DropdownProps['onOptionSelect']> = (_, data) => {
     const newValue = getValue(data, multiple);
     onChange(enumOptionValueDecoder<S>(newValue, enumOptions, optionValueFormat, optEmptyVal));
   };

@@ -20,9 +20,9 @@ import './jsonSchemaAugmentation.ts';
 export type GenericObjectType = Record<string, any>;
 
 /** A callback whose parameters are checked bivariantly, the way React checks event handlers, so a props type carrying
- * one stays covariant in `T`.
+ * one stays covariant in `T`, and an implementation may declare narrower parameters than the callback's own.
  */
-type Bivariant<Args extends unknown[], R = void> = { bivarianceHack(...args: Args): R }['bivarianceHack'];
+export type Bivariant<Args extends unknown[], R = void> = { bivarianceHack(...args: Args): R }['bivarianceHack'];
 
 /** Never constructed: its `constructor` declaration gives class components the same bivariant props check that
  * `Bivariant` gives function components, which a constructor type written out as `new (props: P) => …` would not.

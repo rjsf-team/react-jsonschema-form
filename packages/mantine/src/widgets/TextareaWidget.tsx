@@ -69,6 +69,7 @@ export default function TextareaWidget<
       name={htmlName || id}
       value={value || ''}
       placeholder={placeholder || undefined}
+      rows={options.rows}
       required={required}
       disabled={disabled || readonly}
       autoFocus={autofocus}

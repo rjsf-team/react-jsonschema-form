@@ -11831,7 +11831,7 @@ exports[`single fields > select field 1`] = `
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"
@@ -11926,7 +11926,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"
@@ -12071,7 +12071,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"
@@ -12475,7 +12475,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"
@@ -12600,7 +12600,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"
@@ -12948,7 +12948,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"
@@ -13103,7 +13103,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                 class="truncate"
                 id="root__value"
               >
-                Select...
+                Select ...
               </span>
               <span
                 aria-hidden="true"

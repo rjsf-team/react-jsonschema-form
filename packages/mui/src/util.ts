@@ -30,7 +30,7 @@ export function getMuiProps<
 >(options: UIOptionsType<T, S, F>, propsToFilter?: string[], rjsfSlotPropsOnly?: boolean): P {
   const muiProps = (options?.mui as P) || ({} as P);
   if (rjsfSlotPropsOnly) {
-    const { rjsfSlotProps } = muiProps as any;
+    const { rjsfSlotProps } = muiProps;
     return { rjsfSlotProps } as unknown as P;
   }
   if (propsToFilter) {
@@ -60,7 +60,7 @@ export function getMuiProps<
  */
 export function computeSxProps<MuiProps extends GridProps>(
   sxProps: SxProps<Theme>,
-  muiProps: MuiProps & { sx: any[] },
+  muiProps: MuiProps & { sx: SxArray },
 ): MuiProps['sx'] | MuiProps['sx'][];
 export function computeSxProps<MuiProps extends BoxProps | FormHelperTextProps | PaperProps | TypographyProps>(
   sxProps: SxProps<Theme>,

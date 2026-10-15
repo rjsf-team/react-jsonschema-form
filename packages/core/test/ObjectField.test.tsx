@@ -1318,6 +1318,36 @@ describe('ObjectField', () => {
       expect(node.querySelector('#root_count')).toHaveValue('0');
     });
 
+    it('should seed from the uiSchema entry of a declared name whose schema equals the additionalProperties one', async () => {
+      // The seed is read for the new name whether or not the two names' schemas differ: a declared name with an equal
+      // schema still brings up its own `uiSchema` entry, whose `ui:initialValue` the renamed property takes. The
+      // entry arrives after mount, since one there at mount would have filled the declared property in already
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { note: { type: 'string' } },
+        additionalProperties: { type: 'string' },
+      };
+      const { node, onChange, rerender } = createFormComponent({
+        schema,
+        uiSchema: { additionalProperties: { 'ui:initialValue': 'AP' } },
+      });
+      rerender({
+        schema,
+        uiSchema: { note: { 'ui:initialValue': 'from note' }, additionalProperties: { 'ui:initialValue': 'AP' } },
+      });
+
+      await user.click(node.querySelector('.rjsf-object-property-expand button')!);
+      expectToHaveBeenCalledWithFormData(onChange, { newKey: 'AP' }, 'root');
+
+      const keyInput = node.querySelector('#root_newKey-key')!;
+      await user.clear(keyInput);
+      await user.type(keyInput, 'note');
+      await user.tab();
+
+      expectToHaveBeenCalledWithFormData(onChange, { note: 'from note', newKey: undefined }, 'root');
+      expect(node.querySelector('#root_note')).toHaveValue('from note');
+    });
+
     it('should re-seed an untouched new property from the declared schema when it is renamed onto a declared name', async () => {
       // The key input is free text, so a property can be renamed onto a name the object's own `properties` declare,
       // and the field that name then renders is the declared property's. Reading `additionalProperties` for that name

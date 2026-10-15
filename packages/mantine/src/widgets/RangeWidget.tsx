@@ -60,7 +60,7 @@ const sliderExcludedKeyRecord: Record<SliderExcludedKey, true> = {
   withSuccessStyles: true,
   wrapperProps: true,
 };
-const sliderExcludedKeys = Object.keys(sliderExcludedKeyRecord);
+const sliderExcludedKeys = new Set(Object.keys(sliderExcludedKeyRecord));
 
 interface FieldSliderProps extends Omit<SliderProps, 'thumbProps'> {
   id: string;
@@ -125,7 +125,7 @@ export default function RangeWidget<
   );
 
   const handleChange = useCallback(
-    (nextValue: any) => {
+    (nextValue: number) => {
       if (!disabled && !readonly && onChange) {
         onChange(nextValue);
       }

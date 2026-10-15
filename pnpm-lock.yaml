@@ -290,9 +290,6 @@ importers:
       '@emotion/cache':
         specifier: ^11.14.0
         version: 11.14.0
-      '@emotion/is-prop-valid':
-        specifier: ^1.4.0
-        version: 1.4.0
       '@emotion/weak-memoize':
         specifier: ^0.4.0
         version: 0.4.0

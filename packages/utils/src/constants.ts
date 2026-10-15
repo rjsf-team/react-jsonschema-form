@@ -2,9 +2,10 @@ import type { JSONSchema7TypeName } from 'json-schema';
 
 /** Below are the list of all the keys into various elements of a RJSFSchema or UiSchema that are used by the various
  * utility functions. In addition to those keys, there are the special `ADDITIONAL_PROPERTY_FLAG`,
- * `GUESSED_TYPE_FLAG`, `RJSF_REF_KEY`, and `RJSF_REF_CYCLE_KEY` Symbols that are added to a schema under certain
- * conditions by the `retrieveSchema()` utility. Using Symbols keeps these internal markers invisible to JSON
- * serialisation and JSON Schema validators (AJV, ATA, etc.), which only enumerate string-keyed properties.
+ * `GUESSED_TYPE_FLAG`, `RJSF_REF_KEY`, `RJSF_REF_CYCLE_KEY` and `RJSF_REF_SIBLING_BRANCHES_KEY` Symbols that are
+ * added to a schema under certain conditions by the `retrieveSchema()` utility. Using Symbols keeps these internal
+ * markers invisible to JSON serialisation and JSON Schema validators (AJV, ATA, etc.), which only enumerate
+ * string-keyed properties.
  */
 export const ADDITIONAL_PROPERTY_FLAG = Symbol('__additional_property');
 export const ADDITIONAL_PROPERTIES_KEY = 'additionalProperties';
@@ -34,6 +35,11 @@ export const THEN_KEY = 'then';
 export const UNEVALUATED_PROPERTIES_KEY = 'unevaluatedProperties';
 export const RJSF_REF_KEY = Symbol('__rjsf_ref');
 export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
+/** Marks a schema resolved from a `$ref` that had branch keywords (`allOf`, `dependencies`, `else`, `then`) beside it
+ * with the names of those keywords. The resolved schema holds the definition's keywords and the ones from beside the
+ * `$ref` alike, and only this tells them apart.
+ */
+export const RJSF_REF_SIBLING_BRANCHES_KEY = Symbol('__rjsf_ref_sibling_branches');
 export const SCHEMA_KEY = '$schema';
 export const DEFAULT_ID_PREFIX = 'root';
 export const DEFAULT_ID_SEPARATOR = '_';

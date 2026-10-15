@@ -65,7 +65,7 @@ export default function SelectWidget<
     [enumOptions, optionValueFormat],
   );
 
-  const handleChange = (nextValue: any) =>
+  const handleChange: SelectProps['onChange'] = (nextValue) =>
     onChange(enumOptionValueDecoder<S>(nextValue, enumOptions, optionValueFormat, emptyValue));
 
   const { handleFocus, handleBlur } = useSelectFocusHandlers<T, S, F>({ id, value, options, onFocus, onBlur });
