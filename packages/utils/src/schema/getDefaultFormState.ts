@@ -37,6 +37,7 @@ import optionsList from '../optionsList.ts';
 import { getByPath } from '../pathUtils.ts';
 import { enclosingRefPath, resolvedFromRef } from '../refOf.ts';
 import resolveUiSchema from '../resolveUiSchema.ts';
+import setOwn from '../setOwn.ts';
 import toConstant from '../toConstant.ts';
 import type {
   DefaultFormStateBehavior,
@@ -158,15 +159,6 @@ export function computeDefaultBasedOnSchemaTypeAndDefaults<T = unknown, S extend
   return shouldReturnNullAsDefault ? (null as T) : computedDefault;
 }
 
-/** Writes a computed default as an own key without invoking the prototype setter. */
-function setOwnDefault(acc: GenericObjectType, key: string, value: unknown) {
-  if (key === '__proto__') {
-    Object.defineProperty(acc, key, { value, enumerable: true, writable: true, configurable: true });
-  } else {
-    acc[key] = value;
-  }
-}
-
 /** Either add `computedDefault` at `key` into `obj` or not add it based on its value, the value of
  * `includeUndefinedValues`, the value of `emptyObjectFields` and if its parent field is required. Generally undefined
  * `computedDefault` values are added only when `includeUndefinedValues` is either true/"excludeObjectChildren". If `
@@ -188,7 +180,6 @@ function setOwnDefault(acc: GenericObjectType, key: string, value: unknown) {
  * @param isConst - Optional flag, if true, indicates that the schema has a const property defined, thus we should always return the computedDefault since it's coming from the const.
  * @param isNullType - The type of the schema is null
  */
-
 function maybeAddDefaultToObject<T = unknown>(
   acc: GenericObjectType,
   key: string,
@@ -203,7 +194,7 @@ function maybeAddDefaultToObject<T = unknown>(
   if (includeUndefinedValues === true || isConst) {
     // If includeUndefinedValues is explicitly true
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
-    setOwnDefault(acc, key, computedDefault);
+    setOwn(acc, key, computedDefault);
   } else if (includeUndefinedValues === 'excludeObjectChildren') {
     // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
     // Only add the computed default if it's not an empty object placeholder for a primitive field
@@ -212,7 +203,7 @@ function maybeAddDefaultToObject<T = unknown>(
       !isObject(computedDefault) ||
       Object.keys(computedDefault).length > 0
     ) {
-      setOwnDefault(acc, key, computedDefault);
+      setOwn(acc, key, computedDefault);
     }
     // If computedDefault is an empty object {}, don't add it - let the field stay undefined
   } else if (emptyObjectFields !== 'skipDefaults') {
@@ -224,7 +215,7 @@ function maybeAddDefaultToObject<T = unknown>(
       // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
       if (emptyObjectFields === 'skipEmptyDefaults') {
         if (Object.keys(computedDefault).length > 0) {
-          setOwnDefault(acc, key, computedDefault);
+          setOwn(acc, key, computedDefault);
         }
       } // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
@@ -233,7 +224,7 @@ function maybeAddDefaultToObject<T = unknown>(
         (Object.keys(computedDefault).length > 0 || requiredFields.includes(key)) &&
         (isSelfOrParentRequired || emptyObjectFields !== 'populateRequiredDefaults')
       ) {
-        setOwnDefault(acc, key, computedDefault);
+        setOwn(acc, key, computedDefault);
       }
     } else if (
       // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
@@ -245,7 +236,7 @@ function maybeAddDefaultToObject<T = unknown>(
         emptyObjectFields === 'skipEmptyDefaults' ||
         (isSelfOrParentRequired && requiredFields.includes(key)))
     ) {
-      setOwnDefault(acc, key, computedDefault);
+      setOwn(acc, key, computedDefault);
     }
   }
 }
@@ -315,7 +306,10 @@ export function computeDefaults<
   // Apply `ui:definitions` at every node, keyed by the `$ref` `retrieveSchema()` recorded when it resolved this
   // node, so defaults see the same uiSchema `SchemaField` renders with.
   const uiSchema = uiSchemaDefinitions
-    ? resolveUiSchema<T, S, F>(rawSchema, localUiSchema, { rootSchema, uiSchemaDefinitions })
+    ? resolveUiSchema<T, S, F>(rawSchema, localUiSchema, {
+        rootSchema,
+        uiSchemaDefinitions,
+      })
     : localUiSchema;
   const computeDefaultsProps = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
@@ -436,7 +430,10 @@ export function computeDefaults<
       // constAsDefaults as 'never' for the recursion
       contextToCompute = {
         ...context,
-        defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' },
+        defaultFormStateBehavior: {
+          ...defaultFormStateBehavior,
+          constAsDefaults: 'never',
+        },
       };
     }
     // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick
@@ -484,7 +481,10 @@ export function computeDefaults<
           updatedRecurseList = _recurseList.concat(optionRef);
           const { [REF_KEY]: _ref, ...besideRef } = optionSchema;
           const referenced = findSchemaDefinition<S>(optionRef, rootSchema);
-          renderedOption = getRenderedOptionSchema<S>(remaining as S, { ...referenced, ...besideRef });
+          renderedOption = getRenderedOptionSchema<S>(remaining as S, {
+            ...referenced,
+            ...besideRef,
+          });
         }
         schemaToCompute = withDefaultOf(remaining, renderedOption) as S;
       }
@@ -617,7 +617,7 @@ export function ensureFormDataMatchingSchema<
           Object.hasOwn(acc, key) &&
           (shouldRetrieveAllOf || (isObject(propertySchema) && ALL_OF_KEY in propertySchema))
         ) {
-          setOwnDefault(acc, key, ensureFormDataMatchingSchema<T, S, F>(context, propertySchema, rootSchema, acc[key]));
+          setOwn(acc, key, ensureFormDataMatchingSchema<T, S, F>(context, propertySchema, rootSchema, acc[key]));
         }
         return acc;
       },
@@ -694,7 +694,10 @@ export function getObjectDefaults<
         const propertySchema = getPropertySchema<S>(retrievedSchema, key);
         // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
         // should always return the computedDefault since it's coming from the const.
-        const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;
+        const hasParentConst =
+          isObject(parentConst) &&
+          Object.hasOwn(parentConst, key) &&
+          (parentConst as JSONSchema7Object)[key] !== undefined;
         const hasConst =
           ((isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst) &&
           defaultFormStateBehavior?.constAsDefaults !== 'never' &&
