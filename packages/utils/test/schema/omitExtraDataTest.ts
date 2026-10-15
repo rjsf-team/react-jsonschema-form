@@ -1865,5 +1865,18 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(formData.route.mux.p2s).toHaveLength(1);
       });
     });
+    it('keeps the fields of a $ref under a relative root $id through createSchemaUtils() (#5529)', () => {
+      const schema: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $id: 'nested/root.json',
+        $defs: { c: { $id: 'child.json', type: 'object', properties: { v: { type: 'string' } } } },
+        type: 'object',
+        properties: { c: { $ref: 'child.json' } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+      expect(schemaUtils.omitExtraData(schemaUtils.getRootSchema(), { c: { v: 'x', extra: 1 } })).toEqual({
+        c: { v: 'x' },
+      });
+    });
   });
 }

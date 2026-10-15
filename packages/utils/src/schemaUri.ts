@@ -5,23 +5,21 @@ import {
   DEFINITIONS_KEY,
   DEPENDENCIES_KEY,
   ELSE_KEY,
-  ID_KEY,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
   PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
-  REF_KEY,
   THEN_KEY,
   UNEVALUATED_PROPERTIES_KEY,
 } from './constants.ts';
 import isObject from './isObject.ts';
-import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types.ts';
+import type { GenericObjectType } from './types.ts';
 
-/** RFC 3986 §5.1.4 lets an implementation assume a default base URI when a schema has none; `createSchemaUtils()`
- * passes `'#'` for a root without `$id`, and nested `$id`s are relative URI-references (2020-12 §8.2.1). The `URL`
- * parser only resolves against an absolute base, so relative bases are resolved against this synthetic one, which is
- * then stripped back off; absolute bases pass through it unchanged. The scheme is deliberately not one of the `URL`
+/** RFC 3986 §5.1.4 lets an implementation assume a default base URI when a schema has none, and `$id`s may be
+ * relative URI-references (2020-12 §8.2.1). The `URL` parser only resolves against an absolute base, so relative
+ * bases are resolved against this synthetic one, which is then stripped back off; absolute bases pass through it
+ * unchanged. The scheme is deliberately not one of the `URL`
  * spec's "special" schemes, which would additionally rewrite `\` as `/` in every path they touch.
  */
 const SYNTHETIC_PROTOCOL = 'rjsf-base:';
@@ -119,78 +117,6 @@ export function keywordShape(key: string, value: unknown): 'map' | 'array' | 'si
     return 'single';
   }
   return undefined;
-}
-
-/** Applies `fn` to the direct subschemas of `schema` (following the keyword shapes above), rebuilding only
- * the containers whose contents changed. `extraChanges` carries updates to the schema's own data keys,
- * included in the same rebuild. When neither a subschema nor an extra change differs,
- * `schema` itself is returned, so identity means nothing changed. The rebuild spreads the original node and
- * overwrites only the changed keys, so symbol keys (such as the rjsf flag Symbols) survive it.
- */
-function mapSubschemas<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  fn: (subSchema: S) => S,
-  extraChanges?: GenericObjectType,
-): S {
-  const changed: GenericObjectType = {};
-  let anyChanged = false;
-  const apply = (key: string, next: unknown) => {
-    if (next !== (schema as unknown as GenericObjectType)[key]) {
-      changed[key] = next;
-      anyChanged = true;
-    }
-  };
-  for (const [key, value] of Object.entries(schema)) {
-    const shape = keywordShape(key, value);
-    if (shape === 'map') {
-      let mapped: GenericObjectType | undefined;
-      for (const [name, subSchema] of Object.entries(value as GenericObjectType)) {
-        const nextSubSchema = isObject(subSchema) ? fn(subSchema as S) : subSchema;
-        if (nextSubSchema !== subSchema) {
-          mapped = mapped ?? { ...(value as GenericObjectType) };
-          mapped[name] = nextSubSchema;
-        }
-      }
-      if (mapped !== undefined) {
-        apply(key, mapped);
-      }
-    } else if (shape === 'array') {
-      let mapped: unknown[] | undefined;
-      (value as unknown[]).forEach((subSchema, index) => {
-        const nextSubSchema = isObject(subSchema) ? fn(subSchema as S) : subSchema;
-        if (nextSubSchema !== subSchema) {
-          mapped = mapped ?? [...(value as unknown[])];
-          mapped[index] = nextSubSchema;
-        }
-      });
-      if (mapped !== undefined) {
-        apply(key, mapped);
-      }
-    } else if (shape === 'single') {
-      apply(key, fn(value as S));
-    }
-  }
-  for (const [key, next] of Object.entries(extraChanges ?? {})) {
-    apply(key, next);
-  }
-  return anyChanged ? { ...schema, ...changed } : schema;
-}
-
-/** Parses a JSONSchema and makes all references absolute with respect to
- * the `baseURI` argument. The walk follows the schema-valued keywords (see the keyword sets above): only a
- * string `$ref` is a reference to resolve, and only a string `$id` re-bases its subtree.
- *
- * @param schema - The schema to be processed
- * @param baseURI - The base URI to be used for resolving relative references
- */
-export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
-  const schemaId = schema[ID_KEY];
-  const currentURI = typeof schemaId === 'string' ? resolveUri(baseURI, schemaId) : baseURI;
-  const ref = schema[REF_KEY];
-  // The mapped subschemas never touch the `$ref` data key, so its rewrite is computed up front and
-  // passed to the rebuild as `extraChanges`.
-  const refChange = typeof ref === 'string' ? { [REF_KEY]: resolveUri(currentURI, ref) } : undefined;
-  return mapSubschemas(schema, (subSchema) => makeAllReferencesAbsolute(subSchema, currentURI), refChange);
 }
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first

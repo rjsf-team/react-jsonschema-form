@@ -6,8 +6,9 @@ import type {
   UiSchemaDefinitions,
   ValidatorType,
 } from '../src/index.ts';
-import { RJSF_REF_KEY, noop, resolveUiSchema, retrieveSchema } from '../src/index.ts';
+import { RJSF_REF_KEY, createSchemaUtils, noop, resolveUiSchema, retrieveSchema } from '../src/index.ts';
 import looseSchema from './schema/graph/looseSchema.ts';
+import getTestValidator from './testUtils/getTestValidator.ts';
 
 beforeEach(() => {
   vi.spyOn(console, 'warn').mockImplementation(noop);
@@ -341,5 +342,20 @@ describe('resolveUiSchema() - option walk through the schema graph', () => {
     };
     const result = resolveUiSchema({ $ref: '#/$defs/alias' }, undefined, makeRegistry(rootSchema, optionDefinitions));
     expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
+
+  it('walks the options of a $ref under a relative root $id from the root createSchemaUtils() hands out (#5529)', () => {
+    const field: RJSFSchema = { $ref: 'child.json' };
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $id: 'nested/root.json',
+      $defs: { child: { $id: 'child.json', oneOf: [{ $ref: '#/$defs/leaf' }], $defs: { leaf: { type: 'string' } } } },
+      properties: { field },
+    };
+    const schemaUtils = createSchemaUtils({ validator: getTestValidator({}) }, rootSchema);
+    const warn = vi.spyOn(console, 'warn').mockImplementation(noop);
+    const result = resolveUiSchema(field, undefined, makeRegistry(schemaUtils.getRootSchema(), optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+    expect(warn).not.toHaveBeenCalled();
   });
 });

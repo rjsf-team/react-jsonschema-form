@@ -5075,6 +5075,79 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(schemaUtils.getClosestMatchingOption('s', handedOut, 1)).toBe(0);
         expect(schemaUtils.getClosestMatchingOption('s', rawOptions.map(schemaOf), 1)).toBe(0);
       });
+      it('resolves a $ref under a relative root $id to the resource it names, not one whose $id repeats the path (#5529)', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'a/root.json',
+          $defs: {
+            one: { $id: 'b.json', type: 'number' },
+            two: { $id: 'a/b.json', type: 'string' },
+          },
+          properties: { x: { $ref: 'b.json' } },
+        };
+        const utils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(utils.getRootSchema().properties?.x).toEqual({ $ref: 'b.json' });
+        const x = utils.retrieveSchema(schemaOf(utils.retrieveSchema(utils.getRootSchema()).properties?.x));
+        expect(x).toEqual(expect.objectContaining({ $id: 'b.json', type: 'number' }));
+        expect(retrieveSchema({ validator: testValidator }, { $ref: 'b.json' }, schema).type).toBe('number');
+      });
+      it('resolves the $ref of an additionalProperties under a nested $id on a later call (#5529)', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            x: { type: 'string' },
+            lib: {
+              $id: 'lib.json',
+              type: 'object',
+              additionalProperties: { $ref: '#/$defs/x' },
+              $defs: { x: { type: 'number' } },
+            },
+          },
+          properties: { p: { $ref: 'lib.json' } },
+        };
+        const p = retrieveSchema({ validator: testValidator }, { $ref: 'lib.json' }, schema, { k: 1 });
+        const k = retrieveSchema({ validator: testValidator }, schemaOf(p.properties?.k), schema, 1);
+        expect(k.type).toBe('number');
+      });
+      it('resolves a $ref under an inline nested $id that properties reach (#5529)', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: { x: { type: 'string' } },
+          properties: {
+            a: { $id: 'lib.json', properties: { b: { $ref: '#/$defs/x' } }, $defs: { x: { type: 'number' } } },
+          },
+        };
+        const a = retrieveProperty(testValidator, schema, 'a', schema);
+        expect(retrieveProperty(testValidator, a, 'b', schema).type).toBe('number');
+      });
+      it("resolves the same #/ $ref text in two resources to each one's own definition (#5529)", () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            node: { type: 'object', properties: { l: { $ref: 'lib.json' } } },
+            lib: { $id: 'lib.json', $defs: { node: { type: 'number', default: 7 } }, $ref: '#/$defs/node' },
+          },
+          $ref: '#/$defs/node',
+        };
+        const root = retrieveSchema({ validator: testValidator }, schema, schema);
+        expect(retrieveProperty(testValidator, root, 'l', schema)).toEqual(
+          expect.objectContaining({ type: 'number', default: 7 }),
+        );
+      });
+      it('keeps an $id under a keyword that holds no subschemas from moving the base of a $ref beside it (#5529)', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: { real: { $id: 'n.json', type: 'boolean' }, s: { type: 'string' } },
+          components: { Pet: { type: 'object', properties: { n: { $id: 'n.json', $ref: '#/$defs/s' } } } },
+          properties: { pet: { $ref: '#/components/Pet' } },
+        };
+        const pet = retrieveProperty(testValidator, schema, 'pet', schema);
+        expect(retrieveProperty(testValidator, pet, 'n', schema).type).toBe('string');
+      });
     });
     describe('retrieveSchema() with resolveAnyOfOrOneOfRefs', () => {
       it('resolves simple ref with no anyOf or oneOfs when false', () => {

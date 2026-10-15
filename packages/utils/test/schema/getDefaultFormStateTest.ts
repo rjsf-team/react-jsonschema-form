@@ -8753,5 +8753,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ home: { country: 'US' } });
       });
     });
+    describe('under a draft 2020-12 root with $id resources', () => {
+      it("fills the defaults of the same #/ $ref text in two resources from each one's own definition (#5529)", () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            node: { type: 'object', properties: { l: { $ref: 'lib.json' } } },
+            lib: { $id: 'lib.json', $defs: { node: { type: 'number', default: 7 } }, $ref: '#/$defs/node' },
+          },
+          $ref: '#/$defs/node',
+        };
+        expect(getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema })).toEqual({ l: 7 });
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(schemaUtils.getDefaultFormState(schemaUtils.getRootSchema())).toEqual({ l: 7 });
+      });
+      it('fills the defaults of a $ref under a relative root $id through createSchemaUtils() (#5529)', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'nested/root.json',
+          $defs: { c: { $id: 'child.json', type: 'object', properties: { v: { type: 'string', default: 'ok' } } } },
+          type: 'object',
+          properties: { c: { $ref: 'child.json' } },
+        };
+        const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
+        expect(schemaUtils.getDefaultFormState(schemaUtils.getRootSchema())).toEqual({ c: { v: 'ok' } });
+      });
+    });
   });
 }
