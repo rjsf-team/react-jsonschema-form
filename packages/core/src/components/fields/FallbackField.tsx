@@ -27,7 +27,6 @@ import {
   toFieldPath,
   fieldPathToId,
   TranslatableString,
-  UI_FIELD_KEY,
   UI_OPTIONS_KEY,
   UI_WIDGET_KEY,
   uiBooleanOption,
@@ -218,14 +217,6 @@ const HELP_UI_OPTION = 'help';
  * for the others, and `getWidget()` throws rather than falling back, which would take the whole form down as soon as
  * another type was selected. A widget registered under its own name is left alone since it is expected to handle
  * whatever it is given.
- * The `ui:field` is shadowed whatever it names and wherever it was written — `ui:field`, `ui:options.field` or
- * `ui:globalOptions.field` — for the reason `getValueSchema()` drops `GUESSED_TYPE_FLAG`: one naming this field routes
- * the value straight back here, and each of those renders another one, without end. Shadowed rather than deleted,
- * because a global one reaches every field in the form and so survives the caller's own entry being removed. There is
- * nothing to lose either way, since a `ui:field` that resolves to any other field is rendered by `getFieldComponent()`
- * instead of this one, so the only `ui:field` that reaches here is one this render has already satisfied — or one
- * naming no field, which reaches here only when the `ui:globalOptions.field` it falls back to doesn't resolve to
- * another field either, so the value field would have nothing to render for it.
  * @param uiSchema - The uiSchema for the field being rendered.
  * @param keepsWidget - Whether a widget implements the `ui:widget`, its own or a `ui:globalOptions` one, for the type
  * the selector is on.
@@ -239,19 +230,14 @@ function getValueUiSchema<
   const noUiSchema: UiSchema<T, S, F> = {};
   const valueUiSchema = { ...(uiSchema ?? noUiSchema) };
   delete valueUiSchema[HELP_UI_KEY];
-  delete valueUiSchema[UI_FIELD_KEY];
   if (!keepsWidget) {
     delete valueUiSchema[UI_WIDGET_KEY];
   }
   const uiOptions = { ...valueUiSchema[UI_OPTIONS_KEY] } as UIOptionsType<T, S, F>;
-  // Set rather than deleted for the reason `field` is below: a `help` in `ui:globalOptions` reaches every field in the
-  // form, so removing the caller's own entry would leave it showing through
+  // Set rather than deleted, since `getUiOptions()` layers the local options over `ui:globalOptions`, so removing the
+  // caller's own entry would leave a global `help` showing through
   uiOptions[HELP_UI_OPTION] = undefined;
-  // Set rather than deleted, so it shadows a `field` in `ui:globalOptions` too: `getUiOptions()` layers the local
-  // options over the global ones, so deleting the key alone would let a global one naming this field through and
-  // route the value straight back here
-  uiOptions.field = undefined;
-  // Set rather than deleted, for the reason `field` is: a global `widget` would otherwise show through
+  // Set rather than deleted, for the reason `help` is: a global `widget` would otherwise show through
   if (!keepsWidget) {
     uiOptions.widget = undefined;
   }

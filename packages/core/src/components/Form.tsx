@@ -30,6 +30,7 @@ import type {
 } from '@rjsf/utils';
 import { getTemplates, getUiOptions, SUBMIT_BTN_OPTIONS_KEY, ROOT_FIELD_PATH, UI_OPTIONS_KEY } from '@rjsf/utils';
 
+import NamedFieldContext from './fields/NamedFieldContext.ts';
 import RawFormDataContext from './fields/RawFormDataContext.ts';
 import FormDataContext from './FormDataContext.ts';
 import { createFormModel } from './formModel.ts';
@@ -461,23 +462,25 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       >
         {showErrorList === 'top' && renderErrors()}
         <RawFormDataContext value={SchemaFieldComponent}>
-          <UiStateContext value={model.uiState}>
-            <SchemaFieldComponent
-              name=''
-              schema={schema}
-              uiSchema={uiSchema}
-              errorSchema={errorSchema}
-              fieldPath={ROOT_FIELD_PATH}
-              id={registry.globalFormOptions.idPrefix}
-              formData={formData}
-              onChange={model.handleChange}
-              onBlur={model.handleBlur}
-              onFocus={model.handleFocus}
-              registry={registry}
-              disabled={disabled}
-              readonly={readonly}
-            />
-          </UiStateContext>
+          <NamedFieldContext value={undefined}>
+            <UiStateContext value={model.uiState}>
+              <SchemaFieldComponent
+                name=''
+                schema={schema}
+                uiSchema={uiSchema}
+                errorSchema={errorSchema}
+                fieldPath={ROOT_FIELD_PATH}
+                id={registry.globalFormOptions.idPrefix}
+                formData={formData}
+                onChange={model.handleChange}
+                onBlur={model.handleBlur}
+                onFocus={model.handleFocus}
+                registry={registry}
+                disabled={disabled}
+                readonly={readonly}
+              />
+            </UiStateContext>
+          </NamedFieldContext>
         </RawFormDataContext>
 
         {children || submitButton}
