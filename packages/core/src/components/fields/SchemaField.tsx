@@ -582,9 +582,9 @@ function SchemaFieldRender<
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit to a property
-   * of the object's own that an option declares too, such as one whose `const` tells the options apart, is matched
-   * again, as 6.11.0 matched every edit. Any other edit holds the option shown, as an edit inside the option does: no
-   * option says anything of the property, so the edit cannot be a choice between them
+   * of the object's own that the options can disagree about, through a keyword naming it or one reading the object
+   * whole, is matched again, as 6.11.0 matched every edit. Any other edit holds the option shown, as an edit inside
+   * the option does: every option says the same of the property, so the edit cannot be a choice between them
    */
   const handleFieldComponentChange = useCallback(
     (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
