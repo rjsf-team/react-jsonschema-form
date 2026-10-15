@@ -1,6 +1,7 @@
 import { Switch } from '@mantine/core';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { WidgetProps } from '@rjsf/utils';
+import { helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 
@@ -242,5 +243,114 @@ describe('mantine title templates', () => {
 
     expect(container.querySelector('h4')).toHaveTextContent(/^List \*$/);
     expect(container.querySelector('#root_list__title')).toHaveTextContent(/^List$/);
+  });
+});
+
+describe('mantine ArrayFieldTemplate', () => {
+  test("draws no heading for an array option whose ui:title repeats its field's label", () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            tags: { type: 'array', items: { type: 'string' }, anyOf: [{ maxItems: 3 }, { minItems: 1 }] },
+          },
+        }}
+        uiSchema={{ tags: { 'ui:title': 'Tags', anyOf: [{ 'ui:title': 'Tags' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Tags');
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+  });
+
+  test("keeps an optional array's data control where it draws no heading", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } }}
+        uiSchema={{ tags: { 'ui:label': false }, 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
+        initialFormData={{ tags: ['a'] }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+  });
+
+  test("keeps an option's heading and data control where ui:globalOptions turns labels off and its field's ui:label turns them on", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            tags: {
+              anyOf: [
+                { type: 'array', title: 'Tags', items: { type: 'string' } },
+                { type: 'number', title: 'Count' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{
+          'ui:globalOptions': { label: false, enableOptionalDataFieldForType: ['array'] },
+          tags: { 'ui:label': true, anyOf: [{}, {}] },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_tags__title')).toHaveTextContent('Tags');
+    expect(container.querySelector('#root_tags__optionalAdd')).toBeInTheDocument();
+  });
+});
+
+describe('mantine ObjectFieldTemplate', () => {
+  test("keeps an optional object's data control where ui:label turns its heading off", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } }}
+        initialFormData={{ pet: { a: 'x' } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
+  });
+});
+
+describe('mantine FieldHelpTemplate', () => {
+  test("renders help in a block element, and an option's own help under its own id, beside the field's", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            pet: {
+              title: 'Pet',
+              anyOf: [
+                { title: 'Dog', type: 'string' },
+                { title: 'Cat', type: 'number' },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ pet: { 'ui:help': 'Pick a pet', anyOf: [{ 'ui:help': 'Dogs bark' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    const help = container.querySelectorAll(`[id="${helpId('root_pet')}"]`);
+    expect(help).toHaveLength(1);
+    expect(help[0].tagName).toBe('DIV');
+    expect(help[0]).toHaveTextContent('Pick a pet');
+    expect(container.querySelector(`[id="${optionHelpId('root_pet')}"]`)).toHaveTextContent('Dogs bark');
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Pick a pet Dogs bark');
   });
 });
