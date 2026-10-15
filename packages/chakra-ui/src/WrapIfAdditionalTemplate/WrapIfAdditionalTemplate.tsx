@@ -74,7 +74,7 @@ export default function WrapIfAdditionalTemplate<
             registry={registry}
           />
         ) : (
-          <Field required={required} label={keyLabel}>
+          <Field required={required} label={keyLabel} id={`${id}-key`}>
             <Input
               key={keyName}
               defaultValue={keyName}

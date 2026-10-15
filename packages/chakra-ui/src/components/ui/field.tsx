@@ -1,11 +1,28 @@
 import type { ComponentProps, ReactNode } from 'react';
-import { Field as ChakraField } from '@chakra-ui/react';
+import { chakra, Field as ChakraField, useFieldContext, useFieldStyles } from '@chakra-ui/react';
 
 export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>, 'label'> {
   label?: ReactNode;
   helperText?: ReactNode;
   errorText?: ReactNode;
   optionalText?: ReactNode;
+  /** Draws the label with no `for`, for a control a `for` can't name, such as a group of radios or a slider's thumb,
+   * which is named by pointing `aria-labelledby` at the label's id instead
+   */
+  labelNamesNoControl?: boolean;
+}
+
+/** The field's label with no `for`: Ark's `Field.Label` always sets one, and ignores an undefined override. It keeps the
+ * rest of that label's attributes, as the recipe's disabled style keys off `data-disabled`
+ */
+function LabelWithoutFor({ children }: { children: ReactNode }) {
+  const { htmlFor: _htmlFor, ...labelProps } = useFieldContext().getLabelProps();
+  const styles = useFieldStyles();
+  return (
+    <chakra.label {...labelProps} className='chakra-field__label' css={styles.label}>
+      {children}
+    </chakra.label>
+  );
 }
 
 /**
@@ -17,18 +34,31 @@ export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>
  * @param [props.helperText] - Helper text to display below the field.
  * @param [props.errorText] - Error message to display below the field.
  * @param [props.optionalText] - Text to indicate that the field is optional.
+ * @param [props.labelNamesNoControl] - Whether the label is drawn with no `for`, for a control a `for` can't name.
  * @returns The rendered field component.
  */
-export const Field = ({ label, children, helperText, errorText, optionalText, ref, ...rest }: FieldProps) => (
-  <ChakraField.Root ref={ref} {...rest}>
-    {label && (
-      <ChakraField.Label>
-        {label}
-        <ChakraField.RequiredIndicator fallback={optionalText} />
-      </ChakraField.Label>
-    )}
-    {children}
-    {helperText && <ChakraField.HelperText>{helperText}</ChakraField.HelperText>}
-    {errorText && <ChakraField.ErrorText>{errorText}</ChakraField.ErrorText>}
-  </ChakraField.Root>
-);
+export const Field = ({
+  label,
+  children,
+  helperText,
+  errorText,
+  optionalText,
+  labelNamesNoControl,
+  ref,
+  ...rest
+}: FieldProps) => {
+  const Label = labelNamesNoControl ? LabelWithoutFor : ChakraField.Label;
+  return (
+    <ChakraField.Root ref={ref} {...rest}>
+      {label && (
+        <Label>
+          {label}
+          <ChakraField.RequiredIndicator fallback={optionalText} />
+        </Label>
+      )}
+      {children}
+      {helperText && <ChakraField.HelperText>{helperText}</ChakraField.HelperText>}
+      {errorText && <ChakraField.ErrorText>{errorText}</ChakraField.ErrorText>}
+    </ChakraField.Root>
+  );
+};

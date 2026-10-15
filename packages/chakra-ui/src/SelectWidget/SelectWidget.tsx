@@ -6,6 +6,7 @@ import {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  fieldLabelId,
   flattenGroupedOptions,
   getOptionValueFormat,
   groupEnumOptions,
@@ -44,6 +45,11 @@ export default function SelectWidget<
     schema,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const labelId = fieldLabelId(id);
+  const drawsLabel = !hideLabel && !!label;
+  const ariaProps = widgetAriaProps(props);
+  // With no label drawn, an empty one stops Ark pointing the trigger and the listbox at the missing label
+  const labelledBy = ariaProps['aria-labelledby'] ?? (drawsLabel ? undefined : '');
   const { enumOptions, enumDisabled, emptyValue, optgroups } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = useMemo(
@@ -112,7 +118,9 @@ export default function SelectWidget<
       required={required}
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
-      label={labelValue(label, hideLabel || !label)}
+      label={labelValue(label, !drawsLabel)}
+      id={id}
+      ids={{ label: labelId }}
       position='relative'
       {...chakraProps}
     >
@@ -120,6 +128,10 @@ export default function SelectWidget<
       <SelectRoot
         collection={selectOptions}
         id={id}
+        // The trigger, which a user focuses, carries the field's id, so the label's `for` names it. Ark's own ids replace
+        // the field's, so the label's is restated
+        ids={{ trigger: id, label: labelId }}
+        hiddenSelectLabelledBy={labelledBy}
         name={htmlName || id}
         multiple={isMultiple}
         closeOnSelect={!isMultiple}
@@ -130,11 +142,11 @@ export default function SelectWidget<
         value={formValue}
         positioning={{ placement: 'bottom' }}
       >
-        <SelectTrigger {...widgetAriaProps(props)}>
+        <SelectTrigger {...ariaProps} aria-labelledby={labelledBy}>
           <SelectValueText placeholder={placeholder} />
         </SelectTrigger>
         <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
-          <ChakraSelect.Content>
+          <ChakraSelect.Content {...(labelledBy !== undefined && { 'aria-labelledby': labelledBy })}>
             {groupedOptions.map((option) =>
               isEnumOptionsGroup<S>(option) ? (
                 <ChakraSelect.ItemGroup key={`optgroup-${option.label}`}>

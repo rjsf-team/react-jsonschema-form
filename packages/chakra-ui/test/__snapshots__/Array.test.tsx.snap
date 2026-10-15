@@ -619,7 +619,7 @@ exports[`array fields > array icons 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_b_"
+                            id="field::root_0"
                             role="group"
                           >
                             <input
@@ -789,7 +789,7 @@ exports[`array fields > array icons 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_d_"
+                            id="field::root_1"
                             role="group"
                           >
                             <input
@@ -1458,7 +1458,7 @@ exports[`array fields > checkboxes 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_7_"
+            id="field::root"
             role="group"
           >
             <div
@@ -1470,8 +1470,8 @@ exports[`array fields > checkboxes 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_7_::label"
-                id="_r_7_"
+                aria-labelledby=""
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -1509,7 +1509,7 @@ exports[`array fields > checkboxes 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_7_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -1517,7 +1517,7 @@ exports[`array fields > checkboxes 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -1559,7 +1559,7 @@ exports[`array fields > checkboxes 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_7_::label"
+                  aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
                   data-part="content"
@@ -1943,15 +1943,15 @@ exports[`array fields > empty errors array 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_m_"
+                      id="field::root_name"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_m_"
-                        id="field::_r_m_::label"
+                        for="root_name"
+                        id="field::root_name::label"
                       >
                         name
                       </label>
@@ -2248,7 +2248,7 @@ exports[`array fields > fixed array 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_3_"
+                            id="field::root_0"
                             role="group"
                           >
                             <input
@@ -2291,7 +2291,7 @@ exports[`array fields > fixed array 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_5_"
+                            id="field::root_1"
                             role="group"
                           >
                             <input
@@ -2810,7 +2810,7 @@ exports[`array fields > has errors 1`] = `
                       data-invalid=""
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_g_"
+                      id="field::root_name"
                       role="group"
                     >
                       <label
@@ -2818,8 +2818,8 @@ exports[`array fields > has errors 1`] = `
                         data-invalid=""
                         data-part="label"
                         data-scope="field"
-                        for="_r_g_"
-                        id="field::_r_g_::label"
+                        for="root_name"
+                        id="field::root_name::label"
                       >
                         name
                       </label>
@@ -3133,15 +3133,15 @@ exports[`array fields > no errors 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_j_"
+                      id="field::root_name"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_j_"
-                        id="field::_r_j_::label"
+                        for="root_name"
+                        id="field::root_name::label"
                       >
                         name
                       </label>
@@ -3636,15 +3636,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_2n_"
+                                      id="field::root_0_name"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_2n_"
-                                        id="field::_r_2n_::label"
+                                        for="root_0_name"
+                                        id="field::root_0_name::label"
                                       >
                                         name
                                       </label>
@@ -3680,15 +3680,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_2p_"
+                                      id="field::root_0_value"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_2p_"
-                                        id="field::_r_2p_::label"
+                                        for="root_0_value"
+                                        id="field::root_0_value::label"
                                       >
                                         value
                                       </label>
@@ -3848,15 +3848,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_2s_"
+                                      id="field::root_1_name"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_2s_"
-                                        id="field::_r_2s_::label"
+                                        for="root_1_name"
+                                        id="field::root_1_name::label"
                                       >
                                         name
                                       </label>
@@ -3892,15 +3892,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_2u_"
+                                      id="field::root_1_value"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_2u_"
-                                        id="field::_r_2u_::label"
+                                        for="root_1_value"
+                                        id="field::root_1_value::label"
                                       >
                                         value
                                       </label>
@@ -4487,7 +4487,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_2h_"
+                            id="field::root_0"
                             role="group"
                           >
                             <input
@@ -4624,7 +4624,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_2j_"
+                            id="field::root_1"
                             role="group"
                           >
                             <input
@@ -5260,7 +5260,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_3j_"
+            id="field::root"
             role="group"
           >
             <div
@@ -5272,8 +5272,8 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_3j_::label"
-                id="_r_3j_"
+                aria-labelledby=""
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -5311,7 +5311,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_3j_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -5319,7 +5319,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -5361,7 +5361,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_3j_::label"
+                  aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
                   data-part="content"
@@ -5844,7 +5844,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_31_"
+                            id="field::root_0"
                             role="group"
                           >
                             <input
@@ -5887,7 +5887,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_33_"
+                            id="field::root_1"
                             role="group"
                           >
                             <input
@@ -5933,7 +5933,7 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_35_"
+                            id="field::root_2"
                             role="group"
                           >
                             <label
@@ -5942,14 +5942,14 @@ exports[`nameGenerator > bracketNameGenerator > fixed array 1`] = `
                               data-scope="checkbox"
                               data-state="checked"
                               dir="ltr"
-                              for="_r_35_"
+                              for="root_2"
                               id="checkbox:root_2"
                             >
                               <input
                                 aria-invalid="false"
-                                aria-labelledby="field::_r_35_::label"
+                                aria-labelledby="field::root_2::label"
                                 checked=""
-                                id="_r_35_"
+                                id="root_2"
                                 name="root[2]"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 type="checkbox"
@@ -6434,7 +6434,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             class="chakra-field__root emotion-12"
                                             data-part="root"
                                             data-scope="field"
-                                            id="field::_r_3a_"
+                                            id="field::root_0_0"
                                             role="group"
                                           >
                                             <input
@@ -6571,7 +6571,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             class="chakra-field__root emotion-12"
                                             data-part="root"
                                             data-scope="field"
-                                            id="field::_r_3c_"
+                                            id="field::root_0_1"
                                             role="group"
                                           >
                                             <input
@@ -6868,7 +6868,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             class="chakra-field__root emotion-12"
                                             data-part="root"
                                             data-scope="field"
-                                            id="field::_r_3f_"
+                                            id="field::root_1_0"
                                             role="group"
                                           >
                                             <input
@@ -7005,7 +7005,7 @@ exports[`nameGenerator > bracketNameGenerator > nested arrays 1`] = `
                                             class="chakra-field__root emotion-12"
                                             data-part="root"
                                             data-scope="field"
-                                            id="field::_r_3h_"
+                                            id="field::root_1_1"
                                             role="group"
                                           >
                                             <input
@@ -7770,15 +7770,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_3t_"
+                                      id="field::root_0_name"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_3t_"
-                                        id="field::_r_3t_::label"
+                                        for="root_0_name"
+                                        id="field::root_0_name::label"
                                       >
                                         name
                                       </label>
@@ -7814,15 +7814,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_3v_"
+                                      id="field::root_0_value"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_3v_"
-                                        id="field::_r_3v_::label"
+                                        for="root_0_value"
+                                        id="field::root_0_value::label"
                                       >
                                         value
                                       </label>
@@ -7982,15 +7982,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_42_"
+                                      id="field::root_1_name"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_42_"
-                                        id="field::_r_42_::label"
+                                        for="root_1_name"
+                                        id="field::root_1_name::label"
                                       >
                                         name
                                       </label>
@@ -8026,15 +8026,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_44_"
+                                      id="field::root_1_value"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_44_"
-                                        id="field::_r_44_::label"
+                                        for="root_1_value"
+                                        id="field::root_1_value::label"
                                       >
                                         value
                                       </label>
@@ -8621,7 +8621,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_3n_"
+                            id="field::root_0"
                             role="group"
                           >
                             <input
@@ -8758,7 +8758,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_3p_"
+                            id="field::root_1"
                             role="group"
                           >
                             <input
@@ -9386,15 +9386,15 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_48_"
+                                      id="field::root_0_name"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_48_"
-                                        id="field::_r_48_::label"
+                                        for="root_0_name"
+                                        id="field::root_0_name::label"
                                       >
                                         name
                                       </label>
@@ -9584,15 +9584,15 @@ exports[`nameGenerator > item names > array icons named by itemLabel 1`] = `
                                       class="chakra-field__root emotion-10"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_4b_"
+                                      id="field::root_1_name"
                                       role="group"
                                     >
                                       <label
                                         class="chakra-field__label emotion-11"
                                         data-part="label"
                                         data-scope="field"
-                                        for="_r_4b_"
-                                        id="field::_r_4b_::label"
+                                        for="root_1_name"
+                                        id="field::root_1_name::label"
                                       >
                                         name
                                       </label>
@@ -10582,7 +10582,7 @@ exports[`with title and description > array icons 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_12_"
+                            id="field::root_0"
                             role="group"
                           >
                             <label
@@ -10590,8 +10590,8 @@ exports[`with title and description > array icons 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_12_"
-                              id="field::_r_12_::label"
+                              for="root_0"
+                              id="field::root_0::label"
                             >
                               Test item
                               <span
@@ -10782,7 +10782,7 @@ exports[`with title and description > array icons 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_14_"
+                            id="field::root_1"
                             role="group"
                           >
                             <label
@@ -10790,8 +10790,8 @@ exports[`with title and description > array icons 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_14_"
-                              id="field::_r_14_::label"
+                              for="root_1"
+                              id="field::root_1::label"
                             >
                               Test item
                               <span
@@ -11528,15 +11528,15 @@ exports[`with title and description > checkboxes 1`] = `
             class="chakra-field__root emotion-4"
             data-part="root"
             data-scope="field"
-            id="field::_r_u_"
+            id="field::root"
             role="group"
           >
             <label
               class="chakra-field__label emotion-5"
               data-part="label"
               data-scope="field"
-              for="_r_u_"
-              id="field::_r_u_::label"
+              for="root"
+              id="root__label"
             >
               Test field
             </label>
@@ -11549,8 +11549,8 @@ exports[`with title and description > checkboxes 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_u_::label"
-                id="_r_u_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -11589,7 +11589,7 @@ exports[`with title and description > checkboxes 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_u_::label"
+                  aria-labelledby="root__label"
                   aria-required="false"
                   class="chakra-select__trigger emotion-8"
                   data-part="trigger"
@@ -11597,7 +11597,7 @@ exports[`with title and description > checkboxes 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -11639,7 +11639,7 @@ exports[`with title and description > checkboxes 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_u_::label"
+                  aria-labelledby="root__label"
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-14"
                   data-part="content"
@@ -12134,7 +12134,7 @@ exports[`with title and description > fixed array 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_q_"
+                            id="field::root_0"
                             role="group"
                           >
                             <label
@@ -12142,8 +12142,8 @@ exports[`with title and description > fixed array 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_q_"
-                              id="field::_r_q_::label"
+                              for="root_0"
+                              id="field::root_0::label"
                             >
                               Test item
                               <span
@@ -12207,7 +12207,7 @@ exports[`with title and description > fixed array 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_s_"
+                            id="field::root_1"
                             role="group"
                           >
                             <label
@@ -12215,8 +12215,8 @@ exports[`with title and description > fixed array 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_s_"
-                              id="field::_r_s_::label"
+                              for="root_1"
+                              id="field::root_1::label"
                             >
                               Test item
                               <span
@@ -13051,7 +13051,7 @@ exports[`with title and description from both > array icons 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_1u_"
+                            id="field::root_0"
                             role="group"
                           >
                             <label
@@ -13059,8 +13059,8 @@ exports[`with title and description from both > array icons 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_1u_"
-                              id="field::_r_1u_::label"
+                              for="root_0"
+                              id="field::root_0::label"
                             >
                               My Item
                               <span
@@ -13251,7 +13251,7 @@ exports[`with title and description from both > array icons 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_20_"
+                            id="field::root_1"
                             role="group"
                           >
                             <label
@@ -13259,8 +13259,8 @@ exports[`with title and description from both > array icons 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_20_"
-                              id="field::_r_20_::label"
+                              for="root_1"
+                              id="field::root_1::label"
                             >
                               My Item
                               <span
@@ -13997,15 +13997,15 @@ exports[`with title and description from both > checkboxes 1`] = `
             class="chakra-field__root emotion-4"
             data-part="root"
             data-scope="field"
-            id="field::_r_1q_"
+            id="field::root"
             role="group"
           >
             <label
               class="chakra-field__label emotion-5"
               data-part="label"
               data-scope="field"
-              for="_r_1q_"
-              id="field::_r_1q_::label"
+              for="root"
+              id="root__label"
             >
               My Field
             </label>
@@ -14018,8 +14018,8 @@ exports[`with title and description from both > checkboxes 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_1q_::label"
-                id="_r_1q_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -14058,7 +14058,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_1q_::label"
+                  aria-labelledby="root__label"
                   aria-required="false"
                   class="chakra-select__trigger emotion-8"
                   data-part="trigger"
@@ -14066,7 +14066,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -14108,7 +14108,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_1q_::label"
+                  aria-labelledby="root__label"
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-14"
                   data-part="content"
@@ -14603,7 +14603,7 @@ exports[`with title and description from both > fixed array 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_1m_"
+                            id="field::root_0"
                             role="group"
                           >
                             <label
@@ -14611,8 +14611,8 @@ exports[`with title and description from both > fixed array 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_1m_"
-                              id="field::_r_1m_::label"
+                              for="root_0"
+                              id="field::root_0::label"
                             >
                               My Item
                               <span
@@ -14676,7 +14676,7 @@ exports[`with title and description from both > fixed array 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_1o_"
+                            id="field::root_1"
                             role="group"
                           >
                             <label
@@ -14684,8 +14684,8 @@ exports[`with title and description from both > fixed array 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_1o_"
-                              id="field::_r_1o_::label"
+                              for="root_1"
+                              id="field::root_1::label"
                             >
                               My Item
                               <span
@@ -15520,7 +15520,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_1g_"
+                            id="field::root_0"
                             role="group"
                           >
                             <label
@@ -15528,8 +15528,8 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_1g_"
-                              id="field::_r_1g_::label"
+                              for="root_0"
+                              id="field::root_0::label"
                             >
                               My Item
                               <span
@@ -15720,7 +15720,7 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_1i_"
+                            id="field::root_1"
                             role="group"
                           >
                             <label
@@ -15728,8 +15728,8 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_1i_"
-                              id="field::_r_1i_::label"
+                              for="root_1"
+                              id="field::root_1::label"
                             >
                               My Item
                               <span
@@ -16466,15 +16466,15 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             class="chakra-field__root emotion-4"
             data-part="root"
             data-scope="field"
-            id="field::_r_1c_"
+            id="field::root"
             role="group"
           >
             <label
               class="chakra-field__label emotion-5"
               data-part="label"
               data-scope="field"
-              for="_r_1c_"
-              id="field::_r_1c_::label"
+              for="root"
+              id="root__label"
             >
               My Field
             </label>
@@ -16487,8 +16487,8 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_1c_::label"
-                id="_r_1c_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -16527,7 +16527,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_1c_::label"
+                  aria-labelledby="root__label"
                   aria-required="false"
                   class="chakra-select__trigger emotion-8"
                   data-part="trigger"
@@ -16535,7 +16535,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -16577,7 +16577,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_1c_::label"
+                  aria-labelledby="root__label"
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-14"
                   data-part="content"
@@ -17072,7 +17072,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_18_"
+                            id="field::root_0"
                             role="group"
                           >
                             <label
@@ -17080,8 +17080,8 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_18_"
-                              id="field::_r_18_::label"
+                              for="root_0"
+                              id="field::root_0::label"
                             >
                               My Item
                               <span
@@ -17145,7 +17145,7 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                             class="chakra-field__root emotion-13"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_1a_"
+                            id="field::root_1"
                             role="group"
                           >
                             <label
@@ -17153,8 +17153,8 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                               data-part="label"
                               data-required=""
                               data-scope="field"
-                              for="_r_1a_"
-                              id="field::_r_1a_::label"
+                              for="root_1"
+                              id="field::root_1::label"
                             >
                               My Item
                               <span
@@ -17828,7 +17828,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_2c_"
+                            id="field::root_0"
                             role="group"
                           >
                             <input
@@ -17998,7 +17998,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_2e_"
+                            id="field::root_1"
                             role="group"
                           >
                             <input
@@ -18667,7 +18667,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_28_"
+            id="field::root"
             role="group"
           >
             <div
@@ -18679,8 +18679,8 @@ exports[`with title and description with global label off > checkboxes 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_28_::label"
-                id="_r_28_"
+                aria-labelledby=""
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -18718,7 +18718,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_28_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -18726,7 +18726,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -18768,7 +18768,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_28_::label"
+                  aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
                   data-part="content"
@@ -19151,7 +19151,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_24_"
+                            id="field::root_0"
                             role="group"
                           >
                             <input
@@ -19194,7 +19194,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                             class="chakra-field__root emotion-7"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_26_"
+                            id="field::root_1"
                             role="group"
                           >
                             <input

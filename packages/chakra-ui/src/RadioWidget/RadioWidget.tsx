@@ -58,11 +58,12 @@ export default function RadioWidget<
     { id, presentation },
     'radiogroup',
   );
-  // Ark names the group by the legend of the fieldset around it, which is the template's description, so the group is
-  // pointed at the label this widget draws instead, where the plan names it by no other. With no label to point at, it
-  // is left unnamed: Ark ignores an undefined override, so only an empty one stops the legend naming it
+  // The group is pointed at the label this widget draws, where the plan names it by no other. With no label to point at,
+  // it is left unnamed: Ark otherwise points it at a label id of its own that no element has, and ignores an undefined
+  // override, so only an empty one stops it
   const labelId = fieldLabelId(id);
   const drawsLabel = !hideLabel && !!label;
+  const optionIndexes = new Map(domValues.map((domValue, index) => [domValue, index]));
 
   return (
     <Field
@@ -72,9 +73,12 @@ export default function RadioWidget<
       readOnly={readonly}
       label={labelValue(label, !drawsLabel)}
       ids={{ label: labelId }}
+      labelNamesNoControl
       {...chakraProps}
     >
       <RadioGroup
+        // The group carries the field's id and each radio its option's, as core's do
+        ids={{ root: id, itemHiddenInput: (domValue) => optionId(id, optionIndexes.get(domValue) ?? -1) }}
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
@@ -93,7 +97,6 @@ export default function RadioWidget<
                   value={domValues[index]}
                   // oxlint-disable-next-line react/no-array-index-key
                   key={index}
-                  id={optionId(id, index)}
                   disabled={disabled || itemDisabled || readonly}
                   inputProps={{ ...optionAttributes, autoFocus: autofocus && index === 0 }}
                 >

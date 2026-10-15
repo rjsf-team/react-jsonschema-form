@@ -285,7 +285,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_4_"
+            id="field::root"
             role="group"
           >
             <div
@@ -637,7 +637,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_6_"
+            id="field::root"
             role="group"
           >
             <div
@@ -1032,15 +1032,15 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_2_"
+                      id="field::root_color"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_2_"
-                        id="field::_r_2_::label"
+                        for="root_color"
+                        id="field::root_color::label"
                       >
                         color
                       </label>

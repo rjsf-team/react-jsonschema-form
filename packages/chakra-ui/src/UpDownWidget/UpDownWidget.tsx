@@ -31,6 +31,7 @@ export default function UpDownWidget<
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
       label={labelValue(label, hideLabel || !label)}
+      id={id}
       {...chakraProps}
     >
       <NumberInputRoot

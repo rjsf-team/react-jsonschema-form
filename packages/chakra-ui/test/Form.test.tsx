@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
 import { errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -75,6 +75,31 @@ describe('chakra-ui AltDateWidget', () => {
 });
 
 describe('chakra-ui SelectWidget', () => {
+  test('points the trigger of a select that draws no label at no label', () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', enum: ['a', 'b'] } } }}
+        uiSchema={{ x: { 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAttribute('aria-labelledby', '');
+    expect(container.querySelector('#root_x__label')).not.toBeInTheDocument();
+  });
+
+  test('points the listbox of a select that draws no label at no label', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'string', title: 'X', enum: ['a', 'b'] } } }}
+        uiSchema={{ x: { 'ui:label': false } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('listbox', { hidden: true })).toHaveAttribute('aria-labelledby', '');
+  });
+
   test("names an object's option selector by the object's heading", () => {
     render(
       <WrappedForm
@@ -188,6 +213,34 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     expect(control).toHaveAccessibleDescription('too short');
   });
 
+  test('focuses the slider thumb under ui:autofocus, as core focuses its range input', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { type: 'number', title: 'X' } } }}
+        uiSchema={{ x: { 'ui:widget': 'range', 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).toHaveFocus();
+  });
+
+  test('focuses the slider thumb only on mount, as autoFocus does, not when ui:autofocus turns on later', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { x: { type: 'number', title: 'X' } } };
+    const { rerender } = render(
+      <WrappedForm schema={schema} uiSchema={{ x: { 'ui:widget': 'range' } }} validator={validator} />,
+    );
+    rerender(
+      <WrappedForm
+        schema={schema}
+        uiSchema={{ x: { 'ui:widget': 'range', 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('slider')).not.toHaveFocus();
+  });
+
   test("focuses a radio group's first radio under ui:autofocus, as core does", () => {
     render(
       <WrappedForm
@@ -234,6 +287,115 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
       }
     },
   );
+});
+
+describe("chakra-ui widgets are named by their label and carry their field's id on the element a user focuses", () => {
+  const widgets: [string, RJSFSchema, UiSchema, string, string][] = [
+    ['text input', { type: 'string' }, {}, 'textbox', 'root_x'],
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, 'textbox', 'root_x'],
+    ['checkbox', { type: 'boolean' }, {}, 'checkbox', 'root_x'],
+    ['number input', { type: 'number' }, { 'ui:widget': 'updown' }, 'spinbutton', 'root_x'],
+    ['slider', { type: 'number' }, { 'ui:widget': 'range' }, 'slider', 'root_x'],
+    // Focus goes to the first radio, which carries its option's id, as core's does
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup', 'root_x-0'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, 'combobox', 'root_x'],
+    [
+      'native select',
+      { type: 'string', enum: ['a', 'b'] },
+      { 'ui:widget': 'NativeSelectWidget' },
+      'combobox',
+      'root_x',
+    ],
+  ];
+
+  test.each(widgets)("names a %s by its label, and gives it the field's id", (_, x, ui, role) => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: ui }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole(role, { name: 'X' })).toHaveAttribute('id', 'root_x');
+    container.querySelectorAll('label[for]').forEach((label) => {
+      expect(container.querySelector(`[id="${label.getAttribute('for')}"]`)).toBeInTheDocument();
+    });
+    container.querySelectorAll('[aria-labelledby]').forEach((element) => {
+      element
+        .getAttribute('aria-labelledby')!
+        .split(' ')
+        .filter(Boolean)
+        .forEach((labelId) => expect(container.querySelector(`[id="${labelId}"]`)).toBeInTheDocument());
+    });
+  });
+
+  test.each(widgets)(
+    'moves focus to a %s with errors when focusOnFirstError is set',
+    async (_, x, ui, _role, focusedId) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+          uiSchema={{ x: ui }}
+          validator={validator}
+          focusOnFirstError
+          customValidate={(_: unknown, errors: FormValidation<{ x?: unknown }>) => {
+            errors.x?.addError('bad');
+            return errors;
+          }}
+        />,
+      );
+
+      await user.click(screen.getByRole('button', { name: 'Submit' }));
+      // Ark's slider refocuses its thumb on the next frame; letting it run while the form is mounted keeps it from
+      // looking the thumb up in a detached tree, which Vitest reports as an unhandled error
+      await new Promise((resolve) => {
+        requestAnimationFrame(resolve);
+      });
+
+      expect(document.activeElement).toHaveAttribute('id', focusedId);
+    },
+  );
+
+  test("gives a checkboxes group the field's id and each checkbox's input its option's, and focuses the first", async () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: { type: 'array', title: 'X', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+          },
+        }}
+        uiSchema={{ x: { 'ui:widget': 'checkboxes' } }}
+        validator={validator}
+        focusOnFirstError
+        customValidate={(_: unknown, errors: FormValidation<{ x?: unknown }>) => {
+          errors.x?.addError('bad');
+          return errors;
+        }}
+      />,
+    );
+
+    expect(screen.getByRole('group', { name: 'X' })).toContainElement(container.querySelector('#root_x'));
+    expect(screen.getByRole('checkbox', { name: 'a' })).toHaveAttribute('id', 'root_x-0');
+    expect(screen.getByRole('checkbox', { name: 'b' })).toHaveAttribute('id', 'root_x-1');
+
+    await user.click(screen.getByRole('button', { name: 'Submit' }));
+
+    expect(screen.getByRole('checkbox', { name: 'a' })).toHaveFocus();
+  });
+
+  test("names an additional property's key input by its label", () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', additionalProperties: { type: 'string' } }}
+        formData={{ foo: 'a' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
+  });
 });
 
 describe('chakra-ui RadioWidget', () => {
