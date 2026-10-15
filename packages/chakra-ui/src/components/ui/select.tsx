@@ -48,8 +48,9 @@ export const SelectTrigger = ({
       ref={ref}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}
-      // Passed only when given, since an undefined one would drop the field label Chakra points the trigger at
-      {...(ariaLabelledBy && { 'aria-labelledby': ariaLabelledBy })}
+      // Passed only when given, since an undefined one would drop the field label Chakra points the trigger at; an empty
+      // one is passed, to point it at nothing where no label is drawn
+      {...(ariaLabelledBy !== undefined && { 'aria-labelledby': ariaLabelledBy })}
       {...(ariaInvalid && { 'aria-invalid': ariaInvalid })}
     >
       {children}

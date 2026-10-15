@@ -44,6 +44,8 @@ export default function CheckboxesWidget<
     <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={hasError} {...chakraProps}>
       {!hideLabel && label && <FieldsetLegend>{labelValue(label)}</FieldsetLegend>}
       <CheckboxGroup
+        // The group carries the field's id and each checkbox's `<input>` its option's, as core's do
+        id={id}
         onValueChange={(option) =>
           onChange(enumOptionValueDecoder<S>(option, enumOptions, optionValueFormat, emptyValue))
         }
@@ -61,6 +63,7 @@ export default function CheckboxesWidget<
                   // oxlint-disable-next-line react/no-array-index-key
                   key={index}
                   id={optionId(id, index)}
+                  ids={{ hiddenInput: optionId(id, index) }}
                   name={htmlName || id}
                   value={domValues[index]}
                   disabled={disabled || itemDisabled || readonly}

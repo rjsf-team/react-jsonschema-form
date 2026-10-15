@@ -210,7 +210,7 @@ exports[`format iso-date-time 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_cg_"
+            id="field::root"
             role="group"
           >
             <input
@@ -454,7 +454,7 @@ exports[`format iso-time 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_ce_"
+            id="field::root"
             role="group"
           >
             <input
@@ -1129,15 +1129,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 class="chakra-field__root emotion-19"
                                                 data-part="root"
                                                 data-scope="field"
-                                                id="field::_r_a5_"
+                                                id="field::root_tasks_0_title"
                                                 role="group"
                                               >
                                                 <label
                                                   class="chakra-field__label emotion-20"
                                                   data-part="label"
                                                   data-scope="field"
-                                                  for="_r_a5_"
-                                                  id="field::_r_a5_::label"
+                                                  for="root_tasks_0_title"
+                                                  id="field::root_tasks_0_title::label"
                                                 >
                                                   title
                                                 </label>
@@ -1173,7 +1173,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 class="chakra-field__root emotion-19"
                                                 data-part="root"
                                                 data-scope="field"
-                                                id="field::_r_a7_"
+                                                id="field::root_tasks_0_done"
                                                 role="group"
                                               >
                                                 <label
@@ -1182,13 +1182,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                   data-scope="checkbox"
                                                   data-state="unchecked"
                                                   dir="ltr"
-                                                  for="_r_a7_"
+                                                  for="root_tasks_0_done"
                                                   id="checkbox:root_tasks_0_done"
                                                 >
                                                   <input
                                                     aria-invalid="false"
-                                                    aria-labelledby="field::_r_a7_::label"
-                                                    id="_r_a7_"
+                                                    aria-labelledby="field::root_tasks_0_done::label"
+                                                    id="root_tasks_0_done"
                                                     name="root[tasks][0][done]"
                                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                                     type="checkbox"
@@ -1215,7 +1215,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                     data-scope="checkbox"
                                                     data-state="unchecked"
                                                     dir="ltr"
-                                                    id="field::_r_a7_::label"
+                                                    id="field::root_tasks_0_done::label"
                                                   >
                                                     <p>
                                                       done
@@ -1380,15 +1380,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 class="chakra-field__root emotion-19"
                                                 data-part="root"
                                                 data-scope="field"
-                                                id="field::_r_ab_"
+                                                id="field::root_tasks_1_title"
                                                 role="group"
                                               >
                                                 <label
                                                   class="chakra-field__label emotion-20"
                                                   data-part="label"
                                                   data-scope="field"
-                                                  for="_r_ab_"
-                                                  id="field::_r_ab_::label"
+                                                  for="root_tasks_1_title"
+                                                  id="field::root_tasks_1_title::label"
                                                 >
                                                   title
                                                 </label>
@@ -1424,7 +1424,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 class="chakra-field__root emotion-19"
                                                 data-part="root"
                                                 data-scope="field"
-                                                id="field::_r_ad_"
+                                                id="field::root_tasks_1_done"
                                                 role="group"
                                               >
                                                 <label
@@ -1433,14 +1433,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                   data-scope="checkbox"
                                                   data-state="checked"
                                                   dir="ltr"
-                                                  for="_r_ad_"
+                                                  for="root_tasks_1_done"
                                                   id="checkbox:root_tasks_1_done"
                                                 >
                                                   <input
                                                     aria-invalid="false"
-                                                    aria-labelledby="field::_r_ad_::label"
+                                                    aria-labelledby="field::root_tasks_1_done::label"
                                                     checked=""
-                                                    id="_r_ad_"
+                                                    id="root_tasks_1_done"
                                                     name="root[tasks][1][done]"
                                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                                     type="checkbox"
@@ -1471,7 +1471,7 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                     data-scope="checkbox"
                                                     data-state="checked"
                                                     dir="ltr"
-                                                    id="field::_r_ad_::label"
+                                                    id="field::root_tasks_1_done::label"
                                                   >
                                                     <p>
                                                       done
@@ -2147,7 +2147,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                       class="chakra-field__root emotion-13"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_9u_"
+                                      id="field::root_tags_0"
                                       role="group"
                                     >
                                       <label
@@ -2155,8 +2155,8 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for="_r_9u_"
-                                        id="field::_r_9u_::label"
+                                        for="root_tags_0"
+                                        id="field::root_tags_0::label"
                                       >
                                         tags-1
                                         <span
@@ -2300,7 +2300,7 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                       class="chakra-field__root emotion-13"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_a0_"
+                                      id="field::root_tags_1"
                                       role="group"
                                     >
                                       <label
@@ -2308,8 +2308,8 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for="_r_a0_"
-                                        id="field::_r_a0_::label"
+                                        for="root_tags_1"
+                                        id="field::root_tags_1::label"
                                       >
                                         tags-2
                                         <span
@@ -2848,6 +2848,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         class="emotion-7"
                         data-part="group"
                         data-scope="checkbox"
+                        id="root_choices"
                         role="group"
                       >
                         <div
@@ -2859,13 +2860,13 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="checkbox:root_choices-0:input"
+                            for="root_choices-0"
                             id="checkbox:root_choices-0"
                           >
                             <input
                               aria-invalid="false"
                               aria-labelledby="checkbox:root_choices-0:label"
-                              id="checkbox:root_choices-0:input"
+                              id="root_choices-0"
                               name="root[choices][]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -2905,13 +2906,13 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="checkbox:root_choices-1:input"
+                            for="root_choices-1"
                             id="checkbox:root_choices-1"
                           >
                             <input
                               aria-invalid="false"
                               aria-labelledby="checkbox:root_choices-1:label"
-                              id="checkbox:root_choices-1:input"
+                              id="root_choices-1"
                               name="root[choices][]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -2951,13 +2952,13 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                             data-scope="checkbox"
                             data-state="unchecked"
                             dir="ltr"
-                            for="checkbox:root_choices-2:input"
+                            for="root_choices-2"
                             id="checkbox:root_choices-2"
                           >
                             <input
                               aria-invalid="false"
                               aria-labelledby="checkbox:root_choices-2:label"
-                              id="checkbox:root_choices-2:input"
+                              id="root_choices-2"
                               name="root[choices][]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="checkbox"
@@ -3332,15 +3333,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                 class="chakra-field__root emotion-11"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_9j_"
+                                id="field::root_person_firstName"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-12"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_9j_"
-                                  id="field::_r_9j_::label"
+                                  for="root_person_firstName"
+                                  id="field::root_person_firstName::label"
                                 >
                                   firstName
                                 </label>
@@ -3376,15 +3377,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                 class="chakra-field__root emotion-11"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_9l_"
+                                id="field::root_person_lastName"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-12"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_9l_"
-                                  id="field::_r_9l_::label"
+                                  for="root_person_lastName"
+                                  id="field::root_person_lastName::label"
                                 >
                                   lastName
                                 </label>
@@ -3451,15 +3452,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field::_r_9o_"
+                                          id="field::root_person_address_street"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for="_r_9o_"
-                                            id="field::_r_9o_::label"
+                                            for="root_person_address_street"
+                                            id="field::root_person_address_street::label"
                                           >
                                             street
                                           </label>
@@ -3495,15 +3496,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field::_r_9q_"
+                                          id="field::root_person_address_city"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for="_r_9q_"
-                                            id="field::_r_9q_::label"
+                                            for="root_person_address_city"
+                                            id="field::root_person_address_city::label"
                                           >
                                             city
                                           </label>
@@ -3884,7 +3885,6 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_al_"
                         id="root_option__label"
                       >
                         option
@@ -3897,7 +3897,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         data-part="root"
                         data-scope="radio-group"
                         dir="ltr"
-                        id="radio-group:_r_am_"
+                        id="root_option"
                         role="radiogroup"
                         style="position: relative;"
                       >
@@ -3912,13 +3912,13 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                             data-ssr=""
                             data-state="unchecked"
                             dir="ltr"
-                            for="radio-group:_r_am_:radio:input:0"
-                            id="root_option-0"
+                            for="root_option-0"
+                            id="radio-group:_r_am_:radio:0"
                           >
                             <input
                               aria-labelledby="radio-group:_r_am_:radio:label:0"
-                              data-ownedby="radio-group:_r_am_"
-                              id="radio-group:_r_am_:radio:input:0"
+                              data-ownedby="root_option"
+                              id="root_option-0"
                               name="root[option]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="radio"
@@ -3956,13 +3956,13 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                             data-ssr=""
                             data-state="unchecked"
                             dir="ltr"
-                            for="radio-group:_r_am_:radio:input:1"
-                            id="root_option-1"
+                            for="root_option-1"
+                            id="radio-group:_r_am_:radio:1"
                           >
                             <input
                               aria-labelledby="radio-group:_r_am_:radio:label:1"
-                              data-ownedby="radio-group:_r_am_"
-                              id="radio-group:_r_am_:radio:input:1"
+                              data-ownedby="root_option"
+                              id="root_option-1"
                               name="root[option]"
                               style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                               type="radio"
@@ -4531,15 +4531,15 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_ah_"
+                      id="field::root_color"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_ah_"
-                        id="field::_r_ah_::label"
+                        for="root_color"
+                        id="root_color__label"
                       >
                         color
                       </label>
@@ -4552,8 +4552,8 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                       >
                         <select
                           aria-hidden="true"
-                          aria-labelledby="field::_r_ah_::label"
-                          id="_r_ah_"
+                          aria-labelledby="root_color__label"
+                          id="select:root_color:select"
                           name="root[color]"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           tabindex="-1"
@@ -4590,7 +4590,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-invalid="false"
-                            aria-labelledby="field::_r_ah_::label"
+                            aria-labelledby="root_color__label"
                             aria-required="false"
                             class="chakra-select__trigger emotion-9"
                             data-part="trigger"
@@ -4598,7 +4598,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                             data-scope="select"
                             data-state="closed"
                             dir="ltr"
-                            id="select:root_color:trigger"
+                            id="root_color"
                             role="combobox"
                             type="button"
                           >
@@ -4640,7 +4640,7 @@ exports[`nameGenerator > bracketNameGenerator > select field with enum 1`] = `
                           style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                         >
                           <div
-                            aria-labelledby="field::_r_ah_::label"
+                            aria-labelledby="root_color__label"
                             class="chakra-select__content emotion-15"
                             data-part="content"
                             data-scope="select"
@@ -5144,15 +5144,15 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_9a_"
+                      id="field::root_firstName"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_9a_"
-                        id="field::_r_9a_::label"
+                        for="root_firstName"
+                        id="field::root_firstName::label"
                       >
                         firstName
                       </label>
@@ -5188,15 +5188,15 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_9c_"
+                      id="field::root_age"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_9c_"
-                        id="field::_r_9c_::label"
+                        for="root_age"
+                        id="field::root_age::label"
                       >
                         age
                       </label>
@@ -5235,7 +5235,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_9e_"
+                      id="field::root_active"
                       role="group"
                     >
                       <label
@@ -5244,13 +5244,13 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                         data-scope="checkbox"
                         data-state="unchecked"
                         dir="ltr"
-                        for="_r_9e_"
+                        for="root_active"
                         id="checkbox:root_active"
                       >
                         <input
                           aria-invalid="false"
-                          aria-labelledby="field::_r_9e_::label"
-                          id="_r_9e_"
+                          aria-labelledby="field::root_active::label"
+                          id="root_active"
                           name="root[active]"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           type="checkbox"
@@ -5277,7 +5277,7 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                           data-scope="checkbox"
                           data-state="unchecked"
                           dir="ltr"
-                          id="field::_r_9e_::label"
+                          id="field::root_active::label"
                         >
                           <p>
                             active
@@ -5568,15 +5568,15 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_av_"
+                      id="field::root_description"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_av_"
-                        id="field::_r_av_::label"
+                        for="root_description"
+                        id="field::root_description::label"
                       >
                         description
                       </label>
@@ -6255,15 +6255,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 class="chakra-field__root emotion-19"
                                                 data-part="root"
                                                 data-scope="field"
-                                                id="field::_r_bt_"
+                                                id="field::root_tasks_0_title"
                                                 role="group"
                                               >
                                                 <label
                                                   class="chakra-field__label emotion-20"
                                                   data-part="label"
                                                   data-scope="field"
-                                                  for="_r_bt_"
-                                                  id="field::_r_bt_::label"
+                                                  for="root_tasks_0_title"
+                                                  id="field::root_tasks_0_title::label"
                                                 >
                                                   title
                                                 </label>
@@ -6299,7 +6299,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 class="chakra-field__root emotion-19"
                                                 data-part="root"
                                                 data-scope="field"
-                                                id="field::_r_bv_"
+                                                id="field::root_tasks_0_done"
                                                 role="group"
                                               >
                                                 <label
@@ -6308,13 +6308,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                   data-scope="checkbox"
                                                   data-state="unchecked"
                                                   dir="ltr"
-                                                  for="_r_bv_"
+                                                  for="root_tasks_0_done"
                                                   id="checkbox:root_tasks_0_done"
                                                 >
                                                   <input
                                                     aria-invalid="false"
-                                                    aria-labelledby="field::_r_bv_::label"
-                                                    id="_r_bv_"
+                                                    aria-labelledby="field::root_tasks_0_done::label"
+                                                    id="root_tasks_0_done"
                                                     name="root.tasks.0.done"
                                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                                     type="checkbox"
@@ -6341,7 +6341,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                     data-scope="checkbox"
                                                     data-state="unchecked"
                                                     dir="ltr"
-                                                    id="field::_r_bv_::label"
+                                                    id="field::root_tasks_0_done::label"
                                                   >
                                                     <p>
                                                       done
@@ -6506,15 +6506,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 class="chakra-field__root emotion-19"
                                                 data-part="root"
                                                 data-scope="field"
-                                                id="field::_r_c3_"
+                                                id="field::root_tasks_1_title"
                                                 role="group"
                                               >
                                                 <label
                                                   class="chakra-field__label emotion-20"
                                                   data-part="label"
                                                   data-scope="field"
-                                                  for="_r_c3_"
-                                                  id="field::_r_c3_::label"
+                                                  for="root_tasks_1_title"
+                                                  id="field::root_tasks_1_title::label"
                                                 >
                                                   title
                                                 </label>
@@ -6550,7 +6550,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 class="chakra-field__root emotion-19"
                                                 data-part="root"
                                                 data-scope="field"
-                                                id="field::_r_c5_"
+                                                id="field::root_tasks_1_done"
                                                 role="group"
                                               >
                                                 <label
@@ -6559,14 +6559,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                   data-scope="checkbox"
                                                   data-state="checked"
                                                   dir="ltr"
-                                                  for="_r_c5_"
+                                                  for="root_tasks_1_done"
                                                   id="checkbox:root_tasks_1_done"
                                                 >
                                                   <input
                                                     aria-invalid="false"
-                                                    aria-labelledby="field::_r_c5_::label"
+                                                    aria-labelledby="field::root_tasks_1_done::label"
                                                     checked=""
-                                                    id="_r_c5_"
+                                                    id="root_tasks_1_done"
                                                     name="root.tasks.1.done"
                                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                                     type="checkbox"
@@ -6597,7 +6597,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                     data-scope="checkbox"
                                                     data-state="checked"
                                                     dir="ltr"
-                                                    id="field::_r_c5_::label"
+                                                    id="field::root_tasks_1_done::label"
                                                   >
                                                     <p>
                                                       done
@@ -7273,7 +7273,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                       class="chakra-field__root emotion-13"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_bm_"
+                                      id="field::root_tags_0"
                                       role="group"
                                     >
                                       <label
@@ -7281,8 +7281,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for="_r_bm_"
-                                        id="field::_r_bm_::label"
+                                        for="root_tags_0"
+                                        id="field::root_tags_0::label"
                                       >
                                         tags-1
                                         <span
@@ -7426,7 +7426,7 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                       class="chakra-field__root emotion-13"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_bo_"
+                                      id="field::root_tags_1"
                                       role="group"
                                     >
                                       <label
@@ -7434,8 +7434,8 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for="_r_bo_"
-                                        id="field::_r_bo_::label"
+                                        for="root_tags_1"
+                                        id="field::root_tags_1::label"
                                       >
                                         tags-2
                                         <span
@@ -7933,15 +7933,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                 class="chakra-field__root emotion-11"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_bb_"
+                                id="field::root_person_firstName"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-12"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_bb_"
-                                  id="field::_r_bb_::label"
+                                  for="root_person_firstName"
+                                  id="field::root_person_firstName::label"
                                 >
                                   firstName
                                 </label>
@@ -7977,15 +7977,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                 class="chakra-field__root emotion-11"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_bd_"
+                                id="field::root_person_lastName"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-12"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_bd_"
-                                  id="field::_r_bd_::label"
+                                  for="root_person_lastName"
+                                  id="field::root_person_lastName::label"
                                 >
                                   lastName
                                 </label>
@@ -8052,15 +8052,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field::_r_bg_"
+                                          id="field::root_person_address_street"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for="_r_bg_"
-                                            id="field::_r_bg_::label"
+                                            for="root_person_address_street"
+                                            id="field::root_person_address_street::label"
                                           >
                                             street
                                           </label>
@@ -8096,15 +8096,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                           class="chakra-field__root emotion-11"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field::_r_bi_"
+                                          id="field::root_person_address_city"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-12"
                                             data-part="label"
                                             data-scope="field"
-                                            for="_r_bi_"
-                                            id="field::_r_bi_::label"
+                                            for="root_person_address_city"
+                                            id="field::root_person_address_city::label"
                                           >
                                             city
                                           </label>
@@ -8665,15 +8665,15 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_c9_"
+                      id="field::root_color"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_c9_"
-                        id="field::_r_c9_::label"
+                        for="root_color"
+                        id="root_color__label"
                       >
                         color
                       </label>
@@ -8686,8 +8686,8 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                       >
                         <select
                           aria-hidden="true"
-                          aria-labelledby="field::_r_c9_::label"
-                          id="_r_c9_"
+                          aria-labelledby="root_color__label"
+                          id="select:root_color:select"
                           name="root.color"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           tabindex="-1"
@@ -8724,7 +8724,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-invalid="false"
-                            aria-labelledby="field::_r_c9_::label"
+                            aria-labelledby="root_color__label"
                             aria-required="false"
                             class="chakra-select__trigger emotion-9"
                             data-part="trigger"
@@ -8732,7 +8732,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                             data-scope="select"
                             data-state="closed"
                             dir="ltr"
-                            id="select:root_color:trigger"
+                            id="root_color"
                             role="combobox"
                             type="button"
                           >
@@ -8774,7 +8774,7 @@ exports[`nameGenerator > dotNotationNameGenerator > select field with enum 1`] =
                           style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                         >
                           <div
-                            aria-labelledby="field::_r_c9_::label"
+                            aria-labelledby="root_color__label"
                             class="chakra-select__content emotion-15"
                             data-part="content"
                             data-scope="select"
@@ -9278,15 +9278,15 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_b2_"
+                      id="field::root_firstName"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_b2_"
-                        id="field::_r_b2_::label"
+                        for="root_firstName"
+                        id="field::root_firstName::label"
                       >
                         firstName
                       </label>
@@ -9322,15 +9322,15 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_b4_"
+                      id="field::root_age"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_b4_"
-                        id="field::_r_b4_::label"
+                        for="root_age"
+                        id="field::root_age::label"
                       >
                         age
                       </label>
@@ -9369,7 +9369,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_b6_"
+                      id="field::root_active"
                       role="group"
                     >
                       <label
@@ -9378,13 +9378,13 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                         data-scope="checkbox"
                         data-state="unchecked"
                         dir="ltr"
-                        for="_r_b6_"
+                        for="root_active"
                         id="checkbox:root_active"
                       >
                         <input
                           aria-invalid="false"
-                          aria-labelledby="field::_r_b6_::label"
-                          id="_r_b6_"
+                          aria-labelledby="field::root_active::label"
+                          id="root_active"
                           name="root.active"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           type="checkbox"
@@ -9411,7 +9411,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                           data-scope="checkbox"
                           data-state="unchecked"
                           dir="ltr"
-                          id="field::_r_b6_::label"
+                          id="field::root_active::label"
                         >
                           <p>
                             active
@@ -9731,7 +9731,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
               data-part="root"
               data-scope="radio-group"
               dir="ltr"
-              id="radio-group:_r_dg_"
+              id="root"
               role="radiogroup"
               style="position: relative;"
             >
@@ -9746,13 +9746,13 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_dg_:radio:input:__rjsf_index:0"
-                  id="root-0"
+                  for="root-0"
+                  id="radio-group:_r_dg_:radio:__rjsf_index:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_dg_:radio:label:__rjsf_index:0"
-                    data-ownedby="radio-group:_r_dg_"
-                    id="radio-group:_r_dg_:radio:input:__rjsf_index:0"
+                    data-ownedby="root"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -9790,14 +9790,14 @@ exports[`radio widget with options sharing a String() in the realValue format (#
                   data-ssr=""
                   data-state="checked"
                   dir="ltr"
-                  for="radio-group:_r_dg_:radio:input:__rjsf_index:1"
-                  id="root-1"
+                  for="root-1"
+                  id="radio-group:_r_dg_:radio:__rjsf_index:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_dg_:radio:label:__rjsf_index:1"
                     checked=""
-                    data-ownedby="radio-group:_r_dg_"
-                    id="radio-group:_r_dg_:radio:input:__rjsf_index:1"
+                    data-ownedby="root"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -10426,15 +10426,15 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             class="chakra-field__root emotion-8"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_cp_"
+                            id="field::root_region__oneof_select"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-9"
                               data-part="label"
                               data-scope="field"
-                              for="_r_cp_"
-                              id="field::_r_cp_::label"
+                              for="root_region__oneof_select"
+                              id="root_region__oneof_select__label"
                             >
                               region
                             </label>
@@ -10447,8 +10447,8 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field::_r_cp_::label"
-                                id="_r_cp_"
+                                aria-labelledby="root_region__oneof_select__label"
+                                id="select:root_region__oneof_select:select"
                                 name="root_region__oneof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
@@ -10478,14 +10478,14 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="field::_r_cp_::label"
+                                  aria-labelledby="root_region__oneof_select__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-12"
                                   data-part="trigger"
                                   data-scope="select"
                                   data-state="closed"
                                   dir="ltr"
-                                  id="select:root_region__oneof_select:trigger"
+                                  id="root_region__oneof_select"
                                   role="combobox"
                                   type="button"
                                 >
@@ -10529,7 +10529,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field::_r_cp_::label"
+                                  aria-labelledby="root_region__oneof_select__label"
                                   class="chakra-select__content emotion-18"
                                   data-part="content"
                                   data-scope="select"
@@ -10620,15 +10620,15 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 class="chakra-field__root emotion-8"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_cs_"
+                                id="field::root_region"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-9"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_cs_"
-                                  id="field::_r_cs_::label"
+                                  for="root_region"
+                                  id="root_region__label"
                                 >
                                   Europe
                                 </label>
@@ -10641,8 +10641,8 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                 >
                                   <select
                                     aria-hidden="true"
-                                    aria-labelledby="field::_r_cs_::label"
-                                    id="_r_cs_"
+                                    aria-labelledby="root_region__label"
+                                    id="select:root_region:select"
                                     name="root_region"
                                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                     tabindex="-1"
@@ -10672,14 +10672,14 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                       aria-expanded="false"
                                       aria-haspopup="listbox"
                                       aria-invalid="false"
-                                      aria-labelledby="field::_r_cs_::label"
+                                      aria-labelledby="root_region__label"
                                       aria-required="false"
                                       class="chakra-select__trigger emotion-12"
                                       data-part="trigger"
                                       data-scope="select"
                                       data-state="closed"
                                       dir="ltr"
-                                      id="select:root_region:trigger"
+                                      id="root_region"
                                       role="combobox"
                                       type="button"
                                     >
@@ -10723,7 +10723,7 @@ exports[`select widget from a nested oneOf of constants without a type 1`] = `
                                     style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                                   >
                                     <div
-                                      aria-labelledby="field::_r_cs_::label"
+                                      aria-labelledby="root_region__label"
                                       class="chakra-select__content emotion-18"
                                       data-part="content"
                                       data-scope="select"
@@ -11290,7 +11290,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_d2_"
+            id="field::root"
             role="group"
           >
             <div
@@ -11302,8 +11302,8 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_d2_::label"
-                id="_r_d2_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -11328,14 +11328,14 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_d2_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -11379,7 +11379,7 @@ exports[`select widget from a single anyOf boolean constant without a type 1`] =
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_d2_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -11906,7 +11906,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_cl_"
+            id="field::root"
             role="group"
           >
             <div
@@ -11918,8 +11918,8 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_cl_::label"
-                id="_r_cl_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -11954,14 +11954,14 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_cl_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -12005,7 +12005,7 @@ exports[`select widget from anyOf constants of mixed types without a type 1`] = 
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_cl_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -12592,7 +12592,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_cv_"
+            id="field::root"
             role="group"
           >
             <div
@@ -12604,8 +12604,8 @@ exports[`select widget from oneOf boolean constants with a null option without a
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_cv_::label"
-                id="_r_cv_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -12640,14 +12640,14 @@ exports[`select widget from oneOf boolean constants with a null option without a
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_cv_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -12691,7 +12691,7 @@ exports[`select widget from oneOf boolean constants with a null option without a
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_cv_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -13278,7 +13278,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_ci_"
+            id="field::root"
             role="group"
           >
             <div
@@ -13290,8 +13290,8 @@ exports[`select widget from oneOf constants without a type 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_ci_::label"
-                id="_r_ci_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -13321,14 +13321,14 @@ exports[`select widget from oneOf constants without a type 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_ci_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -13372,7 +13372,7 @@ exports[`select widget from oneOf constants without a type 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_ci_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -13929,7 +13929,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_d5_"
+            id="field::root"
             role="group"
           >
             <div
@@ -13941,8 +13941,8 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_d5_::label"
-                id="_r_d5_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -13972,14 +13972,14 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_d5_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -14023,7 +14023,7 @@ exports[`select widget from oneOf true and false constants without a type 1`] = 
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_d5_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -14580,7 +14580,7 @@ exports[`select widget with options sharing a String() in the realValue format (
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_dc_"
+            id="field::root"
             role="group"
           >
             <div
@@ -14592,8 +14592,8 @@ exports[`select widget with options sharing a String() in the realValue format (
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_dc_::label"
-                id="_r_dc_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -14623,14 +14623,14 @@ exports[`select widget with options sharing a String() in the realValue format (
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_dc_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -14674,7 +14674,7 @@ exports[`select widget with options sharing a String() in the realValue format (
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_dc_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -15506,7 +15506,7 @@ exports[`single fields > checkbox field 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_34_"
+            id="field::root"
             role="group"
           >
             <label
@@ -15515,13 +15515,13 @@ exports[`single fields > checkbox field 1`] = `
               data-scope="checkbox"
               data-state="unchecked"
               dir="ltr"
-              for="_r_34_"
+              for="root"
               id="checkbox:root"
             >
               <input
                 aria-invalid="false"
-                aria-labelledby="field::_r_34_::label"
-                id="_r_34_"
+                aria-labelledby="field::root::label"
+                id="root"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 type="checkbox"
@@ -15849,7 +15849,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_3o_"
+            id="field::root"
             role="group"
           >
             <sup
@@ -15864,14 +15864,14 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
               data-scope="checkbox"
               data-state="unchecked"
               dir="ltr"
-              for="_r_3o_"
+              for="root"
               id="checkbox:root"
             >
               <input
                 aria-describedby="root__description"
                 aria-invalid="false"
-                aria-labelledby="field::_r_3o_::label"
-                id="_r_3o_"
+                aria-labelledby="field::root::label"
+                id="root"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 type="checkbox"
@@ -15898,7 +15898,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
                 data-scope="checkbox"
                 data-state="unchecked"
                 dir="ltr"
-                id="field::_r_3o_::label"
+                id="field::root::label"
               >
                 <p>
                   test
@@ -16207,7 +16207,7 @@ exports[`single fields > checkbox field with label 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_37_"
+            id="field::root"
             role="group"
           >
             <label
@@ -16216,13 +16216,13 @@ exports[`single fields > checkbox field with label 1`] = `
               data-scope="checkbox"
               data-state="unchecked"
               dir="ltr"
-              for="_r_37_"
+              for="root"
               id="checkbox:root"
             >
               <input
                 aria-invalid="false"
-                aria-labelledby="field::_r_37_::label"
-                id="_r_37_"
+                aria-labelledby="field::root::label"
+                id="root"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 type="checkbox"
@@ -16249,7 +16249,7 @@ exports[`single fields > checkbox field with label 1`] = `
                 data-scope="checkbox"
                 data-state="unchecked"
                 dir="ltr"
-                id="field::_r_37_::label"
+                id="field::root::label"
               >
                 <p>
                   test
@@ -16562,7 +16562,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_3a_"
+            id="field::root"
             role="group"
           >
             <sup
@@ -16577,14 +16577,14 @@ exports[`single fields > checkbox field with label and description 1`] = `
               data-scope="checkbox"
               data-state="unchecked"
               dir="ltr"
-              for="_r_3a_"
+              for="root"
               id="checkbox:root"
             >
               <input
                 aria-describedby="root__description"
                 aria-invalid="false"
-                aria-labelledby="field::_r_3a_::label"
-                id="_r_3a_"
+                aria-labelledby="field::root::label"
+                id="root"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 type="checkbox"
@@ -16611,7 +16611,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
                 data-scope="checkbox"
                 data-state="unchecked"
                 dir="ltr"
-                id="field::_r_3a_::label"
+                id="field::root::label"
               >
                 <p>
                   test
@@ -16924,7 +16924,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_3d_"
+            id="field::root"
             role="group"
           >
             <sup
@@ -16947,14 +16947,14 @@ exports[`single fields > checkbox field with label and rich text description 1`]
               data-scope="checkbox"
               data-state="unchecked"
               dir="ltr"
-              for="_r_3d_"
+              for="root"
               id="checkbox:root"
             >
               <input
                 aria-describedby="root__description"
                 aria-invalid="false"
-                aria-labelledby="field::_r_3d_::label"
-                id="_r_3d_"
+                aria-labelledby="field::root::label"
+                id="root"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 type="checkbox"
@@ -16981,7 +16981,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
                 data-scope="checkbox"
                 data-state="unchecked"
                 dir="ltr"
-                id="field::_r_3d_::label"
+                id="field::root::label"
               >
                 <p>
                   test
@@ -17341,6 +17341,7 @@ exports[`single fields > checkboxes field 1`] = `
               class="emotion-4"
               data-part="group"
               data-scope="checkbox"
+              id="root"
               role="group"
             >
               <div
@@ -17352,13 +17353,13 @@ exports[`single fields > checkboxes field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-0:input"
+                  for="root-0"
                   id="checkbox:root-0"
                 >
                   <input
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-0:label"
-                    id="checkbox:root-0:input"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17398,13 +17399,13 @@ exports[`single fields > checkboxes field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-1:input"
+                  for="root-1"
                   id="checkbox:root-1"
                 >
                   <input
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-1:label"
-                    id="checkbox:root-1:input"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17444,13 +17445,13 @@ exports[`single fields > checkboxes field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-2:input"
+                  for="root-2"
                   id="checkbox:root-2"
                 >
                   <input
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-2:label"
-                    id="checkbox:root-2:input"
+                    id="root-2"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17490,13 +17491,13 @@ exports[`single fields > checkboxes field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-3:input"
+                  for="root-3"
                   id="checkbox:root-3"
                 >
                   <input
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-3:label"
-                    id="checkbox:root-3:input"
+                    id="root-3"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17925,6 +17926,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="emotion-7"
               data-part="group"
               data-scope="checkbox"
+              id="root"
               role="group"
             >
               <div
@@ -17936,7 +17938,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   data-scope="checkbox"
                   data-state="checked"
                   dir="ltr"
-                  for="checkbox:root-0:input"
+                  for="root-0"
                   id="checkbox:root-0"
                 >
                   <input
@@ -17944,7 +17946,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-0:label"
                     checked=""
-                    id="checkbox:root-0:input"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -17988,14 +17990,14 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-1:input"
+                  for="root-1"
                   id="checkbox:root-1"
                 >
                   <input
                     aria-describedby="root__description root__help"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-1:label"
-                    id="checkbox:root-1:input"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18035,14 +18037,14 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-2:input"
+                  for="root-2"
                   id="checkbox:root-2"
                 >
                   <input
                     aria-describedby="root__description root__help"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-2:label"
-                    id="checkbox:root-2:input"
+                    id="root-2"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18465,6 +18467,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               class="emotion-6"
               data-part="group"
               data-scope="checkbox"
+              id="root"
               role="group"
             >
               <div
@@ -18476,14 +18479,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-0:input"
+                  for="root-0"
                   id="checkbox:root-0"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-0:label"
-                    id="checkbox:root-0:input"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18523,14 +18526,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-1:input"
+                  for="root-1"
                   id="checkbox:root-1"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-1:label"
-                    id="checkbox:root-1:input"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18570,14 +18573,14 @@ exports[`single fields > checkboxes widget with required field 1`] = `
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-2:input"
+                  for="root-2"
                   id="checkbox:root-2"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-2:label"
-                    id="checkbox:root-2:input"
+                    id="root-2"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -18926,15 +18929,15 @@ exports[`single fields > field with description 1`] = `
                       class="chakra-field__root emotion-7"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_4l_"
+                      id="field::root_my-field"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-8"
                         data-part="label"
                         data-scope="field"
-                        for="_r_4l_"
-                        id="field::_r_4l_::label"
+                        for="root_my-field"
+                        id="field::root_my-field::label"
                       >
                         my-field
                       </label>
@@ -19267,15 +19270,15 @@ exports[`single fields > field with description in uiSchema 1`] = `
                       class="chakra-field__root emotion-7"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_4o_"
+                      id="field::root_my-field"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-8"
                         data-part="label"
                         data-scope="field"
-                        for="_r_4o_"
-                        id="field::_r_4o_::label"
+                        for="root_my-field"
+                        id="field::root_my-field::label"
                       >
                         my-field
                       </label>
@@ -19614,15 +19617,15 @@ exports[`single fields > field with markdown description 1`] = `
                       class="chakra-field__root emotion-7"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_4r_"
+                      id="field::root_my-field"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-8"
                         data-part="label"
                         data-scope="field"
-                        for="_r_4r_"
-                        id="field::_r_4r_::label"
+                        for="root_my-field"
+                        id="field::root_my-field::label"
                       >
                         my-field
                       </label>
@@ -19955,15 +19958,15 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                       class="chakra-field__root emotion-7"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_4u_"
+                      id="field::root_my-field"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-8"
                         data-part="label"
                         data-scope="field"
-                        for="_r_4u_"
-                        id="field::_r_4u_::label"
+                        for="root_my-field"
+                        id="field::root_my-field::label"
                       >
                         my-field
                       </label>
@@ -20214,7 +20217,7 @@ exports[`single fields > format color 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_t_"
+            id="field::root"
             role="group"
           >
             <input
@@ -20458,7 +20461,7 @@ exports[`single fields > format date 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_v_"
+            id="field::root"
             role="group"
           >
             <input
@@ -20702,7 +20705,7 @@ exports[`single fields > format datetime 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_11_"
+            id="field::root"
             role="group"
           >
             <input
@@ -20946,7 +20949,7 @@ exports[`single fields > format time 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_13_"
+            id="field::root"
             role="group"
           >
             <input
@@ -21414,7 +21417,7 @@ exports[`single fields > help and error display 1`] = `
             data-invalid=""
             data-part="root"
             data-scope="field"
-            id="field::_r_5b_"
+            id="field::root"
             role="group"
           >
             <input
@@ -21852,7 +21855,7 @@ exports[`single fields > hidden label 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_53_"
+            id="field::root"
             role="group"
           >
             <input
@@ -22253,7 +22256,7 @@ exports[`single fields > number field 0 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_p_"
+            id="field::root"
             role="group"
           >
             <input
@@ -22500,7 +22503,7 @@ exports[`single fields > number field 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_n_"
+            id="field::root"
             role="group"
           >
             <input
@@ -23249,15 +23252,15 @@ exports[`single fields > optional data controls > does not show optional control
                                 class="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_5h_"
+                                id="field::root_nestedObjectOptional_test"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_5h_"
-                                  id="field::_r_5h_::label"
+                                  for="root_nestedObjectOptional_test"
+                                  id="field::root_nestedObjectOptional_test::label"
                                 >
                                   test
                                 </label>
@@ -23324,15 +23327,15 @@ exports[`single fields > optional data controls > does not show optional control
                                           class="chakra-field__root emotion-14"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field::_r_5k_"
+                                          id="field::root_nestedObjectOptional_deepObjectOptional_deepTest"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-15"
                                             data-part="label"
                                             data-scope="field"
-                                            for="_r_5k_"
-                                            id="field::_r_5k_::label"
+                                            for="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                            id="field::root_nestedObjectOptional_deepObjectOptional_deepTest::label"
                                           >
                                             deepTest
                                           </label>
@@ -23404,15 +23407,15 @@ exports[`single fields > optional data controls > does not show optional control
                                           class="chakra-field__root emotion-14"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field::_r_5n_"
+                                          id="field::root_nestedObjectOptional_deepObject_deepTest"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-15"
                                             data-part="label"
                                             data-scope="field"
-                                            for="_r_5n_"
-                                            id="field::_r_5n_::label"
+                                            for="root_nestedObjectOptional_deepObject_deepTest"
+                                            id="field::root_nestedObjectOptional_deepObject_deepTest::label"
                                           >
                                             deepTest
                                           </label>
@@ -23785,15 +23788,15 @@ exports[`single fields > optional data controls > does not show optional control
                                 class="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_5u_"
+                                id="field::root_nestedObject_test"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_5u_"
-                                  id="field::_r_5u_::label"
+                                  for="root_nestedObject_test"
+                                  id="field::root_nestedObject_test::label"
                                 >
                                   test
                                 </label>
@@ -23917,15 +23920,15 @@ exports[`single fields > optional data controls > does not show optional control
                             class="chakra-field__root emotion-100"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_61_"
+                            id="field::root_optionalObjectWithOneofs__oneof_select"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-15"
                               data-part="label"
                               data-scope="field"
-                              for="_r_61_"
-                              id="field::_r_61_::label"
+                              for="root_optionalObjectWithOneofs__oneof_select"
+                              id="root_optionalObjectWithOneofs__oneof_select__label"
                             >
                               optionalObjectWithOneofs
                             </label>
@@ -23938,8 +23941,8 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field::_r_61_::label"
-                                id="_r_61_"
+                                aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
+                                id="select:root_optionalObjectWithOneofs__oneof_select:select"
                                 name="root_optionalObjectWithOneofs__oneof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
@@ -23974,14 +23977,14 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="field::_r_61_::label"
+                                  aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-104"
                                   data-part="trigger"
                                   data-scope="select"
                                   data-state="closed"
                                   dir="ltr"
-                                  id="select:root_optionalObjectWithOneofs__oneof_select:trigger"
+                                  id="root_optionalObjectWithOneofs__oneof_select"
                                   role="combobox"
                                   type="button"
                                 >
@@ -24025,7 +24028,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field::_r_61_::label"
+                                  aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
                                   class="chakra-select__content emotion-110"
                                   data-part="content"
                                   data-scope="select"
@@ -24164,7 +24167,7 @@ exports[`single fields > optional data controls > does not show optional control
                                           data-part="root"
                                           data-readonly=""
                                           data-scope="field"
-                                          id="field::_r_65_"
+                                          id="field::root_optionalObjectWithOneofs_name"
                                           role="group"
                                         >
                                           <label
@@ -24173,8 +24176,8 @@ exports[`single fields > optional data controls > does not show optional control
                                             data-part="label"
                                             data-readonly=""
                                             data-scope="field"
-                                            for="_r_65_"
-                                            id="field::_r_65_::label"
+                                            for="root_optionalObjectWithOneofs_name"
+                                            id="field::root_optionalObjectWithOneofs_name::label"
                                           >
                                             name
                                           </label>
@@ -24232,15 +24235,15 @@ exports[`single fields > optional data controls > does not show optional control
                             class="chakra-field__root emotion-100"
                             data-part="root"
                             data-scope="field"
-                            id="field::_r_67_"
+                            id="field::root_optionalArrayWithAnyofs__anyof_select"
                             role="group"
                           >
                             <label
                               class="chakra-field__label emotion-15"
                               data-part="label"
                               data-scope="field"
-                              for="_r_67_"
-                              id="field::_r_67_::label"
+                              for="root_optionalArrayWithAnyofs__anyof_select"
+                              id="root_optionalArrayWithAnyofs__anyof_select__label"
                             >
                               optionalArrayWithAnyofs
                             </label>
@@ -24253,8 +24256,8 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field::_r_67_::label"
-                                id="_r_67_"
+                                aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
+                                id="select:root_optionalArrayWithAnyofs__anyof_select:select"
                                 name="root_optionalArrayWithAnyofs__anyof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
@@ -24289,14 +24292,14 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="field::_r_67_::label"
+                                  aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-104"
                                   data-part="trigger"
                                   data-scope="select"
                                   data-state="closed"
                                   dir="ltr"
-                                  id="select:root_optionalArrayWithAnyofs__anyof_select:trigger"
+                                  id="root_optionalArrayWithAnyofs__anyof_select"
                                   role="combobox"
                                   type="button"
                                 >
@@ -24340,7 +24343,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field::_r_67_::label"
+                                  aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
                                   class="chakra-select__content emotion-110"
                                   data-part="content"
                                   data-scope="select"
@@ -25243,7 +25246,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 data-part="root"
                                 data-readonly=""
                                 data-scope="field"
-                                id="field::_r_7e_"
+                                id="field::root_nestedObjectOptional_test"
                                 role="group"
                               >
                                 <label
@@ -25252,8 +25255,8 @@ exports[`single fields > optional data controls > does not show optional control
                                   data-part="label"
                                   data-readonly=""
                                   data-scope="field"
-                                  for="_r_7e_"
-                                  id="field::_r_7e_::label"
+                                  for="root_nestedObjectOptional_test"
+                                  id="field::root_nestedObjectOptional_test::label"
                                 >
                                   test
                                 </label>
@@ -25325,7 +25328,7 @@ exports[`single fields > optional data controls > does not show optional control
                                           data-part="root"
                                           data-readonly=""
                                           data-scope="field"
-                                          id="field::_r_7h_"
+                                          id="field::root_nestedObjectOptional_deepObjectOptional_deepTest"
                                           role="group"
                                         >
                                           <label
@@ -25334,8 +25337,8 @@ exports[`single fields > optional data controls > does not show optional control
                                             data-part="label"
                                             data-readonly=""
                                             data-scope="field"
-                                            for="_r_7h_"
-                                            id="field::_r_7h_::label"
+                                            for="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                                            id="field::root_nestedObjectOptional_deepObjectOptional_deepTest::label"
                                           >
                                             deepTest
                                           </label>
@@ -25412,7 +25415,7 @@ exports[`single fields > optional data controls > does not show optional control
                                           data-part="root"
                                           data-readonly=""
                                           data-scope="field"
-                                          id="field::_r_7k_"
+                                          id="field::root_nestedObjectOptional_deepObject_deepTest"
                                           role="group"
                                         >
                                           <label
@@ -25421,8 +25424,8 @@ exports[`single fields > optional data controls > does not show optional control
                                             data-part="label"
                                             data-readonly=""
                                             data-scope="field"
-                                            for="_r_7k_"
-                                            id="field::_r_7k_::label"
+                                            for="root_nestedObjectOptional_deepObject_deepTest"
+                                            id="field::root_nestedObjectOptional_deepObject_deepTest::label"
                                           >
                                             deepTest
                                           </label>
@@ -25804,7 +25807,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 data-part="root"
                                 data-readonly=""
                                 data-scope="field"
-                                id="field::_r_7r_"
+                                id="field::root_nestedObject_test"
                                 role="group"
                               >
                                 <label
@@ -25813,8 +25816,8 @@ exports[`single fields > optional data controls > does not show optional control
                                   data-part="label"
                                   data-readonly=""
                                   data-scope="field"
-                                  for="_r_7r_"
-                                  id="field::_r_7r_::label"
+                                  for="root_nestedObject_test"
+                                  id="field::root_nestedObject_test::label"
                                 >
                                   test
                                 </label>
@@ -25944,7 +25947,7 @@ exports[`single fields > optional data controls > does not show optional control
                             data-part="root"
                             data-readonly=""
                             data-scope="field"
-                            id="field::_r_7u_"
+                            id="field::root_optionalObjectWithOneofs__oneof_select"
                             role="group"
                           >
                             <label
@@ -25953,8 +25956,8 @@ exports[`single fields > optional data controls > does not show optional control
                               data-part="label"
                               data-readonly=""
                               data-scope="field"
-                              for="_r_7u_"
-                              id="field::_r_7u_::label"
+                              for="root_optionalObjectWithOneofs__oneof_select"
+                              id="root_optionalObjectWithOneofs__oneof_select__label"
                             >
                               optionalObjectWithOneofs
                             </label>
@@ -25968,9 +25971,9 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field::_r_7u_::label"
+                                aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
                                 disabled=""
-                                id="_r_7u_"
+                                id="select:root_optionalObjectWithOneofs__oneof_select:select"
                                 name="root_optionalObjectWithOneofs__oneof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
@@ -26006,7 +26009,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="field::_r_7u_::label"
+                                  aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-104"
                                   data-disabled=""
@@ -26016,7 +26019,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   data-state="closed"
                                   dir="ltr"
                                   disabled=""
-                                  id="select:root_optionalObjectWithOneofs__oneof_select:trigger"
+                                  id="root_optionalObjectWithOneofs__oneof_select"
                                   role="combobox"
                                   type="button"
                                 >
@@ -26063,7 +26066,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field::_r_7u_::label"
+                                  aria-labelledby="root_optionalObjectWithOneofs__oneof_select__label"
                                   class="chakra-select__content emotion-110"
                                   data-part="content"
                                   data-scope="select"
@@ -26208,7 +26211,7 @@ exports[`single fields > optional data controls > does not show optional control
                                           data-part="root"
                                           data-readonly=""
                                           data-scope="field"
-                                          id="field::_r_82_"
+                                          id="field::root_optionalObjectWithOneofs_name"
                                           role="group"
                                         >
                                           <label
@@ -26217,8 +26220,8 @@ exports[`single fields > optional data controls > does not show optional control
                                             data-part="label"
                                             data-readonly=""
                                             data-scope="field"
-                                            for="_r_82_"
-                                            id="field::_r_82_::label"
+                                            for="root_optionalObjectWithOneofs_name"
+                                            id="field::root_optionalObjectWithOneofs_name::label"
                                           >
                                             name
                                           </label>
@@ -26278,7 +26281,7 @@ exports[`single fields > optional data controls > does not show optional control
                             data-part="root"
                             data-readonly=""
                             data-scope="field"
-                            id="field::_r_84_"
+                            id="field::root_optionalArrayWithAnyofs__anyof_select"
                             role="group"
                           >
                             <label
@@ -26287,8 +26290,8 @@ exports[`single fields > optional data controls > does not show optional control
                               data-part="label"
                               data-readonly=""
                               data-scope="field"
-                              for="_r_84_"
-                              id="field::_r_84_::label"
+                              for="root_optionalArrayWithAnyofs__anyof_select"
+                              id="root_optionalArrayWithAnyofs__anyof_select__label"
                             >
                               optionalArrayWithAnyofs
                             </label>
@@ -26302,9 +26305,9 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <select
                                 aria-hidden="true"
-                                aria-labelledby="field::_r_84_::label"
+                                aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
                                 disabled=""
-                                id="_r_84_"
+                                id="select:root_optionalArrayWithAnyofs__anyof_select:select"
                                 name="root_optionalArrayWithAnyofs__anyof_select"
                                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                                 tabindex="-1"
@@ -26340,7 +26343,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   aria-expanded="false"
                                   aria-haspopup="listbox"
                                   aria-invalid="false"
-                                  aria-labelledby="field::_r_84_::label"
+                                  aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
                                   aria-required="false"
                                   class="chakra-select__trigger emotion-104"
                                   data-disabled=""
@@ -26350,7 +26353,7 @@ exports[`single fields > optional data controls > does not show optional control
                                   data-state="closed"
                                   dir="ltr"
                                   disabled=""
-                                  id="select:root_optionalArrayWithAnyofs__anyof_select:trigger"
+                                  id="root_optionalArrayWithAnyofs__anyof_select"
                                   role="combobox"
                                   type="button"
                                 >
@@ -26397,7 +26400,7 @@ exports[`single fields > optional data controls > does not show optional control
                                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                               >
                                 <div
-                                  aria-labelledby="field::_r_84_::label"
+                                  aria-labelledby="root_optionalArrayWithAnyofs__anyof_select__label"
                                   class="chakra-select__content emotion-110"
                                   data-part="content"
                                   data-scope="select"
@@ -27297,15 +27300,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 class="chakra-field__root emotion-17"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_6o_"
+                                id="field::root_nestedObjectOptional_test"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-18"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_6o_"
-                                  id="field::_r_6o_::label"
+                                  for="root_nestedObjectOptional_test"
+                                  id="field::root_nestedObjectOptional_test::label"
                                 >
                                   test
                                 </label>
@@ -27442,15 +27445,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           class="chakra-field__root emotion-17"
                                           data-part="root"
                                           data-scope="field"
-                                          id="field::_r_6s_"
+                                          id="field::root_nestedObjectOptional_deepObject_deepTest"
                                           role="group"
                                         >
                                           <label
                                             class="chakra-field__label emotion-18"
                                             data-part="label"
                                             data-scope="field"
-                                            for="_r_6s_"
-                                            id="field::_r_6s_::label"
+                                            for="root_nestedObjectOptional_deepObject_deepTest"
+                                            id="field::root_nestedObjectOptional_deepObject_deepTest::label"
                                           >
                                             deepTest
                                           </label>
@@ -27794,7 +27797,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       class="chakra-field__root emotion-17"
                                       data-part="root"
                                       data-scope="field"
-                                      id="field::_r_72_"
+                                      id="field::root_nestedArrayOptional_0"
                                       role="group"
                                     >
                                       <label
@@ -27802,8 +27805,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         data-part="label"
                                         data-required=""
                                         data-scope="field"
-                                        for="_r_72_"
-                                        id="field::_r_72_::label"
+                                        for="root_nestedArrayOptional_0"
+                                        id="field::root_nestedArrayOptional_0::label"
                                       >
                                         nestedArrayOptional-1
                                         <span
@@ -27958,15 +27961,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 class="chakra-field__root emotion-17"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_75_"
+                                id="field::root_nestedObject_test"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-18"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_75_"
-                                  id="field::_r_75_::label"
+                                  for="root_nestedObject_test"
+                                  id="field::root_nestedObject_test::label"
                                 >
                                   test
                                 </label>
@@ -28834,7 +28837,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 data-part="root"
                                 data-readonly=""
                                 data-scope="field"
-                                id="field::_r_8l_"
+                                id="field::root_nestedObjectOptional_test"
                                 role="group"
                               >
                                 <label
@@ -28843,8 +28846,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   data-part="label"
                                   data-readonly=""
                                   data-scope="field"
-                                  for="_r_8l_"
-                                  id="field::_r_8l_::label"
+                                  for="root_nestedObjectOptional_test"
+                                  id="field::root_nestedObjectOptional_test::label"
                                 >
                                   test
                                 </label>
@@ -28959,7 +28962,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           data-part="root"
                                           data-readonly=""
                                           data-scope="field"
-                                          id="field::_r_8p_"
+                                          id="field::root_nestedObjectOptional_deepObject_deepTest"
                                           role="group"
                                         >
                                           <label
@@ -28968,8 +28971,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                             data-part="label"
                                             data-readonly=""
                                             data-scope="field"
-                                            for="_r_8p_"
-                                            id="field::_r_8p_::label"
+                                            for="root_nestedObjectOptional_deepObject_deepTest"
+                                            id="field::root_nestedObjectOptional_deepObject_deepTest::label"
                                           >
                                             deepTest
                                           </label>
@@ -29253,7 +29256,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       data-part="root"
                                       data-readonly=""
                                       data-scope="field"
-                                      id="field::_r_8v_"
+                                      id="field::root_nestedArrayOptional_0"
                                       role="group"
                                     >
                                       <label
@@ -29263,8 +29266,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         data-readonly=""
                                         data-required=""
                                         data-scope="field"
-                                        for="_r_8v_"
-                                        id="field::_r_8v_::label"
+                                        for="root_nestedArrayOptional_0"
+                                        id="field::root_nestedArrayOptional_0::label"
                                       >
                                         nestedArrayOptional-1
                                         <span
@@ -29426,7 +29429,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 data-part="root"
                                 data-readonly=""
                                 data-scope="field"
-                                id="field::_r_92_"
+                                id="field::root_nestedObject_test"
                                 role="group"
                               >
                                 <label
@@ -29435,8 +29438,8 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   data-part="label"
                                   data-readonly=""
                                   data-scope="field"
-                                  for="_r_92_"
-                                  id="field::_r_92_::label"
+                                  for="root_nestedObject_test"
+                                  id="field::root_nestedObject_test::label"
                                 >
                                   test
                                 </label>
@@ -30334,15 +30337,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 class="chakra-field__root emotion-32"
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_6f_"
+                                id="field::root_nestedObject_test"
                                 role="group"
                               >
                                 <label
                                   class="chakra-field__label emotion-33"
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_6f_"
-                                  id="field::_r_6f_::label"
+                                  for="root_nestedObject_test"
+                                  id="field::root_nestedObject_test::label"
                                 >
                                   test
                                 </label>
@@ -31137,7 +31140,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 data-disabled=""
                                 data-part="root"
                                 data-scope="field"
-                                id="field::_r_8c_"
+                                id="field::root_nestedObject_test"
                                 role="group"
                               >
                                 <label
@@ -31145,8 +31148,8 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   data-disabled=""
                                   data-part="label"
                                   data-scope="field"
-                                  for="_r_8c_"
-                                  id="field::_r_8c_::label"
+                                  for="root_nestedObject_test"
+                                  id="field::root_nestedObject_test::label"
                                 >
                                   test
                                 </label>
@@ -31622,7 +31625,7 @@ exports[`single fields > password field 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_15_"
+            id="field::root"
             role="group"
           >
             <input
@@ -31943,7 +31946,7 @@ exports[`single fields > radio field 1`] = `
               data-part="root"
               data-scope="radio-group"
               dir="ltr"
-              id="radio-group:_r_4e_"
+              id="root"
               role="radiogroup"
               style="position: relative;"
             >
@@ -31958,13 +31961,13 @@ exports[`single fields > radio field 1`] = `
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_4e_:radio:input:0"
-                  id="root-0"
+                  for="root-0"
+                  id="radio-group:_r_4e_:radio:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_4e_:radio:label:0"
-                    data-ownedby="radio-group:_r_4e_"
-                    id="radio-group:_r_4e_:radio:input:0"
+                    data-ownedby="root"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -32002,13 +32005,13 @@ exports[`single fields > radio field 1`] = `
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_4e_:radio:input:1"
-                  id="root-1"
+                  for="root-1"
+                  id="radio-group:_r_4e_:radio:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_4e_:radio:label:1"
-                    data-ownedby="radio-group:_r_4e_"
-                    id="radio-group:_r_4e_:radio:input:1"
+                    data-ownedby="root"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -32404,7 +32407,6 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               class="chakra-field__label emotion-5"
               data-part="label"
               data-scope="field"
-              for="_r_3r_"
               id="root__label"
             >
               test
@@ -32417,7 +32419,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               data-part="root"
               data-scope="radio-group"
               dir="ltr"
-              id="radio-group:_r_3s_"
+              id="root"
               role="radiogroup"
               style="position: relative;"
             >
@@ -32432,14 +32434,14 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_3s_:radio:input:0"
-                  id="root-0"
+                  for="root-0"
+                  id="radio-group:_r_3s_:radio:0"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-labelledby="radio-group:_r_3s_:radio:label:0"
-                    data-ownedby="radio-group:_r_3s_"
-                    id="radio-group:_r_3s_:radio:input:0"
+                    data-ownedby="root"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -32477,14 +32479,14 @@ exports[`single fields > radio widget with description in schema and FieldTempla
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_3s_:radio:input:1"
-                  id="root-1"
+                  for="root-1"
+                  id="radio-group:_r_3s_:radio:1"
                 >
                   <input
                     aria-describedby="root__description"
                     aria-labelledby="radio-group:_r_3s_:radio:label:1"
-                    data-ownedby="radio-group:_r_3s_"
-                    id="radio-group:_r_3s_:radio:input:1"
+                    data-ownedby="root"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -32840,7 +32842,7 @@ exports[`single fields > required checkbox field 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_3h_"
+                      id="field::root_agree"
                       role="group"
                     >
                       <label
@@ -32849,13 +32851,13 @@ exports[`single fields > required checkbox field 1`] = `
                         data-scope="checkbox"
                         data-state="unchecked"
                         dir="ltr"
-                        for="_r_3h_"
+                        for="root_agree"
                         id="checkbox:root_agree"
                       >
                         <input
                           aria-invalid="false"
-                          aria-labelledby="field::_r_3h_::label"
-                          id="_r_3h_"
+                          aria-labelledby="field::root_agree::label"
+                          id="root_agree"
                           name="root_agree"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           type="checkbox"
@@ -32882,7 +32884,7 @@ exports[`single fields > required checkbox field 1`] = `
                           data-scope="checkbox"
                           data-state="unchecked"
                           dir="ltr"
-                          id="field::_r_3h_::label"
+                          id="field::root_agree::label"
                         >
                           <p>
                             I Agree
@@ -33218,7 +33220,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_3l_"
+                      id="field::root_agree"
                       role="group"
                     >
                       <label
@@ -33227,14 +33229,14 @@ exports[`single fields > required checkbox field, default true 1`] = `
                         data-scope="checkbox"
                         data-state="checked"
                         dir="ltr"
-                        for="_r_3l_"
+                        for="root_agree"
                         id="checkbox:root_agree"
                       >
                         <input
                           aria-invalid="false"
-                          aria-labelledby="field::_r_3l_::label"
+                          aria-labelledby="field::root_agree::label"
                           checked=""
-                          id="_r_3l_"
+                          id="root_agree"
                           name="root_agree"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           type="checkbox"
@@ -33265,7 +33267,7 @@ exports[`single fields > required checkbox field, default true 1`] = `
                           data-scope="checkbox"
                           data-state="checked"
                           dir="ltr"
-                          id="field::_r_3l_::label"
+                          id="field::root_agree::label"
                         >
                           <p>
                             I Agree
@@ -33508,7 +33510,7 @@ exports[`single fields > schema examples 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_57_"
+            id="field::root"
             role="group"
           >
             <input
@@ -33773,7 +33775,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_59_"
+            id="field::root"
             role="group"
           >
             <input
@@ -34288,7 +34290,7 @@ exports[`single fields > select field 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_1c_"
+            id="field::root"
             role="group"
           >
             <div
@@ -34300,8 +34302,8 @@ exports[`single fields > select field 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_1c_::label"
-                id="_r_1c_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -34333,7 +34335,7 @@ exports[`single fields > select field 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_1c_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -34341,7 +34343,7 @@ exports[`single fields > select field 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -34383,7 +34385,7 @@ exports[`single fields > select field 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_1c_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -34941,7 +34943,7 @@ exports[`single fields > select field multiple choice 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_1f_"
+            id="field::root"
             role="group"
           >
             <div
@@ -34953,8 +34955,8 @@ exports[`single fields > select field multiple choice 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_1f_::label"
-                id="_r_1f_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -34997,7 +34999,7 @@ exports[`single fields > select field multiple choice 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_1f_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -35005,7 +35007,7 @@ exports[`single fields > select field multiple choice 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -35047,7 +35049,7 @@ exports[`single fields > select field multiple choice 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_1f_::label"
+                  aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
                   data-part="content"
@@ -35666,7 +35668,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_21_"
+            id="field::root"
             role="group"
           >
             <div
@@ -35678,8 +35680,8 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_21_::label"
-                id="_r_21_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -35723,7 +35725,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_21_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -35731,7 +35733,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -35773,7 +35775,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_21_::label"
+                  aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
                   data-part="content"
@@ -36242,6 +36244,7 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
               class="emotion-3"
               data-part="group"
               data-scope="checkbox"
+              id="root"
               role="group"
             >
               <div
@@ -36253,13 +36256,13 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-0:input"
+                  for="root-0"
                   id="checkbox:root-0"
                 >
                   <input
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-0:label"
-                    id="checkbox:root-0:input"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -36300,14 +36303,14 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-1:input"
+                  for="root-1"
                   id="checkbox:root-1"
                 >
                   <input
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-1:label"
                     disabled=""
-                    id="checkbox:root-1:input"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -36350,13 +36353,13 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-2:input"
+                  for="root-2"
                   id="checkbox:root-2"
                 >
                   <input
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-2:label"
-                    id="checkbox:root-2:input"
+                    id="root-2"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -36396,13 +36399,13 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
                   data-scope="checkbox"
                   data-state="unchecked"
                   dir="ltr"
-                  for="checkbox:root-3:input"
+                  for="root-3"
                   id="checkbox:root-3"
                 >
                   <input
                     aria-invalid="false"
                     aria-labelledby="checkbox:root-3:label"
-                    id="checkbox:root-3:input"
+                    id="root-3"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="checkbox"
@@ -36922,7 +36925,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_31_"
+            id="field::root"
             role="group"
           >
             <div
@@ -36934,8 +36937,8 @@ exports[`single fields > select field multiple choice formData 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_31_::label"
-                id="_r_31_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -36977,14 +36980,14 @@ exports[`single fields > select field multiple choice formData 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_31_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -37028,7 +37031,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_31_::label"
+                  aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
                   data-part="content"
@@ -37645,7 +37648,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_1i_"
+            id="field::root"
             role="group"
           >
             <div
@@ -37657,8 +37660,8 @@ exports[`single fields > select field multiple choice with labels 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_1i_::label"
-                id="_r_1i_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 multiple=""
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
@@ -37696,7 +37699,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_1i_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -37704,7 +37707,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -37746,7 +37749,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_1i_::label"
+                  aria-labelledby=""
                   aria-multiselectable="true"
                   class="chakra-select__content emotion-11"
                   data-part="content"
@@ -38335,7 +38338,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_1l_"
+            id="field::root"
             role="group"
           >
             <div
@@ -38347,8 +38350,8 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_1l_::label"
-                id="_r_1l_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -38381,7 +38384,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_1l_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -38389,7 +38392,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -38431,7 +38434,7 @@ exports[`single fields > select field single choice enumDisabled 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_1l_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -38815,7 +38818,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               data-part="root"
               data-scope="radio-group"
               dir="ltr"
-              id="radio-group:_r_1p_"
+              id="root"
               role="radiogroup"
               style="position: relative;"
             >
@@ -38830,13 +38833,13 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_1p_:radio:input:0"
-                  id="root-0"
+                  for="root-0"
+                  id="radio-group:_r_1p_:radio:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1p_:radio:label:0"
-                    data-ownedby="radio-group:_r_1p_"
-                    id="radio-group:_r_1p_:radio:input:0"
+                    data-ownedby="root"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -38875,14 +38878,14 @@ exports[`single fields > select field single choice enumDisabled using radio wid
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_1p_:radio:input:1"
-                  id="root-1"
+                  for="root-1"
+                  id="radio-group:_r_1p_:radio:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1p_:radio:label:1"
-                    data-ownedby="radio-group:_r_1p_"
+                    data-ownedby="root"
                     disabled=""
-                    id="radio-group:_r_1p_:radio:input:1"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -39229,7 +39232,7 @@ exports[`single fields > select field single choice form disabled using radio wi
               data-part="root"
               data-scope="radio-group"
               dir="ltr"
-              id="radio-group:_r_1v_"
+              id="root"
               role="radiogroup"
               style="position: relative;"
             >
@@ -39245,14 +39248,14 @@ exports[`single fields > select field single choice form disabled using radio wi
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_1v_:radio:input:0"
-                  id="root-0"
+                  for="root-0"
+                  id="radio-group:_r_1v_:radio:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1v_:radio:label:0"
-                    data-ownedby="radio-group:_r_1v_"
+                    data-ownedby="root"
                     disabled=""
-                    id="radio-group:_r_1v_:radio:input:0"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -39293,14 +39296,14 @@ exports[`single fields > select field single choice form disabled using radio wi
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_1v_:radio:input:1"
-                  id="root-1"
+                  for="root-1"
+                  id="radio-group:_r_1v_:radio:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1v_:radio:label:1"
-                    data-ownedby="radio-group:_r_1v_"
+                    data-ownedby="root"
                     disabled=""
-                    id="radio-group:_r_1v_:radio:input:1"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -39819,7 +39822,7 @@ exports[`single fields > select field single choice formData 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_2u_"
+            id="field::root"
             role="group"
           >
             <div
@@ -39831,8 +39834,8 @@ exports[`single fields > select field single choice formData 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_2u_::label"
-                id="_r_2u_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -39862,14 +39865,14 @@ exports[`single fields > select field single choice formData 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_2u_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -39913,7 +39916,7 @@ exports[`single fields > select field single choice formData 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_2u_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -40488,7 +40491,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_2a_"
+            id="field::root"
             role="group"
           >
             <div
@@ -40500,8 +40503,8 @@ exports[`single fields > select field single choice optgroups 1`] = `
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_2a_::label"
-                id="_r_2a_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -40543,7 +40546,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_2a_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -40551,7 +40554,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -40593,7 +40596,7 @@ exports[`single fields > select field single choice optgroups 1`] = `
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_2a_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -41269,7 +41272,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_2f_"
+            id="field::root"
             role="group"
           >
             <div
@@ -41281,8 +41284,8 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_2f_::label"
-                id="_r_2f_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -41325,7 +41328,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_2f_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
@@ -41333,7 +41336,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -41375,7 +41378,7 @@ exports[`single fields > select field single choice optgroups with enumDisabled 
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_2f_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -41864,7 +41867,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
               data-part="root"
               data-scope="radio-group"
               dir="ltr"
-              id="radio-group:_r_1s_"
+              id="root"
               role="radiogroup"
               style="position: relative;"
             >
@@ -41880,14 +41883,14 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_1s_:radio:input:0"
-                  id="root-0"
+                  for="root-0"
+                  id="radio-group:_r_1s_:radio:0"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1s_:radio:label:0"
-                    data-ownedby="radio-group:_r_1s_"
+                    data-ownedby="root"
                     disabled=""
-                    id="radio-group:_r_1s_:radio:input:0"
+                    id="root-0"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -41928,14 +41931,14 @@ exports[`single fields > select field single choice uiSchema disabled using radi
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  for="radio-group:_r_1s_:radio:input:1"
-                  id="root-1"
+                  for="root-1"
+                  id="radio-group:_r_1s_:radio:1"
                 >
                   <input
                     aria-labelledby="radio-group:_r_1s_:radio:label:1"
-                    data-ownedby="radio-group:_r_1s_"
+                    data-ownedby="root"
                     disabled=""
-                    id="radio-group:_r_1s_:radio:input:1"
+                    id="root-1"
                     name="root"
                     style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                     type="radio"
@@ -42513,15 +42516,15 @@ exports[`single fields > select widget with description in schema and FieldTempl
             class="chakra-field__root emotion-4"
             data-part="root"
             data-scope="field"
-            id="field::_r_3u_"
+            id="field::root"
             role="group"
           >
             <label
               class="chakra-field__label emotion-5"
               data-part="label"
               data-scope="field"
-              for="_r_3u_"
-              id="field::_r_3u_::label"
+              for="root"
+              id="root__label"
             >
               test
             </label>
@@ -42534,8 +42537,8 @@ exports[`single fields > select widget with description in schema and FieldTempl
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_3u_::label"
-                id="_r_3u_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -42568,7 +42571,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_3u_::label"
+                  aria-labelledby="root__label"
                   aria-required="false"
                   class="chakra-select__trigger emotion-8"
                   data-part="trigger"
@@ -42576,7 +42579,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -42618,7 +42621,7 @@ exports[`single fields > select widget with description in schema and FieldTempl
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_3u_::label"
+                  aria-labelledby="root__label"
                   class="chakra-select__content emotion-14"
                   data-part="content"
                   data-scope="select"
@@ -43180,7 +43183,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_41_"
+            id="field::root"
             role="group"
           >
             <sup
@@ -43198,8 +43201,8 @@ exports[`single fields > select widget with selected oneOf option description 1`
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_41_::label"
-                id="_r_41_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -43230,14 +43233,14 @@ exports[`single fields > select widget with selected oneOf option description 1`
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_41_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-6"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -43281,7 +43284,7 @@ exports[`single fields > select widget with selected oneOf option description 1`
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_41_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-12"
                   data-part="content"
                   data-scope="select"
@@ -43838,7 +43841,7 @@ exports[`single fields > select widget with selected oneOf option description an
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_44_"
+            id="field::root"
             role="group"
           >
             <div
@@ -43850,8 +43853,8 @@ exports[`single fields > select widget with selected oneOf option description an
             >
               <select
                 aria-hidden="true"
-                aria-labelledby="field::_r_44_::label"
-                id="_r_44_"
+                aria-labelledby="root__label"
+                id="select:root:select"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                 tabindex="-1"
@@ -43881,14 +43884,14 @@ exports[`single fields > select widget with selected oneOf option description an
                   aria-expanded="false"
                   aria-haspopup="listbox"
                   aria-invalid="false"
-                  aria-labelledby="field::_r_44_::label"
+                  aria-labelledby=""
                   aria-required="false"
                   class="chakra-select__trigger emotion-5"
                   data-part="trigger"
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:trigger"
+                  id="root"
                   role="combobox"
                   type="button"
                 >
@@ -43932,7 +43935,7 @@ exports[`single fields > select widget with selected oneOf option description an
                 style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
               >
                 <div
-                  aria-labelledby="field::_r_44_::label"
+                  aria-labelledby=""
                   class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
@@ -44361,7 +44364,7 @@ exports[`single fields > slider field 1`] = `
                   />
                 </div>
                 <div
-                  aria-labelledby="slider:root:label"
+                  aria-labelledby=""
                   aria-orientation="horizontal"
                   aria-valuemax="100"
                   aria-valuemin="42"
@@ -44373,7 +44376,7 @@ exports[`single fields > slider field 1`] = `
                   data-scope="slider"
                   dir="ltr"
                   draggable="false"
-                  id="slider:root:thumb:0"
+                  id="root"
                   role="slider"
                   style="visibility: visible; position: absolute; transform: var(--slider-thumb-transform); inset-inline-start: var(--slider-thumb-offset-0);"
                   tabindex="0"
@@ -44705,15 +44708,15 @@ exports[`single fields > string field > field with markdown help and description
             class="chakra-field__root emotion-5"
             data-part="root"
             data-scope="field"
-            id="field::_r_d_"
+            id="field::root"
             role="group"
           >
             <label
               class="chakra-field__label emotion-6"
               data-part="label"
               data-scope="field"
-              for="_r_d_"
-              id="field::_r_d_::label"
+              for="root"
+              id="field::root::label"
             >
               Markdown Help and Description
             </label>
@@ -45036,15 +45039,15 @@ exports[`single fields > string field > field with markdown help text 1`] = `
             class="chakra-field__root emotion-5"
             data-part="root"
             data-scope="field"
-            id="field::_r_9_"
+            id="field::root"
             role="group"
           >
             <label
               class="chakra-field__label emotion-6"
               data-part="label"
               data-scope="field"
-              for="_r_9_"
-              id="field::_r_9_::label"
+              for="root"
+              id="field::root::label"
             >
               Markdown Help Test
             </label>
@@ -45356,15 +45359,15 @@ exports[`single fields > string field > field with markdown help text without a 
             class="chakra-field__root emotion-5"
             data-part="root"
             data-scope="field"
-            id="field::_r_b_"
+            id="field::root"
             role="group"
           >
             <label
               class="chakra-field__label emotion-6"
               data-part="label"
               data-scope="field"
-              for="_r_b_"
-              id="field::_r_b_::label"
+              for="root"
+              id="field::root::label"
             >
               Raw Help Test
             </label>
@@ -45611,7 +45614,7 @@ exports[`single fields > string field > format data-url 1`] = `
               class="chakra-field__root emotion-2"
               data-part="root"
               data-scope="field"
-              id="field::_r_7_"
+              id="field::root"
               role="group"
             >
               <input
@@ -45856,7 +45859,7 @@ exports[`single fields > string field > format email 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_3_"
+            id="field::root"
             role="group"
           >
             <input
@@ -46100,7 +46103,7 @@ exports[`single fields > string field > format uri 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_5_"
+            id="field::root"
             role="group"
           >
             <input
@@ -46344,7 +46347,7 @@ exports[`single fields > string field > regular 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_1_"
+            id="field::root"
             role="group"
           >
             <input
@@ -46660,15 +46663,15 @@ exports[`single fields > string field > required field with markdown help 1`] = 
             class="chakra-field__root emotion-5"
             data-part="root"
             data-scope="field"
-            id="field::_r_f_"
+            id="field::root"
             role="group"
           >
             <label
               class="chakra-field__label emotion-6"
               data-part="label"
               data-scope="field"
-              for="_r_f_"
-              id="field::_r_f_::label"
+              for="root"
+              id="field::root::label"
             >
               Required Field with Markdown Help
             </label>
@@ -46916,7 +46919,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
             data-part="root"
             data-readonly=""
             data-scope="field"
-            id="field::_r_l_"
+            id="field::root"
             role="group"
           >
             <input
@@ -47256,7 +47259,7 @@ exports[`single fields > string field > string field with allowClearTextInputs a
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_j_"
+            id="field::root"
             role="group"
           >
             <input
@@ -47527,7 +47530,7 @@ exports[`single fields > string field > string field with placeholder 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_h_"
+            id="field::root"
             role="group"
           >
             <input
@@ -47771,7 +47774,7 @@ exports[`single fields > textarea field 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_1a_"
+            id="field::root"
             role="group"
           >
             <textarea
@@ -48100,15 +48103,15 @@ exports[`single fields > title field 1`] = `
                       class="chakra-field__root emotion-8"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_51_"
+                      id="field::root_title"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-9"
                         data-part="label"
                         data-scope="field"
-                        for="_r_51_"
-                        id="field::_r_51_::label"
+                        for="root_title"
+                        id="field::root_title::label"
                       >
                         Titre 2
                       </label>
@@ -48674,7 +48677,7 @@ exports[`single fields > up/down field 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_17_"
+            id="field::root"
             role="group"
           >
             <div
@@ -48693,7 +48696,7 @@ exports[`single fields > up/down field 1`] = `
                 role="group"
               >
                 <button
-                  aria-controls="_r_17_"
+                  aria-controls="root"
                   aria-label="increment value"
                   class="chakra-number-input__incrementTrigger emotion-5"
                   data-part="increment-trigger"
@@ -48713,7 +48716,7 @@ exports[`single fields > up/down field 1`] = `
                   </svg>
                 </button>
                 <button
-                  aria-controls="_r_17_"
+                  aria-controls="root"
                   aria-label="decrease value"
                   class="chakra-number-input__decrementTrigger emotion-7"
                   data-part="decrement-trigger"
@@ -48743,7 +48746,7 @@ exports[`single fields > up/down field 1`] = `
                 data-part="input"
                 data-scope="number-input"
                 dir="ltr"
-                id="_r_17_"
+                id="root"
                 inputmode="decimal"
                 name="root"
                 pattern="-?[0-9]*(.[0-9]+)?"
@@ -48984,7 +48987,7 @@ exports[`single fields > using custom tagName 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_55_"
+            id="field::root"
             role="group"
           >
             <input
@@ -49228,7 +49231,7 @@ exports[`string field with autocapitalize 1`] = `
             class="chakra-field__root emotion-2"
             data-part="root"
             data-scope="field"
-            id="field::_r_cc_"
+            id="field::root"
             role="group"
           >
             <input
@@ -49774,15 +49777,15 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       class="chakra-field__root emotion-5"
                       data-part="root"
                       data-scope="field"
-                      id="field::_r_d9_"
+                      id="field::root_answer"
                       role="group"
                     >
                       <label
                         class="chakra-field__label emotion-6"
                         data-part="label"
                         data-scope="field"
-                        for="_r_d9_"
-                        id="field::_r_d9_::label"
+                        for="root_answer"
+                        id="root_answer__label"
                       >
                         My Answer
                       </label>
@@ -49795,8 +49798,8 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                       >
                         <select
                           aria-hidden="true"
-                          aria-labelledby="field::_r_d9_::label"
-                          id="_r_d9_"
+                          aria-labelledby="root_answer__label"
+                          id="select:root_answer:select"
                           name="root_answer"
                           style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"
                           tabindex="-1"
@@ -49826,14 +49829,14 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                             aria-expanded="false"
                             aria-haspopup="listbox"
                             aria-invalid="false"
-                            aria-labelledby="field::_r_d9_::label"
+                            aria-labelledby="root_answer__label"
                             aria-required="false"
                             class="chakra-select__trigger emotion-9"
                             data-part="trigger"
                             data-scope="select"
                             data-state="closed"
                             dir="ltr"
-                            id="select:root_answer:trigger"
+                            id="root_answer"
                             role="combobox"
                             type="button"
                           >
@@ -49877,7 +49880,7 @@ exports[`titled select widget from oneOf boolean constants without a type 1`] = 
                           style="position: absolute; isolation: isolate; width: var(--reference-width); pointer-events: none; top: 0px; left: 0px; transform: translate3d(0, -100vh, 0); z-index: var(--z-index);"
                         >
                           <div
-                            aria-labelledby="field::_r_d9_::label"
+                            aria-labelledby="root_answer__label"
                             class="chakra-select__content emotion-15"
                             data-part="content"
                             data-scope="select"

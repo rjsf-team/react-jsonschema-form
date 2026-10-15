@@ -43,6 +43,7 @@ export default function TextareaWidget<
       readOnly={readonly}
       invalid={hasWidgetErrors<T, S, F>(props)}
       label={labelValue(label, hideLabel || !label)}
+      id={id}
       {...chakraProps}
     >
       <Textarea
