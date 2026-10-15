@@ -29,14 +29,13 @@ export default function FieldErrorTemplate<
   }
   const id = errorId(fieldId);
 
+  // One element carries the id a control is described by, so the id appears once and describes every message
   return (
-    <ul className={classes.list}>
+    <ul className={classes.list} id={id}>
       {errors.map((error, i: number) => (
         // oxlint-disable-next-line react/no-array-index-key
         <li key={i} className={classes.listItem}>
-          <small className={classes.errorLabel} id={id}>
-            {error}
-          </small>
+          <small className={classes.errorLabel}>{error}</small>
         </li>
       ))}
     </ul>

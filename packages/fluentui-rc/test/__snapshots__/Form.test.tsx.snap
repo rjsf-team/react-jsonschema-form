@@ -5071,13 +5071,13 @@ exports[`single fields > help and error display 1`] = `
         </span>
         <ul
           class="___1f4kp4s_0000000 f1hu3pq6 f19f4twv f1cnd47f ftrb29c"
+          id="root__error"
         >
           <li
             class="___hlfurj0_0000000 fhx4nu f1ywm7hm f14wxoun"
           >
             <small
               class="___9491ub0_0000000 f1hcrxcs"
-              id="root__error"
             >
               an error
             </small>
@@ -8003,7 +8003,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div
                   class="___vklq7w0_0000000 f3iy44f"
                 >
-                  <div />
                   <div
                     class="rjsf-field rjsf-field-object"
                   >
@@ -8090,7 +8089,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div
                   class="___vklq7w0_0000000 f3iy44f"
                 >
-                  <div />
                   <div
                     class="rjsf-field rjsf-field-array"
                   >
@@ -8880,7 +8878,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div
                   class="___vklq7w0_0000000 f3iy44f"
                 >
-                  <div />
                   <div
                     class="rjsf-field rjsf-field-object"
                   >
@@ -8934,7 +8931,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div
                   class="___vklq7w0_0000000 f3iy44f"
                 >
-                  <div />
                   <div
                     class="rjsf-field rjsf-field-array"
                   >
@@ -9331,7 +9327,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div
                   class="___vklq7w0_0000000 f3iy44f"
                 >
-                  <div />
                   <div
                     class="rjsf-field rjsf-field-object"
                   >
@@ -9418,7 +9413,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div
                   class="___vklq7w0_0000000 f3iy44f"
                 >
-                  <div />
                   <div
                     class="rjsf-field rjsf-field-array"
                   >
@@ -9784,7 +9778,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div
                   class="___vklq7w0_0000000 f3iy44f"
                 >
-                  <div />
                   <div
                     class="rjsf-field rjsf-field-object"
                   >
@@ -9838,7 +9831,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div
                   class="___vklq7w0_0000000 f3iy44f"
                 >
-                  <div />
                   <div
                     class="rjsf-field rjsf-field-array"
                   >

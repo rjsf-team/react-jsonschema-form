@@ -1,7 +1,7 @@
 import { makeStyles } from '@fluentui/react-components';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getArrayDescription, getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   arrayItemList: {
@@ -37,7 +37,7 @@ export default function ArrayFieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const shownDescription = getArrayDescription<T, S, F>(props);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -46,7 +46,7 @@ export default function ArrayFieldTemplate<
     <>
       <ArrayFieldTitleTemplate
         id={id}
-        title={uiOptions.title || title}
+        title={title}
         schema={schema}
         uiSchema={uiSchema}
         required={required}

@@ -689,13 +689,13 @@ exports[`array fields > has errors 1`] = `
                 </span>
                 <ul
                   class="___1f4kp4s_0000000 f1hu3pq6 f19f4twv f1cnd47f ftrb29c"
+                  id="root_name__error"
                 >
                   <li
                     class="___hlfurj0_0000000 fhx4nu f1ywm7hm f14wxoun"
                   >
                     <small
                       class="___9491ub0_0000000 f1hcrxcs"
-                      id="root_name__error"
                     >
                       Bad input
                     </small>
