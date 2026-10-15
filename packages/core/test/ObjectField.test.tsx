@@ -3550,4 +3550,18 @@ describe('ObjectField', () => {
       expect(checkbox).toContainHTML('Checkbox with some `markdown`!');
     });
   });
+
+  it('keeps the optional data control of an object whose ui:label turns its heading off', () => {
+    const { node } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: { pet: { type: 'object', title: 'Pet', properties: { a: { type: 'string' } } } },
+      },
+      uiSchema: { 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] }, pet: { 'ui:label': false } },
+      formData: { pet: { a: 'x' } },
+    });
+
+    expect(node.querySelector('#root_pet__title')).not.toBeInTheDocument();
+    expect(node.querySelector('#root_pet__optionalRemove')).toBeInTheDocument();
+  });
 });
