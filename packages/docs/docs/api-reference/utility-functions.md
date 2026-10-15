@@ -32,6 +32,8 @@ These types can be found on GitHub [here](https://github.com/rjsf-team/react-jso
 
 **`SchemaFieldPath`** — Used when navigating a JSON Schema subtree (for example with `getFromSchema` and `findFieldInSchema` on `SchemaUtilsType`, documented under [Validator-based utility functions](#validator-based-utility-functions)). It is `string | FieldPathList`: either a dotted path or an array of segments with the same rules as `FieldPathList` (`(string | number)[]`). A numeric segment denotes an array index or an object key that is numeric. Navigation skips only `undefined` or empty-string segments, so segment **`0`** is always honored (this avoids the bug from treating `0` as a falsy path unit).
 
+**`FormFieldState`** — What a form shows beyond its schema and data, which [`getUiRequiredErrorSchema()`](#getuirequirederrorschema) and [`omitExtraData()`](#omitextradata) read to walk the fields on screen: `selectedOption(fieldPath, options, formData, discriminator?)` returns the index of the `anyOf`/`oneOf` option the field at `fieldPath` shows among its `options`, each retrieved for `formData`, and `isExpanded(fieldPath)` whether the user expanded the collapsed `$ref` cycle there. `Form` passes its own option selections and cycle expansions.
+
 ## Enums
 
 There are enumerations in `@rjsf/utils` that are exported for use by `@rjsf/core` and all the themes, as well as any customizations you may build.
@@ -2927,6 +2929,7 @@ The schema handed to the validator is left untouched, so this behaves identicall
 - [uiSchemaDefinitions=uiSchema['ui:definitions']]: UiSchemaDefinitions&lt;S, F> - The `ui:definitions` a `$ref`'d uiSchema is resolved through
 - [globalUiOptions]: GlobalUISchemaOptions - The global uiSchema options, read as the fields themselves read them
 - [formContext]: F - The formContext to pass to the function form of `uiSchema.items`
+- [fieldState]: FormFieldState&lt;S> - The option each field shows and the cycles the user expanded, so the walk follows the option on screen and descends into an expanded cycle. Without it, a field's option is the one its data matches best, and nothing below a collapsed cycle is walked
 
 #### Returns
 
@@ -3066,6 +3069,9 @@ console.log(filteredFormData);
 - schema: S - The schema to use for filtering the formData
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The formData to filter
+- [fieldState]: FormFieldState&lt;S> - The option each field shows, so a field offering `anyOf`/`oneOf` options keeps the data its shown option describes. Without it, the option the data matches best
+
+An optional object whose filtered content is all empty is pruned, and an `anyOf` over empty data applies every branch.
 
 #### Returns
 
@@ -3079,9 +3085,8 @@ Due to the nature of schemas, this sanitization happens recursively for nested o
 Also, any properties in the old schema that are non-existent in the new schema are set to `undefined`.
 A property is considered to have changed schema when its type differs between the two, except when both types carry the `GUESSED_TYPE_FLAG`: those types were guessed from the data itself, so a difference means the data changed type rather than the schema, and the value is kept.
 A new schema that declares a type of its own is the type the data has to satisfy, so a value of the type the old schema merely happened to hold is still cleared.
-When the previous form data is passed as `oldData` (`Form` passes the data as it last settled under the current root schema), it feeds only the enum filter decision: the filter is skipped at a position whose old and new schemas, each resolved against its own data, agree, so values the schema offered when they were entered are kept.
-Without `oldData` the filter always runs, matching v6.
-`$ref`s on both sides resolve against the one `rootSchema`, so a change to a `$ref` target between the old and new root schemas is invisible to the comparison: pass `oldData` only when the root schema is unchanged, which is how `Form` calls it.
+A value outside the new `enum` or constant options is replaced with the new `default` when that is an option, with the only option when there is one, or cleared; array items outside them are dropped.
+`Form` does not call this to sanitize its data: it diffs the field trees before and after a change and judges only the fields whose constraints the change altered.
 
 #### Parameters
 
@@ -3090,9 +3095,6 @@ Without `oldData` the filter always runs, matching v6.
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
 - [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
-- [oldData]: any - The previous form data, used only to decide whether the enum filter runs; when omitted, the filter always runs. Pass it only when the root schema is unchanged, since `$ref`s on both sides resolve against the one `rootSchema`
-- [resolvedOldSchema]: S | undefined - `oldSchema` already resolved for `oldData` at the root: the root frame's filter chain uses it directly instead of resolving `oldSchema` again
-- [oldDataForPairing]: any - The previous data array elements pair with, as the announced container writes moved it: a row follows its item across a remove or reorder, and an inserted row pairs with its own starting value; when omitted, elements pair with `oldData` by index
 
 #### Returns
 
