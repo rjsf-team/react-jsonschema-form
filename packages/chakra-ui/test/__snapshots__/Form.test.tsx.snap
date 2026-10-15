@@ -2831,7 +2831,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     class="fieldset__content emotion-1"
                   >
                     <fieldset
-                      aria-labelledby="fieldset::_r_ap_::legend"
+                      aria-labelledby="root_choices__label"
                       class="fieldset__root emotion-5"
                       data-part="root"
                       data-scope="fieldset"
@@ -2840,11 +2840,12 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                         class="fieldset__legend emotion-6"
                         data-part="legend"
                         data-scope="fieldset"
-                        id="fieldset::_r_ap_::legend"
+                        id="root_choices__label"
                       >
                         choices
                       </legend>
                       <div
+                        aria-labelledby="root_choices__label"
                         class="emotion-7"
                         data-part="group"
                         data-scope="checkbox"
@@ -17324,7 +17325,7 @@ exports[`single fields > checkboxes field 1`] = `
           class="fieldset__content emotion-1"
         >
           <fieldset
-            aria-labelledby="fieldset::_r_47_::legend"
+            aria-labelledby="root__label"
             class="fieldset__root emotion-2"
             data-part="root"
             data-scope="fieldset"
@@ -17333,11 +17334,12 @@ exports[`single fields > checkboxes field 1`] = `
               class="fieldset__legend emotion-3"
               data-part="legend"
               data-scope="fieldset"
-              id="fieldset::_r_47_::legend"
+              id="root__label"
             >
               An enum list rendered as checkboxes
             </legend>
             <div
+              aria-labelledby="root__label"
               class="emotion-4"
               data-part="group"
               data-scope="checkbox"
@@ -17909,7 +17911,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           class="fieldset__content emotion-4"
         >
           <fieldset
-            aria-labelledby="fieldset::_r_2k_::legend"
+            aria-labelledby="root__label"
             class="fieldset__root emotion-5"
             data-part="root"
             data-scope="fieldset"
@@ -17918,11 +17920,12 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
               class="fieldset__legend emotion-6"
               data-part="legend"
               data-scope="fieldset"
-              id="fieldset::_r_2k_::legend"
+              id="root__label"
             >
               Checkbox Group
             </legend>
             <div
+              aria-labelledby="root__label"
               class="emotion-7"
               data-part="group"
               data-scope="checkbox"
@@ -18450,7 +18453,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           class="fieldset__content emotion-3"
         >
           <fieldset
-            aria-labelledby="fieldset::_r_2p_::legend"
+            aria-labelledby="root__label"
             class="fieldset__root emotion-4"
             data-part="root"
             data-scope="fieldset"
@@ -18459,11 +18462,12 @@ exports[`single fields > checkboxes widget with required field 1`] = `
               class="fieldset__legend emotion-5"
               data-part="legend"
               data-scope="fieldset"
-              id="fieldset::_r_2p_::legend"
+              id="root__label"
             >
               Required Checkbox Group
             </legend>
             <div
+              aria-labelledby="root__label"
               class="emotion-6"
               data-part="group"
               data-scope="checkbox"
@@ -36235,12 +36239,13 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           class="fieldset__content emotion-1"
         >
           <fieldset
-            aria-labelledby="fieldset::_r_24_::legend"
+            aria-labelledby=""
             class="fieldset__root emotion-2"
             data-part="root"
             data-scope="fieldset"
           >
             <div
+              aria-labelledby=""
               class="emotion-3"
               data-part="group"
               data-scope="checkbox"

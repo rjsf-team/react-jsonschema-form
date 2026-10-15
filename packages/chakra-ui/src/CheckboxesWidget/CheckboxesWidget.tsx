@@ -5,6 +5,7 @@ import {
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  fieldLabelId,
   getGroupAttributes,
   getOptionValueFormat,
   hasWidgetErrors,
@@ -40,9 +41,20 @@ export default function CheckboxesWidget<
     'group',
   );
 
+  const drawsLabel = !hideLabel && !!label;
+  const labelId = fieldLabelId(id);
+
   return (
-    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={hasError} {...chakraProps}>
-      {!hideLabel && label && <FieldsetLegend>{labelValue(label)}</FieldsetLegend>}
+    <FieldsetRoot
+      mb={1}
+      disabled={disabled || readonly}
+      invalid={hasError}
+      // Ark points the fieldset at a legend id of its own whether or not the legend renders, so the fieldset and the
+      // group inside it are pointed at the legend drawn here, under the field's label id, or at nothing
+      aria-labelledby={drawsLabel ? labelId : ''}
+      {...chakraProps}
+    >
+      {drawsLabel && <FieldsetLegend id={labelId}>{labelValue(label)}</FieldsetLegend>}
       <CheckboxGroup
         // The group carries the field's id and each checkbox's `<input>` its option's, as core's do
         id={id}
@@ -51,6 +63,7 @@ export default function CheckboxesWidget<
         }
         value={selectValue}
         {...groupAttributes}
+        aria-labelledby={groupAttributes['aria-labelledby'] ?? (drawsLabel ? labelId : '')}
         readOnly={readonly}
         invalid={hasError}
       >

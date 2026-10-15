@@ -1201,7 +1201,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__content emotion-1"
                     >
                       <fieldset
-                        aria-labelledby="fieldset::_r_38_::legend"
+                        aria-labelledby="root_person_race__label"
                         class="fieldset__root emotion-39"
                         data-part="root"
                         data-scope="fieldset"
@@ -1210,11 +1210,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="fieldset__legend emotion-40"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_38_::legend"
+                          id="root_person_race__label"
                         >
                           Race
                         </legend>
                         <div
+                          aria-labelledby="root_person_race__label"
                           class="emotion-41"
                           data-part="group"
                           data-scope="checkbox"
@@ -7476,7 +7477,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__content emotion-1"
                     >
                       <fieldset
-                        aria-labelledby="fieldset::_r_4h_::legend"
+                        aria-labelledby="root_person_race__label"
                         class="fieldset__root emotion-39"
                         data-part="root"
                         data-scope="fieldset"
@@ -7485,11 +7486,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="fieldset__legend emotion-40"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_4h_::legend"
+                          id="root_person_race__label"
                         >
                           Race
                         </legend>
                         <div
+                          aria-labelledby="root_person_race__label"
                           class="emotion-41"
                           data-part="group"
                           data-scope="checkbox"
@@ -13842,7 +13844,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__content emotion-1"
                     >
                       <fieldset
-                        aria-labelledby="fieldset::_r_5s_::legend"
+                        aria-labelledby="root_person_race__label"
                         class="fieldset__root emotion-39"
                         data-part="root"
                         data-scope="fieldset"
@@ -13851,11 +13853,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="fieldset__legend emotion-40"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_5s_::legend"
+                          id="root_person_race__label"
                         >
                           Race
                         </legend>
                         <div
+                          aria-labelledby="root_person_race__label"
                           class="emotion-41"
                           data-part="group"
                           data-scope="checkbox"
@@ -17917,7 +17920,7 @@ exports[`Complex grid > renders person and address and employment in a complex g
                       class="fieldset__content emotion-1"
                     >
                       <fieldset
-                        aria-labelledby="fieldset::_r_1v_::legend"
+                        aria-labelledby="root_person_race__label"
                         class="fieldset__root emotion-39"
                         data-part="root"
                         data-scope="fieldset"
@@ -17926,11 +17929,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                           class="fieldset__legend emotion-40"
                           data-part="legend"
                           data-scope="fieldset"
-                          id="fieldset::_r_1v_::legend"
+                          id="root_person_race__label"
                         >
                           Race
                         </legend>
                         <div
+                          aria-labelledby="root_person_race__label"
                           class="emotion-41"
                           data-part="group"
                           data-scope="checkbox"
@@ -24042,7 +24046,7 @@ exports[`Three even column grid > renders person and address in three columns, n
                     class="fieldset__content emotion-1"
                   >
                     <fieldset
-                      aria-labelledby="fieldset::_r_15_::legend"
+                      aria-labelledby="root_person_race__label"
                       class="fieldset__root emotion-35"
                       data-part="root"
                       data-scope="fieldset"
@@ -24051,11 +24055,12 @@ exports[`Three even column grid > renders person and address in three columns, n
                         class="fieldset__legend emotion-36"
                         data-part="legend"
                         data-scope="fieldset"
-                        id="fieldset::_r_15_::legend"
+                        id="root_person_race__label"
                       >
                         Race
                       </legend>
                       <div
+                        aria-labelledby="root_person_race__label"
                         class="emotion-37"
                         data-part="group"
                         data-scope="checkbox"
@@ -27628,7 +27633,7 @@ exports[`Two even column grid > renders person and address in two columns, no em
                     class="fieldset__content emotion-1"
                   >
                     <fieldset
-                      aria-labelledby="fieldset::_r_b_::legend"
+                      aria-labelledby="root_person_race__label"
                       class="fieldset__root emotion-35"
                       data-part="root"
                       data-scope="fieldset"
@@ -27637,11 +27642,12 @@ exports[`Two even column grid > renders person and address in two columns, no em
                         class="fieldset__legend emotion-36"
                         data-part="legend"
                         data-scope="fieldset"
-                        id="fieldset::_r_b_::legend"
+                        id="root_person_race__label"
                       >
                         Race
                       </legend>
                       <div
+                        aria-labelledby="root_person_race__label"
                         class="emotion-37"
                         data-part="group"
                         data-scope="checkbox"

@@ -376,7 +376,7 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
       />,
     );
 
-    expect(screen.getByRole('group', { name: 'X' })).toContainElement(container.querySelector('#root_x'));
+    expect(container.querySelector('#root_x')).toHaveAccessibleName('X');
     expect(screen.getByRole('checkbox', { name: 'a' })).toHaveAttribute('id', 'root_x-0');
     expect(screen.getByRole('checkbox', { name: 'b' })).toHaveAttribute('id', 'root_x-1');
 
@@ -429,6 +429,33 @@ describe("chakra-ui widgets are named by their label and carry their field's id 
     );
 
     expect(screen.getByRole('textbox', { name: 'foo Key' })).toHaveAttribute('id', 'root_foo-key');
+  });
+});
+
+describe('chakra-ui CheckboxesWidget', () => {
+  test("points the fieldset of a group that draws no legend at no legend, and keeps the legend's name where it draws one", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            x: { type: 'array', title: 'X', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+            y: { type: 'array', title: 'Y', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+          },
+        }}
+        uiSchema={{ x: { 'ui:widget': 'checkboxes', 'ui:label': false }, y: { 'ui:widget': 'checkboxes' } }}
+        validator={validator}
+      />,
+    );
+
+    container.querySelectorAll('[aria-labelledby]').forEach((element) => {
+      element
+        .getAttribute('aria-labelledby')!
+        .split(' ')
+        .filter(Boolean)
+        .forEach((labelId) => expect(container.querySelector(`[id="${labelId}"]`)).toBeInTheDocument());
+    });
+    expect(container.querySelector('#root_y')).toHaveAccessibleName('Y');
   });
 });
 
