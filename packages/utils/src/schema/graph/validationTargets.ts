@@ -62,11 +62,12 @@ export function withVariantId<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   return { ...schema, [ID_KEY]: variantId(id, withoutId) };
 }
 
-/** Returns the `$ref` naming the subschema at the JSON `pointer` in the root, each token percent-encoded as a URI
- * fragment requires
+/** Returns the `$ref` naming the subschema at the JSON `pointer` in the root, encoded as `encodeURI()` encodes it. That
+ * leaves the characters a fragment may hold, such as the `$` of `$defs`, as they are, and is how @cfworker/json-schema
+ * keys the subschemas it looks a `$ref` up in, a `#` included, which Ajv and ata resolve as well.
  */
 function refTo(pointer: string): string {
-  return `#${pointer.split('/').map(encodeURIComponent).join('/')}`;
+  return `#${encodeURI(pointer)}`;
 }
 
 /** Returns `{ $ref }` naming the node `id` where it sits in the root, which a validator resolves against the root it is
@@ -297,9 +298,9 @@ export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Returns every schema the form hands a validator for the root of `graph`: the root itself; each `if`; each
- * `anyOf`/`oneOf` option, as a pointer and as scored, plain and relaxed; the property each option names as its
- * discriminator; and the condition each `oneOf` option of a `dependencies` schema is matched on. Each is named by the
- * graph, so the list depends on the root alone, never on form data.
+ * `anyOf`/`oneOf` option, as a pointer and as scored, plain and relaxed, and `{}` where an option is a boolean; the
+ * property each option names as its discriminator; and the condition each `oneOf` option of a `dependencies` schema is
+ * matched on. Each is named by the graph, so the list depends on the root alone, never on form data.
  *
  * @param graph - The graph of the root
  * @returns - The schemas, the root first
@@ -325,6 +326,10 @@ function nodeTargets<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, node: Ob
   const options = [...graph.subschemas(node.id, ANY_OF_KEY), ...graph.subschemas(node.id, ONE_OF_KEY)];
   for (const [, option] of options) {
     targets.push(targetOf(graph, option), scoringTarget(graph, option, false), scoringTarget(graph, option, true));
+    if (graph.node(option).kind === 'boolean') {
+      // `SchemaField` retrieves a boolean option as a schema of its own, `{}`, which has no place in the root
+      targets.push(schemaFrom(graph.rawRoot, {}));
+    }
     const discriminatorName = stringKeyword(Reflect.get(node.raw, 'discriminator'), 'propertyName');
     const discriminator =
       discriminatorName === undefined ? undefined : declaredProperty(graph, option, discriminatorName);

@@ -27,6 +27,13 @@ describe('pointerTo()', () => {
     expect(pointerTo(graph, nodeAt(graph, '/properties/a'))).toEqual({ $ref: '#/properties/a' });
     expect(pointerTo(graph, graph.root)).toEqual({ $ref: '#' });
   });
+  it('leaves the characters a fragment may hold as they are, and percent-encodes the rest', () => {
+    const root: RJSFSchema = { $defs: { 'a$b:c@d+e#f g%h': {} } };
+    const graph = parseSchemaGraph(root);
+    expect(pointerTo(graph, nodeAt(graph, '/$defs/a$b:c@d+e#f g%h'))).toEqual({
+      $ref: '#/$defs/a$b:c@d+e#f%20g%25h',
+    });
+  });
   it('names nothing for a schema parsed from outside the root, which is validated as it stands', () => {
     const root: RJSFSchema = { properties: {} };
     const graph = parseSchemaGraph(root);
@@ -107,6 +114,12 @@ describe('holdsDeclaredKey()', () => {
 });
 
 describe('validationTargets()', () => {
+  it('lists {}, the schema SchemaField retrieves a boolean option as, beside the pointer to the option', () => {
+    const schema: RJSFSchema = { properties: { a: { anyOf: [false, {}] } } };
+    const targets = validationTargets(parseSchemaGraph(schema));
+    expect(targets).toContainEqual({ $ref: '#/properties/a/anyOf/0' });
+    expect(targets).toContainEqual({});
+  });
   it("leaves out a dependency's oneOf option that declares nothing under the dependency's name", () => {
     const schema: RJSFSchema = {
       properties: { a: {} },

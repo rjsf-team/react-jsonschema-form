@@ -30,8 +30,7 @@ export interface CustomValidatorOptionsType {
 }
 
 /** The options a schema is compiled into precompiled validator functions with: everything `customizeValidator()` takes,
- * plus the `SchemaParserOptions` the schema is parsed for its sub-schemas with. Those options are shared with
- * `schemaParser()` rather than restated, so an option added there needs no mirroring in the validators
+ * plus the `SchemaParserOptions`, which are not read, so the options a form's validator takes can be passed whole
  */
 export type CompileValidatorOptionsType<S extends StrictRJSFSchema = RJSFSchema> = CustomValidatorOptionsType &
   SchemaParserOptions<S>;

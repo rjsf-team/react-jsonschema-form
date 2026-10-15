@@ -24,7 +24,7 @@ export function compiledSchemas<S extends StrictRJSFSchema = RJSFSchema>(
   for (const [key, listed] of Object.entries(schemaMap)) {
     const { [ID_KEY]: _id, [REF_KEY]: ref, ...rest } = listed;
     if (key !== rootId && typeof ref === 'string' && ref.startsWith('#') && Object.keys(rest).length === 0) {
-      exportNames[key] = `${rootId}${ref}`;
+      exportNames[key] = `${rootId.replace(/#$/, '')}${ref}`;
     } else {
       schemas.push(key === rootId ? listed : withIdRefPrefix<S>(listed, rootId));
       exportNames[key] = key;

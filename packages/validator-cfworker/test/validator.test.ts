@@ -7,7 +7,7 @@ import type {
   RJSFValidationError,
   UiSchema,
 } from '@rjsf/utils';
-import { ROOT_SCHEMA_PREFIX } from '@rjsf/utils';
+import { ROOT_SCHEMA_PREFIX, getValidationTarget, isObject } from '@rjsf/utils';
 
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
@@ -315,6 +315,29 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json', definitions: { X: { type: 'string' } } };
     expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a root whose $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json#', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold', () => {
+    const validator = customizeValidator();
+    const property: RJSFSchema = { type: 'string' };
+    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h': property } } } };
+    const pointer = getValidationTarget(property, rootSchema);
+    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e#f%20g%25h' });
+    expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
+  });
+  it('finds the engine internals it indexes a dependencies entry named like a keyword through', () => {
+    // `createCfworkerInstance()` reads the engine's private `lookup` and the `__absolute_uri__` it stamps on each
+    // schema there, which an engine upgrade could rename; this names them, where the test below only stops resolving
+    const lookup: unknown = Reflect.get(createCfworkerInstance({ type: 'object' }), 'lookup');
+    const schemas = isObject(lookup) ? Object.values(lookup).filter(isObject) : [];
+    expect(schemas).not.toHaveLength(0);
+    expect(schemas.every((schema) => typeof Reflect.get(schema, '__absolute_uri__') === 'string')).toBe(true);
   });
   it('resolves a pointer into a dependencies entry named like a keyword', () => {
     const validator = customizeValidator();

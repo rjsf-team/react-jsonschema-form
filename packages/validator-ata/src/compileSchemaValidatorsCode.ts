@@ -1,5 +1,5 @@
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getByPath, ID_KEY, isObject, REF_KEY, schemaKey, getValidationSchemas } from '@rjsf/utils';
+import { getByPath, ID_KEY, isObject, REF_KEY, getValidationSchemas } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
@@ -10,6 +10,9 @@ import type { CompileValidatorOptionsType } from './types.ts';
  */
 const CONTAINERS = ['definitions', '$defs'];
 
+/** A `$ref` into the root that names no whole entry of one of its `CONTAINERS` */
+const LOCAL_REF = /^#(?!\/(definitions|\$defs)\/[^/]*$)/;
+
 /** Returns the subschema at the `$ref` fragment `ref` of `root` */
 function subschemaAt(root: unknown, ref: string): unknown {
   const tokens = ref
@@ -19,36 +22,64 @@ function subschemaAt(root: unknown, ref: string): unknown {
   return getByPath(root, tokens);
 }
 
+/** Returns `value` with each `{ $ref }` local to the root that names no whole entry of the `CONTAINERS` replaced by a
+ * copy of the subschema it names, treated the same way, since ata would leave it unresolved. A `$ref` met again inside
+ * the copy it names is left as it is, there being no finite copy of it.
+ *
+ * @param value - A schema, or any value inside one
+ * @param rootSchema - The root the `$ref`s name
+ * @param inlined - The `$ref`s whose copies `value` sits inside
+ * @returns - The value with those `$ref`s inlined
+ */
+function inlineLocalRefs(value: unknown, rootSchema: unknown, inlined: ReadonlySet<string>): unknown {
+  if (Array.isArray(value)) {
+    return value.map((item) => inlineLocalRefs(item, rootSchema, inlined));
+  }
+  if (!isObject(value)) {
+    return value;
+  }
+  const { [REF_KEY]: ref, ...rest } = value;
+  if (typeof ref === 'string' && Object.keys(rest).length === 0 && LOCAL_REF.test(ref) && !inlined.has(ref)) {
+    const target = subschemaAt(rootSchema, ref);
+    if (target !== undefined) {
+      return inlineLocalRefs(target, rootSchema, new Set(inlined).add(ref));
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(value).map(([key, child]) => [key, inlineLocalRefs(child, rootSchema, inlined)]),
+  );
+}
+
+/** Returns `schema` as an object schema asserting what it says, since ata compiles neither a boolean schema nor one
+ * asserting nothing
+ */
+function compilable(schema: unknown): GenericObjectType {
+  if (schema === false) {
+    return { not: {} };
+  }
+  return isObject(schema) && Object.keys(schema).length > 0 ? schema : { not: { not: {} } };
+}
+
 /** Returns each schema of the `schemaMap` as a document ata compiles on its own. ata names no subschema of another
- * document, so a `{ $ref }` naming a subschema of the root is compiled as a copy of that subschema, and the root's
- * `definitions` and `$defs` are hoisted beside every schema but the root, where a `$ref` to one of their entries
- * resolves. A `$ref` of any other form, such as one naming a property, leaves ata nothing to compile, which the
- * module reports when the schema is first validated against.
+ * document and resolves a `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, so every
+ * other `$ref` into the root is compiled as a copy of the subschema it names, see `inlineLocalRefs()`, and the root's
+ * `definitions` and `$defs` are hoisted beside every schema. A `$ref` outside those that sits beside other keywords, or
+ * leads back into itself, leaves ata nothing to compile, which the module reports when the schema is first validated
+ * against.
  *
  * @param schemaMap - The schemas `getValidationSchemas()` lists
  * @param rootSchema - The root they were listed for
  * @returns - The documents, in the order of the map
  */
 function hoistedSchemas<S extends StrictRJSFSchema>(schemaMap: Record<string, S>, rootSchema: S): GenericObjectType[] {
-  const rootId = schemaKey(rootSchema);
   const containers = Object.fromEntries(
-    CONTAINERS.flatMap((key) => (key in rootSchema ? [[key, Reflect.get(rootSchema, key)]] : [])),
+    CONTAINERS.flatMap((key) =>
+      key in rootSchema ? [[key, inlineLocalRefs(Reflect.get(rootSchema, key), rootSchema, new Set())]] : [],
+    ),
   );
   return Object.entries(schemaMap).map(([key, listed]) => {
-    if (key === rootId) {
-      return listed;
-    }
-    const { [ID_KEY]: _id, [REF_KEY]: ref, ...rest } = listed;
-    const target = typeof ref === 'string' && Object.keys(rest).length === 0 ? subschemaAt(rootSchema, ref) : undefined;
-    let content: GenericObjectType = listed;
-    if (isObject(target)) {
-      content = target;
-    } else if (typeof target === 'boolean') {
-      // ata compiles neither a boolean schema nor one asserting nothing, so a boolean subschema is compiled as an
-      // object schema asserting what it says
-      content = target ? { not: { not: {} } } : { not: {} };
-    }
-    return { ...content, ...containers, [ID_KEY]: key };
+    const { [ID_KEY]: _id, ...withoutId } = listed;
+    return { ...compilable(inlineLocalRefs(withoutId, rootSchema, new Set())), ...containers, [ID_KEY]: key };
   });
 }
 

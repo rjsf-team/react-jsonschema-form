@@ -14,7 +14,7 @@ import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { getValidationTarget, mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
+import { getValidationTarget, mergeAllOf, normalizeBooleanSchema, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -277,7 +277,7 @@ export default function omitExtraData<
     const winning: unknown = oneOf[bestIndex];
     const resolved: S = isSchemaObject<S>(winning)
       ? resolveOwnRef<S>(winning, rootSchema)
-      : relaxOptionsForScoring<S>([Boolean(winning)])[0];
+      : normalizeBooleanSchema<S>(Boolean(winning));
     return omit(resolved, source, target, false);
   }
 
@@ -355,8 +355,8 @@ export default function omitExtraData<
 
   /** Returns the merge of a schema's `allOf`, made once per schema object and remembered for the rest of this call.
    *
-   * Each entry's references are resolved before merging, the way `resolveSchema()` runs every `allOf` entry through
-   * `retrieveSchemaInternal()` before the parent is merged. The shallow merge hoists an entry's `$ref` onto the merged
+   * Each entry's own reference is resolved before merging, as the merge plan follows an entry's `$ref` before it merges
+   * the entry into the parent. The shallow merge hoists an entry's `$ref` onto the merged
    * schema rather than following it, so the referenced schema's properties would be taken for extra data, and a
    * `customMergeAllOf` would be handed a `$ref` the form's own merge never sees.
    *

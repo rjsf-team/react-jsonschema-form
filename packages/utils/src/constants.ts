@@ -22,6 +22,10 @@ export const GUESSED_TYPE_FLAG = Symbol('__guessed_type');
 export const ID_KEY = '$id';
 export const IF_KEY = 'if';
 export const ITEMS_KEY = 'items';
+/** The `$id` of the junk option that option scoring once validated against.
+ *
+ * @deprecated - Option scoring no longer validates a junk option, and nothing reads this. It stays exported until v8.
+ */
 export const JUNK_OPTION_ID = '_$junk_option_schema_id$_';
 export const NAME_KEY = '$name';
 export const ONE_OF_KEY = 'oneOf';

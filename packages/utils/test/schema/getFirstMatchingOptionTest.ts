@@ -56,13 +56,12 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
     });
     it('scores an option of the root that states no required by a pointer to it', () => {
       const { validated, validator } = recordingValidator();
-      const root: RJSFSchema = {
-        oneOf: [
-          { $id: 'anOption', type: 'object', properties: { id: { enum: ['a'] } } },
-          { type: 'object', properties: { id: { enum: ['b'] } } },
-        ],
-      };
-      expect(getFirstMatchingOption({ validator }, { id: 'a' }, root.oneOf as RJSFSchema[], root)).toEqual(0);
+      const options: RJSFSchema[] = [
+        { $id: 'anOption', type: 'object', properties: { id: { enum: ['a'] } } },
+        { type: 'object', properties: { id: { enum: ['b'] } } },
+      ];
+      const root: RJSFSchema = { oneOf: options };
+      expect(getFirstMatchingOption({ validator }, { id: 'a' }, options, root)).toEqual(0);
       expect(validated).toEqual([{ $ref: '#/oneOf/0' }, { $ref: '#/oneOf/1' }]);
     });
     it('scores an option without a key the data holds as no match, without asking the validator', () => {

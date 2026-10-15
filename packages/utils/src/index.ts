@@ -250,6 +250,7 @@ export {
   getMatchingPatternProperties,
   getNumericInputTitle,
   getOptionalDataControlsType,
+  // oxlint-disable-next-line typescript/no-deprecated -- still exported until v8
   getOptionMatchingSimpleDiscriminator,
   getOptionUiSchema,
   getPropertySchema,

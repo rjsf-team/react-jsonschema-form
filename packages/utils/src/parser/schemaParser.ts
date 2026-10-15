@@ -11,8 +11,8 @@ export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = Record<string, 
 /** Returns every schema a form hands its validator for `rootSchema`, keyed by `schemaKey()`, the key a precompiled
  * validator looks its function up by, and carrying that key as its `$id`. The schemas are the root and the ones the
  * schema graph names: a `{ $ref }` for each `if`, option and discriminator property, a copy of an option without its
- * `required` where scoring has to drop one, and the condition each `oneOf` option of a `dependencies` schema is
- * matched on. They depend on the root alone, never on form data.
+ * `required` where scoring has to drop one, the condition each `oneOf` option of a `dependencies` schema is matched
+ * on, and `{}` where an option is a boolean. They depend on the root alone, never on form data.
  *
  * @param rootSchema - The root schema to list the validated schemas of
  * @returns - The `SchemaMap` of the schemas
