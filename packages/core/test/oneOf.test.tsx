@@ -2317,6 +2317,12 @@ describe('oneOf', () => {
 
       expect(selectorProps.mock.lastCall?.[0]?.required).toBe(required);
     });
+
+    it('marks the selector of a field the schema requires required (#5527)', () => {
+      createFormComponent({ schema: pets(['pet']) });
+
+      expect(screen.getByRole('combobox')).toBeRequired();
+    });
   });
 
   describe('OpenAPI discriminator support', () => {
@@ -2400,7 +2406,7 @@ describe('oneOf', () => {
     const uiSchema = {
       'ui:field': () => <div className='custom-field'>Custom field</div>,
     };
-    it('should be rendered once, beside the selected option, which renders its own field (#5391)', () => {
+    it('should be rendered once, beside the selected option, which renders its own field (#5358)', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const fields = node.querySelectorAll('.custom-field');
       expect(fields).toHaveLength(1);
