@@ -15,16 +15,18 @@ export interface OptionSelectionState {
 
 /** `OptionSelectionState`, and what `SchemaField` calls before an edit inside the field */
 export interface ShownOptionState extends OptionSelectionState {
-  /** Records the option shown before an edit inside the field, so the edit cannot change which option it is shown
+  /** Records the option shown before an edit inside the option, so the edit cannot change which option it is shown
    * under
    */
   keepSelection: () => void;
+  /** Lets the data an edit to the object's own properties leaves be matched again, as data from outside the field is */
+  releaseSelection: () => void;
 }
 
 const noSubscription = () => () => undefined;
 
-/** `useOptionSelection()` with `keepSelection()`, which `SchemaField` calls from the `onChange` it hands the field's
- * children and option
+/** `useOptionSelection()` with `keepSelection()` and `releaseSelection()`, which `SchemaField` calls from the
+ * `onChange` it hands the option and the field's own children
  */
 export function useShownOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiState: UiState,
@@ -71,9 +73,14 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
       uiState.keep(fieldPath, list, shown.current.index, shown.current.data);
     }
   }, [list, uiState, fieldPath]);
+  const releaseSelection = useCallback(() => {
+    if (list !== undefined) {
+      uiState.release(fieldPath, list);
+    }
+  }, [list, uiState, fieldPath]);
   return useMemo(
-    () => ({ selectedOption, selectOption, keepSelection }),
-    [selectedOption, selectOption, keepSelection],
+    () => ({ selectedOption, selectOption, keepSelection, releaseSelection }),
+    [selectedOption, selectOption, keepSelection, releaseSelection],
   );
 }
 
@@ -85,11 +92,12 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
  *
  * With no selection, the option is the one `getClosestMatchingOption()` picks for the data, an option whose discriminator
  * holds the data's value first. A selection holds for the data the form last rendered under it and the data the
- * form's own changes leave at the field, so neither an edit inside the field nor a parent declining a switch or an edit
- * changes it. Other data, such as a parent's new `formData`, a reset, or a parent answering a switch with data of its
- * own, is matched again, with the selection preferred where it fits the data as well as any other option, and so is
- * the data after it until the user switches or edits inside the field, which holds the option then shown. Data holding
- * a value for the declared discriminator is always matched, so an edit to the discriminator switches.
+ * form's own changes leave at the field, so neither an edit inside the option nor a parent declining a switch or an
+ * edit changes it. Other data, such as a parent's new `formData`, a reset, a parent answering a switch with data of its
+ * own, or an edit to the object's own properties, is matched again, with the selection preferred where it fits the data
+ * as well as any other option, and so is the data after it until the user switches or edits inside the option, which
+ * holds the option then shown. Data holding a value for the declared discriminator is always matched, so an edit to the
+ * discriminator switches.
  *
  * Outside a `Form` the selection is kept by the outermost `SchemaField`, or the calling component when there is none,
  * and nothing records the data a switch or an edit leaves, so the data rendered after one counts as arriving from

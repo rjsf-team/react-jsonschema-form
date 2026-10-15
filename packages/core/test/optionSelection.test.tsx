@@ -307,13 +307,47 @@ describe('option selection as form state', () => {
       expect(ids(node, 'input, select')).toEqual(['root_kind', 'root__oneof_select', 'root_kind', 'root_y']);
     });
 
-    it('keeps the option shown without a declared discriminator, as typing inside it does', async () => {
+    it('matches the option again without a declared discriminator, as on 6.11.0', async () => {
       const { node } = createFormComponent({ schema: optionsBy({}), initialFormData: { kind: 'a' } });
 
       await user.selectOptions(selectOf(node, 'root_kind'), 'b');
 
-      expect(selectOf(node, 'root__oneof_select')).toHaveValue('0');
-      expect(ids(node, 'input, select')).toEqual(['root_kind', 'root__oneof_select', 'root_kind', 'root_x']);
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      expect(ids(node, 'input, select')).toEqual(['root_kind', 'root__oneof_select', 'root_kind', 'root_y']);
+    });
+
+    it('matches the option again after typing inside it, and submits the data the option left', async () => {
+      const { node, onSubmit } = createFormComponent({ schema: optionsBy({}), initialFormData: { kind: 'a' } });
+      await user.type(elementOf(node, '#root_x'), 'foo');
+
+      await user.selectOptions(selectOf(node, 'root_kind'), 'b');
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      expect(ids(node, 'input, select')).toEqual(['root_kind', 'root__oneof_select', 'root_kind', 'root_y']);
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenLastCalledWith(
+        expect.objectContaining({ formData: { kind: 'b', x: 'foo' } }),
+        expect.anything(),
+      );
+    });
+
+    it('keeps the option that data edited in a property of the object itself fits as well as another', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { a: { type: 'string' }, b: { type: 'string' } } },
+        ],
+      };
+      const { node } = createFormComponent({ schema, initialFormData: {} });
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+      await user.type(elementOf(node, '#root_name'), 'n');
+      await user.type(elementOf(node, '#root_a'), 'a');
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      expect(ids(node, 'input, select')).toEqual(['root_name', 'root__oneof_select', 'root_a', 'root_b']);
     });
   });
 
