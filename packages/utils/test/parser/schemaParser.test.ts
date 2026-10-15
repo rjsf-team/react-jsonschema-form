@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { getValidationSchemas, ID_KEY, schemaKey, schemaParser } from '../../src/index.ts';
+import { getValidationSchemas, ID_KEY, schemaKey } from '../../src/index.ts';
 import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
@@ -34,22 +34,44 @@ describe('getValidationSchemas()', () => {
     const schemaMap = getValidationSchemas(RECURSIVE_REF_ALLOF);
     expect(schemaMap).toMatchSnapshot();
   });
-  it('terminates on an allOf entry declaring a recursive property its own pattern matches (#5452 b)', () => {
-    const rootSchema: RJSFSchema = {
-      $ref: '#/definitions/node',
-      definitions: {
-        node: {
-          type: 'object',
-          allOf: [
-            {
-              properties: { child: { $ref: '#/definitions/node' }, name: { type: 'string' } },
-              patternProperties: { '^child': { title: 'Child' } },
-            },
-          ],
+  it.each<[string, RJSFSchema]>([
+    [
+      'two definitions whose patterns match the keys referring to each other (#5452 a)',
+      {
+        $ref: '#/definitions/x',
+        definitions: {
+          x: {
+            type: 'object',
+            properties: { y: { $ref: '#/definitions/y' } },
+            patternProperties: { '^y': { title: 'Y' } },
+          },
+          y: {
+            type: 'object',
+            properties: { x: { $ref: '#/definitions/x' } },
+            patternProperties: { '^x': { title: 'X' } },
+          },
         },
       },
-    };
-    expect(Object.values(schemaParser(rootSchema))).toEqual([{ ...rootSchema, $id: expect.any(String) }]);
+    ],
+    [
+      'an allOf entry declaring a recursive property its own pattern matches (#5452 b)',
+      {
+        $ref: '#/definitions/node',
+        definitions: {
+          node: {
+            type: 'object',
+            allOf: [
+              {
+                properties: { child: { $ref: '#/definitions/node' }, name: { type: 'string' } },
+                patternProperties: { '^child': { title: 'Child' } },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  ])('terminates on %s, listing the root alone', (_, rootSchema) => {
+    expect(listed(rootSchema)).toEqual([rootSchema]);
   });
   it('parses schema dependencies properly', () => {
     const schemaMap = getValidationSchemas(SCHEMA_DEPENDENCIES);
@@ -213,11 +235,6 @@ describe('getValidationSchemas()', () => {
         },
       ],
     });
-  });
-
-  it('is what the deprecated schemaParser() returns', () => {
-    // oxlint-disable-next-line typescript/no-deprecated -- the deprecated wrapper is what is under test
-    expect(schemaParser(SUPER_SCHEMA)).toEqual(getValidationSchemas(SUPER_SCHEMA));
   });
 
   it('throws when two different schemas share a key', () => {
