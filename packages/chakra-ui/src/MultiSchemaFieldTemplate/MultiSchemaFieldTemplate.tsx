@@ -11,7 +11,8 @@ export default function MultiSchemaFieldTemplate<
   return (
     <Card.Root mb={2}>
       <Card.Body pb={2}>
-        <Box mb={4}>{selector}</Box>
+        {/* No row is laid out for a selector the field doesn't render, as while an optional field has no data (#5401) */}
+        {selector ? <Box mb={4}>{selector}</Box> : null}
         {optionSchemaField}
       </Card.Body>
     </Card.Root>

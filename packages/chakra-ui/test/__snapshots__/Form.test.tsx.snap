@@ -27299,11 +27299,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
   }
 }
 
-.emotion-113 {
-  margin-bottom: var(--chakra-spacing-4);
-}
-
-.emotion-137 {
+.emotion-135 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -28213,9 +28209,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="chakra-card__body emotion-112"
                       >
                         <div
-                          class="emotion-113"
-                        />
-                        <div
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
@@ -28309,9 +28302,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="chakra-card__body emotion-112"
                       >
                         <div
-                          class="emotion-113"
-                        />
-                        <div
                           class="rjsf-field rjsf-field-array"
                         >
                           <fieldset
@@ -28394,7 +28384,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       </fieldset>
     </div>
     <div
-      class="emotion-137"
+      class="emotion-135"
     >
       <button
         class="chakra-button emotion-48"
@@ -28881,11 +28871,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
   }
 }
 
-.emotion-101 {
-  margin-bottom: var(--chakra-spacing-4);
-}
-
-.emotion-119 {
+.emotion-117 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -29700,9 +29686,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="chakra-card__body emotion-100"
                       >
                         <div
-                          class="emotion-101"
-                        />
-                        <div
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
@@ -29769,9 +29752,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         class="chakra-card__body emotion-100"
                       >
                         <div
-                          class="emotion-101"
-                        />
-                        <div
                           class="rjsf-field rjsf-field-array"
                         >
                           <fieldset
@@ -29825,7 +29805,7 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       </fieldset>
     </div>
     <div
-      class="emotion-119"
+      class="emotion-117"
     >
       <button
         class="chakra-button emotion-42"
@@ -30253,11 +30233,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
   }
 }
 
-.emotion-48 {
-  margin-bottom: var(--chakra-spacing-4);
-}
-
-.emotion-72 {
+.emotion-70 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -30612,9 +30588,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="chakra-card__body emotion-47"
                       >
                         <div
-                          class="emotion-48"
-                        />
-                        <div
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
@@ -30708,9 +30681,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="chakra-card__body emotion-47"
                       >
                         <div
-                          class="emotion-48"
-                        />
-                        <div
                           class="rjsf-field rjsf-field-array"
                         >
                           <fieldset
@@ -30793,7 +30763,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       </fieldset>
     </div>
     <div
-      class="emotion-72"
+      class="emotion-70"
     >
       <button
         class="chakra-button emotion-43"
@@ -31111,11 +31081,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
   }
 }
 
-.emotion-42 {
-  margin-bottom: var(--chakra-spacing-4);
-}
-
-.emotion-60 {
+.emotion-58 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -31434,9 +31400,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="chakra-card__body emotion-41"
                       >
                         <div
-                          class="emotion-42"
-                        />
-                        <div
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
@@ -31507,9 +31470,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         class="chakra-card__body emotion-41"
                       >
                         <div
-                          class="emotion-42"
-                        />
-                        <div
                           class="rjsf-field rjsf-field-array"
                         >
                           <fieldset
@@ -31565,7 +31525,7 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       </fieldset>
     </div>
     <div
-      class="emotion-60"
+      class="emotion-58"
     >
       <button
         class="chakra-button emotion-37"
