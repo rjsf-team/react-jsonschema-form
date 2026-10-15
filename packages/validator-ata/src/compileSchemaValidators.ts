@@ -14,9 +14,8 @@ export { compileSchemaValidatorsCode };
  * @param schema - The schema to be compiled into a set of precompiled validators functions
  * @param output - The name of the file into which the precompiled validator functions will be generated
  * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the same options that are passed to the
- *        `customizeValidator()` function to modify the behavior of the regular ata-based validator, plus the form's
- *        `customMergeAllOf`, which must merge the same way as the one passed to the form or the form can validate
- *        against sub-schemas that were not compiled
+ *        `customizeValidator()` function to modify the behavior of the regular ata-based validator. A
+ *        `customMergeAllOf` among them is not read: the schemas compiled do not depend on how `allOf` is merged
  */
 export default function compileSchemaValidators<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,

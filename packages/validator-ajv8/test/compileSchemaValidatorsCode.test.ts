@@ -1,8 +1,9 @@
 import type { RJSFSchema } from '@rjsf/utils';
-import { ID_KEY, schemaKey, schemaParser, withRootIdRefPrefix } from '@rjsf/utils';
+import { schemaKey, getValidationSchemas } from '@rjsf/utils';
 
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
+import { compiledSchemas as compiled } from '../src/compileSchemaValidatorsCode.ts';
 import createAjvInstance from '../src/createAjvInstance.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
 import { SUPER_SCHEMA_OPTIONS, evalValidatorCode, superSchema } from './harness/compileSuperSchema.ts';
@@ -15,12 +16,9 @@ vi.mock('../src/createAjvInstance', async (importOriginal) => {
   return { default: vi.fn((...args: any[]) => realCreateAjvInstance(...args)) };
 });
 
-/** The parsed schemas as they are compiled: every one but the root names the root in its local `$ref`s */
+/** The parsed schemas as they are compiled */
 function compiledSchemas(rootSchema: RJSFSchema): RJSFSchema[] {
-  const rootId = schemaKey(rootSchema);
-  return Object.values(schemaParser(rootSchema)).map((parsed) =>
-    parsed[ID_KEY] === rootId ? parsed : withRootIdRefPrefix(parsed, { [ID_KEY]: rootId }),
-  );
+  return compiled(getValidationSchemas(rootSchema), schemaKey(rootSchema)).schemas;
 }
 
 describe('compileSchemaValidatorsCode()', () => {

@@ -82,6 +82,8 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
   readonly root: NodeId;
   /** The graph this one extends with a schema from outside the root, for a graph `adoptSchema()` returned */
   readonly base?: SchemaGraph<S>;
+  /** How many nodes the graph holds: every id from 0 below it names one */
+  readonly size: number;
   node(id: NodeId): SchemaNode<S>;
   /** The node first found at `pointer`, if one was */
   byPointer(pointer: string): NodeId | undefined;
@@ -261,6 +263,10 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     this.rootBase = rootId === undefined ? '' : resolveUri('', rootId);
     this.offset = base === undefined ? 0 : base.offset + base.own.length;
     this.root = base === undefined ? this.parse(rawRoot, '', '').id : base.root;
+  }
+
+  get size(): number {
+    return this.offset + this.own.length;
   }
 
   node(id: NodeId): SchemaNode<S> {

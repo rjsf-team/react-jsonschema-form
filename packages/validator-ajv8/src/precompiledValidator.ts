@@ -9,7 +9,7 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { createRootSchemaGuard, ID_KEY, JUNK_OPTION_ID, schemaKey } from '@rjsf/utils';
+import { createRootSchemaGuard, REF_KEY, schemaKey } from '@rjsf/utils';
 import type { ErrorObject } from 'ajv';
 
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
@@ -102,7 +102,9 @@ export default class AJV8PrecompiledValidator<
     const key = schemaKey(schema);
     const validator = this.validateFns[key];
     if (!validator) {
-      throw new Error(`No precompiled validator function was found for the given schema for "${key}"`);
+      const ref = schema[REF_KEY];
+      const named = typeof ref === 'string' ? ` (the subschema at "${ref}")` : '';
+      throw new Error(`No precompiled validator function was found for the given schema for "${key}"${named}`);
     }
     return validator;
   }
@@ -191,9 +193,6 @@ export default class AJV8PrecompiledValidator<
    */
   isValid(schema: S, formData: unknown, rootSchema: S) {
     this.ensureSameRootSchema(rootSchema, formData);
-    if (schema[ID_KEY] === JUNK_OPTION_ID) {
-      return false;
-    }
     const validator = this.getValidator(schema);
     return validator(formData);
   }

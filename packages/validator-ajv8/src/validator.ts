@@ -301,7 +301,7 @@ export default class AJV8Validator<
     let compiled = false;
     try {
       this.handleSchemaUpdate(rootSchema);
-      // A `$ref` local to the root, such as one in an option or a condition a form scores or picks a branch with,
+      // A `$ref` local to the root, such as the `{ $ref: '#/properties/a/if' }` a form validates a condition with,
       // names the root by the id it is registered under, whatever the schema holding it is registered as
       const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema);
       schemaId = schemaKey(schemaWithIdRefPrefix);

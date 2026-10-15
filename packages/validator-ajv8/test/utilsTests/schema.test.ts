@@ -73,7 +73,7 @@ const testValidator2020 = getTestValidator({ AjvClass: Ajv2020 });
 // NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing
 findFieldInSchemaTest(testValidator2020);
 findSelectedOptionInXxxOfTest(testValidator2020);
-getDefaultFormStateTest(testValidator2020);
+getDefaultFormStateTest(testValidator2020, false);
 getDisplayLabelTest(testValidator2020);
 getClosestMatchingOptionTest(testValidator2020);
 getFirstMatchingOptionTest(testValidator2020);

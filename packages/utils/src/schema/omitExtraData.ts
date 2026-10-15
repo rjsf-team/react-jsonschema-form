@@ -12,9 +12,9 @@ import isConstantOptionList from '../isConstantOptionList.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
-import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import { closestOption } from './getClosestMatchingOption.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
+import { getValidationTarget, mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -239,7 +239,9 @@ export default function omitExtraData<
     if (condition === undefined) {
       return target;
     }
-    const isThenBranch = isSchemaObject<S>(condition) ? validator.isValid(condition, source, rootSchema) : condition;
+    const isThenBranch = isSchemaObject<S>(condition)
+      ? validator.isValid(getValidationTarget<S>(condition, rootSchema), source, rootSchema)
+      : condition;
     const branch = isThenBranch ? then : otherwise;
     return branch === undefined ? target : omit(branch as S | boolean, source, target, false);
   }
@@ -261,22 +263,21 @@ export default function omitExtraData<
     if (!Array.isArray(oneOf) || Array.isArray(childSchema.enum) || isConstantOptionList<S>(oneOf)) {
       return target;
     }
-    // Resolve $refs and relax additionalProperties:false → true in one pass for scoring only.
-    // The unrelaxed resolved schema is re-derived for the winning option so that omit() still
-    // respects additionalProperties:false during filtering.
-    const scoringOptions = relaxOptionsForScoring<S>(oneOf as (S | boolean)[], true, rootSchema);
-    const bestIndex = getClosestMatchingOption<T, S, F>(
+    // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
+    // that is then applied with it, to omit them
+    const bestIndex = closestOption<unknown, S, F>(
       context,
       rootSchema,
-      source as T,
-      scoringOptions,
+      source,
+      oneOf,
       0,
+      true,
       getDiscriminatorFieldFromSchema<S>(childSchema),
     );
-    const winning = (oneOf as (S | boolean)[])[bestIndex];
-    // For object options, re-resolve without relaxation so additionalProperties:false is respected.
-    // For boolean options, scoringOptions already holds the converted schema (true→{}, false→{not:{}}).
-    const resolved: S = isSchemaObject<S>(winning) ? resolveOwnRef<S>(winning, rootSchema) : scoringOptions[bestIndex];
+    const winning: unknown = oneOf[bestIndex];
+    const resolved: S = isSchemaObject<S>(winning)
+      ? resolveOwnRef<S>(winning, rootSchema)
+      : relaxOptionsForScoring<S>([Boolean(winning)])[0];
     return omit(resolved, source, target, false);
   }
 

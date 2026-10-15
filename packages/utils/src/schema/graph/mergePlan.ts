@@ -23,6 +23,7 @@ import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
+import { declaredProperty, dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -735,20 +736,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (condition === undefined) {
       return without;
     }
-    const conditionNode = this.graph.node(condition);
-    // A boolean `if` holds or fails whatever the data, which needs no validator to say, nor a precompiled one to have a
-    // function for the schema it reads as
-    const satisfied =
-      conditionNode.kind === 'schema'
-        ? this.holds(`if:${condition}`, conditionNode.raw, this.data)
-        : conditionNode.kind !== 'boolean' || conditionNode.value;
-    const branchKey = satisfied ? THEN_KEY : ELSE_KEY;
-    const branchProvider = keywords.get(branchKey);
-    const branchNode = branchProvider && this.graph.child(branchProvider.node.id, branchKey);
-    const branchPart = this.branch(branchProvider, branchKey, dependencyKey);
-    return branchPart === undefined || branchNode === undefined
-      ? without
-      : mergeBranch(without, branchPart, 'b', branchNode);
+    const conditionSchema = targetOf(this.graph, condition);
+    const branchKey = this.holds(`if:${condition}`, conditionSchema, this.data) ? THEN_KEY : ELSE_KEY;
+    const branchPart = this.branch(keywords.get(branchKey), branchKey, dependencyKey);
+    return branchPart === undefined ? without : mergeBranch(without, branchPart);
   }
 
   private branch(
@@ -817,35 +808,6 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return next;
   }
 
-  /** The subschema an option of a dependency's `oneOf` names its condition with: its `properties[key]`, read off the
-   * option as written, or, for an option spelled as a `$ref`, off the schema it resolves to. That schema is planned
-   * from the ref path the list was entered with, its recursive `$ref`s left unfollowed, since one leading back to the
-   * schema declaring the dependency would otherwise read the same condition again without end
-   */
-  private dependencyCondition(option: NodeId, key: string, refPath: RefPath): unknown {
-    const node = this.graph.node(option);
-    if (node.kind !== 'schema') {
-      return undefined;
-    }
-    if (node.ref === undefined) {
-      const condition = this.graph.child(option, PROPERTIES_KEY, key);
-      if (condition === undefined) {
-        return undefined;
-      }
-      const conditionNode = this.graph.node(condition);
-      return conditionNode.kind === 'schema'
-        ? conditionNode.raw
-        : conditionNode.kind === 'boolean' && conditionNode.value;
-    }
-    const resolved = new PlanBuilder(this.context, this.graph, this.data, this.depData, {
-      ...this.policy,
-      allOf: true,
-      cutRecursion: true,
-    }).build([{ node: option, refPath }]);
-    const properties: unknown = resolved.schema.properties;
-    return isObject(properties) ? properties[key] : undefined;
-  }
-
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
    * with no such option or several, none is applied. The list is chosen from rather than offered, so it is dropped
    * before the option is merged in, which keeps an `anyOf` or `oneOf` the option offers itself
@@ -859,12 +821,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => option)
       .filter((option) => {
-        const condition = this.dependencyCondition(option, key, provider.refPath);
-        if (!condition) {
-          return false;
-        }
-        const conditionSchema = schemaFrom(this.graph.rawRoot, { type: 'object', properties: { [key]: condition } });
-        return this.holds(`dependency:${option}:${key}`, conditionSchema, this.depData);
+        const property = declaredProperty(this.graph, option, key);
+        return (
+          property !== undefined &&
+          this.holds(`dependency:${option}:${key}`, dependencyCondition(this.graph, key, property), this.depData)
+        );
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);
