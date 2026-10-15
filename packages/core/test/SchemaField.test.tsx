@@ -1313,5 +1313,68 @@ describe('SchemaField', () => {
       expect(node.querySelector('#root_child_child-button')).toBeNull();
       expect(node.querySelector('#root_child_child_child-button')).toHaveTextContent('Expand Cycle');
     });
+
+    describe('recursive definitions', () => {
+      const ref: RJSFSchema = { $ref: '#/definitions/node' };
+      const rootOf = (node: RJSFSchema): RJSFSchema => ({ definitions: { node }, $ref: '#/definitions/node' });
+      const nodeWith = (child: RJSFSchema): RJSFSchema =>
+        rootOf({ type: 'object', properties: { name: { type: 'string' }, child } });
+
+      it.each<[string, RJSFSchema]>([
+        ['a property', ref],
+        ['an allOf (#5501)', { allOf: [ref] }],
+        ['a then branch (#5501)', { type: 'object', if: {}, then: ref }],
+      ])('expands a recursion through %s by one level per click', async (_, child) => {
+        const { node } = createFormComponent({ schema: nodeWith(child) });
+
+        expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
+        expect(node.querySelector('#root_child-button')).toHaveTextContent('Expand Cycle');
+
+        await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+
+        expect(node.querySelector('#root_child_name')).toBeInTheDocument();
+        expect(node.querySelector('#root_child_child_name')).not.toBeInTheDocument();
+        expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(1);
+        expect(node.querySelector('#root_child_child-button')).toHaveTextContent('Expand Cycle');
+      });
+
+      it('renders an anyOf option that refers back to the schema offering it as the selector alone', async () => {
+        const schema = rootOf({
+          anyOf: [ref, { type: 'object', properties: { x: { type: 'string' } } }],
+        });
+        const { node } = createFormComponent({ schema });
+        const select = screen.getByRole('combobox');
+
+        expect(select).toHaveAttribute('id', 'root__anyof_select');
+        expect(node.querySelectorAll('input')).toHaveLength(0);
+
+        await user.selectOptions(select, 'Option 2');
+
+        expect(node.querySelector('#root_x')).toBeInTheDocument();
+        expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
+      });
+
+      it('renders definitions that all refer to one another, collapsing each path where it comes back round', () => {
+        const names = ['d0', 'd1', 'd2', 'd3'];
+        const definitions = Object.fromEntries(
+          names.map((name): [string, RJSFSchema] => [
+            name,
+            {
+              type: 'object',
+              properties: {
+                v: { type: 'string' },
+                ...Object.fromEntries(
+                  names.filter((other) => other !== name).map((other) => [other, { $ref: `#/definitions/${other}` }]),
+                ),
+              },
+            },
+          ]),
+        );
+        const { node } = createFormComponent({ schema: { definitions, $ref: '#/definitions/d0' } });
+
+        expect(node.querySelectorAll('input')).toHaveLength(16);
+        expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(33);
+      });
+    });
   });
 });

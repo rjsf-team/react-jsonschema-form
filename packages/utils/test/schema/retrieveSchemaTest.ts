@@ -4727,6 +4727,8 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const once = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(once.properties).toEqual({ d1: { $ref: D('d1') }, d2: { $ref: D('d2') }, d3: { $ref: D('d3') } });
         expect(retrieveSchema({ validator: testValidator }, once, rootSchema)).toEqual(once);
+        // As `ObjectField` retrieves the schema `SchemaField` retrieved, resolving the options too
+        expect(retrieveSchema({ validator: testValidator }, once, rootSchema, {}, true)).toEqual(once);
         const d1 = retrieveProperty(testValidator, once, 'd1', rootSchema);
         // `d0` is the definition the root was resolved from, so `d1`'s way back to it is the cycle
         expect(d1.properties).toEqual({
