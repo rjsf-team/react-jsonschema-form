@@ -357,7 +357,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             >
                               <label
                                 class="ant-form-item-required"
-                                for="root_person_race"
                                 title="Race"
                               >
                                 Race
@@ -905,7 +904,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class=""
-                                    for="root_employment"
                                     title="Employment"
                                   >
                                     Employment
@@ -1638,7 +1636,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             >
                               <label
                                 class="ant-form-item-required"
-                                for="root_person_race"
                                 title="Race"
                               >
                                 Race
@@ -2186,7 +2183,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class=""
-                                    for="root_employment"
                                     title="Employment"
                                   >
                                     Employment
@@ -2975,7 +2971,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             >
                               <label
                                 class="ant-form-item-required"
-                                for="root_person_race"
                                 title="Race"
                               >
                                 Race
@@ -3523,7 +3518,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class=""
-                                    for="root_employment"
                                     title="Employment"
                                   >
                                     Employment
@@ -4052,7 +4046,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                             >
                               <label
                                 class="ant-form-item-required"
-                                for="root_person_race"
                                 title="Race"
                               >
                                 Race
@@ -4600,7 +4593,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
                                 >
                                   <label
                                     class=""
-                                    for="root_employment"
                                     title="Employment"
                                   >
                                     Employment
@@ -5315,7 +5307,6 @@ exports[`Three even column grid > renders person and address in three columns, n
                           >
                             <label
                               class="ant-form-item-required"
-                              for="root_person_race"
                               title="Race"
                             >
                               Race
@@ -6096,7 +6087,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
                           >
                             <label
                               class="ant-form-item-required"
-                              for="root_person_race"
                               title="Race"
                             >
                               Race

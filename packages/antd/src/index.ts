@@ -7,7 +7,7 @@ import Widgets, { createWidgets, generateWidgets } from './widgets/index.ts';
 
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: the template draws
  * every field's description, a checkbox's included, which the checkbox doesn't draw itself, and the slider's handle is
- * named by the template's label through `aria-labelledby`, since the label's `for` names the slider's root
+ * named by the template's label through `aria-labelledby`, since a `for` could reach only the slider's root
  */
 function createPresentation(): ThemePresentation {
   return {

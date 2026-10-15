@@ -6,6 +6,7 @@ import {
   hasTemplateErrors,
   isWholeValueSelect,
   templateDrawsLabel,
+  templateLabelFor,
   templateMarksRequired,
 } from '@rjsf/utils';
 import { Form } from 'antd';
@@ -31,7 +32,6 @@ export default function FieldTemplate<
     help,
     rawHelp,
     hidden,
-    id,
     label,
     presentation,
     rawDescription,
@@ -97,7 +97,7 @@ export default function FieldTemplate<
         colon={colon}
         hasFeedback={(schema.type !== 'array' && schema.type !== 'object') || isWholeValueSelect<S>(schema)}
         help={explainNode}
-        htmlFor={id}
+        htmlFor={templateLabelFor<T, S, F>(props)}
         label={shownLabel}
         // antd's label takes no id, so its column carries the one a control labelled through `aria-labelledby` points
         // at, which holds what the label's `for` names the field's own control by. The label stays a string, which antd
