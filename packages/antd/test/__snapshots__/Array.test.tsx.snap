@@ -5764,10 +5764,13 @@ exports[`with title and description > array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -5898,10 +5901,13 @@ exports[`with title and description > array icons 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -6582,10 +6588,13 @@ exports[`with title and description > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="Test field"
                       >
-                        Test field
+                        <span
+                          id="root__title"
+                        >
+                          Test field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -6882,10 +6891,13 @@ exports[`with title and description from both > array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7016,10 +7028,13 @@ exports[`with title and description from both > array icons 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -7700,10 +7715,13 @@ exports[`with title and description from both > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8000,10 +8018,13 @@ exports[`with title and description from uiSchema > array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8134,10 +8155,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
@@ -8818,10 +8842,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
                     >
                       <label
                         class=""
-                        id="root__title"
                         title="My Field"
                       >
-                        My Field
+                        <span
+                          id="root__title"
+                        >
+                          My Field
+                        </span>
                       </label>
                       <div
                         class="ant-divider css-dev-only-do-not-override-oc1rc0 css-var-root ant-divider-horizontal ant-divider-sm ant-divider-rail"
