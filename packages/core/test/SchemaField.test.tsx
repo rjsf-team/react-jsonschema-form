@@ -1407,6 +1407,287 @@ describe('SchemaField', () => {
         expect(node.querySelectorAll('button[id$="-button"]')).toHaveLength(33);
       });
 
+      describe('the fields and Expand Cycle buttons a recursion renders', () => {
+        const controls = (node: Element) =>
+          [...node.querySelectorAll('input[id], select[id], textarea[id]')].map(({ id }) => id);
+        const buttons = (node: Element) => [...node.querySelectorAll('button[id$="-button"]')].map(({ id }) => id);
+        const named: RJSFSchema = { type: 'string' };
+        const withName = (child: RJSFSchema): RJSFSchema =>
+          rootOf({ type: 'object', properties: { name: named, child } });
+        const A: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string', default: 'x' } },
+          dependencies: { a: { properties: { b: { $ref: '#/definitions/B' } } } },
+        };
+        const B: RJSFSchema = {
+          type: 'object',
+          properties: { c: { type: 'string', default: 'y' } },
+          dependencies: { c: { properties: { a2: { $ref: '#/definitions/A' } } } },
+        };
+        const Pet: RJSFSchema = {
+          type: 'object',
+          properties: { petType: { type: 'string', default: 'cat' }, friend: { $ref: '#/definitions/Pet' } },
+          if: { properties: { petType: { const: 'cat' } } },
+          then: { $ref: '#/definitions/Cat' },
+        };
+        const Cat: RJSFSchema = {
+          allOf: [
+            { $ref: '#/definitions/Pet' },
+            { type: 'object', properties: { hunts: { type: 'string', default: 'h' } } },
+          ],
+        };
+
+        it.each<[string, RJSFSchema, string[], string, string[], string, boolean?]>([
+          [
+            'an allOf declaring the recursive property (#5500)',
+            withName({ type: 'object', allOf: [{ properties: { x: ref } }] }),
+            ['root_name'],
+            'root_child_x-button',
+            ['root_name', 'root_child_x_name'],
+            'root_child_x_child_x-button',
+            true,
+          ],
+          [
+            'a then declaring the recursive property (#5500)',
+            withName({ type: 'object', if: {}, then: { properties: { x: ref } } }),
+            ['root_name'],
+            'root_child_x-button',
+            ['root_name', 'root_child_x_name'],
+            'root_child_x_child_x-button',
+          ],
+          [
+            'a dependencies entry that is the recursive $ref (#5500)',
+            withName({ type: 'object', properties: { x: { type: 'string', default: 'x' } }, dependencies: { x: ref } }),
+            ['root_name'],
+            'root_child-button',
+            ['root_name', 'root_child_x', 'root_child_name'],
+            'root_child_child-button',
+          ],
+          [
+            'a dependencies entry declaring the recursive property (#5500)',
+            withName({
+              type: 'object',
+              properties: { x: { type: 'string', default: 'x' } },
+              dependencies: { x: { properties: { y: ref } } },
+            }),
+            ['root_name', 'root_child_x'],
+            'root_child_y-button',
+            ['root_name', 'root_child_x', 'root_child_y_name', 'root_child_y_child_x'],
+            'root_child_y_child_y-button',
+          ],
+          [
+            'two definitions whose dependencies refer to each other',
+            { definitions: { A, B }, $ref: '#/definitions/A' },
+            ['root_a', 'root_b_c'],
+            'root_b_a2-button',
+            ['root_a', 'root_b_c', 'root_b_a2_a', 'root_b_a2_b_c'],
+            'root_b_a2_b_a2-button',
+          ],
+          [
+            'a then merging a definition that merges the recursive one back in',
+            { definitions: { Pet, Cat }, $ref: '#/definitions/Pet' },
+            ['root_petType', 'root_hunts'],
+            'root_friend-button',
+            ['root_petType', 'root_friend_petType', 'root_friend_hunts', 'root_hunts'],
+            'root_friend_friend-button',
+          ],
+          [
+            'a chain of aliases, stopping where its first alias enters the definition again',
+            {
+              definitions: {
+                node: { type: 'object', properties: { n: { type: 'string' }, c: { $ref: '#/definitions/A1' } } },
+                A1: { $ref: '#/definitions/A2' },
+                A2: ref,
+              },
+              $ref: '#/definitions/node',
+            },
+            ['root_n'],
+            'root_c-button',
+            ['root_n', 'root_c_n'],
+            'root_c_c-button',
+          ],
+          [
+            'two definitions whose patterns match the keys referring to each other (#5452 a)',
+            {
+              definitions: {
+                x: {
+                  type: 'object',
+                  properties: { y: { $ref: '#/definitions/y' } },
+                  patternProperties: { '^y': { title: 'Y' } },
+                },
+                y: {
+                  type: 'object',
+                  properties: { x: { $ref: '#/definitions/x' } },
+                  patternProperties: { '^x': { title: 'X' } },
+                },
+              },
+              $ref: '#/definitions/x',
+            },
+            [],
+            'root_y_x-button',
+            [],
+            'root_y_x_y_x-button',
+          ],
+        ])(
+          'renders a recursion through %s, one level per click',
+          async (_, schema, before, button, after, next, populate) => {
+            const { node } = createFormComponent({
+              schema,
+              defaultFormStateBehavior: populate ? { allOf: 'populateDefaults' } : undefined,
+            });
+            expect(controls(node)).toEqual(before);
+            expect(buttons(node)).toEqual([button]);
+
+            await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+
+            expect(controls(node)).toEqual(after);
+            expect(buttons(node)).toEqual([next]);
+          },
+        );
+
+        it.each<[string, RJSFSchema, string[]]>([
+          [
+            'an allOf declaring the recursive items (#5500)',
+            withName({ type: 'array', minItems: 1, allOf: [{ items: ref }] }),
+            ['root_name', 'root_child_0_name', 'root_child_0_child_0_name'],
+          ],
+          [
+            'array items whose then declares the recursive property (#5500)',
+            withName({
+              type: 'array',
+              minItems: 1,
+              items: { type: 'object', if: {}, then: { properties: { x: ref } } },
+            }),
+            ['root_name', 'root_child_0_x_name', 'root_child_0_x_child_0_x_name'],
+          ],
+        ])('renders the rows the defaults fill for a recursion through %s', (_, schema, expected) => {
+          const { node } = createFormComponent({ schema, defaultFormStateBehavior: { allOf: 'populateDefaults' } });
+          expect(controls(node)).toEqual(expected);
+          expect(buttons(node)).toEqual([]);
+        });
+
+        it('collapses the first array row under a root $ref as it collapses the others', () => {
+          const schema = rootOf({
+            type: 'object',
+            properties: { name: named, kids: { type: 'array', items: ref }, best: ref },
+          });
+          const { node } = createFormComponent({ schema, formData: { kids: [{}] } });
+          expect(buttons(node)).toEqual(['root_kids_0_best-button', 'root_best-button']);
+        });
+
+        it("fills an added row of a recursive definition with its item's defaults, where the recursion restarts once", async () => {
+          const schema: RJSFSchema = {
+            definitions: {
+              A: { type: 'object', properties: { v: { type: 'string' }, b: { $ref: '#/definitions/B' } } },
+              B: { type: 'array', minItems: 1, items: { $ref: '#/definitions/A' } },
+            },
+            $ref: '#/definitions/A',
+          };
+          const { node } = createFormComponent({ schema });
+          expect(controls(node)).toEqual(['root_v', 'root_b_0_v', 'root_b_0_b_0_v']);
+          const add = node.querySelector('#root_b__add');
+          if (!(add instanceof HTMLButtonElement)) {
+            throw new Error('no button #root_b__add');
+          }
+
+          await user.click(add);
+
+          expect(controls(node)).toEqual([
+            'root_v',
+            'root_b_0_v',
+            'root_b_0_b_0_v',
+            'root_b_1_v',
+            'root_b_1_b_0_v',
+            'root_b_1_b_0_b_0_v',
+          ]);
+        });
+
+        it('renders the keywords beside a $ref that another $ref reaches in place of its target under draft-07', () => {
+          const schema: RJSFSchema = {
+            definitions: {
+              O: { properties: { a: { type: 'string', default: 'a' } } },
+              M: { $ref: '#/definitions/O', properties: { b: { type: 'string', default: 'b' } } },
+            },
+            type: 'object',
+            properties: { v: { $ref: '#/definitions/M' } },
+          };
+          const { node } = createFormComponent({ schema });
+          expect(controls(node)).toEqual(['root_v_b']);
+          expect(node.querySelector('#root_v_b')).toHaveValue('b');
+        });
+
+        it('renders the default beside the $ref of a tuple entry and of additionalItems', () => {
+          const schema: RJSFSchema = {
+            definitions: { s: { type: 'string', default: 'target' } },
+            type: 'object',
+            properties: {
+              t: {
+                type: 'array',
+                items: [{ $ref: '#/definitions/s', default: 'beside' }, { $ref: '#/definitions/s' }],
+              },
+              x: {
+                type: 'array',
+                minItems: 2,
+                items: [{ type: 'string' }],
+                additionalItems: { $ref: '#/definitions/s', default: 'beside' },
+              },
+            },
+          };
+          const { node } = createFormComponent({ schema });
+          expect(node.querySelector('#root_t_0')).toHaveValue('beside');
+          expect(node.querySelector('#root_t_1')).toHaveValue('target');
+          expect(node.querySelector('#root_x_1')).toHaveValue('beside');
+        });
+
+        it('renders a $ref to an $anchor, and one under a relative $id, against what it names', () => {
+          const target: RJSFSchema = { type: 'object', properties: { v: { type: 'string', default: 'v' } } };
+          const anchored = { ...target, $anchor: 'nodeA' };
+          const draft2020 = 'https://json-schema.org/draft/2020-12/schema';
+          const { node: anchor } = createFormComponent({
+            schema: {
+              $schema: draft2020,
+              $id: 'https://example.com/root',
+              $defs: { n: anchored },
+              type: 'object',
+              properties: { p: { $ref: '#nodeA' } },
+            },
+          });
+          expect(controls(anchor)).toEqual(['root_p_v']);
+          const { node: relative } = createFormComponent({
+            schema: {
+              $schema: draft2020,
+              $id: 'https://example.com/root.json',
+              $defs: {
+                c: {
+                  $id: 'sub/c.json',
+                  type: 'object',
+                  properties: { w: { $ref: '#/$defs/w' } },
+                  $defs: { w: { type: 'string', default: 'w' } },
+                },
+              },
+              type: 'object',
+              properties: { p: { $ref: 'sub/c.json' } },
+            },
+          });
+          expect(controls(relative)).toEqual(['root_p_w']);
+          expect(relative.querySelector('#root_p_w')).toHaveValue('w');
+        });
+
+        it('expands a definition two others share at the first path that reaches it, and collapses it at the second', () => {
+          const schema: RJSFSchema = {
+            definitions: {
+              A: { type: 'object', properties: { a: { type: 'string' }, b: { $ref: '#/definitions/B' } } },
+              B: { type: 'object', properties: { c: { type: 'string' }, a2: { $ref: '#/definitions/A' } } },
+              C: { type: 'object', properties: { x: { $ref: '#/definitions/A' }, y: { $ref: '#/definitions/B' } } },
+            },
+            $ref: '#/definitions/C',
+          };
+          const { node } = createFormComponent({ schema });
+          expect(controls(node)).toEqual(['root_x_a', 'root_x_b_c', 'root_y_c', 'root_y_a2_a']);
+          expect(buttons(node)).toEqual(['root_x_b_a2-button', 'root_y_a2_b-button']);
+        });
+      });
+
       describe('a tree whose array sits in a definition each row enters again', () => {
         const tree: RJSFSchema = {
           type: 'object',

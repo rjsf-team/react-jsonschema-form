@@ -1,4 +1,4 @@
-import { getDefaultFormState } from '../../src/index.ts';
+import { getDefaultFormState, isObject } from '../../src/index.ts';
 import type { DefaultFormStateBehavior, RJSFSchema } from '../../src/index.ts';
 import { computeDefaults, getObjectDefaults } from '../../src/schema/getDefaultFormState.ts';
 import { miniValidator } from './graph/miniValidator.ts';
@@ -193,6 +193,543 @@ describe('getDefaultFormState() as one fold over the merge plan', () => {
         name: 'n',
         c: { name: 'n', c: nested(2) },
       });
+    });
+  });
+});
+
+const D = (name: string) => `#/definitions/${name}`;
+const populate: DefaultFormStateBehavior = { allOf: 'populateDefaults' };
+
+/** The defaults of `schema` as its own root, under `behavior` */
+function defaultsOf(schema: RJSFSchema, formData?: unknown, behavior?: DefaultFormStateBehavior, context = validator) {
+  return getDefaultFormState(
+    { validator: context, defaultFormStateBehavior: behavior },
+    { schema, rootSchema: schema, formData },
+  );
+}
+
+describe('getDefaultFormState() on recursive schemas', () => {
+  const ref: RJSFSchema = { $ref: D('node') };
+  const nodeWith = (child: RJSFSchema): RJSFSchema => ({
+    definitions: { node: { type: 'object', properties: { name: { type: 'string', default: 'n' }, child } } },
+    $ref: D('node'),
+  });
+  const A: RJSFSchema = {
+    type: 'object',
+    properties: { a: { type: 'string', default: 'x' } },
+    dependencies: { a: { properties: { b: { $ref: D('B') } } } },
+  };
+  const B: RJSFSchema = {
+    type: 'object',
+    properties: { c: { type: 'string', default: 'y' } },
+    dependencies: { c: { properties: { a2: { $ref: D('A') } } } },
+  };
+  const ab = { a: 'x', b: { c: 'y', a2: { a: 'x', b: { c: 'y' } } } };
+
+  it.each<[string, RJSFSchema, DefaultFormStateBehavior | undefined, unknown]>([
+    [
+      'an allOf declaring the recursive property (#5500)',
+      nodeWith({ type: 'object', allOf: [{ properties: { x: ref } }] }),
+      populate,
+      { name: 'n', child: { x: { name: 'n' } } },
+    ],
+    [
+      'an allOf declaring the recursive items (#5500)',
+      nodeWith({ type: 'array', minItems: 1, allOf: [{ items: ref }] }),
+      populate,
+      { name: 'n', child: [{ name: 'n', child: [undefined] }] },
+    ],
+    [
+      'a then declaring the recursive property (#5500)',
+      nodeWith({ type: 'object', if: {}, then: { properties: { x: ref } } }),
+      undefined,
+      { name: 'n', child: { x: { name: 'n' } } },
+    ],
+    [
+      'array items whose then declares the recursive property (#5500)',
+      nodeWith({ type: 'array', minItems: 1, items: { type: 'object', if: {}, then: { properties: { x: ref } } } }),
+      undefined,
+      { name: 'n', child: [{ x: { name: 'n', child: [{}] } }] },
+    ],
+    [
+      'a dependencies entry that is the recursive $ref (#5500)',
+      nodeWith({ type: 'object', properties: { x: { type: 'string', default: 'x' } }, dependencies: { x: ref } }),
+      undefined,
+      { name: 'n', child: { x: 'x', name: 'n', child: { x: 'x' } } },
+    ],
+    [
+      'a dependencies entry declaring the recursive property (#5500)',
+      nodeWith({
+        type: 'object',
+        properties: { x: { type: 'string', default: 'x' } },
+        dependencies: { x: { properties: { y: ref } } },
+      }),
+      undefined,
+      { name: 'n', child: { x: 'x', y: { name: 'n', child: { x: 'x' } } } },
+    ],
+    [
+      'an allOf that is the recursive $ref (#5501)',
+      nodeWith({ allOf: [ref] }),
+      populate,
+      { name: 'n', child: { name: 'n' } },
+    ],
+    [
+      'a then that is the recursive $ref (#5501)',
+      nodeWith({ type: 'object', if: {}, then: ref }),
+      undefined,
+      { name: 'n', child: { name: 'n' } },
+    ],
+    ['two definitions whose dependencies refer to each other', { definitions: { A, B }, $ref: D('A') }, undefined, ab],
+    [
+      'the same two definitions as array items',
+      {
+        definitions: { A, B },
+        type: 'object',
+        properties: { arr: { type: 'array', minItems: 1, items: { $ref: D('A') } } },
+      },
+      undefined,
+      { arr: [ab] },
+    ],
+    [
+      'two definitions whose patterns match the keys referring to each other (#5452 a)',
+      {
+        definitions: {
+          x: { type: 'object', properties: { y: { $ref: D('y') } }, patternProperties: { '^y': { title: 'Y' } } },
+          y: { type: 'object', properties: { x: { $ref: D('x') } }, patternProperties: { '^x': { title: 'X' } } },
+        },
+        $ref: D('x'),
+      },
+      undefined,
+      {},
+    ],
+    [
+      'an allOf entry declaring a recursive property its own pattern matches (#5452 b)',
+      {
+        definitions: {
+          node: {
+            type: 'object',
+            allOf: [
+              { properties: { child: ref, name: { type: 'string' } }, patternProperties: { '^child': { title: 'C' } } },
+            ],
+          },
+        },
+        $ref: D('node'),
+      },
+      undefined,
+      {},
+    ],
+    [
+      'an allOf that adds a default to the recursive $ref',
+      nodeWith({ allOf: [ref, { properties: { extra: { type: 'string', default: 'e' } } }] }),
+      populate,
+      { name: 'n', child: { name: 'n', extra: 'e', child: { extra: 'e' } } },
+    ],
+  ])('terminates on a recursion through %s, stopping where it comes back round', (_, schema, behavior, expected) => {
+    const defaults = defaultsOf(schema, undefined, behavior);
+    expect(defaults).toEqual(expected);
+    expect(defaultsOf(schema, defaults, behavior)).toEqual(expected);
+  });
+
+  it('gives nothing for an anyOf option that refers back to the schema offering it, and the other option for its data', () => {
+    const schema: RJSFSchema = {
+      definitions: { node: { anyOf: [ref, { type: 'object', properties: { x: { type: 'string', default: 'x' } } }] } },
+      $ref: D('node'),
+    };
+    expect(defaultsOf(schema)).toBeUndefined();
+    expect(defaultsOf(schema, { x: 'x' })).toEqual({ x: 'x' });
+  });
+
+  it('fills the property a definition at the root recurses through by its then, as under a property', () => {
+    const definitions: RJSFSchema['definitions'] = {
+      Pet: {
+        type: 'object',
+        properties: { petType: { type: 'string', default: 'cat' }, friend: { $ref: D('Pet') } },
+        if: { properties: { petType: { const: 'cat' } } },
+        then: { $ref: D('Cat') },
+      },
+      Cat: { allOf: [{ $ref: D('Pet') }, { type: 'object', properties: { hunts: { type: 'string', default: 'h' } } }] },
+    };
+    const pet = { petType: 'cat', hunts: 'h', friend: { petType: 'cat', hunts: 'h' } };
+    expect(defaultsOf({ definitions, $ref: D('Pet') })).toEqual(pet);
+    expect(defaultsOf({ definitions, type: 'object', properties: { p: { $ref: D('Pet') } } })).toEqual({ p: pet });
+  });
+
+  it('gives an empty object for a definition that merges a schema which merges it back in, with no data', () => {
+    const schema: RJSFSchema = {
+      definitions: {
+        Pet: {
+          type: 'object',
+          properties: { petType: { type: 'string' } },
+          if: { properties: { petType: { const: 'cat' } } },
+          then: { $ref: D('Cat') },
+        },
+        Cat: { allOf: [{ $ref: D('Pet') }, { type: 'object', properties: { hunts: { type: 'boolean' } } }] },
+      },
+      $ref: D('Cat'),
+    };
+    expect(defaultsOf(schema)).toEqual({});
+  });
+
+  it('fills a recursive array whose minItems sits in an allOf to the depth of one whose minItems sits beside its items', () => {
+    const pl: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', default: 'x' }, child: { $ref: D('pl') } },
+    };
+    const withArray = (arr: RJSFSchema): RJSFSchema => ({ definitions: { pl }, type: 'object', properties: { arr } });
+    const expected = { arr: [{ a: 'x', child: { a: 'x' } }] };
+    expect(
+      defaultsOf(withArray({ type: 'array', allOf: [{ minItems: 1 }], items: { $ref: D('pl') } }), undefined, populate),
+    ).toEqual(expected);
+    expect(
+      defaultsOf(withArray({ type: 'array', minItems: 1, items: { $ref: D('pl') } }), undefined, populate),
+    ).toEqual(expected);
+  });
+
+  it('fills the keys of the data an additionalProperties or pattern recursion matches down to where the schema stops', () => {
+    const map: RJSFSchema = {
+      definitions: {
+        map: {
+          type: 'object',
+          properties: { name: { type: 'string', default: 'm' } },
+          additionalProperties: { $ref: D('map') },
+        },
+      },
+      $ref: D('map'),
+    };
+    expect(defaultsOf(map, { k: { j: { i: {} } } })).toEqual({ name: 'm', k: { name: 'm', j: { i: {} } } });
+    const pattern: RJSFSchema = {
+      definitions: {
+        node: {
+          type: 'object',
+          properties: { n: { type: 'string', default: 'n' } },
+          patternProperties: { '^c': { $ref: D('node') } },
+        },
+      },
+      $ref: D('node'),
+    };
+    expect(defaultsOf(pattern, { c1: { c2: { c3: { c4: {} } } } })).toEqual({
+      n: 'n',
+      c1: { n: 'n', c2: { c3: { c4: {} } } },
+    });
+  });
+
+  it("fills a recursive property a pattern matches once, with the pattern's defaults at the collapse", () => {
+    const schema: RJSFSchema = {
+      definitions: {
+        node: {
+          type: 'object',
+          properties: { child: { $ref: D('node') } },
+          patternProperties: { '^c': { type: 'object', properties: { tag: { oneOf: [{ const: 'p' }] } } } },
+        },
+      },
+      $ref: D('node'),
+    };
+    const defaults = defaultsOf(schema);
+    expect(defaults).toEqual({ child: { tag: 'p', child: { tag: 'p' } } });
+    expect(defaultsOf(schema, defaults)).toEqual(defaults);
+  });
+
+  it('gives the same defaults on every call for the keys a recursive default object names', () => {
+    const schema: RJSFSchema = {
+      definitions: {
+        map: {
+          type: 'object',
+          properties: { name: { type: 'string', default: 'm' } },
+          additionalProperties: { $ref: D('map') },
+          default: { k: {} },
+        },
+      },
+      $ref: D('map'),
+    };
+    const expected = { name: 'm', k: { name: 'm' } };
+    let defaults = defaultsOf(schema);
+    expect(defaults).toEqual(expected);
+    for (let call = 0; call < 3; call += 1) {
+      defaults = defaultsOf(schema, defaults);
+      expect(defaults).toEqual(expected);
+    }
+  });
+
+  it("applies the keywords beside a recursive $ref in place of its target's at every level, as the form renders them", () => {
+    const schema: RJSFSchema = {
+      definitions: {
+        node: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', default: 'n' },
+            child: { $ref: D('node'), properties: { own: { type: 'string', default: 'o' } } },
+          },
+        },
+      },
+      $ref: D('node'),
+    };
+    expect(defaultsOf(schema)).toEqual({ name: 'n', child: { own: 'o' } });
+  });
+
+  it('stops a recursion through a chain of aliases where its first alias enters the definition again', () => {
+    const schema: RJSFSchema = {
+      definitions: {
+        node: { type: 'object', properties: { n: { type: 'string', default: 'n' }, c: { $ref: D('A1') } } },
+        A1: { $ref: D('A2') },
+        A2: { $ref: D('node') },
+      },
+      $ref: D('node'),
+    };
+    expect(defaultsOf(schema)).toEqual({ n: 'n', c: { n: 'n' } });
+  });
+
+  it('fills three levels for a root that is the recursive definition and two for a $ref to it', () => {
+    const pl: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', default: 'x' }, child: { $ref: '#' } },
+    };
+    expect(defaultsOf(pl)).toEqual({ a: 'x', child: { a: 'x', child: { a: 'x' } } });
+    const definition: RJSFSchema = {
+      type: 'object',
+      properties: { a: { type: 'string', default: 'x' }, child: { $ref: D('pl') } },
+    };
+    expect(defaultsOf({ definitions: { pl: definition }, $ref: D('pl') })).toEqual({ a: 'x', child: { a: 'x' } });
+  });
+});
+
+describe('getDefaultFormState() reading $ref, branches and extra keys as the form does', () => {
+  const draft2020 = 'https://json-schema.org/draft/2020-12/schema';
+  const S: RJSFSchema = { type: 'string', default: 'def' };
+  const O: RJSFSchema = {
+    type: 'object',
+    properties: { a: { type: 'string' }, b: { type: 'string' } },
+    default: { a: 'da', b: 'db' },
+    required: ['b'],
+  };
+
+  it('gives a property without a type the defaults of the branch its then supplies', () => {
+    expect(
+      defaultsOf({
+        definitions: { S },
+        type: 'object',
+        properties: { p: { if: {}, then: { $ref: D('S'), default: 'sib' } } },
+      }),
+    ).toEqual({ p: 'sib' });
+    expect(
+      defaultsOf({
+        definitions: { O },
+        type: 'object',
+        properties: { p: { if: {}, then: { $ref: D('O'), required: ['a'] } } },
+      }),
+    ).toEqual({ p: { a: 'da', b: 'db' } });
+  });
+
+  it('lets a default beside the $ref of a tuple entry or of additionalItems override the target', () => {
+    const s: RJSFSchema = { type: 'string', default: 'target' };
+    const schema: RJSFSchema = {
+      definitions: { s },
+      type: 'object',
+      properties: {
+        t: { type: 'array', items: [{ $ref: D('s'), default: 'beside' }, { $ref: D('s') }] },
+        x: {
+          type: 'array',
+          minItems: 2,
+          items: [{ type: 'string' }],
+          additionalItems: { $ref: D('s'), default: 'beside' },
+        },
+      },
+    };
+    expect(defaultsOf(schema)).toEqual({ t: ['beside', 'target'], x: [undefined, 'beside'] });
+  });
+
+  it('lets the keywords beside a $ref another $ref reaches override its target under draft-07', () => {
+    const definitions: RJSFSchema['definitions'] = {
+      O: { properties: { a: { type: 'string', default: 'a' } } },
+      M: { $ref: D('O'), properties: { b: { type: 'string', default: 'b' } } },
+    };
+    expect(defaultsOf({ definitions, type: 'object', properties: { v: { $ref: D('M') } } })).toEqual({ v: { b: 'b' } });
+  });
+
+  it('resolves a $ref to an $anchor, and one under a nested $id with a path segment against that $id', () => {
+    const target: RJSFSchema = { type: 'object', properties: { v: { type: 'string', default: 'v' } } };
+    const anchored = { ...target, $anchor: 'nodeA' };
+    expect(
+      defaultsOf({
+        $schema: draft2020,
+        $id: 'https://example.com/root',
+        $defs: { n: anchored },
+        type: 'object',
+        properties: { p: { $ref: '#nodeA' } },
+      }),
+    ).toEqual({ p: { v: 'v' } });
+    expect(
+      defaultsOf({
+        $schema: draft2020,
+        $id: 'https://example.com/root.json',
+        $defs: {
+          c: {
+            $id: 'sub/c.json',
+            type: 'object',
+            properties: { w: { $ref: '#/$defs/w' } },
+            $defs: { w: { type: 'string', default: 'w' } },
+          },
+        },
+        type: 'object',
+        properties: { p: { $ref: 'sub/c.json' } },
+      }),
+    ).toEqual({ p: { w: 'w' } });
+  });
+
+  it('takes the schema as its own root without a rootSchema, whatever the data', () => {
+    const schema: RJSFSchema = {
+      definitions: { a: { type: 'string', default: 'x' } },
+      type: 'object',
+      properties: { p: { $ref: D('a') }, q: { type: 'string' } },
+    };
+    expect(getDefaultFormState({ validator }, { schema })).toEqual({ p: 'x' });
+    expect(getDefaultFormState({ validator }, { schema, formData: { q: '1' } })).toEqual({ p: 'x', q: '1' });
+  });
+
+  it('follows the allOf behavior for an allOf behind the $ref of an extra key, as behind a property', () => {
+    const allOfMap: RJSFSchema = {
+      definitions: { A: { allOf: [{ type: 'object', properties: { a: { type: 'string', default: 'a' } } }] } },
+      type: 'object',
+      patternProperties: { '^p': { $ref: D('A') } },
+      additionalProperties: { $ref: D('A') },
+    };
+    expect(defaultsOf(allOfMap, { k: {}, pk: {} })).toEqual({ k: {}, pk: {} });
+    expect(defaultsOf(allOfMap, { k: {}, pk: {} }, populate)).toEqual({ k: { a: 'a' }, pk: { a: 'a' } });
+    const inheritanceMap: RJSFSchema = {
+      $schema: draft2020,
+      $defs: {
+        O: { type: 'object', properties: { a: { type: 'string', default: 'a' } } },
+        M: { $ref: '#/$defs/O', properties: { b: { type: 'string', default: 'b' } } },
+      },
+      type: 'object',
+      additionalProperties: { $ref: '#/$defs/M' },
+    };
+    expect(defaultsOf(inheritanceMap, { k: {} })).toEqual({ k: {} });
+    expect(defaultsOf(inheritanceMap, { k: {} }, populate)).toEqual({ k: { a: 'a', b: 'b' } });
+  });
+
+  it('applies a dependencies entry merged from an allOf once a default qualifies it, under populateDefaults', () => {
+    const dependencies: RJSFSchema['dependencies'] = { a: { properties: { c: { type: 'string', default: 'c' } } } };
+    const withA: RJSFSchema = { type: 'object', properties: { a: { type: 'string', default: 'x' } } };
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { p: { allOf: [{ dependencies }, withA] }, q: { allOf: [{ ...withA, dependencies }] } },
+    };
+    expect(defaultsOf(schema, undefined, populate)).toEqual({ p: { a: 'x', c: 'c' }, q: { a: 'x', c: 'c' } });
+    expect(defaultsOf(schema)).toEqual({});
+    const chain: RJSFSchema = {
+      $schema: draft2020,
+      $defs: { O: withA, M: { $ref: '#/$defs/O', dependencies } },
+      type: 'object',
+      properties: { p: { $ref: '#/$defs/M' } },
+    };
+    expect(defaultsOf(chain, undefined, populate)).toEqual({ p: { a: 'x', c: 'c' } });
+  });
+});
+
+describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () => {
+  /** Ref cycles of coprime periods meeting under one root `allOf`, each level a property `k` merging a leaf and the
+   * next definition of its cycle
+   */
+  function coprimeCycles(periods: number[]): RJSFSchema {
+    const definitions: Record<string, RJSFSchema> = { Leaf: { type: 'object' } };
+    periods.forEach((period, cycle) => {
+      for (let step = 0; step < period; step += 1) {
+        definitions[`C${cycle}_${step}`] = {
+          type: 'object',
+          properties: {
+            [`n${cycle}`]: { type: 'string', default: 'n' },
+            k: { allOf: [{ $ref: D('Leaf') }, { $ref: D(`C${cycle}_${(step + 1) % period}`) }] },
+          },
+        };
+      }
+    });
+    return { definitions, type: 'object', allOf: periods.map((_, cycle) => ({ $ref: D(`C${cycle}_0`) })) };
+  }
+
+  /** Depth of nested `k` objects in `value` */
+  function depthOfK(value: unknown): number {
+    return isObject(value) && 'k' in value ? 1 + depthOfK(value.k) : 0;
+  }
+
+  it('stops chains through several cycles of definitions at a fixed depth, whatever the periods', () => {
+    expect(defaultsOf(coprimeCycles([2, 3]))).toEqual({ n0: 'n', n1: 'n' });
+    const twoThree = defaultsOf(coprimeCycles([2, 3]), undefined, populate);
+    expect(depthOfK(twoThree)).toBe(7);
+    const five = defaultsOf(coprimeCycles([2, 3, 5, 7, 11]), undefined, populate);
+    expect(depthOfK(five)).toBe(25);
+    expect(defaultsOf(coprimeCycles([2, 3, 5, 7, 11]), five, populate)).toEqual(five);
+  });
+
+  it('fills a chain of definitions with a dependency at every level once per level, without validating', () => {
+    const depth = 32;
+    const definitions: Record<string, RJSFSchema> = {};
+    for (let level = 0; level < depth; level += 1) {
+      definitions[`D${level}`] = {
+        type: 'object',
+        properties: {
+          v: { type: 'string', default: 'v' },
+          w: { type: 'string' },
+          ...(level + 1 < depth ? { next: { $ref: D(`D${level + 1}`) } } : {}),
+        },
+        dependencies: { v: { properties: { w: { type: 'string', default: 'w' } } } },
+      };
+    }
+    const expected = Array.from({ length: depth - 1 }).reduce<Record<string, unknown>>(
+      (inner) => ({ v: 'v', w: 'w', next: inner }),
+      { v: 'v', w: 'w' },
+    );
+    const counting = miniValidator();
+    expect(defaultsOf({ definitions, $ref: D('D0') }, undefined, undefined, counting)).toEqual(expected);
+    expect(counting.calls).toBe(0);
+  });
+
+  it('fills a chain of dependencies, each declaring the default the next one depends on, in one call', () => {
+    const length = 9;
+    const properties: Record<string, RJSFSchema> = { k0: { type: 'string', default: 'v' } };
+    const dependencies: Record<string, RJSFSchema> = {};
+    for (let key = 1; key < length; key += 1) {
+      properties[`k${key}`] = { type: 'string' };
+      dependencies[`k${key - 1}`] = { properties: { [`k${key}`]: { type: 'string', default: 'v' } } };
+    }
+    expect(defaultsOf({ type: 'object', properties, dependencies })).toEqual(
+      Object.fromEntries(Array.from({ length }, (_, key) => [`k${key}`, 'v'])),
+    );
+  });
+
+  describe('definitions that all refer to one another', () => {
+    function dense(size: number): RJSFSchema {
+      const definitions: Record<string, RJSFSchema> = {};
+      for (let from = 0; from < size; from += 1) {
+        const properties: Record<string, RJSFSchema> = { v: { type: 'string', default: 'v' } };
+        for (let to = 0; to < size; to += 1) {
+          if (to !== from) {
+            properties[`p${to}`] = { $ref: D(`d${to}`) };
+          }
+        }
+        definitions[`d${from}`] = { type: 'object', properties };
+      }
+      return { definitions, $ref: D('d0') };
+    }
+    function objectCount(value: unknown): number {
+      return isObject(value) ? 1 + Object.values(value).reduce<number>((sum, child) => sum + objectCount(child), 0) : 0;
+    }
+
+    it('fills each path until a definition comes back round, and a path never past one repeat', () => {
+      expect(defaultsOf(dense(3))).toMatchObject({
+        v: 'v',
+        p1: { v: 'v', p0: { v: 'v', p1: { v: 'v', p2: { v: 'v' } }, p2: { v: 'v', p1: { v: 'v' } } } },
+      });
+      expect(objectCount(defaultsOf(dense(3)))).toBe(35);
+    });
+    it.each([
+      [4, 544],
+      [5, 12_805],
+    ])('fills K%i with %i objects without validating, the same again from its own output', (size, objects) => {
+      const counting = miniValidator();
+      const defaults = defaultsOf(dense(size), undefined, undefined, counting);
+      expect(objectCount(defaults)).toBe(objects);
+      expect(counting.calls).toBe(0);
+      expect(defaultsOf(dense(size), defaults)).toEqual(defaults);
     });
   });
 });

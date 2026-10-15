@@ -13,7 +13,6 @@ import {
   restartSeeds,
 } from '../../../src/schema/graph/recursionRule.ts';
 import { miniValidator } from './miniValidator.ts';
-import { createWalker, settleField } from './walk.ts';
 
 const D = (name: string) => `#/definitions/${name}`;
 
@@ -139,75 +138,6 @@ describe('the recursion rule', () => {
       expect(childField(graph, parent, { seeds, edge: 'additionalKey', inData: true }).seeds).toEqual([
         { node: child, refPath: [] },
       ]);
-    });
-  });
-
-  describe('settleField()', () => {
-    const recursive = { seeds: [{ node: child, refPath: [pl] }], dataDriven: false };
-
-    it('plans a field that does not collapse', () => {
-      const settled = settleField(
-        graph,
-        { ...recursive, seeds: [{ node: child, refPath: [] }] },
-        { edge: 'property', view: 'render' },
-        false,
-        plan,
-      );
-      expect(settled).toMatchObject({ collapsed: false, expanded: false, seeds: [{ node: child, refPath: [] }] });
-    });
-    it('reports a collapse that may not expand, with the plan of the field', () => {
-      const settled = settleField(graph, recursive, { edge: 'property', view: 'render' }, false, plan);
-      expect(settled).toEqual({ collapsed: true, plan: plan(recursive.seeds) });
-    });
-    it('expands a collapse once, restarting its ref paths and its chain (I2)', () => {
-      const chain = extendChain(graph, undefined, 'x');
-      const settled = settleField(graph, { ...recursive, chain }, { edge: 'property', view: 'render' }, true, plan);
-      expect(settled).toEqual({
-        collapsed: false,
-        plan: plan([{ node: child, refPath: [] }]),
-        seeds: [{ node: child, refPath: [] }],
-        expanded: true,
-      });
-    });
-  });
-
-  describe('on the RFC worked examples', () => {
-    const render = (root: RJSFSchema, expanded: string[] = [], data?: unknown) =>
-      createWalker(root, false, { validator: miniValidator() }).render(data, { expanded: new Set(expanded) });
-
-    it('collapses pl under its own $ref at root_child, and an Expand click reveals one level', () => {
-      expect(render(schema)).toEqual({ inputs: ['root_a'], buttons: ['root_child-button'] });
-      expect(render(schema, ['root_child'])).toEqual({
-        inputs: ['root_a', 'root_child_a'],
-        buttons: ['root_child_child-button'],
-      });
-    });
-    it("collapses {$ref: '#'} under a root not reached through a $ref one level later, one level per click", () => {
-      const root: RJSFSchema = { type: 'object', properties: { name: { type: 'string' }, child: { $ref: '#' } } };
-      expect(render(root).buttons).toEqual(['root_child_child-button']);
-      expect(render(root, ['root_child_child']).buttons).toEqual(['root_child_child_child-button']);
-    });
-    it('expands the node shared by A/B/C at root_x_b and collapses it at root_y_a2_b', () => {
-      const root: RJSFSchema = {
-        definitions: {
-          A: { type: 'object', properties: { a: { type: 'string' }, b: { $ref: D('B') } } },
-          B: { type: 'object', properties: { c: { type: 'string' }, a2: { $ref: D('A') } } },
-          C: { type: 'object', properties: { x: { $ref: D('A') }, y: { $ref: D('B') } } },
-        },
-        $ref: D('C'),
-      };
-      expect(render(root).buttons).toEqual(['root_x_b_a2-button', 'root_y_a2_b-button']);
-    });
-    it('renders a self-referencing option as the selector alone, and the other option once selected', () => {
-      const root: RJSFSchema = {
-        definitions: {
-          node: { anyOf: [{ $ref: D('node') }, { type: 'object', properties: { x: { type: 'string' } } }] },
-        },
-        $ref: D('node'),
-      };
-      const walker = createWalker(root, false, { validator: miniValidator() });
-      expect(walker.render(undefined, { forcedOption: 0 })).toEqual({ inputs: [], buttons: [] });
-      expect(walker.render(undefined, { forcedOption: 1 })).toEqual({ inputs: ['root_x'], buttons: [] });
     });
   });
 });

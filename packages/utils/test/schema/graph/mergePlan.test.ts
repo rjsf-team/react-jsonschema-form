@@ -13,7 +13,6 @@ import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import looseSchema from './looseSchema.ts';
 import { miniValidator } from './miniValidator.ts';
-import { itemSeeds } from './walk.ts';
 
 interface Options {
   readonly data?: unknown;
@@ -574,15 +573,15 @@ describe('buildPlan()', () => {
       expect(childSeeds(declared, 'pa').seeds).toHaveLength(2);
       expect(childSeeds(declared, 'zz')).toEqual({ seeds: [], edge: 'additionalKey' });
     });
-    it('names the seeds of an array row: the tuple entry, then the items or additional items', () => {
+    it('names the seeds of an array row: the tuple entries, then the items or additional items', () => {
       const first = planOf(schema, { seeds: (graph) => both(graph).slice(0, 1) });
-      expect(itemSeeds(first, 0).edge).toBe('tupleItem');
-      expect(first.graph.node(itemSeeds(first, 1).seeds[0].node).pointer).toBe('/definitions/first/additionalItems');
-      const second = planOf(schema, { seeds: (graph) => both(graph).slice(1, 2) });
-      expect(seedsOf(second, itemSeeds(second, 2).seeds)).toEqual([
-        ['/definitions/second/items', ['/definitions/second']],
+      expect(first.children.prefixItems).toHaveLength(1);
+      expect(first.children.items).toEqual([]);
+      expect(seedsOf(first, first.children.additionalItems)).toEqual([
+        ['/definitions/first/additionalItems', ['/definitions/first']],
       ]);
-      expect(itemSeeds(second, 2).edge).toBe('item');
+      const second = planOf(schema, { seeds: (graph) => both(graph).slice(1, 2) });
+      expect(seedsOf(second, second.children.items)).toEqual([['/definitions/second/items', ['/definitions/second']]]);
     });
   });
 

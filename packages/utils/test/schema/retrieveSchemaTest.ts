@@ -4887,6 +4887,87 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const retrieved = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
         expect(retrieveSchema({ validator: testValidator }, retrieved, rootSchema)).toEqual(retrieved);
       });
+      describe('on its own output', () => {
+        const ref: RJSFSchema = { $ref: D('node') };
+        const nodeWith = (child: RJSFSchema): RJSFSchema => ({
+          definitions: { node: { type: 'object', properties: { name: { type: 'string' }, child } } },
+          $ref: D('node'),
+        });
+        /** The ids of the properties below `schema` down to `depth` levels, each retrieved as the form retrieves it,
+         * with `cycle` after the id of one flagged as the cycle; every one is checked to come back unchanged
+         */
+        function walk(schema: RJSFSchema, rootSchema: RJSFSchema, data: unknown, depth: number, id = 'root'): string[] {
+          const retrieved = retrieveSchema({ validator: testValidator }, schema, rootSchema, data);
+          expect(retrieveSchema({ validator: testValidator }, retrieved, rootSchema, data)).toEqual(retrieved);
+          return Object.entries(retrieved.properties ?? {}).flatMap(([key, property]) => {
+            const child = schemaOf(property);
+            if (Reflect.get(child, RJSF_REF_CYCLE_KEY) === true) {
+              return [`${id}_${key} cycle`];
+            }
+            const childData = isObject(data) ? data[key] : undefined;
+            return depth === 0
+              ? []
+              : [`${id}_${key}`, ...walk(child, rootSchema, childData, depth - 1, `${id}_${key}`)];
+          });
+        }
+
+        it.each<[string, RJSFSchema, string[], unknown?]>([
+          ['a property', nodeWith(ref), ['root_name', 'root_child cycle']],
+          [
+            'an allOf declaring the property (#5500)',
+            nodeWith({ type: 'object', allOf: [{ properties: { x: ref } }] }),
+            ['root_name', 'root_child', 'root_child_x cycle'],
+          ],
+          [
+            'a then declaring the property (#5500)',
+            nodeWith({ type: 'object', if: {}, then: { properties: { x: ref } } }),
+            ['root_name', 'root_child', 'root_child_x cycle'],
+          ],
+          [
+            'a dependencies entry declaring the property (#5500)',
+            nodeWith({
+              type: 'object',
+              properties: { x: { type: 'string' } },
+              dependencies: { x: { properties: { y: ref } } },
+            }),
+            ['root_name', 'root_child', 'root_child_x', 'root_child_y cycle'],
+            { child: { x: 'x' } },
+          ],
+          [
+            'a chain of aliases',
+            {
+              definitions: {
+                node: { type: 'object', properties: { n: { type: 'string' }, c: { $ref: D('A1') } } },
+                A1: { $ref: D('A2') },
+                A2: ref,
+              },
+              $ref: D('node'),
+            },
+            ['root_n', 'root_c cycle'],
+          ],
+          [
+            'two definitions that refer to each other',
+            {
+              definitions: {
+                A: { type: 'object', properties: { a: { type: 'string' }, b: { $ref: D('B') } } },
+                B: { type: 'object', properties: { c: { type: 'string' }, a2: { $ref: D('A') } } },
+              },
+              $ref: D('A'),
+            },
+            ['root_a', 'root_b', 'root_b_c', 'root_b_a2 cycle'],
+          ],
+          [
+            'a root that is not a $ref',
+            { type: 'object', properties: { name: { type: 'string' }, child: { $ref: '#' } } },
+            ['root_name', 'root_child', 'root_child_name', 'root_child_child cycle'],
+          ],
+        ])(
+          'gives back every level of a recursion through %s, collapsing where it comes back round',
+          (_, rootSchema, ids, data) => {
+            expect(walk(rootSchema, rootSchema, data, 4)).toEqual(ids);
+          },
+        );
+      });
       it('flags a boolean property as a cycle when a pattern it matches leads back round the recursion', () => {
         const rootSchema: RJSFSchema = {
           definitions: {

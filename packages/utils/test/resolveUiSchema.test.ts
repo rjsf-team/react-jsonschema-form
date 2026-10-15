@@ -286,6 +286,24 @@ describe('resolveUiSchema() - definitions composed through allOf', () => {
       resolveUiSchema({ allOf: [{ $ref: '#/definitions/B' }] }, undefined, makeRegistry(rootSchema, definitions)),
     ).toEqual({});
   });
+  it('applies the entry of the definition an extra key of the data names through its additionalProperties', () => {
+    const mapSchema: RJSFSchema = {
+      definitions: { A: { allOf: [{ type: 'object', properties: { a: { type: 'string' } } }] } },
+      type: 'object',
+      additionalProperties: { $ref: '#/definitions/A' },
+    };
+    const { properties } = retrieveSchema({ validator }, mapSchema, mapSchema, { k: {} });
+    const handedOut: RJSFSchema = typeof properties?.k === 'object' ? properties.k : {};
+    const resolved = retrieveSchema({ validator }, handedOut, mapSchema, {});
+    expect(Reflect.get(resolved, RJSF_REF_KEY)).toBe('#/definitions/A');
+    expect(
+      resolveUiSchema(
+        resolved,
+        undefined,
+        makeRegistry(mapSchema, { '#/definitions/A': { 'ui:description': 'FROM_A' } }),
+      ),
+    ).toEqual({ 'ui:description': 'FROM_A' });
+  });
 });
 
 describe('resolveUiSchema() - option walk through the schema graph', () => {
