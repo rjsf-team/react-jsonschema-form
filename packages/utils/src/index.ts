@@ -38,7 +38,6 @@ import {
   fieldPathToName,
   toFieldPath,
 } from './fieldPath.ts';
-import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getChangedFields from './getChangedFields.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
@@ -231,7 +230,6 @@ export {
   expandButtonId,
   ErrorSchemaBuilder,
   fieldLabelId,
-  findSchemaDefinition,
   flattenGroupedOptions,
   getAdditionalPropertySchema,
   getChangedFields,

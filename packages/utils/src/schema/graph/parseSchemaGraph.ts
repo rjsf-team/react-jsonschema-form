@@ -17,8 +17,8 @@ import {
   SCHEMA_KEY,
   THEN_KEY,
 } from '../../constants.ts';
-import { isSubschemaKeyword, keywordShape, normalizeUri, resolveUri } from '../../findSchemaDefinition.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
+import { isSubschemaKeyword, keywordShape, normalizeUri, resolveUri } from '../../schemaUri.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
 import { schemaFrom } from './mergePlan.ts';
 
@@ -38,8 +38,8 @@ export interface BooleanNode {
 /** Why a `$ref` resolves to no subschema */
 export type InvalidReason = 'dangling' | 'circular-alias';
 
-/** What a `$ref` that resolves to no subschema points at: `message` is the error `findSchemaDefinition()` throws for
- * the same `$ref`, which whatever enters the reference throws in turn
+/** What a `$ref` that resolves to no subschema points at: `message` is the error whatever enters the reference
+ * throws
  */
 export interface InvalidNode {
   readonly kind: 'invalid';
@@ -80,8 +80,8 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   /** The node the `$ref` resolves to, which is an `InvalidNode` when it resolves to nothing */
   readonly ref?: NodeId;
   /** Under draft 2019-09 or 2020-12, for a `$ref` with keywords beside it that resolves: the node it reads as where
-   * another `$ref` reaches it, the `allOf` of those keywords and of the `$ref` alone, which is how
-   * `findSchemaDefinition()` reads a chained reference in those dialects
+   * another `$ref` reaches it, the `allOf` of those keywords and of the `$ref` alone, since those dialects apply a
+   * `$ref` beside other keywords rather than replacing them
    */
   readonly conjunction?: NodeId;
   readonly properties?: ReadonlyMap<string, NodeId>;
@@ -163,7 +163,9 @@ function unescapeToken(token: string): string {
   return token.replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
-/** The key a resource is registered under, compared the way `findSchemaDefinition()` compares an `$id` with a `$ref` */
+/** The key a resource is registered under: a normalized URI without a trailing `/`, so an `$id` and a `$ref` that
+ * differ only in those still name the same resource
+ */
 function resourceKey(uri: string): string {
   return normalizeUri(uri).replace(/\/$/, '');
 }
@@ -261,8 +263,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   readonly root: NodeId;
   readonly base?: Graph<S>;
   readonly diagnostics: Diagnostic[];
-  /** Resolution follows `$id` only for a draft 2020-12 root, the one dialect `findSchemaDefinition()` reads `$id`s in;
-   * under any other a `$ref` is a JSON pointer into the root, as it is there
+  /** Resolution follows `$id` only for a draft 2020-12 root; under any other a `$ref` is a JSON pointer into the
+   * root
    */
   private readonly scoped: boolean;
   private readonly conjoinsChainedRefs: boolean;
@@ -467,8 +469,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   }
 
   /** Resolves every `$ref` parsed so far, which parses the subschemas they reach outside the walk and the `$ref`s
-   * inside those, then checks each chain the way `findSchemaDefinition()` follows it, so that a `$ref` it throws for
-   * points at an `InvalidNode` carrying the same message
+   * inside those, then follows each chain of `$ref`s, so that a `$ref` whose chain loops or ends at nothing points at
+   * an `InvalidNode` carrying the message entering it throws
    */
   private resolvePendingRefs(): void {
     const hops = new Map<NodeId, NodeId | undefined>();
@@ -539,8 +541,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     return conjunction.id;
   }
 
-  /** Follows the chain of `$ref`s from `first` as `findSchemaDefinitionRecursive()` does, comparing them as written, and
-   * returns the error it throws, if it throws one
+  /** Follows the chain of `$ref`s from `first`, comparing them as written, and returns the error entering it throws
+   * when the chain loops back onto a `$ref` it already followed or ends at nothing
    */
   private chainFailure(
     first: string,
@@ -555,7 +557,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
         return { reason: 'dangling', message: `Could not find a definition for ${ref}.` };
       }
       const targetNode = this.node(target);
-      // An empty `$ref` ends the chain there, as it does in `findSchemaDefinitionRecursive()`
+      // An empty `$ref` ends the chain there
       const nextRef = targetNode.kind === 'schema' ? refOf(targetNode.raw) : '';
       if (nextRef === '') {
         return undefined;
@@ -611,8 +613,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     return this.anchors.get(key) ?? this.base?.anchor(key);
   }
 
-  /** Resolves the JSON pointer `fragment` from `start` through any container, as `findSchemaDefinition()` does: a
-   * `$ref` may name a subschema under a keyword no walk of the schema follows, such as `#/components/schemas/x`
+  /** Resolves the JSON pointer `fragment` from `start` through any container: a `$ref` may name a subschema under a
+   * keyword no walk of the schema follows, such as `#/components/schemas/x`
    */
   private walk(start: WalkStart, fragment: string, create: boolean): NodeId | undefined {
     let current: unknown = start.raw;
@@ -656,7 +658,7 @@ const graphs = new WeakMap<object, object>();
 
 /** Parses `rawRoot` into a `SchemaGraph`, once per root object: the graph of a root already parsed is returned again.
  * A `$ref` that resolves to nothing parses to an `InvalidNode` and a diagnostic rather than throwing, since only
- * entering the reference throws, as `findSchemaDefinition()` does for it.
+ * entering the reference throws.
  *
  * @param rawRoot - The root schema, as `schemaUtils.getRootSchema()` returns it
  * @returns - The graph parsed from `rawRoot`

@@ -25,7 +25,6 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import deepEquals from '../deepEquals.ts';
-import { splitKeyElementFromObject } from '../findSchemaDefinition.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
@@ -35,6 +34,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import logOnce from '../logOnce.ts';
 import mergeSchemas from '../mergeSchemas.ts';
 import { getByPath } from '../pathUtils.ts';
+import { splitKeyElementFromObject } from '../schemaUri.ts';
 import type {
   FormContextType,
   GenericObjectType,
@@ -276,7 +276,7 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
  * @returns - The schema with its own reference resolved, or the schema itself when it holds none
- * @throws - The error `findSchemaDefinition()` throws for a reference that resolves to nothing or a chain that loops
+ * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
 export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): S {
   const ref = schema[REF_KEY];

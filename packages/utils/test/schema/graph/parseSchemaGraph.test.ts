@@ -1,8 +1,8 @@
-import { makeAllReferencesAbsolute } from '../../../src/findSchemaDefinition.ts';
-import { findSchemaDefinition, JSON_SCHEMA_DRAFT_2020_12 } from '../../../src/index.ts';
+import { JSON_SCHEMA_DRAFT_2020_12 } from '../../../src/index.ts';
 import type { RJSFSchema } from '../../../src/index.ts';
 import parseSchemaGraph, { EXTERNAL_POINTER } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from '../../../src/schema/graph/parseSchemaGraph.ts';
+import { makeAllReferencesAbsolute } from '../../../src/schemaUri.ts';
 import looseSchema from './looseSchema.ts';
 
 function objectNode(graph: SchemaGraph, id: NodeId | undefined): ObjectNode {
@@ -23,15 +23,6 @@ function target(graph: SchemaGraph, pointer: string): SchemaNode {
   const { ref } = at(graph, pointer);
   expect(ref).toBeDefined();
   return graph.node(ref ?? -1);
-}
-
-function messageOf(action: () => unknown): string | undefined {
-  try {
-    action();
-    return undefined;
-  } catch (error) {
-    return error instanceof Error ? error.message : String(error);
-  }
 }
 
 describe('parseSchemaGraph()', () => {
@@ -224,7 +215,7 @@ describe('parseSchemaGraph()', () => {
     });
   });
 
-  describe('alias loops and broken chains throw what findSchemaDefinition() throws', () => {
+  describe('alias loops and broken chains point at the error entering them throws', () => {
     const schema: RJSFSchema = {
       definitions: {
         self: { $ref: '#/definitions/self' },
@@ -245,20 +236,25 @@ describe('parseSchemaGraph()', () => {
       },
     };
     const graph = parseSchemaGraph(schema);
-    const names = Object.keys(schema.definitions ?? {}).filter((name) => name !== 'leaf');
-
-    it.each(names)('%s', (name) => {
-      const ref = `#/definitions/${name}`;
-      const node = at(graph, `/definitions/${name}`);
-      const own = typeof node.raw.$ref === 'string' ? node.raw.$ref : '';
-      const thrown = messageOf(() => findSchemaDefinition(own, schema));
-      const resolved = graph.node(node.ref ?? -1);
-      if (thrown === undefined) {
-        expect(resolved.kind).not.toBe('invalid');
-      } else {
-        expect(resolved).toMatchObject({ kind: 'invalid', message: thrown });
-      }
-      expect(ref).toContain(name);
+    const deepLoop = (from: string, through: string[]) =>
+      `Definition for #/definitions/${from} contains a circular reference through ${through.map((name) => `#/definitions/${name}`).join(' -> ')}`;
+    it.each([
+      ['self', 'Definition for #/definitions/self is a circular reference'],
+      ['deep', deepLoop('deeper', ['deepest', 'deep', 'deeper'])],
+      ['deeper', deepLoop('deepest', ['deep', 'deeper', 'deepest'])],
+      ['deepest', deepLoop('deep', ['deeper', 'deepest', 'deep'])],
+      ['into', deepLoop('deep', ['deeper', 'deepest', 'deep'])],
+      ['intoSelf', 'Definition for #/definitions/self is a circular reference'],
+      ['twoA', 'Definition for #/definitions/%74woA is a circular reference'],
+      ['twoB', 'Definition for #/definitions/twoB is a circular reference'],
+      ['toMissing', 'Could not find a definition for #/definitions/nothing.'],
+      ['chainToMissing', 'Could not find a definition for #/definitions/nothing.'],
+      ['emptyRef', 'Could not find a definition for .'],
+    ])('%s', (name, message) => {
+      expect(graph.node(at(graph, `/definitions/${name}`).ref ?? -1)).toMatchObject({ kind: 'invalid', message });
+    });
+    it.each(['toEmpty', 'fine', 'alias'])('%s resolves', (name) => {
+      expect(graph.node(at(graph, `/definitions/${name}`).ref ?? -1).kind).toBe('schema');
     });
     it('records a diagnostic per $ref', () => {
       expect(graph.diagnostics.map(({ ref, reason }) => [ref, reason])).toEqual([
@@ -275,7 +271,7 @@ describe('parseSchemaGraph()', () => {
         ['', 'dangling'],
       ]);
     });
-    it('reads the messages of the loops findSchemaDefinition.test.ts pins', () => {
+    it('reads the messages of a self-loop and of a chain into a loop', () => {
       expect(target(graph, '/definitions/self')).toMatchObject({
         message: 'Definition for #/definitions/self is a circular reference',
       });

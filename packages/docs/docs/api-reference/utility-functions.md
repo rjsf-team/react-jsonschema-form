@@ -720,25 +720,6 @@ Derives the HTML `name` for `fieldPath` using the `nameGenerator` in `globalForm
 
 - string | undefined: The name for the field, or undefined when no `nameGenerator` is configured or `fieldPath` is the root
 
-### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Given the name of a `$ref` from within a schema, using the `rootSchema`, look up and return the sub-schema using the path provided by that reference.
-If `#` is not the first character of the reference, or the path does not exist in the schema, then throw an Error.
-Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-schema.
-
-#### Parameters
-
-- $ref: string - The ref string for which the schema definition is desired
-- [rootSchema={}]: S - The root schema in which to search for the definition
-
-#### Returns
-
-- S: The sub-schema within the `rootSchema` which matches the `$ref` if it exists
-
-#### Throws
-
-- Error indicating that no schema for that reference exists
-
 ### flattenGroupedOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Flattens the list returned by `groupEnumOptions()` back into a single list of options, in the same order they appear in that list: each group's options in place of the group, followed by any standalone options.

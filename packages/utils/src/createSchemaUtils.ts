@@ -1,6 +1,5 @@
 import { JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants.ts';
 import deepEquals from './deepEquals.ts';
-import { makeAllReferencesAbsolute } from './findSchemaDefinition.ts';
 import logOnce from './logOnce.ts';
 import replaceEqualDeep from './replaceEqualDeep.ts';
 import {
@@ -19,6 +18,7 @@ import {
   retrieveSchema,
   sanitizeDataForNewSchema,
 } from './schema/index.ts';
+import { makeAllReferencesAbsolute } from './schemaUri.ts';
 import type {
   FormContextType,
   FoundFieldType,

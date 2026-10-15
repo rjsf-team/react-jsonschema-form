@@ -86,7 +86,7 @@ describe('buildPlan()', () => {
       ]);
     });
     it.each([JSON_SCHEMA_DRAFT_2019_09, JSON_SCHEMA_DRAFT_2020_12])(
-      'under %s, conjoins a target reached through a $ref with its own target, as findSchemaDefinition() reads it',
+      'under %s, conjoins a target reached through a $ref with its own target',
       (dialect) => {
         const definitions = {
           Pet: { type: 'object', properties: { kind: { type: 'string' } }, required: ['kind'] },
@@ -107,7 +107,7 @@ describe('buildPlan()', () => {
           ['/definitions/Pet', 'ref', ['/definitions/Cat', '/definitions/Pet']],
         ]);
         expect(Reflect.get(plan.schema, RJSF_REF_KEY)).toBe(D('Cat'));
-        // Where the `allOf`s are not merged, the conjunction stays one, as the `allOf` `findSchemaDefinition()` returns
+        // Where the `allOf`s are not merged, the conjunction stays one `allOf`
         const unmerged = planOf({ $schema: dialect, definitions, $ref: D('Cat') }, { policy: { allOf: false } });
         expect(keywordsOf(unmerged)).toEqual({
           $schema: dialect,
@@ -122,7 +122,7 @@ describe('buildPlan()', () => {
         });
       },
     );
-    it('throws the error findSchemaDefinition() throws for a $ref that resolves to nothing', () => {
+    it('throws for a $ref that resolves to nothing or a chain that loops', () => {
       expect(() => planOf({ $ref: D('missing') })).toThrow('Could not find a definition for #/definitions/missing.');
       expect(() => planOf({ definitions: { a: { $ref: D('a') } }, $ref: D('a') })).toThrow(
         'Definition for #/definitions/a is a circular reference',
@@ -708,12 +708,12 @@ describe('refDefinition()', () => {
     expect(refDefinition(graph, node('/properties/t'))).toEqual({});
     expect(refDefinition(graph, graph.root)).toEqual({});
   });
-  it('throws the error findSchemaDefinition() throws for a chain of references that loops', () => {
+  it('throws for a chain of references that loops', () => {
     expect(() => refDefinition(graph, node('/properties/loop'))).toThrow(
       'Definition for #/$defs/alias is a circular reference',
     );
   });
-  it('throws the error findSchemaDefinition() throws for a reference that resolves to nothing', () => {
+  it('throws for a reference that resolves to nothing', () => {
     expect(() => refDefinition(graph, node('/properties/dangling'))).toThrow(
       'Could not find a definition for #/$defs/missing.',
     );

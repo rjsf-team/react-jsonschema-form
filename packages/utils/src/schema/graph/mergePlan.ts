@@ -385,7 +385,7 @@ function flattenRef<S extends StrictRJSFSchema>(
  * @param graph - The graph holding the node
  * @param from - The node holding the reference
  * @returns - The definition
- * @throws - The error `findSchemaDefinition()` throws for a reference that resolves to nothing or a chain that loops
+ * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
 export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, from: NodeId): S {
   const node = graph.node(from);
@@ -792,7 +792,7 @@ function isPlanOf<S extends StrictRJSFSchema>(value: unknown, graph: SchemaGraph
  *
  * @param input - The graph, seeds, data, policy and context of the field
  * @returns - The field's merge plan
- * @throws - The error `findSchemaDefinition()` throws for a `$ref` the plan enters that resolves to nothing
+ * @throws - An error for a `$ref` the plan enters that resolves to nothing or a chain of references that loops
  */
 export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   input: PlanInput<S, F>,
