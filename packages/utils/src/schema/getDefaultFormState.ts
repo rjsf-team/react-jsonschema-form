@@ -488,7 +488,7 @@ function ownView<S extends StrictRJSFSchema>(field: DefaultsField<S>, schema: S,
 }
 
 /** Plans `field` for `data` and the dependency data `depData` with the options selected so far, and applies the
- * recursion rule to the plan. A collapsed field that is not within an expansion yet is expanded once (I2), restarting
+ * recursion rule to the plan. A collapsed field that is not within an expansion yet is expanded once, restarting
  * its seeds; one within an expansion keeps all but its recursive edges.
  *
  * Where `getObjectDefaults()` resolved a schema, the plan does too: every field merges its `$ref`, and its `then` or

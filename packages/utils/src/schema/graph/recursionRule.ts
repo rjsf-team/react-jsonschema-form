@@ -116,7 +116,7 @@ export function collapses<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Returns `seeds` with their ref paths restarted, so that entering a seed's own `$ref` gives `[target]`: for the
- * expansion of a collapsed field (I2), and in render for a row or key the data holds
+ * expansion of a collapsed field, and in render for a row or key the data holds
  *
  * @param seeds - The seeds to restart
  * @returns - The restarted seeds
