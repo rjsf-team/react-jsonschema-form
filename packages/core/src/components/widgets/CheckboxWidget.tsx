@@ -8,6 +8,7 @@ import {
   schemaRequiresTrueValue,
   getUiOptions,
   getWidgetDescription,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
@@ -19,25 +20,25 @@ function CheckboxWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  schema,
-  uiSchema,
-  options,
-  id,
-  value,
-  disabled,
-  readonly,
-  label,
-  hideLabel,
-  autofocus = false,
-  onBlur,
-  onFocus,
-  onChange,
-  registry,
-  htmlName,
-  required,
-  presentation,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    schema,
+    uiSchema,
+    options,
+    id,
+    value,
+    disabled,
+    readonly,
+    label,
+    autofocus = false,
+    onBlur,
+    onFocus,
+    onChange,
+    registry,
+    htmlName,
+    required,
+    presentation,
+  } = props;
   const { DescriptionFieldTemplate } = getTemplates<T, S, F>(registry, options);
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
@@ -61,11 +62,9 @@ function CheckboxWidget<
 
   // The plan says whether the label and description are this widget's to draw, so a checkbox under a label above names
   // none of its own; without a plan, a template rendering the `checkbox` alias draws the description itself
-  const showsLabel = presentation ? presentation.label.by === 'self' : !hideLabel;
+  const showsLabel = widgetDrawsLabel<T, S, F>(props);
   const description =
-    presentation || getUiOptions(uiSchema).widget !== 'checkbox'
-      ? getWidgetDescription<T, S, F>({ id, options, schema, hideLabel, presentation })
-      : undefined;
+    presentation || getUiOptions(uiSchema).widget !== 'checkbox' ? getWidgetDescription<T, S, F>(props) : undefined;
   return (
     <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
       {description && (

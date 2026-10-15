@@ -4,7 +4,7 @@ import {
   AdditionalPropertyKeySelect,
   buttonId,
   hasAdditionalKeyLabel,
-  hasVisibleErrors,
+  hasTemplateErrors,
   TranslatableString,
 } from '@rjsf/utils';
 
@@ -35,8 +35,6 @@ export default function WrapIfAdditionalTemplate<
     readonly,
     required,
     schema,
-    hideError,
-    rawErrors,
     children,
     uiSchema,
     registry,
@@ -51,7 +49,7 @@ export default function WrapIfAdditionalTemplate<
   const hasDescription = !!rawDescription;
 
   const classNamesList = ['form-group', classNames];
-  if (hasVisibleErrors({ rawErrors, hideError })) {
+  if (hasTemplateErrors<T, S, F>(props)) {
     classNamesList.push('has-error has-danger');
   }
   const uiClassNames = classNamesList.join(' ').trim();

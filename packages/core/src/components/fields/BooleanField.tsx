@@ -89,7 +89,7 @@ function BooleanField<
   const yes = translateString(TranslatableString.YesLabel);
   const no = translateString(TranslatableString.NoLabel);
   let enumOptions: EnumOptionsType<S>[] | undefined;
-  const { label, hideLabel } = getWidgetLabelProps(
+  const labelProps = getWidgetLabelProps<T, S, F>(
     presentation,
     uiTitle ?? schemaTitle ?? title ?? name,
     () => displayLabel,
@@ -196,8 +196,7 @@ function BooleanField<
       onChange={onWidgetChange}
       onFocus={onFocus}
       onBlur={onBlur}
-      label={label}
-      hideLabel={hideLabel}
+      {...labelProps}
       value={formData}
       // The plan's, which a checkbox the schema lets be `false` is not, so a widget written for any theme submits it
       // unchecked (#5388). Its control's own, since a label drawn above carries the marker of the field it labels

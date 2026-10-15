@@ -31,7 +31,7 @@ import {
 
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import { displaysLabel, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
@@ -318,10 +318,8 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
     () => presentation && getSelectorPresentation(presentation, fieldId),
     [presentation, fieldId],
   );
-  const { label: selectorLabel, hideLabel: hidesSelectorLabel } = getWidgetLabelProps(
-    selectorPresentation,
-    title ?? name,
-    () => schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+  const selectorLabelProps = getWidgetLabelProps<T, S, F>(selectorPresentation, title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
   );
 
   const selector =
@@ -344,8 +342,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         placeholder={placeholder}
         autocomplete={autocomplete}
         autofocus={autofocus}
-        label={selectorLabel}
-        hideLabel={hidesSelectorLabel}
+        {...selectorLabelProps}
         presentation={selectorPresentation}
         readonly={readonly}
       />

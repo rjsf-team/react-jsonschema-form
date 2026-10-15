@@ -58,7 +58,7 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
-import { getTemplateParts } from './fieldWidgetUtils.ts';
+import { getDeprecatedTemplateProps, getTemplateParts } from './fieldWidgetUtils.ts';
 import PresentationContext, { useInheritedPresentation } from './PresentationContext.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import useSchemaFieldPresentation from './useSchemaFieldPresentation.ts';
@@ -862,12 +862,7 @@ function SchemaFieldRender<
     </PresentationContext>
   );
 
-  const {
-    displayLabel,
-    description: templateDescription,
-    help,
-    errors: templateErrors,
-  } = getTemplateParts(presentation);
+  const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
   const description = templateDescription?.text ?? '';
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
@@ -908,7 +903,7 @@ function SchemaFieldRender<
     help: helpComponent,
     rawHelp: help,
     errors: errorsComponent,
-    rawErrors: hideError ? undefined : __errors,
+    ...getDeprecatedTemplateProps<T, S, F>(presentation, __errors, hideError),
     errorSchema,
     fieldPath,
     id: fieldId,
@@ -924,7 +919,6 @@ function SchemaFieldRender<
     disabled,
     readonly,
     hideError,
-    displayLabel,
     presentation,
     classNames: getFieldClassNames<S>(schema, hasErrors, uiOptions.classNames),
     style: uiOptions.style,

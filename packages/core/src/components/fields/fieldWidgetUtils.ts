@@ -2,12 +2,14 @@ import type {
   EnumOptionsType,
   Field,
   FieldPresentation,
+  FieldTemplateProps,
   FormContextType,
   Registry,
   RJSFSchema,
   StrictRJSFSchema,
   UiSchema,
   Widget,
+  WidgetProps,
 } from '@rjsf/utils';
 import { getUiOptions, isCustomWidget, isFixedItems, ITEMS_KEY, resolveDefaultWidget } from '@rjsf/utils';
 
@@ -136,46 +138,91 @@ export function getArrayFieldWidget<
  * @param presentation - The plan of the field the widget renders the value of
  * @returns - The `hideLabel` the widget receives
  */
-export function hidesWidgetLabel({ label, description }: FieldPresentation): boolean {
+function hidesWidgetLabel({ label, description }: FieldPresentation): boolean {
   if (label.by === 'none') {
     return description.by !== 'self';
   }
   return label.by !== 'self';
 }
 
-/** Gets the `label` and `hideLabel` a field hands the widget it renders: the field's label from its plan, whoever draws
- * it, and whether the widget draws it, or, for a field rendered without a plan, the field's own label and whether
- * `getDisplayLabel()` shows it
+/** Whether a field rendered without a plan shows its label, as the deprecated `getDisplayLabel()` decides. The one
+ * place core asks it, for the deprecated props a field without a plan hands on, the fallback UI's labelling and the
+ * `displayLabel` an `ArrayFieldItemTemplate` lays its toolbar out by
+ *
+ * @param registry - The registry's `schemaUtils` and `globalUiOptions`
+ * @param schema - The field's schema
+ * @param [uiSchema] - The field's uiSchema
+ * @returns - True when the field shows its label
+ */
+export function displaysLabel<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  { schemaUtils, globalUiOptions }: Pick<Registry<T, S, F>, 'schemaUtils' | 'globalUiOptions'>,
+  schema: S,
+  uiSchema?: UiSchema<T, S, F>,
+): boolean {
+  return schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+}
+
+/** Gets the `label` and deprecated `hideLabel` a field hands the widget it renders, for the widget to spread: the
+ * field's label from its plan, whoever draws it, and whether the widget draws it, or, for a field rendered without a
+ * plan, the field's own label and whether `displaysLabel()` shows it. The one place a field sets `hideLabel`
  *
  * @param presentation - The field's plan, if `SchemaField` built one
  * @param ownLabel - The label the field computes for itself, used without a plan
  * @param showsLabel - Whether the field shows its label without a plan, called only then
  * @returns - The `label` and `hideLabel` for the widget
  */
-export function getWidgetLabelProps(
+export function getWidgetLabelProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
   presentation: FieldPresentation | undefined,
   ownLabel: string,
   showsLabel: () => boolean,
-): { label: string; hideLabel: boolean } {
-  if (presentation) {
-    return { label: presentation.label.text, hideLabel: hidesWidgetLabel(presentation) };
-  }
-  return { label: ownLabel, hideLabel: !showsLabel() };
+): Pick<WidgetProps<T, S, F>, 'label' | 'hideLabel'> {
+  const hideLabel = presentation ? hidesWidgetLabel(presentation) : !showsLabel();
+  return { label: presentation ? presentation.label.text : ownLabel, hideLabel };
 }
 
 /** Gets the parts of a field's plan its template draws, from which the deprecated props a template that doesn't read
  * `presentation` renders from are derived, so it draws a part exactly where the plan says the template draws it
  *
  * @param presentation - The field's plan, if one was built
- * @returns - Whether the template draws the label, and the description, help and error messages it draws, if any
+ * @returns - The description, help and error messages the template draws, if any
  */
 export function getTemplateParts(presentation: FieldPresentation | undefined) {
   return {
-    displayLabel: presentation?.label.by === 'template',
     description: presentation?.description.by === 'template' ? presentation.description : undefined,
     help: presentation?.help.by === 'template' ? presentation.help.text : undefined,
     errors: presentation?.errors.by === 'template' ? presentation.errors.messages : undefined,
   };
+}
+
+/** Gets the deprecated `displayLabel` and `rawErrors` a field hands its template, for a template that doesn't read
+ * `presentation`: whether its plan has the template draw the label, and the field's errors unless `ui:hideError` hides
+ * them. The one place core sets them
+ *
+ * @param presentation - The field's plan, if one was built
+ * @param errors - The field's own error messages
+ * @param hideError - Whether `ui:hideError` hides the field's errors
+ * @returns - The `displayLabel` and `rawErrors` for the template
+ */
+export function getDeprecatedTemplateProps<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  presentation: FieldPresentation | undefined,
+  errors: string[] | undefined,
+  hideError: boolean | undefined,
+): Pick<FieldTemplateProps<T, S, F>, 'displayLabel' | 'rawErrors'> {
+  const displayLabel = presentation?.label.by === 'template';
+  const rawErrors = hideError ? undefined : errors;
+  return { displayLabel, rawErrors };
 }
 
 /** Gets the single widget the field component renders its value with, as the field itself picks it, so `SchemaField`

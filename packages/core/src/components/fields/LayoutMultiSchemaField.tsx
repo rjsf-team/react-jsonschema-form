@@ -38,7 +38,7 @@ import {
 } from '@rjsf/utils';
 
 import useSendOptionSwitch from '../../hooks/useSendOptionSwitch.ts';
-import { getTemplateParts, hidesWidgetLabel } from './fieldWidgetUtils.ts';
+import { getDeprecatedTemplateProps, getTemplateParts, getWidgetLabelProps } from './fieldWidgetUtils.ts';
 import formDataForNewOption from './formDataForNewOption.ts';
 
 /** Gets the index of the selected option in the list of `options`, the way `getSelectedOption()` finds the option
@@ -272,12 +272,7 @@ export default function LayoutMultiSchemaField<
     hasControl: !hidden,
     required,
   });
-  const {
-    displayLabel,
-    description: templateDescription,
-    help,
-    errors: templateErrors,
-  } = getTemplateParts(presentation);
+  const { description: templateDescription, help, errors: templateErrors } = getTemplateParts(presentation);
   const description = templateDescription?.text ?? '';
   const errors = templateErrors && (
     <FieldErrorTemplate id={id} schema={schema} errors={[...templateErrors]} registry={registry} />
@@ -315,7 +310,6 @@ export default function LayoutMultiSchemaField<
       required={required}
       readonly={!!readonly}
       registry={registry}
-      displayLabel={displayLabel}
       presentation={presentation}
       classNames={getFieldClassNames<S>(schema, hasErrors, uiClassNames)}
       style={style}
@@ -327,7 +321,7 @@ export default function LayoutMultiSchemaField<
       errors={errors}
       help={helpComponent}
       rawHelp={help}
-      rawErrors={hideFieldError ? undefined : rawErrors}
+      {...getDeprecatedTemplateProps<T, S, F>(presentation, rawErrors, hideFieldError)}
       errorSchema={errorSchema}
       hideError={hideFieldError}
       onChange={onChange}
@@ -339,7 +333,6 @@ export default function LayoutMultiSchemaField<
         id={id}
         name={name}
         schema={schema}
-        label={presentation.label.text}
         disabled={isDisabled}
         uiSchema={widgetUiSchema}
         autofocus={autofocus}
@@ -349,7 +342,7 @@ export default function LayoutMultiSchemaField<
         multiple={false}
         rawErrors={rawErrors}
         hideError={hideFieldError}
-        hideLabel={hidesWidgetLabel(presentation)}
+        {...getWidgetLabelProps<T, S, F>(presentation, presentation.label.text, () => true)}
         presentation={presentation}
         errorSchema={fieldErrorSchema}
         placeholder={placeholder}

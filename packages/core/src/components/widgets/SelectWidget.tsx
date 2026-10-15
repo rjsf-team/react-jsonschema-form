@@ -12,6 +12,7 @@ import {
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   widgetAriaProps,
+  widgetDrawsLabel,
 } from '@rjsf/utils';
 
 /** A multiple select only ever reports its selection in document order, and `optgroups` is presentational, so the
@@ -57,7 +58,6 @@ function SelectWidget<
     htmlName,
     registry,
     uiSchema,
-    hideLabel,
     presentation,
   } = props;
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
@@ -119,7 +119,7 @@ function SelectWidget<
         registry={registry}
         uiSchema={uiSchema}
         value={value}
-        hideLabel={hideLabel}
+        hideLabel={!widgetDrawsLabel<T, S, F>(props)}
         presentation={presentation}
       />
       <select

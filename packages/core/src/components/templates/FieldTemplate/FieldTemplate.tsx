@@ -1,5 +1,5 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, templateDrawsDescription } from '@rjsf/utils';
+import { getTemplates, getUiOptions, templateDrawsDescription, templateDrawsLabel } from '@rjsf/utils';
 
 import Label from './Label.tsx';
 
@@ -13,20 +13,7 @@ export default function FieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
-  const {
-    id,
-    label,
-    children,
-    errors,
-    help,
-    description,
-    hidden,
-    required,
-    displayLabel,
-    registry,
-    uiSchema,
-    presentation,
-  } = props;
+  const { id, label, children, errors, help, description, hidden, required, registry, uiSchema, presentation } = props;
   const uiOptions = getUiOptions(uiSchema);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
@@ -37,7 +24,7 @@ export default function FieldTemplate<
   const leavesLabelToCheckbox = !presentation && uiOptions.widget === 'checkbox';
   return (
     <WrapIfAdditionalTemplate {...props}>
-      {displayLabel && !leavesLabelToCheckbox && (
+      {templateDrawsLabel<T, S, F>(props) && !leavesLabelToCheckbox && (
         <Label label={label} required={required} id={id} labelId={presentation?.label.id} />
       )}
       {templateDrawsDescription<T, S, F>(props) && description}

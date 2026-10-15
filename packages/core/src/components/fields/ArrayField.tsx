@@ -40,7 +40,12 @@ import {
 import useFieldView from '../../hooks/useFieldView.ts';
 import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import { moveOfItems } from '../formState.ts';
-import { ARRAY_MODE_DEFAULT_WIDGETS, getArrayFieldMode, getWidgetLabelProps } from './fieldWidgetUtils.ts';
+import {
+  ARRAY_MODE_DEFAULT_WIDGETS,
+  displaysLabel,
+  getArrayFieldMode,
+  getWidgetLabelProps,
+} from './fieldWidgetUtils.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /** A row's stable React `key`, and its `order`: when the row was added, counted across every array */
@@ -218,8 +223,8 @@ function ArrayAsMultiSelect<
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const { label, hideLabel } = getWidgetLabelProps(presentation, uiTitle ?? schema.title ?? name, () =>
-    schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? schema.title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
   );
   return (
     <Widget
@@ -238,8 +243,7 @@ function ArrayAsMultiSelect<
       readonly={readonly}
       hideError={hideError}
       required={required}
-      label={label}
-      hideLabel={hideLabel}
+      {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
@@ -275,11 +279,11 @@ function ArrayAsCustomWidget<
     onSelectChange,
     htmlName,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions } = registry;
+  const { widgets, globalUiOptions } = registry;
   const { widget, title: uiTitle, placeholder, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const { label, hideLabel } = getWidgetLabelProps(presentation, uiTitle ?? schema.title ?? name, () =>
-    schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? schema.title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
   );
   return (
     <Widget
@@ -298,8 +302,7 @@ function ArrayAsCustomWidget<
       readonly={readonly}
       hideError={hideError}
       required={required}
-      label={label}
-      hideLabel={hideLabel}
+      {...labelProps}
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
@@ -335,7 +338,7 @@ function ArrayAsFiles<
     onSelectChange,
     htmlName,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions } = registry;
+  const { widgets, globalUiOptions } = registry;
   const {
     widget = ARRAY_MODE_DEFAULT_WIDGETS.files,
     title: uiTitle,
@@ -343,8 +346,8 @@ function ArrayAsFiles<
     ...options
   } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const { Widget } = resolveWidget<T[], S, F>(schema, widget, widgets);
-  const { label, hideLabel } = getWidgetLabelProps(presentation, uiTitle ?? schema.title ?? name, () =>
-    schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+  const labelProps = getWidgetLabelProps<T, S, F>(presentation, uiTitle ?? schema.title ?? name, () =>
+    displaysLabel(registry, schema, uiSchema),
   );
   return (
     <Widget
@@ -366,8 +369,7 @@ function ArrayAsFiles<
       autofocus={autofocus}
       rawErrors={rawErrors}
       presentation={presentation}
-      label={label}
-      hideLabel={hideLabel}
+      {...labelProps}
       placeholder={placeholder}
       htmlName={htmlName}
     />
@@ -615,7 +617,6 @@ function ArrayFieldItemInner<
   const {
     schemaUtils,
     fields: { ArraySchemaField, SchemaField },
-    globalUiOptions,
     globalFormOptions,
   } = registry;
   const itemSchema = useMemo(
@@ -627,7 +628,7 @@ function ArrayFieldItemInner<
   const ItemSchemaField = ArraySchemaField || SchemaField;
   const readsFormData = useReadsFormData(ArrayFieldItem);
   const { ArrayFieldItemTemplate } = getTemplates<T[], S, F>(registry, uiOptions);
-  const displayLabel = schemaUtils.getDisplayLabel(itemSchema, itemUiSchema, globalUiOptions);
+  const displayLabel = displaysLabel<T[], S, F>(registry, itemSchema, itemUiSchema);
   const { description } = getUiOptions(itemUiSchema);
   const hasDescription = !!description || !!itemSchema.description;
   const { orderable, removable, copyable } = itemButtonOptions(uiOptions);

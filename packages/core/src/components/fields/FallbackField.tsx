@@ -36,6 +36,7 @@ import {
 } from '@rjsf/utils';
 import type { JSONSchema7TypeName } from 'json-schema';
 
+import { displaysLabel } from './fieldWidgetUtils.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
 /**
@@ -451,7 +452,7 @@ function FallbackUiField<
     () =>
       presentation
         ? presentation.control !== undefined && isLabelledByTemplate(presentation)
-        : schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions),
+        : displaysLabel<T, S, F>({ schemaUtils, globalUiOptions }, schema, uiSchema),
     [presentation, schemaUtils, schema, uiSchema, globalUiOptions],
   );
   const valueSchema = useMemo(
