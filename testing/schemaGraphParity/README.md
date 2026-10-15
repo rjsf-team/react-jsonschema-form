@@ -1,7 +1,7 @@
 # Schema graph parity harness
 
 These suites record what v7 does on recursive and conditional schemas, so that the staged move to a parsed schema graph
-(the RFC "Parse each schema once into a graph and build the form from a field tree") changes that behaviour only where
+(the RFC "Parse each schema once into a graph and build the form from a field tree", [`RFC.md`](./RFC.md)) changes that behaviour only where
 it means to.
 
 ## What is recorded
