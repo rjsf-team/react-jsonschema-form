@@ -3885,12 +3885,12 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         data-part="label"
                         data-scope="field"
                         for="_r_al_"
-                        id="field::_r_al_::label"
+                        id="root_option__label"
                       >
                         option
                       </label>
                       <div
-                        aria-labelledby="fieldset::_r_ak_::legend"
+                        aria-labelledby="root_option__label"
                         aria-orientation="vertical"
                         class="chakra-radio-group__root"
                         data-orientation="vertical"
@@ -9742,7 +9742,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
             role="group"
           >
             <div
-              aria-labelledby="fieldset::_r_de_::legend"
+              aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-orientation="vertical"
@@ -32106,7 +32106,7 @@ exports[`single fields > radio field 1`] = `
             role="group"
           >
             <div
-              aria-labelledby="fieldset::_r_4c_::legend"
+              aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-orientation="vertical"
@@ -32575,12 +32575,12 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               data-part="label"
               data-scope="field"
               for="_r_3r_"
-              id="field::_r_3r_::label"
+              id="root__label"
             >
               test
             </label>
             <div
-              aria-labelledby="fieldset::_r_3q_::legend"
+              aria-labelledby="root__label"
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-orientation="vertical"
@@ -39032,7 +39032,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
             role="group"
           >
             <div
-              aria-labelledby="fieldset::_r_1n_::legend"
+              aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-orientation="vertical"
@@ -39445,7 +39445,7 @@ exports[`single fields > select field single choice form disabled using radio wi
           >
             <div
               aria-disabled="true"
-              aria-labelledby="fieldset::_r_1t_::legend"
+              aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-disabled=""
@@ -42107,7 +42107,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
           >
             <div
               aria-disabled="true"
-              aria-labelledby="fieldset::_r_1q_::legend"
+              aria-labelledby=""
               aria-orientation="vertical"
               class="chakra-radio-group__root"
               data-disabled=""
