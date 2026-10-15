@@ -11,6 +11,8 @@ import {
   templateMarksRequired,
 } from '@rjsf/utils';
 
+import { labelledByOrNone } from '../utils.ts';
+
 interface TemplateLabelProps {
   id?: string;
   htmlFor?: string;
@@ -107,8 +109,12 @@ export default function FieldTemplate<
         </TemplateLabel>
       )}
       {/* Ark points the fieldset at its legend, which renders only for a description, so it is pointed at the label drawn
-          here instead, or at nothing; Ark ignores an undefined override, so only an empty one stops it */}
-      <Fieldset.Root disabled={disabled} invalid={hasError} aria-labelledby={drawsLabel ? presentation?.label.id : ''}>
+          here instead, or at nothing */}
+      <Fieldset.Root
+        disabled={disabled}
+        invalid={hasError}
+        aria-labelledby={labelledByOrNone(undefined, drawsLabel, presentation?.label.id)}
+      >
         {rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
         {help}
         <Fieldset.Content>{children}</Fieldset.Content>
