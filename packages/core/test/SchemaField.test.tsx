@@ -1492,6 +1492,19 @@ describe('SchemaField', () => {
             'root_friend_friend-button',
           ],
           [
+            'a percent-encoded $ref, stopping where the same $ref written plainly does',
+            {
+              definitions: {
+                A: { type: 'object', properties: { name: named, child: { $ref: '#/definitions/%41' } } },
+              },
+              $ref: '#/definitions/A',
+            },
+            ['root_name'],
+            'root_child-button',
+            ['root_name', 'root_child_name'],
+            'root_child_child-button',
+          ],
+          [
             'a chain of aliases, stopping where its first alias enters the definition again',
             {
               definitions: {

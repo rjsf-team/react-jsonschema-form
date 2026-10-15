@@ -430,6 +430,37 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           ),
         ).toEqual(0);
       });
+      it('scores a property written as a recursive $ref as the definition it names, as far as the data goes', () => {
+        const rootSchema: RJSFSchema = {
+          definitions: { Node: { type: 'object', properties: { next: { $ref: '#/definitions/Node' } } } },
+        };
+        const nodeOptions: RJSFSchema[] = [
+          { properties: { a: { $ref: '#/definitions/Node' } } },
+          { properties: { a: { type: 'object', properties: { next: { type: 'object' }, z: { type: 'string' } } } } },
+        ];
+        expect(
+          getClosestMatchingOption(
+            { validator: testValidator },
+            rootSchema,
+            { a: { next: { next: {} } } },
+            nodeOptions,
+          ),
+        ).toEqual(0);
+      });
+    });
+    it('reads the keywords beside a $ref that an option reaches through another $ref in place of its target', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          O: { properties: { a: { type: 'string' } } },
+          M: { $ref: '#/definitions/O', properties: { b: { type: 'string' } } },
+        },
+      };
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { a: { type: 'string' } } },
+        { $ref: '#/definitions/M' },
+      ];
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { b: 'y' }, options)).toEqual(1);
+      expect(getClosestMatchingOption({ validator: testValidator }, rootSchema, { a: 'y' }, options)).toEqual(0);
     });
   });
 }

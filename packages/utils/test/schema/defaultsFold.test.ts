@@ -466,6 +466,17 @@ describe('getDefaultFormState() on recursive schemas', () => {
     expect(defaultsOf(schema)).toEqual({ name: 'n', child: { own: 'o' } });
   });
 
+  it('stops a recursion through a percent-encoded $ref where the same $ref written plainly stops', () => {
+    const withChild = (ref: string): RJSFSchema => ({
+      definitions: {
+        A: { type: 'object', properties: { name: { type: 'string', default: 'n' }, child: { $ref: ref } } },
+      },
+      $ref: D('A'),
+    });
+    expect(defaultsOf(withChild('#/definitions/%41'))).toEqual({ name: 'n', child: { name: 'n' } });
+    expect(defaultsOf(withChild(D('A')))).toEqual({ name: 'n', child: { name: 'n' } });
+  });
+
   it('stops a recursion through a chain of aliases where its first alias enters the definition again', () => {
     const schema: RJSFSchema = {
       definitions: {
