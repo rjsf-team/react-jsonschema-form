@@ -30,6 +30,11 @@ export interface OptionSelection {
    * Empty once the form rendered other data, which the selection is then only the preference in matching
    */
   readonly holdsFor: readonly unknown[];
+  /** Whether an edit to a property of the object's own that the options can disagree about was made since the form
+   * last rendered: the data it leaves is matched again, while the data in `holdsFor` still holds the selection, so a
+   * parent declining the edit leaves the option shown
+   */
+  readonly isReleased: boolean;
 }
 
 /** The key a field's option list is stored under: the list's place in the root schema, which each option's place
@@ -52,9 +57,9 @@ export function optionListKey<S extends StrictRJSFSchema>(options: readonly S[],
 
 /** The option a field shows for `formData`. With no `selection`, the option `getClosestMatchingOption()` picks. A
  * selection holds for the data in its `holdsFor`, and, while `holds` says an edit is being made below the field, for
- * any data unless the edit released it. Other data, from outside the field or from an edit to a property of the
- * object's own that the options can disagree about, is matched again, with the selection preferred where it fits the data as
- * well as any other option. Data holding a value for the declared `discriminator` is always matched: the discriminator
+ * any data unless the selection is released. Other data, from outside the field or from an edit to a property of the
+ * object's own that the options can disagree about, is matched again, with the selection preferred where it fits the
+ * data as well as any other option. Data holding a value for the declared `discriminator` is always matched: the discriminator
  * names the option, so an edit to it is a switch.
  *
  * @param schemaUtils - The schema utilities to match with
@@ -82,19 +87,21 @@ export function shownOption<T, S extends StrictRJSFSchema, F extends FormContext
     selection !== undefined &&
     selection.index < options.length &&
     !isDiscriminated &&
-    ((holds && selection.holdsFor.length > 0) || isHeldFor(selection, formData))
+    ((holds && !selection.isReleased && selection.holdsFor.length > 0) || isHeldFor(selection, formData))
   ) {
     return selection.index;
   }
   return schemaUtils.getClosestMatchingOption(formData, [...options], selection?.index ?? -1, discriminator);
 }
 
-/** The data a selection holds for once an edit left `data` at its field: none for a released selection */
-function heldAfterEdit(holdsFor: readonly unknown[], data: unknown, isProposal: boolean): readonly unknown[] {
-  if (holdsFor.length === 0) {
-    return holdsFor;
+/** The selection once an edit left `data` at its field. One that holds for no data, or that the edit released, is
+ * left as it is, so the data the edit leaves is matched again
+ */
+function heldAfterEdit(selection: OptionSelection, data: unknown, isProposal: boolean): OptionSelection {
+  if (selection.holdsFor.length === 0 || selection.isReleased) {
+    return selection;
   }
-  return isProposal ? [...holdsFor, data] : [data];
+  return { ...selection, holdsFor: isProposal ? [...selection.holdsFor, data] : [data] };
 }
 
 /** A `true` option is any value, which a field renders as the empty schema */
@@ -256,7 +263,7 @@ export function createUiState() {
     /** Selects option `index` of `list` at `path` for the field's `data` as it is shown */
     select: (path: FieldPath, list: string, index: number, data: unknown) => {
       const current = selections.get(path)?.get(list);
-      setSelection(path, list, { index, holdsFor: [data] });
+      setSelection(path, list, { index, holdsFor: [data], isReleased: false });
       if (current?.index !== index) {
         notify();
       }
@@ -267,20 +274,22 @@ export function createUiState() {
     keep: (path: FieldPath, list: string, index: number, data: unknown) => {
       const current = selections.get(path)?.get(list);
       if (current === undefined || !isHeldFor(current, data)) {
-        setSelection(path, list, { index, holdsFor: [data] });
+        setSelection(path, list, { index, holdsFor: [data], isReleased: false });
       }
     },
     /** Lets the data an edit to a property of the object's own that the options can disagree about leaves be matched
-     * again, as data from outside the field is: the edit may be a choice between them
+     * again, as data from outside the field is: the edit may be a choice between them. The data the selection holds for
+     * still holds it, so a parent declining the edit leaves the option shown
      */
     release: (path: FieldPath, list: string) => {
       const current = selections.get(path)?.get(list);
-      if (current !== undefined && current.holdsFor.length > 0) {
-        setSelection(path, list, { index: current.index, holdsFor: [] });
+      if (current !== undefined && !current.isReleased) {
+        setSelection(path, list, { ...current, isReleased: true });
       }
     },
     /** Records, for every selection at or above the edited `path` that holds, the data the edit left there: in place of
-     * the data before, unless the edit is a proposal the parent may decline. A released selection is left to be matched
+     * the data before, unless the edit is a proposal the parent may decline. The data a released edit leaves is left to
+     * be matched
      */
     edited: (path: FieldPath, dataAt: (path: FieldPath) => unknown, isProposal: boolean) => {
       const segments = fieldPathToList(path);
@@ -289,12 +298,7 @@ export function createUiState() {
           const data = dataAt(at);
           selections = new Map(selections).set(
             at,
-            new Map(
-              [...lists].map(([list, { index, holdsFor }]) => [
-                list,
-                { index, holdsFor: heldAfterEdit(holdsFor, data, isProposal) },
-              ]),
-            ),
+            new Map([...lists].map(([list, selection]) => [list, heldAfterEdit(selection, data, isProposal)])),
           );
         }
       }
@@ -307,8 +311,8 @@ export function createUiState() {
         const data = dataAt(at);
         for (const [list, selection] of lists) {
           const holdsFor = isHeldFor(selection, data) ? [data] : [];
-          if (holdsFor.length !== selection.holdsFor.length) {
-            setSelection(at, list, { index: selection.index, holdsFor });
+          if (holdsFor.length !== selection.holdsFor.length || selection.isReleased) {
+            setSelection(at, list, { index: selection.index, holdsFor, isReleased: false });
           }
         }
       }

@@ -518,6 +518,27 @@ describe('option selection as form state', () => {
 
       expect(selectOf(node, 'root__anyof_select')).toHaveValue('1');
     });
+
+    it('keeps the option shown, and submits under it, when the parent declines an edit to a property its options can disagree about', async () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string' } },
+        oneOf: [
+          { title: 'A', properties: { a: { type: 'string' } } },
+          { title: 'B', properties: { b: { type: 'string' } }, required: ['name'] },
+        ],
+      };
+      const props = { schema, formData: { a: 'v' }, onChange: () => undefined, omitExtraData: true };
+      const { node, rerender, onSubmit } = createFormComponent(props);
+      await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+      await user.type(elementOf(node, '#root_name'), 'x');
+
+      rerender({ ...props, formData: { a: 'v' } });
+
+      expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+      await submitForm(node, user);
+      expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: {} }), expect.anything());
+    });
   });
 
   it('moves the selections of array items with the items', async () => {
