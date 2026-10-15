@@ -2630,6 +2630,7 @@ exports[`array fields > has errors 1`] = `
 
 .emotion-16 {
   margin-top: 0;
+  display: block;
 }
 
 @layer recipes {
@@ -2651,11 +2652,15 @@ exports[`array fields > has errors 1`] = `
 }
 
 .emotion-17 {
+  display: block;
+}
+
+.emotion-18 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-18 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2703,19 +2708,19 @@ exports[`array fields > has errors 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-18 :where(svg) {
+  .emotion-19 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -2723,14 +2728,14 @@ exports[`array fields > has errors 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -2849,7 +2854,11 @@ exports[`array fields > has errors 1`] = `
                     data-scope="fieldset"
                     id="root_name__error"
                   >
-                    Bad input
+                    <span
+                      class="emotion-17"
+                    >
+                      Bad input
+                    </span>
                   </span>
                 </fieldset>
               </div>
@@ -2859,10 +2868,10 @@ exports[`array fields > has errors 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-17"
+      class="emotion-18"
     >
       <button
-        class="chakra-button emotion-18"
+        class="chakra-button emotion-19"
         type="submit"
       >
         Submit

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
 import type { RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { errorId, helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -430,5 +431,48 @@ describe('chakra-ui ArrayFieldTemplate', () => {
 
     expect(screen.queryByRole('heading')).not.toBeInTheDocument();
     expect(container.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+  });
+});
+
+describe("chakra-ui's error and help elements carry the ids their field's plan describes its control by", () => {
+  const schema: RJSFSchema = {
+    type: 'object',
+    properties: {
+      pet: {
+        title: 'Pet',
+        anyOf: [
+          { title: 'Dog', type: 'string' },
+          { title: 'Cat', type: 'number' },
+        ],
+      },
+    },
+  };
+
+  test("renders an option's own help under its own id, beside the field's", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={schema}
+        uiSchema={{ pet: { 'ui:help': 'Pick a pet', anyOf: [{ 'ui:help': 'Dogs bark' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll(`#${helpId('root_pet')}`)).toHaveLength(1);
+    expect(container.querySelector(`#${helpId('root_pet')}`)).toHaveTextContent('Pick a pet');
+    expect(container.querySelector(`#${optionHelpId('root_pet')}`)).toHaveTextContent('Dogs bark');
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Pick a pet Dogs bark');
+  });
+
+  test("renders an anyOf field's errors once, under the id its control is described by", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={schema}
+        extraErrors={{ pet: { __errors: ['pick one', 'or another'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelectorAll(`#${errorId('root_pet')}`)).toHaveLength(1);
+    expect(screen.getByRole('textbox')).toHaveAccessibleDescription('pick one or another');
   });
 });

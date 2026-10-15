@@ -21325,6 +21325,7 @@ exports[`single fields > help and error display 1`] = `
 
 .emotion-13 {
   margin-top: 0;
+  display: block;
 }
 
 @layer recipes {
@@ -21346,11 +21347,15 @@ exports[`single fields > help and error display 1`] = `
 }
 
 .emotion-14 {
+  display: block;
+}
+
+.emotion-15 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-16 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -21398,19 +21403,19 @@ exports[`single fields > help and error display 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+  .emotion-16:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-15 :where(svg) {
+  .emotion-16 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -21418,14 +21423,14 @@ exports[`single fields > help and error display 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -21524,15 +21529,19 @@ exports[`single fields > help and error display 1`] = `
           data-scope="fieldset"
           id="root__error"
         >
-          an error
+          <span
+            class="emotion-14"
+          >
+            an error
+          </span>
         </span>
       </fieldset>
     </div>
     <div
-      class="emotion-14"
+      class="emotion-15"
     >
       <button
-        class="chakra-button emotion-15"
+        class="chakra-button emotion-16"
         type="submit"
       >
         Submit
