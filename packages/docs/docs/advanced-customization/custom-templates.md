@@ -840,7 +840,7 @@ The following props are passed to a custom field template component:
 - `help`: A component instance rendering any `ui:help` uiSchema directive defined, when the field's plan says the template draws it.
 - `rawHelp`: The `ui:help` uiSchema directive as it was given, a `string` or a `ReactElement`, resolved the same way as the `help` component that renders it, so it is a truthy check for whether the field has any help at all.
 - `hidden`: A boolean value stating if the field should be hidden.
-- `required`: A boolean value stating if the field is required.
+- `required`: A boolean value stating if the field is required. Mark the label you draw from [`templateMarksRequired()`](../api-reference/utility-functions.md#templatemarksrequired), which follows the field's plan, so a checkbox the schema lets be `false` isn't marked.
 - `readonly`: A boolean value stating if the field is read-only.
 - `hideError`: A boolean value stating if the field is hiding its errors
 - `disabled`: A boolean value stating if the field is disabled.

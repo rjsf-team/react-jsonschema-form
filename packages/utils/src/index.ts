@@ -167,6 +167,7 @@ import shouldRenderOptionalField, { getOptionalDataControlsType } from './should
 import templateDrawsDescription from './templateDrawsDescription.ts';
 import templateDrawsLabel from './templateDrawsLabel.ts';
 import templateLabelFor from './templateLabelFor.ts';
+import templateMarksRequired from './templateMarksRequired.ts';
 import titleDrawsOptionalDataControl from './titleDrawsOptionalDataControl.ts';
 import toConstant from './toConstant.ts';
 import toDateString from './toDateString.ts';
@@ -379,6 +380,7 @@ export {
   templateDrawsDescription,
   templateDrawsLabel,
   templateLabelFor,
+  templateMarksRequired,
   titleDrawsOptionalDataControl,
   titleId,
   toConstant,
