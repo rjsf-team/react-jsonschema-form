@@ -16,11 +16,14 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
+import relativeOptionScoringTests from '../../utils/test/testUtils/relativeOptionScoringTests.ts';
 import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
 
 const illFormedKey = "bar`'()=+*&^%$#@!";
+
+relativeOptionScoringTests(() => new AJV8Validator({}));
 
 describe('AJV8Validator', () => {
   let builder: ErrorSchemaBuilder;
