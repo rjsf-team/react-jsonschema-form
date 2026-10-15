@@ -3,7 +3,7 @@ import deepEquals from '../deepEquals.ts';
 import { schemaKey } from '../hashForSchema.ts';
 import parseSchemaGraph from '../schema/graph/parseSchemaGraph.ts';
 import { validationTargets } from '../schema/graph/validationTargets.ts';
-import type { FormContextType, RJSFSchema, SchemaParserOptions, StrictRJSFSchema } from '../types.ts';
+import type { FormContextType, RJSFSchema, StrictRJSFSchema } from '../types.ts';
 
 /** The type of the map of schema key to schema */
 export type SchemaMap<S extends StrictRJSFSchema = RJSFSchema> = Record<string, S>;
@@ -36,15 +36,12 @@ export function getValidationSchemas<S extends StrictRJSFSchema = RJSFSchema>(ro
 
 /** Returns `getValidationSchemas(rootSchema)`, the schemas a form hands its validator.
  *
- * @deprecated Use `getValidationSchemas()`, which this returns. The schemas no longer depend on how `allOf` is merged,
- *   so the options are not read. Will be removed in v8.
+ * @deprecated Use `getValidationSchemas()`, which this returns. Will be removed in v8.
  * @param rootSchema - The root schema to list the validated schemas of
- * @param [_options={}] - No longer read
  * @returns - The `SchemaMap` of the schemas
  */
 export function schemaParser<S extends StrictRJSFSchema = RJSFSchema, _F extends FormContextType = FormContextType>(
   rootSchema: S,
-  _options: SchemaParserOptions<S> = {},
 ): SchemaMap<S> {
   return getValidationSchemas<S>(rootSchema);
 }

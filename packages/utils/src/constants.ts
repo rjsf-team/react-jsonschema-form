@@ -44,12 +44,6 @@ export const RJSF_REF_CYCLE_KEY = Symbol('__rjsf_ref_cycle');
  * without it.
  */
 export const RJSF_PROVENANCE_KEY = Symbol('__rjsf_provenance');
-/** Marked a schema resolved from a `$ref` that had branch keywords (`allOf`, `dependencies`, `else`, `then`) beside it
- * with the names of those keywords.
- *
- * @deprecated - `retrieveSchema()` no longer adds it to any schema. It stays exported until v8.
- */
-export const RJSF_REF_SIBLING_BRANCHES_KEY = Symbol('__rjsf_ref_sibling_branches');
 export const SCHEMA_KEY = '$schema';
 export const DEFAULT_ID_PREFIX = 'root';
 export const DEFAULT_ID_SEPARATOR = '_';

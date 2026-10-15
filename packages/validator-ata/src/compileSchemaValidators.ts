@@ -2,7 +2,7 @@ import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import fs from 'fs';
 
 import { compileSchemaValidatorsCode } from './compileSchemaValidatorsCode.ts';
-import type { CompileValidatorOptionsType } from './types.ts';
+import type { CustomValidatorOptionsType } from './types.ts';
 
 export { compileSchemaValidatorsCode };
 
@@ -13,14 +13,13 @@ export { compileSchemaValidatorsCode };
  *
  * @param schema - The schema to be compiled into a set of precompiled validators functions
  * @param output - The name of the file into which the precompiled validator functions will be generated
- * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the same options that are passed to the
- *        `customizeValidator()` function to modify the behavior of the regular ata-based validator. A
- *        `customMergeAllOf` among them is not read: the schemas compiled do not depend on how `allOf` is merged
+ * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the same options that are passed to the
+ *        `customizeValidator()` function to modify the behavior of the regular ata-based validator
  */
 export default function compileSchemaValidators<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   output: string,
-  options: CompileValidatorOptionsType<S> = {},
+  options: CustomValidatorOptionsType = {},
 ) {
   // oxlint-disable-next-line no-console
   console.log('parsing the schema');

@@ -3894,6 +3894,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       it('converts boolean false to a {not:{}} schema', () => {
         expect(relaxOptionsForScoring([false])).toEqual([{ not: {} }]);
       });
+      it('derives the $id of a widened option, leaving out the empty fragment the newer drafts reject in it', () => {
+        const option: RJSFSchema = { $id: 'http://e.com/a.json#', type: 'object', additionalProperties: false };
+        const [widened] = relaxOptionsForScoring([option]);
+        expect(widened.$id).toMatch(/^http:\/\/e\.com\/a\.json\?rjsf=[^#?]+$/);
+        expect(relaxOptionsForScoring([widened])[0].$id).toBe(widened.$id);
+      });
       it('widens additionalProperties:false to true', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -3932,17 +3938,6 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           { not: {} },
           { type: 'object', additionalProperties: true },
         ]);
-      });
-      it('builds the relaxed form of an option once, so re-scoring it does not hash it again', () => {
-        const option: RJSFSchema = {
-          $id: 'strict',
-          type: 'object',
-          properties: { a: { type: 'string' } },
-          additionalProperties: false,
-        };
-        // Relaxing derives an `$id`, which serializes the option, and `omitExtraData()` relaxes the options of a
-        // `oneOf` on every call: the same object back is what keeps the scoring memo keyed by it hitting too
-        expect(relaxOptionsForScoring([option])[0]).toBe(relaxOptionsForScoring([option])[0]);
       });
       describe('resolveRefs=true', () => {
         it('resolves a $ref and widens additionalProperties:false to true', () => {

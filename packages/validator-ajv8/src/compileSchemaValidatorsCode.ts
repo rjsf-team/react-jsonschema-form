@@ -4,7 +4,7 @@ import { ID_KEY, REF_KEY, schemaKey, getValidationSchemas, withIdRefPrefix } fro
 import standaloneCode from 'ajv/dist/standalone/index.js';
 
 import createAjvInstance from './createAjvInstance.ts';
-import type { CompileValidatorOptionsType } from './types.ts';
+import type { CustomValidatorOptionsType } from './types.ts';
 
 /** Returns the schemas Ajv compiles for the `schemaMap`, and what each function the module exports is compiled from,
  * by the key a precompiled validator looks it up under. A `{ $ref }` naming a subschema of the root is exported as
@@ -39,13 +39,12 @@ export function compiledSchemas<S extends StrictRJSFSchema = RJSFSchema>(
  * information about AJV code compilation see: https://ajv.js.org/standalone.html
  *
  * @param schema - The schema to be compiled into a set of precompiled validators functions
- * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the same options that are passed to the
- *        `customizeValidator()` function to modify the behavior of the regular AJV-based validator. A
- *        `customMergeAllOf` among them is not read: the schemas compiled do not depend on how `allOf` is merged
+ * @param [options={}] - The `CustomValidatorOptionsType` to compile with: the same options that are passed to the
+ *        `customizeValidator()` function to modify the behavior of the regular AJV-based validator
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
-  options: CompileValidatorOptionsType<S> = {},
+  options: CustomValidatorOptionsType = {},
 ) {
   const {
     additionalMetaSchemas,

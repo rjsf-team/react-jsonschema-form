@@ -9,6 +9,7 @@ import type {
 } from '@rjsf/utils';
 import { ROOT_SCHEMA_PREFIX, getValidationTarget, isObject } from '@rjsf/utils';
 
+import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
 import createCfworkerInstance, { installFormats } from '../src/createCfworkerInstance.ts';
 import customizeValidator from '../src/customizeValidator.ts';
 import * as pkg from '../src/index.ts';
@@ -322,12 +323,12 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
   });
-  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold', () => {
+  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
     const validator = customizeValidator();
     const property: RJSFSchema = { type: 'string' };
-    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h': property } } } };
+    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h#': property } } } };
     const pointer = getValidationTarget(property, rootSchema);
-    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e#f%20g%25h' });
+    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e%23f%20g%25h%23' });
     expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
     expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
   });
@@ -338,6 +339,12 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     const schemas = isObject(lookup) ? Object.values(lookup).filter(isObject) : [];
     expect(schemas).not.toHaveLength(0);
     expect(schemas.every((schema) => typeof Reflect.get(schema, '__absolute_uri__') === 'string')).toBe(true);
+  });
+  it('resolves a $ref with no fragment as it stands', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { definitions: { X: { $id: 'http://example.com/x.json', type: 'number' } } };
+    expect(validator.isValid({ $ref: 'http://example.com/x.json' }, 1, rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: 'http://example.com/x.json' }, 's', rootSchema)).toBe(false);
   });
   it('resolves a pointer into a dependencies entry named like a keyword', () => {
     const validator = customizeValidator();
@@ -350,3 +357,5 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
   });
 });
+
+pointerValidationTests(() => customizeValidator());

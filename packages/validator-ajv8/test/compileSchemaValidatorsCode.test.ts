@@ -1,6 +1,7 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { schemaKey, getValidationSchemas } from '@rjsf/utils';
 
+import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { compiledSchemas as compiled } from '../src/compileSchemaValidatorsCode.ts';
@@ -94,10 +95,9 @@ describe('compileSchemaValidatorsCode()', () => {
     expect(validateRoot({ v: { k: true } })).toBe(false);
   });
   precompiledCoverageTests((rootSchema, options) =>
-    createPrecompiledValidator(
-      evalValidatorCode(compileSchemaValidatorsCode(rootSchema, options)),
-      rootSchema,
-      options,
-    ),
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema, options),
+  );
+  pointerValidationTests((rootSchema) =>
+    createPrecompiledValidator(evalValidatorCode(compileSchemaValidatorsCode(rootSchema)), rootSchema),
   );
 });

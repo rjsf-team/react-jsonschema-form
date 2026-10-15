@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '@rjsf/utils';
 
+import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
 import { createPrecompiledValidator } from '../src/index.ts';
@@ -114,6 +115,23 @@ describe('compileSchemaValidatorsCode', () => {
     expect(errors.map((e) => e.property ?? '').sort()).toEqual(['.also', '.bad']);
   });
   precompiledCoverageTests((rootSchema, options) =>
-    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema, options)), rootSchema, options),
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema, options),
   );
+  pointerValidationTests((rootSchema) =>
+    createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema),
+  );
+  test('compiles an option whose $ref leads to a boolean schema as what the boolean says', () => {
+    for (const value of [true, false]) {
+      const rootSchema: RJSFSchema = {
+        properties: { b: value, v: { anyOf: [{ $ref: '#/properties/b' }, { type: 'string' }] } },
+      };
+      const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+      expect(validator.isValid({ $ref: '#/properties/v/anyOf/0' }, 1, rootSchema)).toBe(value);
+    }
+  });
+  test('compiles a schema holding only annotations, which ata compiles no validator for as it stands', () => {
+    const rootSchema: RJSFSchema = { title: 'Anything' };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    expect(validator.isValid(rootSchema, 1, rootSchema)).toBe(true);
+  });
 });

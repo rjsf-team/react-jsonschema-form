@@ -124,9 +124,13 @@ describe('getValidationSchemas()', () => {
     expect(listed(schema)).toEqual([
       schema,
       { $ref: '#/properties/v/oneOf/0' },
-      { type: 'object', properties: { a: { type: 'string' } } },
+      { type: 'object', properties: { a: { $ref: '#/properties/v/oneOf/0/properties/a' } } },
       { $ref: '#/properties/v/oneOf/1' },
-      { type: 'object', properties: { b: { type: 'string' } }, additionalProperties: true },
+      {
+        type: 'object',
+        properties: { b: { $ref: '#/properties/v/oneOf/1/properties/b' } },
+        additionalProperties: true,
+      },
     ]);
   });
 
@@ -137,7 +141,7 @@ describe('getValidationSchemas()', () => {
     };
     expect(listed(schema)).toContainEqual({
       title: 'derived',
-      allOf: [{ type: 'object', properties: { id: { type: 'string' } } }],
+      allOf: [{ type: 'object', properties: { id: { $ref: '#/definitions/Base/properties/id' } } }],
     });
   });
 
@@ -185,14 +189,20 @@ describe('getValidationSchemas()', () => {
     const schemas = listed(schema);
     expect(schemas).toContainEqual({ $ref: '#/oneOf/0' });
     // The listed `dependencies` of the root are a `required` in disguise, so the option is scored without them
-    const { dependencies: _dependencies, ...withoutDependencies } = schema;
-    expect(schemas).toContainEqual({ allOf: [withoutDependencies] });
+    expect(schemas).toContainEqual({
+      allOf: [
+        {
+          type: 'object',
+          properties: { a: { $ref: '#/properties/a' }, b: { $ref: '#/properties/b' } },
+          oneOf: [{ $ref: '#/oneOf/0' }, { $ref: '#/oneOf/1' }],
+        },
+      ],
+    });
   });
 
-  it('is what the deprecated schemaParser() returns, whatever merge it is passed', () => {
-    const customMergeAllOf = () => ({});
+  it('is what the deprecated schemaParser() returns', () => {
     // oxlint-disable-next-line typescript/no-deprecated -- the deprecated wrapper is what is under test
-    expect(schemaParser(SUPER_SCHEMA, { customMergeAllOf })).toEqual(getValidationSchemas(SUPER_SCHEMA));
+    expect(schemaParser(SUPER_SCHEMA)).toEqual(getValidationSchemas(SUPER_SCHEMA));
   });
 
   it('throws when two different schemas share a key', () => {

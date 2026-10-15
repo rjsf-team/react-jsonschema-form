@@ -49,7 +49,7 @@ Under the hood this calls `ata-validator`'s `bundleStandalone` and wraps the res
 
 - schema: S - The schema to be compiled into a set of precompiled validator functions
 - output: string - The name of the file into which the precompiled validator functions are generated
-- [options={}]: CompileValidatorOptionsType&lt;S> - The options used to alter the validator that compiles the schema. A `customMergeAllOf` among them is not read: the schemas compiled are the ones [`getValidationSchemas()`](utility-functions.md#getvalidationschemassextendsstrictrjsfschemarjsfschema) lists
+- [options={}]: CustomValidatorOptionsType - The options used to alter the validator that compiles the schema. The schemas compiled are the ones [`getValidationSchemas()`](utility-functions.md#getvalidationschemassextendsstrictrjsfschemarjsfschema) lists
 
 ### createPrecompiledValidator&lt;S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

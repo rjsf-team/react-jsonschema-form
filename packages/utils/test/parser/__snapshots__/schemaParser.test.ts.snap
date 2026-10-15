@@ -815,23 +815,6 @@ exports[`getValidationSchemas() > parses superSchema properly 1`] = `
     "$id": "-2d56bf93",
     "$ref": "#/properties/multi/anyOf/0",
   },
-  "-32cbe816": {
-    "$id": "-32cbe816",
-    "allOf": [
-      {
-        "properties": {
-          "choice": {
-            "const": "one",
-            "type": "string",
-          },
-          "other": {
-            "type": "number",
-          },
-        },
-        "type": "object",
-      },
-    ],
-  },
   "-66fb67a0": {
     "$id": "-66fb67a0",
     "$ref": "#/anyOf/1",
@@ -847,6 +830,22 @@ exports[`getValidationSchemas() > parses superSchema properly 1`] = `
   "-75284a12": {
     "$id": "-75284a12",
     "$ref": "#/properties/single/oneOf/0",
+  },
+  "4eef1f90": {
+    "$id": "4eef1f90",
+    "allOf": [
+      {
+        "properties": {
+          "choice": {
+            "$ref": "#/definitions/choice1/properties/choice",
+          },
+          "other": {
+            "$ref": "#/definitions/choice1/properties/other",
+          },
+        },
+        "type": "object",
+      },
+    ],
   },
   "super-schema": {
     "$id": "super-schema",
