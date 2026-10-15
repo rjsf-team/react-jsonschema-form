@@ -62,7 +62,7 @@ import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { extendChain } from './graph/provenance.ts';
 import type { GuardChain } from './graph/provenance.ts';
-import { collapseReason, restartSeeds } from './graph/recursionRule.ts';
+import { collapseReason, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
@@ -316,6 +316,12 @@ interface DefaultsField<S extends StrictRJSFSchema> {
   readonly retrieves?: boolean;
   /** The schema of a field no subschema seeds, such as the stub of an extra key whose type is guessed from its data */
   readonly fallback?: S;
+  /** Whether a `default` beside the field's own `$ref` overrides the target's, as every other keyword beside it does.
+   * `getDefaultFormState()` resolved the `$ref`s of its schema before computing defaults, so its fields take it; the
+   * exported helpers read a `$ref` as `computeDefaults()` did, handing on the default beside it only where the field
+   * has no other default and no data
+   */
+  readonly refSiblingDefault?: boolean;
 }
 
 /** A field's schema as the fold reads it, with the seeds of its children */
@@ -487,6 +493,8 @@ interface RefDefaults {
   readonly siblings: readonly unknown[];
   /** Whether the schema the references end at declares a `default`, and which */
   readonly target?: { readonly value: unknown };
+  /** The node the references end at */
+  readonly end: NodeId;
 }
 
 /** Returns the defaults along the `$ref`s `id` leads through. A chain of `$ref`s that loops resolves to an invalid node,
@@ -502,8 +510,8 @@ function refDefaultsOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: No
     node = graph.node(node.ref);
   }
   return node.kind === 'schema' && DEFAULT_KEY in node.raw
-    ? { siblings, target: { value: node.raw.default } }
-    : { siblings };
+    ? { siblings, target: { value: node.raw.default }, end: node.id }
+    : { siblings, end: node.id };
 }
 
 /** Gives `schema` the default of the schema its `$ref`s lead to in place of the one beside them, or none */
@@ -534,10 +542,19 @@ function planView<S extends StrictRJSFSchema, F extends FormContextType>(
 ): DefaultsView<S> {
   const [seed] = plan.seeds;
   const chain = refDefaultsOf(plan.graph, seed.node);
-  // A default beside the field's own `$ref` applies only where nothing else gives the field one, so the field's schema
-  // keeps the default of the schema the reference leads to
+  const seedNode = plan.graph.node(seed.node);
+  const overrides = field.refSiblingDefault === true && seedNode.kind === 'schema' && DEFAULT_KEY in seedNode.raw;
+  // Otherwise a default beside the `$ref`s on the way applies only where nothing else gives the field one, so the
+  // field's schema keeps the default of the schema the references lead to, as `findSchemaDefinition()` let a target's
+  // keywords win over those beside the `$ref`s that lead to it. A target the rule cut is not computed at all, which
+  // leaves the default beside the `$ref` the only one
   const refDefaults =
-    chain.siblings.length > 0 && Object.is(plan.schema.default, chain.siblings[0]) ? chain.siblings : [];
+    !overrides &&
+    chain.siblings.length > 0 &&
+    Object.is(plan.schema.default, chain.siblings[0]) &&
+    plan.entries.some(({ node }) => node === chain.end)
+      ? chain.siblings
+      : [];
   // An option list the plan merged an option of is no longer offered, unless the option declares one of its own
   const dropped = plan.choices
     .filter(({ selected, list, keyword }) => selected !== undefined && list === plan.schema[keyword])
@@ -641,8 +658,19 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   return ruledView(context, field, planFor, NO_OPTIONS, data, depData, guards);
 }
 
-/** Plans `field` with `planFor` and applies the recursion rule to the plan. A collapsed field that is not within an
- * expansion yet is expanded once (I2), restarting its seeds and its chain.
+/** Whether the option `option` a field's plan merged enters, through its own `$ref`, a target already on the ref path
+ * the option was offered under. A field reaching its options through a `$ref` of its own is checked by the rule against
+ * that `$ref` alone, which leads somewhere new however often the recursion through the option has been followed; this
+ * stops the option where `computeDefaults()` stopped at a `$ref` already followed, as the rule does for a field whose
+ * option list is written inline.
+ */
+function optionReentersRef<S extends StrictRJSFSchema>(plan: MergePlan<S>, option: NodeId): boolean {
+  const entry = plan.entries.find(({ node, edge }) => node === option && edge === 'option');
+  return entry !== undefined && ownRefTargets(plan.graph, option).some((target) => entry.refPath.includes(target));
+}
+
+/** Plans `field` with `planFor` and applies the recursion rule to the plan, and to the option `option` it merged, if
+ * any. A collapsed field that is not within an expansion yet is expanded once (I2), restarting its seeds and its chain.
  */
 function ruledView<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -652,11 +680,15 @@ function ruledView<S extends StrictRJSFSchema, F extends FormContextType>(
   data: unknown,
   depData: unknown,
   guards: readonly GuardFrame[] = [],
+  option?: NodeId,
 ): DefaultsView<S> {
   const planned = planFor(field.seeds);
   recordGuardCheck(planned.plan.setKey, guards);
   const position: FieldPosition = { edge: field.edge, view: 'defaults', chain: field.chain };
-  if (collapseReason(field.graph, planned.plan, position) === undefined) {
+  const collapses =
+    collapseReason(field.graph, planned.plan, position) !== undefined ||
+    (field.edge !== 'root' && option !== undefined && optionReentersRef(planned.plan, option));
+  if (!collapses) {
     return planView(context, field, planned, options, data, depData);
   }
   if (field.expanded) {
@@ -665,7 +697,9 @@ function ruledView<S extends StrictRJSFSchema, F extends FormContextType>(
     return { ...planView(context, field, planFor(field.seeds, true), options, data, depData), collapsed: true };
   }
   const seeds = restartSeeds(field.seeds);
-  const expanded: DefaultsField<S> = { ...field, seeds, chain: undefined, expanded: true };
+  // `resolveAllReferences()` left a `$ref` back to one it was resolving as it stood, so from here on a default beside a
+  // `$ref` applies as `computeDefaults()` applied it
+  const expanded: DefaultsField<S> = { ...field, seeds, chain: undefined, expanded: true, refSiblingDefault: false };
   return planView(context, expanded, planFor(seeds), options, data, depData);
 }
 
@@ -676,7 +710,7 @@ function childField<S extends StrictRJSFSchema>(
   edge: ContainmentEdge,
   fallback?: S,
 ): DefaultsField<S> {
-  const { graph, chain, expanded } = view.field;
+  const { graph, chain, expanded, refSiblingDefault } = view.field;
   const nonBoolean = seeds.filter(({ node }) => graph.node(node).kind !== 'boolean');
   // A subschema the schema's own keywords stand in for, such as the stub of a key whose type is guessed from its data
   // where `additionalProperties` is `true`, is read as it stands
@@ -688,6 +722,7 @@ function childField<S extends StrictRJSFSchema>(
     expanded,
     edge,
     fallback: useFallback ? fallback : undefined,
+    refSiblingDefault,
   };
 }
 
@@ -1081,6 +1116,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     view.data,
     view.depData,
     props.memo?.guards,
+    optionNode,
   );
   const optionRaw = graph.node(optionNode);
   const optionChain = refDefaultsOf(graph, optionNode);
@@ -1725,7 +1761,7 @@ export default function getDefaultFormState<
   // data, its conditions are validated against an empty root, which a validator for another dialect accepts
   const root = rootSchema ?? (isEmptyFormData(formData) ? theSchema : schemaFrom(theSchema, {}));
   // The root is resolved as `retrieveSchema()` resolves it, its `allOf` merged and the extra keys of its data stubbed
-  const field: DefaultsField<S> = { ...callRoot<S>(root, theSchema), retrieves: true };
+  const field: DefaultsField<S> = { ...callRoot<S>(root, theSchema), retrieves: true, refSiblingDefault: true };
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.

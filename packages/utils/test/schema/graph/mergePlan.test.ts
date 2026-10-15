@@ -556,6 +556,36 @@ describe('buildPlan()', () => {
       expect(buildPlan({ context: { validator: miniValidator() }, graph, seeds, data })).not.toBe(plan);
       expect(plan.graph).toBe(graph);
     });
+    it('keeps one plan per value of a bounded kind, but only the last string or number a field held', () => {
+      const context = { validator: miniValidator() };
+      const graph = parseSchemaGraph({ type: 'string', if: { minLength: 2 }, then: { title: 't' } });
+      const seeds = [{ node: graph.root, refPath: [] }];
+      const planFor = (data: unknown) => buildPlan({ context, graph, seeds, data });
+      const none = planFor(undefined);
+      const yes = planFor(true);
+      expect(planFor(null)).toBe(planFor(null));
+      expect(planFor(undefined)).toBe(none);
+      expect(planFor(true)).toBe(yes);
+      const first = planFor('ab');
+      expect(planFor('ab')).toBe(first);
+      const second = planFor('abc');
+      expect(planFor('abc')).toBe(second);
+      expect(planFor('ab')).not.toBe(first);
+      expect(planFor(1)).not.toBe(planFor(2));
+    });
+    it('checks a condition on a string once while it is the last one checked', () => {
+      const validator = miniValidator();
+      const graph = parseSchemaGraph({ type: 'string', if: { minLength: 2 }, then: { title: 't' } });
+      const seeds = [{ node: graph.root, refPath: [] }];
+      const planFor = (data: unknown, allOf: boolean) =>
+        buildPlan({ context: { validator }, graph, seeds, data, policy: { allOf } });
+      expect(planFor('ab', true).schema.title).toBe('t');
+      expect(planFor('ab', false).schema.title).toBe('t');
+      expect(validator.calls).toBe(1);
+      planFor('a', true);
+      planFor('ab', true);
+      expect(validator.calls).toBe(3);
+    });
     it('plans data that is an object afresh, since a caller may mutate it in place', () => {
       const context = { validator: miniValidator() };
       const graph = parseSchemaGraph({

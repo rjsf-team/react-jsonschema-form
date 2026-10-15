@@ -20,7 +20,7 @@ import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
-import KeyedMemo from './keyedMemo.ts';
+import DataMemo from './dataMemo.ts';
 import type { DependencyEdge, NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
@@ -144,16 +144,8 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 /** An `if` is checked against `{}` when the field has no data, as `resolveCondition()` checks it */
 const NO_DATA = Object.freeze({});
 
-/** Whether a result computed from `data` can be memoized under it. Form data may be an object a caller mutates in place
- * between calls, which an entry keyed on its identity would answer for with what it held before, so only a value that
- * cannot change is a key.
- */
-function isImmutable(data: unknown): boolean {
-  return data === NO_DATA || data === null || typeof data !== 'object';
-}
-
-const conditionMemo = new KeyedMemo<boolean>();
-const planMemo = new KeyedMemo<object>();
+const conditionMemo = new DataMemo<boolean>([NO_DATA]);
+const planMemo = new DataMemo<object>([NO_DATA]);
 
 /** Returns the keywords of `source` on a schema of the plan's type. A literal or a merge result is not known to be an
  * `S`, so the copy starts as `template`, which is one, with every keyword removed. A `source` that is not an object,
@@ -472,8 +464,14 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   }
 
   private holds(key: string, condition: S, data: unknown): boolean {
-    const check = () => this.context.validator.isValid(condition, data, this.graph.rawRoot);
-    return isImmutable(data) ? conditionMemo.get([this.context.validator, this.graph, key, data], check) : check();
+    const keys = [this.context.validator, this.graph, key];
+    const memoized = conditionMemo.peek(keys, [data]);
+    if (memoized !== undefined) {
+      return memoized;
+    }
+    const holds = this.context.validator.isValid(condition, data, this.graph.rawRoot);
+    conditionMemo.set(keys, [data], holds);
+    return holds;
   }
 
   /** Applies the `then` or `else` the `if` chooses on the field's own data, `{}` standing in for none */
@@ -675,9 +673,8 @@ function isPlanOf<S extends StrictRJSFSchema>(value: unknown, graph: SchemaGraph
 }
 
 /** Builds the merge plan of the field `input.seeds` seed, memoized per seeds, data, policy and context: the same
- * inputs give the same plan object. Checks of an `if` or a dependency condition are memoized per (node, data), so a
- * parent's lookahead and the child's own build do not check the same condition twice. Data that is an object is not
- * memoized under, since a caller may mutate it in place between calls.
+ * inputs give the same plan object, as `DataMemo` memoizes data. Checks of an `if` or a dependency condition are
+ * memoized per (node, data), so a parent's lookahead and the child's own build do not check the same condition twice.
  *
  * @param input - The graph, seeds, data, policy and context of the field
  * @returns - The field's merge plan
@@ -703,11 +700,8 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     cutRecursion,
     selectOption,
     optionsInheritRefPath,
-    data,
-    depData,
   ];
-  const memoizable = isImmutable(data) && isImmutable(depData);
-  const memoized = memoizable ? planMemo.peek(keys) : undefined;
+  const memoized = planMemo.peek(keys, [data, depData]);
   if (isPlanOf(memoized, graph)) {
     return memoized;
   }
@@ -719,9 +713,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     optionsInheritRefPath,
   }).build(seeds);
   planGraphs.set(plan, graph);
-  if (memoizable) {
-    planMemo.set(keys, plan);
-  }
+  planMemo.set(keys, [data, depData], plan);
   return plan;
 }
 
