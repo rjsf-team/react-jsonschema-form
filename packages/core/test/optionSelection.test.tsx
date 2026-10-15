@@ -1,9 +1,10 @@
 import type { FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import { customizeValidator } from '@rjsf/validator-ajv8';
+import { act } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import { useOptionSelection } from '../src/index.ts';
-import { createFormComponent, submitForm } from './testUtils.tsx';
+import { createFormComponent, createFormRef, handleOf, submitForm } from './testUtils.tsx';
 
 const user = userEvent.setup();
 
@@ -268,7 +269,7 @@ describe('option selection as form state', () => {
     expect(getSelected(selectOf(node, 'root_x__anyof_select'))).toBe('A2');
   });
 
-  it("keeps a selection a parent's new data still fits, and matches data that does not fit it again", async () => {
+  it('keeps a switch the parent declines, and matches the data a parent pushes again, preferring the selection', async () => {
     const schema: RJSFSchema = {
       type: 'object',
       properties: {
@@ -282,17 +283,65 @@ describe('option selection as form state', () => {
     };
     const { node, rerender } = createFormComponent({ schema, formData: { o: { a: 'x' } }, onChange: () => undefined });
     await user.selectOptions(selectOf(node, 'root_o__anyof_select'), 'B');
-    // The parent ignores the switch, and A describes the data it keeps
-    expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('0');
-
-    rerender({ schema, formData: { o: { b: 'y' } }, onChange: () => undefined });
-    expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('1');
-
-    rerender({ schema, formData: { o: { b: 'z', a: 'w' } }, onChange: () => undefined });
+    // The parent ignores the switch, which leaves the data the selection was made with, as on 6.11.0
     expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('1');
 
     rerender({ schema, formData: { o: { a: 'v' } }, onChange: () => undefined });
     expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('0');
+
+    rerender({ schema, formData: { o: { b: 'z', a: 'w' } }, onChange: () => undefined });
+    expect(selectOf(node, 'root_o__anyof_select')).toHaveValue('1');
+  });
+
+  it('shows a pushed value under the option it fits best, even when the selected option fits it too', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const { node, rerender } = createFormComponent({ schema, formData: {}, onChange: () => undefined });
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+
+    rerender({ schema, formData: { a: 'x' }, onChange: () => undefined });
+
+    expect(selectOf(node, 'root__oneof_select')).toHaveValue('0');
+    expect(node.querySelector('#root_a')).toHaveValue('x');
+  });
+
+  it('keeps the selection through a reset', async () => {
+    const schema: RJSFSchema = {
+      oneOf: [
+        { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+        { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+      ],
+    };
+    const ref = createFormRef();
+    const { node } = createFormComponent({ ref, schema, initialFormData: {} });
+    await user.selectOptions(selectOf(node, 'root__oneof_select'), 'B');
+    await user.type(elementOf(node, '#root_b'), 'y');
+
+    act(() => handleOf(ref).reset());
+
+    expect(selectOf(node, 'root__oneof_select')).toHaveValue('1');
+    expect(node.querySelector('#root_b')).toHaveValue('');
+  });
+
+  it('keeps the selection when the schema adds an option to the list', async () => {
+    const options: RJSFSchema[] = [
+      { title: 'A', type: 'object', properties: { a: { type: 'string' } } },
+      { title: 'B', type: 'object', properties: { b: { type: 'string' } } },
+    ];
+    const schemaOf = (oneOf: RJSFSchema[]): RJSFSchema => ({ type: 'object', properties: { o: { oneOf } } });
+    // The parent keeps `{ o: {} }`, which every option fits, so only the selection shows `B`
+    const props = { formData: { o: {} }, onChange: () => undefined };
+    const { node, rerender } = createFormComponent({ schema: schemaOf(options), ...props });
+    await user.selectOptions(selectOf(node, 'root_o__oneof_select'), 'B');
+
+    const withC = schemaOf([...options, { title: 'C', type: 'object', properties: { c: { type: 'string' } } }]);
+    rerender({ schema: withC, ...props });
+
+    expect(selectOf(node, 'root_o__oneof_select')).toHaveValue('1');
   });
 
   it('lets a custom AnyOfField select the option the field stubs its extra keys with', async () => {
@@ -449,6 +498,16 @@ describe('cycle expansion as form state', () => {
 
     expect(node.querySelector('#root_0_child-button')).toBeInTheDocument();
     expect(node.querySelector('#root_1_child_name')).toBeInTheDocument();
+  });
+
+  it('keeps an expansion through a reset', async () => {
+    const ref = createFormRef();
+    const { node } = createFormComponent({ ref, schema, initialFormData: [{ name: 'a' }] });
+    await user.click(elementOf(node, '#root_0_child-button'));
+
+    act(() => handleOf(ref).reset());
+
+    expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
   });
 });
 

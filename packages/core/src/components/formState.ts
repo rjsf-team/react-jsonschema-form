@@ -251,7 +251,6 @@ function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContex
     schema: rootSchema,
     uiSchema,
     retrievedSchema,
-    // The form's own store, which lives as long as the form does
     uiState: prev?.uiState ?? createUiState(),
     registry: buildRegistry(props, rootSchema, schemaUtils),
     validationProps: { customValidate, transformErrors },

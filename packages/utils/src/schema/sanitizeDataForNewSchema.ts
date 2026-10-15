@@ -134,7 +134,7 @@ export default function sanitizeDataForNewSchema<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}): T {
+>(context: SchemaContext<S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: unknown = {}): T {
   // By default, we will clear the form data
   let newFormData;
   const newProperties = newSchema?.[PROPERTIES_KEY];
@@ -154,20 +154,20 @@ export default function sanitizeDataForNewSchema<
     // Create a place to store nested data that will be a side-effect of the filter
     const nestedData: GenericObjectType = {};
     keys.forEach((key) => {
-      const formValue = data?.[key];
+      const formValue = getByPath(data, key);
       const isNewProperty = !hasByPath(oldSchema, [PROPERTIES_KEY, key]);
       const oldRawKeyedSchema = getPropertySchema<S>(oldSchema, key);
       const newRawKeyedSchema = getPropertySchema<S>(newSchema, key);
       // Resolve refs, dependencies, if/then/else and allOf against the current data, so a dependency nested
       // inside this key (not just at the root schema) is taken into account when sanitizing its data (#5250)
-      const oldKeyedSchema = retrieveSchema<T, S, F>(context, oldRawKeyedSchema, rootSchema, formValue);
+      const oldKeyedSchema = retrieveSchema<unknown, S, F>(context, oldRawKeyedSchema, rootSchema, formValue);
       // The old and new raw schema for a key are usually the same object (most keys aren't touched by whatever
       // changed, and a schema `Form` re-resolves keeps the subschemas that did not change), so skip resolving (and
       // re-running any oneOf/dependency validity checks) a second time in that common case.
       const newKeyedSchema =
         oldRawKeyedSchema === newRawKeyedSchema
           ? oldKeyedSchema
-          : retrieveSchema<T, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
+          : retrieveSchema<unknown, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
       // `retrieveSchema()` hands a select's options out as written, so constants written as `$ref`s are read resolved
       const newKeyedSelect = resolveConstantOptions<S>(newKeyedSchema, rootSchema);
       // Now get types and see if they are the same. A type that was guessed from the data of an `additionalProperties`
@@ -246,7 +246,7 @@ export default function sanitizeDataForNewSchema<
     });
 
     newFormData = {
-      ...(typeof data === 'string' || Array.isArray(data) ? undefined : data),
+      ...(isObject(data) ? data : undefined),
       ...removeOldSchemaData,
       ...nestedData,
     };

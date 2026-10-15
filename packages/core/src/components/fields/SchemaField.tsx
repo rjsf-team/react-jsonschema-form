@@ -59,7 +59,7 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
-import useOptionSelection from '../../hooks/useOptionSelection.ts';
+import { useShownOption } from '../../hooks/useOptionSelection.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
@@ -560,7 +560,7 @@ function SchemaFieldRender<
   // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
   // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
   // left to it, and any other is described by the object's extra-key keywords and the option's together
-  const { selectedOption, keepSelection } = useOptionSelection<T, S, F>(
+  const { selectedOption, keepSelection } = useShownOption<T, S, F>(
     registry,
     fieldPath,
     xxxOfOptions,

@@ -10,36 +10,41 @@ import { deepEquals, fieldPathFromList, fieldPathToList, getValidationTarget } f
 
 import type { KeyMove } from './formState.ts';
 
-/** The option selected for a field's option list, with the field's data as the form last left it there: data that
- * differs arrived from outside the field, see `useOptionSelection()`
- */
+/** The option selected for a field's option list, and the field's data it holds for, see `useOptionSelection()` */
 export interface OptionSelection {
   readonly index: number;
+  /** The field's data as the form last left it there */
   readonly data: unknown;
+  /** The field's data as it was shown when the option was selected or an edit inside the field began, which a parent
+   * declining the switch or the edit gives back
+   */
+  readonly madeWith: unknown;
 }
 
-/** The key a field's option list is stored under: the options' places in the root schema, so a condition that swaps
- * the list the field offers starts the choice over, and finds the old one again when it swaps back
+/** The key a field's option list is stored under: the list's place in the root schema, which each option's place
+ * (`getValidationTarget()`'s pointer) ends in, so a condition that swaps the list the field offers starts the choice
+ * over and finds the old one again when it swaps back, and a schema that changes the list in place keeps it
  *
  * @param options - The options, each retrieved for the field's data
  * @param rootSchema - The root schema
- * @returns - The key
+ * @returns - The key, empty for a list with no place in the root
  */
 export function optionListKey<S extends StrictRJSFSchema>(options: readonly S[], rootSchema: S): string {
-  return options
-    .map((option) => {
-      const ref = getValidationTarget<S>(option, rootSchema).$ref;
-      return typeof ref === 'string' ? ref : '';
-    })
-    .join('\n');
+  for (const option of options) {
+    const ref = getValidationTarget<S>(option, rootSchema).$ref;
+    if (typeof ref === 'string') {
+      return ref.slice(0, ref.lastIndexOf('/'));
+    }
+  }
+  return '';
 }
 
 /** The option a field shows for `formData`. With no `selection`, the option `getClosestMatchingOption()` picks. A
- * selection holds while `formData` is the data the form last left at the field, or `holds` says an edit inside the
- * field is being made; other data arrived from outside the field, and keeps the selection while it validates against
- * the option, and is matched again otherwise.
+ * selection holds for the data the form last left at the field and the data it was made with, and while `holds` says
+ * an edit inside the field is being made. Other data arrived from outside the field and is matched again, with the
+ * selection preferred where it fits the data as well as any other option.
  *
- * @param schemaUtils - The schema utilities to match and validate with
+ * @param schemaUtils - The schema utilities to match with
  * @param selection - The stored selection, if any
  * @param options - The options, each retrieved for `formData`
  * @param formData - The field's data
@@ -58,20 +63,14 @@ export function shownOption<T, S extends StrictRJSFSchema, F extends FormContext
   if (options.length === 0) {
     return -1;
   }
-  const matched = (preferred: number) =>
-    schemaUtils.getClosestMatchingOption(formData, [...options], preferred, discriminator);
-  if (selection === undefined || selection.index >= options.length) {
-    return matched(-1);
+  if (
+    selection !== undefined &&
+    selection.index < options.length &&
+    (holds || deepEquals(selection.data, formData) || deepEquals(selection.madeWith, formData))
+  ) {
+    return selection.index;
   }
-  const { index, data } = selection;
-  if (holds || Object.is(data, formData) || deepEquals(data, formData)) {
-    return index;
-  }
-  const rootSchema = schemaUtils.getRootSchema();
-  const isValid = schemaUtils
-    .getValidator()
-    .isValid(getValidationTarget<S>(options[index], rootSchema), formData, rootSchema);
-  return isValid ? index : matched(index);
+  return schemaUtils.getClosestMatchingOption(formData, [...options], selection?.index ?? -1, discriminator);
 }
 
 /** A value of the form's data, in the type the schema utilities take it as */
@@ -151,13 +150,10 @@ export function createUiState() {
       };
     },
     selection: (path: FieldPath, list: string): OptionSelection | undefined => selections.get(path)?.get(list),
-    /** Selects option `index` of `list` at `path`, for the field's `data` as it is */
+    /** Selects option `index` of `list` at `path` for the field's `data` as it is shown */
     select: (path: FieldPath, list: string, index: number, data: unknown) => {
       const current = selections.get(path)?.get(list);
-      if (current?.index === index && current.data === data) {
-        return;
-      }
-      setSelection(path, list, { index, data });
+      setSelection(path, list, { index, data, madeWith: data });
       if (current?.index !== index) {
         notify();
       }
@@ -168,7 +164,7 @@ export function createUiState() {
     keep: (path: FieldPath, list: string, index: number, data: unknown) => {
       const current = selections.get(path)?.get(list);
       if (current === undefined || !deepEquals(current.data, data)) {
-        setSelection(path, list, { index, data });
+        setSelection(path, list, { index, data, madeWith: data });
       }
     },
     /** Records, for every selection at or above the edited `path`, the data the edit left there */
@@ -179,7 +175,7 @@ export function createUiState() {
           const data = dataAt(at);
           selections = new Map(selections).set(
             at,
-            new Map([...lists].map(([list, { index }]) => [list, { index, data }])),
+            new Map([...lists].map(([list, selection]) => [list, { ...selection, data }])),
           );
         }
       }
@@ -201,11 +197,6 @@ export function createUiState() {
       }
       selections = movedSelections;
       expanded = new Set([...expanded].flatMap((path) => movedPath(path, containerSegments, newKeyOf) ?? []));
-      notify();
-    },
-    clear: () => {
-      selections = new Map();
-      expanded = new Set();
       notify();
     },
   };
