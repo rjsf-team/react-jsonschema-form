@@ -1,5 +1,12 @@
 import type { CustomValidator, RJSFSchema, SchemaParserOptions, ValidatorType } from '../../src/index.ts';
-import { createSchemaUtils, getDefaultFormState, omitExtraData, retrieveSchema } from '../../src/index.ts';
+import {
+  createSchemaUtils,
+  getClosestMatchingOption,
+  getDefaultFormState,
+  isObject,
+  omitExtraData,
+  retrieveSchema,
+} from '../../src/index.ts';
 import {
   MERGED_PATTERN_KEY_FORM_DATA,
   MERGED_PATTERN_PROPERTY_FORM_DATA,
@@ -50,14 +57,24 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
     const rootSchema = SCHEMA_MERGED_FOR_PATTERN_PROPERTY;
     const formData = MERGED_PATTERN_PROPERTY_FORM_DATA;
 
+    /** Scores the `choice` options the form renders `p` with, which are the ones the custom merge rewrote */
+    function scoreRenderedChoice(validator: ValidatorType) {
+      const context = { validator, customMergeAllOf };
+      const property = retrieveSchema(context, rootSchema, rootSchema, formData).properties?.p;
+      const choice = isObject(property) ? property.properties?.choice : undefined;
+      const options = isObject(choice) ? (choice.oneOf ?? []) : [];
+      return getClosestMatchingOption(context, rootSchema, formData.p.choice, options.filter(isObject), 0);
+    }
+
     it('misses the custom-merged sub-schemas when compiled without it', () => {
       const validator = buildValidator(rootSchema);
-      expect(() =>
-        getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData }),
-      ).toThrow('No precompiled validator function was found for the given schema');
+      expect(() => scoreRenderedChoice(validator)).toThrow(
+        'No precompiled validator function was found for the given schema',
+      );
     });
     it('covers the custom-merged sub-schemas when compiled with it', () => {
       const validator = buildValidator(rootSchema, { customMergeAllOf });
+      expect(scoreRenderedChoice(validator)).toBe(1);
       expect(
         getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData }),
       ).toEqual(formData);

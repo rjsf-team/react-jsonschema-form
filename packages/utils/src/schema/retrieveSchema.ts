@@ -154,8 +154,13 @@ function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
   return policy;
 }
 
-/** The schema an option node is scored as: its own `$ref` resolved, or the object a boolean option reads as */
-function optionSchema<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, option: number): S {
+/** Returns the schema an option node is scored as: its own `$ref` resolved, or the object a boolean option reads as
+ *
+ * @param graph - The graph the option is a node of
+ * @param option - The option's node
+ * @returns - The option's schema
+ */
+export function optionSchema<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, option: number): S {
   const node = graph.node(option);
   return node.kind === 'schema' ? resolveOwnRef<S>(node.raw, graph.rawRoot) : booleanSchema(node, graph.rawRoot);
 }
@@ -332,94 +337,12 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
 /** The branch keywords that stood beside the `$ref` a schema was resolved from, on a schema the branch resolution below
  * resolved. A branch beside the `$ref` is not part of the definition, so the reference is not on the path of what the
  * branch declares: a `$ref` to the same definition in there is a second use of it, not a way back into it. The merge
- * plan knows this from where each entry was entered; this resolution, which `schemaParser()` and
- * `getDefaultFormState()` run on until they read the plan, carries it on the copy.
+ * plan knows this from where each entry was entered; this resolution, which `schemaParser()` runs on until it reads
+ * the plan, carries it on the copy.
  */
 const SIBLING_BRANCHES = Symbol('__rjsf_sibling_branches');
 
-/** The `$ref`s resolution followed on the way to a subschema, marked on copies of the property and item subschemas it
- * reaches while `getDefaultFormState()` runs. That function follows a `$ref` the walk had not followed yet as part of
- * the walk, and one it had as the recursion it stops at one level further down, which is the depth its results are
- * pinned at. It goes once `getDefaultFormState()` folds over the merge plan.
- */
-const REFS_ON_THE_WAY = Symbol('__rjsf_refs_on_the_way');
-
 const BRANCH_KEYWORDS: string[] = [ALL_OF_KEY, DEPENDENCIES_KEY, ELSE_KEY, THEN_KEY];
-
-/** How many `getDefaultFormState()` calls are under way, during which resolution marks the subschemas it reaches */
-let defaultsUnderWay = 0;
-
-/** Runs `compute` with the subschemas resolution reaches marked with the `$ref`s it followed on the way to them
- *
- * @param compute - The computation of defaults to run
- * @returns - What `compute` returns
- */
-export function markingRefsOnTheWay<R>(compute: () => R): R {
-  defaultsUnderWay += 1;
-  try {
-    return compute();
-  } finally {
-    defaultsUnderWay -= 1;
-  }
-}
-
-/** Returns the `$ref`s resolution followed on the way to `schema`, when it marked them
- *
- * @param schema - The subschema to read the mark off
- * @returns - The references, or undefined for an unmarked subschema
- */
-export function refsOnTheWay(schema: object): readonly string[] | undefined {
-  const mark: unknown = Reflect.get(schema, REFS_ON_THE_WAY);
-  return Array.isArray(mark) ? mark : undefined;
-}
-
-function withRefsOnTheWay(value: unknown, refs: readonly string[]): unknown {
-  if (!isObject(value) || Reflect.has(value, REFS_ON_THE_WAY)) {
-    return value;
-  }
-  // Not enumerable, so it stays out of every copy and comparison of the subschema: only the function asking reads it
-  return Object.defineProperty({ ...value }, REFS_ON_THE_WAY, { value: refs });
-}
-
-/** Marks the property and item subschemas of `schema` that are not marked yet with `refs`
- *
- * @param schema - The schema whose subschemas are marked
- * @param refs - The references followed on the way to them
- * @returns - A copy of `schema` with its subschemas marked, without a mark of its own
- */
-function markRefsOnTheWay<S extends StrictRJSFSchema>(schema: S, refs: readonly string[]): S {
-  const marked = { ...schema };
-  const { properties, items } = schema;
-  if (isObject(properties)) {
-    Reflect.set(
-      marked,
-      PROPERTIES_KEY,
-      Object.fromEntries(Object.entries(properties).map(([key, value]) => [key, withRefsOnTheWay(value, refs)])),
-    );
-  }
-  if (isObject(items)) {
-    Reflect.set(marked, 'items', withRefsOnTheWay(items, refs));
-  }
-  return marked;
-}
-
-/** Resolves the `$ref` of a subschema `getDefaultFormState()` reached through properties and items alone, marking what
- * it holds with the reference followed on top of the ones that led to it
- *
- * @param schema - The subschema holding the `$ref`
- * @param rootSchema - The root schema the reference names a definition of
- * @param refs - The references followed on the way to `schema`
- * @param ref - The `$ref` `schema` holds
- * @returns - The schema the reference resolves to, its subschemas marked
- */
-export function followRefOnTheWay<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S,
-  rootSchema: S,
-  refs: readonly string[],
-  ref: string,
-): S {
-  return markRefsOnTheWay(resolvedFrom(schema, rootSchema), [...refs, ref]);
-}
 
 /** Resolves a schema's own `$ref`, recording which branch keywords stood beside it
  *
@@ -434,23 +357,6 @@ function resolvedFrom<S extends StrictRJSFSchema>(schema: S, rootSchema: S): S {
     Reflect.set(resolved, SIBLING_BRANCHES, siblingBranches);
   }
   return resolved;
-}
-
-/** Returns the references followed on the way to what `schema` holds: `refs` and the `$ref` `schema` was itself
- * resolved from, unless the `keyword` whose subschemas they are for stood beside that `$ref`
- *
- * @param schema - The schema whose own reference joins the path
- * @param refs - The references followed on the way to `schema`
- * @param [keyword] - The branch keyword of `schema` the references are for, when they are for the subschemas of one
- * @returns - The references followed on the way to what `schema` holds
- */
-export function enclosingRefs(schema: object, refs: readonly string[], keyword?: string): readonly string[] {
-  const sourceRef: unknown = Reflect.get(schema, RJSF_REF_KEY);
-  const siblingBranches: unknown = Reflect.get(schema, SIBLING_BRANCHES);
-  if (typeof sourceRef !== 'string' || refs.includes(sourceRef)) {
-    return refs;
-  }
-  return Array.isArray(siblingBranches) && siblingBranches.includes(keyword) ? refs : [...refs, sourceRef];
 }
 
 /** Returns the references a branch `keyword` of `schema` is resolved with: `enteredRefs` less the `$ref` `schema` was
@@ -1540,11 +1446,9 @@ export function retrieveSchemaInternal<
   enteredRefs: readonly string[] = [],
   mergePatterns = true,
 ): S[] {
-  const ownRef = schema[REF_KEY];
-  const resolvesOwnRef = typeof ownRef === 'string' && !enteredRefs.includes(ownRef);
   const resolvedSchemas = resolveSchema<T, S, F>(
     context,
-    defaultsUnderWay > 0 && !resolvesOwnRef ? markRefsOnTheWay(schema, enteredRefs) : schema,
+    schema,
     rootSchema,
     expandAllBranches,
     enteredRefs,
@@ -1568,18 +1472,6 @@ export function retrieveSchemaInternal<
       // resolve allOf schemas. A form always merges an `allOf`, so even `expandAllBranches` merges it: the subschemas it
       // validates against are the merged schema's, which the unmerged branches need not hold -- a `customMergeAllOf` can
       // rewrite them, and only the merged schema has the properties its `patternProperties` apply to
-      // Collect Symbol-keyed properties from allOf subschemas before merging; shallowAllOfMerge
-      // (external library) only operates on string keys and will drop them.
-      const allOfSymbols: Record<symbol, unknown> = {};
-      // A boolean subschema carries no symbols
-      resolvedSchema.allOf?.filter(isObject).forEach((allOfItem) => {
-        for (const sym of Object.getOwnPropertySymbols(allOfItem)) {
-          if (!(sym in allOfSymbols)) {
-            // `Reflect.get` reads through a getter, and a schema's type has no symbol key to index it by
-            allOfSymbols[sym] = Reflect.get(allOfItem, sym);
-          }
-        }
-      });
       const { schema: mergedSchema, merged } = mergeAllOf<S, F>(context, resolvedSchema);
       if (!merged) {
         // The rest of this function describes a merged schema, so a failed merge stops here with the `allOf` already
@@ -1587,8 +1479,6 @@ export function retrieveSchemaInternal<
         return mergedSchema;
       }
       resolvedSchema = mergedSchema;
-      // Re-apply collected Symbol properties that the merge dropped.
-      Object.assign(resolvedSchema, allOfSymbols);
     }
     let withMergedProperties = [resolvedSchema];
     const { properties } = resolvedSchema;

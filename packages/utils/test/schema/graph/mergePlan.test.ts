@@ -2,7 +2,7 @@ import type { JSONSchema7Definition } from 'json-schema';
 
 import { ADDITIONAL_PROPERTY_FLAG, RJSF_REF_KEY } from '../../../src/index.ts';
 import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
-import buildPlan, { childSeeds, itemSeeds } from '../../../src/schema/graph/mergePlan.ts';
+import buildPlan, { childSeeds, itemSeeds, ownChildren } from '../../../src/schema/graph/mergePlan.ts';
 import type { MergePlan, PlanPolicy, Seed } from '../../../src/schema/graph/mergePlan.ts';
 import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
@@ -397,6 +397,7 @@ describe('buildPlan()', () => {
           keyword: 'anyOf',
           provider: plan.graph.root,
           options: [expect.any(Number), expect.any(Number)],
+          list: schema.anyOf,
           dependencies: false,
           selected: undefined,
         },
@@ -404,6 +405,7 @@ describe('buildPlan()', () => {
           keyword: 'oneOf',
           provider: plan.graph.root,
           options: [expect.any(Number)],
+          list: schema.oneOf,
           dependencies: false,
           selected: undefined,
         },
@@ -553,5 +555,23 @@ describe('buildPlan()', () => {
       data.k = 'a';
       expect(buildPlan({ context, graph, seeds, data }).schema.title).toBe('then');
     });
+  });
+});
+
+describe('ownChildren()', () => {
+  it('lists the children the seeds declare themselves, past no $ref, and none for a boolean seed', () => {
+    const schema: RJSFSchema = {
+      definitions: { A: { properties: { a: { type: 'string' } } } },
+      $ref: '#/definitions/A',
+      properties: { own: { type: 'string' }, flag: true },
+    };
+    const graph = parseSchemaGraph(schema);
+    const flag = graph.byPointer('/properties/flag');
+    expect(flag).toBeDefined();
+    const children = ownChildren(graph, [
+      { node: graph.root, refPath: [] },
+      { node: flag ?? graph.root, refPath: [] },
+    ]);
+    expect([...children.properties.keys()]).toEqual(['own', 'flag']);
   });
 });

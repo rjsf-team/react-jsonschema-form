@@ -1389,6 +1389,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           test('computeDefaults', () => {
             // NOTE: `includeUndefinedValues` is not used L1275
             expect(computeDefaults({ validator: testValidator }, schema, { rootSchema: schema })).toEqual({
+              children: {
+                name: '',
+              },
               name: '',
             });
           });
@@ -1563,7 +1566,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             ).toEqual({ name: 'n', child: { name: 'n', child: { name: 'deep', child: { name: 'deep' } } } });
           });
 
-          test('stops at a $ref back to the definition whose allOf merged another $ref in', () => {
+          test('expands a $ref back to the definition whose allOf merged another $ref in once', () => {
             const schema: RJSFSchema = {
               definitions: {
                 outer: {
@@ -1582,12 +1585,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 { validator: testValidator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
                 { schema, rootSchema: schema },
               ),
-            ).toEqual({ a: { name: 'n', extra: 'e' } });
+            ).toEqual({ a: { name: 'n', extra: 'e', back: { name: 'n', extra: 'e' } } });
           });
 
-          test('stops a recursion under a populated allOf one level sooner than the same one without it', () => {
-            // The `allOf` branch of `computeDefaults()` keeps the schema's own ref on the path of what it computes
-            // below, which the test above relies on, and `getObjectDefaults()` and the array defaults do not
+          test('stops a recursion under a populated allOf where it stops the same one without it', () => {
             const tags: RJSFSchema = { type: 'array', minItems: 1, items: { $ref: '#/definitions/tags' } };
             const populated = (definition: RJSFSchema) => {
               const schema: RJSFSchema = {
@@ -1602,7 +1603,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               );
             };
             expect(populated(tags)).toEqual({ t: [[undefined]] });
-            expect(populated({ ...tags, allOf: [{ minItems: 1 }] })).toEqual({ t: [undefined] });
+            expect(populated({ ...tags, allOf: [{ minItems: 1 }] })).toEqual({ t: [[undefined]] });
           });
         });
 
