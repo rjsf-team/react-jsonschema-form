@@ -102,8 +102,9 @@ const MATCHES_NOTHING: StrictRJSFSchema = { not: {} };
  * An option that carries an `$id` names a document that a `$ref` inside it can resolve back to -- `$ref: ''` names the
  * document itself -- so for one of those the assertion is held in a wrapper around the option rather than merged into
  * it. Merged in, it would reach every child the option describes through such a reference, and there it asserts
- * nothing: a child is a value the option holds, not another option the data is being matched against. The wrapper and
- * the option have distinct derived `$id`s, so a reference resolves to the option rather than to the wrapper.
+ * nothing: a child is a value the option holds, not another option the data is being matched against. The wrapper
+ * needs no `$id`, since a schema without one is keyed by its hash, and the option it holds keeps a derived one so that
+ * the reference resolves to the option rather than to the wrapper.
  *
  * @param option - The option to augment for scoring
  * @returns - The schema asserting the option and the keys scoring it needs
@@ -140,7 +141,7 @@ function augmentedForScoring<S extends StrictRJSFSchema = RJSFSchema>(option: S)
     // hash rather than merged in, so that an `anyOf` the option declares still tells it apart from another option
     const scoringId = variantId(id, { ...content, [ALL_OF_KEY]: [...(content.allOf ?? []), requiresAnyOf] });
     const wrapped: StrictRJSFSchema = { allOf: [{ ...content, [ID_KEY]: scoringId }], ...requiresAnyOf };
-    return { [ID_KEY]: variantId(id, wrapped), ...wrapped } as S;
+    return wrapped as S;
   }
   // `content` is already the option without the `required` that scoring drops. The `$id` goes back on because this
   // path is the one that keeps it at the top of the schema, where the junk option is recognised by it
