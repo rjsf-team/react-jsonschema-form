@@ -12073,7 +12073,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div>
-                                    <div />
                                     <div
                                       class="rjsf-field rjsf-field-object"
                                     >
@@ -12206,7 +12205,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div>
-                                    <div />
                                     <div
                                       class="rjsf-field rjsf-field-array"
                                     >
@@ -13474,7 +13472,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div>
-                                    <div />
                                     <div
                                       class="rjsf-field rjsf-field-object"
                                     >
@@ -13569,7 +13566,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div>
-                                    <div />
                                     <div
                                       class="rjsf-field rjsf-field-array"
                                     >
@@ -14179,7 +14175,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div>
-                                    <div />
                                     <div
                                       class="rjsf-field rjsf-field-object"
                                     >
@@ -14312,7 +14307,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div>
-                                    <div />
                                     <div
                                       class="rjsf-field rjsf-field-array"
                                     >
@@ -14894,7 +14888,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div>
-                                    <div />
                                     <div
                                       class="rjsf-field rjsf-field-object"
                                     >
@@ -14989,7 +14982,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="ant-form-item-control-input-content"
                                 >
                                   <div>
-                                    <div />
                                     <div
                                       class="rjsf-field rjsf-field-array"
                                     >
