@@ -579,7 +579,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
         >
           <label
             class="control-label"
-            for="root_choices"
           >
             <span
               id="root_choices__label"
@@ -823,7 +822,6 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
         >
           <label
             class="control-label"
-            for="root_option"
           >
             <span
               id="root_option__label"
@@ -2575,7 +2573,6 @@ exports[`single fields > checkboxes field 1`] = `
     >
       <label
         class="control-label"
-        for="root"
       >
         <span
           id="root__label"
@@ -2681,7 +2678,6 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
     >
       <label
         class="control-label"
-        for="root"
       >
         <span
           id="root__label"
@@ -2780,7 +2776,6 @@ exports[`single fields > checkboxes widget with required field 1`] = `
     >
       <label
         class="control-label"
-        for="root"
       >
         <span
           id="root__label"
@@ -3817,7 +3812,6 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <label
             class="control-label"
-            for="root_optionalObjectWithOneofs"
           >
             <span
               id="root_optionalObjectWithOneofs__label"
@@ -3893,7 +3887,6 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <label
             class="control-label"
-            for="root_optionalArrayWithAnyofs"
           >
             <span
               id="root_optionalArrayWithAnyofs__label"
@@ -4365,7 +4358,6 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <label
             class="control-label"
-            for="root_optionalObjectWithOneofs"
           >
             <span
               id="root_optionalObjectWithOneofs__label"
@@ -4442,7 +4434,6 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <label
             class="control-label"
-            for="root_optionalArrayWithAnyofs"
           >
             <span
               id="root_optionalArrayWithAnyofs__label"
@@ -6154,7 +6145,6 @@ exports[`single fields > radio widget with description in schema and FieldTempla
     >
       <label
         class="control-label"
-        for="root"
       >
         <span
           id="root__label"

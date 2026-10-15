@@ -169,7 +169,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             >
               <label
                 class="control-label"
-                for="root_person_race"
               >
                 <span
                   id="root_person_race__label"
@@ -753,7 +752,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             >
               <label
                 class="control-label"
-                for="root_employment"
               >
                 <span
                   id="root_employment__label"
@@ -1406,7 +1404,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             >
               <label
                 class="control-label"
-                for="root_person_race"
               >
                 <span
                   id="root_person_race__label"
@@ -1990,7 +1987,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             >
               <label
                 class="control-label"
-                for="root_employment"
               >
                 <span
                   id="root_employment__label"
@@ -2670,7 +2666,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             >
               <label
                 class="control-label"
-                for="root_person_race"
               >
                 <span
                   id="root_person_race__label"
@@ -3254,7 +3249,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             >
               <label
                 class="control-label"
-                for="root_employment"
               >
                 <span
                   id="root_employment__label"
@@ -3532,7 +3526,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             >
               <label
                 class="control-label"
-                for="root_person_race"
               >
                 <span
                   id="root_person_race__label"
@@ -4116,7 +4109,6 @@ exports[`Complex grid > renders person and address and employment in a complex g
             >
               <label
                 class="control-label"
-                for="root_employment"
               >
                 <span
                   id="root_employment__label"
@@ -4760,7 +4752,6 @@ exports[`Three even column grid > renders person and address in three columns, n
           >
             <label
               class="control-label"
-              for="root_person_race"
             >
               <span
                 id="root_person_race__label"
@@ -5461,7 +5452,6 @@ exports[`Two even column grid > renders person and address in two columns, no em
           >
             <label
               class="control-label"
-              for="root_person_race"
             >
               <span
                 id="root_person_race__label"

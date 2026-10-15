@@ -15,7 +15,7 @@ import type {
   WidgetProps,
   FormValidation,
 } from '@rjsf/utils';
-import { englishStringTranslator, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
+import { englishStringTranslator, fieldLabelId, getVisibleErrors, noop, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -3251,7 +3251,8 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          expect(node.querySelector('label[for="root_0"]')).toHaveTextContent('Array-1');
+          // By the label's id, since a group's label has no `for`
+          expect(node.querySelector(`#${fieldLabelId('root_0')}`)).toHaveTextContent('Array-1');
         },
       );
 
@@ -3278,7 +3279,7 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          const widgetLabelText = node.querySelector('label[for="root_0"]');
+          const widgetLabelText = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
 
           expect(widgetLabelText).not.toHaveTextContent('Array-1');
           expect(widgetLabelText).toHaveTextContent('Item Title');

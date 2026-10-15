@@ -218,6 +218,13 @@ describe('the plan SchemaField builds', () => {
       },
     };
 
+    it("is named through aria-labelledby by a label whose for names the option's control, which carries the field's id", () => {
+      const { node } = createFormComponent({ schema });
+      expect(node.querySelector(`#${fieldLabelId('root_foo')}`)?.closest('label')).toHaveAttribute('for', 'root_foo');
+      expect(node.querySelector('input#root_foo')).toHaveAccessibleName('Foo');
+      expect(node.querySelector('#root_foo__anyof_select')).toHaveAccessibleName('Foo');
+    });
+
     it("is named by the label the field's template draws, and described by the parts that render", () => {
       const { node } = createFormComponent({
         schema,
@@ -725,6 +732,18 @@ describe('a field a $id names that yields to its anyOf options', () => {
 });
 
 describe('a widget rendering a group of controls', () => {
+  it.each<[string, RJSFSchema]>([
+    ['radio', { type: 'string', title: 'Foo', enum: ['a', 'b'] }],
+    ['checkboxes', { type: 'array', title: 'Foo', items: { enum: ['a', 'b'] }, uniqueItems: true }],
+  ])("draws a %s group's label with no for, which would name the group's wrapper", (widget, foo) => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo } },
+      uiSchema: { foo: { 'ui:widget': widget } },
+    });
+    expect(node.querySelector(`#${fieldLabelId('root_foo')}`)?.closest('label')).not.toHaveAttribute('for');
+    expect(node.querySelector('#root_foo')).toHaveAccessibleName('Foo');
+  });
+
   it('names its radiogroup by the label and marks the radiogroup invalid rather than its radios', () => {
     const { node } = createFormComponent({
       schema: { type: 'object', properties: { foo: { type: 'string', title: 'Foo', enum: ['a', 'b'] } } },

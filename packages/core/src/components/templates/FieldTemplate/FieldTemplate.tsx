@@ -4,6 +4,7 @@ import {
   getUiOptions,
   templateDrawsDescription,
   templateDrawsLabel,
+  templateLabelFor,
   templateMarksRequired,
 } from '@rjsf/utils';
 
@@ -19,7 +20,7 @@ export default function FieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: FieldTemplateProps<T, S, F>) {
-  const { id, label, children, errors, help, description, hidden, registry, uiSchema, presentation } = props;
+  const { label, children, errors, help, description, hidden, registry, uiSchema, presentation } = props;
   const uiOptions = getUiOptions(uiSchema);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   if (hidden) {
@@ -34,7 +35,7 @@ export default function FieldTemplate<
         <Label
           label={label}
           required={templateMarksRequired<T, S, F>(props)}
-          id={id}
+          id={templateLabelFor<T, S, F>(props)}
           labelId={presentation?.label.id}
         />
       )}
