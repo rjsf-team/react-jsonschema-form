@@ -1,5 +1,5 @@
-import type { FieldPath, FieldPathList } from '@rjsf/utils';
-import { deepEquals, fieldPathFromList, fieldPathToList } from '@rjsf/utils';
+import type { FieldPath, FieldPathList, FormContextType, SchemaUtilsType, StrictRJSFSchema } from '@rjsf/utils';
+import { deepEquals, fieldPathFromList, fieldPathToList, getValidationTarget } from '@rjsf/utils';
 
 import type { KeyMove } from './formState.ts';
 
@@ -9,6 +9,68 @@ import type { KeyMove } from './formState.ts';
 export interface OptionSelection {
   readonly index: number;
   readonly data: unknown;
+}
+
+/** The key a field's option list is stored under: the options' places in the root schema, so a condition that swaps
+ * the list the field offers starts the choice over, and finds the old one again when it swaps back
+ *
+ * @param options - The options, each retrieved for the field's data
+ * @param rootSchema - The root schema
+ * @returns - The key
+ */
+export function optionListKey<S extends StrictRJSFSchema>(options: readonly S[], rootSchema: S): string {
+  return options
+    .map((option) => {
+      const ref = getValidationTarget<S>(option, rootSchema).$ref;
+      return typeof ref === 'string' ? ref : '';
+    })
+    .join('\n');
+}
+
+/** The option a field shows for `formData`. With no `selection`, the option `getClosestMatchingOption()` picks. A
+ * selection holds while `formData` is the data the form last left at the field, or `holds` says an edit inside the
+ * field is being made; other data arrived from outside the field, and keeps the selection while it validates against
+ * the option, and is matched again otherwise.
+ *
+ * @param schemaUtils - The schema utilities to match and validate with
+ * @param selection - The stored selection, if any
+ * @param options - The options, each retrieved for `formData`
+ * @param formData - The field's data
+ * @param [discriminator] - The property the options are told apart by, if any
+ * @param [holds=false] - Whether an edit inside the field is being made, which keeps the selection whatever the data
+ * @returns - The index of the option shown, -1 when there are none
+ */
+export function shownOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  selection: OptionSelection | undefined,
+  options: readonly S[],
+  formData: T | undefined,
+  discriminator?: string,
+  holds = false,
+): number {
+  if (options.length === 0) {
+    return -1;
+  }
+  const matched = (preferred: number) =>
+    schemaUtils.getClosestMatchingOption(formData, [...options], preferred, discriminator);
+  if (selection === undefined || selection.index >= options.length) {
+    return matched(-1);
+  }
+  const { index, data } = selection;
+  if (holds || Object.is(data, formData) || deepEquals(data, formData)) {
+    return index;
+  }
+  const rootSchema = schemaUtils.getRootSchema();
+  const isValid = schemaUtils
+    .getValidator()
+    .isValid(getValidationTarget<S>(options[index], rootSchema), formData, rootSchema);
+  return isValid ? index : matched(index);
+}
+
+/** A value of the form's data, in the type the schema utilities take it as */
+export function dataOf<T>(value: unknown): T | undefined;
+export function dataOf(value: unknown): unknown {
+  return value;
 }
 
 /** The new path of `path` once the keys of the array or object at `container` moved as `newKeyOf` says, undefined for
