@@ -158,10 +158,8 @@ export default function SelectWidget<
   // A combobox takes no name from its contents, which are its value, so with no label, `aria-label` or plan naming it,
   // it is named by the field's label, as the label drawn for it would, or, for a field with no title, such as an array
   // item or an untitled option selector, by the translated prompt, as `DatePickerTrigger` is
-  const named =
-    !!ariaProps['aria-label'] ||
-    !!ariaProps['aria-labelledby'] ||
-    hasLabelToReference({ label, name, hideLabel, presentation });
+  const named = !!ariaProps['aria-labelledby'] || hasLabelToReference({ label, name, hideLabel, presentation });
+  const fallbackName = label || registry.translateString(TranslatableString.SelectPlaceholder);
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const isSelected = selectedIndexes.includes(String(option.index));
@@ -216,26 +214,16 @@ export default function SelectWidget<
             disabled || readonly ? 'btn-disabled' : ''
           }`}
           /* A combobox, as a native select is, so it can be `aria-invalid` while its errors show, which a button can't,
-             and announces the option it displays as its value. The plan points an option selector at its field's
-             label, whose `for` names the field's own control */
+             and announces the option it displays as its value */
           role='combobox'
           aria-haspopup='listbox'
           aria-expanded={expanded}
           aria-controls={listboxId}
-          aria-label={
-            ariaProps['aria-label'] ??
-            (named ? undefined : label || registry.translateString(TranslatableString.SelectPlaceholder))
-          }
-          aria-labelledby={ariaProps['aria-labelledby']}
-          aria-describedby={ariaProps['aria-describedby']}
-          aria-invalid={ariaProps['aria-invalid']}
+          {...ariaProps}
+          aria-label={ariaProps['aria-label'] ?? (named ? undefined : fallbackName)}
           aria-disabled={disabled || readonly || undefined}
         >
-          <span className='truncate'>
-            {hasValue
-              ? selectedLabels.join(', ')
-              : placeholder || label || registry.translateString(TranslatableString.SelectPlaceholder)}
-          </span>
+          <span className='truncate'>{hasValue ? selectedLabels.join(', ') : placeholder || fallbackName}</span>
           {/* Decoration, and hidden from the value the combobox's contents give it, which would otherwise end in the
               glyph's own spoken name */}
           <span aria-hidden className='ml-2'>

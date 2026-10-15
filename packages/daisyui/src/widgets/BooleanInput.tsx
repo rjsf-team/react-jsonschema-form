@@ -11,6 +11,8 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
+import RequiredMarker from '../RequiredMarker.tsx';
+
 interface BooleanInputProps<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -137,7 +139,7 @@ export default function BooleanInput<
           <span className='mr-2'>{input}</span>
           <span className='label-text'>
             {label}
-            {marksRequired && <span className='text-error ml-1'>*</span>}
+            {marksRequired && <RequiredMarker />}
           </span>
         </label>
       )}

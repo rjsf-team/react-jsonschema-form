@@ -18,6 +18,7 @@ import {
   templateMarksRequired,
 } from '@rjsf/utils';
 
+import RequiredMarker from '../../RequiredMarker.tsx';
 import { getDaisy } from '../../utils.ts';
 
 const CHECKBOX_ALIAS: WidgetAliasFor<'boolean'> = 'checkbox';
@@ -171,7 +172,7 @@ export default function FieldTemplate<
           >
             <span className='label-text font-medium'>
               {label}
-              {templateMarksRequired<T, S, F>(props) && <span className='text-error ml-1'>*</span>}
+              {templateMarksRequired<T, S, F>(props) && <RequiredMarker />}
             </span>
           </label>
         )}

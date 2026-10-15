@@ -1,6 +1,8 @@
 import type { ArrayFieldTitleProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import { titleId } from '@rjsf/utils';
 
+import RequiredMarker from '../../RequiredMarker.tsx';
+
 /** The `ArrayFieldTitleTemplate` component renders the title for an array field
  * using DaisyUI styling with large bold text, its text carrying the title id derived from the field `id`, and a `*`
  * beside it for a required array.
@@ -22,7 +24,7 @@ export default function ArrayFieldTitleTemplate<
   let heading = (
     <h3 className='text-2xl font-bold'>
       <span id={titleId(id)}>{title}</span>
-      {required && <span className='text-error ml-1'>*</span>}
+      {required && <RequiredMarker />}
     </h3>
   );
   if (optionalDataControl) {

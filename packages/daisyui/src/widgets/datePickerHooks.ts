@@ -1,7 +1,7 @@
 import type { MouseEvent } from 'react';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { callWithDeferredThrow } from '@rjsf/utils';
+import type { FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { callWithDeferredThrow, TranslatableString } from '@rjsf/utils';
 import { format, isSameMonth, isValid, parseISO } from 'date-fns';
 
 /** The document the form is rendered into, which is a document away from the one this module runs in wherever that is
@@ -457,4 +457,18 @@ export function useDatePicker<V>({
     handleBlur,
     handleDone,
   };
+}
+
+/** The name a picker's trigger falls back to where no label names it, which the dialog it opens takes too: the field's
+ * label, or the translated prompt for a field with no title
+ *
+ * @param label - The field's label, empty when it has no title
+ * @param registry - The field's registry, for the translated prompt
+ * @returns - The name
+ */
+export function getDatePickerName<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  label: string | undefined,
+  registry: Registry<T, S, F>,
+) {
+  return label || registry.translateString(TranslatableString.AriaDateLabel);
 }

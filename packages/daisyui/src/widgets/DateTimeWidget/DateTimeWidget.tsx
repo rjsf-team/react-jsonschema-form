@@ -7,7 +7,7 @@ import { format, isValid } from 'date-fns';
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
 import type { DatePickerCalendarProps } from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
-import DatePickerTrigger from '../DatePickerTrigger.tsx';
+import DatePickerTrigger, { DatePickerDialog } from '../DatePickerTrigger.tsx';
 
 /** Props for the DateTimePicker popup component, which is the calendar's own plus the time input's
  */
@@ -182,11 +182,7 @@ export default function DateTimeWidget<
             className='absolute z-[100] mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
             onClick={handleContainerClick}
           >
-            <div
-              id={popupId}
-              role='dialog'
-              aria-label={label || registry.translateString(TranslatableString.AriaDateLabel)}
-            >
+            <DatePickerDialog<T, S, F> id={popupId} label={label} registry={registry}>
               <MemoizedDateTimePickerPopup
                 id={`${id}-picker`}
                 selectedDate={displayedDate}
@@ -201,7 +197,7 @@ export default function DateTimeWidget<
                   {registry.translateString(TranslatableString.DoneLabel)}
                 </button>
               </div>
-            </div>
+            </DatePickerDialog>
           </div>
         )}
       </div>
