@@ -17,6 +17,7 @@ import {
   UNEVALUATED_PROPERTIES_KEY,
 } from '../constants.ts';
 import getSchemaOwnTypes from '../getSchemaOwnTypes.ts';
+import getSchemaType from '../getSchemaType.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import getXxxOfOptions from '../getXxxOfOptions.ts';
 import guessType from '../guessType.ts';
@@ -542,6 +543,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       // data, the option restarts the guard chain too, as a row or key the data holds does: the data bounds how often
       // that happens, and an option the user picks for a recursive field renders its own options rather than collapsing
       const optionChain = data === undefined ? extendedChain() : undefined;
+      // Only an object renders a field of its own beside the option (see `rendersOwnFieldBesideOption()`), which stubs
+      // the option's extra keys with its own; any other field leaves the option to stub them
+      const stubsOwnExtraKeys = getSchemaType<S>(merged) !== 'object';
       Reflect.set(
         merged,
         keyword,
@@ -555,6 +559,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
             seeds: [{ node, refPath: [] }],
             chain: optionChain,
             optionOf: { setKey: plan.setKey, set: plan.set },
+            stubsOwnExtraKeys,
           });
           return resolveOptions
             ? buildView(context, root, provenance, data, false)
@@ -574,7 +579,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   }
   // An option's own extra keys are stubbed with the field offering it, which knows which option is selected
   const fieldSchema = option === undefined ? merged : withOptionExtraKeys<S>(merged, option);
-  const stubsExtraKeys = field.optionOf === undefined && allowsAdditionalProperties<S>(fieldSchema);
+  const stubsExtraKeys =
+    (field.optionOf === undefined || field.stubsOwnExtraKeys === true) && allowsAdditionalProperties<S>(fieldSchema);
   const view = handOut(
     stubsExtraKeys
       ? stubExistingAdditionalProperties<unknown, S, F>(context, fieldSchema, graph.rawRoot, data, option?.properties)

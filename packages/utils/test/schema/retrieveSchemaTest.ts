@@ -2644,6 +2644,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           other: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
         });
       });
+      it('stubs the extra keys of an option a field offers without an object field of its own beside it', () => {
+        const option: RJSFSchema = {
+          type: 'object',
+          properties: { id: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+        };
+        const schema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [option, { type: 'number' }] } } };
+        const formData = { id: 'a', extra: 'x' };
+        const context = { validator: testValidator };
+        const offered = schemaOf(retrieveSchema(context, schema, schema, { v: formData }).properties?.v);
+        // As `SchemaField` reads it: the field offering the option first, then the option out of that field
+        const field = retrieveSchema(context, offered, schema, formData);
+        const shown = retrieveSchema(context, schemaOf(field.oneOf?.[0]), schema, formData);
+        expect(shown.properties).toEqual({
+          id: { type: 'string' },
+          extra: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+      });
       it('leaves a key the selected option declares to it, and stubs the others once (#5461)', () => {
         const schema: RJSFSchema = {
           type: 'object',
