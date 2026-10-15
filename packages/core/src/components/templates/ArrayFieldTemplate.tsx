@@ -1,5 +1,5 @@
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getArrayDescription, getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -28,12 +28,9 @@ export default function ArrayFieldTemplate<
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  // Button templates are not overridden in the uiSchema
-  const showOptionalDataControlInTitle = !readonly && !disabled;
-  // Under a plan, `ArrayField` hands the heading its plan gives the array as `title`, and the plan says whether the
-  // description is the array's to draw, so an option repeating its field's text draws neither
-  const shownTitle = presentation ? title : uiOptions.title || title;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   const shownDescription = getArrayDescription<T, S, F>(props);
+  // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
@@ -41,7 +38,7 @@ export default function ArrayFieldTemplate<
     <fieldset className={className} id={id}>
       <ArrayFieldTitleTemplate
         id={id}
-        title={shownTitle}
+        title={title}
         required={required}
         schema={schema}
         uiSchema={uiSchema}

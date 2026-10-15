@@ -3024,6 +3024,21 @@ describe('ArrayField', () => {
       });
       expect(node.querySelector('#title-test')).toBeNull();
     });
+
+    it.each([
+      ['schema title', {}, 'Tags'],
+      ['ui:title', { additionalProperties: { 'ui:title': 'Labels' } }, 'Labels'],
+    ])(
+      'heads an additionalProperties array by its %s rather than the key its key input shows',
+      (_, uiSchema, heading) => {
+        const { node } = createFormComponent({
+          schema: { type: 'object', additionalProperties: { type: 'array', title: 'Tags', items: { type: 'string' } } },
+          uiSchema,
+          initialFormData: { myKey: ['a'] },
+        });
+        expect(node.querySelector('#root_myKey__title')).toHaveTextContent(heading);
+      },
+    );
   });
 
   describe('Tests for item title', () => {
@@ -5161,6 +5176,56 @@ describe('ArrayField', () => {
       // Each row keeps its key and its error: rows, keys and errors all come from the same proposal
       expect(rowKeys(container)).toEqual([keysBefore[2], keysBefore[0]]);
       expect(log.events.at(-1)?.errorSchema).toEqual({ 0: { __errors: ['must NOT have fewer than 2 characters'] } });
+    });
+  });
+
+  describe('the heading and the optional data control beside it', () => {
+    const optionalArrays: UiSchema = { 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } };
+    /** Renders the array without a plan, as a caller outside `SchemaField` does */
+    function NoPlanArrayField(props: FieldProps<unknown[]>) {
+      return <ArrayField {...props} presentation={undefined} />;
+    }
+
+    it('keeps the control of an array option whose heading a field above draws', () => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: {
+            tags: {
+              title: 'Tags',
+              anyOf: [
+                { type: 'array', items: { type: 'string' }, maxItems: 3 },
+                { type: 'array', items: { type: 'string' }, minItems: 1 },
+              ],
+            },
+          },
+        },
+        uiSchema: optionalArrays,
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+    });
+
+    it('draws the ui:title of an array rendered without a plan', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { tags: { 'ui:field': NoPlanArrayField, 'ui:title': 'Labels' } },
+      });
+
+      expect(node.querySelector('#root_tags__title')).toHaveTextContent(/^Labels$/);
+    });
+
+    it('keeps the control of an array rendered without a plan whose ui:label turns its heading off', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } },
+        uiSchema: { ...optionalArrays, tags: { 'ui:field': NoPlanArrayField, 'ui:label': false } },
+        formData: { tags: ['a'] },
+      });
+
+      expect(node.querySelector('#root_tags__title')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
     });
   });
 });
