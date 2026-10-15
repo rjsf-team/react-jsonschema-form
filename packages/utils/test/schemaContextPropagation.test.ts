@@ -14,7 +14,6 @@ import {
   retrieveSchema,
   sanitizeDataForNewSchema,
 } from '../src/index.ts';
-import { calculateIndexScore } from '../src/schema/getClosestMatchingOption.ts';
 import shallowAllOfMerge from '../src/schema/shallowAllOfMerge.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
@@ -99,14 +98,6 @@ const CASES: PropagationCase[] = [
     rootSchema: { ...objectAllOfDefinitions, properties: { a: { $ref: '#/definitions/A' } } },
     callFunction: (context, rootSchema) => findFieldInSchema(context, rootSchema, rootSchema, 'a.b'),
     callSchemaUtils: (schemaUtils) => schemaUtils.findFieldInSchema(schemaUtils.getRootSchema(), 'a.b'),
-  },
-  {
-    // `getClosestMatchingOption()` resolves the `$ref`s of every option before scoring it, so it is the scoring of an
-    // option that still holds a `$ref` that reaches the merge
-    name: 'calculateIndexScore',
-    rootSchema: objectAllOfDefinitions,
-    callFunction: (context, rootSchema) =>
-      calculateIndexScore(context, rootSchema, { properties: { a: { $ref: '#/definitions/A' } } }, { a: { b: 'x' } }),
   },
   {
     name: 'omitExtraData',

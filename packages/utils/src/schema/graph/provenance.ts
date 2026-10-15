@@ -1,4 +1,5 @@
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
+import { seedsKey } from './mergePlan.ts';
 import type { Seed } from './mergePlan.ts';
 import type { SchemaGraph } from './parseSchemaGraph.ts';
 
@@ -20,14 +21,10 @@ export interface GuardChain {
   has(setKey: string): boolean;
 }
 
-/** What a field's provenance records beyond its graph and its parent: its seeds, the guard chain of its ancestors,
- * whether a data-driven edge restarted it and whether it is the expansion of a collapsed field
- */
+/** What a field's provenance records beyond its graph and its parent: its seeds and the guard chain of its ancestors */
 export interface ProvenanceFields {
   readonly seeds: readonly Seed[];
   readonly chain?: GuardChain;
-  readonly dataRestart?: boolean;
-  readonly expanded?: boolean;
   /** For an `anyOf`/`oneOf` option, the `setKey` of the plan of the field offering it: an option whose own plan adds
    * nothing to that set renders nothing beside the selector
    */
@@ -43,8 +40,6 @@ export interface Provenance<S extends StrictRJSFSchema = RJSFSchema> {
   readonly parent?: Provenance<S>;
   readonly seeds: readonly Seed[];
   readonly chain?: GuardChain;
-  readonly dataRestart: boolean;
-  readonly expanded: boolean;
   readonly optionOf?: string;
 }
 
@@ -104,10 +99,6 @@ export function extendChain(graph: object, chain: GuardChain | undefined, setKey
   return extended;
 }
 
-function seedsKey(seeds: readonly Seed[]): string {
-  return seeds.map(({ node, refPath }) => `${node}:${refPath.join('.')}`).join(';');
-}
-
 /** Whether `value` is a provenance planned in `graph` or in a graph extending it with a schema from outside the root */
 function isProvenanceOf<S extends StrictRJSFSchema>(value: unknown, graph: SchemaGraph<S>): value is Provenance<S> {
   if (typeof value !== 'object' || value === null) {
@@ -127,8 +118,7 @@ function intern<S extends StrictRJSFSchema>(
   parent?: Provenance<S>,
 ): Provenance<S> {
   const table = tableOf(graph);
-  const flags = `${fields.dataRestart ? 1 : 0}${fields.expanded ? 1 : 0}`;
-  const key = [parent?.id, seedsKey(fields.seeds), fields.chain?.id, flags, fields.optionOf].join('|');
+  const key = [parent?.id, seedsKey(fields.seeds), fields.chain?.id, fields.optionOf].join('|');
   const interned = table.provenances.get(key);
   if (isProvenanceOf(interned, graph)) {
     return interned;
@@ -141,8 +131,6 @@ function intern<S extends StrictRJSFSchema>(
       fields.seeds.map(({ node, refPath }) => Object.freeze({ node, refPath: Object.freeze([...refPath]) })),
     ),
     chain: fields.chain,
-    dataRestart: fields.dataRestart ?? false,
-    expanded: fields.expanded ?? false,
     optionOf: fields.optionOf,
   };
   // A printed schema shows its stamp through this rather than the whole graph the stamp points into, as the diff of a

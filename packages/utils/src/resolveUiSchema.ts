@@ -1,21 +1,11 @@
-import { ALL_OF_KEY, ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
+import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
 import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
-import { composedRefs } from './schema/graph/mergePlan.ts';
 import parseSchemaGraph from './schema/graph/parseSchemaGraph.ts';
-import type { NodeId, SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
-import { readProvenance } from './schema/graph/provenance.ts';
-import type {
-  FormContextType,
-  GenericObjectType,
-  Registry,
-  RJSFSchema,
-  StrictRJSFSchema,
-  UiSchema,
-  UiSchemaDefinitions,
-} from './types.ts';
+import type { SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
+import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Returns the `$ref` a schema was resolved from, which `retrieveSchema()` marks it with
  *
@@ -36,48 +26,6 @@ function resolvedFromRef(schema: unknown): string | undefined {
 function declaredRef(schema: unknown): string | undefined {
   const ref: unknown = Reflect.get(Object(schema), REF_KEY);
   return typeof ref === 'string' ? ref : undefined;
-}
-
-/** The `ui:definitions` keys by the node each resolves to, per definitions object and graph */
-const keysByNode = new WeakMap<object, WeakMap<object, ReadonlyMap<NodeId, readonly string[]>>>();
-
-function definitionKeys<S extends StrictRJSFSchema, F extends FormContextType>(
-  graph: SchemaGraph<S>,
-  definitions: UiSchemaDefinitions<S, F>,
-): ReadonlyMap<NodeId, readonly string[]> {
-  let byGraph = keysByNode.get(definitions);
-  if (byGraph === undefined) {
-    byGraph = new WeakMap();
-    keysByNode.set(definitions, byGraph);
-  }
-  const known = byGraph.get(graph);
-  if (known !== undefined) {
-    return known;
-  }
-  const keys = new Map<NodeId, string[]>();
-  for (const key of Object.keys(definitions)) {
-    const node = graph.resolveRef(key);
-    if (node !== undefined) {
-      keys.set(node, [...(keys.get(node) ?? []), key]);
-    }
-  }
-  byGraph.set(graph, keys);
-  return keys;
-}
-
-/** Returns the graph a schema is planned in and the nodes it is seeded with: those of the field it was handed out for,
- * or, for a schema `retrieveSchema()` did not hand out, the schema itself
- */
-function seedsOf<S extends StrictRJSFSchema>(
-  root: SchemaGraph<S>,
-  schema: S,
-): { graph: SchemaGraph<S>; seeds: readonly NodeId[] } {
-  const provenance = readProvenance<S>(schema, root);
-  if (provenance !== undefined) {
-    return { graph: provenance.graph, seeds: provenance.seeds.map(({ node }) => node) };
-  }
-  const adopted = root.adopt(schema);
-  return { graph: adopted.graph, seeds: [adopted.node] };
 }
 
 /** Returns the schema a `$ref` names, resolved through the graph as `retrieveSchema()` resolves it, an `$anchor` or a
@@ -117,10 +65,8 @@ function mergeDefinition<T, S extends StrictRJSFSchema, F extends FormContextTyp
  * whose `$ref` matches a definition, so `MultiSchemaField` can read dropdown option titles.
  *
  * Resolution order (later sources override earlier):
- * 1. `ui:definitions` entries of the further `$ref`s the schema composes through `allOf`, innermost first, so that an
- *    `allOf`-composed definition keeps the entry of the definition it composes
- * 2. `ui:definitions[$ref]` - base definition from registry
- * 3. `localUiSchema` - local overrides at current path
+ * 1. `ui:definitions[$ref]` - base definition from registry
+ * 2. `localUiSchema` - local overrides at current path
  *
  * @param schema - The JSON schema (may contain `$ref` or `RJSF_REF_KEY`)
  * @param rawLocalUiSchema - The uiSchema at the current path (local overrides), as the caller supplied it
@@ -152,19 +98,6 @@ export default function resolveUiSchema<
   } else {
     result = mergeDefinition(definitionUiSchema, localUiSchema ?? {});
   }
-  const graph = definitions ? parseSchemaGraph<S>(registry.rootSchema) : undefined;
-  // `Object()` boxes a boolean option, which composes nothing
-  if (graph && definitions && (ref !== undefined || Reflect.has(Object(schema), ALL_OF_KEY))) {
-    const seeded = seedsOf<S>(graph, schema);
-    const keys = definitionKeys(seeded.graph, definitions);
-    for (const node of composedRefs(seeded.graph, seeded.seeds)) {
-      for (const key of keys.get(node) ?? []) {
-        if (key !== ref) {
-          result = mergeDefinition(definitions[key], result);
-        }
-      }
-    }
-  }
 
   // The same goes for `ui:options`: consumers spread it and use `in` on it, both of which assume an object
   if (UI_OPTIONS_KEY in result && !isObject(result[UI_OPTIONS_KEY])) {
@@ -174,7 +107,8 @@ export default function resolveUiSchema<
 
   // Walk oneOf/anyOf branches to populate uiSchema[keyword][i] so MultiSchemaField
   // can read dropdown option titles at the parent level.
-  if (graph && definitions) {
+  if (definitions) {
+    const graph = parseSchemaGraph<S>(registry.rootSchema);
     let resolvedSchema: S = schema;
     if (ref && declaredRef(schema) && !resolvedFromRef(schema)) {
       try {

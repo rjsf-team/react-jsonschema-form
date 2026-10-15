@@ -9,13 +9,11 @@ import {
   collapseReason,
   count2Hit,
   firstEnteredRefHit,
-  optionSeeds,
   ownRefTargets,
   restartSeeds,
-  settleField,
 } from '../../../src/schema/graph/recursionRule.ts';
 import { miniValidator } from './miniValidator.ts';
-import { createWalker } from './walk.ts';
+import { createWalker, settleField } from './walk.ts';
 
 const D = (name: string) => `#/definitions/${name}`;
 
@@ -105,12 +103,8 @@ describe('the recursion rule', () => {
   });
 
   describe('seeds', () => {
-    it('restarts ref paths, for an expansion and for a selected option', () => {
+    it('restarts ref paths, for an expansion', () => {
       expect(restartSeeds([{ node: child, refPath: [pl, pl] }])).toEqual([{ node: child, refPath: [] }]);
-      expect(optionSeeds([{ node: child, refPath: [pl] }], pl)).toEqual([
-        { node: child, refPath: [pl] },
-        { node: pl, refPath: [] },
-      ]);
     });
   });
 

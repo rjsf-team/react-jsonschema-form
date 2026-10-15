@@ -275,32 +275,16 @@ describe('resolveUiSchema() - definitions composed through allOf', () => {
     rawValidation: () => ({}),
   };
 
-  it('applies the entry of the definition an allOf composes beneath the entry of the one composing it', () => {
-    expect(
-      resolveUiSchema({ $ref: '#/definitions/A' }, { 'ui:title': 'LOCAL' }, makeRegistry(rootSchema, definitions)),
-    ).toEqual({
-      'ui:title': 'LOCAL',
-      'ui:description': 'FROM_A',
-      'ui:help': 'HELP_A',
-    });
-  });
-
-  it('reads the composition off the field a handed-out schema is the schema of', () => {
+  it('applies only the entry of the $ref the field was resolved from, not those of the definitions it composes', () => {
     const { items } = retrieveSchema({ validator }, rootSchema, rootSchema);
     const handedOut: RJSFSchema = typeof items === 'object' && !Array.isArray(items) ? items : {};
-    expect(resolveUiSchema(handedOut, undefined, makeRegistry(rootSchema, definitions))).toEqual({
-      'ui:title': 'FROM_B',
-      'ui:description': 'FROM_A',
-      'ui:help': 'HELP_A',
-    });
-  });
-
-  it('applies the entry of a definition composed by an allOf of the schema itself', () => {
-    const schema: RJSFSchema = { allOf: [{ $ref: '#/definitions/B' }] };
-    expect(resolveUiSchema(schema, undefined, makeRegistry(rootSchema, definitions))).toEqual({
-      'ui:title': 'FROM_B',
-      'ui:help': 'HELP_B',
-    });
+    const resolved = retrieveSchema({ validator }, handedOut, rootSchema);
+    const fromA = { 'ui:description': 'FROM_A', 'ui:help': 'HELP_A' };
+    expect(resolveUiSchema(handedOut, undefined, makeRegistry(rootSchema, definitions))).toEqual(fromA);
+    expect(resolveUiSchema(resolved, undefined, makeRegistry(rootSchema, definitions))).toEqual(fromA);
+    expect(
+      resolveUiSchema({ allOf: [{ $ref: '#/definitions/B' }] }, undefined, makeRegistry(rootSchema, definitions)),
+    ).toEqual({});
   });
 });
 

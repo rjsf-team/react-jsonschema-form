@@ -2,7 +2,7 @@ import type { JSONSchema7Definition } from 'json-schema';
 
 import { ADDITIONAL_PROPERTY_FLAG, RJSF_REF_KEY } from '../../../src/index.ts';
 import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
-import buildPlan, { childSeeds, composedRefs, itemSeeds, ownChildren } from '../../../src/schema/graph/mergePlan.ts';
+import buildPlan, { childSeeds, itemSeeds, ownChildren } from '../../../src/schema/graph/mergePlan.ts';
 import type { MergePlan, PlanPolicy, Seed } from '../../../src/schema/graph/mergePlan.ts';
 import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
@@ -600,39 +600,6 @@ describe('buildPlan()', () => {
       data.k = 'a';
       expect(buildPlan({ context, graph, seeds, data }).schema.title).toBe('then');
     });
-  });
-});
-
-describe('composedRefs()', () => {
-  const pointers = (schema: RJSFSchema) => {
-    const graph = parseSchemaGraph(schema);
-    return composedRefs(graph, [graph.root]).map((id) => graph.node(id).pointer);
-  };
-
-  it('follows the $ref chain, then the allOf of the outermost node declaring one, depth first', () => {
-    expect(
-      pointers({
-        definitions: {
-          A: { $ref: D('B') },
-          B: { allOf: [{ $ref: D('C') }, { $ref: D('D') }], properties: {} },
-          C: { allOf: [{ $ref: D('D') }] },
-          D: { allOf: [{ $ref: D('A') }] },
-        },
-        $ref: D('A'),
-      }),
-    ).toEqual(['/definitions/A', '/definitions/B', '/definitions/C', '/definitions/D']);
-  });
-  it("leaves out a target's allOf where a sibling of the $ref declares one, and then, dependencies and options", () => {
-    const shared: RJSFSchema = { $ref: D('E') };
-    expect(
-      pointers({
-        definitions: { T: { allOf: [{ $ref: D('C') }] }, C: {}, E: {}, F: {} },
-        $ref: D('T'),
-        allOf: [shared, shared],
-        then: { $ref: D('F') },
-        anyOf: [{ $ref: D('F') }],
-      }),
-    ).toEqual(['/definitions/T', '/definitions/E']);
   });
 });
 

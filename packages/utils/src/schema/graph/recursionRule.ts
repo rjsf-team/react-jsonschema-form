@@ -48,7 +48,9 @@ export function ownRefTargets<S extends StrictRJSFSchema = RJSFSchema>(graph: Sc
 
 /** The first-entered check: the field's first-entered `$ref` is its containment nodes' own (each seed against its own
  * ref path, every alias target checked), or, when no seed has one, the first `$ref` its plan enters through any edge.
- * It fires when that target is already on the ref path in effect where it is entered.
+ * It fires when that target is already on the ref path in effect where it is entered. A selected option is entered
+ * the way a seed is: its own `$ref` is checked against the ref path it was offered under, so a recursion through an
+ * option stops at the same depth whether the option list is written in place or behind a `$ref` of the field's own.
  *
  * @param graph - The graph the plan is of
  * @param plan - The field's plan
@@ -58,6 +60,13 @@ export function firstEnteredRefHit<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
   plan: MergePlan<S>,
 ): boolean {
+  const optionReenters = plan.entries.some(
+    ({ node, edge, refPath }) =>
+      edge === 'option' && ownRefTargets(graph, node).some((target) => refPath.includes(target)),
+  );
+  if (optionReenters) {
+    return true;
+  }
   const own = plan.seeds.map((seed) => ({ seed, targets: ownRefTargets(graph, seed.node) }));
   if (own.some(({ seed, targets }) => targets.some((target) => seed.refPath.includes(target)))) {
     return true;
@@ -118,24 +127,13 @@ export function collapseReason<S extends StrictRJSFSchema = RJSFSchema>(
 }
 
 /** Returns `seeds` with their ref paths restarted, so that entering a seed's own `$ref` gives `[target]`: for the
- * expansion of a collapsed field (I2), for the option a field selects, and in render for a row or key the data holds
+ * expansion of a collapsed field (I2), and in render for a row or key the data holds
  *
  * @param seeds - The seeds to restart
  * @returns - The restarted seeds
  */
 export function restartSeeds(seeds: readonly Seed[]): Seed[] {
   return seeds.map(({ node }) => ({ node, refPath: [] }));
-}
-
-/** Returns the seeds of the option a field selects: the field's own, then the option, whose ref path restarts since
- * `MultiSchemaField` renders the option as a schema of its own
- *
- * @param seeds - The field's seeds
- * @param option - The selected option's node
- * @returns - The seeds of the field with the option selected
- */
-export function optionSeeds(seeds: readonly Seed[], option: NodeId): Seed[] {
-  return [...seeds, { node: option, refPath: [] }];
 }
 
 /** A child as its parent hands it on: its seeds and the guard chain it is checked against */
@@ -167,46 +165,4 @@ export function childField<S extends StrictRJSFSchema = RJSFSchema>(
     return { seeds: child.seeds, chain: extendChain(graph, parent.chain, parent.plan.setKey), dataDriven };
   }
   return { seeds: restartSeeds(child.seeds), dataDriven };
-}
-
-/** What `settleField()` decided: the field's plan with the seeds and chain it was planned from, or the collapse */
-export type SettledField<S extends StrictRJSFSchema = RJSFSchema> =
-  | {
-      readonly collapsed: false;
-      readonly plan: MergePlan<S>;
-      readonly seeds: readonly Seed[];
-      readonly chain?: GuardChain;
-      /** Whether the field is the expansion of a collapse */
-      readonly expanded: boolean;
-    }
-  | { readonly collapsed: true; readonly plan: MergePlan<S>; readonly reason: CollapseReason };
-
-/** Plans a field and applies the rule. A collapsed field that may expand is planned again from its seeds restarted,
- * with its guard chain restarted at it (I2): its descendants collapse again at their next recurrence, one level per
- * expansion. Only the recursive edge is cut: the collapsed plan still holds the field's own keywords.
- *
- * @param graph - The graph the field is in
- * @param field - The field's seeds and chain, and whether the data drives it
- * @param position - Where the field sits, less its chain
- * @param mayExpand - Whether a collapse expands: an Expand click in render, the fold's one expansion in defaults
- * @param plan - Plans the field from its seeds
- * @returns - The field's plan and chain, or its collapse
- */
-export function settleField<S extends StrictRJSFSchema = RJSFSchema>(
-  graph: SchemaGraph<S>,
-  field: ChildField,
-  position: Omit<FieldPosition, 'chain' | 'dataDriven'>,
-  mayExpand: boolean,
-  plan: (seeds: readonly Seed[]) => MergePlan<S>,
-): SettledField<S> {
-  const planned = plan(field.seeds);
-  const reason = collapseReason(graph, planned, { ...position, dataDriven: field.dataDriven, chain: field.chain });
-  if (reason === undefined) {
-    return { collapsed: false, plan: planned, seeds: field.seeds, chain: field.chain, expanded: false };
-  }
-  if (!mayExpand) {
-    return { collapsed: true, plan: planned, reason };
-  }
-  const seeds = restartSeeds(field.seeds);
-  return { collapsed: false, plan: plan(seeds), seeds, expanded: true };
 }

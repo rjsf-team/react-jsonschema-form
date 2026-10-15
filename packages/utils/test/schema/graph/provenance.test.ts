@@ -26,14 +26,12 @@ describe('provenance', () => {
       parent: undefined,
       seeds,
       chain: undefined,
-      dataRestart: false,
-      expanded: false,
     });
     expect(Object.isFrozen(first)).toBe(true);
     expect(Object.isFrozen(first.seeds)).toBe(true);
     expect(Object.isFrozen(first.seeds[0].refPath)).toBe(true);
   });
-  it('tells provenances apart by parent, seeds, ref paths, chain and flags', () => {
+  it('tells provenances apart by parent, seeds, ref paths, chain and the options they are of', () => {
     const parent = rootProvenance(graph, seeds);
     const chain = extendChain(graph, undefined, '0,1');
     const child = { seeds: [{ node: 2, refPath: [1] }] };
@@ -41,12 +39,11 @@ describe('provenance', () => {
       childProvenance(parent, child),
       childProvenance(parent, { seeds: [{ node: 2, refPath: [1, 1] }] }),
       childProvenance(parent, { ...child, chain }),
-      childProvenance(parent, { ...child, chain, dataRestart: true }),
-      childProvenance(parent, { ...child, chain, expanded: true }),
+      childProvenance(parent, { ...child, chain, optionOf: '0' }),
       rootProvenance(graph, child.seeds),
     ];
     expect(new Set(variants).size).toBe(variants.length);
-    expect(childProvenance(parent, { ...child, chain, expanded: true })).toBe(variants[4]);
+    expect(childProvenance(parent, { ...child, chain, optionOf: '0' })).toBe(variants[3]);
     expect(variants[0].parent).toBe(parent);
   });
   it('prints as its id, rather than as the graph it points into', () => {

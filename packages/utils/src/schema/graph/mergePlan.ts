@@ -159,7 +159,7 @@ export function schemaFrom<S extends StrictRJSFSchema, U>(template: S, source: U
   return Object.assign(schema, source);
 }
 
-function seedsKey(seeds: readonly Seed[]): string {
+export function seedsKey(seeds: readonly Seed[]): string {
   return seeds.map(({ node, refPath }) => `${node}:${refPath.join('.')}`).join(';');
 }
 
@@ -715,42 +715,6 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
   planGraphs.set(plan, graph);
   planMemo.set(keys, [data, depData], plan);
   return plan;
-}
-
-/** Returns the `$ref` targets the field `seeds` seed enters whatever its data, in the order its plan enters them: each
- * seed's `$ref`, along the whole alias chain, then the `$ref`s the entries of its `allOf` enter in turn. The `allOf` is
- * the one the outermost node declaring it holds, as the plan merges it. A `then`/`else`, a dependency or an option is
- * left out, since which of them applies depends on the data.
- *
- * @param graph - The graph the seeds are in
- * @param seeds - The nodes the field is seeded with
- * @returns - The targets, each once
- */
-export function composedRefs<S extends StrictRJSFSchema = RJSFSchema>(
-  graph: SchemaGraph<S>,
-  seeds: readonly NodeId[],
-): NodeId[] {
-  const entered: NodeId[] = [];
-  const seen = new Set<NodeId>();
-  const visit = (id: NodeId) => {
-    if (seen.has(id)) {
-      return;
-    }
-    seen.add(id);
-    let allOf: readonly NodeId[] | undefined;
-    for (let node = graph.node(id); node.kind === 'schema';) {
-      allOf ??= node.allOf;
-      if (node.ref === undefined || seen.has(node.ref)) {
-        break;
-      }
-      seen.add(node.ref);
-      entered.push(node.ref);
-      node = graph.node(node.ref);
-    }
-    allOf?.forEach(visit);
-  };
-  seeds.forEach(visit);
-  return entered;
 }
 
 /** Returns the seeds of the child of an object field at `key`, and the containment edge it is reached through: a

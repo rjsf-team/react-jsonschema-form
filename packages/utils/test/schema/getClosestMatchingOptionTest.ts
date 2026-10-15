@@ -44,14 +44,14 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
     it('returns 0 when formData is empty object', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, {})).toEqual(0);
     });
-    it('returns 1 for first option in oneOf schema', () => {
+    it('returns 2 for first option in oneOf schema, scoring its $ref property as the definition it names', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, firstOption, ONE_OF_SCHEMA_DATA)).toEqual(
-        1,
+        2,
       );
     });
-    it('returns 8 for second option in oneOf schema', () => {
+    it('returns 10 for second option in oneOf schema', () => {
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, secondOption, ONE_OF_SCHEMA_DATA)).toEqual(
-        9,
+        10,
       );
     });
     it('scores a property by the anyOf of a schema that also has a oneOf', () => {

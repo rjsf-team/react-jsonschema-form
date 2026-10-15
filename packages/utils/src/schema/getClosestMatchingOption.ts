@@ -7,7 +7,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
-import retrieveSchema, { resolveOwnRef } from './retrieveSchema.ts';
+import { resolveOwnRef } from './retrieveSchema.ts';
 
 /** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
  * the first item
@@ -24,10 +24,9 @@ export const JUNK_OPTION: StrictRJSFSchema = {
 
 /** Returns the score of one property's `formValue` against the `value` schema describing it, as
  * `calculateIndexScore()` adds it up:
- * - If the `value` is a `$ref` the scoring has not followed yet on the way here, it is scored as the definition it
- *   names, with the keywords beside it, as though written in its place. One the scoring has followed is a recursion:
- *   it is followed again only as far as the form data goes, and scored as `calculateIndexScore()` scores the schema it
- *   retrieves to.
+ * - If the `value` is a `$ref` and the formValue is neither `undefined` nor `null`, it is scored as the definition it
+ *   names, with the keywords beside it, as though written in its place. A recursive `$ref` names a definition holding
+ *   that same `$ref` one level down, so only the form data, consumed a key at a time, bounds the descent.
  * - If the `value` contains an `anyOf` or `oneOf` and the formValue is neither `undefined` nor `null`, then score based
  *   on the index returned from calling `getClosestMatchingOption()` of that `anyOf`/`oneOf`.
  * - If the type of the `value` is 'object', `calculateIndexScore()` is called recursively with the formValue and the
@@ -40,36 +39,17 @@ export const JUNK_OPTION: StrictRJSFSchema = {
  * @param rootSchema - The root JSON schema of the entire form
  * @param value - The schema of the property
  * @param formValue - The form data the property holds
- * @param [refsFollowed] - The `$ref`s the scoring followed on the way to `value`, unless it was handed a schema as
- *          written
  * @returns - The property's score
  */
 function propertyScore<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, rootSchema: S, value: S, formValue: unknown, refsFollowed?: readonly string[]): number {
-  const ref = value[REF_KEY];
-  if (typeof ref === 'string') {
-    if (refsFollowed !== undefined && !refsFollowed.includes(ref)) {
-      return propertyScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(value, rootSchema), formValue, [
-        ...refsFollowed,
-        ref,
-      ]);
-    }
-    // A recursive `$ref` names a definition holding that same `$ref` one level down, so the descent is bounded only by
-    // the form data being consumed a key at a time, and never terminates once that data runs out. Descending anyway
-    // could only ever add points for the absence of data — an empty object matching a property-less `type: 'object'`,
-    // `undefined` matching a `type: 'null'` property — so a `$ref` is followed only as far as the form data goes
+>(context: SchemaContext<S, F>, rootSchema: S, value: S, formValue: unknown): number {
+  if (typeof value[REF_KEY] === 'string') {
     return formValue == null
       ? 0
-      : calculateIndexScore<T, S, F>(
-          context,
-          rootSchema,
-          retrieveSchema<unknown, S, F>(context, value, rootSchema, formValue),
-          formValue,
-          [ref],
-        );
+      : propertyScore<T, S, F>(context, rootSchema, resolveOwnRef<S>(value, rootSchema), formValue);
   }
   const xxxOfKey = getXxxOfKey<S>(value);
   if (xxxOfKey && formValue != null) {
@@ -86,7 +66,7 @@ function propertyScore<
   if (value.type === 'object') {
     // If the structure is matching then give it a little boost in score
     const structureBoost = typeof formValue === 'object' && formValue !== null ? 1 : 0;
-    return structureBoost + calculateIndexScore<T, S, F>(context, rootSchema, value, formValue, refsFollowed);
+    return structureBoost + calculateIndexScore<T, S, F>(context, rootSchema, value, formValue);
   }
   if (value.type !== guessType(formValue)) {
     return 0;
@@ -117,21 +97,13 @@ function propertyScore<
  * @param rootSchema - The root JSON schema of the entire form
  * @param schema - The schema for which the score is being calculated
  * @param formData - The form data associated with the schema, used to calculate the score
- * @param [refsFollowed] - The `$ref`s followed to reach `schema`, when it is one the scoring resolved rather than one
- *          it was handed as written: a `$ref` below it that is not among them is scored as the definition it names
  * @returns - The score a schema against the formData
  */
 export function calculateIndexScore<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(
-  context: SchemaContext<S, F>,
-  rootSchema: S,
-  schema?: S,
-  formData?: unknown,
-  refsFollowed?: readonly string[],
-): number {
+>(context: SchemaContext<S, F>, rootSchema: S, schema?: S, formData?: unknown): number {
   if (!schema) {
     return 0;
   }
@@ -141,7 +113,7 @@ export function calculateIndexScore<
       // data's own value rather than the one every object inherits, which would never look like missing data
       (score, [key, value]) =>
         isSchemaObject<S>(value)
-          ? score + propertyScore<T, S, F>(context, rootSchema, value, getByPath<T>(formData, key), refsFollowed)
+          ? score + propertyScore<T, S, F>(context, rootSchema, value, getByPath<T>(formData, key))
           : score,
       0,
     );
@@ -220,8 +192,7 @@ export default function getClosestMatchingOption<
     (scoreData: BestType, index: number) => {
       const { bestScore } = scoreData;
       const option = resolvedOptions[index];
-      const ownRef = options[index][REF_KEY];
-      const score = calculateIndexScore(context, rootSchema, option, formData, ownRef === undefined ? [] : [ownRef]);
+      const score = calculateIndexScore(context, rootSchema, option, formData);
       scoreCount.add(score);
       if (score > bestScore) {
         return { bestIndex: index, bestScore: score };

@@ -7,7 +7,6 @@ import {
   DEFAULT_KEY,
   IF_KEY,
   ONE_OF_KEY,
-  RJSF_REF_KEY,
   UI_DEFINITIONS_KEY,
 } from '../constants.ts';
 import constIsAjvDataReference from '../constIsAjvDataReference.ts';
@@ -44,11 +43,9 @@ import type {
   SchemaContext,
   StrictRJSFSchema,
   UiSchema,
-  UiSchemaDefinitions,
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
-import getFirstMatchingOption from './getFirstMatchingOption.ts';
-import buildPlan, { childSeeds, composedRefs, ownChildren, schemaFrom, withoutKeys } from './graph/mergePlan.ts';
+import buildPlan, { childSeeds, ownChildren, schemaFrom, seedsKey, withoutKeys } from './graph/mergePlan.ts';
 import type {
   MergePlan,
   OptionChoice,
@@ -60,13 +57,11 @@ import type {
 } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
-import { extendChain } from './graph/provenance.ts';
-import type { GuardChain } from './graph/provenance.ts';
-import { collapseReason, ownRefTargets, restartSeeds } from './graph/recursionRule.ts';
-import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
+import { collapseReason, restartSeeds } from './graph/recursionRule.ts';
+import type { ContainmentEdge } from './graph/recursionRule.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
-import retrieveSchema, { optionSchema, resolveOwnRef, stubExistingAdditionalProperties } from './retrieveSchema.ts';
+import retrieveSchema, { dependencyOption, resolveOwnRef, stubExistingAdditionalProperties } from './retrieveSchema.ts';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -305,8 +300,6 @@ function asDeclared<R>(value: unknown): R {
 interface DefaultsField<S extends StrictRJSFSchema> {
   readonly graph: SchemaGraph<S>;
   readonly seeds: readonly Seed[];
-  /** The plan sets of the field's ancestors since the chain last restarted */
-  readonly chain?: GuardChain;
   /** Whether the field lies within the expansion of a collapsed field, where a further collapse stops the fold */
   readonly expanded: boolean;
   readonly edge: ContainmentEdge;
@@ -316,22 +309,14 @@ interface DefaultsField<S extends StrictRJSFSchema> {
   readonly retrieves?: boolean;
   /** The schema of a field no subschema seeds, such as the stub of an extra key whose type is guessed from its data */
   readonly fallback?: S;
-  /** Whether a `default` beside the field's own `$ref` overrides the target's, as every other keyword beside it does.
-   * `getDefaultFormState()` resolved the `$ref`s of its schema before computing defaults, so its fields take it; the
-   * exported helpers read a `$ref` as `computeDefaults()` did, handing on the default beside it only where the field
-   * has no other default and no data
-   */
-  readonly refSiblingDefault?: boolean;
 }
 
 /** A field's schema as the fold reads it, with the seeds of its children */
 interface DefaultsView<S extends StrictRJSFSchema> {
-  /** The field as settled: an expanded field restarts its seeds and its chain */
+  /** The field as settled: an expanded field restarts its seeds */
   readonly field: DefaultsField<S>;
   readonly schema: S;
   readonly children: PlanChildren;
-  /** The set of the field's plan, which its children's chain is extended with */
-  readonly setKey: string;
   /** The nodes the field's plan merged, in plan order, none for a schema read as it stands */
   readonly entries: readonly PlanEntry[];
   /** The option lists the field's plan met */
@@ -344,10 +329,6 @@ interface DefaultsView<S extends StrictRJSFSchema> {
   readonly stubs: boolean;
   /** The options the fold has selected for the field so far */
   readonly options: OptionState;
-  /** The defaults standing beside the `$ref`s the field was reached through, outermost first, each of which applies
-   * only when nothing else has given the field a default and its data is empty, as `computeDefaults()` applied them
-   */
-  readonly refDefaults: readonly unknown[];
   /** The `allOf` and `if` policies the field was planned with, which planning it again with an option keeps */
   readonly allOf: boolean | 'if';
   readonly conditions: boolean;
@@ -365,29 +346,10 @@ interface OptionState {
 
 const NO_OPTIONS: OptionState = { selections: new Map(), chosen: new Set() };
 
-/** A child computed in an earlier pass of its object's dependency fixed point, what it was computed from, and the
- * answer its guard chain gave each set-equality check made within it
- */
+/** A child computed in an earlier pass of its object's dependency fixed point, and what it was computed from */
 interface MemoEntry {
   readonly inputs: readonly unknown[];
-  readonly checked: ReadonlyMap<string, boolean>;
   readonly value: unknown;
-}
-
-/** A child being computed under the memo: its guard chain, and the answer that chain gives each set-equality check made
- * within the child. A pass that adds a dependency to its object changes the object's plan set, so its children get
- * another chain; a child is reused when that chain answers every check the same, since nothing else in it changed.
- * Comparing the chains themselves instead re-folds every child on every pass, which is exponential in depth.
- */
-interface GuardFrame {
-  readonly chain?: GuardChain;
-  readonly checked: Map<string, boolean>;
-}
-
-/** The children an object's passes computed, and the children being computed around the object, innermost last */
-interface FoldMemo {
-  readonly children: Map<string, MemoEntry>;
-  readonly guards: readonly GuardFrame[];
 }
 
 /** The props the fold hands each field: those of `computeDefaults()`, holding the data as it comes */
@@ -400,7 +362,7 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   /** The children of the field computed so far, which a pass of the field's dependency fixed point reuses when they
    * would be computed from the same inputs again
    */
-  memo?: FoldMemo;
+  memo?: Map<string, MemoEntry>;
 }
 
 /** The props `foldView()` computes a field with: the field's own, with what it reports the last view it computed the
@@ -443,14 +405,8 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   if (isPolicyFor<S>(cached)) {
     return cached;
   }
-  const selectOption = ({ graph, provider, options, depData, dependencies, discriminator }: OptionRequest<S>) => {
-    const selected = selections.get(provider);
-    if (selected !== undefined || !dependencies || options.length === 0) {
-      return selected;
-    }
-    const resolved = options.map((option) => optionSchema(graph, option));
-    return getFirstMatchingOption<unknown, S, F>(context, depData, resolved, graph.rawRoot, discriminator);
-  };
+  const selectOption = (request: OptionRequest<S>) =>
+    selections.get(request.provider) ?? dependencyOption(context, request, request.depData);
   // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would restart
   // it at every level of a recursion through an option chosen without data, which nothing then bounds
   const policy: PlanPolicy<S> = { allOf, conditions, cutRecursion, selectOption, optionsInheritRefPath: true };
@@ -487,43 +443,6 @@ function stubsFor<S extends StrictRJSFSchema, F extends FormContextType>(
   );
 }
 
-/** The defaults along the `$ref`s a node leads through */
-interface RefDefaults {
-  /** The default beside each `$ref` on the way, outermost first */
-  readonly siblings: readonly unknown[];
-  /** Whether the schema the references end at declares a `default`, and which */
-  readonly target?: { readonly value: unknown };
-  /** The node the references end at */
-  readonly end: NodeId;
-}
-
-/** Returns the defaults along the `$ref`s `id` leads through. A chain of `$ref`s that loops resolves to an invalid node,
- * which ends it, as the plan entering it throws.
- */
-function refDefaultsOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): RefDefaults {
-  const siblings: unknown[] = [];
-  let node = graph.node(id);
-  while (node.kind === 'schema' && node.ref !== undefined) {
-    if (DEFAULT_KEY in node.raw) {
-      siblings.push(node.raw.default);
-    }
-    node = graph.node(node.ref);
-  }
-  return node.kind === 'schema' && DEFAULT_KEY in node.raw
-    ? { siblings, target: { value: node.raw.default }, end: node.id }
-    : { siblings, end: node.id };
-}
-
-/** Gives `schema` the default of the schema its `$ref`s lead to in place of the one beside them, or none */
-function withTargetDefault<S extends StrictRJSFSchema>(schema: S, { target }: RefDefaults): S {
-  if (target === undefined) {
-    Reflect.deleteProperty(schema, DEFAULT_KEY);
-  } else {
-    Reflect.set(schema, DEFAULT_KEY, target.value);
-  }
-  return schema;
-}
-
 /** A field's plan, with the `allOf` and `if` policies it was planned with */
 interface PlannedField<S extends StrictRJSFSchema> {
   readonly plan: MergePlan<S>;
@@ -540,42 +459,22 @@ function planView<S extends StrictRJSFSchema, F extends FormContextType>(
   data: unknown,
   depData: unknown,
 ): DefaultsView<S> {
-  const [seed] = plan.seeds;
-  const chain = refDefaultsOf(plan.graph, seed.node);
-  const seedNode = plan.graph.node(seed.node);
-  const overrides = field.refSiblingDefault === true && seedNode.kind === 'schema' && DEFAULT_KEY in seedNode.raw;
-  // Otherwise a default beside the `$ref`s on the way applies only where nothing else gives the field one, so the
-  // field's schema keeps the default of the schema the references lead to, as `findSchemaDefinition()` let a target's
-  // keywords win over those beside the `$ref`s that lead to it. A target the rule cut is not computed at all, which
-  // leaves the default beside the `$ref` the only one
-  const refDefaults =
-    !overrides &&
-    chain.siblings.length > 0 &&
-    Object.is(plan.schema.default, chain.siblings[0]) &&
-    plan.entries.some(({ node }) => node === chain.end)
-      ? chain.siblings
-      : [];
   // An option list the plan merged an option of is no longer offered, unless the option declares one of its own
   const dropped = plan.choices
     .filter(({ selected, list, keyword }) => selected !== undefined && list === plan.schema[keyword])
     .map(({ keyword }) => keyword);
-  const schema = refDefaults.length > 0 || dropped.length > 0 ? withoutKeys(plan.schema, ...dropped) : plan.schema;
-  if (refDefaults.length > 0) {
-    withTargetDefault(schema, chain);
-  }
+  const schema = dropped.length > 0 ? withoutKeys(plan.schema, ...dropped) : plan.schema;
   const keywords = ownKeywords(plan);
   return {
     field,
     schema,
     children: plan.children,
-    setKey: plan.setKey,
     entries: plan.entries,
     choices: plan.choices,
     keywords,
     collapsed: false,
     stubs: stubsFor(context, field, keywords),
     options,
-    refDefaults,
     allOf,
     conditions,
     data,
@@ -591,14 +490,12 @@ function ownView<S extends StrictRJSFSchema>(field: DefaultsField<S>, schema: S,
     field,
     schema,
     children: ownChildren(field.graph, field.seeds),
-    setKey: field.seeds.map(({ node }) => node).join(','),
     entries: [],
     choices: [],
     keywords: new Set(Object.keys(schema)),
     collapsed: false,
     stubs: false,
     options: NO_OPTIONS,
-    refDefaults: [],
     allOf: true,
     conditions: true,
     data,
@@ -606,20 +503,22 @@ function ownView<S extends StrictRJSFSchema>(field: DefaultsField<S>, schema: S,
   };
 }
 
-/** Plans `field` for `data` and the dependency data `depData`, and applies the recursion rule to it. A collapsed field
- * that is not within an expansion yet is expanded once (I2), restarting its seeds and its chain.
+/** Plans `field` for `data` and the dependency data `depData` with the options selected so far, and applies the
+ * recursion rule to the plan. A collapsed field that is not within an expansion yet is expanded once (I2), restarting
+ * its seeds; one within an expansion keeps all but its recursive edges.
  *
  * Where `getObjectDefaults()` resolved a schema, the plan does too: every field merges its `$ref`, and its `then` or
  * `else` unless `emptyObjectFields` is `skipEmptyDefaults`, in which case only one whose `allOf` is merged under
  * `allOf: 'populateDefaults'` does. An `allOf` is merged under that setting, or for a field whose own keywords hold an
- * `if`, or for a field that `retrieves`.
+ * `if`, or for a field that `retrieves`. A field planned again with an option keeps the policies it was planned with.
  */
 function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   field: DefaultsField<S>,
   data: unknown,
   depData: unknown,
-  guards: readonly GuardFrame[] = [],
+  options: OptionState = NO_OPTIONS,
+  inherited?: Pick<PlannedField<S>, 'allOf' | 'conditions'>,
 ): DefaultsView<S> {
   const { graph } = field;
   if (field.seeds.length === 0) {
@@ -633,17 +532,13 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
     conditions: boolean,
     cutRecursion: boolean,
   ): PlannedField<S> => {
-    const plan = buildPlan<S, F>({
-      context,
-      graph,
-      seeds,
-      data,
-      depData,
-      policy: policyFor(context, allOf, conditions, NO_OPTIONS.selections, cutRecursion),
-    });
-    return { plan, allOf, conditions };
+    const policy = policyFor(context, allOf, conditions, options.selections, cutRecursion);
+    return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions };
   };
   const planFor = (seeds: readonly Seed[], cutRecursion = false): PlannedField<S> => {
+    if (inherited) {
+      return planWith(seeds, inherited.allOf, inherited.conditions, cutRecursion);
+    }
     if (field.retrieves) {
       return planWith(seeds, true, true, cutRecursion);
     }
@@ -655,40 +550,8 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
       ? planWith(seeds, true, true, cutRecursion)
       : withoutConditions;
   };
-  return ruledView(context, field, planFor, NO_OPTIONS, data, depData, guards);
-}
-
-/** Whether the option `option` a field's plan merged enters, through its own `$ref`, a target already on the ref path
- * the option was offered under. A field reaching its options through a `$ref` of its own is checked by the rule against
- * that `$ref` alone, which leads somewhere new however often the recursion through the option has been followed; this
- * stops the option where `computeDefaults()` stopped at a `$ref` already followed, as the rule does for a field whose
- * option list is written inline.
- */
-function optionReentersRef<S extends StrictRJSFSchema>(plan: MergePlan<S>, option: NodeId): boolean {
-  const entry = plan.entries.find(({ node, edge }) => node === option && edge === 'option');
-  return entry !== undefined && ownRefTargets(plan.graph, option).some((target) => entry.refPath.includes(target));
-}
-
-/** Plans `field` with `planFor` and applies the recursion rule to the plan, and to the option `option` it merged, if
- * any. A collapsed field that is not within an expansion yet is expanded once (I2), restarting its seeds and its chain.
- */
-function ruledView<S extends StrictRJSFSchema, F extends FormContextType>(
-  context: SchemaContext<S, F>,
-  field: DefaultsField<S>,
-  planFor: (seeds: readonly Seed[], cutRecursion?: boolean) => PlannedField<S>,
-  options: OptionState,
-  data: unknown,
-  depData: unknown,
-  guards: readonly GuardFrame[] = [],
-  option?: NodeId,
-): DefaultsView<S> {
   const planned = planFor(field.seeds);
-  recordGuardCheck(planned.plan.setKey, guards);
-  const position: FieldPosition = { edge: field.edge, view: 'defaults', chain: field.chain };
-  const collapses =
-    collapseReason(field.graph, planned.plan, position) !== undefined ||
-    (field.edge !== 'root' && option !== undefined && optionReentersRef(planned.plan, option));
-  if (!collapses) {
+  if (collapseReason(graph, planned.plan, { edge: field.edge, view: 'defaults' }) === undefined) {
     return planView(context, field, planned, options, data, depData);
   }
   if (field.expanded) {
@@ -697,9 +560,7 @@ function ruledView<S extends StrictRJSFSchema, F extends FormContextType>(
     return { ...planView(context, field, planFor(field.seeds, true), options, data, depData), collapsed: true };
   }
   const seeds = restartSeeds(field.seeds);
-  // `resolveAllReferences()` left a `$ref` back to one it was resolving as it stood, so from here on a default beside a
-  // `$ref` applies as `computeDefaults()` applied it
-  const expanded: DefaultsField<S> = { ...field, seeds, chain: undefined, expanded: true, refSiblingDefault: false };
+  const expanded: DefaultsField<S> = { ...field, seeds, expanded: true };
   return planView(context, expanded, planFor(seeds), options, data, depData);
 }
 
@@ -710,7 +571,7 @@ function childField<S extends StrictRJSFSchema>(
   edge: ContainmentEdge,
   fallback?: S,
 ): DefaultsField<S> {
-  const { graph, chain, expanded, refSiblingDefault } = view.field;
+  const { graph, expanded } = view.field;
   const nonBoolean = seeds.filter(({ node }) => graph.node(node).kind !== 'boolean');
   // A subschema the schema's own keywords stand in for, such as the stub of a key whose type is guessed from its data
   // where `additionalProperties` is `true`, is read as it stands
@@ -718,36 +579,10 @@ function childField<S extends StrictRJSFSchema>(
   return {
     graph,
     seeds: useFallback ? [] : seeds,
-    chain: extendChain(graph, chain, view.setKey),
     expanded,
     edge,
     fallback: useFallback ? fallback : undefined,
-    refSiblingDefault,
   };
-}
-
-/** Returns the uiSchema a field is computed with, as `SchemaField` renders it: its own, over the `ui:definitions` entry
- * of the `$ref` the field was resolved from, over the entry of each further `$ref` it composes through `allOf`
- */
-function viewUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  view: DefaultsView<S>,
-  localUiSchema: UiSchema<T, S, F> | undefined,
-  uiSchemaDefinitions: UiSchemaDefinitions<S, F>,
-): UiSchema<T, S, F> {
-  const { graph, seeds } = view.field;
-  const registry = { rootSchema: graph.rawRoot, uiSchemaDefinitions };
-  const resolved = resolveUiSchema<T, S, F>(view.schema, localUiSchema, registry);
-  const ownRef: unknown = Reflect.get(view.schema, RJSF_REF_KEY);
-  const keys = Object.keys(uiSchemaDefinitions).filter((key) => key !== ownRef);
-  const composed = composedRefs(
-    graph,
-    seeds.map(({ node }) => node),
-  ).flatMap((node) => keys.filter((key) => graph.resolveRef(key) === node));
-  // Each entry goes under what is already resolved, as a definition goes under the uiSchema it is resolved for
-  return composed.reduce(
-    (uiSchema, key) => resolveUiSchema<T, S, F>(schemaFrom(graph.rawRoot, { [RJSF_REF_KEY]: key }), uiSchema, registry),
-    resolved,
-  );
 }
 
 /** Computes the defaults of `field` from the fold's state at it. A field whose plan has `dependencies` is planned again
@@ -761,14 +596,13 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FoldProps<T, S, F>,
 ): { value: unknown; view: DefaultsView<S> } {
   const data = props.rawFormData;
-  const guards = props.memo?.guards;
-  let view = settle(context, field, data, data, guards);
+  let view = settle(context, field, data, data);
   // The options the field selected are planned with it, so the dependencies they bring are qualified too
   let lastView = view;
   const track = (computed: DefaultsView<S>) => {
     lastView = computed;
   };
-  const passProps = { ...props, memo: { children: new Map<string, MemoEntry>(), guards: guards ?? [] }, track };
+  const passProps = { ...props, memo: new Map<string, MemoEntry>(), track };
   let value = foldView(context, view, passProps);
   const seen = new Set([qualifiedDependencies(lastView, data)]);
   for (;;) {
@@ -778,7 +612,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       return { value, view };
     }
     seen.add(qualified);
-    view = settle(context, field, data, depData, guards);
+    view = settle(context, field, data, depData);
     value = foldView(context, view, passProps);
   }
 }
@@ -795,24 +629,13 @@ function qualifiedDependencies<S extends StrictRJSFSchema>(view: DefaultsView<S>
     .join(',');
 }
 
-/** Records, for every child being computed, the answer its guard chain gives the set-equality check of `setKey` */
-function recordGuardCheck(setKey: string, guards: readonly GuardFrame[] = []): void {
-  for (const { chain, checked } of guards) {
-    checked.set(setKey, chain?.has(setKey) === true);
-  }
-}
-
-function seedsKey(seeds: readonly Seed[]): string {
-  return seeds.map(({ node, refPath }) => `${node}:${refPath.join('.')}`).join(';');
-}
-
 /** Computes the defaults of the child `child` of a field, memoized across the passes of the field's fixed point */
 function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
   memoKey: string,
   child: DefaultsField<S>,
   props: FoldProps<T, S, F>,
-  memo: FoldMemo | undefined,
+  memo: Map<string, MemoEntry> | undefined,
 ): unknown {
   const inputs = [
     context,
@@ -826,22 +649,12 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     props.uiSchema,
     props.shouldMergeDefaultsIntoFormData,
   ];
-  const guards = memo?.guards ?? [];
-  const entry = memo?.children.get(memoKey);
-  if (
-    entry?.inputs.every((input, index) => Object.is(input, inputs[index])) &&
-    [...entry.checked].every(([setKey, answer]) => (child.chain?.has(setKey) === true) === answer)
-  ) {
-    // The checks the reused child made are the ones the children around it depend on as well
-    for (const setKey of entry.checked.keys()) {
-      recordGuardCheck(setKey, guards);
-    }
+  const entry = memo?.get(memoKey);
+  if (entry?.inputs.every((input, index) => Object.is(input, inputs[index]))) {
     return entry.value;
   }
-  const frame: GuardFrame = { chain: child.chain, checked: new Map() };
-  const childMemo: FoldMemo = { children: new Map(), guards: [...guards, frame] };
-  const { value } = foldField<T, S, F>(context, child, { ...props, memo: childMemo });
-  memo?.children.set(memoKey, { inputs, checked: frame.checked, value });
+  const { value } = foldField<T, S, F>(context, child, { ...props, memo: undefined });
+  memo?.set(memoKey, { inputs, value });
   return value;
 }
 
@@ -868,22 +681,15 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const { schema } = view;
   const rootSchema = view.field.graph.rawRoot;
   inputProps.track(view);
-  // Apply `ui:definitions` at every field, keyed by the `$ref`s its plan entered, so defaults see the same uiSchema
-  // `SchemaField` renders with
+  // Apply `ui:definitions` at every field, keyed by the `$ref` its plan was resolved from, so defaults see the same
+  // uiSchema `SchemaField` renders with
   const uiSchema = uiSchemaDefinitions
-    ? viewUiSchema<T, S, F>(view, localUiSchema, uiSchemaDefinitions)
+    ? resolveUiSchema<T, S, F>(schema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
   const props = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   const formData = isObject(rawFormData) ? rawFormData : {};
   // Compute the defaults recursively: give highest priority to deepest nodes unless nestedDefaultsPrecedence is ancestorWins.
   let defaults: unknown = parentDefaults;
-  // A default beside a `$ref` is one the field is handed only when it has no default yet and no data of its own: data
-  // already there is not to be overridden by it
-  for (const refDefault of view.refDefaults) {
-    if (!defaults && isEmptyFormData(rawFormData)) {
-      defaults = refDefault;
-    }
-  }
   const preferParentDefaults =
     Boolean(defaults) && defaultFormStateBehavior?.nestedDefaultsPrecedence === 'ancestorWins';
   // Worked out by the `oneOf`/`anyOf` branch, so it isn't worked out again for this node's type-based default
@@ -1048,9 +854,6 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
  * selected, its seeds joining the plan with the ref path of the node offering it. Any other field renders only the
  * option, as `getRenderedOptionSchema()` renders it, so its defaults are those of the option as rendered, the option's
  * children still seeded beside the field's own. The option's `uiSchema` entry is the one its fields see.
- *
- * An option written as a `$ref` that nothing is met into is followed as a `$ref` property is: the default the field
- * hands it, and any beside the reference, apply only where the field has no default yet and no data.
  */
 function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   context: SchemaContext<S, F>,
@@ -1089,49 +892,16 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       seeds: [{ node: adopted.node, refPath: [] }],
       edge: 'root',
     };
-    const optionView = settle(context, optionField, view.data, view.depData, props.memo?.guards);
+    const optionView = settle(context, optionField, view.data, view.depData);
     return foldView<T, S, F>(context, { ...optionView, options: { ...optionView.options, chosen } }, branchProps);
   }
   const optionNode = choice.options[index];
   const selections = new Map(view.options.selections).set(choice.provider, index);
-  const planWithOption = (seeds: readonly Seed[], cutRecursion = false): PlannedField<S> => ({
-    plan: buildPlan<S, F>({
-      context,
-      graph,
-      seeds,
-      data: view.data,
-      depData: view.depData,
-      policy: policyFor(context, view.allOf, view.conditions, selections, cutRecursion),
-    }),
-    allOf: view.allOf,
-    conditions: view.conditions,
-  });
   // The rule applies to the field with its option merged, since a recursion through an option enters its `$ref` only
   // there: the option collapses where the same recursion written as a property does, whatever the data holds below it
-  const merged = ruledView(
-    context,
-    field,
-    planWithOption,
-    { selections, chosen },
-    view.data,
-    view.depData,
-    props.memo?.guards,
-    optionNode,
-  );
-  const optionRaw = graph.node(optionNode);
-  const optionChain = refDefaultsOf(graph, optionNode);
-  const isRef = optionRaw.kind === 'schema' && optionRaw.ref !== undefined;
-  // What the field hands an option written as a `$ref`: the default beside the reference, or else its own
-  const handed =
-    optionRaw.kind === 'schema' && !(DEFAULT_KEY in optionRaw.raw) && DEFAULT_KEY in remaining
-      ? [remaining.default, ...optionChain.siblings]
-      : optionChain.siblings;
+  const merged = settle(context, field, view.data, view.depData, { selections, chosen }, view);
   if (rendersOwnField) {
-    return foldView<T, S, F>(
-      context,
-      isRef ? { ...merged, schema: withTargetDefault({ ...merged.schema }, optionChain), refDefaults: handed } : merged,
-      branchProps,
-    );
+    return foldView<T, S, F>(context, merged, branchProps);
   }
   // The option as rendered is planned from where the field's settled plan offers it, and cut where that plan was cut
   const optionAlone = buildPlan<S, F>({
@@ -1145,16 +915,6 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
     depData: view.depData,
     policy: policyFor(context, view.allOf, view.conditions, NO_OPTIONS.selections, merged.collapsed),
   });
-  // An option the field passes nothing on to is rendered as it stands, a `$ref` and all
-  const passesNothing =
-    optionRaw.kind === 'schema' && getRenderedOptionSchema<S>(remaining, optionRaw.raw) === optionRaw.raw;
-  if (isRef && passesNothing) {
-    return foldView<T, S, F>(
-      context,
-      { ...merged, schema: withTargetDefault({ ...optionAlone.schema }, optionChain), refDefaults: handed },
-      branchProps,
-    );
-  }
   const rendered = getRenderedOptionSchema<S>(remaining, optionAlone.schema);
   return foldView<T, S, F>(
     context,
@@ -1761,7 +1521,7 @@ export default function getDefaultFormState<
   // data, its conditions are validated against an empty root, which a validator for another dialect accepts
   const root = rootSchema ?? (isEmptyFormData(formData) ? theSchema : schemaFrom(theSchema, {}));
   // The root is resolved as `retrieveSchema()` resolves it, its `allOf` merged and the extra keys of its data stubbed
-  const field: DefaultsField<S> = { ...callRoot<S>(root, theSchema), retrieves: true, refSiblingDefault: true };
+  const field: DefaultsField<S> = { ...callRoot<S>(root, theSchema), retrieves: true };
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
   // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
   // cases we take the value from the defaults because the value from the formData is not valid.

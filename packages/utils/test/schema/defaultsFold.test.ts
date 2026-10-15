@@ -31,7 +31,7 @@ describe('getDefaultFormState() as one fold over the merge plan', () => {
     ).toEqual({ pet: { kind: 'cat', meow: 'yes' } });
   });
 
-  it("applies the ui:definitions entry of a $ref an allOf merges in beneath the field's own", () => {
+  it("applies the ui:definitions entry of the field's own $ref only, not that of a $ref an allOf merges in", () => {
     const schema: RJSFSchema = {
       definitions: {
         A: { allOf: [{ $ref: '#/definitions/B' }], properties: { a: { type: 'string' } } },
@@ -51,7 +51,7 @@ describe('getDefaultFormState() as one fold over the merge plan', () => {
         { validator, defaultFormStateBehavior: { allOf: 'populateDefaults' } },
         { schema, rootSchema: schema, uiSchema },
       ),
-    ).toEqual({ field: { b: 'from A', c: 'from B' } });
+    ).toEqual({ field: { b: 'from A' } });
   });
 
   describe('options a customMergeAllOf rewrote', () => {
@@ -127,7 +127,7 @@ describe('getDefaultFormState() as one fold over the merge plan', () => {
         ['beside'],
       );
     });
-    it('beside the outermost $ref of an alias chain only, the target winning over one further in', () => {
+    it('overrides it along an alias chain, past a $ref back into a recursion and in computeDefaults()', () => {
       expect(
         defaultsOf({
           type: 'object',
@@ -136,21 +136,17 @@ describe('getDefaultFormState() as one fold over the merge plan', () => {
             inner: { $ref: '#/definitions/alias' },
           },
         }),
-      ).toEqual({ outer: 'beside', inner: 'target' });
-    });
-    it('takes the target in computeDefaults(), which reads the $ref as it stands', () => {
+      ).toEqual({ outer: 'beside', inner: 'alias' });
       expect(
         computeDefaults({ validator }, { $ref: '#/definitions/s', default: 'beside' }, { rootSchema: { definitions } }),
-      ).toBe('target');
-    });
-    it('takes the target past a $ref back into a recursion, and the default beside one the rule cuts', () => {
+      ).toBe('beside');
       const node: RJSFSchema = {
         type: 'object',
         properties: { v: { $ref: '#/definitions/s', default: 'beside' }, child: { $ref: '#/definitions/node' } },
       };
       expect(defaultsOf({ definitions: { ...definitions, node }, $ref: '#/definitions/node' })).toEqual({
         v: 'beside',
-        child: { v: 'target' },
+        child: { v: 'beside' },
       });
       const tree: RJSFSchema = {
         type: 'object',
@@ -162,7 +158,7 @@ describe('getDefaultFormState() as one fold over the merge plan', () => {
       };
       expect(defaultsOf({ definitions: { ...definitions, tree }, $ref: '#/definitions/tree' })).toEqual({
         name: 'target',
-        child: { name: 'target', child: { name: 'beside' } },
+        child: { name: 'beside', child: { name: 'beside' } },
       });
     });
   });

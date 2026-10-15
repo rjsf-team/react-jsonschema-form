@@ -6821,7 +6821,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ pet: { id: 'ID', meow: true } });
         });
       });
-      it("hands a selected option written as a $ref its field's default, as a $ref property is handed it", () => {
+      it("merges a selected option written as a $ref with its field's default, as it merges one written in place", () => {
         const schema: RJSFSchema = {
           $defs: {
             O: { type: 'object', properties: { a: { type: 'number' }, b: { type: 'number' } } },
@@ -6835,13 +6835,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(
           getDefaultFormState({ validator: testValidator }, { schema, rootSchema: schema, formData: { o: { b: 2 } } }),
-        ).toEqual({ o: { b: 2 }, s: 'child' });
+        ).toEqual({ o: { a: 1, b: 2 }, s: 'child' });
         expect(
           getDefaultFormState(
             { validator: testValidator, defaultFormStateBehavior: { nestedDefaultsPrecedence: 'ancestorWins' } },
             { schema, rootSchema: schema, formData: { o: { b: 2 } } },
           ),
-        ).toEqual({ o: { b: 2 }, s: 'parent' });
+        ).toEqual({ o: { a: 1, b: 2 }, s: 'child' });
       });
       it('stops following a selected option written as a $ref once it leads back to a $ref already followed', () => {
         const schema: RJSFSchema = {

@@ -47,8 +47,8 @@ import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
 import type { Provenance } from './graph/provenance.ts';
-import { childField, restartSeeds, settleField } from './graph/recursionRule.ts';
-import type { ContainmentEdge } from './graph/recursionRule.ts';
+import { childField, collapseReason, restartSeeds } from './graph/recursionRule.ts';
+import type { ContainmentEdge, FieldPosition } from './graph/recursionRule.ts';
 import shallowAllOfMerge from './shallowAllOfMerge.ts';
 
 /** Retrieves the schema of one field: the `schema` with its own `$ref`, `allOf`, `if`/`then`/`else`, `dependencies`
@@ -119,7 +119,7 @@ function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): 
     return rootProvenance(adopted.graph, [{ node: adopted.node, refPath: [] }]);
   }
   if (Reflect.get(schema, RJSF_REF_CYCLE_KEY) === false) {
-    return childProvenance(stamped, { seeds: restartSeeds(stamped.seeds), expanded: true });
+    return childProvenance(stamped, { seeds: restartSeeds(stamped.seeds) });
   }
   if (handedOut.has(schema)) {
     return stamped;
@@ -144,27 +144,34 @@ function renderPolicy<S extends StrictRJSFSchema, F extends FormContextType>(
   if (isPolicyFor<S>(cached)) {
     return cached;
   }
-  const selectOption = ({ graph, options, data, dependencies, discriminator }: OptionRequest<S>) => {
-    if (!dependencies || options.length === 0) {
-      return undefined;
-    }
-    const resolved = options.map((option) => optionSchema(graph, option));
-    return getFirstMatchingOption(context, data, resolved, graph.rawRoot, discriminator);
-  };
+  const selectOption = (request: OptionRequest<S>) => dependencyOption(context, request, request.data);
   const policy: PlanPolicy<S> = { allOf: true, selectOption };
   policies.set(context.validator, policy);
   return policy;
 }
 
-/** Returns the schema an option node is scored as: its own `$ref` resolved, or the object a boolean option reads as
+/** Returns the option of a list beside `dependencies` that `data` matches first, which resolution merges into the
+ * schema as `resolveDependencies()` merged it, rather than leaving the choice to `MultiSchemaField`; none for any other
+ * list. Each option is matched with its own `$ref` resolved, a boolean option as the object it reads as.
  *
- * @param graph - The graph the option is a node of
- * @param option - The option's node
- * @returns - The option's schema
+ * @param context - The `SchemaContext` the options are matched in
+ * @param request - The option list the plan met
+ * @param data - The data the option is matched against
+ * @returns - The index of the matching option, or undefined
  */
-export function optionSchema<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, option: number): S {
-  const node = graph.node(option);
-  return node.kind === 'schema' ? resolveOwnRef<S>(node.raw, graph.rawRoot) : booleanSchema(node, graph.rawRoot);
+export function dependencyOption<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  { graph, options, dependencies, discriminator }: OptionRequest<S>,
+  data: unknown,
+): number | undefined {
+  if (!dependencies || options.length === 0) {
+    return undefined;
+  }
+  const resolved = options.map((option) => {
+    const node = graph.node(option);
+    return node.kind === 'schema' ? resolveOwnRef<S>(node.raw, graph.rawRoot) : booleanSchema(node, graph.rawRoot);
+  });
+  return getFirstMatchingOption(context, data, resolved, graph.rawRoot, discriminator);
 }
 
 /** Returns a schema's own `$ref` resolved, the definition overridden by the keywords beside the reference and marked
@@ -229,7 +236,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     const next = childField(graph, { plan, chain: field.chain }, { seeds: seedsOfChild, edge, inData }, 'render');
     return {
       next,
-      provenance: childProvenance(field, { seeds: next.seeds, chain: next.chain, dataRestart: next.dataDriven }),
+      provenance: childProvenance(field, { seeds: next.seeds, chain: next.chain }),
     };
   };
   // A subschema already handed out was decided where it was handed out, and a stub for an extra key is a field of its
@@ -254,10 +261,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       }
       const own = valueOf(data, key);
       const { next, provenance } = child(propertySeeds, edge, isObject(data) && Object.hasOwn(data, key));
-      const settled = settleField(graph, next, { edge, view: 'render' }, false, (seedsOfChild) =>
-        planOf(seedsOfChild, own),
-      );
-      if (settled.collapsed) {
+      const childPlan = planOf(next.seeds, own);
+      const position: FieldPosition = { edge, view: 'render', dataDriven: next.dataDriven, chain: next.chain };
+      if (collapseReason(graph, childPlan, position) !== undefined) {
         // A boolean property collapses as the empty schema it stands for
         const collapsed = isSchemaObject<S>(value) ? value : schemaFrom(graph.rawRoot, {});
         return [key, handOut({ ...collapsed, [RJSF_REF_CYCLE_KEY]: true }, provenance)];
@@ -265,7 +271,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       return [
         key,
         patterned
-          ? buildView(context, root, provenance, own, false, settled.plan)
+          ? buildView(context, root, provenance, own, false, childPlan)
           : handOut(schemaFrom(graph.rawRoot, value), provenance),
       ];
     });
