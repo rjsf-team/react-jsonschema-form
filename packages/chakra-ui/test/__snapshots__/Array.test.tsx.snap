@@ -1077,7 +1077,7 @@ exports[`array fields > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1109,7 +1109,7 @@ exports[`array fields > checkboxes 1`] = `
     border-color: var(--chakra-colors-border);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-5:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -1117,27 +1117,27 @@ exports[`array fields > checkboxes 1`] = `
     border-color: var(--focus-ring-color);
   }
 
-  .emotion-6:is(:placeholder-shown, [data-placeholder-shown]) {
+  .emotion-5:is(:placeholder-shown, [data-placeholder-shown]) {
     --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
     color: var(--mix-color, var(--chakra-colors-fg-muted));
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-5:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     border-color: var(--chakra-colors-border-emphasized);
   }
 }
 
 @layer recipes {
-  .emotion-7 {
+  .emotion-6 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -1148,7 +1148,7 @@ exports[`array fields > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1168,7 +1168,7 @@ exports[`array fields > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-8 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1184,21 +1184,21 @@ exports[`array fields > checkboxes 1`] = `
     color: var(--chakra-colors-fg-muted);
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     color: var(--chakra-colors-fg-subtle);
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     color: var(--chakra-colors-fg-error);
   }
 
-  .emotion-9 :where(svg) {
+  .emotion-8 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
-.emotion-10 {
+.emotion-9 {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -1206,14 +1206,14 @@ exports[`array fields > checkboxes 1`] = `
   stroke-linejoin: round;
 }
 
-.emotion-11 {
+.emotion-10 {
   min-width: 100%!important;
   z-index: 2!important;
   top: calc(100% + 5px)!important;
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-11 {
     background: var(--chakra-colors-bg-panel);
     --bg-currentcolor: var(--chakra-colors-bg-panel);
     display: -webkit-box;
@@ -1235,61 +1235,61 @@ exports[`array fields > checkboxes 1`] = `
     line-height: 1.25rem;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open]) {
+  .emotion-11:is([open], [data-open], [data-state=open]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fast);
     animation-duration: var(--chakra-durations-fast);
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=top] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=top] {
     -webkit-animation-name: slide-from-bottom,fade-in;
     animation-name: slide-from-bottom,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
     -webkit-animation-name: slide-from-top,fade-in;
     animation-name: slide-from-top,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=left] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=left] {
     -webkit-animation-name: slide-from-right,fade-in;
     animation-name: slide-from-right,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=right] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=right] {
     -webkit-animation-name: slide-from-left,fade-in;
     animation-name: slide-from-left,fade-in;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed]) {
+  .emotion-11:is([closed], [data-closed], [data-state=closed]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fastest);
     animation-duration: var(--chakra-durations-fastest);
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
     -webkit-animation-name: slide-to-bottom,fade-out;
     animation-name: slide-to-bottom,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
     -webkit-animation-name: slide-to-top,fade-out;
     animation-name: slide-to-top,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
     -webkit-animation-name: slide-to-right,fade-out;
     animation-name: slide-to-right,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
     -webkit-animation-name: slide-to-left,fade-out;
     animation-name: slide-to-left,fade-out;
   }
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-12 {
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -1317,25 +1317,25 @@ exports[`array fields > checkboxes 1`] = `
     padding-inline: var(--chakra-spacing-2);
   }
 
-  .emotion-13[data-highlighted] {
+  .emotion-12[data-highlighted] {
     --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
     background: var(--mix-background, var(--chakra-colors-bg-emphasized));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
   }
 
-  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     pointer-events: none;
     opacity: 0.5;
   }
 
-  .emotion-13 :where(svg) {
+  .emotion-12 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
 @layer recipes {
-  .emotion-14 {
+  .emotion-13 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1351,12 +1351,12 @@ exports[`array fields > checkboxes 1`] = `
   }
 }
 
-.emotion-22 {
+.emotion-21 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-23 {
+  .emotion-22 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -1404,19 +1404,19 @@ exports[`array fields > checkboxes 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-23 :where(svg) {
+  .emotion-22 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -1424,14 +1424,14 @@ exports[`array fields > checkboxes 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -1504,63 +1504,54 @@ exports[`array fields > checkboxes 1`] = `
                 dir="ltr"
                 id="select:root:control"
               >
-                <div
-                  class="chakra-select__control emotion-4"
-                  data-part="control"
+                <button
+                  aria-controls="select:root:content"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-invalid="false"
+                  aria-labelledby="field::_r_7_::label"
+                  aria-required="false"
+                  class="chakra-select__trigger emotion-5"
+                  data-part="trigger"
+                  data-placeholder-shown=""
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:control"
+                  id="select:root:trigger"
+                  role="combobox"
+                  type="button"
                 >
-                  <button
-                    aria-controls="select:root:content"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    aria-invalid="false"
-                    aria-labelledby="field::_r_7_::label"
-                    aria-required="false"
-                    class="chakra-select__trigger emotion-6"
-                    data-part="trigger"
-                    data-placeholder-shown=""
+                  <span
+                    class="chakra-select__valueText emotion-6"
+                    data-part="value-text"
+                    data-scope="select"
+                    dir="ltr"
+                  />
+                </button>
+                <div
+                  class="chakra-select__indicatorGroup emotion-7"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="chakra-select__indicator emotion-8"
+                    data-part="indicator"
                     data-scope="select"
                     data-state="closed"
                     dir="ltr"
-                    id="select:root:trigger"
-                    role="combobox"
-                    type="button"
                   >
-                    <span
-                      class="chakra-select__valueText emotion-7"
-                      data-part="value-text"
-                      data-scope="select"
-                      dir="ltr"
-                    />
-                  </button>
-                  <div
-                    class="chakra-select__indicatorGroup emotion-8"
-                  >
-                    <div
-                      aria-hidden="true"
-                      class="chakra-select__indicator emotion-9"
-                      data-part="indicator"
-                      data-scope="select"
-                      data-state="closed"
-                      dir="ltr"
+                    <svg
+                      class="emotion-9"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        class="emotion-10"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </div>
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
               <div
-                class="chakra-select__positioner emotion-11"
+                class="chakra-select__positioner emotion-10"
                 data-part="positioner"
                 data-scope="select"
                 dir="ltr"
@@ -1570,7 +1561,7 @@ exports[`array fields > checkboxes 1`] = `
                 <div
                   aria-labelledby="field::_r_7_::label"
                   aria-multiselectable="true"
-                  class="chakra-select__content emotion-12"
+                  class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
                   data-state="closed"
@@ -1582,7 +1573,7 @@ exports[`array fields > checkboxes 1`] = `
                 >
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -1594,14 +1585,14 @@ exports[`array fields > checkboxes 1`] = `
                     a
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -1612,7 +1603,7 @@ exports[`array fields > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -1624,14 +1615,14 @@ exports[`array fields > checkboxes 1`] = `
                     b
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -1642,7 +1633,7 @@ exports[`array fields > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -1654,14 +1645,14 @@ exports[`array fields > checkboxes 1`] = `
                     c
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -1678,10 +1669,10 @@ exports[`array fields > checkboxes 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-22"
+      class="emotion-21"
     >
       <button
-        class="chakra-button emotion-23"
+        class="chakra-button emotion-22"
         type="submit"
       >
         Submit
@@ -4888,7 +4879,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4920,7 +4911,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     border-color: var(--chakra-colors-border);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-5:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -4928,27 +4919,27 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     border-color: var(--focus-ring-color);
   }
 
-  .emotion-6:is(:placeholder-shown, [data-placeholder-shown]) {
+  .emotion-5:is(:placeholder-shown, [data-placeholder-shown]) {
     --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
     color: var(--mix-color, var(--chakra-colors-fg-muted));
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-5:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     border-color: var(--chakra-colors-border-emphasized);
   }
 }
 
 @layer recipes {
-  .emotion-7 {
+  .emotion-6 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -4959,7 +4950,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4979,7 +4970,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-8 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4995,21 +4986,21 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     color: var(--chakra-colors-fg-muted);
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     color: var(--chakra-colors-fg-subtle);
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     color: var(--chakra-colors-fg-error);
   }
 
-  .emotion-9 :where(svg) {
+  .emotion-8 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
-.emotion-10 {
+.emotion-9 {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -5017,14 +5008,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
   stroke-linejoin: round;
 }
 
-.emotion-11 {
+.emotion-10 {
   min-width: 100%!important;
   z-index: 2!important;
   top: calc(100% + 5px)!important;
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-11 {
     background: var(--chakra-colors-bg-panel);
     --bg-currentcolor: var(--chakra-colors-bg-panel);
     display: -webkit-box;
@@ -5046,61 +5037,61 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     line-height: 1.25rem;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open]) {
+  .emotion-11:is([open], [data-open], [data-state=open]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fast);
     animation-duration: var(--chakra-durations-fast);
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=top] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=top] {
     -webkit-animation-name: slide-from-bottom,fade-in;
     animation-name: slide-from-bottom,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
     -webkit-animation-name: slide-from-top,fade-in;
     animation-name: slide-from-top,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=left] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=left] {
     -webkit-animation-name: slide-from-right,fade-in;
     animation-name: slide-from-right,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=right] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=right] {
     -webkit-animation-name: slide-from-left,fade-in;
     animation-name: slide-from-left,fade-in;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed]) {
+  .emotion-11:is([closed], [data-closed], [data-state=closed]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fastest);
     animation-duration: var(--chakra-durations-fastest);
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
     -webkit-animation-name: slide-to-bottom,fade-out;
     animation-name: slide-to-bottom,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
     -webkit-animation-name: slide-to-top,fade-out;
     animation-name: slide-to-top,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
     -webkit-animation-name: slide-to-right,fade-out;
     animation-name: slide-to-right,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
     -webkit-animation-name: slide-to-left,fade-out;
     animation-name: slide-to-left,fade-out;
   }
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-12 {
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -5128,25 +5119,25 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     padding-inline: var(--chakra-spacing-2);
   }
 
-  .emotion-13[data-highlighted] {
+  .emotion-12[data-highlighted] {
     --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
     background: var(--mix-background, var(--chakra-colors-bg-emphasized));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
   }
 
-  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     pointer-events: none;
     opacity: 0.5;
   }
 
-  .emotion-13 :where(svg) {
+  .emotion-12 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
 @layer recipes {
-  .emotion-14 {
+  .emotion-13 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -5162,12 +5153,12 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
   }
 }
 
-.emotion-22 {
+.emotion-21 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-23 {
+  .emotion-22 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -5215,19 +5206,19 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-23 :where(svg) {
+  .emotion-22 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -5235,14 +5226,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -5315,63 +5306,54 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 dir="ltr"
                 id="select:root:control"
               >
-                <div
-                  class="chakra-select__control emotion-4"
-                  data-part="control"
+                <button
+                  aria-controls="select:root:content"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-invalid="false"
+                  aria-labelledby="field::_r_3j_::label"
+                  aria-required="false"
+                  class="chakra-select__trigger emotion-5"
+                  data-part="trigger"
+                  data-placeholder-shown=""
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:control"
+                  id="select:root:trigger"
+                  role="combobox"
+                  type="button"
                 >
-                  <button
-                    aria-controls="select:root:content"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    aria-invalid="false"
-                    aria-labelledby="field::_r_3j_::label"
-                    aria-required="false"
-                    class="chakra-select__trigger emotion-6"
-                    data-part="trigger"
-                    data-placeholder-shown=""
+                  <span
+                    class="chakra-select__valueText emotion-6"
+                    data-part="value-text"
+                    data-scope="select"
+                    dir="ltr"
+                  />
+                </button>
+                <div
+                  class="chakra-select__indicatorGroup emotion-7"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="chakra-select__indicator emotion-8"
+                    data-part="indicator"
                     data-scope="select"
                     data-state="closed"
                     dir="ltr"
-                    id="select:root:trigger"
-                    role="combobox"
-                    type="button"
                   >
-                    <span
-                      class="chakra-select__valueText emotion-7"
-                      data-part="value-text"
-                      data-scope="select"
-                      dir="ltr"
-                    />
-                  </button>
-                  <div
-                    class="chakra-select__indicatorGroup emotion-8"
-                  >
-                    <div
-                      aria-hidden="true"
-                      class="chakra-select__indicator emotion-9"
-                      data-part="indicator"
-                      data-scope="select"
-                      data-state="closed"
-                      dir="ltr"
+                    <svg
+                      class="emotion-9"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        class="emotion-10"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </div>
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
               <div
-                class="chakra-select__positioner emotion-11"
+                class="chakra-select__positioner emotion-10"
                 data-part="positioner"
                 data-scope="select"
                 dir="ltr"
@@ -5381,7 +5363,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 <div
                   aria-labelledby="field::_r_3j_::label"
                   aria-multiselectable="true"
-                  class="chakra-select__content emotion-12"
+                  class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
                   data-state="closed"
@@ -5393,7 +5375,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                 >
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -5405,14 +5387,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                     foo
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -5423,7 +5405,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -5435,14 +5417,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                     bar
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -5453,7 +5435,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -5465,14 +5447,14 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
                     baz
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -5489,10 +5471,10 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
       </fieldset>
     </div>
     <div
-      class="emotion-22"
+      class="emotion-21"
     >
       <button
-        class="chakra-button emotion-23"
+        class="chakra-button emotion-22"
         type="submit"
       >
         Submit
@@ -11152,7 +11134,7 @@ exports[`with title and description > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-8 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11184,7 +11166,7 @@ exports[`with title and description > checkboxes 1`] = `
     border-color: var(--chakra-colors-border);
   }
 
-  .emotion-9:is(:focus-visible, [data-focus-visible]) {
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -11192,27 +11174,27 @@ exports[`with title and description > checkboxes 1`] = `
     border-color: var(--focus-ring-color);
   }
 
-  .emotion-9:is(:placeholder-shown, [data-placeholder-shown]) {
+  .emotion-8:is(:placeholder-shown, [data-placeholder-shown]) {
     --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
     color: var(--mix-color, var(--chakra-colors-fg-muted));
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-8:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     border-color: var(--chakra-colors-border-emphasized);
   }
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-9 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -11223,7 +11205,7 @@ exports[`with title and description > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11243,7 +11225,7 @@ exports[`with title and description > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11259,21 +11241,21 @@ exports[`with title and description > checkboxes 1`] = `
     color: var(--chakra-colors-fg-muted);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     color: var(--chakra-colors-fg-subtle);
   }
 
-  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     color: var(--chakra-colors-fg-error);
   }
 
-  .emotion-12 :where(svg) {
+  .emotion-11 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
-.emotion-13 {
+.emotion-12 {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -11281,14 +11263,14 @@ exports[`with title and description > checkboxes 1`] = `
   stroke-linejoin: round;
 }
 
-.emotion-14 {
+.emotion-13 {
   min-width: 100%!important;
   z-index: 2!important;
   top: calc(100% + 5px)!important;
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-14 {
     background: var(--chakra-colors-bg-panel);
     --bg-currentcolor: var(--chakra-colors-bg-panel);
     display: -webkit-box;
@@ -11310,61 +11292,61 @@ exports[`with title and description > checkboxes 1`] = `
     line-height: 1.25rem;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open]) {
+  .emotion-14:is([open], [data-open], [data-state=open]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fast);
     animation-duration: var(--chakra-durations-fast);
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=top] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=top] {
     -webkit-animation-name: slide-from-bottom,fade-in;
     animation-name: slide-from-bottom,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
     -webkit-animation-name: slide-from-top,fade-in;
     animation-name: slide-from-top,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=left] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=left] {
     -webkit-animation-name: slide-from-right,fade-in;
     animation-name: slide-from-right,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=right] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=right] {
     -webkit-animation-name: slide-from-left,fade-in;
     animation-name: slide-from-left,fade-in;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed]) {
+  .emotion-14:is([closed], [data-closed], [data-state=closed]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fastest);
     animation-duration: var(--chakra-durations-fastest);
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
     -webkit-animation-name: slide-to-bottom,fade-out;
     animation-name: slide-to-bottom,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
     -webkit-animation-name: slide-to-top,fade-out;
     animation-name: slide-to-top,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
     -webkit-animation-name: slide-to-right,fade-out;
     animation-name: slide-to-right,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
     -webkit-animation-name: slide-to-left,fade-out;
     animation-name: slide-to-left,fade-out;
   }
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-15 {
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -11392,25 +11374,25 @@ exports[`with title and description > checkboxes 1`] = `
     padding-inline: var(--chakra-spacing-2);
   }
 
-  .emotion-16[data-highlighted] {
+  .emotion-15[data-highlighted] {
     --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
     background: var(--mix-background, var(--chakra-colors-bg-emphasized));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     pointer-events: none;
     opacity: 0.5;
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-15 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
 @layer recipes {
-  .emotion-17 {
+  .emotion-16 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -11426,12 +11408,12 @@ exports[`with title and description > checkboxes 1`] = `
   }
 }
 
-.emotion-25 {
+.emotion-24 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-26 {
+  .emotion-25 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -11479,19 +11461,19 @@ exports[`with title and description > checkboxes 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-26:is(:focus-visible, [data-focus-visible]) {
+  .emotion-25:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-26:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-26 :where(svg) {
+  .emotion-25 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -11499,14 +11481,14 @@ exports[`with title and description > checkboxes 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-26:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-25:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-26:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-25:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -11601,64 +11583,55 @@ exports[`with title and description > checkboxes 1`] = `
                 dir="ltr"
                 id="select:root:control"
               >
-                <div
-                  class="chakra-select__control emotion-7"
-                  data-part="control"
+                <button
+                  aria-controls="select:root:content"
+                  aria-describedby="root__description"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-invalid="false"
+                  aria-labelledby="field::_r_u_::label"
+                  aria-required="false"
+                  class="chakra-select__trigger emotion-8"
+                  data-part="trigger"
+                  data-placeholder-shown=""
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:control"
+                  id="select:root:trigger"
+                  role="combobox"
+                  type="button"
                 >
-                  <button
-                    aria-controls="select:root:content"
-                    aria-describedby="root__description"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    aria-invalid="false"
-                    aria-labelledby="field::_r_u_::label"
-                    aria-required="false"
-                    class="chakra-select__trigger emotion-9"
-                    data-part="trigger"
-                    data-placeholder-shown=""
+                  <span
+                    class="chakra-select__valueText emotion-9"
+                    data-part="value-text"
+                    data-scope="select"
+                    dir="ltr"
+                  />
+                </button>
+                <div
+                  class="chakra-select__indicatorGroup emotion-10"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="chakra-select__indicator emotion-11"
+                    data-part="indicator"
                     data-scope="select"
                     data-state="closed"
                     dir="ltr"
-                    id="select:root:trigger"
-                    role="combobox"
-                    type="button"
                   >
-                    <span
-                      class="chakra-select__valueText emotion-10"
-                      data-part="value-text"
-                      data-scope="select"
-                      dir="ltr"
-                    />
-                  </button>
-                  <div
-                    class="chakra-select__indicatorGroup emotion-11"
-                  >
-                    <div
-                      aria-hidden="true"
-                      class="chakra-select__indicator emotion-12"
-                      data-part="indicator"
-                      data-scope="select"
-                      data-state="closed"
-                      dir="ltr"
+                    <svg
+                      class="emotion-12"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        class="emotion-13"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </div>
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
               <div
-                class="chakra-select__positioner emotion-14"
+                class="chakra-select__positioner emotion-13"
                 data-part="positioner"
                 data-scope="select"
                 dir="ltr"
@@ -11668,7 +11641,7 @@ exports[`with title and description > checkboxes 1`] = `
                 <div
                   aria-labelledby="field::_r_u_::label"
                   aria-multiselectable="true"
-                  class="chakra-select__content emotion-15"
+                  class="chakra-select__content emotion-14"
                   data-part="content"
                   data-scope="select"
                   data-state="closed"
@@ -11680,7 +11653,7 @@ exports[`with title and description > checkboxes 1`] = `
                 >
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -11692,14 +11665,14 @@ exports[`with title and description > checkboxes 1`] = `
                     a
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -11710,7 +11683,7 @@ exports[`with title and description > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -11722,14 +11695,14 @@ exports[`with title and description > checkboxes 1`] = `
                     b
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -11740,7 +11713,7 @@ exports[`with title and description > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -11752,14 +11725,14 @@ exports[`with title and description > checkboxes 1`] = `
                     c
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -11776,10 +11749,10 @@ exports[`with title and description > checkboxes 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-25"
+      class="emotion-24"
     >
       <button
-        class="chakra-button emotion-26"
+        class="chakra-button emotion-25"
         type="submit"
       >
         Submit
@@ -13630,7 +13603,7 @@ exports[`with title and description from both > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-8 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -13662,7 +13635,7 @@ exports[`with title and description from both > checkboxes 1`] = `
     border-color: var(--chakra-colors-border);
   }
 
-  .emotion-9:is(:focus-visible, [data-focus-visible]) {
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -13670,27 +13643,27 @@ exports[`with title and description from both > checkboxes 1`] = `
     border-color: var(--focus-ring-color);
   }
 
-  .emotion-9:is(:placeholder-shown, [data-placeholder-shown]) {
+  .emotion-8:is(:placeholder-shown, [data-placeholder-shown]) {
     --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
     color: var(--mix-color, var(--chakra-colors-fg-muted));
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-8:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     border-color: var(--chakra-colors-border-emphasized);
   }
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-9 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -13701,7 +13674,7 @@ exports[`with title and description from both > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -13721,7 +13694,7 @@ exports[`with title and description from both > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -13737,21 +13710,21 @@ exports[`with title and description from both > checkboxes 1`] = `
     color: var(--chakra-colors-fg-muted);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     color: var(--chakra-colors-fg-subtle);
   }
 
-  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     color: var(--chakra-colors-fg-error);
   }
 
-  .emotion-12 :where(svg) {
+  .emotion-11 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
-.emotion-13 {
+.emotion-12 {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -13759,14 +13732,14 @@ exports[`with title and description from both > checkboxes 1`] = `
   stroke-linejoin: round;
 }
 
-.emotion-14 {
+.emotion-13 {
   min-width: 100%!important;
   z-index: 2!important;
   top: calc(100% + 5px)!important;
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-14 {
     background: var(--chakra-colors-bg-panel);
     --bg-currentcolor: var(--chakra-colors-bg-panel);
     display: -webkit-box;
@@ -13788,61 +13761,61 @@ exports[`with title and description from both > checkboxes 1`] = `
     line-height: 1.25rem;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open]) {
+  .emotion-14:is([open], [data-open], [data-state=open]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fast);
     animation-duration: var(--chakra-durations-fast);
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=top] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=top] {
     -webkit-animation-name: slide-from-bottom,fade-in;
     animation-name: slide-from-bottom,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
     -webkit-animation-name: slide-from-top,fade-in;
     animation-name: slide-from-top,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=left] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=left] {
     -webkit-animation-name: slide-from-right,fade-in;
     animation-name: slide-from-right,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=right] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=right] {
     -webkit-animation-name: slide-from-left,fade-in;
     animation-name: slide-from-left,fade-in;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed]) {
+  .emotion-14:is([closed], [data-closed], [data-state=closed]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fastest);
     animation-duration: var(--chakra-durations-fastest);
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
     -webkit-animation-name: slide-to-bottom,fade-out;
     animation-name: slide-to-bottom,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
     -webkit-animation-name: slide-to-top,fade-out;
     animation-name: slide-to-top,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
     -webkit-animation-name: slide-to-right,fade-out;
     animation-name: slide-to-right,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
     -webkit-animation-name: slide-to-left,fade-out;
     animation-name: slide-to-left,fade-out;
   }
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-15 {
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -13870,25 +13843,25 @@ exports[`with title and description from both > checkboxes 1`] = `
     padding-inline: var(--chakra-spacing-2);
   }
 
-  .emotion-16[data-highlighted] {
+  .emotion-15[data-highlighted] {
     --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
     background: var(--mix-background, var(--chakra-colors-bg-emphasized));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     pointer-events: none;
     opacity: 0.5;
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-15 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
 @layer recipes {
-  .emotion-17 {
+  .emotion-16 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -13904,12 +13877,12 @@ exports[`with title and description from both > checkboxes 1`] = `
   }
 }
 
-.emotion-25 {
+.emotion-24 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-26 {
+  .emotion-25 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -13957,19 +13930,19 @@ exports[`with title and description from both > checkboxes 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-26:is(:focus-visible, [data-focus-visible]) {
+  .emotion-25:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-26:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-26 :where(svg) {
+  .emotion-25 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -13977,14 +13950,14 @@ exports[`with title and description from both > checkboxes 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-26:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-25:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-26:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-25:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -14079,64 +14052,55 @@ exports[`with title and description from both > checkboxes 1`] = `
                 dir="ltr"
                 id="select:root:control"
               >
-                <div
-                  class="chakra-select__control emotion-7"
-                  data-part="control"
+                <button
+                  aria-controls="select:root:content"
+                  aria-describedby="root__description"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-invalid="false"
+                  aria-labelledby="field::_r_1q_::label"
+                  aria-required="false"
+                  class="chakra-select__trigger emotion-8"
+                  data-part="trigger"
+                  data-placeholder-shown=""
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:control"
+                  id="select:root:trigger"
+                  role="combobox"
+                  type="button"
                 >
-                  <button
-                    aria-controls="select:root:content"
-                    aria-describedby="root__description"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    aria-invalid="false"
-                    aria-labelledby="field::_r_1q_::label"
-                    aria-required="false"
-                    class="chakra-select__trigger emotion-9"
-                    data-part="trigger"
-                    data-placeholder-shown=""
+                  <span
+                    class="chakra-select__valueText emotion-9"
+                    data-part="value-text"
+                    data-scope="select"
+                    dir="ltr"
+                  />
+                </button>
+                <div
+                  class="chakra-select__indicatorGroup emotion-10"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="chakra-select__indicator emotion-11"
+                    data-part="indicator"
                     data-scope="select"
                     data-state="closed"
                     dir="ltr"
-                    id="select:root:trigger"
-                    role="combobox"
-                    type="button"
                   >
-                    <span
-                      class="chakra-select__valueText emotion-10"
-                      data-part="value-text"
-                      data-scope="select"
-                      dir="ltr"
-                    />
-                  </button>
-                  <div
-                    class="chakra-select__indicatorGroup emotion-11"
-                  >
-                    <div
-                      aria-hidden="true"
-                      class="chakra-select__indicator emotion-12"
-                      data-part="indicator"
-                      data-scope="select"
-                      data-state="closed"
-                      dir="ltr"
+                    <svg
+                      class="emotion-12"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        class="emotion-13"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </div>
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
               <div
-                class="chakra-select__positioner emotion-14"
+                class="chakra-select__positioner emotion-13"
                 data-part="positioner"
                 data-scope="select"
                 dir="ltr"
@@ -14146,7 +14110,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 <div
                   aria-labelledby="field::_r_1q_::label"
                   aria-multiselectable="true"
-                  class="chakra-select__content emotion-15"
+                  class="chakra-select__content emotion-14"
                   data-part="content"
                   data-scope="select"
                   data-state="closed"
@@ -14158,7 +14122,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                 >
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -14170,14 +14134,14 @@ exports[`with title and description from both > checkboxes 1`] = `
                     a
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -14188,7 +14152,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -14200,14 +14164,14 @@ exports[`with title and description from both > checkboxes 1`] = `
                     b
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -14218,7 +14182,7 @@ exports[`with title and description from both > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -14230,14 +14194,14 @@ exports[`with title and description from both > checkboxes 1`] = `
                     c
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -14254,10 +14218,10 @@ exports[`with title and description from both > checkboxes 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-25"
+      class="emotion-24"
     >
       <button
-        class="chakra-button emotion-26"
+        class="chakra-button emotion-25"
         type="submit"
       >
         Submit
@@ -16108,7 +16072,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-8 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -16140,7 +16104,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     border-color: var(--chakra-colors-border);
   }
 
-  .emotion-9:is(:focus-visible, [data-focus-visible]) {
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -16148,27 +16112,27 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     border-color: var(--focus-ring-color);
   }
 
-  .emotion-9:is(:placeholder-shown, [data-placeholder-shown]) {
+  .emotion-8:is(:placeholder-shown, [data-placeholder-shown]) {
     --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
     color: var(--mix-color, var(--chakra-colors-fg-muted));
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-9:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-8:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     border-color: var(--chakra-colors-border-emphasized);
   }
 }
 
 @layer recipes {
-  .emotion-10 {
+  .emotion-9 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -16179,7 +16143,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -16199,7 +16163,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -16215,21 +16179,21 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     color: var(--chakra-colors-fg-muted);
   }
 
-  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     color: var(--chakra-colors-fg-subtle);
   }
 
-  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-11:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     color: var(--chakra-colors-fg-error);
   }
 
-  .emotion-12 :where(svg) {
+  .emotion-11 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
-.emotion-13 {
+.emotion-12 {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -16237,14 +16201,14 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
   stroke-linejoin: round;
 }
 
-.emotion-14 {
+.emotion-13 {
   min-width: 100%!important;
   z-index: 2!important;
   top: calc(100% + 5px)!important;
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-14 {
     background: var(--chakra-colors-bg-panel);
     --bg-currentcolor: var(--chakra-colors-bg-panel);
     display: -webkit-box;
@@ -16266,61 +16230,61 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     line-height: 1.25rem;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open]) {
+  .emotion-14:is([open], [data-open], [data-state=open]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fast);
     animation-duration: var(--chakra-durations-fast);
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=top] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=top] {
     -webkit-animation-name: slide-from-bottom,fade-in;
     animation-name: slide-from-bottom,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
     -webkit-animation-name: slide-from-top,fade-in;
     animation-name: slide-from-top,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=left] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=left] {
     -webkit-animation-name: slide-from-right,fade-in;
     animation-name: slide-from-right,fade-in;
   }
 
-  .emotion-15:is([open], [data-open], [data-state=open])[data-placement^=right] {
+  .emotion-14:is([open], [data-open], [data-state=open])[data-placement^=right] {
     -webkit-animation-name: slide-from-left,fade-in;
     animation-name: slide-from-left,fade-in;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed]) {
+  .emotion-14:is([closed], [data-closed], [data-state=closed]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fastest);
     animation-duration: var(--chakra-durations-fastest);
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
     -webkit-animation-name: slide-to-bottom,fade-out;
     animation-name: slide-to-bottom,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
     -webkit-animation-name: slide-to-top,fade-out;
     animation-name: slide-to-top,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
     -webkit-animation-name: slide-to-right,fade-out;
     animation-name: slide-to-right,fade-out;
   }
 
-  .emotion-15:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+  .emotion-14:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
     -webkit-animation-name: slide-to-left,fade-out;
     animation-name: slide-to-left,fade-out;
   }
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-15 {
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -16348,25 +16312,25 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     padding-inline: var(--chakra-spacing-2);
   }
 
-  .emotion-16[data-highlighted] {
+  .emotion-15[data-highlighted] {
     --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
     background: var(--mix-background, var(--chakra-colors-bg-emphasized));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     pointer-events: none;
     opacity: 0.5;
   }
 
-  .emotion-16 :where(svg) {
+  .emotion-15 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
 @layer recipes {
-  .emotion-17 {
+  .emotion-16 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -16382,12 +16346,12 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
   }
 }
 
-.emotion-25 {
+.emotion-24 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-26 {
+  .emotion-25 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -16435,19 +16399,19 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-26:is(:focus-visible, [data-focus-visible]) {
+  .emotion-25:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-26:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-25:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-26 :where(svg) {
+  .emotion-25 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -16455,14 +16419,14 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-26:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-25:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-26:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-25:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -16557,64 +16521,55 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 dir="ltr"
                 id="select:root:control"
               >
-                <div
-                  class="chakra-select__control emotion-7"
-                  data-part="control"
+                <button
+                  aria-controls="select:root:content"
+                  aria-describedby="root__description"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-invalid="false"
+                  aria-labelledby="field::_r_1c_::label"
+                  aria-required="false"
+                  class="chakra-select__trigger emotion-8"
+                  data-part="trigger"
+                  data-placeholder-shown=""
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:control"
+                  id="select:root:trigger"
+                  role="combobox"
+                  type="button"
                 >
-                  <button
-                    aria-controls="select:root:content"
-                    aria-describedby="root__description"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    aria-invalid="false"
-                    aria-labelledby="field::_r_1c_::label"
-                    aria-required="false"
-                    class="chakra-select__trigger emotion-9"
-                    data-part="trigger"
-                    data-placeholder-shown=""
+                  <span
+                    class="chakra-select__valueText emotion-9"
+                    data-part="value-text"
+                    data-scope="select"
+                    dir="ltr"
+                  />
+                </button>
+                <div
+                  class="chakra-select__indicatorGroup emotion-10"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="chakra-select__indicator emotion-11"
+                    data-part="indicator"
                     data-scope="select"
                     data-state="closed"
                     dir="ltr"
-                    id="select:root:trigger"
-                    role="combobox"
-                    type="button"
                   >
-                    <span
-                      class="chakra-select__valueText emotion-10"
-                      data-part="value-text"
-                      data-scope="select"
-                      dir="ltr"
-                    />
-                  </button>
-                  <div
-                    class="chakra-select__indicatorGroup emotion-11"
-                  >
-                    <div
-                      aria-hidden="true"
-                      class="chakra-select__indicator emotion-12"
-                      data-part="indicator"
-                      data-scope="select"
-                      data-state="closed"
-                      dir="ltr"
+                    <svg
+                      class="emotion-12"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        class="emotion-13"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </div>
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
               <div
-                class="chakra-select__positioner emotion-14"
+                class="chakra-select__positioner emotion-13"
                 data-part="positioner"
                 data-scope="select"
                 dir="ltr"
@@ -16624,7 +16579,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 <div
                   aria-labelledby="field::_r_1c_::label"
                   aria-multiselectable="true"
-                  class="chakra-select__content emotion-15"
+                  class="chakra-select__content emotion-14"
                   data-part="content"
                   data-scope="select"
                   data-state="closed"
@@ -16636,7 +16591,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                 >
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -16648,14 +16603,14 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                     a
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -16666,7 +16621,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -16678,14 +16633,14 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                     b
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -16696,7 +16651,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-16"
+                    class="chakra-select__item emotion-15"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -16708,14 +16663,14 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
                     c
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-17"
+                      class="chakra-select__itemIndicator emotion-16"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-13"
+                        class="emotion-12"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -16732,10 +16687,10 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-25"
+      class="emotion-24"
     >
       <button
-        class="chakra-button emotion-26"
+        class="chakra-button emotion-25"
         type="submit"
       >
         Submit
@@ -18331,7 +18286,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-6 {
+  .emotion-5 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -18363,7 +18318,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     border-color: var(--chakra-colors-border);
   }
 
-  .emotion-6:is(:focus-visible, [data-focus-visible]) {
+  .emotion-5:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -18371,27 +18326,27 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     border-color: var(--focus-ring-color);
   }
 
-  .emotion-6:is(:placeholder-shown, [data-placeholder-shown]) {
+  .emotion-5:is(:placeholder-shown, [data-placeholder-shown]) {
     --mix-color: color-mix(in srgb, var(--chakra-colors-fg-muted) 80%, transparent);
     color: var(--mix-color, var(--chakra-colors-fg-muted));
   }
 
-  .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-6:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     border-color: var(--chakra-colors-border-error);
   }
 
-  .emotion-6:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-5:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     border-color: var(--chakra-colors-border-emphasized);
   }
 }
 
 @layer recipes {
-  .emotion-7 {
+  .emotion-6 {
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 1;
@@ -18402,7 +18357,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-8 {
+  .emotion-7 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -18422,7 +18377,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
 }
 
 @layer recipes {
-  .emotion-9 {
+  .emotion-8 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -18438,21 +18393,21 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     color: var(--chakra-colors-fg-muted);
   }
 
-  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     color: var(--chakra-colors-fg-subtle);
   }
 
-  .emotion-9:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     color: var(--chakra-colors-fg-error);
   }
 
-  .emotion-9 :where(svg) {
+  .emotion-8 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
-.emotion-10 {
+.emotion-9 {
   fill: none;
   stroke: currentColor;
   stroke-width: 2;
@@ -18460,14 +18415,14 @@ exports[`with title and description with global label off > checkboxes 1`] = `
   stroke-linejoin: round;
 }
 
-.emotion-11 {
+.emotion-10 {
   min-width: 100%!important;
   z-index: 2!important;
   top: calc(100% + 5px)!important;
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-11 {
     background: var(--chakra-colors-bg-panel);
     --bg-currentcolor: var(--chakra-colors-bg-panel);
     display: -webkit-box;
@@ -18489,61 +18444,61 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     line-height: 1.25rem;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open]) {
+  .emotion-11:is([open], [data-open], [data-state=open]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fast);
     animation-duration: var(--chakra-durations-fast);
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=top] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=top] {
     -webkit-animation-name: slide-from-bottom,fade-in;
     animation-name: slide-from-bottom,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=bottom] {
     -webkit-animation-name: slide-from-top,fade-in;
     animation-name: slide-from-top,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=left] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=left] {
     -webkit-animation-name: slide-from-right,fade-in;
     animation-name: slide-from-right,fade-in;
   }
 
-  .emotion-12:is([open], [data-open], [data-state=open])[data-placement^=right] {
+  .emotion-11:is([open], [data-open], [data-state=open])[data-placement^=right] {
     -webkit-animation-name: slide-from-left,fade-in;
     animation-name: slide-from-left,fade-in;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed]) {
+  .emotion-11:is([closed], [data-closed], [data-state=closed]) {
     transform-origin: var(--transform-origin);
     -webkit-animation-duration: var(--chakra-durations-fastest);
     animation-duration: var(--chakra-durations-fastest);
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=top] {
     -webkit-animation-name: slide-to-bottom,fade-out;
     animation-name: slide-to-bottom,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=bottom] {
     -webkit-animation-name: slide-to-top,fade-out;
     animation-name: slide-to-top,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=left] {
     -webkit-animation-name: slide-to-right,fade-out;
     animation-name: slide-to-right,fade-out;
   }
 
-  .emotion-12:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
+  .emotion-11:is([closed], [data-closed], [data-state=closed])[data-placement^=right] {
     -webkit-animation-name: slide-to-left,fade-out;
     animation-name: slide-to-left,fade-out;
   }
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-12 {
     position: relative;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -18571,25 +18526,25 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     padding-inline: var(--chakra-spacing-2);
   }
 
-  .emotion-13[data-highlighted] {
+  .emotion-12[data-highlighted] {
     --mix-background: color-mix(in srgb, var(--chakra-colors-bg-emphasized) 60%, transparent);
     background: var(--mix-background, var(--chakra-colors-bg-emphasized));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-bg-emphasized));
   }
 
-  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     pointer-events: none;
     opacity: 0.5;
   }
 
-  .emotion-13 :where(svg) {
+  .emotion-12 :where(svg) {
     width: var(--chakra-sizes-4);
     height: var(--chakra-sizes-4);
   }
 }
 
 @layer recipes {
-  .emotion-14 {
+  .emotion-13 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -18605,12 +18560,12 @@ exports[`with title and description with global label off > checkboxes 1`] = `
   }
 }
 
-.emotion-22 {
+.emotion-21 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-23 {
+  .emotion-22 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -18658,19 +18613,19 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-23 :where(svg) {
+  .emotion-22 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -18678,14 +18633,14 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -18758,64 +18713,54 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 dir="ltr"
                 id="select:root:control"
               >
-                <div
-                  class="chakra-select__control emotion-4"
-                  data-part="control"
+                <button
+                  aria-controls="select:root:content"
+                  aria-expanded="false"
+                  aria-haspopup="listbox"
+                  aria-invalid="false"
+                  aria-labelledby="field::_r_28_::label"
+                  aria-required="false"
+                  class="chakra-select__trigger emotion-5"
+                  data-part="trigger"
+                  data-placeholder-shown=""
                   data-scope="select"
                   data-state="closed"
                   dir="ltr"
-                  id="select:root:control"
+                  id="select:root:trigger"
+                  role="combobox"
+                  type="button"
                 >
-                  <button
-                    aria-controls="select:root:content"
-                    aria-expanded="false"
-                    aria-haspopup="listbox"
-                    aria-invalid="false"
-                    aria-label="Test field"
-                    aria-labelledby="field::_r_28_::label"
-                    aria-required="false"
-                    class="chakra-select__trigger emotion-6"
-                    data-part="trigger"
-                    data-placeholder-shown=""
+                  <span
+                    class="chakra-select__valueText emotion-6"
+                    data-part="value-text"
+                    data-scope="select"
+                    dir="ltr"
+                  />
+                </button>
+                <div
+                  class="chakra-select__indicatorGroup emotion-7"
+                >
+                  <div
+                    aria-hidden="true"
+                    class="chakra-select__indicator emotion-8"
+                    data-part="indicator"
                     data-scope="select"
                     data-state="closed"
                     dir="ltr"
-                    id="select:root:trigger"
-                    role="combobox"
-                    type="button"
                   >
-                    <span
-                      class="chakra-select__valueText emotion-7"
-                      data-part="value-text"
-                      data-scope="select"
-                      dir="ltr"
-                    />
-                  </button>
-                  <div
-                    class="chakra-select__indicatorGroup emotion-8"
-                  >
-                    <div
-                      aria-hidden="true"
-                      class="chakra-select__indicator emotion-9"
-                      data-part="indicator"
-                      data-scope="select"
-                      data-state="closed"
-                      dir="ltr"
+                    <svg
+                      class="emotion-9"
+                      viewBox="0 0 24 24"
                     >
-                      <svg
-                        class="emotion-10"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="m6 9 6 6 6-6"
-                        />
-                      </svg>
-                    </div>
+                      <path
+                        d="m6 9 6 6 6-6"
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
               <div
-                class="chakra-select__positioner emotion-11"
+                class="chakra-select__positioner emotion-10"
                 data-part="positioner"
                 data-scope="select"
                 dir="ltr"
@@ -18825,7 +18770,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 <div
                   aria-labelledby="field::_r_28_::label"
                   aria-multiselectable="true"
-                  class="chakra-select__content emotion-12"
+                  class="chakra-select__content emotion-11"
                   data-part="content"
                   data-scope="select"
                   data-state="closed"
@@ -18837,7 +18782,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 >
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -18849,14 +18794,14 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                     a
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -18867,7 +18812,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -18879,14 +18824,14 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                     b
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -18897,7 +18842,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                   </div>
                   <div
                     aria-selected="false"
-                    class="chakra-select__item emotion-13"
+                    class="chakra-select__item emotion-12"
                     data-part="item"
                     data-scope="select"
                     data-state="unchecked"
@@ -18909,14 +18854,14 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                     c
                     <div
                       aria-hidden="true"
-                      class="chakra-select__itemIndicator emotion-14"
+                      class="chakra-select__itemIndicator emotion-13"
                       data-part="item-indicator"
                       data-scope="select"
                       data-state="unchecked"
                       hidden=""
                     >
                       <svg
-                        class="emotion-10"
+                        class="emotion-9"
                         viewBox="0 0 24 24"
                       >
                         <path
@@ -18933,10 +18878,10 @@ exports[`with title and description with global label off > checkboxes 1`] = `
       </fieldset>
     </div>
     <div
-      class="emotion-22"
+      class="emotion-21"
     >
       <button
-        class="chakra-button emotion-23"
+        class="chakra-button emotion-22"
         type="submit"
       >
         Submit
