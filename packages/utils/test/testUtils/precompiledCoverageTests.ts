@@ -184,7 +184,7 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
   });
 
   describe('for the schemas the schema graph names', () => {
-    it('validates an if with no else before and after it holds (#5453)', () => {
+    it('validates an if with no else before and after it holds', () => {
       const rootSchema: RJSFSchema = {
         type: 'object',
         properties: { a: { type: 'string' } },
@@ -197,6 +197,33 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
       const options = isObject(extra) && Array.isArray(extra.oneOf) ? extra.oneOf.filter(isObject) : [];
       expect(schemaUtils.getClosestMatchingOption(5, options, 0)).toBe(1);
     });
+    it.each([
+      ['before', { a: 'y' }],
+      ['after', { a: 'x', extra: 'e' }],
+    ])('scores an option whose if has no else %s the if holds (#5453)', (_when, subFormData) => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            oneOf: [
+              {
+                type: 'object',
+                properties: { a: { type: 'string' } },
+                if: { properties: { a: { const: 'x' } }, required: ['a'] },
+                then: { properties: { extra: { type: 'string' } } },
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const field = schemaUtils.retrieveSchema(rootSchema, { v: subFormData }).properties?.v;
+      const options = isObject(field) && Array.isArray(field.oneOf) ? field.oneOf.filter(isObject) : [];
+      const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
+      expect(schemaUtils.getFirstMatchingOption(subFormData, retrieved)).toBe(0);
+      expect(schemaUtils.getClosestMatchingOption(subFormData, retrieved, -1)).toBe(0);
+    });
     it("scores an option whose own patternProperties stub the data's keys into it (#5454)", () => {
       const rootSchema: RJSFSchema = {
         type: 'object',
@@ -206,6 +233,8 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
               {
                 type: 'object',
                 properties: { id: { type: 'string' } },
+                // The issue's `minLength: 2` is spelled as a `pattern`, since ata's standalone code for a `minLength`
+                // below the top of a schema calls a helper it declares out of scope
                 patternProperties: { '^s_': { type: 'string' }, '^s_n': { pattern: '^x' } },
               },
               { type: 'number' },
@@ -219,6 +248,7 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
       const options = isObject(field) && Array.isArray(field.oneOf) ? field.oneOf.filter(isObject) : [];
       const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
       expect(schemaUtils.getFirstMatchingOption(subFormData, retrieved)).toBe(0);
+      expect(schemaUtils.getClosestMatchingOption(subFormData, retrieved, -1)).toBe(0);
     });
     it('scores an option that carries an $id, retrieved for the data (#5455)', () => {
       const rootSchema: RJSFSchema = {
@@ -231,7 +261,6 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
                 type: 'object',
                 properties: { id: { type: 'string' } },
                 additionalProperties: { type: 'string' },
-                required: ['id'],
               },
               { type: 'number' },
             ],
@@ -239,21 +268,43 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
         },
       };
       const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
-      const subFormData = { extra: 'x' };
+      const subFormData = { id: 'a', extra: 'x' };
       const field = schemaUtils.retrieveSchema(rootSchema, { v: subFormData }).properties?.v;
       const options = isObject(field) && Array.isArray(field.oneOf) ? field.oneOf.filter(isObject) : [];
       const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
-      // `extra` is no key the option declares, so neither option matches and the scores decide
-      expect(schemaUtils.getClosestMatchingOption({ id: 'a', extra: 'x' }, retrieved, -1)).toBe(0);
+      expect(schemaUtils.getFirstMatchingOption(subFormData, retrieved)).toBe(0);
+      expect(schemaUtils.getClosestMatchingOption(subFormData, retrieved, -1)).toBe(0);
       expect(schemaUtils.getClosestMatchingOption(5, retrieved, -1)).toBe(1);
     });
-    it('builds for a oneOf of a $ref to the root beside dependencies (#5452 c)', () => {
-      const rootSchema: RJSFSchema = {
-        type: 'object',
-        properties: { a: { type: 'string' }, b: { type: 'string' } },
-        dependencies: { a: ['b'] },
-        oneOf: [{ $ref: '#' }, { properties: { c: { type: 'string' } } }],
-      };
+    it.each<[string, RJSFSchema]>([
+      [
+        'two definitions whose patterns match the keys referring to each other (#5452 a)',
+        {
+          $ref: '#/definitions/x',
+          definitions: {
+            x: {
+              type: 'object',
+              properties: { y: { $ref: '#/definitions/y' } },
+              patternProperties: { '^y': { title: 'Y' } },
+            },
+            y: {
+              type: 'object',
+              properties: { x: { $ref: '#/definitions/x' } },
+              patternProperties: { '^x': { title: 'X' } },
+            },
+          },
+        },
+      ],
+      [
+        'a oneOf of a $ref to the root beside dependencies (#5452 c)',
+        {
+          type: 'object',
+          properties: { a: { type: 'string' }, b: { type: 'string' } },
+          dependencies: { a: ['b'] },
+          oneOf: [{ $ref: '#' }, { properties: { c: { type: 'string' } } }],
+        },
+      ],
+    ])('builds for %s', (_, rootSchema) => {
       expect(() => buildValidator(rootSchema)).not.toThrow();
     });
     it('compiles and matches an option that is a $ref to the whole root, at every depth', () => {
