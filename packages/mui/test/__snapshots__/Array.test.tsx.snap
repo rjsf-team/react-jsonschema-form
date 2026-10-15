@@ -13974,12 +13974,15 @@ exports[`with title and description > array 1`] = `
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                Test field
+                <span
+                  id="root__title"
+                >
+                  Test field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"
@@ -14974,12 +14977,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                Test field
+                <span
+                  id="root__title"
+                >
+                  Test field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"
@@ -16561,12 +16567,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                Test field
+                <span
+                  id="root__title"
+                >
+                  Test field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"
@@ -17122,12 +17131,15 @@ exports[`with title and description from both > array 1`] = `
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"
@@ -18122,12 +18134,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"
@@ -19709,12 +19724,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"
@@ -20270,12 +20288,15 @@ exports[`with title and description from uiSchema > array 1`] = `
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"
@@ -21270,12 +21291,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"
@@ -22857,12 +22881,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
           >
             <div
               class="MuiBox-root emotion-3"
-              id="root__title"
             >
               <h5
                 class="MuiTypography-root MuiTypography-h5 emotion-4"
               >
-                My Field
+                <span
+                  id="root__title"
+                >
+                  My Field
+                </span>
               </h5>
               <hr
                 class="MuiDivider-root MuiDivider-fullWidth emotion-5"

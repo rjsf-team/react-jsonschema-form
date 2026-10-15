@@ -1869,12 +1869,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-6"
-                      id="root_tasks__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-7"
                       >
-                        tasks
+                        <span
+                          id="root_tasks__title"
+                        >
+                          tasks
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-8"
@@ -1904,12 +1907,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                                 >
                                   <div
                                     class="MuiBox-root emotion-6"
-                                    id="root_tasks_0__title"
                                   >
                                     <h5
                                       class="MuiTypography-root MuiTypography-h5 emotion-7"
                                     >
-                                      tasks-1
+                                      <span
+                                        id="root_tasks_0__title"
+                                      >
+                                        tasks-1
+                                      </span>
+                                      <span
+                                        aria-hidden="true"
+                                      >
+                                         *
+                                      </span>
                                     </h5>
                                     <hr
                                       class="MuiDivider-root MuiDivider-fullWidth emotion-8"
@@ -2104,12 +2115,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                                 >
                                   <div
                                     class="MuiBox-root emotion-6"
-                                    id="root_tasks_1__title"
                                   >
                                     <h5
                                       class="MuiTypography-root MuiTypography-h5 emotion-7"
                                     >
-                                      tasks-2
+                                      <span
+                                        id="root_tasks_1__title"
+                                      >
+                                        tasks-2
+                                      </span>
+                                      <span
+                                        aria-hidden="true"
+                                      >
+                                         *
+                                      </span>
                                     </h5>
                                     <hr
                                       class="MuiDivider-root MuiDivider-fullWidth emotion-8"
@@ -3307,12 +3326,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-6"
-                      id="root_tags__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-7"
                       >
-                        tags
+                        <span
+                          id="root_tags__title"
+                        >
+                          tags
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-8"
@@ -4641,12 +4663,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-4"
-                  id="root_person__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-5"
                   >
-                    person
+                    <span
+                      id="root_person__title"
+                    >
+                      person
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-6"
@@ -4764,12 +4789,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                       >
                         <div
                           class="MuiBox-root emotion-4"
-                          id="root_person_address__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-5"
                           >
-                            address
+                            <span
+                              id="root_person_address__title"
+                            >
+                              address
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-6"
@@ -8458,12 +8486,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-6"
-                      id="root_tasks__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-7"
                       >
-                        tasks
+                        <span
+                          id="root_tasks__title"
+                        >
+                          tasks
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-8"
@@ -8493,12 +8524,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                                 >
                                   <div
                                     class="MuiBox-root emotion-6"
-                                    id="root_tasks_0__title"
                                   >
                                     <h5
                                       class="MuiTypography-root MuiTypography-h5 emotion-7"
                                     >
-                                      tasks-1
+                                      <span
+                                        id="root_tasks_0__title"
+                                      >
+                                        tasks-1
+                                      </span>
+                                      <span
+                                        aria-hidden="true"
+                                      >
+                                         *
+                                      </span>
                                     </h5>
                                     <hr
                                       class="MuiDivider-root MuiDivider-fullWidth emotion-8"
@@ -8693,12 +8732,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-24:focus::-ms-input-
                                 >
                                   <div
                                     class="MuiBox-root emotion-6"
-                                    id="root_tasks_1__title"
                                   >
                                     <h5
                                       class="MuiTypography-root MuiTypography-h5 emotion-7"
                                     >
-                                      tasks-2
+                                      <span
+                                        id="root_tasks_1__title"
+                                      >
+                                        tasks-2
+                                      </span>
+                                      <span
+                                        aria-hidden="true"
+                                      >
+                                         *
+                                      </span>
                                     </h5>
                                     <hr
                                       class="MuiDivider-root MuiDivider-fullWidth emotion-8"
@@ -9896,12 +9943,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-19:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-6"
-                      id="root_tags__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-7"
                       >
-                        tags
+                        <span
+                          id="root_tags__title"
+                        >
+                          tags
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-8"
@@ -10717,12 +10767,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-4"
-                  id="root_person__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-5"
                   >
-                    person
+                    <span
+                      id="root_person__title"
+                    >
+                      person
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-6"
@@ -10840,12 +10893,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
                       >
                         <div
                           class="MuiBox-root emotion-4"
-                          id="root_person_address__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-5"
                           >
-                            address
+                            <span
+                              id="root_person_address__title"
+                            >
+                              address
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-6"
@@ -17044,12 +17100,15 @@ exports[`single fields > Cyclic schema 1`] = `
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            A registration form
+            <span
+              id="root__title"
+            >
+              A registration form
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -17075,12 +17134,15 @@ exports[`single fields > Cyclic schema 1`] = `
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_child__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    A registration form
+                    <span
+                      id="root_child__title"
+                    >
+                      A registration form
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27269,12 +27331,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27294,12 +27359,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObjectOptional__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObjectOptional
+                    <span
+                      id="root_nestedObjectOptional__title"
+                    >
+                      nestedObjectOptional
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27368,12 +27436,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                       >
                         <div
                           class="MuiBox-root emotion-1"
-                          id="root_nestedObjectOptional_deepObjectOptional__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            deepObjectOptional
+                            <span
+                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                            >
+                              deepObjectOptional
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27446,12 +27517,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                       >
                         <div
                           class="MuiBox-root emotion-1"
-                          id="root_nestedObjectOptional_deepObject__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            deepObject
+                            <span
+                              id="root_nestedObjectOptional_deepObject__title"
+                            >
+                              deepObject
+                            </span>
+                            <span
+                              aria-hidden="true"
+                            >
+                               *
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27531,12 +27610,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArrayOptional__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArrayOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                                >
+                                  deepArrayOptional
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27596,12 +27678,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArrayOptional2__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArrayOptional2
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                >
+                                  deepArrayOptional2
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27661,12 +27746,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArray__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArray
+                                <span
+                                  id="root_nestedObjectOptional_deepArray__title"
+                                >
+                                  deepArray
+                                </span>
+                                <span
+                                  aria-hidden="true"
+                                >
+                                   *
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27730,12 +27823,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArrayOptional__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArrayOptional
+                        <span
+                          id="root_nestedArrayOptional__title"
+                        >
+                          nestedArrayOptional
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27788,12 +27884,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                       *
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -27873,12 +27977,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArray__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArray
+                        <span
+                          id="root_nestedArray__title"
+                        >
+                          nestedArray
+                        </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                           *
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29141,12 +29253,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29166,12 +29281,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObjectOptional__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObjectOptional
+                    <span
+                      id="root_nestedObjectOptional__title"
+                    >
+                      nestedObjectOptional
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29241,12 +29359,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                       >
                         <div
                           class="MuiBox-root emotion-1"
-                          id="root_nestedObjectOptional_deepObjectOptional__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            deepObjectOptional
+                            <span
+                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                            >
+                              deepObjectOptional
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29320,12 +29441,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                       >
                         <div
                           class="MuiBox-root emotion-1"
-                          id="root_nestedObjectOptional_deepObject__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            deepObject
+                            <span
+                              id="root_nestedObjectOptional_deepObject__title"
+                            >
+                              deepObject
+                            </span>
+                            <span
+                              aria-hidden="true"
+                            >
+                               *
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29406,12 +29535,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArrayOptional__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArrayOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                                >
+                                  deepArrayOptional
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29472,12 +29604,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArrayOptional2__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArrayOptional2
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                >
+                                  deepArrayOptional2
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29538,12 +29673,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArray__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArray
+                                <span
+                                  id="root_nestedObjectOptional_deepArray__title"
+                                >
+                                  deepArray
+                                </span>
+                                <span
+                                  aria-hidden="true"
+                                >
+                                   *
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29608,12 +29751,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArrayOptional__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArrayOptional
+                        <span
+                          id="root_nestedArrayOptional__title"
+                        >
+                          nestedArrayOptional
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29667,12 +29813,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                       *
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -29753,12 +29907,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-128:focus::-ms-input
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArray__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArray
+                        <span
+                          id="root_nestedArray__title"
+                        >
+                          nestedArray
+                        </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                           *
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -31181,12 +31343,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -31206,7 +31371,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObjectOptional__title"
                 >
                   <div
                     class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -31217,7 +31381,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedObjectOptional
+                        <span
+                          id="root_nestedObjectOptional__title"
+                        >
+                          nestedObjectOptional
+                        </span>
                       </h5>
                     </div>
                     <div
@@ -31311,7 +31479,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                       >
                         <div
                           class="MuiBox-root emotion-1"
-                          id="root_nestedObjectOptional_deepObjectOptional__title"
                         >
                           <div
                             class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -31322,7 +31489,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepObjectOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                >
+                                  deepObjectOptional
+                                </span>
                               </h5>
                             </div>
                             <div
@@ -31370,12 +31541,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                       >
                         <div
                           class="MuiBox-root emotion-1"
-                          id="root_nestedObjectOptional_deepObject__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            deepObject
+                            <span
+                              id="root_nestedObjectOptional_deepObject__title"
+                            >
+                              deepObject
+                            </span>
+                            <span
+                              aria-hidden="true"
+                            >
+                               *
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -31455,12 +31634,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArrayOptional__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArrayOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                                >
+                                  deepArrayOptional
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -31520,7 +31702,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArrayOptional2__title"
                             >
                               <div
                                 class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -31531,7 +31712,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                                   <h5
                                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                                   >
-                                    deepArrayOptional2
+                                    <span
+                                      id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                    >
+                                      deepArrayOptional2
+                                    </span>
                                   </h5>
                                 </div>
                                 <div
@@ -31585,12 +31770,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArray__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArray
+                                <span
+                                  id="root_nestedObjectOptional_deepArray__title"
+                                >
+                                  deepArray
+                                </span>
+                                <span
+                                  aria-hidden="true"
+                                >
+                                   *
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -31654,7 +31847,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArrayOptional__title"
                     >
                       <div
                         class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -31665,7 +31857,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                         </div>
                         <div
@@ -31839,12 +32035,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                       *
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -31924,12 +32128,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArray__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArray
+                        <span
+                          id="root_nestedArray__title"
+                        >
+                          nestedArray
+                        </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                           *
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -31994,7 +32206,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                     >
                       <div
                         class="MuiBox-root emotion-1"
-                        id="root_optionalObjectWithOneofs__title"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -32005,7 +32216,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                             <h5
                               class="MuiTypography-root MuiTypography-h5 emotion-2"
                             >
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h5>
                           </div>
                           <div
@@ -32075,7 +32290,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                         >
                           <div
                             class="MuiBox-root emotion-1"
-                            id="root_optionalArrayWithAnyofs__title"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -32086,7 +32300,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-21:focus::-ms-input-
                                 <h5
                                   class="MuiTypography-root MuiTypography-h5 emotion-2"
                                 >
-                                  optionalArrayWithAnyofs
+                                  <span
+                                    id="root_optionalArrayWithAnyofs__title"
+                                  >
+                                    optionalArrayWithAnyofs
+                                  </span>
                                 </h5>
                               </div>
                               <div
@@ -33099,12 +33317,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33124,12 +33345,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObjectOptional__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObjectOptional
+                    <span
+                      id="root_nestedObjectOptional__title"
+                    >
+                      nestedObjectOptional
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33199,12 +33423,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                       >
                         <div
                           class="MuiBox-root emotion-1"
-                          id="root_nestedObjectOptional_deepObjectOptional__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            deepObjectOptional
+                            <span
+                              id="root_nestedObjectOptional_deepObjectOptional__title"
+                            >
+                              deepObjectOptional
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33233,12 +33460,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                       >
                         <div
                           class="MuiBox-root emotion-1"
-                          id="root_nestedObjectOptional_deepObject__title"
                         >
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            deepObject
+                            <span
+                              id="root_nestedObjectOptional_deepObject__title"
+                            >
+                              deepObject
+                            </span>
+                            <span
+                              aria-hidden="true"
+                            >
+                               *
+                            </span>
                           </h5>
                           <hr
                             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33319,12 +33554,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArrayOptional__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArrayOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                                >
+                                  deepArrayOptional
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33385,12 +33623,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArrayOptional2__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArrayOptional2
+                                <span
+                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                >
+                                  deepArrayOptional2
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33424,12 +33665,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                           >
                             <div
                               class="MuiBox-root emotion-1"
-                              id="root_nestedObjectOptional_deepArray__title"
                             >
                               <h5
                                 class="MuiTypography-root MuiTypography-h5 emotion-2"
                               >
-                                deepArray
+                                <span
+                                  id="root_nestedObjectOptional_deepArray__title"
+                                >
+                                  deepArray
+                                </span>
+                                <span
+                                  aria-hidden="true"
+                                >
+                                   *
+                                </span>
                               </h5>
                               <hr
                                 class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33494,12 +33743,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArrayOptional__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArrayOptional
+                        <span
+                          id="root_nestedArrayOptional__title"
+                        >
+                          nestedArrayOptional
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33651,12 +33903,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                       *
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33737,12 +33997,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArray__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArray
+                        <span
+                          id="root_nestedArray__title"
+                        >
+                          nestedArray
+                        </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                           *
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33808,12 +34076,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                     >
                       <div
                         class="MuiBox-root emotion-1"
-                        id="root_optionalObjectWithOneofs__title"
                       >
                         <h5
                           class="MuiTypography-root MuiTypography-h5 emotion-2"
                         >
-                          optionalObjectWithOneofs
+                          <span
+                            id="root_optionalObjectWithOneofs__title"
+                          >
+                            optionalObjectWithOneofs
+                          </span>
                         </h5>
                         <hr
                           class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -33864,12 +34135,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
                         >
                           <div
                             class="MuiBox-root emotion-1"
-                            id="root_optionalArrayWithAnyofs__title"
                           >
                             <h5
                               class="MuiTypography-root MuiTypography-h5 emotion-2"
                             >
-                              optionalArrayWithAnyofs
+                              <span
+                                id="root_optionalArrayWithAnyofs__title"
+                              >
+                                optionalArrayWithAnyofs
+                              </span>
                             </h5>
                             <hr
                               class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -34715,12 +34989,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -34740,7 +35017,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObjectOptional__title"
                 >
                   <div
                     class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -34751,7 +35027,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedObjectOptional
+                        <span
+                          id="root_nestedObjectOptional__title"
+                        >
+                          nestedObjectOptional
+                        </span>
                       </h5>
                     </div>
                     <div
@@ -34806,7 +35086,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArrayOptional__title"
                     >
                       <div
                         class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -34817,7 +35096,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                           <h5
                             class="MuiTypography-root MuiTypography-h5 emotion-2"
                           >
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                         </div>
                         <div
@@ -34864,12 +35147,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                       *
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -34949,12 +35240,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArray__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArray
+                        <span
+                          id="root_nestedArray__title"
+                        >
+                          nestedArray
+                        </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                           *
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -35019,7 +35318,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                     >
                       <div
                         class="MuiBox-root emotion-1"
-                        id="root_optionalObjectWithOneofs__title"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -35030,7 +35328,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                             <h5
                               class="MuiTypography-root MuiTypography-h5 emotion-2"
                             >
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h5>
                           </div>
                           <div
@@ -35100,7 +35402,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                         >
                           <div
                             class="MuiBox-root emotion-1"
-                            id="root_optionalArrayWithAnyofs__title"
                           >
                             <div
                               class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-8"
@@ -35111,7 +35412,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-39:focus::-ms-input-
                                 <h5
                                   class="MuiTypography-root MuiTypography-h5 emotion-2"
                                 >
-                                  optionalArrayWithAnyofs
+                                  <span
+                                    id="root_optionalArrayWithAnyofs__title"
+                                  >
+                                    optionalArrayWithAnyofs
+                                  </span>
                                 </h5>
                               </div>
                               <div
@@ -35823,12 +36128,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -35848,12 +36156,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObjectOptional__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObjectOptional
+                    <span
+                      id="root_nestedObjectOptional__title"
+                    >
+                      nestedObjectOptional
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -35889,12 +36200,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArrayOptional__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArrayOptional
+                        <span
+                          id="root_nestedArrayOptional__title"
+                        >
+                          nestedArrayOptional
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -35921,12 +36235,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
               >
                 <div
                   class="MuiBox-root emotion-1"
-                  id="root_nestedObject__title"
                 >
                   <h5
                     class="MuiTypography-root MuiTypography-h5 emotion-2"
                   >
-                    nestedObject
+                    <span
+                      id="root_nestedObject__title"
+                    >
+                      nestedObject
+                    </span>
+                    <span
+                      aria-hidden="true"
+                    >
+                       *
+                    </span>
                   </h5>
                   <hr
                     class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -36007,12 +36329,20 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                   >
                     <div
                       class="MuiBox-root emotion-1"
-                      id="root_nestedArray__title"
                     >
                       <h5
                         class="MuiTypography-root MuiTypography-h5 emotion-2"
                       >
-                        nestedArray
+                        <span
+                          id="root_nestedArray__title"
+                        >
+                          nestedArray
+                        </span>
+                        <span
+                          aria-hidden="true"
+                        >
+                           *
+                        </span>
                       </h5>
                       <hr
                         class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -36078,12 +36408,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                     >
                       <div
                         class="MuiBox-root emotion-1"
-                        id="root_optionalObjectWithOneofs__title"
                       >
                         <h5
                           class="MuiTypography-root MuiTypography-h5 emotion-2"
                         >
-                          optionalObjectWithOneofs
+                          <span
+                            id="root_optionalObjectWithOneofs__title"
+                          >
+                            optionalObjectWithOneofs
+                          </span>
                         </h5>
                         <hr
                           class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -36134,12 +36467,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-29:focus::-ms-input-
                         >
                           <div
                             class="MuiBox-root emotion-1"
-                            id="root_optionalArrayWithAnyofs__title"
                           >
                             <h5
                               class="MuiTypography-root MuiTypography-h5 emotion-2"
                             >
-                              optionalArrayWithAnyofs
+                              <span
+                                id="root_optionalArrayWithAnyofs__title"
+                              >
+                                optionalArrayWithAnyofs
+                              </span>
                             </h5>
                             <hr
                               class="MuiDivider-root MuiDivider-fullWidth emotion-3"
@@ -53645,12 +53981,15 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
       >
         <div
           class="MuiBox-root emotion-1"
-          id="root__title"
         >
           <h5
             class="MuiTypography-root MuiTypography-h5 emotion-2"
           >
-            Titre 1
+            <span
+              id="root__title"
+            >
+              Titre 1
+            </span>
           </h5>
           <hr
             class="MuiDivider-root MuiDivider-fullWidth emotion-3"
