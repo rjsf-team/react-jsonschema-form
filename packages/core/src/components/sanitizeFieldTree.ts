@@ -28,7 +28,7 @@ interface TreeContext<T, S extends StrictRJSFSchema, F extends FormContextType> 
   oldSchemaUtils: SchemaUtilsType<T, S, F>;
   /** The schema utilities the new tree is built with */
   schemaUtils: SchemaUtilsType<T, S, F>;
-  uiState?: UiState;
+  uiState: UiState;
   /** The path of the change being made, if there is one: the value there is the user's, and the selections at or
    * above it hold
    */
@@ -95,7 +95,7 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const data = dataOf<T>(value);
   let schema = raw;
   if (Reflect.get(schema, RJSF_REF_CYCLE_KEY)) {
-    if (!uiState?.isExpanded(fieldPathFromList(path))) {
+    if (!uiState.isExpanded(fieldPathFromList(path))) {
       return [];
     }
     schema = expandRefCycle<S>(schema, rootSchema);
@@ -112,7 +112,7 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const fieldPath = fieldPathFromList(path);
   const index = shownOption<T, S, F>(
     schemaUtils,
-    uiState?.selection(fieldPath, optionListKey<S>(options, rootSchema)),
+    uiState.selection(fieldPath, optionListKey<S>(options, rootSchema)),
     options,
     data,
     getDiscriminatorFieldFromSchema<S>(view),
@@ -313,7 +313,6 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           childPath,
         );
       } else if (oldProperties.has(key) && !isEdited(ctx, childPath)) {
-        // The field left the tree
         next = DROP;
       }
       if (next !== newValue[key]) {
@@ -383,7 +382,7 @@ export default function sanitizeFieldTree<T, S extends StrictRJSFSchema, F exten
   previous: { schemaUtils: SchemaUtilsType<T, S, F>; data: T | undefined },
   schemaUtils: SchemaUtilsType<T, S, F>,
   data: T | undefined,
-  uiState: UiState | undefined,
+  uiState: UiState,
   edit?: { path: FieldPathList; newKeyOf?: KeyMove },
 ): T | undefined {
   const sanitized = walk(

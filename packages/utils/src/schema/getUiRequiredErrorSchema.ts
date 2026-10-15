@@ -77,7 +77,7 @@ function resolveSelectedBranch<T, S extends StrictRJSFSchema, F extends FormCont
   const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
   const index = fieldState
     ? fieldState.selectedOption(fieldPathFromList(path), options, formData, discriminator)
-    : getClosestMatchingOption<T, S, F>(schemaContext, rootSchema, formData as T, options, 0, discriminator);
+    : getClosestMatchingOption<unknown, S, F>(schemaContext, rootSchema, formData, options, 0, discriminator);
   // A boolean option is rendered as an empty schema, as `SchemaField` retrieves it
   const option = isObject(options[index]) ? options[index] : ({} as S);
   const optionUiSchema = getOptionUiSchema<T, S, F>(uiSchema, key, index) ?? {};

@@ -3094,7 +3094,7 @@ A value outside the new `enum` or constant options is replaced with the new `def
 - rootSchema: S - The root JSON schema of the entire form
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
-- [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
+- [data={}]: unknown - The form data associated with the schema, defaulting to an empty object when undefined
 
 #### Returns
 

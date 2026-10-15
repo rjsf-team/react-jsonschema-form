@@ -72,7 +72,7 @@ export default function omitExtraData<
 >(
   context: SchemaContext<S, F>,
   schema: S,
-  rootSchema: S = {} as S,
+  rootSchema: S = schemaFrom(schema, {}),
   formData?: T,
   fieldState?: FormFieldState<S>,
 ): T | undefined {
@@ -226,7 +226,7 @@ export default function omitExtraData<
       let i = 0;
       for (; i < tupleLength; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items[i] as S | boolean, source[i], [...path, i]);
+        target[i] = omit(items[i], source[i], [...path, i]);
       }
       // Without additionalItems, truncate at the tuple boundary to drop any pre-existing items.
       if (!additionalItems) {
@@ -236,12 +236,12 @@ export default function omitExtraData<
       }
       for (; i < source.length; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(additionalItems as S | boolean, source[i], [...path, i]);
+        target[i] = omit(additionalItems, source[i], [...path, i]);
       }
     } else {
       for (let i = 0; i < source.length; i += 1) {
         // oxlint-disable-next-line no-param-reassign
-        target[i] = omit(items as S | boolean, source[i], [...path, i]);
+        target[i] = omit(items, source[i], [...path, i]);
       }
     }
     // Truncate any pre-existing items beyond the source length.
@@ -268,7 +268,7 @@ export default function omitExtraData<
       return target;
     }
     const branch = conditionHolds<S, F>(context, condition, source, rootSchema) ? then : otherwise;
-    return branch === undefined ? target : omit(branch as S | boolean, source, path, target, false);
+    return branch === undefined ? target : omit(branch, source, path, target, false);
   }
 
   /** Applies the `oneOf` option the field shows to `source`, the best-matching one without a `fieldState`, merging
@@ -363,7 +363,7 @@ export default function omitExtraData<
     for (const [key, deps] of Object.entries(dependencies)) {
       // Skip property dependencies (string arrays); only process schema dependencies.
       if (key in source && !Array.isArray(deps)) {
-        result = omit(deps as S | boolean, source, path, result, false);
+        result = omit(deps, source, path, result, false);
       }
     }
     return result;
@@ -422,7 +422,7 @@ export default function omitExtraData<
    * @returns - The filtered value, or `undefined` when the schema rejects the value
    */
   function omit(
-    schemaDef: S | boolean,
+    schemaDef: unknown,
     source: unknown,
     path: FieldPathList,
     target?: unknown,
@@ -431,7 +431,7 @@ export default function omitExtraData<
     if (source === undefined || schemaDef === false) {
       return undefined;
     }
-    if (schemaDef === true || !schemaDef || Object.keys(schemaDef).length === 0) {
+    if (!isSchemaObject<S>(schemaDef) || Object.keys(schemaDef).length === 0) {
       return target ?? (useSourceAsFallback ? source : undefined);
     }
 
@@ -459,7 +459,7 @@ export default function omitExtraData<
       if (remainingAllOf) {
         for (let i = 0; i < remainingAllOf.length; i++) {
           // oxlint-disable-next-line no-param-reassign
-          target = omit(remainingAllOf[i] as S | boolean, source, path, target, false);
+          target = omit(remainingAllOf[i], source, path, target, false);
         }
       }
     }

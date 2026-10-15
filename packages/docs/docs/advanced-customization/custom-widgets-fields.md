@@ -434,8 +434,9 @@ function MyAnyOfField(props: FieldProps & { options: RJSFSchema[] }) {
 ```
 
 With no selection, the option shown is the one `getClosestMatchingOption()` picks for the data.
-A selection holds while the data is what the form left at the field, whatever the edits inside the field made of it; data arriving from outside the field, such as a parent's new `formData` or a parent declining the switch, keeps it while it validates against the option and is matched again otherwise.
-A condition that swaps the option list the field offers starts the choice over, and finds it again when it swaps back.
+A selection holds for the data it was made with and for the data the form's own changes leave at the field, whatever the edits inside the field made of it, so a parent declining a switch or an edit keeps it too.
+Other data, such as a parent's new `formData`, a reset, or a parent answering a switch with data of its own, is shown under the option `getClosestMatchingOption()` picks for it, the selection winning a tie; that pick does not replace the selection.
+The selection is kept by the place of the option list in the root schema, so a condition that swaps the list the field offers starts the choice over and finds it again when it swaps back, while a schema that changes the list in place, such as by adding an option, keeps it.
 
 ## The `registry` object
 

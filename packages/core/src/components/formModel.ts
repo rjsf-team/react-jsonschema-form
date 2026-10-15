@@ -527,7 +527,6 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       const committed = commit(start, applyReset(start, props), (base) => applyReset(base, props));
-      uiState.clear();
       // A reset replaces whatever a parent holds with the reset data
       reportToCaller((latest) => latest.onChange?.(toIChangeEvent(committed)));
     },
