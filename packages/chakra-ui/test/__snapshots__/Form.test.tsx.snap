@@ -25301,7 +25301,6 @@ exports[`single fields > optional data controls > does not show optional control
           <div
             class="emotion-5"
           >
-            <div />
             <div>
               <div
                 class="rjsf-field rjsf-field-object"
@@ -25333,7 +25332,6 @@ exports[`single fields > optional data controls > does not show optional control
                     <div
                       class="emotion-5"
                     >
-                      <div />
                       <div>
                         <div
                           class="rjsf-field rjsf-field-string"
@@ -25416,7 +25414,6 @@ exports[`single fields > optional data controls > does not show optional control
                               <div
                                 class="emotion-5"
                               >
-                                <div />
                                 <div>
                                   <div
                                     class="rjsf-field rjsf-field-string"
@@ -25504,7 +25501,6 @@ exports[`single fields > optional data controls > does not show optional control
                               <div
                                 class="emotion-5"
                               >
-                                <div />
                                 <div>
                                   <div
                                     class="rjsf-field rjsf-field-string"
@@ -25897,7 +25893,6 @@ exports[`single fields > optional data controls > does not show optional control
                     <div
                       class="emotion-5"
                     >
-                      <div />
                       <div>
                         <div
                           class="rjsf-field rjsf-field-string"
@@ -26312,7 +26307,6 @@ exports[`single fields > optional data controls > does not show optional control
                               <div
                                 class="emotion-5"
                               >
-                                <div />
                                 <div>
                                   <div
                                     class="rjsf-field rjsf-field-string"
@@ -28917,7 +28911,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
           <div
             class="emotion-5"
           >
-            <div />
             <div>
               <div
                 class="rjsf-field rjsf-field-object"
@@ -29075,7 +29068,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div
                                 class="emotion-5"
                               >
-                                <div />
                                 <div>
                                   <div
                                     class="rjsf-field rjsf-field-string"
@@ -29543,7 +29535,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <div
                       class="emotion-5"
                     >
-                      <div />
                       <div>
                         <div
                           class="rjsf-field rjsf-field-string"
@@ -31129,7 +31120,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
           <div
             class="emotion-5"
           >
-            <div />
             <div>
               <div
                 class="rjsf-field rjsf-field-object"
@@ -31255,7 +31245,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <div
                       class="emotion-5"
                     >
-                      <div />
                       <div>
                         <div
                           class="rjsf-field rjsf-field-string"

@@ -92,6 +92,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `ArrayFieldTemplate` draws only the heading `ArrayField` hands it as `title`, the one the array draws, as core's does, so an `anyOf`/`oneOf` option repeating its field's `ui:title` no longer draws it a second time, and lays out an optional array's data control with its items where it draws no heading, as under `ui:label: false`, rather than dropping it with the heading ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `MultiSchemaFieldTemplate` lays out no row for a selector it isn't given, as while an optional `anyOf`/`oneOf` field has no data, rather than an empty `<div>` ([#5401](https://github.com/rjsf-team/react-jsonschema-form/issues/5401), [#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `FieldErrorTemplate` renders a field's errors in one element under `errorId()`, each message on its own line, where it rendered each message under that same id, so a field with two errors repeated it ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `ObjectFieldTemplate` lays out the optional data control with the properties where it draws no heading, as under `ui:label: false`, rather than dropping it with the heading, as core's does, and renders no empty grid item where there is no control ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/core
 
