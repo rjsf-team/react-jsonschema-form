@@ -2635,6 +2635,19 @@ Read it rather than `displayLabel`, which stays through v7 only for a template r
 
 - boolean: True when the template draws the label
 
+### templateLabelFor&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#templatelabelfor}
+
+The `for` of the label a `FieldTemplate` draws: the field's `id`, except where the field's plan names the control through `aria-labelledby`, as for a group of radios or checkboxes, whose wrapper carries the `id` and isn't an element a `for` can label.
+That label names the control through its own `presentation.label.id` instead.
+
+#### Parameters
+
+- props: Pick&lt;FieldTemplateProps&lt;T, S, F>, 'id' | 'presentation'> - The template's `id` and `presentation`
+
+#### Returns
+
+- string | undefined: The `for` of the template's label, or undefined when it should have none
+
 ### titleDrawsOptionalDataControl&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#titledrawsoptionaldatacontrol}
 
 Whether an `ArrayFieldTemplate` or `ObjectFieldTemplate` lays out its optional data control in its heading, the one it draws for the `title` its field hands it.

@@ -825,7 +825,7 @@ If you want to handle the rendering of each element yourself, you can use the pr
 The following props are passed to a custom field template component:
 
 - `fieldPath`: The `FieldPath` string identifying where this field's data lives, such as `friends[0].firstName`.
-- `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget.
+- `id`: The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget, as the `for` that [`templateLabelFor()`](../api-reference/utility-functions.md#templatelabelfor) gives, which is none where the field's plan names a group of controls through `aria-labelledby`.
 - `classNames`: A string containing the base Bootstrap CSS classes, merged with any [custom ones](../api-reference/uiSchema.md#classnames) defined in your uiSchema.
 - `style`: An object containing the `StyleHTMLAttributes` defined in the `uiSchema`.
 - `label`: The computed label for this field, as a string.

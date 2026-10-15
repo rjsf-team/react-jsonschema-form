@@ -4,6 +4,7 @@ import {
   resolveFieldPresentation,
   templateDrawsDescription,
   templateDrawsLabel,
+  templateLabelFor,
   widgetDrawsLabel,
 } from '../src/index.ts';
 
@@ -71,5 +72,21 @@ describe('widgetDrawsLabel()', () => {
   it('follows hideLabel without a plan', () => {
     expect(widgetDrawsLabel({})).toBe(true);
     expect(widgetDrawsLabel({ hideLabel: true })).toBe(false);
+  });
+});
+
+describe('templateLabelFor()', () => {
+  it("points the label at the field's id where the plan names the control through the label's for", () => {
+    expect(templateLabelFor({ id: ID, presentation: plan() })).toBe(ID);
+  });
+
+  it('gives the label no for where the plan names the control through aria-labelledby', () => {
+    const presentation = plan({ declaration: { ...TEMPLATE, labelledBy: 'aria-labelledby' } });
+    expect(templateLabelFor({ id: ID, presentation })).toBeUndefined();
+  });
+
+  it("points the label at the field's id where the plan has no control, and without a plan", () => {
+    expect(templateLabelFor({ id: ID, presentation: plan({ hasControl: false }) })).toBe(ID);
+    expect(templateLabelFor({ id: ID })).toBe(ID);
   });
 });
