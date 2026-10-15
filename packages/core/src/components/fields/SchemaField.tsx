@@ -195,6 +195,8 @@ interface NamedFieldResolution<
   ignoredOwnField?: string;
   /** What `ui:globalOptions.field` was, when it applied to the field but names no field, for the same warning */
   ignoredGlobalField?: string;
+  /** What the schema's `$id` was, when something other than a component is registered under it, for the same warning */
+  ignoredIdField?: string;
 }
 
 /** Resolves the one field a schema's field is named by: its own `ui:field`, else `ui:globalOptions.field`, else the
@@ -209,13 +211,13 @@ interface NamedFieldResolution<
  * asks for no field: `undefined` is how `SchemaField` shadows it for a schema's options, and a JSON uiSchema, which can't
  * spell `undefined`, clears it for one field with `null` or `false`. An empty `ui:globalOptions.field` asks for no field
  * the same way, so it isn't warned about either. A `$id` is an identifier first, so one naming no field is not warned
- * about.
+ * about, but one something other than a component is registered under is, since registering it asked for a field.
  *
  * @param ownUiOptions - The field's own UI options, without the global ones
  * @param globalField - The `field` from `ui:globalOptions`
  * @param schemaId - The schema's `$id`
  * @param fields - The registered fields
- * @returns - The field to render, if any, and a description of each `ui:field` that was ignored
+ * @returns - The field to render, if any, and a description of each `ui:field` or `$id` that was ignored
  */
 function resolveNamedField<
   T = unknown,
@@ -241,9 +243,14 @@ function resolveNamedField<
     return { namedField: globalResolved, ignoredOwnField };
   }
   const idResolved = lookUpUiField<T, S, F>(schemaId, fields);
+  const idNamesField = isComponentType<FieldProps<T, S, F>>(idResolved);
   return {
-    namedField: isComponentType<FieldProps<T, S, F>>(idResolved) ? idResolved : undefined,
+    namedField: idNamesField ? idResolved : undefined,
     ignoredOwnField,
+    ignoredIdField:
+      !idNamesField && idResolved != null
+        ? describeUnresolvedComponent(schemaId, idResolved, 'registered field', 'MyField')
+        : undefined,
     ignoredGlobalField: appliedGlobalField
       ? describeUnresolvedComponent(appliedGlobalField, globalResolved, 'registered field', 'MyField')
       : undefined,
@@ -619,7 +626,7 @@ function SchemaFieldRender<
       </RawFormDataContext>,
     );
   }
-  const { ignoredOwnField, ignoredGlobalField } = uiField;
+  const { ignoredOwnField, ignoredGlobalField, ignoredIdField } = uiField;
   const { FieldComponent, rendersOptionSelector } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
@@ -680,6 +687,13 @@ function SchemaFieldRender<
     logOnce(
       `ui:globalOptions.field ${ignoredGlobalField}, so it is ignored and the fields it applies to are rendered as ` +
         'though no ui:field were given.',
+    );
+  }
+  // A field is registered under a `$id` once for the form, however many fields the schema carrying it renders
+  if (ignoredIdField) {
+    logOnce(
+      `$id ${ignoredIdField}, so it is ignored and the fields of the schema carrying it are rendered as though no ` +
+        'field were registered under it.',
     );
   }
 

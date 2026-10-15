@@ -779,15 +779,38 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll('.my-field')).toHaveLength(1);
       expect(node.querySelectorAll('input#root')).toHaveLength(1);
     });
+  });
 
-    it('renders the default field where the field registered under the $id is not a component (#5439)', () => {
+  describe('a field registered under a $id that is not a component', () => {
+    const consoleWarnSuppression = setupConsoleWarnSuppression();
+
+    it('warns that it is ignored, and renders the field for the schema type (#5439)', async () => {
+      function MyField() {
+        return <div id='custom' />;
+      }
       const fieldsWithElement: Record<string, Field> = {};
       // A JavaScript caller can register a React element, which the registry's type rules out
-      Reflect.set(fieldsWithElement, 'MyField', <MyField />);
-      const { node } = createFormComponent({ schema: { $id: 'MyField', type: 'string' }, fields: fieldsWithElement });
+      Reflect.set(fieldsWithElement, '#/thing', <MyField />);
+      const { node, onChange } = createFormComponent({
+        schema: { type: 'object', properties: { thing: { $id: '#/thing', type: 'string' } } },
+        fields: fieldsWithElement,
+      });
 
-      expect(node.querySelector('.my-field')).not.toBeInTheDocument();
+      expect(node.querySelector('#custom')).not.toBeInTheDocument();
+      await user.type(screen.getByRole('textbox'), 'x');
+      expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { thing: 'x' } }), 'root_thing');
+      expect(consoleWarnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+        "$id names a registered field ('#/thing') that is a React element rather than a component (pass MyField, not " +
+          '<MyField />), so it is ignored and the fields of the schema carrying it are rendered as though no field ' +
+          'were registered under it.',
+      );
+    });
+
+    it('does not warn about a $id no field is registered under', () => {
+      const { node } = createFormComponent({ schema: { $id: 'https://example.com/thing.json', type: 'string' } });
+
       expect(node.querySelector('input#root')).toBeInTheDocument();
+      expect(consoleWarnSuppression.consoleSpy).not.toHaveBeenCalled();
     });
   });
 
