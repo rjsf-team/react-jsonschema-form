@@ -151,12 +151,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               >
                                 <div
                                   class="title-field mb-6"
-                                  id="root_tasks_0__title"
                                 >
                                   <h2
                                     class="text-3xl font-bold text-primary mb-2"
                                   >
-                                    tasks-1
+                                    <span
+                                      id="root_tasks_0__title"
+                                    >
+                                      tasks-1
+                                    </span>
                                   </h2>
                                   <div
                                     class="divider divider-primary my-0"
@@ -330,12 +333,15 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                               >
                                 <div
                                   class="title-field mb-6"
-                                  id="root_tasks_1__title"
                                 >
                                   <h2
                                     class="text-3xl font-bold text-primary mb-2"
                                   >
-                                    tasks-2
+                                    <span
+                                      id="root_tasks_1__title"
+                                    >
+                                      tasks-2
+                                    </span>
                                   </h2>
                                   <div
                                     class="divider divider-primary my-0"
@@ -909,7 +915,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                 >
                   <label
                     class="label"
-                    for="root_choices"
                     id="root_choices__label"
                   >
                     <span
@@ -1030,12 +1035,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_person__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        person
+                        <span
+                          id="root_person__title"
+                        >
+                          person
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -1136,12 +1144,15 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_person_address__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  address
+                                  <span
+                                    id="root_person_address__title"
+                                  >
+                                    address
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -1282,7 +1293,6 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                 >
                   <label
                     class="label"
-                    for="root_option"
                     id="root_option__label"
                   >
                     <span
@@ -1762,12 +1772,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               >
                                 <div
                                   class="title-field mb-6"
-                                  id="root_tasks_0__title"
                                 >
                                   <h2
                                     class="text-3xl font-bold text-primary mb-2"
                                   >
-                                    tasks-1
+                                    <span
+                                      id="root_tasks_0__title"
+                                    >
+                                      tasks-1
+                                    </span>
                                   </h2>
                                   <div
                                     class="divider divider-primary my-0"
@@ -1941,12 +1954,15 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                               >
                                 <div
                                   class="title-field mb-6"
-                                  id="root_tasks_1__title"
                                 >
                                   <h2
                                     class="text-3xl font-bold text-primary mb-2"
                                   >
-                                    tasks-2
+                                    <span
+                                      id="root_tasks_1__title"
+                                    >
+                                      tasks-2
+                                    </span>
                                   </h2>
                                   <div
                                     class="divider divider-primary my-0"
@@ -2523,12 +2539,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_person__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        person
+                        <span
+                          id="root_person__title"
+                        >
+                          person
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -2629,12 +2648,15 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_person_address__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  address
+                                  <span
+                                    id="root_person_address__title"
+                                  >
+                                    address
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -3891,12 +3913,15 @@ exports[`single fields > Cyclic schema 1`] = `
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              A registration form
+              <span
+                id="root__title"
+              >
+                A registration form
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -3929,12 +3954,15 @@ exports[`single fields > Cyclic schema 1`] = `
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_child__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        A registration form
+                        <span
+                          id="root_child__title"
+                        >
+                          A registration form
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -4277,7 +4305,6 @@ exports[`single fields > checkboxes field 1`] = `
       >
         <label
           class="label"
-          for="root"
           id="root__label"
         >
           <span
@@ -4392,7 +4419,6 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
       >
         <label
           class="label"
-          for="root"
           id="root__label"
         >
           <span
@@ -4510,7 +4536,6 @@ exports[`single fields > checkboxes widget with required field 1`] = `
       >
         <label
           class="label"
-          for="root"
           id="root__label"
         >
           <span
@@ -5428,12 +5453,15 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              test
+              <span
+                id="root__title"
+              >
+                test
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -5456,12 +5484,15 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObjectOptional__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObjectOptional
+                        <span
+                          id="root_nestedObjectOptional__title"
+                        >
+                          nestedObjectOptional
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -5523,12 +5554,15 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepObjectOptional__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  deepObjectOptional
+                                  <span
+                                    id="root_nestedObjectOptional_deepObjectOptional__title"
+                                  >
+                                    deepObjectOptional
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -5595,12 +5629,15 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepObject__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  deepObject
+                                  <span
+                                    id="root_nestedObjectOptional_deepObject__title"
+                                  >
+                                    deepObject
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -5944,12 +5981,15 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObject__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObject
+                        <span
+                          id="root_nestedObject__title"
+                        >
+                          nestedObject
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -6442,12 +6482,15 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              test
+              <span
+                id="root__title"
+              >
+                test
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -6470,12 +6513,15 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObjectOptional__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObjectOptional
+                        <span
+                          id="root_nestedObjectOptional__title"
+                        >
+                          nestedObjectOptional
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -6538,12 +6584,15 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepObjectOptional__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  deepObjectOptional
+                                  <span
+                                    id="root_nestedObjectOptional_deepObjectOptional__title"
+                                  >
+                                    deepObjectOptional
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -6611,12 +6660,15 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepObject__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  deepObject
+                                  <span
+                                    id="root_nestedObjectOptional_deepObject__title"
+                                  >
+                                    deepObject
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -6965,12 +7017,15 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObject__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObject
+                        <span
+                          id="root_nestedObject__title"
+                        >
+                          nestedObject
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -7466,12 +7521,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              test
+              <span
+                id="root__title"
+              >
+                test
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -7494,7 +7552,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObjectOptional__title"
                     >
                       <div
                         class="flex"
@@ -7505,7 +7562,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <h2
                             class="text-3xl font-bold text-primary mb-2"
                           >
-                            nestedObjectOptional
+                            <span
+                              id="root_nestedObjectOptional__title"
+                            >
+                              nestedObjectOptional
+                            </span>
                           </h2>
                         </div>
                         <div
@@ -7594,7 +7655,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepObjectOptional__title"
                               >
                                 <div
                                   class="flex"
@@ -7605,7 +7665,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     <h2
                                       class="text-3xl font-bold text-primary mb-2"
                                     >
-                                      deepObjectOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepObjectOptional__title"
+                                      >
+                                        deepObjectOptional
+                                      </span>
                                     </h2>
                                   </div>
                                   <div
@@ -7659,12 +7723,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepObject__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  deepObject
+                                  <span
+                                    id="root_nestedObjectOptional_deepObject__title"
+                                  >
+                                    deepObject
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -8092,12 +8159,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObject__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObject
+                        <span
+                          id="root_nestedObject__title"
+                        >
+                          nestedObject
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -8244,7 +8314,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         >
                           <div
                             class="title-field mb-6"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <div
                               class="flex"
@@ -8255,7 +8324,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  optionalObjectWithOneofs
+                                  <span
+                                    id="root_optionalObjectWithOneofs__title"
+                                  >
+                                    optionalObjectWithOneofs
+                                  </span>
                                 </h2>
                               </div>
                               <div
@@ -8403,12 +8476,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              test
+              <span
+                id="root__title"
+              >
+                test
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -8431,12 +8507,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObjectOptional__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObjectOptional
+                        <span
+                          id="root_nestedObjectOptional__title"
+                        >
+                          nestedObjectOptional
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -8499,12 +8578,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepObjectOptional__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  deepObjectOptional
+                                  <span
+                                    id="root_nestedObjectOptional_deepObjectOptional__title"
+                                  >
+                                    deepObjectOptional
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -8537,12 +8619,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="title-field mb-6"
-                                id="root_nestedObjectOptional_deepObject__title"
                               >
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  deepObject
+                                  <span
+                                    id="root_nestedObjectOptional_deepObject__title"
+                                  >
+                                    deepObject
+                                  </span>
                                 </h2>
                                 <div
                                   class="divider divider-primary my-0"
@@ -8923,12 +9008,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObject__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObject
+                        <span
+                          id="root_nestedObject__title"
+                        >
+                          nestedObject
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -9077,12 +9165,15 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         >
                           <div
                             class="title-field mb-6"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <h2
                               class="text-3xl font-bold text-primary mb-2"
                             >
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h2>
                             <div
                               class="divider divider-primary my-0"
@@ -9185,12 +9276,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              test
+              <span
+                id="root__title"
+              >
+                test
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -9213,7 +9307,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObjectOptional__title"
                     >
                       <div
                         class="flex"
@@ -9224,7 +9317,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           <h2
                             class="text-3xl font-bold text-primary mb-2"
                           >
-                            nestedObjectOptional
+                            <span
+                              id="root_nestedObjectOptional__title"
+                            >
+                              nestedObjectOptional
+                            </span>
                           </h2>
                         </div>
                         <div
@@ -9336,12 +9433,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObject__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObject
+                        <span
+                          id="root_nestedObject__title"
+                        >
+                          nestedObject
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -9488,7 +9588,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         >
                           <div
                             class="title-field mb-6"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <div
                               class="flex"
@@ -9499,7 +9598,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 <h2
                                   class="text-3xl font-bold text-primary mb-2"
                                 >
-                                  optionalObjectWithOneofs
+                                  <span
+                                    id="root_optionalObjectWithOneofs__title"
+                                  >
+                                    optionalObjectWithOneofs
+                                  </span>
                                 </h2>
                               </div>
                               <div
@@ -9648,12 +9751,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              test
+              <span
+                id="root__title"
+              >
+                test
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"
@@ -9677,12 +9783,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObjectOptional__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObjectOptional
+                        <span
+                          id="root_nestedObjectOptional__title"
+                        >
+                          nestedObjectOptional
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -9751,12 +9860,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="title-field mb-6"
-                      id="root_nestedObject__title"
                     >
                       <h2
                         class="text-3xl font-bold text-primary mb-2"
                       >
-                        nestedObject
+                        <span
+                          id="root_nestedObject__title"
+                        >
+                          nestedObject
+                        </span>
                       </h2>
                       <div
                         class="divider divider-primary my-0"
@@ -9909,12 +10021,15 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         >
                           <div
                             class="title-field mb-6"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <h2
                               class="text-3xl font-bold text-primary mb-2"
                             >
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h2>
                             <div
                               class="divider divider-primary my-0"
@@ -10127,7 +10242,6 @@ exports[`single fields > radio widget with description in schema and FieldTempla
       >
         <label
           class="label"
-          for="root"
           id="root__label"
         >
           <span
@@ -12945,12 +13059,15 @@ exports[`single fields > title field 1`] = `
         >
           <div
             class="title-field mb-6"
-            id="root__title"
           >
             <h2
               class="text-3xl font-bold text-primary mb-2"
             >
-              Titre 1
+              <span
+                id="root__title"
+              >
+                Titre 1
+              </span>
             </h2>
             <div
               class="divider divider-primary my-0"

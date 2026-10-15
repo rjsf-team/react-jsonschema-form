@@ -14,6 +14,8 @@ import {
   getUiOptions,
   getWidgetType,
   templateDrawsLabel,
+  templateLabelFor,
+  templateMarksRequired,
 } from '@rjsf/utils';
 
 import { getDaisy } from '../../utils.ts';
@@ -162,10 +164,14 @@ export default function FieldTemplate<
         style={daisy.style}
       >
         {templateDrawsLabel<T, S, F>(props) && !widgetRendersLabel && !!label && (
-          <label id={fieldLabelId(id)} htmlFor={id} className='label'>
+          <label
+            id={presentation?.label.id ?? fieldLabelId(id)}
+            htmlFor={templateLabelFor<T, S, F>(props)}
+            className='label'
+          >
             <span className='label-text font-medium'>
               {label}
-              {required && <span className='text-error ml-1'>*</span>}
+              {templateMarksRequired<T, S, F>(props) && <span className='text-error ml-1'>*</span>}
             </span>
           </label>
         )}

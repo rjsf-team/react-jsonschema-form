@@ -1,6 +1,6 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { FormValidation, RJSFSchema, UiSchema } from '@rjsf/utils';
-import { errorId } from '@rjsf/utils';
+import type { FormValidation, RJSFSchema, UiSchema, WidgetProps } from '@rjsf/utils';
+import { errorId, fieldLabelId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -140,6 +140,99 @@ describe("daisyui widgets carry their field's plan on the element a user focuses
     );
 
     expect(screen.getByRole('slider', { name: 'X' })).toHaveFocus();
+  });
+});
+
+describe('daisyui FieldTemplate', () => {
+  test.each<[string, string, RJSFSchema]>([
+    ['radio', 'radiogroup', { type: 'string', title: 'Color', enum: ['red', 'blue'] }],
+    [
+      'checkboxes',
+      'group',
+      { type: 'array', title: 'Color', items: { type: 'string', enum: ['red', 'blue'] }, uniqueItems: true },
+    ],
+  ])("draws a %s group's label with no for, which would name the group's wrapper", (widget, role, color) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector(`#${fieldLabelId('root_color')}`)).not.toHaveAttribute('for');
+    expect(screen.getByRole(role, { name: 'Color' })).toBeInTheDocument();
+  });
+
+  test.each([
+    ['declares it holds false unchecked', { uncheckedIsFalse: true }, /^Foo$/],
+    ['declares nothing', {}, /^Foo\*$/],
+  ])("marks the template's label for a switch that %s only where its plan says", (_, declaration, text) => {
+    const SwitchWidget = ({ id }: WidgetProps) => <input id={id} type='checkbox' />;
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { foo: { type: 'boolean', title: 'Foo' } }, required: ['foo'] }}
+        uiSchema={{ foo: { 'ui:widget': 'SwitchWidget' } }}
+        widgets={{ SwitchWidget }}
+        presentation={{ widgets: { SwitchWidget: { ...declaration, label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('label[for="root_foo"]')).toHaveTextContent(text);
+  });
+});
+
+describe('daisyui TitleField', () => {
+  const pet: RJSFSchema = {
+    type: 'object',
+    title: 'Pet',
+    properties: { name: { type: 'string' } },
+    anyOf: [
+      { title: 'Dog', properties: { bark: { type: 'string' } } },
+      { title: 'Cat', properties: { meow: { type: 'string' } } },
+    ],
+  };
+
+  // jsdom leaves a button inside the element a name points at out of the name, but a browser takes its label in too, so
+  // the element the selector is named by is checked to hold the heading's text and nothing else
+  test("names an optional object's option selector by its heading's text, not by its data control", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { pet } }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
+        initialFormData={{ pet: { name: 'Rex' } }}
+        validator={validator}
+      />,
+    );
+
+    const selector = document.getElementById('root_pet__anyof_select')!;
+    const heading = document.getElementById(selector.getAttribute('aria-labelledby')!);
+    expect(heading).toHaveTextContent(/^Pet$/);
+    expect(heading?.querySelector('button')).toBeNull();
+    expect(selector).toHaveAccessibleName('Pet');
+  });
+
+  test("draws the heading its field's plan hands TitleField, decoration included, over its ui:title", () => {
+    const { container } = render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            pet: { type: 'object', title: 'Pet', deprecated: true, properties: { a: { type: 'string' } } },
+            none: { type: 'null', title: 'Nothing', deprecated: true },
+          },
+        }}
+        uiSchema={{
+          pet: { 'ui:title': 'Animal', 'ui:options': { deprecatedHandling: 'label' } },
+          none: { 'ui:title': 'Nada', 'ui:options': { deprecatedHandling: 'label' } },
+        }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector('#root_pet__title')).toHaveTextContent(/^Animal \(deprecated\)$/);
+    expect(container.querySelector('#root_none__title')).toHaveTextContent(/^Nada \(deprecated\)$/);
   });
 });
 
