@@ -6088,6 +6088,38 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
         });
 
+        it("should populate a property's allOf conditional defaults with createDeepAllOfMerge in array items whose schema also has a direct if", () => {
+          const deepMerge = createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf;
+          const directIfItemsSchema: RJSFSchema = {
+            type: 'array',
+            items: { ...rootAllOfSchema, if: { properties: { x: { const: 1 } } }, then: {} },
+          };
+          const allOfItemsSchema: RJSFSchema = { type: 'array', items: rootAllOfSchema };
+          const formData = [{ animalInfo: { animal: 'Cat' } }];
+          expect(
+            getDefaultFormState(
+              testValidator,
+              directIfItemsSchema,
+              formData,
+              directIfItemsSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              deepMerge,
+            ),
+          ).toEqual([{ animalInfo: { animal: 'Cat', food: 'meat' } }]);
+          expect(
+            getDefaultFormState(
+              testValidator,
+              allOfItemsSchema,
+              formData,
+              allOfItemsSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              deepMerge,
+            ),
+          ).toEqual(formData);
+        });
+
         it('should populate the conditional defaults of an allOf in array items whose schema also has a direct if', () => {
           expect(
             getDefaultFormState(

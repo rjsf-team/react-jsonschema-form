@@ -121,8 +121,9 @@ export interface Experimental_DefaultFormStateBehavior {
    * the `then` defaults of all the entries, and the first entry that defaults a property wins, while an
    * `experimental_customMergeAllOf` that throws on the conflicting `default`s drops the whole `allOf`. An
    * `experimental_customMergeAllOf` built on a deep merger also turns a property's `allOf: [{ if, then }]` into a
-   * direct `if-then-else` when it merges a root-level `allOf`, so that property's `then` default is filled in under
-   * `skipDefaults` too, unless `emptyObjectFields` is `skipEmptyDefaults`.
+   * direct `if-then-else` wherever it merges an `allOf` (the root's own, or one next to a direct `if` in a nested object
+   * schema, but not a nested `allOf` on its own), so that property's `then` default is filled in under `skipDefaults`
+   * too, unless `emptyObjectFields` is `skipEmptyDefaults`.
    * See the `allOf` section of `experimental_defaultFormStateBehavior` in the form props docs for examples of each case.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
