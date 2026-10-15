@@ -541,7 +541,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
  * @param schema - The schema or boolean schema to normalize
  * @returns - The original schema or an equivalent object schema
  */
-function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: boolean): S {
+export function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: boolean): S {
   return (schema ? {} : { not: {} }) as S;
 }
 
@@ -873,16 +873,16 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
 /** Returns the subschemas a `dependencies` entry merges into the schema it belongs to for the `formData` in hand,
  * which `declaredPropertyNames()` reads for the names they bring with them.
  *
- * A dependent schema's `oneOf` is not a choice `MultiSchemaField` offers: `withExactlyOneSubschema()` settles it from
- * the data, merging in the one branch whose own schema for the dependency key the data matches, so the names that
- * branch declares are rendered by whatever renders this schema. Read as options they would be left to a selector that
- * is never on screen, and a name only the matching branch declares would be stubbed beside the field that branch
- * renders it with. The branch is selected the way that function selects it, down to reading the condition behind the
- * `$ref` a branch is spelled as and to merging nothing where no single branch qualifies, which is the case it drops
- * the `oneOf` in rather than rendering any of it. The dependency itself is read behind the `$ref` it may be spelled as
- * for the same reason, since that is where its branches are then written. Without a `rootSchema` to look a reference up
- * in and match the branches against, none of them is read and the names they declare are left to be stubbed, as the
- * branches of an `if` are.
+ * A dependent schema's `oneOf` is not a choice `MultiSchemaField` offers: the merge plan settles it from the data
+ * (`applyExactlyOne()` in `mergePlan.ts`), merging in the one branch whose own schema for the dependency key the data
+ * matches, so the names that branch declares are rendered by whatever renders this schema. Read as options they would
+ * be left to a selector that is never on screen, and a name only the matching branch declares would be stubbed beside
+ * the field that branch renders it with. The branch is selected the way that function selects it, down to reading the
+ * condition behind the `$ref` a branch is spelled as and to merging nothing where no single branch qualifies, which is
+ * the case it drops the `oneOf` in rather than rendering any of it. The dependency itself is read behind the `$ref` it
+ * may be spelled as for the same reason, since that is where its branches are then written. Without a `rootSchema` to
+ * look a reference up in and match the branches against, none of them is read and the names they declare are left to be
+ * stubbed, as the branches of an `if` are.
  *
  * @param context - The `SchemaContext` whose `validator` settles which branch the data matches
  * @param dependent - What the `dependencies` entry holds, which is a schema here and a list of required names elsewhere
@@ -901,9 +901,9 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
   if (!isObject(dependent)) {
     return [dependent];
   }
-  const ownOneOf = dependent[ONE_OF_KEY];
-  // A dependency spelled as a `$ref` holds its `oneOf` behind that reference, and `withDependentSchema()` resolves the
-  // dependency before it takes the `oneOf` off, so the branch is settled from the data for that spelling too. Read
+  const { [ONE_OF_KEY]: ownOneOf, ...dependentWithoutOneOf } = dependent;
+  // A dependency spelled as a `$ref` holds its `oneOf` behind that reference, and the merge plan follows that reference
+  // before it takes the `oneOf` off, so the branch is settled from the data for that spelling too. Read
   // without following the reference it offers no branches, and a name the matching branch declares would be stubbed
   // beside the field that branch renders it with, which is what the inline spelling no longer does
   const referenced =
@@ -942,10 +942,10 @@ function dependencySubschemas<S extends StrictRJSFSchema = RJSFSchema, F extends
  * data brings in — every subschema that is merged into it before it renders, so that each of them declares its names as
  * the schema's own.
  *
- * The condition is put to the validator, which is the question `resolveCondition()` answers to merge that branch in, so
- * the branch read here is the branch whose properties the form renders; a dependency is read on the same terms
- * `processDependencies()` applies it on, which are that the data has the key and the schema declares it, so that the
- * names read here are the ones the merge is about to bring in. Without a `rootSchema` to resolve the condition
+ * The condition is put to the validator, which is the question the merge plan asks to merge that branch in, so the
+ * branch read here is the branch whose properties the form renders; a dependency is read on the same terms the merge
+ * plan's `applyDependencies()` applies it on, which are that the data has the key and the schema declares it, so that
+ * the names read here are the ones the merge is about to bring in. Without a `rootSchema` to resolve the condition
  * against, neither branch is read and the names it declares are left to be stubbed instead. A reference is looked up
  * rather than the schema resolved: the names are all that is wanted here, where resolving every option of every
  * expandable object would cost each render the merge `MultiSchemaField` already pays for the one option on screen.
@@ -1078,15 +1078,14 @@ function namesOptionRenders<S extends StrictRJSFSchema = RJSFSchema, F extends F
  * a name the option on screen is the only one to render.
  *
  * Under `additionalProperties`, or a matching pattern, that keyword describes the key whichever option is chosen, so
- * only a name every option renders is left to them: the option on screen is the user's to choose and
- * `retrieveSchema()` leaves the options for `MultiSchemaField` to choose between rather than merging the chosen one in,
- * so a name the other options don't render would have no field at all under them and the value it holds nothing to
- * edit or remove it with. Under `unevaluatedProperties` the keyword says nothing about a key the matching option
- * evaluates, which is every key that option declares, so a stub for one of its names is not a second field for the
- * value but the wrong schema over it; a name only another option declares is a key nothing evaluates, which is the
- * keyword's to describe and the object's to stub, so only the matching option is read. That option is matched with
- * `getFirstMatchingOption()` over the options with their references resolved, which is the form
- * `resolveAnyOrOneOfSchemas()` scores them in, so a precompiled validator has a function compiled for it.
+ * only a name every option renders is left to them: the option on screen is the user's to choose and `retrieveSchema()`
+ * leaves the options for `MultiSchemaField` to choose between rather than merging the chosen one in, so a name the
+ * other options don't render would have no field at all under them and the value it holds nothing to edit or remove it
+ * with. Under `unevaluatedProperties` the keyword says nothing about a key the matching option evaluates, which is
+ * every key that option declares, so a stub for one of its names is not a second field for the value but the wrong
+ * schema over it; a name only another option declares is a key nothing evaluates, which is the keyword's to describe
+ * and the object's to stub, so only the matching option is read. That option is matched as option matching matches
+ * everywhere, by where it sits in the root, so a precompiled validator has a function compiled for it.
  *
  * It is not always the option on screen. `MultiSchemaField` picks with `getClosestMatchingOption()`, which scores
  * rather than takes the first that validates, and it keeps a choice the user made in the dropdown, which is state
@@ -1334,13 +1333,14 @@ export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
  */
 const relaxedOptions = new WeakMap<StrictRJSFSchema, StrictRJSFSchema>();
 
-/** Normalises a list of `oneOf`/`anyOf` options for use in option-scoring only (not for filtering).
+/** Normalises a list of `oneOf`/`anyOf` options for scoring them only (not for filtering).
  * Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
  * When `resolveRefs` is `true`, each object option has its own `$ref` resolved first
  * so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
  * Any option whose `additionalProperties` is `false` is widened to `true` so that
- * `getClosestMatchingOption` / `validator.isValid()` does not produce false negatives when the
- * form data contains keys not listed in `properties`.
+ * `validator.isValid()` does not produce false negatives when the form data contains keys not listed in `properties`.
+ * The library's own option scoring does not call it: `getClosestMatchingOption()` relaxes the whole scope of an
+ * option itself, from where the option sits in the root.
  *
  * @param options - The raw `oneOf`/`anyOf` array, which may contain boolean schemas
  * @param [resolveRefs=false] - When `true`, resolve `$ref`s in each option before relaxing; pass
@@ -1365,8 +1365,8 @@ export function relaxOptionsForScoring<S extends StrictRJSFSchema = RJSFSchema>(
     if (memoized) {
       return memoized as S;
     }
-    // Relaxing makes a schema the option's `$id` does not name, so it is derived for the same reason
-    // `getFirstMatchingOption()` derives one for the schema it augments
+    // Relaxing makes a schema the option's `$id` does not name, which a validator would answer with the option's
+    // compiled function
     const relaxed = withVariantId<S>({ ...schema, additionalProperties: true });
     relaxedOptions.set(schema, relaxed);
     return relaxed;

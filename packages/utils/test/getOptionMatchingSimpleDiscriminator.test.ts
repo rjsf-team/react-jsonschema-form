@@ -1,3 +1,4 @@
+/* oxlint-disable typescript/no-deprecated -- the deprecated function is what is under test */
 import getOptionMatchingSimpleDiscriminator from '../src/getOptionMatchingSimpleDiscriminator.ts';
 
 describe('getOptionMatchingSimpleDiscriminator()', () => {

@@ -6,6 +6,9 @@ import type { RJSFSchema, StrictRJSFSchema } from './types.ts';
  * Returns index of first `option` whose discriminator matches formData. Returns `undefined` if there is no match.
  * This function does not work with discriminators of `"type": "object"` and `"type": "array"`
  *
+ * @deprecated Option matching no longer calls this. `getFirstMatchingOption()` and `getClosestMatchingOption()` read
+ *   the discriminator property through the option's `$ref`, its `allOf` entries and the other schemas in its scope,
+ *   where this reads only the option's own `properties`. Will be removed in v8.
  * @param formData - The current formData, if any, used to figure out a match
  * @param options - The list of options to find a matching options from
  * @param [discriminatorField] - The optional name of the field within the options object whose value is used to

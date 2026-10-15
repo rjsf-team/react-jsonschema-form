@@ -275,5 +275,90 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
       expect(schemaUtils.getFirstMatchingOption({ n: 'a', u: { n: 'b' } }, list)).toBe(0);
       expect(schemaUtils.getFirstMatchingOption(5, list)).toBe(1);
     });
+    it('scores a boolean option retrieved as SchemaField retrieves it, as {}', () => {
+      const options: RJSFSchema['anyOf'] = [false, { type: 'object', properties: { y: { type: 'number' } } }, true];
+      const rootSchema: RJSFSchema = { type: 'object', properties: { a: { anyOf: options } } };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const retrieved = (options ?? []).map((option) => schemaUtils.retrieveSchema(isObject(option) ? option : {}));
+      expect(schemaUtils.getClosestMatchingOption({ y: 1 }, retrieved, 0)).toBe(1);
+    });
+    it("matches a dependency's oneOf option on the property it names", () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string', enum: ['p', 'q'] } },
+        dependencies: {
+          a: {
+            oneOf: [
+              { properties: { a: { const: 'p' }, p: { default: 'P' } } },
+              { properties: { a: { const: 'q' }, q: { default: 'Q' } } },
+            ],
+          },
+        },
+      };
+      const validator = buildValidator(rootSchema);
+      expect(getDefaultFormState({ validator }, { schema: rootSchema, rootSchema, formData: { a: 'q' } })).toEqual({
+        a: 'q',
+        q: 'Q',
+      });
+    });
+    it.each(['http://example.com/root.json#', 'http://example.com/root.json'])(
+      'checks a condition and an option of a root whose $id is %s',
+      ($id) => {
+        const option: RJSFSchema = { properties: { y: { $ref: '#/definitions/n' } } };
+        const rootSchema: RJSFSchema = {
+          $id,
+          definitions: { n: { type: 'number' } },
+          type: 'object',
+          properties: {
+            k: { type: 'string', default: 'x' },
+            o: { anyOf: [{ properties: { x: { type: 'string' }, y: { type: 'string' } } }, option] },
+          },
+          if: { properties: { k: { const: 'x' } } },
+          then: { properties: { t: { default: 't' } } },
+          else: { properties: { e: { default: 'e' } } },
+        };
+        const validator = buildValidator(rootSchema);
+        expect(getDefaultFormState({ validator }, { schema: rootSchema, rootSchema, formData: {} })).toEqual({
+          k: 'x',
+          t: 't',
+        });
+        const property = rootSchema.properties?.o;
+        const anyOf = isObject(property) && Array.isArray(property.anyOf) ? property.anyOf.filter(isObject) : [];
+        expect(createSchemaUtils({ validator }, rootSchema).getFirstMatchingOption({ y: 1 }, anyOf)).toBe(1);
+      },
+    );
+    it.each(['a$b', 'a:b', 'a+b', 'a@b', 'a#b', 'a b', 'a%b', 'a/b', 'a~b'])(
+      'checks the options and a condition under $defs and a property named %s',
+      (name) => {
+        const rootSchema: RJSFSchema = {
+          $defs: {
+            T: {
+              type: 'object',
+              properties: { k: { type: 'string', default: 'x' } },
+              if: { properties: { k: { const: 'x' } } },
+              then: { properties: { t: { default: 't' } } },
+              else: { properties: { e: { default: 'e' } } },
+            },
+          },
+          type: 'object',
+          properties: {
+            d: { $ref: '#/$defs/T' },
+            [name]: {
+              anyOf: [
+                { properties: { x: { type: 'string' }, y: { type: 'string' } } },
+                { properties: { y: { type: 'number' } } },
+              ],
+            },
+          },
+        };
+        const validator = buildValidator(rootSchema);
+        expect(getDefaultFormState({ validator }, { schema: rootSchema, rootSchema, formData: {} })).toEqual({
+          d: { k: 'x', t: 't' },
+        });
+        const property = rootSchema.properties?.[name];
+        const anyOf = isObject(property) && Array.isArray(property.anyOf) ? property.anyOf.filter(isObject) : [];
+        expect(createSchemaUtils({ validator }, rootSchema).getFirstMatchingOption({ y: 1 }, anyOf)).toBe(1);
+      },
+    );
   });
 }

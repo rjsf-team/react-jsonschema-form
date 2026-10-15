@@ -192,9 +192,8 @@ export interface SchemaContext<S extends StrictRJSFSchema = RJSFSchema, F extend
   readonly defaultFormStateBehavior?: DefaultFormStateBehavior;
 }
 
-/** The settings of a `SchemaContext` that decide which sub-schemas a form validates against, which `schemaParser()`
- * parses a schema with; they must match the ones the form's `SchemaContext` holds, so the parsed sub-schemas are the
- * ones the form validates against
+/** The settings of a `SchemaContext` that the deprecated `schemaParser()` and the compile functions of the precompiled
+ * validators take. They are not read: the sub-schemas a form validates against depend on the root schema alone
  */
 export type SchemaParserOptions<S extends StrictRJSFSchema = RJSFSchema> = Pick<SchemaContext<S>, 'customMergeAllOf'>;
 
@@ -1847,11 +1846,12 @@ export interface ValidatorType<S extends StrictRJSFSchema = RJSFSchema, F extend
   ): ValidationData<T>;
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
-   * false.
+   * false. The form checks a condition or an option by handing `{ $ref: '#/<pointer>' }` naming where it sits in the
+   * `rootSchema`, so a `$ref` local to the root has to be resolved against the `rootSchema`, wherever it appears.
    *
-   * @param schema - The schema against which to validate the form data
+   * @param schema - The schema against which to validate the form data, often a `$ref` local to the `rootSchema`
    * @param formData - The form data to validate
-   * @param rootSchema - The root schema used to provide $ref resolutions
+   * @param rootSchema - The root schema that a `$ref` starting with `#` in the `schema` names
    */
   isValid(schema: S, formData: unknown, rootSchema: S): boolean;
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use

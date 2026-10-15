@@ -5,8 +5,6 @@ import type { AdoptedSchema } from './graph/parseSchemaGraph.ts';
 import { declaredProperty, holdsDeclaredKey, scoringTarget, targetOf } from './graph/validationTargets.ts';
 import { nodeOfSchema } from './retrieveSchema.ts';
 
-export { withVariantId } from './graph/validationTargets.ts';
-
 /** An option as matching reads it: the node it stands for, or a boolean option given as one */
 export type OptionNode<S extends StrictRJSFSchema = RJSFSchema> = AdoptedSchema<S> | boolean;
 

@@ -13,6 +13,7 @@ import {
   ErrorSchemaBuilder,
   getDefaultFormState,
   getFirstMatchingOption,
+  getValidationTarget,
   isSchemaObject,
   noop,
   retrieveSchema,
@@ -3509,6 +3510,21 @@ describe('AJV8Validator validating a subschema by its place in the root', () => 
     const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json', definitions: { X: { type: 'string' } } };
     expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a root whose $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json#', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold', () => {
+    const validator = customizeValidator();
+    const property: RJSFSchema = { type: 'string' };
+    const rootSchema: RJSFSchema = { $defs: { X: { properties: { 'a$b:c@d+e#f g%h': property } } } };
+    const pointer = getValidationTarget(property, rootSchema);
+    expect(pointer).toEqual({ $ref: '#/$defs/X/properties/a$b:c@d+e#f%20g%25h' });
+    expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
   });
   it('resolves a pointer into a dependencies entry named like a keyword', () => {
     const validator = customizeValidator();
