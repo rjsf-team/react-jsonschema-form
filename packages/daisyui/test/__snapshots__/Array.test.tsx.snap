@@ -749,10 +749,10 @@ exports[`array fields > has errors 1`] = `
                   </div>
                   <div
                     class="rjsf-field-error-template text-red-600"
+                    id="root_name__error"
                   >
                     <ul
                       class="list-disc list-inside"
-                      id="root_name__error"
                     >
                       <li>
                         Bad input
