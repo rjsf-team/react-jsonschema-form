@@ -630,16 +630,15 @@ describe('buildPlan()', () => {
       expect(buildPlan({ context: { validator: miniValidator() }, graph, seeds, data })).not.toBe(plan);
       expect(plan.graph).toBe(graph);
     });
-    it('keeps one plan per value of a bounded kind, but only the last string or number a field held', () => {
+    it('keeps the plan for the last value a field held', () => {
       const context = { validator: miniValidator() };
       const graph = parseSchemaGraph({ type: 'string', if: { minLength: 2 }, then: { title: 't' } });
       const seeds = [{ node: graph.root, refPath: [] }];
       const planFor = (data: unknown) => buildPlan({ context, graph, seeds, data });
       const none = planFor(undefined);
-      const yes = planFor(true);
-      expect(planFor(null)).toBe(planFor(null));
       expect(planFor(undefined)).toBe(none);
-      expect(planFor(true)).toBe(yes);
+      expect(planFor(null)).toBe(planFor(null));
+      expect(planFor(undefined)).not.toBe(none);
       const first = planFor('ab');
       expect(planFor('ab')).toBe(first);
       const second = planFor('abc');

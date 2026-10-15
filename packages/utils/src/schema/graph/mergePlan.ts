@@ -20,7 +20,6 @@ import mergeSchemas from '../../mergeSchemas.ts';
 import { getByPath } from '../../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../../types.ts';
 import shallowAllOfMerge from '../shallowAllOfMerge.ts';
-import DataMemo from './dataMemo.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
@@ -147,8 +146,8 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 /** The data an `if` is checked against when the field has none */
 const NO_DATA = Object.freeze({});
 
-const conditionMemo = new DataMemo<boolean>([NO_DATA]);
-const planMemo = new DataMemo<object>([NO_DATA]);
+const conditionMemo = new KeyedMemo<boolean>();
+const planMemo = new KeyedMemo<object>();
 /** The plans whose build read nothing of the data, which hold for any data: memoizing them apart lets a field whose
  * data is a new object each time, as an object field's is on every edit, reuse its plan
  */
@@ -493,12 +492,12 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private holds(key: string, condition: S, data: unknown): boolean {
     this.readsData = true;
     const keys = [this.context.validator, this.graph, key];
-    const memoized = conditionMemo.peek(keys, [data]);
+    const memoized = conditionMemo.peekLatest(keys, [data]);
     if (memoized !== undefined) {
       return memoized;
     }
-    const holds = this.context.validator.isValid(condition, data, this.graph.rawRoot);
-    conditionMemo.set(keys, [data], holds);
+    const holds = this.context.validator.isValid(condition, data ?? NO_DATA, this.graph.rawRoot);
+    conditionMemo.setLatest(keys, [data], holds);
     return holds;
   }
 
@@ -522,7 +521,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const conditionNode = this.graph.node(condition);
     const conditionSchema =
       conditionNode.kind === 'schema' ? conditionNode.raw : booleanSchema(conditionNode, this.graph.rawRoot);
-    const branchKey = this.holds(`if:${condition}`, conditionSchema, this.data ?? NO_DATA) ? THEN_KEY : ELSE_KEY;
+    const branchKey = this.holds(`if:${condition}`, conditionSchema, this.data) ? THEN_KEY : ELSE_KEY;
     const branchPart = this.branch(keywords.get(branchKey), branchKey, dependencyKey);
     return branchPart === undefined ? without : mergeBranch(without, branchPart);
   }
@@ -721,8 +720,8 @@ function isPlanOf<S extends StrictRJSFSchema>(value: unknown, graph: SchemaGraph
 }
 
 /** Builds the merge plan of the field `input.seeds` seed, memoized per seeds, data, policy and context: the same
- * inputs give the same plan object, as `DataMemo` memoizes data, and a plan whose build read nothing of the data is the
- * same object for any data. Checks of an `if` or a dependency condition are
+ * inputs give the same plan object while the data is the last the plan was built for, and a plan whose build read
+ * nothing of the data is the same object for any data. Checks of an `if` or a dependency condition are
  * memoized per (node, data), so a parent's lookahead and the child's own build do not check the same condition twice.
  *
  * @param input - The graph, seeds, data, policy and context of the field
@@ -754,7 +753,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
   if (isPlanOf(dataFree, graph)) {
     return dataFree;
   }
-  const memoized = planMemo.peek(keys, [data, depData]);
+  const memoized = planMemo.peekLatest(keys, [data, depData]);
   if (isPlanOf(memoized, graph)) {
     return memoized;
   }
@@ -767,7 +766,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
   }).build(seeds);
   planGraphs.set(plan, graph);
   if (plan.readsData) {
-    planMemo.set(keys, [data, depData], plan);
+    planMemo.setLatest(keys, [data, depData], plan);
   } else {
     dataFreePlans.set(keys, plan);
   }

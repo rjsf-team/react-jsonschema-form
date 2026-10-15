@@ -34,4 +34,24 @@ describe('KeyedMemo', () => {
     expect(memo.peek(['k'])).toBe('v');
     expect(memo.get(['k'], () => 'computed')).toBe('v');
   });
+  it('keeps the value for the last data stored under the keys, compared by identity', () => {
+    const memo = new KeyedMemo<string>();
+    expect(memo.peekLatest(['k'], [undefined])).toBeUndefined();
+    memo.setLatest(['k'], [undefined, 'a'], 'first');
+    expect(memo.peekLatest(['k'], [undefined, 'a'])).toBe('first');
+    expect(memo.peekLatest(['k'], [undefined, 'b'])).toBeUndefined();
+    memo.setLatest(['k'], [null, Number.NaN], 'second');
+    expect(memo.peekLatest(['k'], [null, Number.NaN])).toBe('second');
+    expect(memo.peekLatest(['k'], [undefined, 'a'])).toBeUndefined();
+    expect(memo.peekLatest(['other'], [null, Number.NaN])).toBeUndefined();
+  });
+  it('stores nothing for data holding an object, which a caller may mutate in place', () => {
+    const memo = new KeyedMemo<string>();
+    const data = { a: 1 };
+    memo.setLatest(['k'], ['x', 1], 'kept');
+    memo.setLatest(['k'], ['x', data], 'object');
+    memo.setLatest(['k'], ['x', [1]], 'array');
+    expect(memo.peekLatest(['k'], ['x', data])).toBeUndefined();
+    expect(memo.peekLatest(['k'], ['x', 1])).toBe('kept');
+  });
 });

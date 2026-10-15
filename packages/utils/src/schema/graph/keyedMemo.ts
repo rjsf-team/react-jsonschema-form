@@ -5,6 +5,7 @@ interface MemoLevel<V> {
   readonly byObject: WeakMap<object, MemoLevel<V>>;
   readonly byValue: Map<unknown, MemoLevel<V>>;
   entry?: { readonly value: V };
+  latest?: { readonly data: readonly unknown[]; readonly value: V };
 }
 
 function createLevel<V>(): MemoLevel<V> {
@@ -30,8 +31,9 @@ function nextLevel<V>(level: MemoLevel<V>, key: unknown): MemoLevel<V> {
 }
 
 /** A memo keyed on a list of values compared by identity (`SameValueZero` for primitives). The graph memoizes condition
- * checks per (node, data) and plans per (seeds, data, policy) through it, where the data is whatever the form holds at
- * a path: the same object is the same data, since form data is replaced rather than mutated.
+ * checks per (node, data) and plans per (seeds, data, policy) through it: the data is kept in a slot of its own holding
+ * the last value only, since a field sees a new value on every keystroke and an entry per value would keep every
+ * version of the text for as long as the keys live.
  */
 export default class KeyedMemo<V> {
   private readonly root = createLevel<V>();
@@ -68,5 +70,30 @@ export default class KeyedMemo<V> {
    */
   set(keys: readonly unknown[], value: V): void {
     this.level(keys).entry = { value };
+  }
+
+  /** Returns the value last stored under `keys` for `data`, if that is the data it was stored for
+   *
+   * @param keys - The keys, in order
+   * @param data - The data, compared by identity
+   * @returns - The stored value, or undefined when the last one stored was for other data
+   */
+  peekLatest(keys: readonly unknown[], data: readonly unknown[]): V | undefined {
+    const { latest } = this.level(keys);
+    return latest?.data.every((datum, index) => Object.is(datum, data[index])) ? latest.value : undefined;
+  }
+
+  /** Stores `value` under `keys` for `data`, in place of the value stored for other data, unless `data` holds an
+   * object: a caller may mutate that in place between calls, which an entry keyed on its identity would answer for with
+   * what it held before
+   *
+   * @param keys - The keys, in order
+   * @param data - The data the value is for
+   * @param value - The value to store
+   */
+  setLatest(keys: readonly unknown[], data: readonly unknown[], value: V): void {
+    if (!data.some((datum) => typeof datum === 'object' && datum !== null)) {
+      this.level(keys).latest = { data, value };
+    }
   }
 }

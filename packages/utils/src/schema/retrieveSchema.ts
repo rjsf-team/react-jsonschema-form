@@ -162,7 +162,8 @@ function handOut<S extends StrictRJSFSchema>(schema: S, provenance: Provenance<S
 const stubs = new WeakMap<object, { readonly value: unknown; readonly stub: object }>();
 
 /** Returns `value`, the subschema of the field `provenance` describes, handed out as it stands. It depends on nothing
- * else, so the same object is handed out again while the field's subschema is the same.
+ * else, so the same object is handed out again while the field's subschema is the same, which spares the deep
+ * comparison that would otherwise find a new copy equal on every render of its parent.
  */
 function stubOf<S extends StrictRJSFSchema>(rawRoot: S, value: unknown, provenance: Provenance<S>): S {
   const cached = stubs.get(provenance);
@@ -174,9 +175,6 @@ function stubOf<S extends StrictRJSFSchema>(rawRoot: S, value: unknown, provenan
   return stub;
 }
 
-/** The stubs handed out for the properties of a field that merge nothing, by field, plan and key */
-const plainProperties = new KeyedMemo<unknown>();
-
 /** A view, with the values of the data's keys it read: those of the properties whose own plan read their data */
 interface MemoizedView {
   readonly view: object;
@@ -186,7 +184,7 @@ interface MemoizedView {
 /** The views that read the data only through some of its keys, by field, plan, whether options are resolved and
  * whether there is data: an object field's data is a new object on every edit, which leaves the values of the keys
  * the edit did not touch as they were, so such a view is the same until one of the keys it read changes. A key holding
- * an object is not read for a memoized view, since a caller may mutate that object in place, as `DataMemo` explains.
+ * an object is not read for a memoized view, since a caller may mutate that object in place.
  */
 const views = new KeyedMemo<MemoizedView>();
 
@@ -363,12 +361,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       if (!patterned && !isSchemaObject<S>(value)) {
         return [key, value];
       }
-      if (!patterned && isSchemaObject<S>(value) && mergesNothing(graph, propertySeeds)) {
-        // A property never restarts its seeds, so the stub is the same for the same field and plan
-        const stub = plainProperties.get([field, plan, key], () =>
-          handOut(schemaFrom(graph.rawRoot, value), child(propertySeeds, edge, false).provenance),
-        );
-        return [key, stub];
+      if (!patterned && mergesNothing(graph, propertySeeds)) {
+        return [key, stubOf(graph.rawRoot, value, child(propertySeeds, edge, false).provenance)];
       }
       const { next, provenance } = child(propertySeeds, edge, isObject(data) && Object.hasOwn(data, key));
       const own = valueOf(data, key);
