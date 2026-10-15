@@ -1,5 +1,6 @@
 import { createElement, forwardRef, lazy, memo } from 'react';
 
+import { setupConsoleWarnSuppression } from '../../../testing/consoleSuppression.ts';
 import type { Registry, UIOptionsType } from '../src/index.ts';
 import { createSchemaUtils, englishStringTranslator, getTemplate, getTemplates } from '../src/index.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
@@ -78,27 +79,25 @@ const uiOptions: UIOptionsType = {
 const KEYS = Object.keys(registry.templates).filter((k) => k !== 'ButtonTemplates');
 
 describe('getTemplate', () => {
+  const warnSuppression = setupConsoleWarnSuppression();
+
   it('warns once for an invalid override and stays silent when no override is provided', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    try {
-      getTemplate('FieldTemplate', registry);
-      expect(warn).not.toHaveBeenCalled();
-      const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', createElement(FakeTemplate)]]);
-      getTemplate('FieldTemplate', registry, invalidOptions);
-      getTemplate('FieldTemplate', registry, invalidOptions);
-      expect(warn).toHaveBeenCalledExactlyOnceWith(
-        'ui:FieldTemplate is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
-      );
-    } finally {
-      warn.mockRestore();
-    }
+    getTemplate('FieldTemplate', registry);
+    expect(warnSuppression.consoleSpy).not.toHaveBeenCalled();
+    const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', createElement(FakeTemplate)]]);
+    getTemplate('FieldTemplate', registry, invalidOptions);
+    getTemplate('FieldTemplate', registry, invalidOptions);
+    expect(warnSuppression.consoleSpy).toHaveBeenCalledExactlyOnceWith(
+      'ui:FieldTemplate is a React element rather than a component (pass MyTemplate, not <MyTemplate />), so it is ignored.',
+    );
   });
 
   it.each([createElement(FakeTemplate), { arbitrary: true }, 42, true, '', 0, false, null])(
-    'falls back when the override is not a component: %s',
+    'falls back and warns when the override is not a component: %s',
     (override) => {
       const invalidOptions: UIOptionsType = Object.fromEntries([['FieldTemplate', override]]);
       expect(getTemplate('FieldTemplate', registry, invalidOptions)).toBe(FakeTemplate);
+      expect(warnSuppression.consoleSpy).toHaveBeenCalledOnce();
       expect(getTemplates(registry, invalidOptions)).toBe(registry.templates);
     },
   );
@@ -123,28 +122,13 @@ describe('getTemplate', () => {
   });
 
   it('reports separate unknown template names and dedupes the same name', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    try {
-      ['Typo1', 'Typo2', 'Typo1'].forEach((FieldTemplate) => {
-        getTemplate('FieldTemplate', registry, Object.fromEntries([['FieldTemplate', FieldTemplate]]));
-      });
-      expect(warn.mock.calls).toEqual([
-        ["ui:FieldTemplate names no registered template ('Typo1'), so it is ignored."],
-        ["ui:FieldTemplate names no registered template ('Typo2'), so it is ignored."],
-      ]);
-    } finally {
-      warn.mockRestore();
-    }
-  });
-
-  it.each(['', 0, false, null])('warns when a supplied invalid override is falsy: %s', (override) => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    try {
-      getTemplate('FieldTemplate', registry, Object.fromEntries([['FieldTemplate', override]]));
-      expect(warn).toHaveBeenCalledOnce();
-    } finally {
-      warn.mockRestore();
-    }
+    ['Typo1', 'Typo2', 'Typo1'].forEach((FieldTemplate) => {
+      getTemplate('FieldTemplate', registry, Object.fromEntries([['FieldTemplate', FieldTemplate]]));
+    });
+    expect(warnSuppression.consoleSpy.mock.calls).toEqual([
+      ["ui:FieldTemplate names no registered template ('Typo1'), so it is ignored."],
+      ["ui:FieldTemplate names no registered template ('Typo2'), so it is ignored."],
+    ]);
   });
 
   it('returns the ButtonTemplates from the registry', () => {
@@ -183,17 +167,12 @@ describe('getTemplate', () => {
     });
   });
   it('returns the registry template when uiOptions names a template that is not registered', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
-    try {
-      KEYS.forEach((name) => {
-        expect(getTemplate<typeof name>(name, registry, { [name]: 'NotRegistered' })).toBe(FakeTemplate);
-        expect(warn).toHaveBeenCalledWith(
-          `ui:${name} names no registered template ('NotRegistered'), so it is ignored.`,
-        );
-      });
-    } finally {
-      warn.mockRestore();
-    }
+    KEYS.forEach((name) => {
+      expect(getTemplate<typeof name>(name, registry, { [name]: 'NotRegistered' })).toBe(FakeTemplate);
+      expect(warnSuppression.consoleSpy).toHaveBeenCalledWith(
+        `ui:${name} names no registered template ('NotRegistered'), so it is ignored.`,
+      );
+    });
   });
   it('returns the custom template name from the registry', () => {
     const customTemplateKey = 'CustomTemplate';
