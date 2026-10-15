@@ -499,6 +499,16 @@ function getOptionsPresentation(presentation: FieldPresentation, id: string, isC
   return { ...presentation, ...parts, describedBy: shownDescribers, control: shownControl };
 }
 
+/** Whether a field's label goes undrawn only because its template has no control for it to name, as an `anyOf`/`oneOf`
+ * field's does while an optional data control keeps its option selector off screen
+ *
+ * @param plan - The field's plan
+ * @returns - True when the field's label has text that `ui:label` shows but nothing draws for want of a control
+ */
+function isLabelUndrawnForLackOfControl({ label, control, showLabel }: FieldPresentation): boolean {
+  return label.by === 'none' && control === undefined && showLabel && label.text !== '';
+}
+
 /** The `SchemaFieldRender` component is the work-horse of react-jsonschema-form, determining what kind of real field to
  * render based on the `schema`, `uiSchema` and all the other props. It also deals with rendering the `anyOf` and
  * `oneOf` fields.
@@ -666,7 +676,7 @@ function SchemaFieldRender<
   // UI's value renders the value of, so a field below with no title of its own isn't labelled by them a second time
   // where a label outside the field above already shows them: its template's, or one drawn above it, a container's
   // heading included. A label the field above draws itself, such as a selector's, names another control, so the field
-  // below keeps them
+  // below keeps them for its own title
   const labelledAbove = inheritedPresentation !== undefined && isLabelledByTemplate(inheritedPresentation.plan);
   const labelSources = {
     name: labelledAbove ? undefined : name,
@@ -679,8 +689,21 @@ function SchemaFieldRender<
     ? getFieldLabel<T, S, F>({ ...schema, deprecated: false }, uiOptions, registry.translateString, labelSources)
     : ownLabel;
   // A field below titled as the field above says what that field's label says, so it takes that label, Deprecated
-  // marker included, and its heading is recognised as the same one rather than kept for differing by the marker
-  const label = inheritedPresentation?.title === title ? inheritedPresentation.plan.label.text : ownLabel;
+  // marker included, and its heading is recognised as the same one rather than kept for differing by the marker. A
+  // field below with no title of its own takes it too, rather than the property name, whatever draws it: a label the
+  // field above draws itself, as a selector's, names the selector, not this control, and a template label with no
+  // control to name, as while an optional field's option selector isn't on screen, isn't drawn, so it is the field
+  // below's heading
+  let label = ownLabel;
+  if (inheritedPresentation) {
+    const untitled = !getFieldLabel<T, S, F>(schema, uiOptions, registry.translateString, {
+      ...labelSources,
+      name: undefined,
+    });
+    if (inheritedPresentation.title === title || untitled) {
+      label = inheritedPresentation.plan.label.text;
+    }
+  }
   // When the option selector is an optional data control AND it does not have form data, the control is not on screen
   // yet. This is decided here rather than with the `XxxOfField` below because the fallback UI renders that same selector
   // for the type it has pinned, and the value field it renders it within is already labelled `false`, which leaves this
@@ -696,8 +719,20 @@ function SchemaFieldRender<
   // value carries its field's own description, which is not its own
   const ownSchemaDescription =
     inheritedPresentation && schemaDescription !== inheritedPresentation.schemaDescription ? schemaDescription : '';
+  // The description of a field above with no control to draw its parts by is left undrawn there, as its label is, so a
+  // field below with none of its own draws it under the heading it takes from that label
+  const descriptionUndrawnAbove =
+    inheritedPresentation &&
+    isLabelUndrawnForLackOfControl(inheritedPresentation.plan) &&
+    inheritedPresentation.plan.description.by === 'none'
+      ? inheritedPresentation.plan.description.text
+      : '';
   const fieldDescription =
-    ownUiOptions.description || ownSchemaDescription || uiOptions.description || schemaDescription;
+    ownUiOptions.description ||
+    ownSchemaDescription ||
+    descriptionUndrawnAbove ||
+    uiOptions.description ||
+    schemaDescription;
   // `ui:label` is resolved as `hideError` is: the field's own, then the one the field above rendering this id resolved
   // to, then `ui:globalOptions`, since an option given a `uiSchema` of its own doesn't carry the field's
   const showLabel =
