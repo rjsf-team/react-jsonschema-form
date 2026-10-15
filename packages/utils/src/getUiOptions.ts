@@ -1,6 +1,6 @@
 import { isValidElement } from 'react';
 
-import { UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants.ts';
+import { UI_DEFINITIONS_KEY, UI_GLOBAL_OPTIONS_KEY, UI_OPTIONS_KEY, UI_WIDGET_KEY } from './constants.ts';
 import describeElementGivenAsComponent from './describeElementGivenAsComponent.ts';
 import isComponentType from './isComponentType.ts';
 import isObject from './isObject.ts';
@@ -19,8 +19,14 @@ function isUiKey(key: string): key is `ui:${string}` {
   return key.startsWith('ui:');
 }
 
+/** The root uiSchema's own keys, which configure the form rather than any one field */
+const FORM_KEYS: readonly string[] = [UI_DEFINITIONS_KEY, UI_GLOBAL_OPTIONS_KEY];
+
 /** Get all passed options from ui:options, and ui:<optionName>, returning them in an object with the `ui:`
  * stripped off. Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
+ * A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own
+ * uiSchema alone, so a form-wide one would mark fields required that validation doesn't require. `ui:definitions` and
+ * `ui:globalOptions` aren't options either.
  *
  * @param [uiSchema={}] - The UI Schema from which to get any `ui:xxx` options
  * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
@@ -31,12 +37,16 @@ export default function getUiOptions<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(uiSchema: UiSchema<T, S, F> = {}, globalOptions: GlobalUISchemaOptions = {}): UIOptionsType<T, S, F> {
+  const options: UIOptionsType<T, S, F> = { ...globalOptions };
+  delete options.required;
   // Handle null or undefined uiSchema
   if (!uiSchema) {
-    return { ...globalOptions };
+    return options;
   }
-  const options: UIOptionsType<T, S, F> = { ...globalOptions };
-  for (const key of Object.keys(uiSchema).filter(isUiKey)) {
+  const optionKeys = Object.keys(uiSchema)
+    .filter(isUiKey)
+    .filter((key) => !FORM_KEYS.includes(key));
+  for (const key of optionKeys) {
     const value = uiSchema[key];
     // `memo()`, `forwardRef()` and `lazy()` return objects too, so only an object that isn't a component is taken for the
     // removed `{ component, options }` form

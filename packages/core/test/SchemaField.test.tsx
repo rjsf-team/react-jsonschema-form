@@ -627,6 +627,120 @@ describe('SchemaField', () => {
     });
   });
 
+  describe('a named field renders once per data path', () => {
+    const schema: RJSFSchema = { type: 'object', properties: { val: { type: 'string', title: 'Value' } } };
+
+    function WrappingField(props: FieldProps) {
+      const { SchemaField: RegistrySchemaField } = props.registry.fields;
+      return (
+        <div className='wrapper'>
+          <RegistrySchemaField {...props} />
+        </div>
+      );
+    }
+
+    it.each<[string, UiSchema]>([
+      ["ui:field: 'SchemaField'", { val: { 'ui:field': 'SchemaField' } }],
+      ["ui:options.field: 'SchemaField'", { val: { 'ui:options': { field: 'SchemaField' } } }],
+      ["ui:globalOptions.field: 'SchemaField'", { 'ui:globalOptions': { field: 'SchemaField' } }],
+    ])('renders the field %s names once, rather than until the heap runs out (#5377)', (_, uiSchema) => {
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
+      expect(screen.getByLabelText('Value')).toBe(node.querySelector('input#root_val'));
+    });
+
+    it('renders a field that wraps SchemaField for its own data once (#5377)', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { val: { 'ui:field': 'wrapping' } },
+        fields: { wrapping: WrappingField },
+      });
+
+      expect(node.querySelectorAll('.wrapper')).toHaveLength(1);
+      expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
+    });
+
+    it('renders a field a $id names once when it wraps SchemaField (#5377)', () => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { val: { $id: 'wrapping', type: 'string' } } },
+        fields: { wrapping: WrappingField },
+      });
+
+      expect(node.querySelectorAll('.wrapper')).toHaveLength(1);
+      expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
+    });
+
+    it.each<[string, UiSchema]>([
+      ['without', { 'ui:globalOptions': { field: 'FallbackField' } }],
+      ['with', { 'ui:globalOptions': { field: 'FallbackField' }, val: { anyOf: [{}, {}] } }],
+    ])('renders one type selector %s a uiSchema per option under a global FallbackField', (_, uiSchema) => {
+      const { node } = createFormComponent({
+        schema: {
+          type: 'object',
+          properties: { val: { type: ['string', 'number'], anyOf: [{ minLength: 2 }, { maximum: 5 }] } },
+        },
+        uiSchema,
+        useFallbackUiForUnsupportedType: true,
+      });
+
+      expect(node.querySelectorAll('[id$="___internal_type_selector"]')).toHaveLength(1);
+    });
+
+    it('applies a field named for a data path below the one already named', () => {
+      const { node } = createFormComponent({
+        schema,
+        uiSchema: { 'ui:field': 'wrapping', val: { 'ui:field': 'wrapping' } },
+        fields: { wrapping: WrappingField },
+      });
+
+      expect(node.querySelectorAll('.wrapper')).toHaveLength(2);
+      expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
+    });
+  });
+
+  describe('a $id names a field as ui:field does (#5391)', () => {
+    function MyField() {
+      return <div className='my-field' />;
+    }
+    const fields = { MyField };
+    const anyOfSchema: RJSFSchema = { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] };
+
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['a $id', { $id: 'MyField', ...anyOfSchema }, {}],
+      ['a ui:field', anyOfSchema, { 'ui:field': 'MyField' }],
+      ['a ui:globalOptions.field', anyOfSchema, { 'ui:globalOptions': { field: 'MyField' } }],
+    ])('renders the field %s names once, beside the option selector', (_, schema, uiSchema) => {
+      const { node } = createFormComponent({ schema, uiSchema, fields });
+
+      expect(node.querySelectorAll('.my-field')).toHaveLength(1);
+      expect(node.querySelector('#root__anyof_select')).toBeInTheDocument();
+      expect(node.querySelectorAll('input#root')).toHaveLength(1);
+    });
+
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['a $id', { $id: 'MyField', ...anyOfSchema }, { 'ui:fieldReplacesAnyOrOneOf': true }],
+      ['a ui:field', anyOfSchema, { 'ui:field': 'MyField', 'ui:fieldReplacesAnyOrOneOf': true }],
+    ])('renders the field %s names in place of the options under ui:fieldReplacesAnyOrOneOf', (_, schema, uiSchema) => {
+      const { node } = createFormComponent({ schema, uiSchema, fields });
+
+      expect(node.querySelectorAll('.my-field')).toHaveLength(1);
+      expect(node.querySelector('#root__anyof_select')).not.toBeInTheDocument();
+      expect(node.querySelector('input#root')).not.toBeInTheDocument();
+    });
+
+    it('does not render a ui:globalOptions.field again for an option with a uiSchema of its own', () => {
+      const { node } = createFormComponent({
+        schema: anyOfSchema,
+        uiSchema: { 'ui:globalOptions': { field: 'MyField' }, anyOf: [{ 'ui:title': 'Short' }, {}] },
+        fields,
+      });
+
+      expect(node.querySelectorAll('.my-field')).toHaveLength(1);
+      expect(node.querySelectorAll('input#root')).toHaveLength(1);
+    });
+  });
+
   describe('label support', () => {
     const schema: RJSFSchema = {
       type: 'object',

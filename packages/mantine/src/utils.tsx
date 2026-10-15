@@ -109,10 +109,9 @@ const rjsfOptionNameRecord: Record<RjsfOptionName, true> = {
   WrapIfAdditionalTemplate: true,
 };
 
-// The uiSchema's own `ui:` keys, which `getUiOptions()` also gives a field as options: the root's `ui:definitions` and
-// `ui:globalOptions`, which `LayoutGridField` also copies to each field it renders, and `ui:fieldReplacesAnyOrOneOf`.
-// They can't be derived like the rest, since `UiSchema`'s `ui:${string}` key, which every option takes, absorbs them.
-const uiSchemaOptionNames = ['definitions', 'fieldReplacesAnyOrOneOf', 'globalOptions'] as const;
+// The uiSchema's own `ui:fieldReplacesAnyOrOneOf`, which `getUiOptions()` also gives a field as an option. It can't be
+// derived like the rest, since `UiSchema`'s `ui:${string}` key, which every option takes, absorbs it.
+const uiSchemaOptionNames = ['fieldReplacesAnyOrOneOf'] as const;
 
 // The options rjsf's widgets, fields and templates read that no type declares, so they can't be derived either: the
 // alt-date widgets' `yearsRange`, `format`, `hideNowButton` and `hideClearButton`, the file widget's `accept`, the

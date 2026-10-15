@@ -54,6 +54,8 @@ There are 4 properties that exist in a `UiSchema` that will not be found in an i
 ### `ui:globalOptions`
 
 The set of globally relevant `UiSchema` options that are read from the root-level `UiSchema` and stored in the `registry` for use everywhere.
+Each field takes them beneath its own options, except `required`: `ui:required` applies to the field whose uiSchema sets it alone, since validation reads it from there.
+Neither `ui:globalOptions` nor `ui:definitions` is itself an option of the root field.
 
 ```ts
 import { UiSchema } from '@rjsf/utils';
@@ -170,14 +172,17 @@ Specify either the name of a field that is used to look up an implementation fro
 
 See [Custom Widgets and Fields](../advanced-customization/custom-widgets-fields.md#custom-field-components) for more information about how to use this property.
 
+A field's own `ui:field` comes first, then `ui:globalOptions.field`, then a field registered under the schema's [`$id`](../advanced-customization/custom-widgets-fields.md#custom-field-by-id).
+The field they name is applied once per data path: a `SchemaField` the named field renders for its own data, and the selected `anyOf`/`oneOf` option, render as though no field were named.
+
 ### `ui:fieldReplacesAnyOrOneOf`
 
 By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or `OneOfField` component.
 This default behavior may be undesirable if your custom field already handles behavior related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
-By providing a `true` value for this flag in association with a custom `ui:field`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
-If the flag is omitted or set to `false`, your custom field will be wrapped by `AnyOfField`/`OneOfField`.
+By providing a `true` value for this flag in association with a custom `ui:field`, or a field named by the schema's `$id`, the wrapped components will be omitted, so just one instance of the custom field will be rendered.
+If the flag is omitted or set to `false`, your custom field is rendered beside the `AnyOfField`/`OneOfField`, whose selected option renders its own field rather than the custom one again.
 
-The flag needs a `ui:field` that resolves to a field.
+The flag needs a `ui:field`, or a `$id`, that resolves to a field.
 A name no field is registered under names nothing for the `anyOf`/`oneOf` to give way to, so the options are rendered as though the flag were absent: dropping them would leave an object union with no way to reach the `properties` of any option while the validator still required them.
 A `ui:field` naming `FallbackField` does not take them away either, whatever [`useFallbackUiForUnsupportedType`](./form-props.md#usefallbackuiforunsupportedtype) says.
 With that prop on, the [fallback UI](../json-schema/single.md#multiple-types) renders the options itself, against the schema whose type its selector has pinned.
