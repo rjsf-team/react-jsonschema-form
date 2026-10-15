@@ -894,7 +894,9 @@ export interface PartPresentation {
   id: string;
 }
 
-/** The attributes the element(s) of a field's control carry, which are the elements that also carry its `id` */
+/** The attributes the element(s) of a field's control carry, which are the elements that also carry its `id`, or, for a
+ * group of controls, its wrapper and each control in it, as `getGroupAttributes()` splits them
+ */
 export interface ControlAttributes {
   'aria-labelledby'?: string;
   /** Lists only the ids of the parts that render */
@@ -937,7 +939,9 @@ export interface FieldPresentation {
    */
   control?: {
     id: string;
-    /** Spread onto the element(s) carrying `id`, and nowhere else */
+    /** Spread onto the element(s) carrying `id`, and nowhere else, except as `getGroupAttributes()` splits them between
+     * a group's wrapper and its controls
+     */
     attributes: ControlAttributes;
   };
   /** The plan of the field above that renders this same id, which this one was built under */
