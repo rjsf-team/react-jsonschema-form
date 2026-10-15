@@ -944,10 +944,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="emotion-6"
-                        id="root_person__title"
                       >
                         <h5
                           class="chakra-heading emotion-7"
+                          id="root_person__title"
                         >
                           Person Info
                         </h5>
@@ -7237,10 +7237,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="emotion-6"
-                        id="root_person__title"
                       >
                         <h5
                           class="chakra-heading emotion-7"
+                          id="root_person__title"
                         >
                           Person Info
                         </h5>
@@ -13621,10 +13621,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="emotion-6"
-                        id="root_person__title"
                       >
                         <h5
                           class="chakra-heading emotion-7"
+                          id="root_person__title"
                         >
                           Person Info
                         </h5>
@@ -17705,10 +17705,10 @@ exports[`Complex grid > renders person and address and employment in a complex g
                     >
                       <div
                         class="emotion-6"
-                        id="root_person__title"
                       >
                         <h5
                           class="chakra-heading emotion-7"
+                          id="root_person__title"
                         >
                           Person Info
                         </h5>
@@ -23858,10 +23858,10 @@ exports[`Three even column grid > renders person and address in three columns, n
                   >
                     <div
                       class="emotion-5"
-                      id="root_person__title"
                     >
                       <h5
                         class="chakra-heading emotion-6"
+                        id="root_person__title"
                       >
                         Person Info
                       </h5>
@@ -27452,10 +27452,10 @@ exports[`Two even column grid > renders person and address in two columns, no em
                   >
                     <div
                       class="emotion-5"
-                      id="root_person__title"
                     >
                       <h5
                         class="chakra-heading emotion-6"
+                        id="root_person__title"
                       >
                         Person Info
                       </h5>
