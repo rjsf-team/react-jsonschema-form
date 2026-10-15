@@ -398,3 +398,37 @@ describe('chakra-ui labels the core widgets that draw no label of their own', ()
     expect(document.getElementById('root_when__label')).toHaveTextContent('When');
   });
 });
+
+describe('chakra-ui ArrayFieldTemplate', () => {
+  test("draws no heading for an array option whose ui:title repeats its field's label", () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            tags: { type: 'array', items: { type: 'string' }, anyOf: [{ maxItems: 3 }, { minItems: 1 }] },
+          },
+        }}
+        uiSchema={{ tags: { 'ui:title': 'Tags', anyOf: [{ 'ui:title': 'Tags' }, {}] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Tags');
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+  });
+
+  test("keeps an optional array's data control where it draws no heading", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { tags: { type: 'array', title: 'Tags', items: { type: 'string' } } } }}
+        uiSchema={{ tags: { 'ui:label': false }, 'ui:globalOptions': { enableOptionalDataFieldForType: ['array'] } }}
+        formData={{ tags: ['a'] }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument();
+    expect(container.querySelector('#root_tags__optionalRemove')).toBeInTheDocument();
+  });
+});
