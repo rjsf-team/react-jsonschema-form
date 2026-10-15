@@ -5,6 +5,7 @@ import {
   resolveFieldPresentation,
   templateDrawsDescription,
   templateDrawsLabel,
+  templateDrawsPlannedLabel,
   templateLabelFor,
   templateMarksRequired,
   widgetDrawsLabel,
@@ -131,5 +132,18 @@ describe('templateLabelFor()', () => {
   it("points the label at the field's id where the plan has no control, and without a plan", () => {
     expect(templateLabelFor({ id: ID, presentation: plan({ hasControl: false }) })).toBe(ID);
     expect(templateLabelFor({ id: ID })).toBe(ID);
+  });
+});
+
+describe('templateDrawsPlannedLabel()', () => {
+  it('draws a label where the plan gives it to the template and there is text to draw', () => {
+    expect(templateDrawsPlannedLabel({ presentation: plan(), label: 'Foo' })).toBe(true);
+    expect(templateDrawsPlannedLabel({ presentation: plan(), label: '' })).toBe(false);
+    expect(templateDrawsPlannedLabel({ presentation: plan({ showLabel: false }), label: 'Foo' })).toBe(false);
+  });
+
+  it('draws none without a plan, whatever displayLabel says', () => {
+    const props = { label: 'Foo', displayLabel: true };
+    expect(templateDrawsPlannedLabel(props)).toBe(false);
   });
 });
