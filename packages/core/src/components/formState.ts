@@ -45,7 +45,7 @@ import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
-import { createUiState, fieldStateOf } from './uiState.ts';
+import { asFieldValue, createUiState, fieldStateOf } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  *
@@ -79,15 +79,6 @@ export function ownedErrorsOf<T, S extends StrictRJSFSchema, F extends FormConte
 export function toEventFormData<T>(formData: T | undefined): EventFormData<T>;
 export function toEventFormData(formData: unknown): unknown {
   return formData;
-}
-
-/** `setFieldValue()`'s value, which its run-time path keeps `unknown`, in the type a field's `onChange` hands over.
- * The overload is the one trust point that the caller passes what the field at that path holds, the promise a field's
- * own `onChange` makes.
- */
-export function asFieldValue<V>(value: unknown): V | undefined;
-export function asFieldValue(value: unknown): unknown {
-  return value;
 }
 
 /** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values

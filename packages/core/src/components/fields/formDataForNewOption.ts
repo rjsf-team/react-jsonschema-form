@@ -8,6 +8,8 @@ import type {
   UiSchemaDefinitions,
 } from '@rjsf/utils';
 import {
+  CONST_KEY,
+  DEFAULT_KEY,
   deepEquals,
   getPropertySchema,
   getRenderedOptionSchema,
@@ -16,8 +18,7 @@ import {
   mergeSchemas,
 } from '@rjsf/utils';
 
-import { declaresOwnValue, declaresValueFor } from '../declaresValue.ts';
-import { dataOf } from '../uiState.ts';
+import { asFieldValue } from '../uiState.ts';
 
 /** Returns `option` carrying the `required` that `parentSchema` declares, which is what decides whether the form
  * populates a key at all under a `defaultFormStateBehavior` keyed off `required`. A schema's defaults
@@ -54,9 +55,25 @@ function renderedOption<S extends StrictRJSFSchema = RJSFSchema>(parentSchema?: 
   return option && parentSchema ? getRenderedOptionSchema<S>(parentSchema, option) : option;
 }
 
-/** Determines whether `option` declares a value of its own for `key`, resolving the property's schema first.
- * `sanitizeFieldTree()` reads what a conditional branch declares for a key the same way: the key's own `default`, or
- * the level's `default` object.
+/** Determines whether `schema` declares a value of its own, which is what a schema that is not an object has instead
+ * of a per-property declaration.
+ *
+ * @param schema - The schema to test
+ * @returns - True when the schema declares a `default` or `const`
+ */
+function declaresOwnValue<S extends StrictRJSFSchema = RJSFSchema>(schema: S): boolean {
+  return DEFAULT_KEY in schema || CONST_KEY in schema;
+}
+
+/** Determines whether `option` declares a value for `key`, either on the property's own schema, resolved first, or in
+ * the option's own `default` object. `sanitizeFieldTree()` reads what a conditional branch declares for a key the same
+ * way.
+ *
+ * The computed defaults are no guide on their own, which is the whole reason this exists: `getDefaultFormState()` also
+ * returns a nested object's leaf defaults, `{}` for a required object, `[]` for a required array, `false` for a
+ * required boolean and an `items` default repeated up to `minItems`. None of those is the option saying what the key
+ * should hold, so treating them as such replaces a value the user is still holding with an empty container or with a
+ * subset of what was there.
  *
  * @param schemaUtils - The `SchemaUtilsType` implementation to resolve the property schema with
  * @param option - The option whose declaration is being tested
@@ -68,7 +85,13 @@ function optionDeclaresValueFor<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(schemaUtils: SchemaUtilsType<T, S, F>, option: S, key: string): boolean {
-  return declaresValueFor<S>(option, key, schemaUtils.retrieveSchema(getPropertySchema<S>(option, key)));
+  if (declaresOwnValue<S>(schemaUtils.retrieveSchema(getPropertySchema<S>(option, key)))) {
+    return true;
+  }
+  const optionDefault = option[DEFAULT_KEY];
+  // `Object.hasOwn()`, so a property named `constructor` or `toString` is not answered for by the member every object
+  // inherits under that name
+  return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key);
 }
 
 /** The uiSchemas the defaults of the two options are computed with, named so the old and new cannot be swapped */
@@ -244,7 +267,7 @@ export default function formDataForNewOption<
         : {};
       const fieldDefaults = schemaUtils.getDefaultFormState(
         { ...parentSchema, [xxxOfKey]: [newOption] },
-        dataOf<T>(held),
+        asFieldValue<T>(held),
         false,
         undefined,
         fieldUiSchema,

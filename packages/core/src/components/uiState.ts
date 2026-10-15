@@ -179,9 +179,12 @@ function isHeldFor(selection: OptionSelection, data: unknown): boolean {
   return selection.holdsFor.some((held) => deepEquals(held, data));
 }
 
-/** A value of the form's data, in the type the schema utilities take it as */
-export function dataOf<T>(value: unknown): T | undefined;
-export function dataOf(value: unknown): unknown {
+/** A value of the form's data, which a run-time path keeps `unknown`, in the type a field's `onChange` hands over and
+ * the schema utilities take it as. The overload is the one trust point that the caller passes what the field at that
+ * path holds, the promise a field's own `onChange` makes.
+ */
+export function asFieldValue<V>(value: unknown): V | undefined;
+export function asFieldValue(value: unknown): unknown {
   return value;
 }
 
@@ -206,7 +209,7 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
         schemaUtils,
         uiState.selection(fieldPath, optionListKey<S>(options, rootSchema)),
         options,
-        dataOf<T>(formData),
+        asFieldValue<T>(formData),
         discriminator,
         editedPath !== undefined && isAtOrAbove(fieldPath, editedPath),
       ),

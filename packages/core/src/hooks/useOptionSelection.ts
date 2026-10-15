@@ -134,9 +134,8 @@ export default function useOptionSelection<
   formData: T | undefined,
   discriminatorField?: string,
 ): OptionSelectionState {
-  const { uiState } = useUiState();
   const { selectedOption, selectOption } = useShownOption<T, S, F>(
-    uiState,
+    useUiState().uiState,
     registry,
     fieldPath,
     options,
