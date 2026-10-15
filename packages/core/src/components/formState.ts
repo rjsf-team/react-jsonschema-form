@@ -44,7 +44,7 @@ import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
 import sanitizeFieldTree from './sanitizeFieldTree.ts';
-import { createUiState } from './uiState.ts';
+import { createUiState, fieldStateOf } from './uiState.ts';
 
 /* The pure half of `Form`: what its state is derived from, and what each operation makes of it.
  *
@@ -334,6 +334,7 @@ export function validateFormData<T, S extends StrictRJSFSchema, F extends FormCo
     undefined,
     uiSchema?.[UI_GLOBAL_OPTIONS_KEY],
     formContext ?? ({} as F),
+    fieldStateOf(context.uiState, schemaUtils),
   );
   return validationDataMerge<T>(schemaValidation, uiRequiredErrorSchema);
 }
@@ -1132,7 +1133,11 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
   let newFormData = formData;
 
   if (omitExtraData === true && liveOmit === 'onChange') {
-    newFormData = context.schemaUtils.omitExtraData(context.schema, formData);
+    newFormData = context.schemaUtils.omitExtraData(
+      context.schema,
+      formData,
+      fieldStateOf(context.uiState, context.schemaUtils),
+    );
   }
 
   let next: Partial<FormState<T, S, F>> = { formData: newFormData };
@@ -1193,7 +1198,7 @@ export function applyBlur<T, S extends StrictRJSFSchema, F extends FormContextTy
   const { schema, schemaUtils, customErrors, retrievedSchema } = current;
   const formData =
     omitExtraData === true && liveOmit === 'onBlur'
-      ? schemaUtils.omitExtraData(schema, current.formData)
+      ? schemaUtils.omitExtraData(schema, current.formData, fieldStateOf(current.uiState, schemaUtils))
       : current.formData;
   const validation = isBlurValidated(props)
     ? runLiveValidation(props, current, formData, customErrors, retrievedSchema)

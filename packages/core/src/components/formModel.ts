@@ -39,6 +39,7 @@ import {
   toIChangeEvent,
   validateFormData,
 } from './formState.ts';
+import { fieldStateOf } from './uiState.ts';
 
 /** How an operation calls the consumer's callback: directly for a handle method, whose caller catches the throw, or
  * through `callWithDeferredThrow()` for a field, which can report from an Effect inside React's commit phase, where a
@@ -291,7 +292,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * `validateForm()` act on
    */
   const withExtraDataOmitted = (props: OperationProps<T, S, F>, start: FormState<T, S, F>, formData: T | undefined) =>
-    props.omitExtraData === true ? start.schemaUtils.omitExtraData(start.schema, formData) : formData;
+    props.omitExtraData === true
+      ? start.schemaUtils.omitExtraData(start.schema, formData, fieldStateOf(uiState, start.schemaUtils))
+      : formData;
 
   /** Attempts to focus on the field associated with the `error`. Uses the `property` field to compute path of the error
    * field, then, using the `idPrefix` and `idSeparator` converts that path into an id. Then the input element with that
