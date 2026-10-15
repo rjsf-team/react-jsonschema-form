@@ -4737,6 +4737,24 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           d3: { $ref: D('d3') },
         });
       });
+      it.each<[string, (schema: RJSFSchema) => RJSFSchema]>([
+        ['an unchanged spread copy', (schema) => ({ ...schema })],
+        ['a copy with a keyword of its own', (schema) => ({ ...schema, description: 'copied' })],
+      ])('resolves %s of a handed-out property as the property it copies', (_, copy) => {
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            A: { type: 'object', properties: { a: { type: 'string' }, b: { $ref: D('B') } } },
+            B: { type: 'object', properties: { c: { type: 'string' }, a2: { $ref: D('A') } } },
+          },
+          $ref: D('A'),
+        };
+        const top = retrieveSchema({ validator: testValidator }, rootSchema, rootSchema);
+        const b = schemaOf(top.properties?.b);
+        const original = retrieveSchema({ validator: testValidator }, b, rootSchema);
+        const copied = retrieveSchema({ validator: testValidator }, copy(b), rootSchema);
+        expect(original.properties?.a2).toEqual({ $ref: D('A'), [RJSF_REF_CYCLE_KEY]: true });
+        expect(copied.properties).toEqual(original.properties);
+      });
       it('collapses a recursion reached through an allOf (#5501)', () => {
         const rootSchema: RJSFSchema = {
           definitions: { node: { type: 'object', properties: { child: { allOf: [{ $ref: D('node') }] } } } },

@@ -48,7 +48,7 @@ import type {
 } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
 import getFirstMatchingOption from './getFirstMatchingOption.ts';
-import buildPlan, { childSeeds, ownChildren, schemaFrom, withoutKeys } from './graph/mergePlan.ts';
+import buildPlan, { childSeeds, composedRefs, ownChildren, schemaFrom, withoutKeys } from './graph/mergePlan.ts';
 import type {
   MergePlan,
   OptionChoice,
@@ -359,10 +359,29 @@ interface OptionState {
 
 const NO_OPTIONS: OptionState = { selections: new Map(), chosen: new Set() };
 
-/** A child computed in an earlier pass of its object's dependency fixed point, and what it was computed from */
+/** A child computed in an earlier pass of its object's dependency fixed point, what it was computed from, and the
+ * answer its guard chain gave each set-equality check made within it
+ */
 interface MemoEntry {
   readonly inputs: readonly unknown[];
+  readonly checked: ReadonlyMap<string, boolean>;
   readonly value: unknown;
+}
+
+/** A child being computed under the memo: its guard chain, and the answer that chain gives each set-equality check made
+ * within the child. A pass that adds a dependency to its object changes the object's plan set, so its children get
+ * another chain; a child is reused when that chain answers every check the same, since nothing else in it changed.
+ * Comparing the chains themselves instead re-folds every child on every pass, which is exponential in depth.
+ */
+interface GuardFrame {
+  readonly chain?: GuardChain;
+  readonly checked: Map<string, boolean>;
+}
+
+/** The children an object's passes computed, and the children being computed around the object, innermost last */
+interface FoldMemo {
+  readonly children: Map<string, MemoEntry>;
+  readonly guards: readonly GuardFrame[];
 }
 
 /** The props the fold hands each field: those of `computeDefaults()`, holding the data as it comes */
@@ -375,7 +394,7 @@ interface FoldProps<T, S extends StrictRJSFSchema, F extends FormContextType> ex
   /** The children of the field computed so far, which a pass of the field's dependency fixed point reuses when they
    * would be computed from the same inputs again
    */
-  memo?: Map<string, MemoEntry>;
+  memo?: FoldMemo;
 }
 
 /** The props `foldView()` computes a field with: the field's own, with what it reports the last view it computed the
@@ -426,7 +445,9 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
     const resolved = options.map((option) => optionSchema(graph, option));
     return getFirstMatchingOption<unknown, S, F>(context, depData, resolved, graph.rawRoot, discriminator);
   };
-  const policy: PlanPolicy<S> = { allOf, conditions, cutRecursion, selectOption };
+  // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would restart
+  // it at every level of a recursion through an option chosen without data, which nothing then bounds
+  const policy: PlanPolicy<S> = { allOf, conditions, cutRecursion, selectOption, optionsInheritRefPath: true };
   cache.set(key, policy);
   return policy;
 }
@@ -581,6 +602,7 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   field: DefaultsField<S>,
   data: unknown,
   depData: unknown,
+  guards: readonly GuardFrame[] = [],
 ): DefaultsView<S> {
   const { graph } = field;
   if (field.seeds.length === 0) {
@@ -617,6 +639,7 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
       : withoutConditions;
   };
   const planned = planFor(field.seeds);
+  recordGuardCheck(planned.plan.setKey, guards);
   const position: FieldPosition = { edge: field.edge, view: 'defaults', chain: field.chain };
   if (collapseReason(graph, planned.plan, position) === undefined) {
     return planView(context, field, planned, NO_OPTIONS, data, depData);
@@ -653,25 +676,25 @@ function childField<S extends StrictRJSFSchema>(
   };
 }
 
-/** Returns the uiSchema a field is computed with: its own, over the `ui:definitions` entry of the `$ref` the field was
- * resolved from, over the entry of each further `$ref` its plan entered, in plan order, so that an `allOf`-composed
- * definition keeps the entry of the definition it composes as well as gaining its own
+/** Returns the uiSchema a field is computed with, as `SchemaField` renders it: its own, over the `ui:definitions` entry
+ * of the `$ref` the field was resolved from, over the entry of each further `$ref` it composes through `allOf`
  */
 function viewUiSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
   view: DefaultsView<S>,
   localUiSchema: UiSchema<T, S, F> | undefined,
   uiSchemaDefinitions: UiSchemaDefinitions<S, F>,
 ): UiSchema<T, S, F> {
-  const { graph } = view.field;
+  const { graph, seeds } = view.field;
   const registry = { rootSchema: graph.rawRoot, uiSchemaDefinitions };
   const resolved = resolveUiSchema<T, S, F>(view.schema, localUiSchema, registry);
   const ownRef: unknown = Reflect.get(view.schema, RJSF_REF_KEY);
   const keys = Object.keys(uiSchemaDefinitions).filter((key) => key !== ownRef);
-  const entered = view.entries
-    .filter(({ edge }) => edge === 'ref')
-    .flatMap(({ node }) => keys.filter((key) => graph.resolveRef(key) === node));
+  const composed = composedRefs(
+    graph,
+    seeds.map(({ node }) => node),
+  ).flatMap((node) => keys.filter((key) => graph.resolveRef(key) === node));
   // Each entry goes under what is already resolved, as a definition goes under the uiSchema it is resolved for
-  return entered.reduce(
+  return composed.reduce(
     (uiSchema, key) => resolveUiSchema<T, S, F>(schemaFrom(graph.rawRoot, { [RJSF_REF_KEY]: key }), uiSchema, registry),
     resolved,
   );
@@ -688,13 +711,14 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FoldProps<T, S, F>,
 ): { value: unknown; view: DefaultsView<S> } {
   const data = props.rawFormData;
-  let view = settle(context, field, data, data);
+  const guards = props.memo?.guards;
+  let view = settle(context, field, data, data, guards);
   // The options the field selected are planned with it, so the dependencies they bring are qualified too
   let lastView = view;
   const track = (computed: DefaultsView<S>) => {
     lastView = computed;
   };
-  const passProps = { ...props, memo: new Map<string, MemoEntry>(), track };
+  const passProps = { ...props, memo: { children: new Map<string, MemoEntry>(), guards: guards ?? [] }, track };
   let value = foldView(context, view, passProps);
   const seen = new Set([qualifiedDependencies(lastView, data)]);
   for (;;) {
@@ -704,7 +728,7 @@ function foldField<T, S extends StrictRJSFSchema, F extends FormContextType>(
       return { value, view };
     }
     seen.add(qualified);
-    view = settle(context, field, data, depData);
+    view = settle(context, field, data, depData, guards);
     value = foldView(context, view, passProps);
   }
 }
@@ -721,20 +745,11 @@ function qualifiedDependencies<S extends StrictRJSFSchema>(view: DefaultsView<S>
     .join(',');
 }
 
-/** Computes a child of a field with `compute`, or hands back what an earlier pass computed from the same `inputs` */
-function memoized(
-  memo: Map<string, MemoEntry> | undefined,
-  key: string,
-  inputs: readonly unknown[],
-  compute: () => unknown,
-): unknown {
-  const entry = memo?.get(key);
-  if (entry?.inputs.every((input, index) => Object.is(input, inputs[index]))) {
-    return entry.value;
+/** Records, for every child being computed, the answer its guard chain gives the set-equality check of `setKey` */
+function recordGuardCheck(setKey: string, guards: readonly GuardFrame[] = []): void {
+  for (const { chain, checked } of guards) {
+    checked.set(setKey, chain?.has(setKey) === true);
   }
-  const value = compute();
-  memo?.set(key, { inputs, value });
-  return value;
 }
 
 function seedsKey(seeds: readonly Seed[]): string {
@@ -747,12 +762,11 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
   memoKey: string,
   child: DefaultsField<S>,
   props: FoldProps<T, S, F>,
-  memo: Map<string, MemoEntry> | undefined,
+  memo: FoldMemo | undefined,
 ): unknown {
   const inputs = [
     context,
     seedsKey(child.seeds),
-    child.chain,
     child.expanded,
     child.fallback,
     props.parentDefaults,
@@ -762,7 +776,23 @@ function foldChild<T, S extends StrictRJSFSchema, F extends FormContextType>(
     props.uiSchema,
     props.shouldMergeDefaultsIntoFormData,
   ];
-  return memoized(memo, memoKey, inputs, () => foldField<T, S, F>(context, child, props).value);
+  const guards = memo?.guards ?? [];
+  const entry = memo?.children.get(memoKey);
+  if (
+    entry?.inputs.every((input, index) => Object.is(input, inputs[index])) &&
+    [...entry.checked].every(([setKey, answer]) => (child.chain?.has(setKey) === true) === answer)
+  ) {
+    // The checks the reused child made are the ones the children around it depend on as well
+    for (const setKey of entry.checked.keys()) {
+      recordGuardCheck(setKey, guards);
+    }
+    return entry.value;
+  }
+  const frame: GuardFrame = { chain: child.chain, checked: new Map() };
+  const childMemo: FoldMemo = { children: new Map(), guards: [...guards, frame] };
+  const { value } = foldField<T, S, F>(context, child, { ...props, memo: childMemo });
+  memo?.children.set(memoKey, { inputs, checked: frame.checked, value });
+  return value;
 }
 
 /** Computes the defaults of a field from its view: the `const`, `default` and parent defaults that apply to it, the
@@ -965,9 +995,9 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
 
 /** Computes the defaults of a field from the option at `index` of the options it offers. An object renders its own
  * field beside the option, so the option is merged into the whole field: the field is planned again with the option
- * selected, its seeds joining the plan with their ref path restarted. Any other field renders only the option, as
- * `getRenderedOptionSchema()` renders it, so its defaults are those of the option as rendered, the option's children
- * still seeded beside the field's own. The option's `uiSchema` entry is the one its fields see.
+ * selected, its seeds joining the plan with the ref path of the node offering it. Any other field renders only the
+ * option, as `getRenderedOptionSchema()` renders it, so its defaults are those of the option as rendered, the option's
+ * children still seeded beside the field's own. The option's `uiSchema` entry is the one its fields see.
  *
  * An option written as a `$ref` that nothing is met into is followed as a `$ref` property is: the default the field
  * hands it, and any beside the reference, apply only where the field has no default yet and no data.
@@ -1009,7 +1039,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       seeds: [{ node: adopted.node, refPath: [] }],
       edge: 'root',
     };
-    const optionView = settle(context, optionField, view.data, view.depData);
+    const optionView = settle(context, optionField, view.data, view.depData, props.memo?.guards);
     return foldView<T, S, F>(context, { ...optionView, options: { ...optionView.options, chosen } }, branchProps);
   }
   const optionNode = choice.options[index];
@@ -1048,7 +1078,7 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   const optionAlone = buildPlan<S, F>({
     context,
     graph,
-    seeds: [{ node: optionNode, refPath: [] }],
+    seeds: [{ node: optionNode, refPath: choice.refPath }],
     data: view.data,
     depData: view.depData,
     policy: policyFor(context, view.allOf, view.conditions, NO_OPTIONS.selections),

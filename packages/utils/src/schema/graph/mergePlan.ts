@@ -66,6 +66,8 @@ export interface OptionChoice {
   readonly keyword: 'anyOf' | 'oneOf';
   /** The node holding the options */
   readonly provider: NodeId;
+  /** The ref path the node holding the options was entered with */
+  readonly refPath: RefPath;
   readonly options: readonly NodeId[];
   /** The list of options as the node holding it declares it */
   readonly list: unknown;
@@ -100,9 +102,15 @@ export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
    */
   readonly cutRecursion?: boolean;
   /** Chooses the option merged into the field for each `anyOf`/`oneOf` met; none is merged when this is absent or it
-   * returns undefined. The chosen option's ref path restarts, as the option `MultiSchemaField` renders does.
+   * returns undefined. The chosen option's ref path restarts, as the option `MultiSchemaField` renders does, unless
+   * `optionsInheritRefPath` is set.
    */
   readonly selectOption?: (request: OptionRequest<S>) => number | undefined;
+  /** Whether the chosen option keeps the ref path of the node offering it instead of restarting it. A restart is
+   * bounded by the data only where the data reaches the option, so an option the defaults choose without data keeps the
+   * path and its recursion collapses like any other.
+   */
+  readonly optionsInheritRefPath?: boolean;
 }
 
 /** A field's merge plan: its ordered entries, their set, and the merged schema with its children's seeds */
@@ -284,9 +292,10 @@ function withRequired<S extends StrictRJSFSchema>(schema: S, required: readonly 
   return { ...schema, required: Array.isArray(existing) ? [...new Set([...existing, ...required])] : [...required] };
 }
 
-/** Builds one field's plan. Entries are added in the order `retrieveSchema()` merged them in v7: the `$ref` override,
- * the chosen option, the `dependencies`, the `then` or `else`, and the `allOf` entries. A node already in the plan is
- * not added again and adds nothing to the schema, so `X AND X` is `X`.
+/** Builds one field's plan. Entries are added in this order: the `$ref` override, the chosen option, the
+ * `dependencies`, the `then` or `else`, and the `allOf` entries. The order decides which entry's keyword wins where two
+ * declare it, and the order the merged `properties` render in. A node already in the plan is not added again and adds
+ * nothing to the schema, so `X AND X` is `X`.
  */
 class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly entries: PlanEntry[] = [];
@@ -300,6 +309,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly conditions: boolean;
   private readonly cutRecursion: boolean;
   private readonly selectOption: PlanPolicy<S>['selectOption'];
+  private readonly optionsInheritRefPath: boolean;
   private mergeAllOf: boolean;
   /** How many `then`, `else` and `dependencies` branches are being expanded: a branch has its `allOf` merged whatever
    * the policy, as `retrieveSchema()` retrieves a branch whole before merging it
@@ -321,6 +331,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     this.conditions = policy.conditions;
     this.cutRecursion = policy.cutRecursion;
     this.selectOption = policy.selectOption;
+    this.optionsInheritRefPath = policy.optionsInheritRefPath;
     this.mergeAllOf = policy.allOf === true;
   }
 
@@ -560,6 +571,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       conditions: this.conditions,
       cutRecursion: this.cutRecursion,
       selectOption: this.selectOption,
+      optionsInheritRefPath: this.optionsInheritRefPath,
     }).build([{ node: option, refPath: [] }]);
     const properties: unknown = resolved.schema.properties;
     return isObject(properties) ? properties[key] : undefined;
@@ -609,6 +621,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const request = {
       keyword,
       provider: provider.node.id,
+      refPath: provider.refPath,
       options,
       list: Reflect.get(provider.node.raw, keyword),
       dependencies,
@@ -622,8 +635,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });
-    // The chosen option is rendered as a schema of its own, so its ref path restarts
-    const option = selected === undefined ? undefined : this.expand(options[selected], [], 'option', false);
+    const optionRefPath = this.optionsInheritRefPath ? provider.refPath : [];
+    const option = selected === undefined ? undefined : this.expand(options[selected], optionRefPath, 'option', false);
     return option === undefined ? part : mergeBranch(part, option);
   }
 }
@@ -679,6 +692,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
   const conditions = policy?.conditions ?? true;
   const cutRecursion = policy?.cutRecursion ?? false;
   const selectOption = policy?.selectOption;
+  const optionsInheritRefPath = policy?.optionsInheritRefPath ?? false;
   const keys = [
     context.validator,
     context.customMergeAllOf,
@@ -688,6 +702,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     conditions,
     cutRecursion,
     selectOption,
+    optionsInheritRefPath,
     data,
     depData,
   ];
@@ -696,14 +711,54 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
   if (isPlanOf(memoized, graph)) {
     return memoized;
   }
-  const plan = new PlanBuilder(context, graph, data, depData, { allOf, conditions, cutRecursion, selectOption }).build(
-    seeds,
-  );
+  const plan = new PlanBuilder(context, graph, data, depData, {
+    allOf,
+    conditions,
+    cutRecursion,
+    selectOption,
+    optionsInheritRefPath,
+  }).build(seeds);
   planGraphs.set(plan, graph);
   if (memoizable) {
     planMemo.set(keys, plan);
   }
   return plan;
+}
+
+/** Returns the `$ref` targets the field `seeds` seed enters whatever its data, in the order its plan enters them: each
+ * seed's `$ref`, along the whole alias chain, then the `$ref`s the entries of its `allOf` enter in turn. The `allOf` is
+ * the one the outermost node declaring it holds, as the plan merges it. A `then`/`else`, a dependency or an option is
+ * left out, since which of them applies depends on the data.
+ *
+ * @param graph - The graph the seeds are in
+ * @param seeds - The nodes the field is seeded with
+ * @returns - The targets, each once
+ */
+export function composedRefs<S extends StrictRJSFSchema = RJSFSchema>(
+  graph: SchemaGraph<S>,
+  seeds: readonly NodeId[],
+): NodeId[] {
+  const entered: NodeId[] = [];
+  const seen = new Set<NodeId>();
+  const visit = (id: NodeId) => {
+    if (seen.has(id)) {
+      return;
+    }
+    seen.add(id);
+    let allOf: readonly NodeId[] | undefined;
+    for (let node = graph.node(id); node.kind === 'schema';) {
+      allOf ??= node.allOf;
+      if (node.ref === undefined || seen.has(node.ref)) {
+        break;
+      }
+      seen.add(node.ref);
+      entered.push(node.ref);
+      node = graph.node(node.ref);
+    }
+    allOf?.forEach(visit);
+  };
+  seeds.forEach(visit);
+  return entered;
 }
 
 /** Returns the seeds of the child of an object field at `key`, and the containment edge it is reached through: a

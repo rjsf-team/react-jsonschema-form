@@ -1299,6 +1299,37 @@ describe('SchemaField', () => {
       expect(form.querySelectorAll('button[id$="-button"]')).toHaveLength(0);
     });
 
+    it.each<[string, Record<string, Field> | undefined]>([
+      ['the default SchemaField', undefined],
+      [
+        'a custom SchemaField that renders a copy of its schema',
+        {
+          // The copy carries a keyword of its own, so it is planned again from its keywords, within the ref path of the
+          // field it copies
+          SchemaField: function DescribedSchemaField(props: FieldProps) {
+            return <SchemaField {...props} schema={{ ...props.schema, description: 'wrapped' }} />;
+          },
+        },
+      ],
+    ])('stops a mutual recursion rendered through %s, one period per click', async (_, fields) => {
+      const A: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' }, b: { $ref: '#/definitions/B' } },
+      };
+      const B: RJSFSchema = {
+        type: 'object',
+        properties: { b: { type: 'string' }, a: { $ref: '#/definitions/A' } },
+      };
+      const { node } = createFormComponent({ schema: { definitions: { A, B }, $ref: '#/definitions/A' }, fields });
+      const ids = () => [...node.querySelectorAll('input[id], button[id$="-button"]')].map(({ id }) => id);
+
+      expect(ids()).toEqual(['root_a', 'root_b_b', 'root_b_a-button']);
+
+      await user.click(screen.getByRole('button', { name: 'Expand Cycle' }));
+
+      expect(ids()).toEqual(['root_a', 'root_b_b', 'root_b_a_a', 'root_b_a_b_b', 'root_b_a_b_a-button']);
+    });
+
     it('clicking the expand button shows the next level of the cycle', async () => {
       const { node } = createFormComponent({ schema });
 

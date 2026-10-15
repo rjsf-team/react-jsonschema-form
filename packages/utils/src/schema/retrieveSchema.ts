@@ -107,8 +107,10 @@ function handOut<S extends StrictRJSFSchema>(schema: S, provenance: Provenance<S
 
 /** Returns the field `schema` is the schema of. An unstamped schema, or one stamped for another root, is a call root.
  * A copy with `RJSF_REF_CYCLE_KEY` set to `false` is the expansion of the collapsed field it copies: its seeds restart,
- * and so does the guard chain its children are checked against. A copy of a handed-out schema that changed it, as an
- * option merged with what it inherits is, is planned from its own keywords, within the chain of the field it copies.
+ * and so does the guard chain its children are checked against. Any other copy of a handed-out schema, such as an
+ * option merged with what it inherits or a custom field's spread with a keyword of its own, is planned from its own
+ * keywords, with the ref path and chain of the field it copies: restarting the ref path would let a field that copies
+ * its schema at every level recurse without end.
  */
 function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): Provenance<S> {
   const stamped = readProvenance<S>(schema, graph);
@@ -125,7 +127,7 @@ function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): 
   const adopted = stamped.graph.adopt(schema);
   return childProvenance(
     stamped,
-    { seeds: [{ node: adopted.node, refPath: [] }], chain: stamped.chain },
+    { seeds: [{ node: adopted.node, refPath: stamped.seeds[0].refPath }], chain: stamped.chain },
     adopted.graph,
   );
 }
@@ -295,7 +297,10 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   for (const keyword of OPTION_KEYWORDS) {
     const options = merged[keyword];
     if (Array.isArray(options)) {
-      const optionChain = extendChain(graph, field.chain, plan.setKey);
+      // `MultiSchemaField` renders the option as a schema of its own, so its ref path restarts. Where the field has
+      // data, the option restarts the guard chain too, as a row or key the data holds does: the data bounds how often
+      // that happens, and an option the user picks for a recursive field renders its own options rather than collapsing
+      const optionChain = data === undefined ? extendChain(graph, field.chain, plan.setKey) : undefined;
       Reflect.set(
         merged,
         keyword,
@@ -409,7 +414,6 @@ function mergeBranch<S extends StrictRJSFSchema = RJSFSchema>(schema: S, branch:
  *          dependencies as a list of schemas
  * @param enteredRefs - The `$ref`s already resolved into this schema, which a branch leaves as they stand
  * @param [formData] - The current formData to assist retrieving a schema
- * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - A list of schemas with the appropriate conditions resolved, possibly with all branches expanded
  */
 export function resolveCondition<
@@ -423,7 +427,6 @@ export function resolveCondition<
   expandAllBranches: boolean,
   enteredRefs: readonly string[],
   formData?: T,
-  preserveDependencies = false,
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
@@ -448,7 +451,6 @@ export function resolveCondition<
           rootSchema,
           formData,
           expandAllBranches,
-          preserveDependencies,
           branchRefs(schema, enteredRefs, keyword),
         )
       : [];
@@ -457,15 +459,7 @@ export function resolveCondition<
     resolvedSchemas = schemas.map((s) => mergeBranch<S>(schemaLessConditional, s));
   }
   return resolvedSchemas.flatMap((s) =>
-    retrieveSchemaInternal<T, S, F>(
-      context,
-      s,
-      rootSchema,
-      formData,
-      expandAllBranches,
-      preserveDependencies,
-      enteredRefs,
-    ),
+    retrieveSchemaInternal<T, S, F>(context, s, rootSchema, formData, expandAllBranches, enteredRefs),
   );
 }
 
@@ -651,7 +645,6 @@ function additionalPropertyType<S extends StrictRJSFSchema = RJSFSchema>(
  *          as a list of schemas
  * @param enteredRefs - The `$ref`s already resolved into this schema, which a branch leaves as they stand
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - The list of schemas having its references, dependencies and allOf schemas resolved
  */
 export function resolveSchema<
@@ -665,7 +658,6 @@ export function resolveSchema<
   expandAllBranches: boolean,
   enteredRefs: readonly string[],
   formData?: T,
-  preserveDependencies = false,
 ): S[] {
   const updatedSchemas = resolveReference<T, S, F>(
     context,
@@ -674,14 +666,13 @@ export function resolveSchema<
     expandAllBranches,
     enteredRefs,
     formData,
-    preserveDependencies,
   );
   if (updatedSchemas.length > 1 || updatedSchemas[0] !== schema) {
     // return the updatedSchemas array if it has either multiple schemas within it
     // OR the first schema is not the same as the original schema
     return updatedSchemas;
   }
-  if (DEPENDENCIES_KEY in schema && !preserveDependencies) {
+  if (DEPENDENCIES_KEY in schema) {
     const resolvedSchemas = resolveDependencies<T, S, F>(
       context,
       schema,
@@ -692,7 +683,7 @@ export function resolveSchema<
     );
     // The merged result is resolved again, so the references and conditions the merge brought in are resolved too
     return resolvedSchemas.flatMap((s) =>
-      retrieveSchemaInternal<T, S, F>(context, s, rootSchema, formData, expandAllBranches, false, enteredRefs),
+      retrieveSchemaInternal<T, S, F>(context, s, rootSchema, formData, expandAllBranches, enteredRefs),
     );
   }
   const { allOf } = schema;
@@ -704,7 +695,6 @@ export function resolveSchema<
         rootSchema,
         formData,
         expandAllBranches,
-        preserveDependencies,
         branchRefs(schema, enteredRefs, ALL_OF_KEY),
       ),
     );
@@ -731,7 +721,6 @@ export function resolveSchema<
  *          as a list of schemas
  * @param enteredRefs - The `$ref`s already resolved into this schema
  * @param [formData] - The current formData, if any, to assist retrieving a schema
- * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @returns - The list schemas retrieved after having the reference resolved, or the schema when it has none to resolve
  */
 export function resolveReference<
@@ -745,7 +734,6 @@ export function resolveReference<
   expandAllBranches: boolean,
   enteredRefs: readonly string[],
   formData?: T,
-  preserveDependencies = false,
 ): S[] {
   const ref = schema[REF_KEY];
   if (typeof ref !== 'string' || enteredRefs.includes(ref)) {
@@ -757,7 +745,6 @@ export function resolveReference<
     rootSchema,
     formData,
     expandAllBranches,
-    preserveDependencies,
     [...enteredRefs, ref],
   );
 }
@@ -1424,7 +1411,6 @@ export function mergeAllOf<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
  * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
  * @param [expandAllBranches=false] - Flag, if true, will return all possible branches of conditions, any/oneOf and
  *          dependencies as a list of schemas
- * @param [preserveDependencies=false] - Leave dependencies unresolved for default computation
  * @param [enteredRefs=[]] - The `$ref`s already resolved into this schema, which are left as they stand where the
  *          schema reaches them again
  * @param [mergePatterns=true] - Whether the declared properties are merged with the patterns they match, which a
@@ -1442,7 +1428,6 @@ export function retrieveSchemaInternal<
   rootSchema: S,
   rawFormData?: T,
   expandAllBranches = false,
-  preserveDependencies = false,
   enteredRefs: readonly string[] = [],
   mergePatterns = true,
 ): S[] {
@@ -1453,7 +1438,6 @@ export function retrieveSchemaInternal<
     expandAllBranches,
     enteredRefs,
     rawFormData,
-    preserveDependencies,
   );
   return resolvedSchemas.flatMap((s: S) => {
     let resolvedSchema = s;
@@ -1465,7 +1449,6 @@ export function retrieveSchemaInternal<
         expandAllBranches,
         enteredRefs,
         rawFormData,
-        preserveDependencies,
       );
     }
     if (ALL_OF_KEY in resolvedSchema) {
@@ -1519,7 +1502,6 @@ export function retrieveSchemaInternal<
           rootSchema,
           getByPath<T>(rawFormData, key),
           expandAllBranches,
-          preserveDependencies,
           enteredRefs,
           false,
         );
@@ -1609,7 +1591,7 @@ export function resolveAnyOrOneOfSchemas<
       // describes is stubbed into its `properties` once the user adds one, and no parse can enumerate those
       const retrievedOptions = anyOrOneOf.flatMap((item) =>
         // The options share the list, since a `$ref` one of them resolves is not one a sibling has already been through
-        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, false, enteredRefs),
+        retrieveSchemaInternal<T, S, F>(context, item, rootSchema, formData, true, enteredRefs),
       );
       getFirstMatchingOption<T, S, F>(context, formData, retrievedOptions, rootSchema, discriminator);
       // `MultiSchemaField` also validates a retrieved option as it stands, rather than scoring it: when a parent
@@ -1933,7 +1915,6 @@ export function withDependentSchema<
     rootSchema,
     formData,
     expandAllBranches,
-    false,
     dependencyRefs,
   );
   return dependentSchemas.flatMap((dependent) => {
@@ -2030,7 +2011,6 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      false,
       branchRefs(schema, enteredRefs, DEPENDENCIES_KEY),
     );
     return schemas.map((resolvedSubschema) => mergeBranch<S>(schema, resolvedSubschema));
