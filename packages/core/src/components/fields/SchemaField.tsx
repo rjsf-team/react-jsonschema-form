@@ -564,7 +564,7 @@ function SchemaFieldRender<
   // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
   // left to it, and any other is described by the object's extra-key keywords and the option's together
   const { uiState, isOwn: ownsUiState } = useUiState();
-  const { selectedOption, keepSelection } = useShownOption<T, S, F>(
+  const { selectedOption, keepSelection, releaseSelection } = useShownOption<T, S, F>(
     uiState,
     registry,
     fieldPath,
@@ -582,17 +582,18 @@ function SchemaFieldRender<
   const hasOptions = xxxOfOptions !== undefined;
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
-   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit inside a field
-   * offering options keeps the option it is shown under first
+   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit to the object's
+   * own properties beside its options is matched again, as 6.11.0 matched every edit: only the option's own fields
+   * hold it
    */
   const handleFieldComponentChange = useCallback(
     (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       if (hasOptions) {
-        keepSelection();
+        releaseSelection();
       }
       onChange(newFormData, changedFieldPath, newErrorSchema, id || fieldId);
     },
-    [fieldId, onChange, hasOptions, keepSelection],
+    [fieldId, onChange, hasOptions, releaseSelection],
   );
   const handleOptionFieldChange = useCallback(
     (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {

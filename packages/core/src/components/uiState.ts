@@ -39,17 +39,19 @@ export function optionListKey<S extends StrictRJSFSchema>(options: readonly S[],
 }
 
 /** The option a field shows for `formData`. With no `selection`, the option `getClosestMatchingOption()` picks. A
- * selection holds for the data in its `holdsFor`, and while `holds` says an edit inside the field is being made. Other
- * data arrived from outside the field and is matched again, with the selection preferred where it fits the data as
- * well as any other option. Data holding a value for the declared `discriminator` is always matched: the discriminator
- * names the option, so an edit to it is a switch.
+ * selection holds for the data in its `holdsFor`, and, while `holds` says an edit is being made below the field, for
+ * any data unless the edit released it. Other data, from outside the field or from an edit to the object's own
+ * properties, is matched again, with the selection preferred where it fits the data as well as any other option. Data
+ * holding a value for the declared `discriminator` is always matched: the discriminator names the option, so an edit to
+ * it is a switch.
  *
  * @param schemaUtils - The schema utilities to match with
  * @param selection - The stored selection, if any
  * @param options - The options, each retrieved for `formData`
  * @param formData - The field's data
  * @param [discriminator] - The property the options are told apart by, if any
- * @param [holds=false] - Whether an edit inside the field is being made, which keeps the selection whatever the data
+ * @param [holds=false] - Whether an edit below the field is being made, which keeps a selection it did not release
+ *        whatever the data
  * @returns - The index of the option shown, -1 when there are none
  */
 export function shownOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
@@ -68,11 +70,19 @@ export function shownOption<T, S extends StrictRJSFSchema, F extends FormContext
     selection !== undefined &&
     selection.index < options.length &&
     !isDiscriminated &&
-    (holds || isHeldFor(selection, formData))
+    ((holds && selection.holdsFor.length > 0) || isHeldFor(selection, formData))
   ) {
     return selection.index;
   }
   return schemaUtils.getClosestMatchingOption(formData, [...options], selection?.index ?? -1, discriminator);
+}
+
+/** The data a selection holds for once an edit left `data` at its field: none for a released selection */
+function heldAfterEdit(holdsFor: readonly unknown[], data: unknown, isProposal: boolean): readonly unknown[] {
+  if (holdsFor.length === 0) {
+    return holdsFor;
+  }
+  return isProposal ? [...holdsFor, data] : [data];
 }
 
 function isHeldFor(selection: OptionSelection, data: unknown): boolean {
@@ -177,8 +187,17 @@ export function createUiState() {
         setSelection(path, list, { index, holdsFor: [data] });
       }
     },
-    /** Records, for every selection at or above the edited `path`, the data the edit left there: in place of the data
-     * before, unless the edit is a proposal the parent may decline
+    /** Lets the data an edit to the field's own properties leaves be matched again, as data from outside the field is:
+     * those properties are not the option's, so the edit is no reason to keep it
+     */
+    release: (path: FieldPath, list: string) => {
+      const current = selections.get(path)?.get(list);
+      if (current !== undefined && current.holdsFor.length > 0) {
+        setSelection(path, list, { index: current.index, holdsFor: [] });
+      }
+    },
+    /** Records, for every selection at or above the edited `path` that holds, the data the edit left there: in place of
+     * the data before, unless the edit is a proposal the parent may decline. A released selection is left to be matched
      */
     edited: (path: FieldPath, dataAt: (path: FieldPath) => unknown, isProposal: boolean) => {
       const segments = fieldPathToList(path);
@@ -190,7 +209,7 @@ export function createUiState() {
             new Map(
               [...lists].map(([list, { index, holdsFor }]) => [
                 list,
-                { index, holdsFor: isProposal ? [...holdsFor, data] : [data] },
+                { index, holdsFor: heldAfterEdit(holdsFor, data, isProposal) },
               ]),
             ),
           );

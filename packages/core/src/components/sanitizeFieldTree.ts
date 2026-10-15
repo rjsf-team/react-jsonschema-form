@@ -89,7 +89,8 @@ function emptySchema(): StrictRJSFSchema {
  * renders at the same path, and so on for an option's own options. None for a collapsed `$ref` cycle that is not
  * expanded, which renders no field beneath its Expand button. Mirrors `SchemaField`, `MultiSchemaField` and
  * `CyclicSchemaField`, which is what makes the tree the one on screen. `retrieved` is `raw` retrieved for `value`, when
- * the caller has it.
+ * the caller has it. `shown` maps each option list, by `optionListKey()`, to the option shown from it: an entry is
+ * taken in place of the selection, and a list without one is added with the option shown for `value`.
  */
 function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
@@ -97,6 +98,7 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   raw: S,
   value: unknown,
   path: FieldPathList,
+  shown: Map<string, number>,
   retrieved?: S,
 ): S[] {
   const { uiState } = ctx;
@@ -111,27 +113,32 @@ function layersOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const view = retrieved ?? schemaUtils.retrieveSchema(schema, data);
   const xxxOfKey = getXxxOfKey<S>(view);
-  const list = xxxOfKey ? view[xxxOfKey] : undefined;
-  if (!list || isConstantOptionList<S>(list, true)) {
+  const optionList = xxxOfKey ? view[xxxOfKey] : undefined;
+  if (!optionList || isConstantOptionList<S>(optionList, true)) {
     return [view];
   }
-  const options = list.map((option) =>
+  const options = optionList.map((option) =>
     schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), data),
   );
-  const fieldPath = fieldPathFromList(path);
-  const index = shownOption<T, S, F>(
-    schemaUtils,
-    uiState.selection(fieldPath, optionListKey<S>(options, rootSchema)),
-    options,
-    data,
-    getDiscriminatorFieldFromSchema<S>(view),
-    isEdited(ctx, path),
-  );
+  const list = optionListKey<S>(options, rootSchema);
+  const given = list === '' ? undefined : shown.get(list);
+  const index =
+    given !== undefined && given < options.length
+      ? given
+      : shownOption<T, S, F>(
+          schemaUtils,
+          uiState.selection(fieldPathFromList(path), list),
+          options,
+          data,
+          getDiscriminatorFieldFromSchema<S>(view),
+          isEdited(ctx, path),
+        );
+  shown.set(list, index);
   if (index < 0) {
     return [view];
   }
   const own = rendersOwnFieldBesideOption<S>(view) ? schemaUtils.retrieveSchema(schema, data, false, index) : view;
-  return [own, ...layersOf(ctx, schemaUtils, getRenderedOptionSchema<S>(view, options[index]), value, path)];
+  return [own, ...layersOf(ctx, schemaUtils, getRenderedOptionSchema<S>(view, options[index]), value, path, shown)];
 }
 
 /** The innermost layer's `keyword`, which is the one the value is rendered under */
@@ -282,8 +289,11 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (!edited && oldRaw === newRaw && oldValue === newValue && Object.is(oldInherited, newInherited)) {
     return newValue;
   }
-  const oldLayers = layersOf(ctx, ctx.oldSchemaUtils, oldRaw, oldValue, path, oldRetrieved);
-  const newLayers = layersOf(ctx, ctx.schemaUtils, newRaw, newValue, path, newRetrieved);
+  // The old side shows the options the new side shows from the same lists: which option the data is shown under is
+  // the selection's, or the match's, and a switch's data is `formDataForNewOption()`'s, so no switch drops a value
+  const shown = new Map<string, number>();
+  const newLayers = layersOf(ctx, ctx.schemaUtils, newRaw, newValue, path, shown, newRetrieved);
+  const oldLayers = layersOf(ctx, ctx.oldSchemaUtils, oldRaw, oldValue, path, shown, oldRetrieved);
   if (newLayers.length === 0) {
     return newValue;
   }
@@ -380,8 +390,9 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
  * own schema or on its parent's) has its value judged again, see `judge()`: a value still holding the default the old
  * schema declared takes the new one, written in place. A field whose constraints did not change keeps its value, so an
  * edit elsewhere never re-judges it. The value of the field being edited, and of the fields holding it, is the
- * user's, and only what they hold is judged. Both trees show the options the form selects now, so an option switch
- * changes no field's constraints: the data the switch proposes is `formDataForNewOption()`'s.
+ * user's, and only what they hold is judged. Both trees show the option the new data is shown under, so an option
+ * switch, by the selector or by matching, changes no field's constraints: the data a switch proposes is
+ * `formDataForNewOption()`'s.
  *
  * @param previous - The previous tree: the schema utilities it is built with, its data, and the root schema retrieved
  *        for that data
