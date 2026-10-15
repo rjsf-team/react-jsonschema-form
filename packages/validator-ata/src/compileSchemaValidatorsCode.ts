@@ -1,30 +1,76 @@
-import type { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { schemaParser } from '@rjsf/utils';
+import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { getByPath, ID_KEY, isObject, REF_KEY, schemaKey, getValidationSchemas } from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
 import type { CompileValidatorOptionsType } from './types.ts';
 
+/** The keywords whose definitions a `$ref` in a compiled schema can name. ata resolves a `$ref` only to an entry of one
+ * of these, in the document it compiles
+ */
+const CONTAINERS = ['definitions', '$defs'];
+
+/** Returns the subschema at the `$ref` fragment `ref` of `root` */
+function subschemaAt(root: unknown, ref: string): unknown {
+  const tokens = ref
+    .split('/')
+    .slice(1)
+    .map((token) => decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~'));
+  return getByPath(root, tokens);
+}
+
+/** Returns each schema of the `schemaMap` as a document ata compiles on its own. ata names no subschema of another
+ * document, so a `{ $ref }` naming a subschema of the root is compiled as a copy of that subschema, and the root's
+ * `definitions` and `$defs` are hoisted beside every schema but the root, where a `$ref` to one of their entries
+ * resolves. A `$ref` of any other form, such as one naming a property, leaves ata nothing to compile, which the
+ * module reports when the schema is first validated against.
+ *
+ * @param schemaMap - The schemas `getValidationSchemas()` lists
+ * @param rootSchema - The root they were listed for
+ * @returns - The documents, in the order of the map
+ */
+function hoistedSchemas<S extends StrictRJSFSchema>(schemaMap: Record<string, S>, rootSchema: S): GenericObjectType[] {
+  const rootId = schemaKey(rootSchema);
+  const containers = Object.fromEntries(
+    CONTAINERS.flatMap((key) => (key in rootSchema ? [[key, Reflect.get(rootSchema, key)]] : [])),
+  );
+  return Object.entries(schemaMap).map(([key, listed]) => {
+    if (key === rootId) {
+      return listed;
+    }
+    const { [ID_KEY]: _id, [REF_KEY]: ref, ...rest } = listed;
+    const target = typeof ref === 'string' && Object.keys(rest).length === 0 ? subschemaAt(rootSchema, ref) : undefined;
+    let content: GenericObjectType = listed;
+    if (isObject(target)) {
+      content = target;
+    } else if (typeof target === 'boolean') {
+      // ata compiles neither a boolean schema nor one asserting nothing, so a boolean subschema is compiled as an
+      // object schema asserting what it says
+      content = target ? { not: { not: {} } } : { not: {} };
+    }
+    return { ...content, ...containers, [ID_KEY]: key };
+  });
+}
+
 /** Compiles a schema into a precompiled validator module. ata's
  * `bundleStandalone` emits `module.exports = [fn, ...]`, one validator per
  * schema in order, where each `fn(data)` returns `{ valid, errors }`. This wraps
  * that array into the `{ [id]: (data) => boolean }`-with-`errors` map that
- * `createPrecompiledValidator` consumes, keyed the same way `schemaParser` keys
+ * `createPrecompiledValidator` consumes, keyed the same way `getValidationSchemas()` keys
  * the schemas so the precompiled validator can look each one up.
  *
  * @param schema - The schema to compile
- * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the options used to build the validator, plus
- *        the form's `customMergeAllOf`, which must merge the same way as the one passed to the form or the form can
- *        validate against sub-schemas that were not compiled
+ * @param [options={}] - The `CompileValidatorOptionsType` to compile with: the options used to build the validator. A
+ *        `customMergeAllOf` among them is not read: the schemas compiled do not depend on how `allOf` is merged
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   options: CompileValidatorOptionsType<S> = {},
 ) {
-  const { customFormats, ataOptionsOverrides = {}, customMergeAllOf } = options;
-  const schemaMaps = schemaParser(schema, { customMergeAllOf });
+  const { customFormats, ataOptionsOverrides = {} } = options;
+  const schemaMaps = getValidationSchemas(schema);
   const keys = Object.keys(schemaMaps);
-  const schemas = Object.values(schemaMaps);
+  const schemas = hoistedSchemas(schemaMaps, schema);
 
   // Format checkers are serialized into the standalone module via Function#toString,
   // so they must carry no closure references or build-time instrumentation (a plain

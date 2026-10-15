@@ -31,7 +31,10 @@ function resolvePointer(root: unknown, ref: string): unknown {
     .split('/')
     .filter((token) => token !== '')
     .map((token) => decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~'))
-    .reduce<unknown>((current, token) => (isObject(current) ? current[token] : undefined), root);
+    .reduce<unknown>(
+      (current, token) => (typeof current === 'object' && current !== null ? Reflect.get(current, token) : undefined),
+      root,
+    );
 }
 
 /** Checks `data` against `schema` for the keywords the graph tests use: `$ref` into the root, `type`, `const`, `enum`,

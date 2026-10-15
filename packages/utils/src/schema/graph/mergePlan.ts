@@ -23,6 +23,7 @@ import shallowAllOfMerge from '../shallowAllOfMerge.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaGraph.ts';
+import { declaredProperty, dependencyCondition, targetOf } from './validationTargets.ts';
 
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
@@ -660,9 +661,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (condition === undefined) {
       return without;
     }
-    const conditionNode = this.graph.node(condition);
-    const conditionSchema =
-      conditionNode.kind === 'schema' ? conditionNode.raw : booleanSchema(conditionNode, this.graph.rawRoot);
+    const conditionSchema = targetOf(this.graph, condition);
     const branchKey = this.holds(`if:${condition}`, conditionSchema, this.data) ? THEN_KEY : ELSE_KEY;
     const branchPart = this.branch(keywords.get(branchKey), branchKey, dependencyKey);
     return branchPart === undefined ? without : mergeBranch(without, branchPart);
@@ -734,32 +733,6 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     return next;
   }
 
-  /** The subschema an option of a dependency's `oneOf` names its condition with: its `properties[key]`, read off the
-   * option as written, or, for an option spelled as a `$ref`, off the schema it resolves to
-   */
-  private dependencyCondition(option: NodeId, key: string): unknown {
-    const node = this.graph.node(option);
-    if (node.kind !== 'schema') {
-      return undefined;
-    }
-    if (node.ref === undefined) {
-      const condition = this.graph.child(option, PROPERTIES_KEY, key);
-      if (condition === undefined) {
-        return undefined;
-      }
-      const conditionNode = this.graph.node(condition);
-      return conditionNode.kind === 'schema'
-        ? conditionNode.raw
-        : conditionNode.kind === 'boolean' && conditionNode.value;
-    }
-    const resolved = new PlanBuilder(this.context, this.graph, this.data, this.depData, {
-      ...this.policy,
-      allOf: true,
-    }).build([{ node: option, refPath: [] }]);
-    const properties: unknown = resolved.schema.properties;
-    return isObject(properties) ? properties[key] : undefined;
-  }
-
   /** Applies the one option of a dependency's `oneOf` whose `properties[key]` the data satisfies, less that property;
    * with no such option or several, none is applied
    */
@@ -771,12 +744,11 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       .subschemas(provider.node.id, ONE_OF_KEY)
       .map(([, option]) => option)
       .filter((option) => {
-        const condition = this.dependencyCondition(option, key);
-        if (!condition) {
-          return false;
-        }
-        const conditionSchema = schemaFrom(this.graph.rawRoot, { type: 'object', properties: { [key]: condition } });
-        return this.holds(`dependency:${option}:${key}`, conditionSchema, this.depData);
+        const property = declaredProperty(this.graph, option, key);
+        return (
+          property !== undefined &&
+          this.holds(`dependency:${option}:${key}`, dependencyCondition(this.graph, key, property), this.depData)
+        );
       });
     if (valid.length !== 1) {
       logOnce(`ignoring oneOf in dependencies of "${key}" because there isn't exactly one subschema that is valid`);

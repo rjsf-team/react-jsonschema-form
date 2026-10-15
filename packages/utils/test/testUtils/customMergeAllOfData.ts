@@ -8,7 +8,7 @@ import { isObject, mergeSchemas } from '../../src/index.ts';
  * @param schema - The schema whose `allOf` entries are to be merged into it
  * @returns - The schema with its `allOf` merged in and the keyword dropped
  */
-export function mergeAllOfEntries(schema: RJSFSchema): GenericObjectType {
+function mergeAllOfEntries(schema: RJSFSchema): GenericObjectType {
   const { allOf = [], ...rest } = schema;
   // A boolean subschema constrains nothing this merge has to carry over
   return allOf.reduce<GenericObjectType>(
@@ -18,7 +18,7 @@ export function mergeAllOfEntries(schema: RJSFSchema): GenericObjectType {
 }
 
 /** The `oneOf` options that `titleChoiceMergeAllOf()` rewrites, as a schema parsed with the default merge leaves them */
-export const CHOICE: RJSFSchema = { oneOf: [{ const: 'a' }, { const: 'b' }] };
+const CHOICE: RJSFSchema = { oneOf: [{ const: 'a' }, { const: 'b' }] };
 
 /** A schema whose `p` is both a named property and a `patternProperties` match, so resolving it merges
  * `{ allOf: [p, ...patterns] }` -- the one merge made for a schema that has no `allOf` of its own
@@ -56,6 +56,3 @@ export function titleChoiceMergeAllOf(schema: RJSFSchema): RJSFSchema {
   const oneOf = choice.oneOf.filter(isObject).map((option) => ({ ...option, title: `Option ${option.const}` }));
   return { ...merged, properties: { ...merged.properties, choice: { ...choice, oneOf } } };
 }
-
-/** The titled `choice` option that only `titleChoiceMergeAllOf()` produces */
-export const TITLED_CHOICE_OPTION = { const: 'b', title: 'Option b' };

@@ -11,7 +11,11 @@ import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
 import omitExtraData, { isValueEmpty } from './omitExtraData.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import retrieveSchema, { getAdditionalPropertyType, relaxOptionsForScoring } from './retrieveSchema.ts';
+import retrieveSchema, {
+  getAdditionalPropertyType,
+  getValidationTarget,
+  relaxOptionsForScoring,
+} from './retrieveSchema.ts';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.ts';
 
 export {
@@ -24,6 +28,7 @@ export {
   getFirstMatchingOption,
   getFromSchema,
   getUiRequiredErrorSchema,
+  getValidationTarget,
   isFilesArray,
   isMultiSelect,
   isSelect,

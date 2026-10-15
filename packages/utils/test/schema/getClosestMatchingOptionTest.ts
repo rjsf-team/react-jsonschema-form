@@ -60,7 +60,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           foo: { anyOf: [{ const: 'a' }, { const: 'b' }], oneOf: [{ const: 'b' }] },
         },
       };
-      testValidator.setReturnValues({ isValid: [false, false, false, true] });
+      testValidator.setReturnValues({ isValid: [false, true] });
       expect(calculateIndexScore({ validator: testValidator }, oneOfSchema, schema, { foo: 'b' })).toEqual(1);
     });
     it('returns 1 for a schema that has a type matching the formData type', () => {
@@ -397,12 +397,11 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
         { type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } },
       ];
       beforeEach(() => {
-        // Without mocked results every option matches the junk option too, so none is the single match and all of
-        // them get scored, which is the only path that reaches the recursive $ref
         testValidator.setReturnValues({ isValid: [] });
       });
       it('terminates when the recursion runs out of form data', () => {
         // Neither option matches `{ child: 5 }` and both score 0, so the tie falls back to the selectedOption
+        testValidator.setReturnValues({ isValid: [false] });
         expect(getClosestMatchingOption({ validator: testValidator }, schema, { child: 5 }, options)).toEqual(-1);
       });
       it('scores the recursive option as deep as the form data goes', () => {

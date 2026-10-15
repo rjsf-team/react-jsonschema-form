@@ -66,18 +66,15 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
       return getClosestMatchingOption(context, rootSchema, formData.p.choice, options.filter(isObject), 0);
     }
 
-    it('misses the custom-merged sub-schemas when compiled without it', () => {
-      const validator = buildValidator(rootSchema);
+    it.each([
+      ['without it', undefined],
+      ['with it', customMergeAllOf],
+    ])('has no function for an option the custom merge rewrites, compiled %s', (_compiled, merge) => {
+      // The rewritten option is a schema the merge made, with no place in the root for the compile list to name
+      const validator = buildValidator(rootSchema, merge && { customMergeAllOf: merge });
       expect(() => scoreRenderedChoice(validator)).toThrow(
         'No precompiled validator function was found for the given schema',
       );
-    });
-    it('covers the custom-merged sub-schemas when compiled with it', () => {
-      const validator = buildValidator(rootSchema, { customMergeAllOf });
-      expect(scoreRenderedChoice(validator)).toBe(1);
-      expect(
-        getDefaultFormState({ validator, customMergeAllOf }, { schema: rootSchema, rootSchema, formData }),
-      ).toEqual(formData);
     });
     it('covers the sub-schemas of the merge the form makes for a key only patternProperties match', () => {
       const patternKeySchema = SCHEMA_MERGED_FOR_PATTERN_KEY;
@@ -169,15 +166,114 @@ export default function precompiledCoverageTests(buildValidator: BuildPrecompile
         owner: DEPENDENCY_ONE_OF_OMITTED,
       });
     });
-    it('covers the merge of two patternProperties that match the same key', () => {
+    it('has no function for an option the merge of two patternProperties makes', () => {
+      // Both patterns match `ab`, and merging their `oneOf`s makes options neither pattern has
       const rootSchema = SCHEMA_TWO_MATCHING_PATTERNS;
       const validator = buildValidator(rootSchema);
-      expect(
+      expect(() =>
         getDefaultFormState(
           { validator },
           { schema: rootSchema, rootSchema, formData: TWO_MATCHING_PATTERNS_FORM_DATA },
         ),
-      ).toEqual(TWO_MATCHING_PATTERNS_FORM_DATA);
+      ).toThrow('No precompiled validator function was found for the given schema');
+    });
+  });
+
+  describe('for the schemas the schema graph names', () => {
+    it('validates an if with no else before and after it holds (#5453)', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' } },
+        if: { properties: { a: { const: 'x' } }, required: ['a'] },
+        then: { properties: { extra: { oneOf: [{ type: 'string' }, { type: 'number' }] } } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      expect(schemaUtils.retrieveSchema(rootSchema, { a: 'y' }).properties).toEqual({ a: { type: 'string' } });
+      const extra = schemaUtils.retrieveSchema(rootSchema, { a: 'x', extra: 5 }).properties?.extra;
+      const options = isObject(extra) && Array.isArray(extra.oneOf) ? extra.oneOf.filter(isObject) : [];
+      expect(schemaUtils.getClosestMatchingOption(5, options, 0)).toBe(1);
+    });
+    it("scores an option whose own patternProperties stub the data's keys into it (#5454)", () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            oneOf: [
+              {
+                type: 'object',
+                properties: { id: { type: 'string' } },
+                patternProperties: { '^s_': { type: 'string' }, '^s_n': { pattern: '^x' } },
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const subFormData = { id: 'a', s_na: 'xx' };
+      const field = schemaUtils.retrieveSchema(rootSchema, { v: subFormData }).properties?.v;
+      const options = isObject(field) && Array.isArray(field.oneOf) ? field.oneOf.filter(isObject) : [];
+      const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
+      expect(schemaUtils.getFirstMatchingOption(subFormData, retrieved)).toBe(0);
+    });
+    it('scores an option that carries an $id, retrieved for the data (#5455)', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          v: {
+            oneOf: [
+              {
+                $id: 'myOption',
+                type: 'object',
+                properties: { id: { type: 'string' } },
+                additionalProperties: { type: 'string' },
+                required: ['id'],
+              },
+              { type: 'number' },
+            ],
+          },
+        },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const subFormData = { extra: 'x' };
+      const field = schemaUtils.retrieveSchema(rootSchema, { v: subFormData }).properties?.v;
+      const options = isObject(field) && Array.isArray(field.oneOf) ? field.oneOf.filter(isObject) : [];
+      const retrieved = options.map((option) => schemaUtils.retrieveSchema(option, subFormData));
+      // `extra` is no key the option declares, so neither option matches and the scores decide
+      expect(schemaUtils.getClosestMatchingOption({ id: 'a', extra: 'x' }, retrieved, -1)).toBe(0);
+      expect(schemaUtils.getClosestMatchingOption(5, retrieved, -1)).toBe(1);
+    });
+    it('builds for a oneOf of a $ref to the root beside dependencies (#5452 c)', () => {
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: { a: { type: 'string' }, b: { type: 'string' } },
+        dependencies: { a: ['b'] },
+        oneOf: [{ $ref: '#' }, { properties: { c: { type: 'string' } } }],
+      };
+      expect(() => buildValidator(rootSchema)).not.toThrow();
+    });
+    it('compiles and matches a boolean option', () => {
+      const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: [false, true] } } };
+      const validator = buildValidator(rootSchema);
+      expect(validator.isValid({ $ref: '#/properties/v/anyOf/0' }, 1, rootSchema)).toBe(false);
+      expect(validator.isValid({ $ref: '#/properties/v/anyOf/1' }, 1, rootSchema)).toBe(true);
+    });
+    it('compiles and scores a recursive definition used as an option', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: {
+          node: {
+            type: 'object',
+            properties: { n: { type: 'string' }, u: { anyOf: [{ $ref: '#/definitions/node' }, { type: 'string' }] } },
+          },
+        },
+        type: 'object',
+        properties: { v: { oneOf: [{ $ref: '#/definitions/node' }, { type: 'number' }] } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const options = rootSchema.properties?.v;
+      const list = isObject(options) && Array.isArray(options.oneOf) ? options.oneOf.filter(isObject) : [];
+      expect(schemaUtils.getFirstMatchingOption({ n: 'a', u: { n: 'b' } }, list)).toBe(0);
+      expect(schemaUtils.getFirstMatchingOption(5, list)).toBe(1);
     });
   });
 }

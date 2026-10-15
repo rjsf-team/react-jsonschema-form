@@ -1,5 +1,994 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`getValidationSchemas() > parse schema with allof not able to merge 1`] = `
+{
+  "-44c06f09": {
+    "$id": "-44c06f09",
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "animal": {
+              "const": "Cat",
+            },
+          },
+        },
+        "then": {
+          "properties": {
+            "food": {
+              "enum": [
+                "meat",
+                "grass",
+                "fish",
+              ],
+              "type": "string",
+            },
+          },
+          "required": [
+            "food",
+          ],
+        },
+      },
+      {
+        "if": {
+          "properties": {
+            "animal": {
+              "const": "Fish",
+            },
+          },
+        },
+        "then": {
+          "properties": {
+            "food": {
+              "enum": [
+                "insect",
+                "worms",
+              ],
+              "type": "string",
+            },
+            "water": {
+              "enum": [
+                "lake",
+                "sea",
+              ],
+              "type": "string",
+            },
+          },
+          "required": [
+            "food",
+            "water",
+          ],
+        },
+      },
+      {
+        "required": [
+          "animal",
+        ],
+      },
+    ],
+    "properties": {
+      "animal": {
+        "enum": [
+          "Cat",
+          "Fish",
+        ],
+      },
+    },
+    "type": "object",
+  },
+  "4b36ac8e": {
+    "$id": "4b36ac8e",
+    "$ref": "#/allOf/0/if",
+  },
+  "4ceb852d": {
+    "$id": "4ceb852d",
+    "$ref": "#/allOf/1/if",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parse schema with array condition 1`] = `
+{
+  "1eb2259c": {
+    "$id": "1eb2259c",
+    "$ref": "#/properties/list/items/if",
+  },
+  "f254d0a": {
+    "$id": "f254d0a",
+    "properties": {
+      "list": {
+        "items": {
+          "else": {
+            "properties": {
+              "postal_code": {
+                "pattern": "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]",
+              },
+            },
+          },
+          "if": {
+            "properties": {
+              "country": {
+                "const": "United States of America",
+              },
+            },
+          },
+          "properties": {
+            "country": {
+              "default": "United States of America",
+              "enum": [
+                "United States of America",
+                "Canada",
+              ],
+            },
+          },
+          "then": {
+            "properties": {
+              "postal_code": {
+                "pattern": "[0-9]{5}(-[0-9]{4})?",
+              },
+            },
+          },
+          "type": "object",
+        },
+        "type": "array",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses property dependencies properly 1`] = `
+{
+  "-4e612676": {
+    "$id": "-4e612676",
+    "dependencies": {
+      "a": [
+        "b",
+      ],
+    },
+    "properties": {
+      "a": {
+        "type": "string",
+      },
+      "b": {
+        "type": "integer",
+      },
+    },
+    "required": [
+      "a",
+    ],
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses recursive refs in allOf properly 1`] = `
+{
+  "2b3d97f8": {
+    "$id": "2b3d97f8",
+    "definitions": {
+      "@enum": {
+        "properties": {
+          "_id": {
+            "title": "Value",
+            "type": "number",
+          },
+          "children": {
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/@enum",
+                },
+              ],
+            },
+            "title": "Subvalues",
+            "type": "array",
+          },
+          "name": {
+            "default": "",
+            "title": "Name",
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+    },
+    "properties": {
+      "value": {
+        "items": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/@enum",
+            },
+          ],
+        },
+        "minItems": 1,
+        "type": "array",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses recursive refs properly 1`] = `
+{
+  "7cf4cd8a": {
+    "$id": "7cf4cd8a",
+    "$ref": "#/definitions/@enum",
+    "definitions": {
+      "@enum": {
+        "properties": {
+          "children": {
+            "$ref": "#/definitions/@enum",
+          },
+          "name": {
+            "default": "",
+            "title": "Name",
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+    },
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses schema and required dependencies properly 1`] = `
+{
+  "-738b34fc": {
+    "$id": "-738b34fc",
+    "dependencies": {
+      "a": {
+        "properties": {
+          "a": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "b",
+        ],
+      },
+    },
+    "properties": {
+      "a": {
+        "type": "string",
+      },
+      "b": {
+        "type": "integer",
+      },
+    },
+    "required": [
+      "a",
+    ],
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses schema dependencies properly 1`] = `
+{
+  "75f1f611": {
+    "$id": "75f1f611",
+    "dependencies": {
+      "a": {
+        "properties": {
+          "b": {
+            "type": "integer",
+          },
+        },
+      },
+    },
+    "properties": {
+      "a": {
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses schema dependencies with one of and refs properly 1`] = `
+{
+  "-71e750ba": {
+    "$id": "-71e750ba",
+    "$ref": "#/dependencies/a/oneOf/1",
+  },
+  "-71e7547b": {
+    "$id": "-71e7547b",
+    "$ref": "#/dependencies/a/oneOf/0",
+  },
+  "138b0b13": {
+    "$id": "138b0b13",
+    "properties": {
+      "a": {
+        "$ref": "#/definitions/needsA/properties/a",
+      },
+    },
+    "type": "object",
+  },
+  "50aacf32": {
+    "$id": "50aacf32",
+    "properties": {
+      "a": {
+        "$ref": "#/definitions/needsB/properties/a",
+      },
+    },
+    "type": "object",
+  },
+  "7de97d9a": {
+    "$id": "7de97d9a",
+    "definitions": {
+      "needsA": {
+        "properties": {
+          "a": {
+            "enum": [
+              "int",
+            ],
+          },
+          "b": {
+            "type": "integer",
+          },
+        },
+      },
+      "needsB": {
+        "properties": {
+          "a": {
+            "enum": [
+              "bool",
+            ],
+          },
+          "b": {
+            "type": "boolean",
+          },
+        },
+      },
+    },
+    "dependencies": {
+      "a": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/needsA",
+          },
+          {
+            "$ref": "#/definitions/needsB",
+          },
+        ],
+      },
+    },
+    "properties": {
+      "a": {
+        "enum": [
+          "int",
+          "bool",
+        ],
+        "type": "string",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses schema with a single condition 1`] = `
+{
+  "-49e91088": {
+    "$id": "-49e91088",
+    "$ref": "#/if",
+  },
+  "7a88ed97": {
+    "$id": "7a88ed97",
+    "else": {
+      "properties": {
+        "postal_code": {
+          "pattern": "[A-Z][0-9][A-Z] [0-9][A-Z][0-9]",
+        },
+      },
+    },
+    "if": {
+      "properties": {
+        "country": {
+          "const": "United States of America",
+        },
+      },
+    },
+    "properties": {
+      "country": {
+        "default": "United States of America",
+        "enum": [
+          "United States of America",
+          "Canada",
+        ],
+      },
+    },
+    "then": {
+      "properties": {
+        "postal_code": {
+          "pattern": "[0-9]{5}(-[0-9]{4})?",
+        },
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses schema with multiple conditions 1`] = `
+{
+  "-24a14519": {
+    "$id": "-24a14519",
+    "$ref": "#/allOf/1/then/properties/Breed/allOf/1/if",
+  },
+  "-26561db8": {
+    "$id": "-26561db8",
+    "$ref": "#/allOf/1/then/properties/Breed/allOf/0/if",
+  },
+  "-61d82723": {
+    "$id": "-61d82723",
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "Animal": {
+              "const": "Cat",
+            },
+          },
+          "required": [
+            "Animal",
+          ],
+        },
+        "then": {
+          "properties": {
+            "Tail": {
+              "default": "Long",
+              "enum": [
+                "Long",
+                "Short",
+                "None",
+              ],
+              "title": "Tail length",
+              "type": "string",
+            },
+          },
+          "required": [
+            "Tail",
+          ],
+        },
+      },
+      {
+        "if": {
+          "properties": {
+            "Animal": {
+              "const": "Dog",
+            },
+          },
+          "required": [
+            "Animal",
+          ],
+        },
+        "then": {
+          "properties": {
+            "Breed": {
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "BreedName": {
+                        "const": "Alsatian",
+                      },
+                    },
+                    "required": [
+                      "BreedName",
+                    ],
+                  },
+                  "then": {
+                    "properties": {
+                      "Fur": {
+                        "default": "brown",
+                        "enum": [
+                          "black",
+                          "brown",
+                        ],
+                        "title": "Fur",
+                        "type": "string",
+                      },
+                    },
+                    "required": [
+                      "Fur",
+                    ],
+                  },
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "BreedName": {
+                        "const": "Dalmation",
+                      },
+                    },
+                    "required": [
+                      "BreedName",
+                    ],
+                  },
+                  "then": {
+                    "properties": {
+                      "Spots": {
+                        "default": "small",
+                        "enum": [
+                          "large",
+                          "small",
+                        ],
+                        "title": "Spots",
+                        "type": "string",
+                      },
+                    },
+                    "required": [
+                      "Spots",
+                    ],
+                  },
+                },
+              ],
+              "properties": {
+                "BreedName": {
+                  "default": "Alsatian",
+                  "enum": [
+                    "Alsatian",
+                    "Dalmation",
+                  ],
+                  "title": "Breed name",
+                  "type": "string",
+                },
+              },
+              "required": [
+                "BreedName",
+              ],
+              "title": "Breed",
+            },
+          },
+        },
+      },
+    ],
+    "properties": {
+      "Animal": {
+        "default": "Cat",
+        "enum": [
+          "Cat",
+          "Dog",
+        ],
+        "title": "Animal",
+        "type": "string",
+      },
+    },
+    "required": [
+      "Animal",
+    ],
+    "type": "object",
+  },
+  "4b36ac8e": {
+    "$id": "4b36ac8e",
+    "$ref": "#/allOf/0/if",
+  },
+  "4ceb852d": {
+    "$id": "4ceb852d",
+    "$ref": "#/allOf/1/if",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses schema with nested conditions 1`] = `
+{
+  "-49e91088": {
+    "$id": "-49e91088",
+    "$ref": "#/if",
+  },
+  "3acf7a2a": {
+    "$id": "3acf7a2a",
+    "$ref": "#/then/if",
+  },
+  "5a59a11c": {
+    "$id": "5a59a11c",
+    "$ref": "#/then/else/if",
+  },
+  "767ff7c6": {
+    "$id": "767ff7c6",
+    "if": {
+      "properties": {
+        "country": {
+          "const": "USA",
+        },
+      },
+      "required": [
+        "country",
+      ],
+    },
+    "properties": {
+      "country": {
+        "enum": [
+          "USA",
+        ],
+      },
+    },
+    "required": [
+      "country",
+    ],
+    "then": {
+      "else": {
+        "if": {
+          "properties": {
+            "state": {
+              "const": "California",
+            },
+          },
+          "required": [
+            "state",
+          ],
+        },
+        "then": {
+          "properties": {
+            "city": {
+              "enum": [
+                "Los Angeles",
+                "San Diego",
+                "San Jose",
+              ],
+              "type": "string",
+            },
+          },
+        },
+      },
+      "if": {
+        "properties": {
+          "state": {
+            "const": "New York",
+          },
+        },
+        "required": [
+          "state",
+        ],
+      },
+      "properties": {
+        "state": {
+          "enum": [
+            "California",
+            "New York",
+          ],
+          "type": "string",
+        },
+      },
+      "required": [
+        "state",
+      ],
+      "then": {
+        "properties": {
+          "city": {
+            "enum": [
+              "New York City",
+              "Buffalo",
+              "Rochester",
+            ],
+            "type": "string",
+          },
+        },
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses schema with oneof and nested dependencies 1`] = `
+{
+  "-29ba0ff9": {
+    "$id": "-29ba0ff9",
+    "properties": {
+      "update_absences": {
+        "$ref": "#/dependencies/update_absences/oneOf/0/properties/update_absences",
+      },
+    },
+    "type": "object",
+  },
+  "-2d3e9a05": {
+    "$id": "-2d3e9a05",
+    "$ref": "#/dependencies/employee_accounts/oneOf/0",
+  },
+  "-3b0af5b7": {
+    "$id": "-3b0af5b7",
+    "$ref": "#/dependencies/employee_accounts/oneOf/0/properties/update_absences/oneOf/0",
+  },
+  "-406a5a54": {
+    "$id": "-406a5a54",
+    "dependencies": {
+      "employee_accounts": {
+        "oneOf": [
+          {
+            "properties": {
+              "employee_accounts": {
+                "const": true,
+              },
+              "update_absences": {
+                "oneOf": [
+                  {
+                    "const": "BOTH",
+                    "title": "Both",
+                  },
+                ],
+                "title": "Update Absences",
+                "type": "string",
+              },
+            },
+          },
+        ],
+      },
+      "update_absences": {
+        "oneOf": [
+          {
+            "properties": {
+              "permitted_extension": {
+                "title": "Permitted Extension",
+                "type": "integer",
+              },
+              "update_absences": {
+                "const": "BOTH",
+              },
+            },
+          },
+          {
+            "properties": {
+              "permitted_extension": {
+                "title": "Permitted Extension",
+                "type": "integer",
+              },
+              "update_absences": {
+                "const": "MEDICAL_ONLY",
+              },
+            },
+          },
+          {
+            "properties": {
+              "permitted_extension": {
+                "title": "Permitted Extension",
+                "type": "integer",
+              },
+              "update_absences": {
+                "const": "NON_MEDICAL_ONLY",
+              },
+            },
+          },
+        ],
+      },
+    },
+    "properties": {
+      "employee_accounts": {
+        "title": "Employee Accounts",
+        "type": "boolean",
+      },
+    },
+    "type": "object",
+  },
+  "-47ec390e": {
+    "$id": "-47ec390e",
+    "properties": {
+      "employee_accounts": {
+        "$ref": "#/dependencies/employee_accounts/oneOf/0/properties/employee_accounts",
+      },
+    },
+    "type": "object",
+  },
+  "101091e6": {
+    "$id": "101091e6",
+    "properties": {
+      "update_absences": {
+        "$ref": "#/dependencies/update_absences/oneOf/1/properties/update_absences",
+      },
+    },
+    "type": "object",
+  },
+  "12d14c70": {
+    "$id": "12d14c70",
+    "$ref": "#/dependencies/update_absences/oneOf/0",
+  },
+  "12d15031": {
+    "$id": "12d15031",
+    "$ref": "#/dependencies/update_absences/oneOf/1",
+  },
+  "12d153f2": {
+    "$id": "12d153f2",
+    "$ref": "#/dependencies/update_absences/oneOf/2",
+  },
+  "49db33c5": {
+    "$id": "49db33c5",
+    "properties": {
+      "update_absences": {
+        "$ref": "#/dependencies/update_absences/oneOf/2/properties/update_absences",
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
+exports[`getValidationSchemas() > parses superSchema properly 1`] = `
+{
+  "-2d56bf93": {
+    "$id": "-2d56bf93",
+    "$ref": "#/properties/multi/anyOf/0",
+  },
+  "-32cbe816": {
+    "$id": "-32cbe816",
+    "allOf": [
+      {
+        "properties": {
+          "choice": {
+            "const": "one",
+            "type": "string",
+          },
+          "other": {
+            "type": "number",
+          },
+        },
+        "type": "object",
+      },
+    ],
+  },
+  "-66fb67a0": {
+    "$id": "-66fb67a0",
+    "$ref": "#/anyOf/1",
+  },
+  "-66fb6b61": {
+    "$id": "-66fb6b61",
+    "$ref": "#/anyOf/0",
+  },
+  "-75284651": {
+    "$id": "-75284651",
+    "$ref": "#/properties/single/oneOf/1",
+  },
+  "-75284a12": {
+    "$id": "-75284a12",
+    "$ref": "#/properties/single/oneOf/0",
+  },
+  "super-schema": {
+    "$id": "super-schema",
+    "anyOf": [
+      {
+        "properties": {
+          "firstName": {
+            "title": "First name",
+            "type": "string",
+          },
+          "lastName": {
+            "$ref": "#/definitions/test",
+          },
+        },
+        "title": "First method of identification",
+      },
+      {
+        "properties": {
+          "idCode": {
+            "$ref": "#/definitions/test",
+          },
+        },
+        "title": "Second method of identification",
+      },
+    ],
+    "definitions": {
+      "choice1": {
+        "properties": {
+          "choice": {
+            "const": "one",
+            "type": "string",
+          },
+          "other": {
+            "type": "number",
+          },
+        },
+        "required": [
+          "more",
+        ],
+        "type": "object",
+      },
+      "choice2": {
+        "properties": {
+          "choice": {
+            "const": "two",
+            "type": "string",
+          },
+          "more": {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "foo": {
+        "properties": {
+          "name": {
+            "type": "string",
+          },
+        },
+        "type": "object",
+      },
+      "list": {
+        "items": {
+          "type": "string",
+        },
+        "type": "array",
+      },
+      "passwords": {
+        "properties": {
+          "pass1": {
+            "type": "string",
+          },
+          "pass2": {
+            "type": "string",
+          },
+        },
+        "required": [
+          "pass1",
+          "pass2",
+        ],
+        "type": "object",
+      },
+      "price": {
+        "minimum": 0,
+        "multipleOf": 0.03,
+        "title": "Price per task ($)",
+        "type": "number",
+      },
+      "test": {
+        "type": "string",
+      },
+    },
+    "properties": {
+      "anything": {
+        "additionalProperties": {
+          "type": "string",
+        },
+        "type": "object",
+      },
+      "dataUrlWithName": {
+        "format": "data-url",
+        "type": "string",
+      },
+      "foo": {
+        "type": "string",
+      },
+      "list": {
+        "$ref": "#/definitions/list",
+      },
+      "multi": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/foo",
+          },
+        ],
+        "title": "multi",
+      },
+      "passwords": {
+        "$ref": "#/definitions/passwords",
+      },
+      "price": {
+        "$ref": "#/definitions/price",
+      },
+      "single": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/choice1",
+          },
+          {
+            "$ref": "#/definitions/choice2",
+          },
+        ],
+        "required": [
+          "choice",
+        ],
+      },
+    },
+    "type": "object",
+  },
+}
+`;
+
 exports[`schemaParser() > parse schema with allof not able to merge 1`] = `
 {
   "-44c06f09": {
@@ -76,34 +1065,22 @@ exports[`schemaParser() > parse schema with allof not able to merge 1`] = `
     },
     "type": "object",
   },
-  "59fefb6e": {
-    "$id": "59fefb6e",
-    "properties": {
-      "animal": {
-        "const": "Fish",
-      },
-    },
+  "4b36ac8e": {
+    "$id": "4b36ac8e",
+    "$ref": "#/allOf/0/if",
   },
-  "6f438756": {
-    "$id": "6f438756",
-    "properties": {
-      "animal": {
-        "const": "Cat",
-      },
-    },
+  "4ceb852d": {
+    "$id": "4ceb852d",
+    "$ref": "#/allOf/1/if",
   },
 }
 `;
 
 exports[`schemaParser() > parse schema with array condition 1`] = `
 {
-  "-33d8d73c": {
-    "$id": "-33d8d73c",
-    "properties": {
-      "country": {
-        "const": "United States of America",
-      },
-    },
+  "1eb2259c": {
+    "$id": "1eb2259c",
+    "$ref": "#/properties/list/items/if",
   },
   "f254d0a": {
     "$id": "f254d0a",
@@ -305,104 +1282,28 @@ exports[`schemaParser() > parses schema dependencies properly 1`] = `
 
 exports[`schemaParser() > parses schema dependencies with one of and refs properly 1`] = `
 {
-  "-29b1244f": {
-    "$id": "-29b1244f",
+  "-71e750ba": {
+    "$id": "-71e750ba",
+    "$ref": "#/dependencies/a/oneOf/1",
+  },
+  "-71e7547b": {
+    "$id": "-71e7547b",
+    "$ref": "#/dependencies/a/oneOf/0",
+  },
+  "138b0b13": {
+    "$id": "138b0b13",
     "properties": {
       "a": {
-        "enum": [
-          "int",
-        ],
+        "$ref": "#/definitions/needsA/properties/a",
       },
     },
     "type": "object",
   },
-  "-505ec9e6": {
-    "$id": "-505ec9e6",
+  "50aacf32": {
+    "$id": "50aacf32",
     "properties": {
       "a": {
-        "enum": [
-          "int",
-        ],
-      },
-      "b": {
-        "type": "integer",
-      },
-    },
-    Symbol(__rjsf_ref): "#/definitions/needsA",
-  },
-  "12882445": {
-    "$id": "12882445",
-    "anyOf": [
-      {
-        "required": [
-          "a",
-        ],
-      },
-      {
-        "required": [
-          "b",
-        ],
-      },
-    ],
-    "properties": {
-      "a": {
-        "enum": [
-          "bool",
-        ],
-      },
-      "b": {
-        "type": "boolean",
-      },
-    },
-    Symbol(__rjsf_ref): "#/definitions/needsB",
-  },
-  "4177356d": {
-    "$id": "4177356d",
-    "properties": {
-      "a": {
-        "enum": [
-          "bool",
-        ],
-      },
-      "b": {
-        "type": "boolean",
-      },
-    },
-    Symbol(__rjsf_ref): "#/definitions/needsB",
-  },
-  "63cb0c42": {
-    "$id": "63cb0c42",
-    "anyOf": [
-      {
-        "required": [
-          "a",
-        ],
-      },
-      {
-        "required": [
-          "b",
-        ],
-      },
-    ],
-    "properties": {
-      "a": {
-        "enum": [
-          "int",
-        ],
-      },
-      "b": {
-        "type": "integer",
-      },
-    },
-    Symbol(__rjsf_ref): "#/definitions/needsA",
-  },
-  "71dd1668": {
-    "$id": "71dd1668",
-    "properties": {
-      "a": {
-        "enum": [
-          "bool",
-        ],
+        "$ref": "#/definitions/needsB/properties/a",
       },
     },
     "type": "object",
@@ -463,13 +1364,9 @@ exports[`schemaParser() > parses schema dependencies with one of and refs proper
 
 exports[`schemaParser() > parses schema with a single condition 1`] = `
 {
-  "-33d8d73c": {
-    "$id": "-33d8d73c",
-    "properties": {
-      "country": {
-        "const": "United States of America",
-      },
-    },
+  "-49e91088": {
+    "$id": "-49e91088",
+    "$ref": "#/if",
   },
   "7a88ed97": {
     "$id": "7a88ed97",
@@ -510,27 +1407,13 @@ exports[`schemaParser() > parses schema with a single condition 1`] = `
 
 exports[`schemaParser() > parses schema with multiple conditions 1`] = `
 {
-  "-269ce7ef": {
-    "$id": "-269ce7ef",
-    "properties": {
-      "Animal": {
-        "const": "Dog",
-      },
-    },
-    "required": [
-      "Animal",
-    ],
+  "-24a14519": {
+    "$id": "-24a14519",
+    "$ref": "#/allOf/1/then/properties/Breed/allOf/1/if",
   },
-  "-5e82ba72": {
-    "$id": "-5e82ba72",
-    "properties": {
-      "BreedName": {
-        "const": "Dalmation",
-      },
-    },
-    "required": [
-      "BreedName",
-    ],
+  "-26561db8": {
+    "$id": "-26561db8",
+    "$ref": "#/allOf/1/then/properties/Breed/allOf/0/if",
   },
   "-61d82723": {
     "$id": "-61d82723",
@@ -672,65 +1555,30 @@ exports[`schemaParser() > parses schema with multiple conditions 1`] = `
     ],
     "type": "object",
   },
-  "-7b9d5dae": {
-    "$id": "-7b9d5dae",
-    "properties": {
-      "BreedName": {
-        "const": "Alsatian",
-      },
-    },
-    "required": [
-      "BreedName",
-    ],
+  "4b36ac8e": {
+    "$id": "4b36ac8e",
+    "$ref": "#/allOf/0/if",
   },
-  "6dc2a62b": {
-    "$id": "6dc2a62b",
-    "properties": {
-      "Animal": {
-        "const": "Cat",
-      },
-    },
-    "required": [
-      "Animal",
-    ],
+  "4ceb852d": {
+    "$id": "4ceb852d",
+    "$ref": "#/allOf/1/if",
   },
 }
 `;
 
 exports[`schemaParser() > parses schema with nested conditions 1`] = `
 {
-  "-f42a226": {
-    "$id": "-f42a226",
-    "properties": {
-      "state": {
-        "const": "New York",
-      },
-    },
-    "required": [
-      "state",
-    ],
+  "-49e91088": {
+    "$id": "-49e91088",
+    "$ref": "#/if",
   },
-  "14f43ce2": {
-    "$id": "14f43ce2",
-    "properties": {
-      "country": {
-        "const": "USA",
-      },
-    },
-    "required": [
-      "country",
-    ],
+  "3acf7a2a": {
+    "$id": "3acf7a2a",
+    "$ref": "#/then/if",
   },
-  "5ad8e931": {
-    "$id": "5ad8e931",
-    "properties": {
-      "state": {
-        "const": "California",
-      },
-    },
-    "required": [
-      "state",
-    ],
+  "5a59a11c": {
+    "$id": "5a59a11c",
+    "$ref": "#/then/else/if",
   },
   "767ff7c6": {
     "$id": "767ff7c6",
@@ -821,56 +1669,22 @@ exports[`schemaParser() > parses schema with nested conditions 1`] = `
 
 exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] = `
 {
-  "-1d49bf87": {
-    "$id": "-1d49bf87",
-    "properties": {
-      "employee_accounts": {
-        "const": true,
-      },
-      "update_absences": {
-        "oneOf": [
-          {
-            "const": "BOTH",
-            "title": "Both",
-          },
-        ],
-        "title": "Update Absences",
-        "type": "string",
-      },
-    },
-  },
-  "-34afb4c9": {
-    "$id": "-34afb4c9",
-    "properties": {
-      "permitted_extension": {
-        "title": "Permitted Extension",
-        "type": "integer",
-      },
-      "update_absences": {
-        "const": "MEDICAL_ONLY",
-      },
-    },
-  },
-  "-37c29d49": {
-    "$id": "-37c29d49",
+  "-29ba0ff9": {
+    "$id": "-29ba0ff9",
     "properties": {
       "update_absences": {
-        "const": "NON_MEDICAL_ONLY",
+        "$ref": "#/dependencies/update_absences/oneOf/0/properties/update_absences",
       },
     },
     "type": "object",
   },
-  "-3ecec277": {
-    "$id": "-3ecec277",
-    "properties": {
-      "permitted_extension": {
-        "title": "Permitted Extension",
-        "type": "integer",
-      },
-      "update_absences": {
-        "const": "NON_MEDICAL_ONLY",
-      },
-    },
+  "-2d3e9a05": {
+    "$id": "-2d3e9a05",
+    "$ref": "#/dependencies/employee_accounts/oneOf/0",
+  },
+  "-3b0af5b7": {
+    "$id": "-3b0af5b7",
+    "$ref": "#/dependencies/employee_accounts/oneOf/0/properties/update_absences/oneOf/0",
   },
   "-406a5a54": {
     "$id": "-406a5a54",
@@ -942,329 +1756,86 @@ exports[`schemaParser() > parses schema with oneof and nested dependencies 1`] =
     },
     "type": "object",
   },
-  "-45ced7c": {
-    "$id": "-45ced7c",
-    "anyOf": [
-      {
-        "required": [
-          "permitted_extension",
-        ],
-      },
-      {
-        "required": [
-          "update_absences",
-        ],
-      },
-    ],
-    "properties": {
-      "permitted_extension": {
-        "title": "Permitted Extension",
-        "type": "integer",
-      },
-      "update_absences": {
-        "const": "NON_MEDICAL_ONLY",
-      },
-    },
-  },
-  "-7a6dd81b": {
-    "$id": "-7a6dd81b",
-    "properties": {
-      "update_absences": {
-        "const": "MEDICAL_ONLY",
-      },
-    },
-    "type": "object",
-  },
-  "-7c3c9229": {
-    "$id": "-7c3c9229",
-    "const": "BOTH",
-    "title": "Both",
-  },
-  "1e15c7e": {
-    "$id": "1e15c7e",
-    "properties": {
-      "permitted_extension": {
-        "title": "Permitted Extension",
-        "type": "integer",
-      },
-      "update_absences": {
-        "const": "BOTH",
-      },
-    },
-  },
-  "21f592dd": {
-    "$id": "21f592dd",
-    "anyOf": [
-      {
-        "required": [
-          "employee_accounts",
-        ],
-      },
-      {
-        "required": [
-          "update_absences",
-        ],
-      },
-    ],
+  "-47ec390e": {
+    "$id": "-47ec390e",
     "properties": {
       "employee_accounts": {
-        "const": true,
-      },
-      "update_absences": {
-        "oneOf": [
-          {
-            "const": "BOTH",
-            "title": "Both",
-          },
-        ],
-        "title": "Update Absences",
-        "type": "string",
-      },
-    },
-  },
-  "3a28e528": {
-    "$id": "3a28e528",
-    "properties": {
-      "employee_accounts": {
-        "const": true,
+        "$ref": "#/dependencies/employee_accounts/oneOf/0/properties/employee_accounts",
       },
     },
     "type": "object",
   },
-  "528691f9": {
-    "$id": "528691f9",
-    "anyOf": [
-      {
-        "required": [
-          "permitted_extension",
-        ],
-      },
-      {
-        "required": [
-          "update_absences",
-        ],
-      },
-    ],
-    "properties": {
-      "permitted_extension": {
-        "title": "Permitted Extension",
-        "type": "integer",
-      },
-      "update_absences": {
-        "const": "BOTH",
-      },
-    },
-  },
-  "934b22c": {
-    "$id": "934b22c",
+  "101091e6": {
+    "$id": "101091e6",
     "properties": {
       "update_absences": {
-        "const": "BOTH",
+        "$ref": "#/dependencies/update_absences/oneOf/1/properties/update_absences",
       },
     },
     "type": "object",
   },
-  "ed1d5b2": {
-    "$id": "ed1d5b2",
-    "anyOf": [
-      {
-        "required": [
-          "permitted_extension",
-        ],
-      },
-      {
-        "required": [
-          "update_absences",
-        ],
-      },
-    ],
+  "12d14c70": {
+    "$id": "12d14c70",
+    "$ref": "#/dependencies/update_absences/oneOf/0",
+  },
+  "12d15031": {
+    "$id": "12d15031",
+    "$ref": "#/dependencies/update_absences/oneOf/1",
+  },
+  "12d153f2": {
+    "$id": "12d153f2",
+    "$ref": "#/dependencies/update_absences/oneOf/2",
+  },
+  "49db33c5": {
+    "$id": "49db33c5",
     "properties": {
-      "permitted_extension": {
-        "title": "Permitted Extension",
-        "type": "integer",
-      },
       "update_absences": {
-        "const": "MEDICAL_ONLY",
+        "$ref": "#/dependencies/update_absences/oneOf/2/properties/update_absences",
       },
     },
+    "type": "object",
   },
 }
 `;
 
 exports[`schemaParser() > parses superSchema properly 1`] = `
 {
-  "-130bae51": {
-    "$id": "-130bae51",
-    "anyOf": [
+  "-2d56bf93": {
+    "$id": "-2d56bf93",
+    "$ref": "#/properties/multi/anyOf/0",
+  },
+  "-32cbe816": {
+    "$id": "-32cbe816",
+    "allOf": [
       {
-        "required": [
-          "name",
-        ],
+        "properties": {
+          "choice": {
+            "const": "one",
+            "type": "string",
+          },
+          "other": {
+            "type": "number",
+          },
+        },
+        "type": "object",
       },
     ],
-    "properties": {
-      "name": {
-        "type": "string",
-      },
-    },
-    "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/foo",
   },
-  "-1e3c57ec": {
-    "$id": "-1e3c57ec",
-    "anyOf": [
-      {
-        "required": [
-          "choice",
-        ],
-      },
-      {
-        "required": [
-          "more",
-        ],
-      },
-    ],
-    "properties": {
-      "choice": {
-        "const": "two",
-        "type": "string",
-      },
-      "more": {
-        "type": "string",
-      },
-    },
-    "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/choice2",
+  "-66fb67a0": {
+    "$id": "-66fb67a0",
+    "$ref": "#/anyOf/1",
   },
-  "-284587a1": {
-    "$id": "-284587a1",
-    "anyOf": [
-      {
-        "required": [
-          "idCode",
-        ],
-      },
-    ],
-    "properties": {
-      "idCode": {
-        "$ref": "#/definitions/test",
-      },
-    },
-    "title": "Second method of identification",
+  "-66fb6b61": {
+    "$id": "-66fb6b61",
+    "$ref": "#/anyOf/0",
   },
-  "-365ff3a7": {
-    "$id": "-365ff3a7",
-    "properties": {
-      "choice": {
-        "const": "two",
-        "type": "string",
-      },
-      "more": {
-        "type": "string",
-      },
-    },
-    "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/choice2",
+  "-75284651": {
+    "$id": "-75284651",
+    "$ref": "#/properties/single/oneOf/1",
   },
-  "-3c1db7d0": {
-    "$id": "-3c1db7d0",
-    "properties": {
-      "name": {
-        "type": "string",
-      },
-    },
-    "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/foo",
-  },
-  "-42566fe2": {
-    "$id": "-42566fe2",
-    "anyOf": [
-      {
-        "required": [
-          "choice",
-        ],
-      },
-      {
-        "required": [
-          "other",
-        ],
-      },
-    ],
-    "properties": {
-      "choice": {
-        "const": "one",
-        "type": "string",
-      },
-      "other": {
-        "type": "number",
-      },
-    },
-    "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/choice1",
-  },
-  "-fcbf823": {
-    "$id": "-fcbf823",
-    "properties": {
-      "idCode": {
-        "$ref": "#/definitions/test",
-      },
-    },
-    "title": "Second method of identification",
-  },
-  "2f1c1e4d": {
-    "$id": "2f1c1e4d",
-    "properties": {
-      "firstName": {
-        "title": "First name",
-        "type": "string",
-      },
-      "lastName": {
-        "$ref": "#/definitions/test",
-      },
-    },
-    "title": "First method of identification",
-  },
-  "32b62378": {
-    "$id": "32b62378",
-    "properties": {
-      "choice": {
-        "const": "one",
-        "type": "string",
-      },
-      "other": {
-        "type": "number",
-      },
-    },
-    "required": [
-      "more",
-    ],
-    "type": "object",
-    Symbol(__rjsf_ref): "#/definitions/choice1",
-  },
-  "7cf7e824": {
-    "$id": "7cf7e824",
-    "anyOf": [
-      {
-        "required": [
-          "firstName",
-        ],
-      },
-      {
-        "required": [
-          "lastName",
-        ],
-      },
-    ],
-    "properties": {
-      "firstName": {
-        "title": "First name",
-        "type": "string",
-      },
-      "lastName": {
-        "$ref": "#/definitions/test",
-      },
-    },
-    "title": "First method of identification",
+  "-75284a12": {
+    "$id": "-75284a12",
+    "$ref": "#/properties/single/oneOf/0",
   },
   "super-schema": {
     "$id": "super-schema",

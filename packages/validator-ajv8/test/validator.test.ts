@@ -24,6 +24,7 @@ import { Ajv2020 } from 'ajv/dist/2020.js';
 import metaSchemaDraft6 from 'ajv/lib/refs/json-schema-draft-06.json' with { type: 'json' };
 import type { Mock } from 'vitest';
 
+import customizeValidator from '../src/customizeValidator.ts';
 import type { Localizer } from '../src/index.ts';
 import AJV8Validator from '../src/validator.ts';
 import { expectWarn } from './harness/testData.ts';
@@ -3488,5 +3489,32 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
     expect(validator.isValid(own, 1, rootB)).toBe(true);
     expect(validator.isValid(own, 'str', rootB)).toBe(false);
     expect(validator.isValid(own, 'str', rootA)).toBe(true);
+  });
+});
+
+describe('AJV8Validator validating a subschema by its place in the root', () => {
+  it('does not answer a pointer with what it compiled for an earlier root', () => {
+    const validator = customizeValidator();
+    const pointer: RJSFSchema = { $ref: '#/definitions/X' };
+    expect(validator.isValid(pointer, 's', { definitions: { X: { type: 'string' } } })).toBe(true);
+    const numberRoot: RJSFSchema = { definitions: { X: { type: 'number' } } };
+    expect(validator.isValid(pointer, 's', numberRoot)).toBe(false);
+    expect(validator.isValid(pointer, 5, numberRoot)).toBe(true);
+  });
+  it('resolves a pointer into a root that carries an $id', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a dependencies entry named like a keyword', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      properties: { type: { type: 'string' } },
+      dependencies: { type: { oneOf: [{ properties: { type: { const: 'a' } } }] } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
   });
 });

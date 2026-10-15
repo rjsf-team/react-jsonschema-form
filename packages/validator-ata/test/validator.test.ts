@@ -584,3 +584,30 @@ describe('ATAValidator resolving a $ref local to the root', () => {
     expect(validator.isValid(ref, 's', edited)).toBe(false);
   });
 });
+
+describe('ATAValidator validating a subschema by its place in the root', () => {
+  it('does not answer a pointer with what it compiled for an earlier root', () => {
+    const validator = customizeValidator();
+    const pointer: RJSFSchema = { $ref: '#/definitions/X' };
+    expect(validator.isValid(pointer, 's', { definitions: { X: { type: 'string' } } })).toBe(true);
+    const numberRoot: RJSFSchema = { definitions: { X: { type: 'number' } } };
+    expect(validator.isValid(pointer, 's', numberRoot)).toBe(false);
+    expect(validator.isValid(pointer, 5, numberRoot)).toBe(true);
+  });
+  it('resolves a pointer into a root that carries an $id', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://example.com/root.json', definitions: { X: { type: 'string' } } };
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
+    expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
+  });
+  it('resolves a pointer into a dependencies entry named like a keyword', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      properties: { type: { type: 'string' } },
+      dependencies: { type: { oneOf: [{ properties: { type: { const: 'a' } } }] } },
+    };
+    const pointer: RJSFSchema = { $ref: '#/dependencies/type/oneOf/0/properties/type' };
+    expect(validator.isValid(pointer, 'a', rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, 'b', rootSchema)).toBe(false);
+  });
+});

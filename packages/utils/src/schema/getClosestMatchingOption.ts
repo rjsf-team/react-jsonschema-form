@@ -1,26 +1,12 @@
-import { REF_KEY, JUNK_OPTION_ID } from '../constants.ts';
+import { REF_KEY } from '../constants.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
-import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDiscriminator.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
-import getFirstMatchingOption from './getFirstMatchingOption.ts';
+import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
 import { resolveOwnRef } from './retrieveSchema.ts';
-
-/** A junk option used to determine when the getFirstMatchingOption call really matches an option rather than returning
- * the first item
- */
-export const JUNK_OPTION: StrictRJSFSchema = {
-  type: 'object',
-  $id: JUNK_OPTION_ID,
-  properties: {
-    __not_really_there__: {
-      type: 'number',
-    },
-  },
-};
 
 /** Returns the score of one property's `formValue` against the `value` schema describing it, as
  * `calculateIndexScore()` adds it up:
@@ -121,29 +107,19 @@ export function calculateIndexScore<
   return typeof schema.type === 'string' && schema.type === guessType(formData) ? 1 : 0;
 }
 
-/** Determines which of the given `options` provided most closely matches the `formData`. Using
- * `getFirstMatchingOption()` to match two schemas that differ only by the readOnly, default or const value of a field
- * based on the `formData` and returns 0 when there is no match. Rather than passing in all the `options` at once to
- * this utility, instead an array of valid option indexes is created by iterating over the list of options, call
- * `getFirstMatchingOptions` with a list of one junk option and one good option, seeing if the good option is considered
- * matched.
- *
- * Once the list of valid indexes is created, if there is only one valid index, just return it. Otherwise, if there are
- * no valid indexes, then fill the valid indexes array with the indexes of all the options. Next, the index of the
- * option with the highest score is determined by iterating over the list of valid options, calling
- * `calculateIndexScore()` on each, comparing it against the current best score, and returning the index of the one that
- * eventually has the best score.
+/** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
+ * with each option matched as `optionMatches()` matches it under `relax`
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
  * @param formData - The form data associated with the schema
- * @param options - The list of options that can be selected from
- * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
- * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
- *          determine which option is selected
- * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+ * @param options - The list of options that can be selected from, boolean ones included
+ * @param selectedOption - The index of the currently selected option, -1 for none
+ * @param relax - Whether an option's `additionalProperties: false` is relaxed for matching
+ * @param [discriminatorField] - The name of the property the options are told apart by
+ * @returns - The index of the closest option, or the `selectedOption` if no option is closer
  */
-export default function getClosestMatchingOption<
+export function closestOption<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
@@ -151,28 +127,24 @@ export default function getClosestMatchingOption<
   context: SchemaContext<S, F>,
   rootSchema: S,
   formData: T | undefined,
-  options: S[],
-  selectedOption = -1,
+  options: readonly unknown[],
+  selectedOption: number,
+  relax: boolean,
   discriminatorField?: string,
 ): number {
-  // First resolve each option's own ref
-  const resolvedOptions = options.map((option) => resolveOwnRef<S>(option, rootSchema));
-
-  const simpleDiscriminatorMatch = getOptionMatchingSimpleDiscriminator(formData, options, discriminatorField);
-  if (typeof simpleDiscriminatorMatch === 'number') {
-    return simpleDiscriminatorMatch;
+  const optionNodes = options.map((option) => optionNodeOf<S>(option, rootSchema));
+  const simpleMatch = simpleDiscriminatorMatch(optionNodes, formData, discriminatorField);
+  if (simpleMatch !== undefined) {
+    return simpleMatch;
   }
+  const resolvedOptions = options.map((option) =>
+    isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : undefined,
+  );
 
   // Reduce the array of options down to a list of the indexes that are considered matching options
-  const allValidIndexes = resolvedOptions.reduce((validList: number[], option, index: number) => {
-    const testOptions: S[] = [JUNK_OPTION as S, option];
-    const match = getFirstMatchingOption<T, S, F>(context, formData, testOptions, rootSchema, discriminatorField);
-    // The match is the real option, so add its index to list of valid indexes
-    if (match === 1) {
-      validList.push(index);
-    }
-    return validList;
-  }, []);
+  const allValidIndexes = optionNodes.flatMap((option, index) =>
+    formData !== undefined && optionMatches<S, F>(context, formData, option, relax, discriminatorField) ? [index] : [],
+  );
 
   // There is only one valid index, so return it!
   if (allValidIndexes.length === 1) {
@@ -207,4 +179,35 @@ export default function getClosestMatchingOption<
   }
 
   return bestIndex;
+}
+
+/** Determines which of the given `options` provided most closely matches the `formData`. Returns the index of the one
+ * option that matches the data, as `getFirstMatchingOption()` matches an option, when exactly one does.
+ *
+ * Otherwise the options that match, or all of them when none does, are scored by calling `calculateIndexScore()` on
+ * each, and the index of the one with the best score is returned. The `selectedOption` is kept when no option scores
+ * above it or every option scores the same.
+ *
+ * @param context - The `SchemaContext` that will be forwarded to all the APIs
+ * @param rootSchema - The root JSON schema of the entire form
+ * @param formData - The form data associated with the schema
+ * @param options - The list of options that can be selected from
+ * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
+ * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
+ *          determine which option is selected
+ * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
+ */
+export default function getClosestMatchingOption<
+  T = unknown,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = FormContextType,
+>(
+  context: SchemaContext<S, F>,
+  rootSchema: S,
+  formData: T | undefined,
+  options: S[],
+  selectedOption = -1,
+  discriminatorField?: string,
+): number {
+  return closestOption<T, S, F>(context, rootSchema, formData, options, selectedOption, false, discriminatorField);
 }
