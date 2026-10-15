@@ -293,6 +293,31 @@ describe('option selection as form state', () => {
   });
 });
 
+describe('cycle expansion as form state', () => {
+  const schema: RJSFSchema = {
+    definitions: {
+      node: { type: 'object', properties: { name: { type: 'string' }, child: { $ref: '#/definitions/node' } } },
+    },
+    type: 'array',
+    items: { $ref: '#/definitions/node' },
+  };
+
+  it('keeps an expansion when the field mounts again, and moves it with the array item', async () => {
+    const { node, rerender } = createFormComponent({ schema, initialFormData: [{ name: 'a' }, { name: 'b' }] });
+    await user.click(elementOf(node, '#root_0_child-button'));
+    expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
+
+    rerender({ schema, uiSchema: { items: { 'ui:field': () => null } } });
+    rerender({ schema, uiSchema: {} });
+    expect(node.querySelector('#root_0_child_name')).toBeInTheDocument();
+
+    await user.click(node.querySelectorAll('.rjsf-array-item-move-down')[0]);
+
+    expect(node.querySelector('#root_0_child-button')).toBeInTheDocument();
+    expect(node.querySelector('#root_1_child_name')).toBeInTheDocument();
+  });
+});
+
 function getSelected(select: HTMLSelectElement) {
   return select.selectedOptions[0]?.textContent;
 }
