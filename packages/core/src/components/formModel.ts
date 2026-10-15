@@ -39,6 +39,7 @@ import {
   toIChangeEvent,
   validateFormData,
 } from './formState.ts';
+import { createUiState } from './uiState.ts';
 
 /** How an operation calls the consumer's callback: directly for a handle method, whose caller catches the throw, or
  * through `callWithDeferredThrow()` for a field, which can report from an Effect inside React's commit phase, where a
@@ -234,6 +235,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let epoch = 0;
   // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
   let announced: AnnouncedMove | undefined;
+  const uiState = createUiState();
   const propose = (next: FormState<T, S, F>) => {
     // `commit()` freezes self-owned data; a proposal never reaches it
     if (isDevelopment) {
@@ -399,6 +401,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const move = announced?.fieldPath === fieldPath ? announced : undefined;
     if (move) {
       announced = undefined;
+      uiState.move(fieldPath, move.newOwnKeyOf ?? move.newKeyOf);
     }
     const edit: PendingChange<T> = {
       newValue,
@@ -409,6 +412,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       dropsOwnErrors: move?.dropsOwnErrors,
     };
     const next = applyChange(pending ?? start, edit, props);
+    uiState.edited(fieldPath, (path) => getAt(next.formData, fieldPathToList(path)));
     if (!start.isControlled) {
       // A reentrant operation may have committed while this one was being calculated, so report what was committed
       const committed = commit(start, next, (base) => applyChange(base, edit, props));
@@ -567,6 +571,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       const committed = commit(start, applyReset(start, props), (base) => applyReset(base, props));
+      uiState.clear();
       // A reset replaces whatever a parent holds with the reset data
       reportToCaller((latest) => latest.onChange?.(toIChangeEvent(committed)));
     },
@@ -633,6 +638,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         }
       }
     },
+    uiState,
     /** The latest value at `path`: a self-owned edit or a pending proposal, else the rendered data */
     readField: <D>(path: FieldPath) => getAt<D>((pending ?? state).formData, fieldPathToList(path)),
     getSnapshot: () => snapshot,

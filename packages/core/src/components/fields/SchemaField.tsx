@@ -21,6 +21,7 @@ import {
   fieldPathToId,
   getByPath,
   getDeprecatedHandling,
+  getDiscriminatorFieldFromSchema,
   getFieldClassNames,
   getFieldTypeForWidget,
   getSchemaOwnTypes,
@@ -40,6 +41,7 @@ import {
   isFormDataAvailable,
   logOnce,
   omitConsumedStyling,
+  rendersOwnFieldBesideOption,
   resolveConstantOptions,
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
@@ -57,6 +59,7 @@ import {
 import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
+import useOptionSelection from '../../hooks/useOptionSelection.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
@@ -444,17 +447,6 @@ function SchemaFieldRender<
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
   const readsFormData = useReadsFormData(SchemaField);
 
-  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
-   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
-   */
-  const handleFieldComponentChange = useCallback(
-    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      const theId = id || fieldId;
-      onChange(newFormData, changedFieldPath, newErrorSchema, theId);
-    },
-    [fieldId, onChange],
-  );
-
   const resolvedUiSchema = useMemo(
     () => resolveUiSchema<T, S, F>(_schema, _uiSchema, registry),
     [_schema, _uiSchema, registry],
@@ -563,6 +555,46 @@ function SchemaFieldRender<
           )
         : undefined,
     [retrievesOptions, xxxOfKey, schema, schemaUtils, formData],
+  );
+
+  // The option shown is the form's state, which `AnyOfField`/`OneOfField` read and write too. An object renders its own
+  // field beside the option, whose extra keys are stubbed once, with the selected option: a key the option declares is
+  // left to it, and any other is described by the object's extra-key keywords and the option's together
+  const { selectedOption, keepSelection } = useOptionSelection<T, S, F>(
+    registry,
+    fieldPath,
+    xxxOfOptions,
+    formData,
+    getDiscriminatorFieldFromSchema<S>(schema),
+  );
+  const fieldSchema = useMemo(
+    () =>
+      xxxOfOptions && selectedOption >= 0 && rendersOwnFieldBesideOption<S>(schema)
+        ? schemaUtils.retrieveSchema(_schema, formData, false, selectedOption)
+        : schema,
+    [xxxOfOptions, selectedOption, schema, schemaUtils, _schema, formData],
+  );
+  const hasOptions = xxxOfOptions !== undefined;
+
+  /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
+   * `onChange` chain if it is not already being provided from a deeper level in the hierarchy. An edit inside a field
+   * offering options keeps the option it is shown under first
+   */
+  const handleFieldComponentChange = useCallback(
+    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      if (hasOptions) {
+        keepSelection();
+      }
+      onChange(newFormData, changedFieldPath, newErrorSchema, id || fieldId);
+    },
+    [fieldId, onChange, hasOptions, keepSelection],
+  );
+  const handleOptionFieldChange = useCallback(
+    (newFormData: T | undefined, changedFieldPath: FieldPath, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      keepSelection();
+      onChange(newFormData, changedFieldPath, newErrorSchema, id);
+    },
+    [onChange, keepSelection],
   );
 
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
@@ -679,7 +711,7 @@ function SchemaFieldRender<
       {...props}
       onChange={handleFieldComponentChange}
       id={fieldComponentId}
-      schema={schema}
+      schema={fieldSchema}
       uiSchema={fieldUiSchema}
       {...(fieldUiRequired !== undefined ? { required: effectiveRequired } : {})}
       disabled={disabled}
@@ -811,7 +843,7 @@ function SchemaFieldRender<
                 fieldPath={fieldPath}
                 id={fieldId}
                 onBlur={props.onBlur}
-                onChange={props.onChange}
+                onChange={handleOptionFieldChange}
                 onFocus={props.onFocus}
                 options={xxxOfOptions}
                 registry={registry}

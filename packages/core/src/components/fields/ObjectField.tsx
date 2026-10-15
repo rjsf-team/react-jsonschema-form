@@ -96,22 +96,21 @@ function getDefaultValue<
  * matches another one, so that option's type is the one the field the user is handed renders and a seed of any other
  * type is a value that field cannot show.
  *
- * Both reads are given the `rootSchema`, so an option spelled as a `$ref` -- which names no type of its own, where the
- * field `MultiSchemaField` renders for it takes the type of what it refers to -- is read through the definition it
+ * The subschema is read with its options resolved, so an option spelled as a `$ref` -- which names no type of its own,
+ * where the field `MultiSchemaField` renders for it takes the type of what it refers to -- is read as the definition it
  * names, as `retrieveSchema()` reads the very same options when it stubs the property. An option that leaves the type
  * to options that disagree again leaves the seed to the `New Value` a property no schema names a type for starts at.
  *
- * @param subSchema - The schema describing the additional property, with its own `$ref`s resolved
- * @param rootSchema - The root schema an option's `$ref` names a definition of
+ * @param subSchema - The schema describing the additional property, resolved with its options
  * @returns - The type to seed the new property with, or undefined when no option names one either
  */
-function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S, rootSchema: S): string | undefined {
-  const type = getAdditionalPropertyType<S>(subSchema, rootSchema);
+function getSeedType<S extends StrictRJSFSchema = RJSFSchema>(subSchema: S): string | undefined {
+  const type = getAdditionalPropertyType<S>(subSchema);
   if (type !== undefined) {
     return type;
   }
   const [firstOption] = getXxxOfOptions<S>(subSchema)?.options ?? [];
-  return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption, rootSchema) : undefined;
+  return isObject(firstOption) ? getAdditionalPropertyType<S>(firstOption) : undefined;
 }
 
 function isAdditionalPropertySchema(schema: unknown) {
@@ -362,7 +361,7 @@ export default function ObjectField<
   F extends FormContextType = FormContextType,
 >(props: FieldProps<T, S, F>) {
   const {
-    schema: rawSchema,
+    schema,
     uiSchema: rawUiSchema,
     formData,
     errorSchema,
@@ -390,10 +389,6 @@ export default function ObjectField<
   );
   const readData = useCallback(() => view.readData(view.read()), [view]);
 
-  const schema: S = useMemo(
-    () => schemaUtils.retrieveSchema(rawSchema, formData, true),
-    [schemaUtils, rawSchema, formData],
-  );
   // Read by the callbacks a property template holds onto rather than closed over by them, as the form data is above:
   // the resolved schema changes identity whenever a key is added, renamed or removed, and a callback that changed with
   // it would re-render every property beside the one that did. Written once the render it belongs to has committed, so
@@ -586,7 +581,7 @@ export default function ObjectField<
       // a typeless `enum` of numbers as the number its values hold where a field's own type would call it a string
       const type = Array.isArray(resolvedKeySchema.type)
         ? getFieldTypeForWidget(resolvedKeySchema, widget)
-        : getSeedType<S>(resolvedKeySchema, rootSchema);
+        : getSeedType<S>(schemaUtils.retrieveSchema(resolvedKeySchema, undefined, true));
       // A select starts on its type's zero value only when that is an option the user can pick: neither a string's
       // `'New Value'` nor a number's `0` need be, so otherwise it starts on the first one it shows enabled
       let firstOption: EnumOptionsType<S> | undefined;

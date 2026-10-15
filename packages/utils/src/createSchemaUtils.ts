@@ -46,10 +46,10 @@ class SchemaUtils<
   /** The last `retrieveSchema()` result per schema object, used only as the base for `replaceEqualDeep()` so a
    * recomputed schema keeps the identity of every subschema that did not change. Nothing is served from it directly,
    * so a `rawFormData` object mutated in place after a call is still resolved afresh. Resolving the `anyOf`/`oneOf`
-   * refs yields a differently shaped result, so it gets a slot of its own rather than evicting the plain one.
+   * refs, or stubbing the extra keys with a selected option, yields a differently shaped result, so each gets a slot of
+   * its own rather than evicting the plain one.
    */
-  private lastRetrievedSchemas = new WeakMap<object, S>();
-  private lastRetrievedSchemasWithRefs = new WeakMap<object, S>();
+  private readonly lastRetrievedSchemas = new WeakMap<object, Map<string, S>>();
 
   /** Constructs the `SchemaUtils` instance with the given `context` and `rootSchema` stored as instance variables
    *
@@ -300,19 +300,30 @@ class SchemaUtils<
    * @param schema - The schema for which retrieving a schema is desired
    * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
    * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
+   * @param [selectedOption] - The index of the `anyOf`/`oneOf` option selected for the field, see `retrieveSchema()`
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
+  retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean, selectedOption?: number) {
     // `Form` renders an error for a non-object schema instead of throwing, so one reaches here despite the type, and a
     // `WeakMap` refuses it as a key
     const cacheKey = schema !== null && typeof schema === 'object' ? schema : undefined;
-    const cache = resolveAnyOfOrOneOfRefs ? this.lastRetrievedSchemasWithRefs : this.lastRetrievedSchemas;
+    const slot = `${Boolean(resolveAnyOfOrOneOfRefs)}|${selectedOption}`;
+    const results = cacheKey && this.lastRetrievedSchemas.get(cacheKey);
     const result = replaceEqualDeep(
-      cacheKey && cache.get(cacheKey),
-      retrieveSchema<T, S, F>(this.context, schema, this.rootSchema, rawFormData, resolveAnyOfOrOneOfRefs),
+      results?.get(slot),
+      retrieveSchema<T, S, F>(
+        this.context,
+        schema,
+        this.rootSchema,
+        rawFormData,
+        resolveAnyOfOrOneOfRefs,
+        selectedOption,
+      ),
     );
-    if (cacheKey) {
-      cache.set(cacheKey, result);
+    if (results) {
+      results.set(slot, result);
+    } else if (cacheKey) {
+      this.lastRetrievedSchemas.set(cacheKey, new Map([[slot, result]]));
     }
     return result;
   }

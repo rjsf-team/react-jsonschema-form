@@ -108,13 +108,20 @@ describe('matching options through the schema graph', () => {
     const rootSchema: RJSFSchema = { type: 'object', dependencies: { a: ['b'] }, oneOf: [] };
     expect(retrieveSchema({ validator: miniValidator() }, rootSchema, rootSchema, {})).not.toHaveProperty('oneOf');
   });
-  it('leaves unstubbed a key an option declares through the then of a boolean if', () => {
+  it('leaves unstubbed a key the selected option declares through the then of a boolean if', () => {
     const rootSchema: RJSFSchema = {
       type: 'object',
       additionalProperties: { type: 'string' },
       oneOf: [{ if: true, then: { properties: { x: { type: 'number' } } } }],
     };
-    const retrieved = retrieveSchema({ validator: miniValidator() }, rootSchema, rootSchema, { x: 1, y: 'y' });
+    const retrieved = retrieveSchema(
+      { validator: miniValidator() },
+      rootSchema,
+      rootSchema,
+      { x: 1, y: 'y' },
+      false,
+      0,
+    );
     expect(Object.keys(retrieved.properties ?? {})).toEqual(['y']);
   });
   describe('options sharing a base that declares a key the data holds', () => {
