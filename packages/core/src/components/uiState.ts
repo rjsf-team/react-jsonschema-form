@@ -6,7 +6,7 @@ import type {
   SchemaUtilsType,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { deepEquals, fieldPathFromList, fieldPathToList, getValidationTarget } from '@rjsf/utils';
+import { deepEquals, fieldPathFromList, fieldPathToList, getByPath, getValidationTarget } from '@rjsf/utils';
 
 import type { KeyMove } from './formState.ts';
 
@@ -41,7 +41,8 @@ export function optionListKey<S extends StrictRJSFSchema>(options: readonly S[],
 /** The option a field shows for `formData`. With no `selection`, the option `getClosestMatchingOption()` picks. A
  * selection holds for the data in its `holdsFor`, and while `holds` says an edit inside the field is being made. Other
  * data arrived from outside the field and is matched again, with the selection preferred where it fits the data as
- * well as any other option.
+ * well as any other option. Data holding a value for the declared `discriminator` is always matched: the discriminator
+ * names the option, so an edit to it is a switch.
  *
  * @param schemaUtils - The schema utilities to match with
  * @param selection - The stored selection, if any
@@ -62,7 +63,13 @@ export function shownOption<T, S extends StrictRJSFSchema, F extends FormContext
   if (options.length === 0) {
     return -1;
   }
-  if (selection !== undefined && selection.index < options.length && (holds || isHeldFor(selection, formData))) {
+  const isDiscriminated = discriminator !== undefined && getByPath(formData, discriminator) !== undefined;
+  if (
+    selection !== undefined &&
+    selection.index < options.length &&
+    !isDiscriminated &&
+    (holds || isHeldFor(selection, formData))
+  ) {
     return selection.index;
   }
   return schemaUtils.getClosestMatchingOption(formData, [...options], selection?.index ?? -1, discriminator);
@@ -83,11 +90,14 @@ export function dataOf(value: unknown): unknown {
  *
  * @param uiState - The form's option selections and cycle expansions
  * @param schemaUtils - The schema utilities the form renders with
+ * @param [editedPath] - The path of the edit being made, whose field and the fields above it keep their selections, as
+ *        they do when the form renders the edit
  * @returns - The field state
  */
 export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
   uiState: UiState,
   schemaUtils: SchemaUtilsType<T, S, F>,
+  editedPath?: FieldPathList,
 ): FormFieldState<S> {
   const rootSchema = schemaUtils.getRootSchema();
   return {
@@ -98,6 +108,7 @@ export function fieldStateOf<T, S extends StrictRJSFSchema, F extends FormContex
         options,
         dataOf<T>(formData),
         discriminator,
+        editedPath !== undefined && isAtOrAbove(fieldPath, editedPath),
       ),
     isExpanded: (fieldPath) => uiState.isExpanded(fieldPath),
   };

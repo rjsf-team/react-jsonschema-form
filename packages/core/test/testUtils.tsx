@@ -35,6 +35,14 @@ export function input(container: HTMLElement, id: string) {
   return element;
 }
 
+export function elementOf(node: ParentNode, selector: string) {
+  const element = node.querySelector(selector);
+  if (!element) {
+    throw new Error(`There is no ${selector}`);
+  }
+  return element;
+}
+
 /** Collects what React reports to `window` while `run` runs: an error thrown from an event handler goes there instead
  * of to the dispatcher
  */
