@@ -12,6 +12,7 @@ import {
   createFormRef,
   elementOf,
   errorListMessages,
+  getSelectedOptionValue,
   handleOf,
   submitForm,
 } from './testUtils.tsx';
@@ -261,7 +262,7 @@ describe('option selection as form state', () => {
     expect(node.querySelector('#root_w_p_extra')).toHaveValue('from-root');
   });
 
-  it('matches each option list once per level of data, so the matching grows linearly with depth (#4990)', () => {
+  describe('options that refer to one another across definitions (#4990)', () => {
     const names = ['A', 'B', 'C', 'D', 'E'];
     const definitions = Object.fromEntries(
       names.map((name): [string, RJSFSchema] => [
@@ -285,16 +286,32 @@ describe('option selection as form state', () => {
       oneOf: [{ type: 'null', title: 'None' }, ...names.map((name) => ({ $ref: `#/definitions/${name}` }))],
     };
     const nested = (depth: number): unknown => (depth === 0 ? null : { child: nested(depth - 1) });
-    const counts = [1, 2, 3, 4, 5].map((depth) => {
-      const counting = customizeValidator();
-      const isValid = vi.spyOn(counting, 'isValid');
-      createFormComponent({ schema, initialFormData: nested(depth) }, counting);
-      return isValid.mock.calls.length;
-    });
-    const steps = counts.slice(1).map((count, index) => count - counts[index]);
 
-    // Before, each level multiplied the matching done below it by the number of options it scored
-    expect(new Set(steps).size).toBe(1);
+    it('matches each option list once per level of data, so the matching grows linearly with depth', () => {
+      const counts = [1, 2, 3, 4, 5].map((depth) => {
+        const counting = customizeValidator();
+        const isValid = vi.spyOn(counting, 'isValid');
+        createFormComponent({ schema, initialFormData: nested(depth) }, counting);
+        return isValid.mock.calls.length;
+      });
+      const steps = counts.slice(1).map((count, index) => count - counts[index]);
+
+      // Before, each level multiplied the matching done below it by the number of options it scored
+      expect(new Set(steps).size).toBe(1);
+    });
+
+    it('opens every level the data holds on an option that fits it, down to the None that ends it', () => {
+      const { node } = createFormComponent({ schema, initialFormData: nested(3) });
+
+      expect(ids(node, 'select')).toEqual([
+        'root__oneof_select',
+        'root_child__oneof_select',
+        'root_child_child__oneof_select',
+        'root_child_child_child__oneof_select',
+      ]);
+      expect(getSelectedOptionValue(selectOf(node, 'root__oneof_select'))).toBe('A');
+      expect(getSelectedOptionValue(selectOf(node, 'root_child_child_child__oneof_select'))).toBe('None');
+    });
   });
 
   it('renders only the selector for an option that adds nothing to the field offering it', async () => {
