@@ -3044,7 +3044,12 @@ describe('ArrayField', () => {
 
   describe('Tests for item title', () => {
     describe('Should show indexed title for widgets when necessary', () => {
-      const widgetTestData: { widgetName: string; itemSchema: RJSFSchema; itemUiSchema?: UiSchema }[] = [
+      const widgetTestData: {
+        widgetName: string;
+        itemSchema: RJSFSchema;
+        itemUiSchema?: UiSchema;
+        labelFor?: string | null;
+      }[] = [
         {
           widgetName: 'AltDateWidget',
           itemSchema: {
@@ -3126,6 +3131,7 @@ describe('ArrayField', () => {
           itemUiSchema: {
             'ui:widget': 'radio',
           },
+          labelFor: null,
         },
         {
           widgetName: 'RangeWidget',
@@ -3233,7 +3239,7 @@ describe('ArrayField', () => {
 
       it.each(widgetTestData)(
         "Should show indexed title for the `$widgetName` widget if no title is mentioned in it's UI Schema",
-        async ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema, labelFor = 'root_0' }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -3251,14 +3257,17 @@ describe('ArrayField', () => {
 
           await user.click(node.querySelector('.rjsf-array-item-add button')!);
 
-          // By the label's id, since a group's label has no `for`
-          expect(node.querySelector(`#${fieldLabelId('root_0')}`)).toHaveTextContent('Array-1');
+          // By the label's id, since a group's label has no `for`; the id is on the label's text
+          const widgetLabel = node.querySelector(`#${fieldLabelId('root_0')}`)?.closest('label');
+
+          expect(widgetLabel).toHaveTextContent('Array-1');
+          expect(widgetLabel?.getAttribute('for')).toBe(labelFor);
         },
       );
 
       it.each(widgetTestData)(
         "Should not show indexed title for the `$widgetName` widget if title is mentioned in it's UI Schema",
-        async ({ itemSchema, itemUiSchema }) => {
+        async ({ itemSchema, itemUiSchema, labelFor = 'root_0' }) => {
           const schema: RJSFSchema = {
             type: 'array',
             title: 'Array',
@@ -3283,6 +3292,7 @@ describe('ArrayField', () => {
 
           expect(widgetLabelText).not.toHaveTextContent('Array-1');
           expect(widgetLabelText).toHaveTextContent('Item Title');
+          expect(widgetLabelText?.getAttribute('for')).toBe(labelFor);
         },
       );
     });
