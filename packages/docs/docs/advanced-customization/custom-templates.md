@@ -117,7 +117,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `schema`: The schema object for this array.
 - `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
-- `presentation`: The array's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
+- `presentation`: The array's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation). [`getArrayDescription()`](../api-reference/utility-functions.md#getarraydescription) reads the description this template draws from it, falling back to the `ui:description` or schema `description` for a template rendered without one.
 - `formData`: The formData for this array.
 - `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget. Unlike the `rawErrors` a `FieldTemplate` receives, it carries them whatever `hideError` says, so pair the two through [`hasVisibleErrors()`](../api-reference/utility-functions.md#hasvisibleerrors) before rendering an error state.
