@@ -312,4 +312,16 @@ describe('resolveUiSchema() - option walk through the schema graph', () => {
     const result = resolveUiSchema({ $ref: '#/$defs/alias' }, undefined, makeRegistry(rootSchema, optionDefinitions));
     expect(result.anyOf).toEqual([{ 'ui:title': 'Leaf' }]);
   });
+
+  it('walks the options of the definition an alias with sibling keywords leads to', () => {
+    const rootSchema: RJSFSchema = {
+      $defs: {
+        alias: { $ref: '#/$defs/node', type: 'string', minLength: 1 },
+        node: { oneOf: [{ $ref: '#/$defs/leaf' }, { type: 'string' }] },
+        leaf: { type: 'string' },
+      },
+    };
+    const result = resolveUiSchema({ $ref: '#/$defs/alias' }, undefined, makeRegistry(rootSchema, optionDefinitions));
+    expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
+  });
 });

@@ -1,10 +1,8 @@
 import { ANY_OF_KEY, ONE_OF_KEY, REF_KEY, RJSF_REF_KEY, UI_OPTIONS_KEY } from './constants.ts';
-import findSchemaDefinition from './findSchemaDefinition.ts';
 import isObject from './isObject.ts';
 import logOnce from './logOnce.ts';
 import mergeObjects from './mergeObjects.ts';
-import parseSchemaGraph from './schema/graph/parseSchemaGraph.ts';
-import type { SchemaGraph } from './schema/graph/parseSchemaGraph.ts';
+import { resolveOwnRef } from './schema/retrieveSchema.ts';
 import type { FormContextType, GenericObjectType, Registry, RJSFSchema, StrictRJSFSchema, UiSchema } from './types.ts';
 
 /** Returns the `$ref` a schema was resolved from, which `retrieveSchema()` marks it with
@@ -26,23 +24,6 @@ function resolvedFromRef(schema: unknown): string | undefined {
 function declaredRef(schema: unknown): string | undefined {
   const ref: unknown = Reflect.get(Object(schema), REF_KEY);
   return typeof ref === 'string' ? ref : undefined;
-}
-
-/** Returns the schema a `$ref` names, resolved through the graph as `retrieveSchema()` resolves it, an `$anchor` or a
- * `$ref` under an `$id` included, and followed along a chain of aliases
- *
- * @param graph - The graph of the root schema
- * @param ref - The `$ref` to resolve
- * @returns - The schema the `$ref` names
- * @throws - The error `findSchemaDefinition()` throws for a `$ref` that names nothing
- */
-function definitionOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, ref: string): S {
-  const id = graph.resolveRef(ref);
-  let node = id === undefined ? undefined : graph.node(id);
-  while (node?.kind === 'schema' && node.pureRef && node.ref !== undefined) {
-    node = graph.node(node.ref);
-  }
-  return node?.kind === 'schema' ? node.raw : findSchemaDefinition<S>(ref, graph.rawRoot);
 }
 
 /** Merges a `ui:definitions` entry under the local uiSchema of a field whose schema `$ref`s it. A definition is typed
@@ -108,11 +89,10 @@ export default function resolveUiSchema<
   // Walk oneOf/anyOf branches to populate uiSchema[keyword][i] so MultiSchemaField
   // can read dropdown option titles at the parent level.
   if (definitions) {
-    const graph = parseSchemaGraph<S>(registry.rootSchema);
     let resolvedSchema: S = schema;
     if (ref && declaredRef(schema) && !resolvedFromRef(schema)) {
       try {
-        resolvedSchema = definitionOf(graph, ref);
+        resolvedSchema = resolveOwnRef<S>(schema, registry.rootSchema);
       } catch (e) {
         logOnce('could not resolve $ref in resolveUiSchema:\n', 'warn', e);
         return result;
