@@ -93,6 +93,63 @@ describe('chakra-ui SelectWidget', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
   });
 
+  test("names an object's option selector by the heading's text alone, without its optional data control", () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          properties: {
+            pet: {
+              type: 'object',
+              title: 'Pet',
+              properties: { name: { type: 'string' } },
+              anyOf: [
+                { title: 'Dog', properties: { bark: { type: 'string' } } },
+                { title: 'Cat', properties: { meow: { type: 'string' } } },
+              ],
+            },
+          },
+        }}
+        uiSchema={{ 'ui:globalOptions': { enableOptionalDataFieldForType: ['object'] } }}
+        formData={{ pet: { name: 'Rex' } }}
+        validator={validator}
+      />,
+    );
+
+    const title = document.getElementById('root_pet_XxxOf__title');
+    expect(title?.closest('h5')?.parentElement?.querySelector('button')).toBeInTheDocument();
+    expect(title?.querySelector('button')).toBeNull();
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
+  });
+
+  test("marks a required heading outside the title's text, so a selector named by it isn't named with the marker", () => {
+    render(
+      <WrappedForm
+        schema={{
+          type: 'object',
+          required: ['pet'],
+          properties: {
+            pet: {
+              type: 'object',
+              title: 'Pet',
+              properties: { name: { type: 'string' } },
+              anyOf: [
+                { title: 'Dog', properties: { bark: { type: 'string' } } },
+                { title: 'Cat', properties: { meow: { type: 'string' } } },
+              ],
+            },
+          },
+        }}
+        validator={validator}
+      />,
+    );
+
+    const title = document.getElementById('root_pet_XxxOf__title');
+    expect(title).toHaveTextContent(/^Pet$/);
+    expect(title?.closest('h5')).toHaveTextContent('Pet*');
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
+  });
+
   test('keeps the name its own label gives it', () => {
     render(
       <WrappedForm

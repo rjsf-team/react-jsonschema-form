@@ -1059,10 +1059,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                     <div>
                       <div
                         class="emotion-5"
-                        id="root_tasks__title"
                       >
                         <h5
                           class="chakra-heading emotion-6"
+                          id="root_tasks__title"
                         >
                           tasks
                         </h5>
@@ -1096,10 +1096,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   >
                                     <div
                                       class="emotion-5"
-                                      id="root_tasks_0__title"
                                     >
                                       <h5
                                         class="chakra-heading emotion-6"
+                                        id="root_tasks_0__title"
                                       >
                                         tasks-1
                                       </h5>
@@ -1347,10 +1347,10 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   >
                                     <div
                                       class="emotion-5"
-                                      id="root_tasks_1__title"
                                     >
                                       <h5
                                         class="chakra-heading emotion-6"
+                                        id="root_tasks_1__title"
                                       >
                                         tasks-2
                                       </h5>
@@ -2108,10 +2108,10 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                     <div>
                       <div
                         class="emotion-5"
-                        id="root_tags__title"
                       >
                         <h5
                           class="chakra-heading emotion-6"
+                          id="root_tags__title"
                         >
                           tags
                         </h5>
@@ -3299,10 +3299,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                   >
                     <div
                       class="emotion-5"
-                      id="root_person__title"
                     >
                       <h5
                         class="chakra-heading emotion-6"
+                        id="root_person__title"
                       >
                         person
                       </h5>
@@ -3418,10 +3418,10 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                             >
                               <div
                                 class="emotion-5"
-                                id="root_person_address__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-6"
+                                  id="root_person_address__title"
                                 >
                                   address
                                 </h5>
@@ -6194,10 +6194,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                     <div>
                       <div
                         class="emotion-5"
-                        id="root_tasks__title"
                       >
                         <h5
                           class="chakra-heading emotion-6"
+                          id="root_tasks__title"
                         >
                           tasks
                         </h5>
@@ -6231,10 +6231,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   >
                                     <div
                                       class="emotion-5"
-                                      id="root_tasks_0__title"
                                     >
                                       <h5
                                         class="chakra-heading emotion-6"
+                                        id="root_tasks_0__title"
                                       >
                                         tasks-1
                                       </h5>
@@ -6482,10 +6482,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   >
                                     <div
                                       class="emotion-5"
-                                      id="root_tasks_1__title"
                                     >
                                       <h5
                                         class="chakra-heading emotion-6"
+                                        id="root_tasks_1__title"
                                       >
                                         tasks-2
                                       </h5>
@@ -7243,10 +7243,10 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                     <div>
                       <div
                         class="emotion-5"
-                        id="root_tags__title"
                       >
                         <h5
                           class="chakra-heading emotion-6"
+                          id="root_tags__title"
                         >
                           tags
                         </h5>
@@ -7909,10 +7909,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                   >
                     <div
                       class="emotion-5"
-                      id="root_person__title"
                     >
                       <h5
                         class="chakra-heading emotion-6"
+                        id="root_person__title"
                       >
                         person
                       </h5>
@@ -8028,10 +8028,10 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                             >
                               <div
                                 class="emotion-5"
-                                id="root_person_address__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-6"
+                                  id="root_person_address__title"
                                 >
                                   address
                                 </h5>
@@ -15212,10 +15212,10 @@ exports[`single fields > Cyclic schema 1`] = `
         >
           <div
             class="emotion-2"
-            id="root__title"
           >
             <h5
               class="chakra-heading emotion-3"
+              id="root__title"
             >
               A registration form
             </h5>
@@ -15249,10 +15249,10 @@ exports[`single fields > Cyclic schema 1`] = `
                   >
                     <div
                       class="emotion-2"
-                      id="root_child__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_child__title"
                       >
                         A registration form
                       </h5>
@@ -23266,10 +23266,10 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <div
             class="emotion-2"
-            id="root__title"
           >
             <h5
               class="chakra-heading emotion-3"
+              id="root__title"
             >
               test
             </h5>
@@ -23297,10 +23297,10 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObjectOptional__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObjectOptional__title"
                       >
                         nestedObjectOptional
                       </h5>
@@ -23372,10 +23372,10 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div
                                 class="emotion-2"
-                                id="root_nestedObjectOptional_deepObjectOptional__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
                                 >
                                   deepObjectOptional
                                 </h5>
@@ -23452,10 +23452,10 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div
                                 class="emotion-2"
-                                id="root_nestedObjectOptional_deepObject__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_nestedObjectOptional_deepObject__title"
                                 >
                                   deepObject
                                 </h5>
@@ -23533,10 +23533,10 @@ exports[`single fields > optional data controls > does not show optional control
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArrayOptional__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     deepArrayOptional
                                   </h5>
@@ -23607,10 +23607,10 @@ exports[`single fields > optional data controls > does not show optional control
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     deepArrayOptional2
                                   </h5>
@@ -23681,10 +23681,10 @@ exports[`single fields > optional data controls > does not show optional control
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArray__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     deepArray
                                   </h5>
@@ -23760,10 +23760,10 @@ exports[`single fields > optional data controls > does not show optional control
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArrayOptional__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArrayOptional__title"
                         >
                           nestedArrayOptional
                         </h5>
@@ -23833,10 +23833,10 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObject__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObject__title"
                       >
                         nestedObject
                       </h5>
@@ -23914,10 +23914,10 @@ exports[`single fields > optional data controls > does not show optional control
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArray__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArray__title"
                         >
                           nestedArray
                         </h5>
@@ -25276,10 +25276,10 @@ exports[`single fields > optional data controls > does not show optional control
         >
           <div
             class="emotion-2"
-            id="root__title"
           >
             <h5
               class="chakra-heading emotion-3"
+              id="root__title"
             >
               test
             </h5>
@@ -25308,10 +25308,10 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObjectOptional__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObjectOptional__title"
                       >
                         nestedObjectOptional
                       </h5>
@@ -25391,10 +25391,10 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div
                                 class="emotion-2"
-                                id="root_nestedObjectOptional_deepObjectOptional__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
                                 >
                                   deepObjectOptional
                                 </h5>
@@ -25479,10 +25479,10 @@ exports[`single fields > optional data controls > does not show optional control
                             >
                               <div
                                 class="emotion-2"
-                                id="root_nestedObjectOptional_deepObject__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_nestedObjectOptional_deepObject__title"
                                 >
                                   deepObject
                                 </h5>
@@ -25568,10 +25568,10 @@ exports[`single fields > optional data controls > does not show optional control
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArrayOptional__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     deepArrayOptional
                                   </h5>
@@ -25643,10 +25643,10 @@ exports[`single fields > optional data controls > does not show optional control
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     deepArrayOptional2
                                   </h5>
@@ -25718,10 +25718,10 @@ exports[`single fields > optional data controls > does not show optional control
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArray__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     deepArray
                                   </h5>
@@ -25798,10 +25798,10 @@ exports[`single fields > optional data controls > does not show optional control
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArrayOptional__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArrayOptional__title"
                         >
                           nestedArrayOptional
                         </h5>
@@ -25872,10 +25872,10 @@ exports[`single fields > optional data controls > does not show optional control
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObject__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObject__title"
                       >
                         nestedObject
                       </h5>
@@ -25961,10 +25961,10 @@ exports[`single fields > optional data controls > does not show optional control
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArray__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArray__title"
                         >
                           nestedArray
                         </h5>
@@ -27324,10 +27324,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <div
             class="emotion-2"
-            id="root__title"
           >
             <h5
               class="chakra-heading emotion-3"
+              id="root__title"
             >
               test
             </h5>
@@ -27355,13 +27355,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObjectOptional__title"
                     >
                       <div
                         class="emotion-9"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedObjectOptional__title"
                         >
                           nestedObjectOptional
                         </h5>
@@ -27468,13 +27468,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="emotion-2"
-                                id="root_nestedObjectOptional_deepObjectOptional__title"
                               >
                                 <div
                                   class="emotion-9"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepObjectOptional__title"
                                   >
                                     deepObjectOptional
                                   </h5>
@@ -27538,10 +27538,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="emotion-2"
-                                id="root_nestedObjectOptional_deepObject__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_nestedObjectOptional_deepObject__title"
                                 >
                                   deepObject
                                 </h5>
@@ -27619,10 +27619,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArrayOptional__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     deepArrayOptional
                                   </h5>
@@ -27693,13 +27693,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
                                 >
                                   <div
                                     class="emotion-9"
                                   >
                                     <h5
                                       class="chakra-heading emotion-3"
+                                      id="root_nestedObjectOptional_deepArrayOptional2__title"
                                     >
                                       deepArrayOptional2
                                     </h5>
@@ -27767,10 +27767,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArray__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     deepArray
                                   </h5>
@@ -27846,13 +27846,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArrayOptional__title"
                       >
                         <div
                           class="emotion-9"
                         >
                           <h5
                             class="chakra-heading emotion-3"
+                            id="root_nestedArrayOptional__title"
                           >
                             nestedArrayOptional
                           </h5>
@@ -28054,10 +28054,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObject__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObject__title"
                       >
                         nestedObject
                       </h5>
@@ -28135,10 +28135,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArray__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArray__title"
                         >
                           nestedArray
                         </h5>
@@ -28229,13 +28229,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="emotion-2"
-                                id="root_optionalObjectWithOneofs__title"
                               >
                                 <div
                                   class="emotion-9"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_optionalObjectWithOneofs__title"
                                   >
                                     optionalObjectWithOneofs
                                   </h5>
@@ -28326,13 +28326,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <div
                                     class="emotion-9"
                                   >
                                     <h5
                                       class="chakra-heading emotion-3"
+                                      id="root_optionalArrayWithAnyofs__title"
                                     >
                                       optionalArrayWithAnyofs
                                     </h5>
@@ -28906,10 +28906,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
         >
           <div
             class="emotion-2"
-            id="root__title"
           >
             <h5
               class="chakra-heading emotion-3"
+              id="root__title"
             >
               test
             </h5>
@@ -28938,10 +28938,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObjectOptional__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObjectOptional__title"
                       >
                         nestedObjectOptional
                       </h5>
@@ -29021,10 +29021,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="emotion-2"
-                                id="root_nestedObjectOptional_deepObjectOptional__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
                                 >
                                   deepObjectOptional
                                 </h5>
@@ -29064,10 +29064,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="emotion-2"
-                                id="root_nestedObjectOptional_deepObject__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_nestedObjectOptional_deepObject__title"
                                 >
                                   deepObject
                                 </h5>
@@ -29153,10 +29153,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArrayOptional__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     deepArrayOptional
                                   </h5>
@@ -29228,10 +29228,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArrayOptional2__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     deepArrayOptional2
                                   </h5>
@@ -29273,10 +29273,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_nestedObjectOptional_deepArray__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     deepArray
                                   </h5>
@@ -29353,10 +29353,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArrayOptional__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArrayOptional__title"
                         >
                           nestedArrayOptional
                         </h5>
@@ -29532,10 +29532,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObject__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObject__title"
                       >
                         nestedObject
                       </h5>
@@ -29621,10 +29621,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArray__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArray__title"
                         >
                           nestedArray
                         </h5>
@@ -29716,10 +29716,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                             >
                               <div
                                 class="emotion-2"
-                                id="root_optionalObjectWithOneofs__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_optionalObjectWithOneofs__title"
                                 >
                                   optionalObjectWithOneofs
                                 </h5>
@@ -29786,10 +29786,10 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_optionalArrayWithAnyofs__title"
                                   >
                                     optionalArrayWithAnyofs
                                   </h5>
@@ -30278,10 +30278,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <div
             class="emotion-2"
-            id="root__title"
           >
             <h5
               class="chakra-heading emotion-3"
+              id="root__title"
             >
               test
             </h5>
@@ -30309,13 +30309,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObjectOptional__title"
                     >
                       <div
                         class="emotion-9"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedObjectOptional__title"
                         >
                           nestedObjectOptional
                         </h5>
@@ -30380,13 +30380,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArrayOptional__title"
                       >
                         <div
                           class="emotion-9"
                         >
                           <h5
                             class="chakra-heading emotion-3"
+                            id="root_nestedArrayOptional__title"
                           >
                             nestedArrayOptional
                           </h5>
@@ -30453,10 +30453,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObject__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObject__title"
                       >
                         nestedObject
                       </h5>
@@ -30534,10 +30534,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArray__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArray__title"
                         >
                           nestedArray
                         </h5>
@@ -30628,13 +30628,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             >
                               <div
                                 class="emotion-2"
-                                id="root_optionalObjectWithOneofs__title"
                               >
                                 <div
                                   class="emotion-9"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_optionalObjectWithOneofs__title"
                                   >
                                     optionalObjectWithOneofs
                                   </h5>
@@ -30725,13 +30725,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <div
                                     class="emotion-9"
                                   >
                                     <h5
                                       class="chakra-heading emotion-3"
+                                      id="root_optionalArrayWithAnyofs__title"
                                     >
                                       optionalArrayWithAnyofs
                                     </h5>
@@ -31138,10 +31138,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
         >
           <div
             class="emotion-2"
-            id="root__title"
           >
             <h5
               class="chakra-heading emotion-3"
+              id="root__title"
             >
               test
             </h5>
@@ -31172,10 +31172,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObjectOptional__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObjectOptional__title"
                       >
                         nestedObjectOptional
                       </h5>
@@ -31218,10 +31218,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArrayOptional__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArrayOptional__title"
                         >
                           nestedArrayOptional
                         </h5>
@@ -31264,10 +31264,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                   >
                     <div
                       class="emotion-2"
-                      id="root_nestedObject__title"
                     >
                       <h5
                         class="chakra-heading emotion-3"
+                        id="root_nestedObject__title"
                       >
                         nestedObject
                       </h5>
@@ -31353,10 +31353,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                     <div>
                       <div
                         class="emotion-2"
-                        id="root_nestedArray__title"
                       >
                         <h5
                           class="chakra-heading emotion-3"
+                          id="root_nestedArray__title"
                         >
                           nestedArray
                         </h5>
@@ -31452,10 +31452,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                             >
                               <div
                                 class="emotion-2"
-                                id="root_optionalObjectWithOneofs__title"
                               >
                                 <h5
                                   class="chakra-heading emotion-3"
+                                  id="root_optionalObjectWithOneofs__title"
                                 >
                                   optionalObjectWithOneofs
                                 </h5>
@@ -31526,10 +31526,10 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               <div>
                                 <div
                                   class="emotion-2"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <h5
                                     class="chakra-heading emotion-3"
+                                    id="root_optionalArrayWithAnyofs__title"
                                   >
                                     optionalArrayWithAnyofs
                                   </h5>
@@ -48345,10 +48345,10 @@ exports[`single fields > title field 1`] = `
         >
           <div
             class="emotion-2"
-            id="root__title"
           >
             <h5
               class="chakra-heading emotion-3"
+              id="root__title"
             >
               Titre 1
             </h5>
