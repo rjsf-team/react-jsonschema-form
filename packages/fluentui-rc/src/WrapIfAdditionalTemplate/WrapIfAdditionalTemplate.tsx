@@ -10,6 +10,8 @@ import {
   TranslatableString,
 } from '@rjsf/utils';
 
+import { fieldLabelSlot } from '../utils.ts';
+
 const useStyles = makeStyles({
   input: {
     width: '100%',
@@ -78,6 +80,7 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
+  const keyId = `${id}-key`;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
   const hasDescription = !!rawDescription;
   const btnStyle: CSSProperties = {
@@ -102,11 +105,11 @@ export default function WrapIfAdditionalTemplate<
   }
 
   return (
-    <Flex gap='gap.medium' vAlign='start' key={`${id}-key`} className={classNames} style={style}>
+    <Flex gap='gap.medium' vAlign='start' key={keyId} className={classNames} style={style}>
       <div className={classes.halfWidth}>
         {propertyNamesEnum ? (
           <AdditionalPropertyKeySelect<T, S, F>
-            id={`${id}-key`}
+            id={keyId}
             className={classes.keySelect}
             label={keyLabel}
             hideLabel={!hasKeyLabel}
@@ -119,14 +122,14 @@ export default function WrapIfAdditionalTemplate<
             registry={registry}
           />
         ) : (
-          <Field label={hasKeyLabel ? keyLabel : undefined} required={required}>
+          <Field label={hasKeyLabel ? fieldLabelSlot(keyLabel, keyId) : undefined} required={required}>
             <Input
               key={keyName}
               required={required}
               defaultValue={keyName}
               disabled={disabled || readonly}
-              id={`${id}-key`}
-              name={`${id}-key`}
+              id={keyId}
+              name={keyId}
               onBlur={!readonly ? onKeyRenameBlur : undefined}
               type='text'
               input={{

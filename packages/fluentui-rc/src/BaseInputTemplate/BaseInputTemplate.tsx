@@ -5,8 +5,8 @@ import { Input, Label, makeStyles } from '@fluentui/react-components';
 import { SchemaExamples } from '@rjsf/core';
 import type { BaseInputTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   examplesId,
+  getControlAttributes,
   getExampleSuggestions,
   getInputProps,
   getNumericInputTitle,
@@ -54,6 +54,7 @@ export default function BaseInputTemplate<
     options,
     schema,
     registry,
+    presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
   const { ClearButton } = registry.templates.ButtonTemplates;
@@ -100,7 +101,7 @@ export default function BaseInputTemplate<
         onChange={onChangeOverride ?? handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        aria-describedby={ariaDescribedByIds(id, hasExamples)}
+        {...getControlAttributes<T, S, F>({ id, presentation }, hasExamples ? [examplesId(id)] : [])}
       />
       {options.allowClearTextInputs && !readonly && !disabled && value && (
         <ClearButton registry={registry} onClick={handleClear} />
