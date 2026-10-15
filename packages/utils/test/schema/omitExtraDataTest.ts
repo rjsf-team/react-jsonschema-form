@@ -1706,6 +1706,15 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         const result = omitExtraData({ validator: testValidator }, schema, schema, formData);
         expect(result).toEqual({ name: 'Alice' });
       });
+
+      it('keeps the data when a boolean false entry wins, as its { not: {} } names no property', () => {
+        const schema: RJSFSchema = {
+          oneOf: [false, { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] }],
+        };
+        testValidator.setReturnValues({ isValid: [false, false] });
+        const result = omitExtraData({ validator: testValidator }, schema, schema, { extra: 'data' });
+        expect(result).toEqual({ extra: 'data' });
+      });
     });
 
     describe('dependencies support', () => {

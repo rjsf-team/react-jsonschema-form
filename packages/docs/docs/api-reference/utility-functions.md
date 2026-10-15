@@ -1102,24 +1102,6 @@ The type of an `anyOf`/`oneOf` schema whose options name no type of their own is
 
 - string | string[] | undefined: The type of the field, the unique list of its `anyOf`/`oneOf` options' types, or `undefined` when neither names one
 
-### getOptionMatchingSimpleDiscriminator()
-
-Compares the value of `discriminatorField` within `formData` against the value of `discriminatorField` within schema for each `option`. Returns index of first `option` whose discriminator matches formData. Returns `undefined` if there is no match.
-
-This function does not work with discriminators of `"type": "object"` and `"type": "array"`
-
-> Deprecated: option matching no longer calls this. [`getFirstMatchingOption()`](#getfirstmatchingoptiontunknownsextendsstrictrjsfschemarjsfschemafextendsformcontexttypeformcontexttype) and `getClosestMatchingOption()` read the discriminator property through an option's `$ref`, its `allOf` entries and the other schemas in its scope, where this reads only the option's own `properties`: with the options `[{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }]`, whose definitions give `kind` the `const`s `'a'` and `'b'`, the data `{ kind: 'b' }` and the `discriminatorField` `kind`, this returns `undefined` and `getFirstMatchingOption()` returns `1`. It will be removed in v8.
-
-#### Parameters
-
-- [formData]: T | undefined - The current formData, if any, used to figure out a match
-- options: S[] - The list of options to find a matching options from
-- [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
-
-#### Returns
-
-- number | undefined: index of the matched option
-
 ### getOptionUiSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Returns the uiSchema for the `oneOf`/`anyOf` option at `index`, resolved the way `AnyOfField` resolves it: `uiSchema[keyword][index]` when that keyword's uiSchema is declared as an array reaching `index`, falling back to `uiSchema` itself otherwise.
@@ -2946,25 +2928,6 @@ When the schema has both keywords, `anyOf` is the one checked (see `getXxxOfKey(
 #### Returns
 
 - boolean: True if schema contains a select, otherwise false
-
-### relaxOptionsForScoring&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Normalises a list of `oneOf`/`anyOf` options for scoring them only (not for filtering).
-Option scoring no longer calls it: [`getClosestMatchingOption()`](#getclosestmatchingoptiontunknownsextendsstrictrjsfschemarjsfschemafextendsformcontexttypeformcontexttype) relaxes the whole scope of an option itself, from where the option sits in the root.
-Boolean schemas are converted to their object equivalents (`true` → `{}`, `false` → `{not:{}}`).
-When `resolveRefs` is `true`, each object option has its own `$ref` resolved first so that `$ref`-based options expose their `additionalProperties` constraint before relaxation.
-Any option whose `additionalProperties` is `false` is widened to `true` so that `validator.isValid()` does not produce false negatives when the form data contains keys not listed in `properties`.
-A widened option is not the schema its `$id` names, so it is given an `$id` of `<the option's>?rjsf=<the widened option's hash>`: distinct enough that a validator compiles a function for it rather than reusing the option's, while keeping the option's `$id` as the base that a relative `$ref` inside it resolves against.
-
-#### Parameters
-
-- options: Array&lt;S | boolean> - The raw `oneOf`/`anyOf` array, which may contain boolean schemas
-- [resolveRefs=false]: boolean - When `true`, resolve `$ref`s in each option before relaxing; pass `rootSchema` as well. Set `false` (default) when refs are already resolved at the call site
-- [rootSchema]: S | undefined - Required when `resolveRefs` is `true`; the root schema used to look up `$ref`s
-
-#### Returns
-
-- S[]: A new array of plain schema objects with `additionalProperties` relaxed where needed
 
 ### retrieveSchema&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 

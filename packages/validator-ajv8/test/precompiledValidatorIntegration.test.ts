@@ -16,7 +16,6 @@ import {
   getFirstMatchingOption,
   getValidationTarget,
   omitExtraData,
-  relaxOptionsForScoring,
 } from '@rjsf/utils';
 
 import { compileSchemaValidatorsCode } from '../src/compileSchemaValidators.ts';
@@ -30,28 +29,30 @@ function buildPrecompiledValidator(schema: RJSFSchema) {
 
 // ─── Test schemas ─────────────────────────────────────────────────────────────
 
+const STRICT_OPTIONS: RJSFSchema[] = [
+  {
+    type: 'object',
+    properties: {
+      kind: { const: 'a' },
+      foo: { type: 'string' },
+    },
+    additionalProperties: false,
+  },
+  {
+    type: 'object',
+    properties: {
+      kind: { const: 'b' },
+      bar: { type: 'string' },
+    },
+    additionalProperties: false,
+  },
+];
+
 /** oneOf with direct additionalProperties:false on each branch */
-const STRICT_ONEOF_SCHEMA: RJSFSchema = {
-  type: 'object',
-  oneOf: [
-    {
-      type: 'object',
-      properties: {
-        kind: { const: 'a' },
-        foo: { type: 'string' },
-      },
-      additionalProperties: false,
-    },
-    {
-      type: 'object',
-      properties: {
-        kind: { const: 'b' },
-        bar: { type: 'string' },
-      },
-      additionalProperties: false,
-    },
-  ],
-};
+const STRICT_ONEOF_SCHEMA: RJSFSchema = { type: 'object', oneOf: STRICT_OPTIONS };
+
+/** Copies of the options the compile list does not hold, which a caller may hand the matchers to ignore extra keys */
+const RELAXED_COPIES = STRICT_OPTIONS.map((option) => ({ ...option, additionalProperties: true }));
 
 /** oneOf where each branch is a $ref to a definition that has additionalProperties:false */
 const STRICT_ONEOF_REF_SCHEMA: RJSFSchema = {
@@ -89,74 +90,60 @@ describe('precompiled validator integration: oneOf with additionalProperties:fal
 
     describe('getFirstMatchingOption()', () => {
       it('returns 0 when formData matches the first strict option exactly', () => {
-        const options = STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+        const options = STRICT_OPTIONS;
         expect(getFirstMatchingOption({ validator }, { kind: 'a', foo: 'hello' }, options, STRICT_ONEOF_SCHEMA)).toBe(
           0,
         );
       });
 
       it('returns 1 when formData matches the second strict option exactly', () => {
-        const options = STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+        const options = STRICT_OPTIONS;
         expect(getFirstMatchingOption({ validator }, { kind: 'b', bar: 'world' }, options, STRICT_ONEOF_SCHEMA)).toBe(
           1,
         );
       });
-
-      it('does not throw when called with manually relaxed options and data containing extra keys', () => {
-        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
+      it('matches uncompiled copies of the options that allow extra keys', () => {
+        const formData = { kind: 'a', foo: 'hello', extra: 'data' };
         expect(() =>
-          getFirstMatchingOption(
-            { validator },
-            { kind: 'a', foo: 'hello', extra: 'data' },
-            relaxed,
-            STRICT_ONEOF_SCHEMA,
-          ),
+          getFirstMatchingOption({ validator }, formData, RELAXED_COPIES, STRICT_ONEOF_SCHEMA),
         ).not.toThrow();
-      });
-
-      it('finds the correct match with relaxed options and extra keys in formData', () => {
-        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
-        expect(
-          getFirstMatchingOption(
-            { validator },
-            { kind: 'a', foo: 'hello', extra: 'data' },
-            relaxed,
-            STRICT_ONEOF_SCHEMA,
-          ),
-        ).toBe(0);
+        expect(getFirstMatchingOption({ validator }, formData, RELAXED_COPIES, STRICT_ONEOF_SCHEMA)).toBe(0);
       });
     });
 
     describe('getClosestMatchingOption()', () => {
       it('returns 0 for formData matching the first strict option', () => {
-        const options = STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+        const options = STRICT_OPTIONS;
         expect(
           getClosestMatchingOption({ validator }, STRICT_ONEOF_SCHEMA, { kind: 'a', foo: 'hello' }, options, 0),
         ).toBe(0);
       });
 
-      it('returns 1 for formData matching the second strict option', () => {
-        const options = STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[];
+      it('returns 1 for formData matching the second strict option, also with a key no option declares', () => {
+        const options = STRICT_OPTIONS;
         expect(
           getClosestMatchingOption({ validator }, STRICT_ONEOF_SCHEMA, { kind: 'b', bar: 'world' }, options, 0),
         ).toBe(1);
-      });
-
-      it('does not throw with relaxed options and extra keys in formData', () => {
-        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
-        expect(() =>
-          getClosestMatchingOption({ validator }, STRICT_ONEOF_SCHEMA, { kind: 'a', extra: 'data' }, relaxed, 0),
-        ).not.toThrow();
-      });
-
-      it('picks the correct branch with relaxed options and extra keys', () => {
-        const relaxed = relaxOptionsForScoring(STRICT_ONEOF_SCHEMA.oneOf as RJSFSchema[]);
         expect(
           getClosestMatchingOption(
             { validator },
             STRICT_ONEOF_SCHEMA,
             { kind: 'b', bar: 'hello', extra: 'ignored' },
-            relaxed,
+            options,
+            0,
+          ),
+        ).toBe(1);
+      });
+      it('scores uncompiled copies of the options that allow extra keys', () => {
+        expect(() =>
+          getClosestMatchingOption({ validator }, STRICT_ONEOF_SCHEMA, { kind: 'a', extra: 'data' }, RELAXED_COPIES, 0),
+        ).not.toThrow();
+        expect(
+          getClosestMatchingOption(
+            { validator },
+            STRICT_ONEOF_SCHEMA,
+            { kind: 'b', bar: 'world', extra: 'data' },
+            RELAXED_COPIES,
             0,
           ),
         ).toBe(1);
