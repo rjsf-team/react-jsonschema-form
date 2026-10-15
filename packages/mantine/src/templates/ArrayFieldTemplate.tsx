@@ -1,6 +1,6 @@
 import { Fieldset, Box, Group } from '@mantine/core';
 import type { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getArrayDescription, getTemplates, getUiOptions, buttonId } from '@rjsf/utils';
+import { getArrayDescription, getTemplates, getUiOptions, buttonId, titleDrawsOptionalDataControl } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -31,17 +31,17 @@ export default function ArrayFieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const { ArrayFieldDescriptionTemplate, ArrayFieldTitleTemplate } = getTemplates<T, S, F>(registry, uiOptions);
   const shownDescription = getArrayDescription<T, S, F>(props);
-  const showOptionalDataControlInTitle = !readonly && !disabled;
+  const showOptionalDataControlInTitle = titleDrawsOptionalDataControl<T, S, F>(props);
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
-  const legend = (uiOptions.title || title) && (
+  const legend = title && (
     <ArrayFieldTitleTemplate
       id={id}
       required={required}
-      title={uiOptions.title || title}
+      title={title}
       schema={schema}
       uiSchema={uiSchema}
       registry={registry}

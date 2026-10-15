@@ -7305,14 +7305,14 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           value="0"
         />
       </div>
-      <p
+      <div
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         data-size="sm"
         id="root__help"
         style="--text-fz: var(--mantine-font-size-sm); --text-lh: var(--mantine-line-height-sm); margin-block: var(--mantine-spacing-xs); color: var(--mantine-color-dimmed);"
       >
         Select all that apply
-      </p>
+      </div>
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
@@ -8456,14 +8456,14 @@ exports[`single fields > help and error display 1`] = `
           an error
         </p>
       </div>
-      <p
+      <div
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         data-size="sm"
         id="root__help"
         style="--text-fz: var(--mantine-font-size-sm); --text-lh: var(--mantine-line-height-sm); margin-block: var(--mantine-spacing-xs); color: var(--mantine-color-dimmed);"
       >
         help me!
-      </p>
+      </div>
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
@@ -19030,7 +19030,7 @@ exports[`single fields > string field > field with markdown help and description
           />
         </div>
       </div>
-      <p
+      <div
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         data-size="sm"
         id="root__help"
@@ -19048,7 +19048,7 @@ exports[`single fields > string field > field with markdown help and description
             a link
           </a>
         </span>
-      </p>
+      </div>
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
@@ -19138,7 +19138,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
           />
         </div>
       </div>
-      <p
+      <div
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         data-size="sm"
         id="root__help"
@@ -19156,7 +19156,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
             a link
           </a>
         </span>
-      </p>
+      </div>
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
@@ -19246,14 +19246,14 @@ exports[`single fields > string field > field with markdown help text without a 
           />
         </div>
       </div>
-      <p
+      <div
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         data-size="sm"
         id="root__help"
         style="--text-fz: var(--mantine-font-size-sm); --text-lh: var(--mantine-line-height-sm); margin-block: var(--mantine-spacing-xs); color: var(--mantine-color-dimmed);"
       >
         This is **markdown** help text with [a link](https://example.com)
-      </p>
+      </div>
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
@@ -19607,7 +19607,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
           />
         </div>
       </div>
-      <p
+      <div
         class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
         data-size="sm"
         id="root__help"
@@ -19620,7 +19620,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
           </strong>
           . Please provide a value.
         </span>
-      </p>
+      </div>
     </div>
     <button
       class="mantine-focus-auto mantine-active m_77c9d27d mantine-Button-root m_87cf2631 mantine-UnstyledButton-root"
