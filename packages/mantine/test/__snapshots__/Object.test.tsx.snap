@@ -54,10 +54,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 <h3
                   class="m_8a5d1357 mantine-Title-root"
                   data-order="3"
-                  id="root_person__title"
                   style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                 >
-                  person
+                  <span
+                    id="root_person__title"
+                  >
+                    person
+                  </span>
                 </h3>
                 <style
                   data-mantine-styles="inline"
@@ -122,10 +125,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                         <h3
                           class="m_8a5d1357 mantine-Title-root"
                           data-order="3"
-                          id="root_person_address__title"
                           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                         >
-                          address
+                          <span
+                            id="root_person_address__title"
+                          >
+                            address
+                          </span>
                         </h3>
                         <style
                           data-mantine-styles="inline"
@@ -808,10 +814,13 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                   <h4
                     class="m_8a5d1357 mantine-Title-root"
                     data-order="4"
-                    id="root_tags__title"
                     style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
                   >
-                    tags
+                    <span
+                      id="root_tags__title"
+                    >
+                      tags
+                    </span>
                   </h4>
                 </legend>
                 <div
@@ -1514,10 +1523,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 <h3
                   class="m_8a5d1357 mantine-Title-root"
                   data-order="3"
-                  id="root_person__title"
                   style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                 >
-                  person
+                  <span
+                    id="root_person__title"
+                  >
+                    person
+                  </span>
                 </h3>
                 <style
                   data-mantine-styles="inline"
@@ -1582,10 +1594,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                         <h3
                           class="m_8a5d1357 mantine-Title-root"
                           data-order="3"
-                          id="root_person_address__title"
                           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                         >
-                          address
+                          <span
+                            id="root_person_address__title"
+                          >
+                            address
+                          </span>
                         </h3>
                         <style
                           data-mantine-styles="inline"
@@ -1888,10 +1903,13 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                   <h4
                     class="m_8a5d1357 mantine-Title-root"
                     data-order="4"
-                    id="root_items__title"
                     style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
                   >
-                    items
+                    <span
+                      id="root_items__title"
+                    >
+                      items
+                    </span>
                   </h4>
                 </legend>
                 <div
@@ -3311,10 +3329,13 @@ exports[`object fields > additionalProperties, array type 1`] = `
                           <h4
                             class="m_8a5d1357 mantine-Title-root"
                             data-order="4"
-                            id="root_foo__title"
                             style="--title-fw: var(--mantine-h4-font-weight); --title-lh: var(--mantine-h4-line-height); --title-fz: var(--mantine-h4-font-size); font-weight: normal;"
                           >
-                            foo
+                            <span
+                              id="root_foo__title"
+                            >
+                              foo
+                            </span>
                           </h4>
                         </legend>
                         <div
@@ -4110,10 +4131,13 @@ exports[`object fields > additionalProperties, object type 1`] = `
                         <h3
                           class="m_8a5d1357 mantine-Title-root"
                           data-order="3"
-                          id="root_foo__title"
                           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
                         >
-                          foo
+                          <span
+                            id="root_foo__title"
+                          >
+                            foo
+                          </span>
                         </h3>
                         <style
                           data-mantine-styles="inline"
@@ -5520,10 +5544,13 @@ exports[`object fields > with title and description > additionalProperties 1`] =
         <h3
           class="m_8a5d1357 mantine-Title-root"
           data-order="3"
-          id="root__title"
           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
         >
-          Test field
+          <span
+            id="root__title"
+          >
+            Test field
+          </span>
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -5783,10 +5810,13 @@ exports[`object fields > with title and description > object 1`] = `
         <h3
           class="m_8a5d1357 mantine-Title-root"
           data-order="3"
-          id="root__title"
           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
         >
-          Test field
+          <span
+            id="root__title"
+          >
+            Test field
+          </span>
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -6022,10 +6052,13 @@ exports[`object fields > with title and description > show add button and fields
         <h3
           class="m_8a5d1357 mantine-Title-root"
           data-order="3"
-          id="root__title"
           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
         >
-          Test field
+          <span
+            id="root__title"
+          >
+            Test field
+          </span>
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -6285,10 +6318,13 @@ exports[`object fields > with title and description from both > additionalProper
         <h3
           class="m_8a5d1357 mantine-Title-root"
           data-order="3"
-          id="root__title"
           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
         >
-          My Field
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -6548,10 +6584,13 @@ exports[`object fields > with title and description from both > object 1`] = `
         <h3
           class="m_8a5d1357 mantine-Title-root"
           data-order="3"
-          id="root__title"
           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
         >
-          My Field
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -6787,10 +6826,13 @@ exports[`object fields > with title and description from uiSchema > additionalPr
         <h3
           class="m_8a5d1357 mantine-Title-root"
           data-order="3"
-          id="root__title"
           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
         >
-          My Field
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -7050,10 +7092,13 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
         <h3
           class="m_8a5d1357 mantine-Title-root"
           data-order="3"
-          id="root__title"
           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
         >
-          My Field
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
@@ -7289,10 +7334,13 @@ exports[`object fields > with title and description from uiSchema > show add but
         <h3
           class="m_8a5d1357 mantine-Title-root"
           data-order="3"
-          id="root__title"
           style="--title-fw: var(--mantine-h3-font-weight); --title-lh: var(--mantine-h3-line-height); --title-fz: var(--mantine-h3-font-size); font-weight: normal;"
         >
-          My Field
+          <span
+            id="root__title"
+          >
+            My Field
+          </span>
         </h3>
         <p
           class="mantine-focus-auto m_b6d8b162 mantine-Text-root"
