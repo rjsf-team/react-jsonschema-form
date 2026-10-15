@@ -1,10 +1,18 @@
 import type { ReactNode } from 'react';
 import { chakra, Fieldset, useSlotRecipe } from '@chakra-ui/react';
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel, templateLabelFor } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  hasTemplateErrors,
+  templateDrawsLabel,
+  templateDrawsPlannedLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 
 interface TemplateLabelProps {
-  id: string;
+  id?: string;
   htmlFor?: string;
   requiredMarker: boolean;
   disabled?: boolean;
@@ -60,6 +68,8 @@ export default function FieldTemplate<
   const hasError = hasTemplateErrors<T, S, F>(props);
   const { WrapIfAdditionalTemplate } = getTemplates<T, S, F>(registry, uiOptions);
 
+  const drawsLabel = templateDrawsPlannedLabel<T, S, F>(props);
+
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
@@ -86,19 +96,19 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      {/* Only under a plan, as for a widget declared to leave its label to the template: without one, `displayLabel`
-          falls back to the deprecated prop, and this theme's widgets draw their own label beside it */}
-      {presentation && displayLabel && label && (
+      {drawsLabel && (
         <TemplateLabel
           htmlFor={templateLabelFor<T, S, F>(props)}
-          id={presentation.label.id}
-          requiredMarker={presentation.label.requiredMarker}
+          id={presentation?.label.id}
+          requiredMarker={templateMarksRequired<T, S, F>(props)}
           disabled={disabled || readonly}
         >
           {label}
         </TemplateLabel>
       )}
-      <Fieldset.Root disabled={disabled} invalid={hasError}>
+      {/* Ark points the fieldset at its legend, which renders only for a description, so it is pointed at the label drawn
+          here instead, or at nothing; Ark ignores an undefined override, so only an empty one stops it */}
+      <Fieldset.Root disabled={disabled} invalid={hasError} aria-labelledby={drawsLabel ? presentation?.label.id : ''}>
         {rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
         {help}
         <Fieldset.Content>{children}</Fieldset.Content>

@@ -273,7 +273,7 @@ exports[`NativeSelectWidget > select field multiple choice 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_3_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -625,7 +625,7 @@ exports[`NativeSelectWidget > select field multiple choice with labels 1`] = `
       class="rjsf-field rjsf-field-array"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_5_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -1004,7 +1004,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_0_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -1020,7 +1020,7 @@ exports[`NativeSelectWidget > select field with enum 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_1_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"

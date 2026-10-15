@@ -366,6 +366,20 @@ describe('chakra-ui FieldTemplate', () => {
     expect(container.querySelector('#root_foo__label')).toHaveAttribute('data-disabled');
   });
 
+  test("points each field's fieldset at the label the template draws, or at nothing", () => {
+    const { container } = render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { foo: { type: 'string', title: 'Foo' } } }}
+        presentation={{ widgets: { TextWidget: { label: 'template' } } }}
+        validator={validator}
+      />,
+    );
+
+    const fieldsets = [...container.querySelectorAll('fieldset')];
+    expect(fieldsets.map((fieldset) => fieldset.getAttribute('aria-labelledby'))).toEqual(['', 'root_foo__label']);
+    expect(screen.getByRole('group', { name: 'Foo' })).toBe(fieldsets[1]);
+  });
+
   test('draws no label for a widget that draws its own', () => {
     const { container } = render(<WrappedForm schema={{ type: 'string', title: 'Foo' }} validator={validator} />);
 

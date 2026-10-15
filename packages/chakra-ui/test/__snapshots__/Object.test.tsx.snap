@@ -254,7 +254,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_33_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -270,7 +270,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 class="rjsf-field rjsf-field-object"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_34_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -301,7 +301,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="rjsf-field rjsf-field-string"
                         >
                           <fieldset
-                            aria-labelledby="fieldset::_r_35_::legend"
+                            aria-labelledby=""
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -345,7 +345,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
-                            aria-labelledby="fieldset::_r_37_::legend"
+                            aria-labelledby=""
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -376,7 +376,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset::_r_38_::legend"
+                                      aria-labelledby=""
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -420,7 +420,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset::_r_3a_::legend"
+                                      aria-labelledby=""
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -464,7 +464,7 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset::_r_3c_::legend"
+                                      aria-labelledby=""
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -943,7 +943,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_3e_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -959,7 +959,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_3f_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1036,7 +1036,7 @@ exports[`nameGenerator > bracketNameGenerator > object with additionalProperties
                   class="emotion-9"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_3i_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -1715,7 +1715,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_3k_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -1731,7 +1731,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_3l_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1775,7 +1775,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_3n_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1822,7 +1822,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-boolean"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_3p_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1898,7 +1898,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                 class="rjsf-field rjsf-field-array"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_3s_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1936,7 +1936,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset::_r_3t_::legend"
+                                  aria-labelledby=""
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -2089,7 +2089,7 @@ exports[`nameGenerator > bracketNameGenerator > object with mixed types 1`] = `
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset::_r_3v_::legend"
+                                  aria-labelledby=""
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -2525,7 +2525,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_2s_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -2541,7 +2541,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_2t_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2585,7 +2585,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_2v_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2629,7 +2629,7 @@ exports[`nameGenerator > bracketNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_31_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2946,7 +2946,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_48_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -2962,7 +2962,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 class="rjsf-field rjsf-field-object"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_49_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2993,7 +2993,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="rjsf-field rjsf-field-string"
                         >
                           <fieldset
-                            aria-labelledby="fieldset::_r_4a_::legend"
+                            aria-labelledby=""
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -3037,7 +3037,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           class="rjsf-field rjsf-field-object"
                         >
                           <fieldset
-                            aria-labelledby="fieldset::_r_4c_::legend"
+                            aria-labelledby=""
                             class="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -3068,7 +3068,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset::_r_4d_::legend"
+                                      aria-labelledby=""
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -3112,7 +3112,7 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                     class="rjsf-field rjsf-field-string"
                                   >
                                     <fieldset
-                                      aria-labelledby="fieldset::_r_4f_::legend"
+                                      aria-labelledby=""
                                       class="fieldset__root emotion-0"
                                       data-part="root"
                                       data-scope="fieldset"
@@ -3617,7 +3617,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_4h_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -3633,7 +3633,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_4i_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3677,7 +3677,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_4k_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3724,7 +3724,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                 class="rjsf-field rjsf-field-array"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_4m_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3762,7 +3762,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset::_r_4n_::legend"
+                                  aria-labelledby=""
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -3915,7 +3915,7 @@ exports[`nameGenerator > dotNotationNameGenerator > object with mixed types 1`] 
                                 class="rjsf-field rjsf-field-string"
                               >
                                 <fieldset
-                                  aria-labelledby="fieldset::_r_4p_::legend"
+                                  aria-labelledby=""
                                   class="fieldset__root emotion-0"
                                   data-part="root"
                                   data-scope="fieldset"
@@ -4351,7 +4351,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_41_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -4367,7 +4367,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_42_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4411,7 +4411,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_44_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4455,7 +4455,7 @@ exports[`nameGenerator > dotNotationNameGenerator > simple object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_46_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4927,7 +4927,7 @@ exports[`object fields > additionalProperties 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_5_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -4976,7 +4976,7 @@ exports[`object fields > additionalProperties 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_7_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -5787,7 +5787,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_u_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -6027,7 +6027,7 @@ exports[`object fields > additionalProperties with a description, propertyNames 
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_11_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -6542,7 +6542,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_m_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -6591,7 +6591,7 @@ exports[`object fields > additionalProperties, array type 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_o_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7179,7 +7179,7 @@ exports[`object fields > additionalProperties, description 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_d_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -7229,7 +7229,7 @@ exports[`object fields > additionalProperties, description 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_f_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -7780,7 +7780,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_9_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -7829,7 +7829,7 @@ exports[`object fields > additionalProperties, label off 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_b_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -8390,7 +8390,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_h_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -8439,7 +8439,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_j_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -8470,7 +8470,7 @@ exports[`object fields > additionalProperties, object type 1`] = `
                             class="rjsf-field rjsf-field-string"
                           >
                             <fieldset
-                              aria-labelledby="fieldset::_r_k_::legend"
+                              aria-labelledby=""
                               class="fieldset__root emotion-0"
                               data-part="root"
                               data-scope="fieldset"
@@ -9265,7 +9265,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_p_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -9504,7 +9504,7 @@ exports[`object fields > additionalProperties, propertyNames enum 1`] = `
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_s_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -10294,7 +10294,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_13_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -10533,7 +10533,7 @@ exports[`object fields > deprecated additionalProperties, propertyNames enum 1`]
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_16_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -10891,7 +10891,7 @@ exports[`object fields > object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_0_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -10907,7 +10907,7 @@ exports[`object fields > object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_1_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -10951,7 +10951,7 @@ exports[`object fields > object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_3_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -11423,7 +11423,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_18_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -11472,7 +11472,7 @@ exports[`object fields > show add button and fields if additionalProperties is t
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_1a_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -12037,7 +12037,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_1h_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -12107,7 +12107,7 @@ exports[`object fields > with title and description > additionalProperties 1`] =
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_1j_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -12510,7 +12510,7 @@ exports[`object fields > with title and description > object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_1c_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -12547,7 +12547,7 @@ exports[`object fields > with title and description > object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_1d_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -12605,7 +12605,7 @@ exports[`object fields > with title and description > object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_1f_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -13119,7 +13119,7 @@ exports[`object fields > with title and description > show add button and fields
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_1l_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -13189,7 +13189,7 @@ exports[`object fields > with title and description > show add button and fields
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_1n_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -13754,7 +13754,7 @@ exports[`object fields > with title and description from both > additionalProper
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_2b_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -13824,7 +13824,7 @@ exports[`object fields > with title and description from both > additionalProper
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_2d_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -14227,7 +14227,7 @@ exports[`object fields > with title and description from both > object 1`] = `
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_26_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -14264,7 +14264,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_27_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -14322,7 +14322,7 @@ exports[`object fields > with title and description from both > object 1`] = `
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_29_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -14836,7 +14836,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_1u_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -14906,7 +14906,7 @@ exports[`object fields > with title and description from uiSchema > additionalPr
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_20_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -15309,7 +15309,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_1p_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -15346,7 +15346,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_1q_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -15404,7 +15404,7 @@ exports[`object fields > with title and description from uiSchema > object 1`] =
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_1s_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -15918,7 +15918,7 @@ exports[`object fields > with title and description from uiSchema > show add but
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_22_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -15988,7 +15988,7 @@ exports[`object fields > with title and description from uiSchema > show add but
                   class="emotion-8"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_24_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -16499,7 +16499,7 @@ exports[`object fields > with title and description with global label off > addi
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_2k_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -16539,7 +16539,7 @@ exports[`object fields > with title and description with global label off > addi
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_2m_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
@@ -16861,7 +16861,7 @@ exports[`object fields > with title and description with global label off > obje
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_2f_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -16877,7 +16877,7 @@ exports[`object fields > with title and description with global label off > obje
                 class="rjsf-field rjsf-field-string"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_2g_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -16912,7 +16912,7 @@ exports[`object fields > with title and description with global label off > obje
                 class="rjsf-field rjsf-field-number"
               >
                 <fieldset
-                  aria-labelledby="fieldset::_r_2i_::legend"
+                  aria-labelledby=""
                   class="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -17349,7 +17349,7 @@ exports[`object fields > with title and description with global label off > show
       class="rjsf-field rjsf-field-object"
     >
       <fieldset
-        aria-labelledby="fieldset::_r_2o_::legend"
+        aria-labelledby=""
         class="fieldset__root emotion-0"
         data-part="root"
         data-scope="fieldset"
@@ -17389,7 +17389,7 @@ exports[`object fields > with title and description with global label off > show
                   class="emotion-4"
                 >
                   <fieldset
-                    aria-labelledby="fieldset::_r_2q_::legend"
+                    aria-labelledby=""
                     class="fieldset__root emotion-0"
                     data-part="root"
                     data-scope="fieldset"
