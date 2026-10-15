@@ -137,7 +137,6 @@ import replaceEqualDeep from './replaceEqualDeep.ts';
 import replaceStringParameters from './replaceStringParameters.ts';
 import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
-import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
 import { normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
@@ -320,7 +319,6 @@ export {
   resolveDefaultWidget,
   resolveUiSchema,
   resolveWidget,
-  schemaHasNestedConditional,
   schemaKey,
   schemaRequiresTrueValue,
   setByPath,

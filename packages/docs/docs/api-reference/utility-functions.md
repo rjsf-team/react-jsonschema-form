@@ -2270,23 +2270,6 @@ So `http://example.com/root.json#foo` gives `http://example.com/root.json`.
 
 - string: The id the root is registered under
 
-### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or an `additionalProperties`, `unevaluatedProperties` or `patternProperties` entry.
-`retrieveSchema()` only resolves the `dependencies`/`if` declared directly on the schema it is given, so a root-level retrieved schema never reflects a conditional branch switch that happens deeper in the tree.
-`Form` uses this to detect when a comparison of root-level retrieved schemas can't be trusted to decide whether sanitization is needed.
-
-#### Parameters
-
-- schema: S | boolean | undefined - The raw schema node to search
-- rootSchema: S - The root schema, used to resolve any `$ref`s encountered while searching
-- atRoot: boolean = true - Whether `schema` is the root of the search, whose own `dependencies`/`if` don't count
-- seenRefs: string[] = [] - The `$ref`s already resolved along this branch of the search, to guard against cycles
-
-#### Returns
-
-- boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
-
 ### schemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the key a validator caches a schema's compiled validation function under, and the key [getValidationSchemas()](#getvalidationschemassextendsstrictrjsfschemarjsfschema) maps it into the compiled set under: its `$id` when it names something, and the hash of its content otherwise.
