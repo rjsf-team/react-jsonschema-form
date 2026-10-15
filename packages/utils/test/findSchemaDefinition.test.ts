@@ -183,9 +183,9 @@ describe('findSchemaDefinition()', () => {
       'Could not find a definition for /bundled.ref.json',
     );
   });
-  it('throws error when bundled ref with explicit baseURI are not part of JSON Schema Draft 2020-12', () => {
-    expect(() => findSchemaDefinition('#/properties/num', schema, 'https://example.com/bundled.ref.json')).toThrow(
-      'Could not find a definition for #/properties/num',
+  it('resolves a fragment against the embedded resource its explicit baseURI names outside JSON Schema Draft 2020-12', () => {
+    expect(findSchemaDefinition('#/properties/num', schema, 'https://example.com/bundled.ref.json')).toBe(
+      (schema.definitions!.bundledSchema as RJSFSchema).properties!.num,
     );
   });
   it('correctly resolves absolute bundled refs when JSON Schema Draft 2020-12', () => {
@@ -406,6 +406,19 @@ describe('findSchemaDefinition()', () => {
       expect(c.properties!.a).toMatchObject({ type: 'string' });
       expect(c.properties!.b).toMatchObject({ type: 'number' });
     });
+    it('does not find a resource the relative `$ref` inside it does not name', () => {
+      const bundle: RJSFSchema = {
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: {
+          b: { $id: 'b.json', type: 'number' },
+          sub: { $id: 'sub/a.json', properties: { x: { $ref: 'b.json' } } },
+        },
+      };
+      const rootSchema = createSchemaUtils({ validator: getTestValidator({}) }, bundle).getRootSchema();
+      expect(() => findSchemaDefinition('#/$defs/sub/properties/x', rootSchema)).toThrow(
+        'Could not find a definition for b.json',
+      );
+    });
   });
   describe('a pointer into an embedded resource', () => {
     const inner: RJSFSchema = {
@@ -548,6 +561,62 @@ describe('findSchemaDefinition()', () => {
       expect(a.properties!.y).toMatchObject({ type: 'string' });
     });
   });
+  describe('an `$id` in a draft-07 or 2019-09 root', () => {
+    it.each([
+      ['draft-07', 'http://json-schema.org/draft-07/schema#', 'definitions'],
+      ['2019-09', 'https://json-schema.org/draft/2019-09/schema', '$defs'],
+    ])('starts a resource a %s pointer into it resolves in', (_, draft, defs) => {
+      const other: RJSFSchema = {
+        $id: 'https://example.com/other.json',
+        [defs]: { x: { type: 'string' } },
+        properties: { p: { $ref: `#/${defs}/x` } },
+      };
+      const root: RJSFSchema = {
+        $schema: draft,
+        $id: 'https://example.com/root.json',
+        [defs]: { x: { type: 'number' }, other },
+        properties: { a: { $ref: `#/${defs}/other` } },
+      };
+      expect(findSchemaDefinition(`#/${defs}/other/properties/p`, root)).toBe((other[defs] as GenericObjectType).x);
+      const a = retrieveSchema({ validator: getTestValidator({}) }, root, root, {}).properties!.a as RJSFSchema;
+      expect(a.properties!.p).toMatchObject({ type: 'string' });
+    });
+    it.each([
+      ['rebases', '2019-09', 'https://json-schema.org/draft/2019-09/schema', 'string'],
+      ['is ignored by', 'draft-07', 'http://json-schema.org/draft-07/schema#', 'number'],
+    ])('beside a `$ref` %s the %s `$ref`', (_, __, draft, type) => {
+      const root: RJSFSchema = {
+        $schema: draft,
+        $id: 'https://example.com/root.json',
+        properties: { a: { $id: 'own.json', $ref: '#/$defs/str', $defs: { str: { type: 'string' } } } },
+        $defs: { str: { type: 'number' } },
+      };
+      const a = retrieveSchema({ validator: getTestValidator({}) }, root, root, {}).properties!.a as RJSFSchema;
+      expect(a).toMatchObject({ type });
+    });
+    it('beside a `$ref` a draft-07 pointer reaches starts no resource', () => {
+      const root: RJSFSchema = {
+        $schema: 'http://json-schema.org/draft-07/schema#',
+        $id: 'https://example.com/root.json',
+        definitions: { a: { $id: 'a.json', $ref: '#/definitions/b' }, b: { type: 'string' } },
+        properties: { x: { $ref: '#/definitions/a' } },
+      };
+      expect(findSchemaDefinition('#/definitions/a', root)).toStrictEqual({ $id: 'a.json', type: 'string' });
+      const resolved = retrieveSchema({ validator: getTestValidator({}) }, root, root, {});
+      expect(resolved.properties!.x).toMatchObject({ type: 'string' });
+    });
+    it.each([
+      ['draft-07', 'http://json-schema.org/draft-07/schema#', 'definitions'],
+      ['2019-09', 'https://json-schema.org/draft/2019-09/schema', '$defs'],
+    ])('starts a resource a %s `$ref` names by its URI', (_, draft, defs) => {
+      const other: RJSFSchema = { $id: 'other.json', type: 'string', [defs]: { y: { type: 'null' } } };
+      const root: RJSFSchema = { $schema: draft, $id: 'https://example.com/root.json', [defs]: { other } };
+      expect(findSchemaDefinition('other.json', root)).toBe(other);
+      expect(findSchemaDefinition(`https://example.com/other.json#/${defs}/y`, root)).toBe(
+        (other[defs] as GenericObjectType).y,
+      );
+    });
+  });
   it('finds a resource whose relative nested `$id` ends in `/`', () => {
     const bundle: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',
@@ -615,7 +684,8 @@ describe('findSchemaDefinition()', () => {
     });
     // An absolute-path reference stays rooted, so it must not collide with the relative `embedded.json`
     expect(findSchemaDefinition('#/properties/rooted', resolved)).toBe(resolved.$defs!.rooted);
-    expect((resolved.$defs!.a as RJSFSchema).properties).toStrictEqual({ b: { $ref: 'sub/b.json' } });
+    // A validator resolves `sub/b.json` against `sub/a.json` again, as `sub/sub/b.json`, so the ref stays as written
+    expect((resolved.$defs!.a as RJSFSchema).properties).toStrictEqual({ b: { $ref: 'b.json' } });
     expect(findSchemaDefinition('#/properties/dot', resolved)).toBe(resolved.$defs!.embedded);
     expect(findSchemaDefinition('#/$defs/a/properties/b', resolved)).toBe(resolved.$defs!.b);
   });
@@ -827,10 +897,10 @@ describe('findSchemaDefinitionRecursive()', () => {
       'Could not find a definition for /bundled.ref.json',
     );
   });
-  it('throws error when bundled ref with explicit baseURI are not part of JSON Schema Draft 2020-12', () => {
-    expect(() =>
-      findSchemaDefinitionRecursive('#/properties/num', schema, [], 'https://example.com/bundled.ref.json'),
-    ).toThrow('Could not find a definition for #/properties/num');
+  it('resolves a fragment against the embedded resource its explicit baseURI names outside JSON Schema Draft 2020-12', () => {
+    expect(findSchemaDefinitionRecursive('#/properties/num', schema, [], 'https://example.com/bundled.ref.json')).toBe(
+      (schema.definitions!.bundledSchema as RJSFSchema).properties!.num,
+    );
   });
   it('correctly resolves absolute bundled refs within a JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinitionRecursive('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(internalSchema);
@@ -944,6 +1014,26 @@ describe('makeAllReferencesAbsolute()', () => {
     expect(child.$id).toBe('child.json');
     expect(child.properties!.a).toStrictEqual({ $ref: 'https://example.com/child.json#/$defs/x' });
     expect((child.$defs!.x as RJSFSchema).properties!.y).toStrictEqual({ $ref: 'https://example.com/deep/y.json' });
+  });
+  it('leaves a ref as written when resolving its rewritten form against the same relative base names something else', () => {
+    const bundle: RJSFSchema = {
+      $id: 'schemas/root.json',
+      properties: { r: { $ref: '#/$defs/flat' } },
+      $defs: {
+        flat: { $id: 'flat.json', properties: { f: { $ref: '#/$defs/x' } } },
+        parent: {
+          $id: 'nested/parent.json',
+          $defs: { child: { $id: 'child.json', properties: { a: { $ref: '#/$defs/x' }, b: { $ref: 'b.json' } } } },
+        },
+      },
+    };
+    const resolved = makeAllReferencesAbsolute(bundle, '#');
+    const child = (resolved.$defs!.parent as RJSFSchema).$defs!.child as RJSFSchema;
+    expect(resolved.properties!.r).toStrictEqual({ $ref: '#/$defs/flat' });
+    expect((resolved.$defs!.flat as RJSFSchema).properties!.f).toStrictEqual({ $ref: '#/$defs/x' });
+    expect(child.properties).toStrictEqual({ a: { $ref: '#/$defs/x' }, b: { $ref: 'b.json' } });
+    const unnamed = makeAllReferencesAbsolute({ ...bundle, $id: undefined }, '#');
+    expect((unnamed.$defs!.flat as RJSFSchema).properties!.f).toStrictEqual({ $ref: 'flat.json#/$defs/x' });
   });
   it('leaves a property named $ref intact when the schema has no root $id', () => {
     const schemaWithRefProperty = { properties: { $ref: { type: 'string' } } } as unknown as RJSFSchema;
