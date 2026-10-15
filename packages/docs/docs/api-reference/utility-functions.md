@@ -1108,11 +1108,14 @@ Gets the ARIA attributes a widget rendering a group of controls, such as radios 
 A label's `for` reaches a single control rather than the element wrapping a group, so the wrapper takes the `aria-labelledby` its field's plan gives the control, and each control the `aria-describedby` [getControlAttributes()](#getcontrolattributes) gives it.
 `aria-invalid` goes where ARIA supports it: on a `radiogroup` rather than on its radios, and on each control of a `group`, such as its checkboxes, rather than on the group.
 The wrapper takes the `role` as well, so `aria-invalid` always lands on the role it was placed for; spread `group` rather than setting the role separately.
+A widget that draws its own label for the group, as in a theme whose widgets draw their label, passes that label's id, and the group is named by it where the plan names the group by no other label.
+Under a plan the id is taken only where the plan gives the widget the label, so a widget can pass it whether or not it draws one; without a plan the caller is trusted.
 
 #### Parameters
 
 - props: Pick&lt;WidgetProps&lt;T, S, F>, 'id' | 'presentation'> - The widget's `id` and `presentation`
 - role: GroupRole - The role of the group's wrapper, `'radiogroup'` for radios and `'group'` for anything else
+- [drawnLabelId]: string | undefined - The id of the label the widget draws for the group itself, where it draws one
 
 #### Returns
 
@@ -1128,6 +1131,23 @@ return (
       <input key={i} type='radio' id={optionId(id, i)} {...option} />
     ))}
   </div>
+);
+```
+
+A widget that draws its own label for the group draws it with no `for`, which can't name the group's wrapper, under the id it passes:
+
+```tsx
+const labelId = fieldLabelId(id);
+const { group, option } = getGroupAttributes({ id, presentation }, 'radiogroup', labelId);
+return (
+  <>
+    {widgetDrawsLabel(props) && label && <label id={labelId}>{label}</label>}
+    <div id={id} {...group}>
+      {enumOptions.map((opt, i) => (
+        <input key={i} type='radio' id={optionId(id, i)} {...option} />
+      ))}
+    </div>
+  </>
 );
 ```
 
