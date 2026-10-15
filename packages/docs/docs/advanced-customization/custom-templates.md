@@ -117,6 +117,7 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `schema`: The schema object for this array.
 - `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
+- `optionalDataControl`: The control that adds or removes the data of an optional array, when it has one. [`titleDrawsOptionalDataControl()`](../api-reference/utility-functions.md#titledrawsoptionaldatacontrol) says whether to lay it out in the heading drawn for `title` or with the items, so it isn't dropped with a heading that isn't drawn.
 - `presentation`: The array's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation). [`getArrayDescription()`](../api-reference/utility-functions.md#getarraydescription) reads the description this template draws from it, falling back to the `ui:description` or schema `description` for a template rendered without one.
 - `formData`: The formData for this array.
 - `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
@@ -1056,6 +1057,7 @@ Please see the [customObject.tsx sample](https://github.com/rjsf-team/react-json
 The following props are passed to each `ObjectFieldTemplate` as defined by the `ObjectFieldTemplateProps` in `@rjsf/utils`:
 
 - `title`: A string value containing the title for the object.
+- `optionalDataControl`: The control that adds or removes the data of an optional object, when it has one. [`titleDrawsOptionalDataControl()`](../api-reference/utility-functions.md#titledrawsoptionaldatacontrol) says whether to lay it out in the heading drawn for `title` or with the properties, so it isn't dropped with a heading that isn't drawn.
 - `presentation`: The object's plan: whether its heading and description are this template's to draw, which they aren't when they repeat the field above it, and the id its description renders under. See [`resolveFieldPresentation()`](../api-reference/utility-functions.md#resolvefieldpresentation).
 - `description`: A string value containing the description for the object.
 - `disabled`: A boolean value stating if the object is disabled.
