@@ -3842,12 +3842,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-scope="field"
                               for="_r_3r_"
-                              id="field::_r_3r_::label"
+                              id="root_employment__label"
                             >
                               Employment
                             </label>
                             <div
-                              aria-labelledby="fieldset::_r_3q_::legend"
+                              aria-labelledby="root_employment__label"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -10135,12 +10135,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-scope="field"
                               for="_r_54_"
-                              id="field::_r_54_::label"
+                              id="root_employment__label"
                             >
                               Employment
                             </label>
                             <div
-                              aria-labelledby="fieldset::_r_53_::legend"
+                              aria-labelledby="root_employment__label"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -16519,12 +16519,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-scope="field"
                               for="_r_6f_"
-                              id="field::_r_6f_::label"
+                              id="root_employment__label"
                             >
                               Employment
                             </label>
                             <div
-                              aria-labelledby="fieldset::_r_6e_::legend"
+                              aria-labelledby="root_employment__label"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"
@@ -20603,12 +20603,12 @@ exports[`Complex grid > renders person and address and employment in a complex g
                               data-part="label"
                               data-scope="field"
                               for="_r_2i_"
-                              id="field::_r_2i_::label"
+                              id="root_employment__label"
                             >
                               Employment
                             </label>
                             <div
-                              aria-labelledby="fieldset::_r_2h_::legend"
+                              aria-labelledby="root_employment__label"
                               aria-orientation="vertical"
                               class="chakra-radio-group__root"
                               data-orientation="vertical"

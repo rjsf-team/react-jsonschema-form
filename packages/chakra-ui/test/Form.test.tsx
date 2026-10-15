@@ -177,3 +177,41 @@ describe("chakra-ui widgets carry their field's plan on the element a user focus
     },
   );
 });
+
+describe('chakra-ui RadioWidget', () => {
+  test.each([
+    ['whose label is hidden', { title: 'Color' }, { 'ui:label': false }],
+    ['with no label', {}, {}],
+  ])(
+    'leaves a group %s unnamed, rather than named by the description or by an id no element has',
+    (_, title, uiSchema) => {
+      render(
+        <WrappedForm
+          schema={{ type: 'string', ...title, description: 'Pick a color', enum: ['red', 'blue'] }}
+          uiSchema={{ 'ui:widget': 'radio', ...uiSchema }}
+          validator={validator}
+        />,
+      );
+
+      const group = screen.getByRole('radiogroup');
+      expect(group).toHaveAccessibleName('');
+      const labelledBy = group.getAttribute('aria-labelledby')?.split(' ').filter(Boolean) ?? [];
+      expect(labelledBy.filter((labelId) => !document.getElementById(labelId))).toEqual([]);
+    },
+  );
+
+  test('names its group by the label it draws rather than by the description', () => {
+    render(
+      <WrappedForm
+        schema={{ type: 'string', title: 'Color', description: 'Pick a color', enum: ['red', 'blue'] }}
+        uiSchema={{ 'ui:widget': 'radio' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Color');
+    for (const radio of screen.getAllByRole('radio')) {
+      expect(radio).toHaveAccessibleDescription('Pick a color');
+    }
+  });
+});

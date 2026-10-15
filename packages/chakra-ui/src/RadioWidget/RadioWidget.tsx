@@ -6,6 +6,7 @@ import {
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
+  fieldLabelId,
   getGroupAttributes,
   getOptionValueFormat,
   labelValue,
@@ -57,6 +58,11 @@ export default function RadioWidget<
     { id, presentation },
     'radiogroup',
   );
+  // Ark names the group by the legend of the fieldset around it, which is the template's description, so the group is
+  // pointed at the label this widget draws instead, where the plan names it by no other. With no label to point at, it
+  // is left unnamed: Ark ignores an undefined override, so only an empty one stops the legend naming it
+  const labelId = fieldLabelId(id);
+  const drawsLabel = !hideLabel && !!label;
 
   return (
     <Field
@@ -64,7 +70,8 @@ export default function RadioWidget<
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
-      label={labelValue(label, hideLabel || !label)}
+      label={labelValue(label, !drawsLabel)}
+      ids={{ label: labelId }}
       {...chakraProps}
     >
       <RadioGroup
@@ -74,6 +81,7 @@ export default function RadioWidget<
         value={selectValue}
         name={htmlName || id}
         {...groupAttributes}
+        aria-labelledby={groupAttributes['aria-labelledby'] ?? (drawsLabel ? labelId : '')}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
