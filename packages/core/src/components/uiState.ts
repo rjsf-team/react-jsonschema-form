@@ -6,7 +6,17 @@ import type {
   SchemaUtilsType,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { deepEquals, fieldPathFromList, fieldPathToList, getByPath, getValidationTarget } from '@rjsf/utils';
+import {
+  deepEquals,
+  fieldPathFromList,
+  fieldPathToList,
+  getByPath,
+  getDiscriminatorFieldFromSchema,
+  getValidationTarget,
+  getXxxOfKey,
+  isConstantOptionList,
+  isSchemaObject,
+} from '@rjsf/utils';
 
 import type { KeyMove } from './formState.ts';
 
@@ -83,6 +93,55 @@ function heldAfterEdit(holdsFor: readonly unknown[], data: unknown, isProposal: 
     return holdsFor;
   }
   return isProposal ? [...holdsFor, data] : [data];
+}
+
+/** A `true` option is any value, which a field renders as the empty schema */
+function emptySchema<S extends StrictRJSFSchema>(): S;
+function emptySchema(): StrictRJSFSchema {
+  return {};
+}
+
+/** The options a field whose retrieved schema is `view` renders below its selector, each retrieved for `formData` as
+ * `SchemaField` retrieves them; undefined where it offers none, or only constants, which a select renders instead
+ */
+export function retrievedOptionsOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  view: S,
+  formData: T | undefined,
+): S[] | undefined {
+  const xxxOfKey = getXxxOfKey<S>(view);
+  const list = xxxOfKey ? view[xxxOfKey] : undefined;
+  if (!list || isConstantOptionList<S>(list, true)) {
+    return undefined;
+  }
+  return list.map((option) =>
+    schemaUtils.retrieveSchema(isSchemaObject<S>(option) ? option : emptySchema<S>(), formData),
+  );
+}
+
+/** The option the field at `fieldPath`, whose retrieved schema is `view`, shows for `formData`, retrieved for that data,
+ * or undefined where it shows none
+ */
+export function shownOptionSchema<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  uiState: UiState,
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  fieldPath: FieldPath,
+  view: S,
+  formData: T | undefined,
+): S | undefined {
+  const options = retrievedOptionsOf<T, S, F>(schemaUtils, view, formData);
+  if (!options) {
+    return undefined;
+  }
+  const selection = uiState.selection(fieldPath, optionListKey<S>(options, schemaUtils.getRootSchema()));
+  const index = shownOption<T, S, F>(
+    schemaUtils,
+    selection,
+    options,
+    formData,
+    getDiscriminatorFieldFromSchema<S>(view),
+  );
+  return options[index];
 }
 
 function isHeldFor(selection: OptionSelection, data: unknown): boolean {
