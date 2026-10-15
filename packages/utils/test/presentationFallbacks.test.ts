@@ -1,6 +1,7 @@
 import type { FieldPresentation, ResolvedPresentationDeclaration } from '../src/index.ts';
 import {
   hasTemplateErrors,
+  hasWidgetErrors,
   resolveFieldPresentation,
   templateDrawsDescription,
   templateDrawsLabel,
@@ -71,6 +72,35 @@ describe('hasTemplateErrors()', () => {
     expect(hasTemplateErrors({ rawErrors: ['bad'] })).toBe(true);
     expect(hasTemplateErrors({ rawErrors: ['bad'], hideError: true })).toBe(false);
     expect(hasTemplateErrors({})).toBe(false);
+  });
+});
+
+describe('hasWidgetErrors()', () => {
+  it("follows the plan's control, whoever draws the errors, whatever rawErrors says", () => {
+    expect(hasWidgetErrors({ presentation: plan({ errors: ['bad'] }) })).toBe(true);
+    expect(
+      hasWidgetErrors({
+        presentation: plan({ declaration: { ...TEMPLATE, errors: 'self' }, errors: ['bad'] }),
+        rawErrors: [],
+      }),
+    ).toBe(true);
+    expect(hasWidgetErrors({ presentation: plan({ errors: ['bad'], hideError: true }), rawErrors: ['bad'] })).toBe(
+      false,
+    );
+  });
+
+  it("follows the errors of the field above under an inherited plan, which the widget isn't handed as rawErrors", () => {
+    expect(hasWidgetErrors({ presentation: plan({ inherited: plan({ errors: ['bad'] }) }), rawErrors: [] })).toBe(true);
+  });
+
+  it('reports no errors where the plan has no control', () => {
+    expect(hasWidgetErrors({ presentation: plan({ errors: ['bad'], hasControl: false }) })).toBe(false);
+  });
+
+  it('follows rawErrors and hideError without a plan', () => {
+    expect(hasWidgetErrors({ rawErrors: ['bad'] })).toBe(true);
+    expect(hasWidgetErrors({ rawErrors: ['bad'], hideError: true })).toBe(false);
+    expect(hasWidgetErrors({})).toBe(false);
   });
 });
 

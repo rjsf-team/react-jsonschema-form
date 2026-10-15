@@ -1786,6 +1786,20 @@ Detects whether the `widget` exists for the `schema` with the associated `regist
 
 - boolean: True if the widget exists, false otherwise
 
+### hasWidgetErrors&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#haswidgeterrors}
+
+Whether a widget's control has errors to show, for the widget's error state, such as a red outline or an invalid status: whether its field's plan marks the control `aria-invalid`, whoever draws the messages, or, for a widget rendered without a plan, as one rendered outside `SchemaField` is, the deprecated `rawErrors` while `hideError` is off.
+An `anyOf`/`oneOf` option's control is styled invalid by it while the field above draws the errors, which the option's widget isn't handed as `rawErrors`.
+Read it rather than `rawErrors`, which stays through v7 only for a widget rendered without a plan.
+
+#### Parameters
+
+- props: Pick&lt;WidgetProps&lt;T, S, F>, 'rawErrors' | 'hideError' | 'presentation'> - The widget's `rawErrors`, `hideError` and `presentation`
+
+#### Returns
+
+- boolean: True when the widget's control has errors to show
+
 ### helpId()
 
 Return a consistent `id` for the field help element.
