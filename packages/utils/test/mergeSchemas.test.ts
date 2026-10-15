@@ -123,4 +123,18 @@ describe('mergeSchemas()', () => {
       expect(mergeSchemas(obj1, obj2)).toEqual({ items: { type: 'string' } });
     });
   });
+
+  it('keeps a __proto__ property of the second object as an own key', () => {
+    const obj2 = JSON.parse('{"properties":{"__proto__":{"type":"string"}}}');
+    const result = mergeSchemas({ properties: { a: { type: 'string' } } }, obj2);
+    expect(Object.hasOwn(result.properties, '__proto__')).toBe(true);
+    expect(Object.getPrototypeOf(result.properties)).toBe(Object.prototype);
+  });
+
+  it('does not read an inherited member of the first object', () => {
+    const result = mergeSchemas({ a: 1 }, JSON.parse('{"toString":{"type":"string"}}'));
+    expect(Object.getOwnPropertyDescriptor(result, 'toString')?.value).toEqual({
+      type: 'string',
+    });
+  });
 });
