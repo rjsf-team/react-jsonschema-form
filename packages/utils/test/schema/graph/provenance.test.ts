@@ -66,6 +66,25 @@ describe('provenance', () => {
     expect([second.has('a'), second.has('b'), second.has('c'), first.has('b')]).toEqual([true, true, false, false]);
     expect(Object.isFrozen(second)).toBe(true);
   });
+  it('keeps a chain from the root graph and one born in a graph extending it apart when both are extended there', () => {
+    const rootGraph = parseSchemaGraph({ ...root });
+    const adopted = rootGraph.adopt({ items: { $ref: '#/definitions/node' } });
+    const fromRoot = extendChain(rootGraph, undefined, 'root');
+    const fromOverlay = extendChain(adopted.graph, undefined, 'overlay');
+    const extendedFromRoot = extendChain(adopted.graph, fromRoot, 'x');
+    const extendedFromOverlay = extendChain(adopted.graph, fromOverlay, 'x');
+    expect(extendedFromOverlay).not.toBe(extendedFromRoot);
+    expect([extendedFromRoot.has('root'), extendedFromRoot.has('overlay')]).toEqual([true, false]);
+    expect([extendedFromOverlay.has('root'), extendedFromOverlay.has('overlay')]).toEqual([false, true]);
+  });
+  it('keeps the children of a root-graph provenance and of an extending-graph one apart when both are planned there', () => {
+    const rootGraph = parseSchemaGraph({ ...root });
+    const adopted = rootGraph.adopt({ items: { $ref: '#/definitions/node' } });
+    const fromRoot = rootProvenance(rootGraph, [{ node: rootGraph.root, refPath: [] }]);
+    const fromOverlay = rootProvenance(adopted.graph, [{ node: adopted.node, refPath: [] }]);
+    const child = { seeds: [{ node: adopted.node, refPath: [] }] };
+    expect(childProvenance(fromRoot, child, adopted.graph)).not.toBe(childProvenance(fromOverlay, child));
+  });
   it('stamps a copy, which a spread keeps and readProvenance() reads back', () => {
     const provenance = rootProvenance(graph, seeds);
     const schema: RJSFSchema = { type: 'string' };

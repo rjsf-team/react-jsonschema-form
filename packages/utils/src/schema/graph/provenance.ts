@@ -39,12 +39,21 @@ export interface Provenance<S extends StrictRJSFSchema = RJSFSchema> extends Pro
  * symbol-keyed values by identity
  */
 interface InternTable {
-  readonly takeId: () => number;
   readonly chains: Map<string, GuardChain>;
   readonly provenances: Map<string, object>;
 }
 
 const tables = new WeakMap<object, InternTable>();
+
+/** The ids of chains and provenances, drawn from one counter for every graph: a graph extending the root interns
+ * chains and provenances that came from the root beside its own, by id, so an id has to name one value across graphs
+ */
+let lastId = 0;
+
+function takeId(): number {
+  lastId += 1;
+  return lastId;
+}
 
 /** The graph each interned provenance was planned in, which is how a value read back is known to be one */
 const provenanceGraphs = new WeakMap<object, SchemaGraph<StrictRJSFSchema>>();
@@ -52,12 +61,7 @@ const provenanceGraphs = new WeakMap<object, SchemaGraph<StrictRJSFSchema>>();
 function tableOf(graph: object): InternTable {
   let table = tables.get(graph);
   if (table === undefined) {
-    let nextId = 0;
-    const takeId = () => {
-      nextId += 1;
-      return nextId;
-    };
-    table = { takeId, chains: new Map(), provenances: new Map() };
+    table = { chains: new Map(), provenances: new Map() };
     tables.set(graph, table);
   }
   return table;
@@ -82,7 +86,7 @@ export function extendChain(graph: object, chain: GuardChain | undefined, setKey
     keys.add(link.setKey);
   }
   const extended: GuardChain = Object.freeze({
-    id: table.takeId(),
+    id: takeId(),
     parent: chain,
     setKey,
     has: (candidate: string) => keys.has(candidate),
@@ -116,7 +120,7 @@ function intern<S extends StrictRJSFSchema>(
     return interned;
   }
   const provenance: Provenance<S> = {
-    id: table.takeId(),
+    id: takeId(),
     graph,
     parent,
     seeds: Object.freeze(
