@@ -758,7 +758,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     defaultFormStateBehavior?.constAsDefaults !== 'never' &&
     !constIsAjvDataReference(schema)
   ) {
-    defaults = schema[CONST_KEY];
+    defaults = ownValue(schema[CONST_KEY]);
   } else if (
     isObject(defaults) &&
     isObject(schema.default) &&
@@ -768,12 +768,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // For object defaults, merge defaults by precedence setting.
     // Skip this for anyOf/oneOf schemas, which need special handling, and for a select over object constants,
     // whose own default and inherited default each name a whole constant, so a blend of them names none.
-    defaults = preferParentDefaults ? mergeObjects(schema.default, defaults) : mergeObjects(defaults, schema.default);
+    const ownDefault = ownValue(schema.default);
+    defaults = preferParentDefaults ? mergeObjects(ownDefault, defaults) : mergeObjects(defaults, ownDefault);
   } else if (DEFAULT_KEY in schema && !preferParentDefaults && !xxxOf) {
     // If the schema has a default value and parentDefaults does not have precedence
     // And if the schema does not have anyOf or oneOf (since we need to merge the defaults with the formData)
     // Then we should use it as the default.
-    defaults = schema.default;
+    defaults = ownValue(schema.default);
   } else if (Array.isArray(schema.items) && isFixedItems<S>(schema) && !preferParentDefaults && !xxxOf) {
     // If the schema contains fixed items and parentDefaults does not have precedence
     // Then construct defaults from defaults of array items. A tuple with options is rendered through the selected
@@ -807,13 +808,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // constant wins over an inherited default, as it does for a primitive `const`, unless constants are never defaults.
     // The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by `typeDefaults()`
     if (rawFormData === undefined && choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never') {
-      defaults = toConstant<S>(choice.wholeOptions[choice.index]);
+      defaults = ownValue(toConstant<S>(choice.wholeOptions[choice.index]));
     }
   }
 
   // No defaults defined for this node, fallback to generic typed ones.
   if (defaults === undefined) {
-    defaults = schema.default;
+    defaults = ownValue(schema.default);
   }
 
   // `ui:initialValue` takes priority over `schema.default`; `ui:emptyValue` is only used as a last resort, when
@@ -855,6 +856,13 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
 
   return defaultsWithFormData;
+}
+
+/** Returns a schema's `default` or `const` as the defaults hold it, an object or array copied: the schema, which can be
+ * the merged schema of a memoized plan, is shared across calls, and the caller may change the defaults it is handed
+ */
+function ownValue<V>(value: V): V {
+  return typeof value === 'object' && value !== null ? structuredClone(value) : value;
 }
 
 /** Picks the option of a field offering `anyOf`/`oneOf` options that its data, or its default, matches, and the context

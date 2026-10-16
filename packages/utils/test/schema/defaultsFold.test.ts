@@ -731,6 +731,40 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     });
   });
 
+  it.each<[string, RJSFSchema]>([
+    [
+      'an object default a branch merges',
+      {
+        type: 'object',
+        properties: { o: { default: { x: 1 } } },
+        if: true,
+        then: { properties: { o: { default: { y: 2 } } } },
+      },
+    ],
+    ['an array default', { type: 'object', properties: { o: { type: 'array', default: [{ x: 1 }] } } }],
+    ['an object const', { type: 'object', properties: { o: { const: { x: [1] } } } }],
+    [
+      'the constant of a select over objects',
+      { type: 'object', properties: { o: { type: 'object', oneOf: [{ const: { x: 1 } }] } }, required: ['o'] },
+    ],
+  ])('hands out %s as a copy, which the caller can change without changing later calls', (_, schema) => {
+    const pristine = structuredClone(schema);
+    const first = defaultsOf(schema);
+    const expected = structuredClone(first);
+    const pending: unknown[] = [first];
+    for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
+      if (Array.isArray(next)) {
+        pending.push(...next);
+        next.push('changed');
+      } else if (isObject(next)) {
+        pending.push(...Object.values(next));
+        next.changed = true;
+      }
+    }
+    expect(defaultsOf(schema)).toEqual(expected);
+    expect(schema).toEqual(pristine);
+  });
+
   it('resolves a $ref to an $anchor, and one under a nested $id with a path segment against that $id', () => {
     const target: RJSFSchema = { type: 'object', properties: { v: { type: 'string', default: 'v' } } };
     const anchored = { ...target, $anchor: 'nodeA' };
