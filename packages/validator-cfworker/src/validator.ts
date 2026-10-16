@@ -18,7 +18,7 @@ import {
   REF_KEY,
   rootSchemaIdOf,
   schemaKey,
-  withIdRefPrefix,
+  withRootIdRefPrefix,
 } from '@rjsf/utils';
 
 import createCfworkerInstance from './createCfworkerInstance.ts';
@@ -227,7 +227,7 @@ export default class CFWorkerValidator<
       return;
     }
     // Registered under its own `$id`, a root is what both its own `$ref`s, which resolve against that `$id`, and the
-    // local `$ref`s `withIdRefPrefix()` prefixes with it resolve into
+    // local `$ref`s `withRootIdRefPrefix()` prefixes with it resolve into
     const rootSchemaId = rootSchemaIdOf(rootSchema);
     const rootWithId =
       rootSchema[ID_KEY] === rootSchemaId
@@ -255,7 +255,7 @@ export default class CFWorkerValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withCfworkerRefs(withIdRefPrefix<S>(schema, rootSchemaIdOf(rootSchema)));
+      const schemaWithIdRefPrefix = withCfworkerRefs(withRootIdRefPrefix<S>(schema, rootSchema));
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
