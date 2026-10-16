@@ -266,23 +266,24 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       return undefined;
     }
     const value: unknown = Reflect.get(node.raw, keyword);
-    const entry = subschemaEntries(keyword, value).find(([tokens]) => tokens[1] === key);
-    if (entry === undefined) {
-      return undefined;
+    const shape = keywordShape(keyword, value);
+    if (shape === 'map' || shape === 'array') {
+      return key !== undefined && typeof value === 'object' && value !== null && Object.hasOwn(value, key)
+        ? this.nodeAt(node, [keyword, key], Reflect.get(value, key))
+        : undefined;
     }
-    const [tokens, sub] = entry;
-    // A boolean has no identity, so it is the node parsed where the keyword holds it
-    if (typeof sub === 'boolean') {
-      return this.byPointer(childPointer(node.pointer, tokens));
-    }
-    return isObject(sub) ? this.byObject(sub) : undefined;
+    const single = shape === 'single' || (typeof value === 'boolean' && isSubschemaKeyword(keyword));
+    return key === undefined && single ? this.nodeAt(node, [keyword], value) : undefined;
   }
 
   subschemas(id: NodeId, keyword: string): [string, NodeId][] {
     const node = this.node(id);
-    const value: unknown = node.kind === 'schema' ? Reflect.get(node.raw, keyword) : undefined;
-    return subschemaEntries(keyword, value).flatMap(([[, key]]) => {
-      const child = key === undefined ? undefined : this.child(id, keyword, key);
+    if (node.kind !== 'schema') {
+      return [];
+    }
+    return subschemaEntries(keyword, Reflect.get(node.raw, keyword)).flatMap(([tokens, sub]) => {
+      const [, key] = tokens;
+      const child = key === undefined ? undefined : this.nodeAt(node, tokens, sub);
       return child === undefined ? [] : [[key, child]];
     });
   }
@@ -313,6 +314,15 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     const adopted = this.adopt(raw);
     this.copies.set(of, { raw, adopted });
     return adopted;
+  }
+
+  /** The node of the subschema `sub` that `node` holds at the pointer `tokens` */
+  private nodeAt(node: ObjectNode<S>, tokens: readonly string[], sub: unknown): NodeId | undefined {
+    // A boolean has no identity, so it is the node parsed where the keyword holds it
+    if (typeof sub === 'boolean') {
+      return this.byPointer(childPointer(node.pointer, tokens));
+    }
+    return isObject(sub) ? this.byObject(sub) : undefined;
   }
 
   private parse(raw: S, pointer: string, base: string): ObjectNode<S> {
