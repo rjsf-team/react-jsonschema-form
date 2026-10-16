@@ -157,6 +157,31 @@ describe("daisyui widgets carry their field's plan on the element a user focuses
 
     expect(screen.getByRole('slider', { name: 'X' })).toHaveFocus();
   });
+
+  test.each<[string, RJSFSchema, UiSchema, string]>([
+    ['textarea', { type: 'string' }, { 'ui:widget': 'textarea' }, '#root_x'],
+    ['time input', { type: 'string', format: 'time' }, {}, '#root_x'],
+    ['select', { type: 'string', enum: ['a', 'b'] }, {}, '#root_x'],
+    ['date picker', { type: 'string', format: 'date' }, {}, '#root_x'],
+    ['date-time picker', { type: 'string', format: 'date-time' }, {}, '#root_x'],
+    [
+      "checkboxes group's first checkbox",
+      { type: 'array', items: { type: 'string', enum: ['a', 'b'] }, uniqueItems: true },
+      { 'ui:widget': 'checkboxes' },
+      '#root_x-0',
+    ],
+    ["alt-date's first part", { type: 'string', format: 'date' }, { 'ui:widget': 'alt-date' }, '#root_x_year'],
+  ])('focuses a %s under ui:autofocus, as core does', (_, x, ui, focused) => {
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { x: { ...x, title: 'X' } } }}
+        uiSchema={{ x: { ...ui, 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(container.querySelector(focused)).toHaveFocus();
+  });
 });
 
 describe('daisyui FieldTemplate', () => {

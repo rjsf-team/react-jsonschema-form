@@ -430,6 +430,7 @@ exports[`array fields > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
@@ -1579,6 +1580,7 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes with nameGenerator 1`
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
@@ -4104,6 +4106,7 @@ exports[`with title and description > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
@@ -4893,6 +4896,7 @@ exports[`with title and description from both > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
@@ -5682,6 +5686,7 @@ exports[`with title and description from uiSchema > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
@@ -6374,6 +6379,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"

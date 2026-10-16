@@ -26,7 +26,7 @@ export default function TimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const { id, onChange, onFocus, onBlur, required, disabled, readonly, presentation } = props;
+  const { id, onChange, onFocus, onBlur, required, disabled, readonly, autofocus, presentation } = props;
   const { localValue: displayValue, computeTimeValue } = useTimeWidgetProps(props);
 
   /** Handle focus events
@@ -81,6 +81,7 @@ export default function TimeWidget<
         required={required}
         disabled={disabled || readonly}
         readOnly={readonly}
+        autoFocus={autofocus}
         onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

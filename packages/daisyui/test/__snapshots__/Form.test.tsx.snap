@@ -10912,6 +10912,7 @@ exports[`single fields > select field multiple choice 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
@@ -11054,6 +11055,7 @@ exports[`single fields > select field multiple choice enumDisabled 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
@@ -11301,6 +11303,7 @@ exports[`single fields > select field multiple choice formData 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
@@ -11445,6 +11448,7 @@ exports[`single fields > select field multiple choice with labels 1`] = `
               </span>
             </button>
             <ul
+              aria-multiselectable="true"
               class="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
               id="root__listbox"
               role="listbox"
