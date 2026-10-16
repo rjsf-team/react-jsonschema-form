@@ -1,5 +1,6 @@
 import type { RJSFSchema } from '@rjsf/utils';
 import { schemaKey, getValidationSchemas } from '@rjsf/utils';
+import uri from 'ajv/dist/runtime/uri.js';
 
 import pointerValidationTests from '../../utils/test/testUtils/pointerValidationTests.ts';
 import precompiledCoverageTests from '../../utils/test/testUtils/precompiledCoverageTests.ts';
@@ -18,13 +19,13 @@ vi.mock('../src/createAjvInstance', async (importOriginal) => {
 });
 
 /** The parsed schemas as they are compiled */
-function compiledSchemas(rootSchema: RJSFSchema): RJSFSchema[] {
-  return compiled(getValidationSchemas(rootSchema), schemaKey(rootSchema)).schemas;
+function compiledSchemas(rootSchema: RJSFSchema): Record<string, RJSFSchema> {
+  return compiled(getValidationSchemas(rootSchema), schemaKey(rootSchema), uri.default).schemas;
 }
 
 describe('compileSchemaValidatorsCode()', () => {
   describe('compiling without additional options', () => {
-    let schemas: RJSFSchema[];
+    let schemas: Record<string, RJSFSchema>;
     beforeAll(() => {
       schemas = compiledSchemas(superSchema);
       // superSchema deliberately uses the unregistered "phone-us" format, which AJV warns about
@@ -46,7 +47,7 @@ describe('compileSchemaValidatorsCode()', () => {
     });
   });
   describe('compiling WITH additional options', () => {
-    let schemas: RJSFSchema[];
+    let schemas: Record<string, RJSFSchema>;
     beforeAll(() => {
       schemas = compiledSchemas(superSchema);
       compileSchemaValidatorsCode(superSchema, SUPER_SCHEMA_OPTIONS);

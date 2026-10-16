@@ -209,6 +209,34 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
       expect(schemaUtils.getClosestMatchingOption({ k: 'b' }, options)).toBe(1);
       expect(validator.isValid(rootSchema, { v: { k: 'b' } }, rootSchema)).toBe(true);
     });
+    it.each(['#', '#root', 'http://example.com/root.json#foo', 'http://example.com/a b.json'])(
+      'resolves the pointers into a root whose $id is %j against the id the root is registered under',
+      (id) => {
+        const rootSchema: RJSFSchema = {
+          $id: id,
+          definitions: {
+            A: { type: 'object', properties: { k: { const: 'a' } }, required: ['k'] },
+            B: { type: 'object', properties: { k: { const: 'b' } }, required: ['k'] },
+          },
+          type: 'object',
+          properties: {
+            k: { type: 'string' },
+            v: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] },
+          },
+          if: { properties: { k: { const: 'x' } }, required: ['k'] },
+          then: { properties: { t: { type: 'string', default: 'T' } } },
+          else: { properties: { e: { type: 'string', default: 'E' } } },
+        };
+        const validator = buildValidator(rootSchema);
+        const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+        expect(schemaUtils.getFirstMatchingOption({ k: 'b' }, optionsOf(rootSchema.properties?.v, 'oneOf'))).toBe(1);
+        expect(schemaUtils.getDefaultFormState(rootSchema, { k: 'x', v: { k: 'b' } })).toEqual({
+          k: 'x',
+          v: { k: 'b' },
+          t: 'T',
+        });
+      },
+    );
     describe('reads an option declaring its discriminator in an allOf entry beside a $ref to a base declaring it too', () => {
       const pet = (kind: string, petType: RJSFSchema = { const: kind }): RJSFSchema => ({
         allOf: [{ $ref: '#/definitions/Base' }, { properties: { petType, [kind]: { type: 'string' } } }],

@@ -76,11 +76,15 @@ describe('withRootIdRefPrefix()', () => {
 });
 
 describe('rootSchemaIdOf()', () => {
-  it("returns the root schema's own $id", () => {
-    expect(rootSchemaIdOf({ $id: 'http://example.com/root.json#' })).toBe('http://example.com/root.json#');
+  it("returns the root schema's own $id less any fragment, which names a place in the document", () => {
+    expect(rootSchemaIdOf({ $id: 'http://example.com/root.json' })).toBe('http://example.com/root.json');
+    expect(rootSchemaIdOf({ $id: 'http://example.com/root.json#' })).toBe('http://example.com/root.json');
+    expect(rootSchemaIdOf({ $id: 'http://example.com/root.json#foo' })).toBe('http://example.com/root.json');
   });
-  it('returns ROOT_SCHEMA_PREFIX for a root without an $id or with an empty one', () => {
+  it('returns ROOT_SCHEMA_PREFIX for a root without an $id, with an empty one or with one that is only a fragment', () => {
     expect(rootSchemaIdOf({})).toBe(ROOT_SCHEMA_PREFIX);
     expect(rootSchemaIdOf({ $id: '' })).toBe(ROOT_SCHEMA_PREFIX);
+    expect(rootSchemaIdOf({ $id: '#' })).toBe(ROOT_SCHEMA_PREFIX);
+    expect(rootSchemaIdOf({ $id: '#root' })).toBe(ROOT_SCHEMA_PREFIX);
   });
 });

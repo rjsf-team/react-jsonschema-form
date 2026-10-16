@@ -8,9 +8,10 @@ import type {
   ValidationData,
   ValidatorType,
 } from '@rjsf/utils';
-import { deepEquals, isObject, logOnce, ID_KEY, rootSchemaIdOf, schemaKey, withRootIdRefPrefix } from '@rjsf/utils';
+import { deepEquals, isObject, logOnce, ID_KEY, schemaKey } from '@rjsf/utils';
 import type { ErrorObject, ValidateFunction, Ajv } from 'ajv';
 
+import ajvRootSchemaId, { withAjvRootIdRefPrefix } from './ajvRootSchemaId.ts';
 import createAjvInstance from './createAjvInstance.ts';
 import type { RawValidationErrorsType } from './processRawValidationErrors.ts';
 import processRawValidationErrors from './processRawValidationErrors.ts';
@@ -261,8 +262,7 @@ export default class AJV8Validator<
     if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
       return;
     }
-    // Ajv keys a root by its `$id` without an empty trailing fragment, so it is removed under that key too
-    const rootSchemaId = rootSchemaIdOf(rootSchema).replace(/#$/, '');
+    const rootSchemaId = ajvRootSchemaId(rootSchema, this.ajv.opts.uriResolver);
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
     // if schema validator instance doesn't exist, add it.
     // else if the root schemas don't match, we should remove and add the root schema so we don't have to remove and recompile the schema every run.
@@ -303,7 +303,11 @@ export default class AJV8Validator<
       this.handleSchemaUpdate(rootSchema);
       // A `$ref` local to the root, such as the `{ $ref: '#/properties/a/if' }` a form validates a condition with,
       // names the root by the id it is registered under, whatever the schema holding it is registered as
-      const schemaWithIdRefPrefix = withRootIdRefPrefix<S>(schema, rootSchema);
+      const schemaWithIdRefPrefix = withAjvRootIdRefPrefix<S>(
+        schema,
+        rootSchema,
+        ajvRootSchemaId(rootSchema, this.ajv.opts.uriResolver),
+      );
       schemaId = schemaKey(schemaWithIdRefPrefix);
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary
