@@ -947,26 +947,26 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   );
 }
 
-/** Returns the seeds of the array item `getInnerSchemaForArrayItem()` picks for `additionalItems` and `idx`, and the
- * edge the item is reached through
+/** Returns the array item `getInnerSchemaForArrayItem()` picks for `additionalItems` and `idx`: its seeds, the edge it
+ * is reached through, and the subschema that function returns for it
  */
-function innerItemSeeds<S extends StrictRJSFSchema>(
+function innerItem<S extends StrictRJSFSchema>(
   view: DefaultsView<S>,
   additionalItems: AdditionalItemsHandling,
   idx: number,
-): { seeds: readonly Seed[]; edge: ContainmentEdge } {
+): { seeds: readonly Seed[]; edge: ContainmentEdge; fallback: unknown } {
   const { items, additionalItems: additional } = view.schema;
   if (idx >= 0) {
     if (Array.isArray(items) && idx < items.length && typeof items[idx] !== 'boolean') {
-      return { seeds: tupleSeeds(view, idx), edge: 'tupleItem' };
+      return { seeds: tupleSeeds(view, idx), edge: 'tupleItem', fallback: items[idx] };
     }
   } else if (items && !Array.isArray(items) && typeof items !== 'boolean') {
-    return { seeds: seedsAt(view, 'items'), edge: 'item' };
+    return { seeds: seedsAt(view, 'items'), edge: 'item', fallback: items };
   }
   if (additionalItems !== AdditionalItemsHandling.Ignore && isObject(additional)) {
-    return { seeds: seedsAt(view, 'additionalItems'), edge: 'item' };
+    return { seeds: seedsAt(view, 'additionalItems'), edge: 'item', fallback: additional };
   }
-  return { seeds: [], edge: 'item' };
+  return { seeds: [], edge: 'item', fallback: {} };
 }
 
 /** Returns the child of an array field at the item `getInnerSchemaForArrayItem()` picks */
@@ -975,8 +975,8 @@ function itemField<S extends StrictRJSFSchema>(
   additionalItems: AdditionalItemsHandling,
   idx = -1,
 ): DefaultsField<S> {
-  const { seeds, edge } = innerItemSeeds(view, additionalItems, idx);
-  return defaultsChild(view, seeds, edge, getInnerSchemaForArrayItem<S>(view.schema, additionalItems, idx));
+  const { seeds, edge, fallback } = innerItem(view, additionalItems, idx);
+  return defaultsChild(view, seeds, edge, fallback);
 }
 
 /** Computes the default value for objects.
