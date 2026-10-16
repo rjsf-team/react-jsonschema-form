@@ -443,6 +443,38 @@ describe("mui widgets are named by their label and carry the field's id on the e
     expect(container.querySelector('.MuiSlider-root')).toHaveAttribute('id', 'root_r');
   });
 
+  test('names every thumb of a range of several values by its label, which has no `for` naming the root', () => {
+    const { RangeWidget } = generateWidgets();
+    const { container } = render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', title: 'Span', items: { type: 'number' } } } }}
+        uiSchema={{ r: { 'ui:widget': RangeWidget } }}
+        initialFormData={{ r: [10, 20] }}
+        validator={validator}
+      />,
+    );
+
+    const thumbs = screen.getAllByRole('slider');
+    expect(thumbs).toHaveLength(2);
+    thumbs.forEach((thumb) => expect(thumb).toHaveAccessibleName('Span'));
+    expect(container.querySelector('label[for="root_r"]')).not.toBeInTheDocument();
+    expectReferencesResolve(container);
+  });
+
+  test('focuses the first thumb of a range of several values under ui:autofocus', () => {
+    const { RangeWidget } = generateWidgets();
+    render(
+      <Form
+        schema={{ type: 'object', properties: { r: { type: 'array', title: 'Span', items: { type: 'number' } } } }}
+        uiSchema={{ r: { 'ui:widget': RangeWidget, 'ui:autofocus': true } }}
+        initialFormData={{ r: [10, 20] }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole('slider')[0]).toHaveFocus();
+  });
+
   test("names an additional property's key select by its label, and describes it by no id that is missing", () => {
     const { container } = render(
       <Form
@@ -726,5 +758,35 @@ describe("mui's error and help elements carry the ids their field's plan describ
 
     expect(container.querySelectorAll(`#${errorId('root_pet')}`)).toHaveLength(1);
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('pick one or another');
+  });
+});
+
+describe('mui focuses its groups as core does', () => {
+  test.each<[string, RJSFSchema, string]>([
+    ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
+  ])('focuses the first %s a user can choose under ui:autofocus', (widget, color, role) => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget, 'ui:autofocus': true, 'ui:enumDisabled': ['red'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole(role)[1]).toHaveFocus();
+  });
+
+  test("focuses a radio group's checked radio under ui:autofocus, where Tab into the group lands", () => {
+    render(
+      <Form
+        schema={{ type: 'object', properties: { color: { type: 'string', enum: ['red', 'green', 'blue'] } } }}
+        uiSchema={{ color: { 'ui:widget': 'radio', 'ui:autofocus': true } }}
+        initialFormData={{ color: 'blue' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole('radio')[2]).toHaveFocus();
   });
 });

@@ -1,9 +1,17 @@
 import type { FocusEvent } from 'react';
+import { useEffect, useRef } from 'react';
 import FormLabel from '@mui/material/FormLabel';
 import type { SliderProps } from '@mui/material/Slider';
 import Slider from '@mui/material/Slider';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, labelValue, rangeSpec, widgetDrawsLabel } from '@rjsf/utils';
+import {
+  getControlAttributes,
+  getLabelId,
+  labelValue,
+  rangeSpec,
+  widgetDrawsLabel,
+  widgetDrawsLabelText,
+} from '@rjsf/utils';
 
 import { getMuiProps, withInputSlot } from '../util.ts';
 
@@ -43,6 +51,16 @@ export default function RangeWidget<
     presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const rootRef = useRef<HTMLSpanElement>(null);
+  const isRangeOfValues = Array.isArray(value);
+  const focusOnMount = useRef(autofocus && isRangeOfValues);
+  // A range of several values focuses its first thumb, as `autoFocus` would one thumb, and like `autoFocus` only on mount,
+  // so an `autofocus` that turns true later doesn't take focus from the user
+  useEffect(() => {
+    if (focusOnMount.current) {
+      rootRef.current?.querySelector('input')?.focus();
+    }
+  }, []);
   const sliderProps = { value, name: htmlName || id, ...rangeSpec<S>(schema) };
 
   const handleChange: NonNullable<SliderProps['onChange']> = (_, newValue) => onChange(newValue);
@@ -63,17 +81,22 @@ export default function RangeWidget<
     'aria-labelledby': plannedLabelledBy,
     ...controlAttributes
   } = getControlAttributes<T, S, F>({ id, presentation });
-  const plannedName = authorNamesSlider ? {} : { 'aria-label': plannedLabel, 'aria-labelledby': plannedLabelledBy };
   // The `Slider` gives its `input` slot to every thumb, so a range of several values keeps the field's id, which only
-  // one element may carry, on the slider's root, and focuses no thumb
-  const isRangeOfValues = Array.isArray(value);
+  // one element may carry, on the slider's root, which a label's `for` can't name. Its label names every thumb through
+  // `aria-labelledby` instead
+  const labelId = getLabelId<T, S, F>(props);
+  const labelledByLabel = isRangeOfValues && widgetDrawsLabelText<T, S, F>(props) ? labelId : undefined;
+  const plannedName = authorNamesSlider
+    ? {}
+    : { 'aria-label': plannedLabel, 'aria-labelledby': plannedLabelledBy ?? labelledByLabel };
+  const labelProps = isRangeOfValues ? { id: labelId } : { htmlFor: id };
   const rootProps = isRangeOfValues ? { id } : {};
   const thumbProps = isRangeOfValues ? {} : { id, autoFocus: autofocus };
 
   return (
     <>
       {labelValue(
-        <FormLabel required={required} htmlFor={id}>
+        <FormLabel required={required} {...labelProps}>
           {label || undefined}
         </FormLabel>,
         hideLabel,
@@ -87,6 +110,7 @@ export default function RangeWidget<
         {...authorSlider}
         {...sliderProps}
         {...rootProps}
+        ref={rootRef}
         // The slider's root isn't focusable but its thumb's `<input>` is, so the input carries the field's id and plan
         slotProps={withInputSlot(
           { ...thumbProps, required, ...controlAttributes, ...plannedName },

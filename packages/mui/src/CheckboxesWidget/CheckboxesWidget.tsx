@@ -8,6 +8,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormLabel from '@mui/material/FormLabel';
 import type { FormContextType, GenericObjectType, WidgetProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
@@ -73,6 +74,7 @@ export default function CheckboxesWidget<
   const { rjsfSlotProps: muiSlotProps, ...otherMuiProps } = getMuiProps<T, S, F, CheckboxesWidgetMuiProps>(options);
   const checkboxSlotProps = withInputSlot(optionAttributes, muiSlotProps?.checkbox?.slotProps);
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <>
       {/* No `for`, which can't name the group's wrapper: the group points its `aria-labelledby` at the label instead */}
@@ -94,7 +96,7 @@ export default function CheckboxesWidget<
                 checked={checked}
                 value={domValues[index]}
                 disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 onChange={handleChange(index)}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}
