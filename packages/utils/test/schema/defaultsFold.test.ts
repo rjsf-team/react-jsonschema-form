@@ -848,6 +848,22 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     };
     expect(defaultsOf(chain, undefined, populate)).toEqual({ p: { a: 'x', c: 'c' } });
   });
+
+  it('gives a property the default of the option an allOf entry chooses over an earlier entry, nested as at the root, under populateDefaults', () => {
+    const object: RJSFSchema = {
+      type: 'object',
+      allOf: [
+        { properties: { c: { type: 'string', default: 'm0' } } },
+        {
+          oneOf: [{ properties: { c: { type: 'string', default: 'opt' } } }, { properties: { z: { type: 'number' } } }],
+        },
+      ],
+    };
+    expect(defaultsOf(object, undefined, populate)).toEqual({ c: 'opt' });
+    expect(defaultsOf({ type: 'object', properties: { o: object } }, undefined, populate)).toEqual({
+      o: { c: 'opt' },
+    });
+  });
 });
 
 describe('getDefaultFormState() termination and cost', { timeout: 30_000 }, () => {
