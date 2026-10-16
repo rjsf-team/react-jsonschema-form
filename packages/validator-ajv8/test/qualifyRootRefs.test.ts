@@ -29,4 +29,9 @@ describe('qualifyRootRefs()', () => {
     expect(qualifyRootRefs(schema, 'root')).not.toBe(schema);
     expect(schema).toEqual({ $ref: '#/definitions/a' });
   });
+  it('leaves the empty fragment an id ends in out of the prefix', () => {
+    expect(qualifyRootRefs({ $ref: '#/definitions/a' }, 'http://example.com/root.json#')).toEqual({
+      $ref: 'http://example.com/root.json#/definitions/a',
+    });
+  });
 });

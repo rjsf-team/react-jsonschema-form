@@ -77,6 +77,25 @@ describe('compileSchemaValidatorsCode()', () => {
       );
     });
   });
+  it('compiles the options of a root whose $id ends in an empty fragment, their local $refs naming the root', () => {
+    const rootSchema: RJSFSchema = {
+      $id: 'http://x.example/root.json#',
+      definitions: { str: { type: 'string' }, num: { type: 'number' } },
+      type: 'object',
+      properties: {
+        v: {
+          oneOf: [
+            { type: 'object', properties: { k: { $ref: '#/definitions/str' } }, required: ['k'] },
+            { type: 'object', properties: { k: { $ref: '#/definitions/num' } }, required: ['k'] },
+          ],
+        },
+      },
+    };
+    const validateFns = evalValidatorCode(compileSchemaValidatorsCode(rootSchema));
+    const validateRoot = validateFns['http://x.example/root.json'];
+    expect(validateRoot({ v: { k: 3 } })).toBe(true);
+    expect(validateRoot({ v: { k: true } })).toBe(false);
+  });
   precompiledCoverageTests((rootSchema, options) =>
     createPrecompiledValidator(
       evalValidatorCode(compileSchemaValidatorsCode(rootSchema, options)),

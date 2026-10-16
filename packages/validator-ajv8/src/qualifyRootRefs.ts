@@ -25,7 +25,9 @@ function qualifiedEntries<T extends GenericObjectType>(copy: T, rootId: string):
 /** Returns a copy of `schema` in which every `$ref` local to the root document, one starting with `#`, names the root
  * by `rootId`, as `withRootIdRefPrefix()` names it for the runtime validator. `retrieveSchema()` leaves a `$ref` below the
  * schema it resolves as it stands, so a sub-schema the form validates against can hold one, and compiled under an
- * `$id` of its own it would resolve that `$ref` against itself, where the definition it names is not.
+ * `$id` of its own it would resolve that `$ref` against itself, where the definition it names is not. An id ending in an
+ * empty fragment names the document without it, so that `#` is left out of the prefix, as `withRootIdRefPrefix()` leaves
+ * it out.
  *
  * @param schema - The sub-schema to qualify the references of
  * @param rootId - The `$id` the root schema is compiled under
@@ -34,6 +36,6 @@ function qualifiedEntries<T extends GenericObjectType>(copy: T, rootId: string):
 export default function qualifyRootRefs<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootId: string): S {
   const copy: S = { ...schema };
   const entries: GenericObjectType = copy;
-  qualifiedEntries(entries, rootId);
+  qualifiedEntries(entries, rootId.replace(/#$/, ''));
   return copy;
 }
