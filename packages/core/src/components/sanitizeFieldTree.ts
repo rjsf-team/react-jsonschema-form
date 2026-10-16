@@ -8,7 +8,7 @@ import {
   getByPath,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
-  getXxxOfKey,
+  getXxxOfOptions,
   GUESSED_TYPE_FLAG,
   isConstantOptionList,
   isObject,
@@ -17,6 +17,7 @@ import {
   isWholeValueSelect,
   rendersOwnFieldBesideOption,
   RJSF_REF_CYCLE_KEY,
+  toConstant,
 } from '@rjsf/utils';
 
 import type { FieldEdit, KeyMove } from './formState.ts';
@@ -161,12 +162,11 @@ function offeredValues<S extends StrictRJSFSchema>(layers: readonly S[]): unknow
     return values;
   }
   const last = layers[layers.length - 1];
-  const xxxOfKey = last && getXxxOfKey<S>(last);
-  const options = xxxOfKey ? last[xxxOfKey] : undefined;
+  const options = last && getXxxOfOptions<S>(last)?.options;
   if (!options || !isConstantOptionList<S>(options, true)) {
     return undefined;
   }
-  return options.flatMap((option) => (CONST_KEY in option ? [option[CONST_KEY]] : (option.enum ?? [])));
+  return options.map((option) => toConstant<S>(option));
 }
 
 /** Whether two `type`s name the same types, a list by what it names */
