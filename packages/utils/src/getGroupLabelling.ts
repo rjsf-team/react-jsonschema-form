@@ -9,7 +9,8 @@ import widgetDrawsLabel from './widgetDrawsLabel.ts';
  * `getGroupAttributes()` gives the group and each control in it, given that label's id where the widget draws one. The
  * label is drawn with no `for`, which can't name the group's wrapper, so the group points `aria-labelledby` at it
  * instead, where its field's plan names the group by no other label. A widget draws the label where
- * `widgetDrawsLabel()` says it does and it has text
+ * `widgetDrawsLabel()` says it does and it has text; a group whose label `ui:label: false` hides is named by the
+ * `aria-label` its plan gives it
  *
  * @param props - The widget's `id`, `label`, `hideLabel` and `presentation`
  * @param role - The role of the group's wrapper

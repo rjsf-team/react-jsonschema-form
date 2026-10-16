@@ -8,7 +8,7 @@ import type { ControlAttributes, FormContextType, RJSFSchema, StrictRJSFSchema, 
  *
  * @param props - The widget's `id` and `presentation`
  * @param [ownDescribedBy=[]] - The ids of the elements the widget renders to describe its control
- * @returns - The `aria-labelledby`, `aria-describedby` and `aria-invalid` to spread onto the control
+ * @returns - The `aria-labelledby`, `aria-label`, `aria-describedby` and `aria-invalid` to spread onto the control
  */
 export default function getControlAttributes<
   T = unknown,

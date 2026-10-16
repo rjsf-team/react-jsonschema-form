@@ -6,10 +6,11 @@ export type GroupRole = 'radiogroup' | 'group';
 
 /** Gets the ARIA attributes a widget rendering a group of controls, such as radios or checkboxes, spreads onto the
  * group's wrapper and onto each control in it. A label's `for` reaches a single control rather than the element
- * wrapping a group, so the wrapper takes the `aria-labelledby` its field's plan gives the control, and each control the
- * `aria-describedby` `getControlAttributes()` gives it. The wrapper takes the `role` too, so `aria-invalid` always lands
- * on the role it was placed for. `aria-invalid` goes where ARIA supports it: on a `radiogroup`
- * rather than on its radios, and on each control of a `group`, such as its checkboxes, rather than on the group.
+ * wrapping a group, so the wrapper takes the `aria-labelledby` its field's plan gives the control, or the `aria-label`
+ * it gives one whose label `ui:label: false` hides, and each control the `aria-describedby` `getControlAttributes()`
+ * gives it. The wrapper takes the `role` too, so `aria-invalid` always lands on the role it was placed for.
+ * `aria-invalid` goes where ARIA supports it: on a `radiogroup` rather than on its radios, and on each control of a
+ * `group`, such as its checkboxes, rather than on the group.
  *
  * A widget that draws its own label for the group, which the plan points nothing at, passes that label's id, so the
  * group is named by it where the plan names the group by no other label: one rule for every theme whose group widgets
@@ -31,27 +32,27 @@ export default function getGroupAttributes<
   role: GroupRole,
   drawnLabelId?: string,
 ): {
-  group: Pick<ControlAttributes, 'aria-labelledby' | 'aria-invalid'> & { role: GroupRole };
-  option: Omit<ControlAttributes, 'aria-labelledby' | 'required'>;
+  group: Pick<ControlAttributes, 'aria-labelledby' | 'aria-label' | 'aria-invalid'> & { role: GroupRole };
+  option: Omit<ControlAttributes, 'aria-labelledby' | 'aria-label' | 'required'>;
 } {
   const {
     'aria-labelledby': plannedLabelledBy,
+    'aria-label': ariaLabel,
     'aria-invalid': invalid,
     ...described
   } = getControlAttributes<T, S, F>(props);
   const { presentation } = props;
   const drawsOwnLabel = presentation ? presentation.label.by === 'self' : true;
   const labelledBy = plannedLabelledBy || (drawsOwnLabel ? drawnLabelId : undefined);
-  const group: Pick<ControlAttributes, 'aria-labelledby' | 'aria-invalid'> & { role: GroupRole } = labelledBy
-    ? { role, 'aria-labelledby': labelledBy }
-    : { role };
-  const option: Omit<ControlAttributes, 'aria-labelledby' | 'required'> = described;
-  if (invalid) {
-    if (role === 'radiogroup') {
-      group['aria-invalid'] = invalid;
-    } else {
-      option['aria-invalid'] = invalid;
-    }
-  }
-  return { group, option };
+  const invalidAttribute = invalid && { 'aria-invalid': invalid };
+  const groupTakesInvalid = role === 'radiogroup';
+  return {
+    group: {
+      role,
+      ...(labelledBy && { 'aria-labelledby': labelledBy }),
+      ...(ariaLabel && { 'aria-label': ariaLabel }),
+      ...(groupTakesInvalid && invalidAttribute),
+    },
+    option: { ...described, ...(!groupTakesInvalid && invalidAttribute) },
+  };
 }

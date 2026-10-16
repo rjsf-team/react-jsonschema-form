@@ -52,12 +52,19 @@ describe('getGroupAttributes()', () => {
     });
   });
 
+  it('names a group whose label the template draws with a for by no label the widget would draw', () => {
+    const presentation = plan({ declaration: { ...GROUP, labelledBy: 'for' } });
+    expect(getGroupAttributes({ id: ID, presentation }, 'group', `${ID}__label`).group).toEqual({ role: 'group' });
+  });
+
   it.each([
-    ['whose label is hidden', { declaration: { ...GROUP, label: 'self' as const }, showLabel: false }],
-    ['whose label the template draws with a for', { declaration: { ...GROUP, labelledBy: 'for' as const } }],
-  ])('names a group %s by no label the widget would draw', (_, inputs) => {
-    expect(getGroupAttributes({ id: ID, presentation: plan(inputs) }, 'group', `${ID}__label`).group).toEqual({
-      role: 'group',
+    ['template', 'group'],
+    ['self', 'radiogroup'],
+  ] as const)('names a %s-labelled %s whose label is hidden by its text, rather than each control', (label, role) => {
+    const presentation = plan({ declaration: { ...GROUP, label }, showLabel: false });
+    expect(getGroupAttributes({ id: ID, presentation }, role, `${ID}__label`)).toEqual({
+      group: { role, 'aria-label': 'Foo' },
+      option: {},
     });
   });
 

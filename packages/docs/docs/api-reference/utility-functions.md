@@ -956,7 +956,7 @@ Returns `undefined` when a valid discriminator is not present.
 
 ### getControlAttributes()
 
-Gets the ARIA attributes a widget spreads onto the focusable element that carries its `id`: the `aria-labelledby`, `aria-describedby` and `aria-invalid` its field's plan gives its control, followed in `aria-describedby` by the ids of the elements the widget renders to describe that control itself, such as its examples list, each once.
+Gets the ARIA attributes a widget spreads onto the focusable element that carries its `id`: the `aria-labelledby`, the `aria-label` a control whose label `ui:label: false` hides is named by, the `aria-describedby` and the `aria-invalid` its field's plan gives its control, followed in `aria-describedby` by the ids of the elements the widget renders to describe that control itself, such as its examples list, each once.
 A widget rendered without a plan, as one a caller renders without a `SchemaField` above it, is described by [ariaDescribedByIds()](#ariadescribedbyids).
 The plan's `required` is left to the widget's own `required` prop, which a widget may turn off, as `FileWidget` does once a file is chosen.
 
@@ -1110,7 +1110,7 @@ A `propertyNames` written as a `$ref` reads as the former, since resolving one n
 ### getGroupAttributes&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>() {#getgroupattributes}
 
 Gets the ARIA attributes a widget rendering a group of controls, such as radios or checkboxes, spreads onto the group's wrapper and onto each control in it.
-A label's `for` reaches a single control rather than the element wrapping a group, so the wrapper takes the `aria-labelledby` its field's plan gives the control, and each control the `aria-describedby` [getControlAttributes()](#getcontrolattributes) gives it.
+A label's `for` reaches a single control rather than the element wrapping a group, so the wrapper takes the `aria-labelledby` its field's plan gives the control, or the `aria-label` it gives one whose label `ui:label: false` hides, and each control the `aria-describedby` [getControlAttributes()](#getcontrolattributes) gives it.
 `aria-invalid` goes where ARIA supports it: on a `radiogroup` rather than on its radios, and on each control of a `group`, such as its checkboxes, rather than on the group.
 The wrapper takes the `role` as well, so `aria-invalid` always lands on the role it was placed for; spread `group` rather than setting the role separately.
 A widget that draws its own label for the group, as in a theme whose widgets draw their label, passes that label's id, and the group is named by it where the plan names the group by no other label.
@@ -1124,7 +1124,7 @@ Under a plan the id is taken only where the plan gives the widget the label, so 
 
 #### Returns
 
-- \{ group: Pick&lt;ControlAttributes, 'aria-labelledby' | 'aria-invalid'> & \{ role: GroupRole }, option: Omit&lt;ControlAttributes, 'aria-labelledby' | 'required'> }: `group`, the `role` and attributes for the group's wrapper, and `option`, those for each control in it
+- \{ group: Pick&lt;ControlAttributes, 'aria-labelledby' | 'aria-label' | 'aria-invalid'> & \{ role: GroupRole }, option: Omit&lt;ControlAttributes, 'aria-labelledby' | 'aria-label' | 'required'> }: `group`, the `role` and attributes for the group's wrapper, and `option`, those for each control in it
 
 #### Example
 
@@ -1145,7 +1145,7 @@ A widget that draws its own label for the group draws it with no `for`, which ca
 
 Gets what a widget rendering a group of controls, such as radios or checkboxes, needs to draw its own label for the group and to label the group by it: whether it draws one, the id it draws it under, [fieldLabelId()](#fieldlabelid), and the attributes [getGroupAttributes()](#getgroupattributes) gives the group and each control in it, given that label's id where the widget draws one.
 The label is drawn with no `for`, which can't name the group's wrapper, so the group points `aria-labelledby` at it instead, where its field's plan names the group by no other label.
-A widget draws the label where [widgetDrawsLabel()](#widgetdrawslabel) says it does and it has text, so a group whose label is hidden, or has none, is left unnamed rather than named by a label that isn't drawn.
+A widget draws the label where [widgetDrawsLabel()](#widgetdrawslabel) says it does and it has text, so a group whose label is hidden is named by its text through the `aria-label` the plan gives it, and one with no label is left unnamed, rather than either being named by a label that isn't drawn.
 
 #### Parameters
 
@@ -1446,7 +1446,7 @@ Mixed types can't share a typed field (`NumberField` would cast a string option 
 
 Derives the plan of the selector an `anyOf`/`oneOf` field renders to pick its option from the field's own plan.
 The selector draws the parts the field's plan has the field draw itself, as a theme whose template draws no label declares, and the parts drawn elsewhere are `'above'` it. It is derived from the plan of the field rendering the options, which `SchemaField` hands none of the parts a component rendered beside the options draws itself, such as a custom field's label or an object's heading.
-It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it always holds an option.
+It is named through `aria-labelledby` by a label a `FieldTemplate` draws, since that label's `for` names the field's own control rather than the selector, or by the `aria-label` the field's control takes where `ui:label: false` hides its label, described by the field's parts that render, marked `aria-invalid` while the field shows errors, and never `required`, since it always holds an option.
 `MultiSchemaField` passes it to the selector as `presentation`.
 
 #### Parameters
@@ -2461,7 +2461,7 @@ Each part is placed `template` or `self` by its declared owner, `above` when a f
 - The description and help show where they have text, the description only where `showLabel` allows it, since `ui:label: false` hides both. Text any field above already shows is `above`, as is a part with no text under a field above that shows one. Text is compared with `===`, so an element `ui:help` is matched only by the same element, which an option inheriting its field's `uiSchema` carries; to repeat one in an option's own `uiSchema`, reuse the one element rather than writing the JSX again. Text of its own takes [optionDescriptionId()](#optiondescriptionid) or [optionHelpId()](#optionhelpid) when a field above shows text under the id it would take, numbered by how many fields above show text of their own, so each level's text has an id of its own.
 - The errors are the field's own with `hideError` applied, or, under a field above, that field's, which it draws.
 - The control is described by the parts that render, here or above, which the plan lists as `describedBy`, and is `aria-invalid` whenever errors show. A field below rendering the same id inherits `describedBy`, so a widget adds the ids of the elements it renders to describe its own control, such as its `examplesId()` list, with [getControlAttributes()](#getcontrolattributes) rather than through the plan.
-- The plan records `showLabel` as resolved, so a widget reads whether `ui:label: false` hides its field's label and description from it. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at [fieldLabelId()](#fieldlabelid).
+- The plan records `showLabel` as resolved, so a widget reads whether `ui:label: false` hides its field's label and description from it. A control whose label it hides, with no label above naming it, takes the label's text as its `aria-label`, since hiding the label is a choice of layout, not of the control's name, or the `aria-label` of the nearest field above rendering the same id whose label is hidden too, as an option's control is named by its field's label while it shows; `getGroupAttributes()` puts it on a group's wrapper. A control the template labels and whose declaration says `labelledBy: 'aria-labelledby'` points `aria-labelledby` at [fieldLabelId()](#fieldlabelid).
 
 #### Parameters
 
@@ -3055,7 +3055,7 @@ Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the elemen
 A select rendered inside another widget, such as each select of an `AltDateWidget`, has no label of its own and an id that no help or error element is rendered for, so only its caller can name it and link it to its field.
 While the select shows the description of its selected option, the ids the caller passed are followed by that description's id, [selectedOptionDescriptionId()](#selectedoptiondescriptionid) under its field's plan and `descriptionId(props.id)` without one, the one element the select renders itself, so that description is still announced.
 A select that shows none is described by the ids the caller passed alone: a date part, a `multiple` select, one whose label is hidden and one whose selected option has no description render no such element, and its id may be another field's description id.
-Without ids from the caller, a select its field's plan reaches takes the attributes [getControlAttributes()](#getcontrolattributes) gives its control, the selected option's description among its describers while it renders one, and a select rendered without a plan `ariaDescribedByIds(props.id)`.
+Without ids from the caller, a select its field's plan reaches takes the attributes [getControlAttributes()](#getcontrolattributes) gives its control, the selected option's description among its describers while it renders one and the caller's `aria-label` over the plan's, and a select rendered without a plan `ariaDescribedByIds(props.id)`.
 Every theme's `SelectWidget` gives the result to its control, and a replacement `SelectWidget` should do the same; no other widget is required to.
 
 #### Parameters

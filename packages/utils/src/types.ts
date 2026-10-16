@@ -901,6 +901,8 @@ export interface PartPresentation {
  */
 export interface ControlAttributes {
   'aria-labelledby'?: string;
+  /** The label's text, naming a control whose label `ui:label: false` hides, which would otherwise have no name */
+  'aria-label'?: string;
   /** Lists only the ids of the parts that render */
   'aria-describedby'?: string;
   'aria-invalid'?: true;

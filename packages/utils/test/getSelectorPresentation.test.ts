@@ -50,6 +50,19 @@ describe('getSelectorPresentation()', () => {
     expect(selector.control?.attributes['aria-labelledby']).toBeUndefined();
   });
 
+  it.each(['template', 'self'] as const)(
+    'names the selector by the label text a %s-labelled field hides under ui:label false',
+    (label) => {
+      const field = resolveFieldPresentation({
+        id: ID,
+        declaration: { ...TEMPLATE, label },
+        label: 'Foo',
+        showLabel: false,
+      });
+      expect(getSelectorPresentation(field, SELECTOR).control?.attributes).toEqual({ 'aria-label': 'Foo' });
+    },
+  );
+
   it('has no control when its field has none on screen', () => {
     const field = resolveFieldPresentation({ id: ID, declaration: TEMPLATE, label: 'Foo', hasControl: false });
     expect(getSelectorPresentation(field, SELECTOR).control).toBeUndefined();
