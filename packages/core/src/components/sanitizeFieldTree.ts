@@ -259,7 +259,7 @@ interface FieldPair<S> {
   newInherited: unknown;
   /** Whether the field is an array item, whose `null` or `undefined` is a placeholder the item's schema judges */
   isItem: boolean;
-  /** Whether the field was in the data before: a property holding a value, or an item */
+  /** Whether the field was in the data before: a property holding a value, or an item of an array the data held */
   hasOld: boolean;
   /** `oldRaw` and `newRaw` retrieved for their values, when the caller has them */
   oldRetrieved?: S;
@@ -349,6 +349,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     const items = newValue.map((item: unknown, index) => {
       const newItem = itemOf(newLayers, index);
       const previousIndex = previousKeyOf(String(index));
+      const hasPrevious =
+        Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length;
+      // An item no previous one moved to, such as a copy or a new row, is judged as holding what it holds now under
+      // the old tree's item at its index, so a change that flips the constraints of the rows judges it as it judges them
       return newItem === undefined
         ? item
         : walk(
@@ -356,12 +360,12 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
             {
               oldRaw: itemOf(oldLayers, index),
               newRaw: newItem,
-              oldValue: valueAt(oldValue, previousIndex),
+              oldValue: hasPrevious ? valueAt(oldValue, previousIndex) : item,
               newValue: item,
               oldInherited: undefined,
               newInherited: undefined,
               isItem: true,
-              hasOld: Array.isArray(oldValue) && previousIndex !== undefined && Number(previousIndex) < oldValue.length,
+              hasOld: Array.isArray(oldValue),
             },
             [...path, index],
           );
