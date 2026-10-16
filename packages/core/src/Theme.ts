@@ -36,6 +36,7 @@ function generatePresentation(): ThemePresentation {
       CheckboxWidget: { label: 'self', description: 'self', uncheckedIsFalse: true },
       CheckboxesWidget: { labelledBy: 'aria-labelledby' },
       RadioWidget: { labelledBy: 'aria-labelledby' },
+      RatingWidget: { labelledBy: 'aria-labelledby' },
     },
     fields: {
       AnyOfField: { label: 'template', description: 'template' },

@@ -9,7 +9,7 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import { errorId, fieldLabelId, helpId, optionHelpId, selectedOptionDescriptionId, titleId } from '@rjsf/utils';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 
 import { generateTemplates, generateTheme, generateWidgets } from '../src/index.ts';
 import { createFormComponent } from './testUtils.tsx';
@@ -760,6 +760,50 @@ describe('a widget rendering a group of controls', () => {
       expect(radio).not.toHaveAttribute('aria-invalid');
       expect(radio.getAttribute('aria-describedby')!.split(' ')).toContain(errorId('root_foo'));
     });
+  });
+
+  it('names a rating radiogroup by the label and marks the radiogroup invalid rather than its stars', () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo', maximum: 3 } } },
+      uiSchema: { foo: { 'ui:widget': 'RatingWidget' } },
+      extraErrors: { foo: { __errors: ['is wrong'] } },
+    });
+    const group = screen.getByRole('radiogroup', { name: 'Foo' });
+    expect(group).toHaveAttribute('aria-invalid', 'true');
+    expect(node.querySelector(`#${fieldLabelId('root_foo')}`)?.closest('label')).not.toHaveAttribute('for');
+    const stars = within(group).getAllByRole('radio');
+    expect(stars).toHaveLength(3);
+    stars.forEach((star) => {
+      expect(star).not.toHaveAttribute('aria-invalid');
+      expect(star.getAttribute('aria-describedby')!.split(' ')).toContain(errorId('root_foo'));
+    });
+  });
+
+  it.each<[string, RJSFSchema, UiSchema, string]>([
+    ['radio group', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }, 'radiogroup'],
+    ['option selector', { anyOf: [{ type: 'string' }, { type: 'number' }] }, {}, 'combobox'],
+  ])("names a required field's %s by its label's text, without the required marker", (_, foo, fooUi, role) => {
+    createFormComponent({
+      schema: { type: 'object', required: ['foo'], properties: { foo: { title: 'Foo', ...foo } } },
+      uiSchema: { foo: fooUi },
+    });
+    expect(screen.getByRole(role, { name: 'Foo' })).toBeInTheDocument();
+  });
+
+  it('marks a required rating radiogroup aria-required, as its stars take no required of their own', () => {
+    createFormComponent({
+      schema: { type: 'object', required: ['foo'], properties: { foo: { type: 'integer', title: 'Foo' } } },
+      uiSchema: { foo: { 'ui:widget': 'RatingWidget' } },
+    });
+    expect(screen.getByRole('radiogroup')).toHaveAttribute('aria-required', 'true');
+  });
+
+  it('names a rating radiogroup by the label text ui:label false hides', () => {
+    createFormComponent({
+      schema: { type: 'object', properties: { foo: { type: 'integer', title: 'Foo' } } },
+      uiSchema: { foo: { 'ui:widget': 'RatingWidget', 'ui:label': false } },
+    });
+    expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Foo');
   });
 
   it('names its group by the label and marks each checkbox invalid rather than the group', () => {
