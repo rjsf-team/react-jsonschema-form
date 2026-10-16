@@ -1,4 +1,5 @@
 import isPlainObject from './isPlainObject.ts';
+import { markHandedOut, isHandedOut } from './schema/graph/handedOut.ts';
 
 function isReactElement(thing: unknown): thing is { $$typeof: unknown; type: unknown; key: unknown; props: unknown } {
   // `$$typeof` alone is not enough: `forwardRef()`, `memo()`, `lazy()`, contexts and portals carry one too and have
@@ -100,6 +101,10 @@ function shareUnchanged(prev: unknown, next: unknown, walked: WalkedPairs): unkn
     }
     if (!copy) {
       return leavePair(walked, next);
+    }
+    // The copy is deep-equal to `next`, so a schema `retrieveSchema()` handed out keeps standing for its subschema
+    if (isHandedOut(next)) {
+      markHandedOut(copy);
     }
     const proto = Object.getPrototypeOf(next);
     // Reassigning a prototype deoptimizes property access, so only a null-prototype source pays for it
