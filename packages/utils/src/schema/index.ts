@@ -10,6 +10,7 @@ import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
 import omitExtraData, { isValueEmpty } from './omitExtraData.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, { getAdditionalPropertyType, relaxOptionsForScoring } from './retrieveSchema.ts';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema.ts';
 
@@ -29,6 +30,7 @@ export {
   isValueEmpty,
   omitExtraData,
   relaxOptionsForScoring,
+  resolveConstantOptions,
   retrieveSchema,
   sanitizeDataForNewSchema,
   withVariantId,

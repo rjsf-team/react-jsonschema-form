@@ -2103,6 +2103,25 @@ Forgets every message `logOnce()` has already logged, so each will be logged aga
 Tests need it so each one sees its own warnings.
 An app that swaps schemas at runtime needs it for the same reason the playground does: a wizard whose steps reuse the same field ids, a schema editor or a form builder would otherwise have the second schema's warnings held back by the first's.
 
+### resolveConstantOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns `schema` with the own `$ref` of each of its `anyOf`/`oneOf` options resolved when that makes every option a constant, the shape a select is read from, and `schema` itself otherwise.
+`retrieveSchema()` hands an option written as a `$ref` out as it stands, for the field that renders it to retrieve, but a select renders no field per option, so `isSelect()`, `isMultiSelect()` and the fields read a select's options through this before `optionsList()` labels them.
+The result is made once per schema and shared.
+
+#### Parameters
+
+- schema: S - The retrieved schema that may offer options written as `$ref`s
+- rootSchema: S - The root schema the references name definitions of
+
+#### Returns
+
+- S: The schema with its constant options resolved, or `schema` itself
+
+#### Throws
+
+- Error for an option's reference that resolves to nothing, as retrieving that option does
+
 ### resolveDefaultWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
 Computes the widget name a field falls back to when no `ui:widget` is specified, along with the `enumOptions` (if any) that back a `select`-like fallback.

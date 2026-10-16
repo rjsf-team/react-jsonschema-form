@@ -3391,6 +3391,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       it('Test schema with valid formData for enum property', () => {
         expect(ensureFormDataMatchingSchema({ validator: testValidator }, schema, schema, 'b')).toEqual('b');
       });
+      it('keeps an option of constants written as $refs and drops a value none of them holds', () => {
+        const color: RJSFSchema = {
+          type: 'string',
+          oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }],
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: { red: { const: 'red' }, blue: { const: 'blue' } },
+          type: 'object',
+          properties: { color },
+        };
+        expect(ensureFormDataMatchingSchema({ validator: testValidator }, color, rootSchema, 'blue')).toEqual('blue');
+        expect(ensureFormDataMatchingSchema({ validator: testValidator }, color, rootSchema, 'green')).toBeUndefined();
+      });
       it('Test schema with const property', () => {
         schema = {
           type: 'string',

@@ -3266,6 +3266,30 @@ describe('oneOf', () => {
           'root_plans_0',
         );
       });
+
+      it('should sanitize for a property whose object constants are written as $refs', async () => {
+        const schema: RJSFSchema = {
+          definitions: { basic: { const: { tier: 1 }, title: 'Basic' }, pro: { const: { tier: 2 }, title: 'Pro' } },
+          type: 'object',
+          properties: {
+            plan: { type: 'object', oneOf: [{ $ref: '#/definitions/basic' }, { $ref: '#/definitions/pro' }] },
+            color: { type: 'string' },
+          },
+          if: { properties: { plan: { const: { tier: 1 } } } },
+          ...colorsByTier,
+        };
+        const { onChange } = createFormComponent({
+          schema,
+          initialFormData: { plan: { tier: 1 }, color: 'red' },
+        });
+
+        await user.selectOptions(screen.getByRole('combobox', { name: 'plan' }), 'Pro');
+
+        expect(onChange).toHaveBeenLastCalledWith(
+          expect.objectContaining({ formData: { plan: { tier: 2 }, color: 'blue' } }),
+          'root_plan',
+        );
+      });
     });
 
     it('should keep the schema a typeless select infers its type into when its uiSchema changes', () => {

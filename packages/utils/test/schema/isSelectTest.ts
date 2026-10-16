@@ -53,5 +53,25 @@ export default function isSelectTest(testValidator: TestValidatorType) {
       const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
       expect(schemaUtils.isSelect(schema)).toBe(true);
     });
+    it('should be true for constant options written as $refs', () => {
+      const color: RJSFSchema = { oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }] };
+      const rootSchema: RJSFSchema = {
+        definitions: { red: { const: 'red' }, blue: { const: 'blue' } },
+        type: 'object',
+        properties: { color },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+      expect(schemaUtils.isSelect(color)).toBe(true);
+    });
+    it('should be false for options written as $refs whose definitions are not all constants', () => {
+      const color: RJSFSchema = { oneOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/text' }] };
+      const rootSchema: RJSFSchema = {
+        definitions: { red: { const: 'red' }, text: { type: 'string' } },
+        type: 'object',
+        properties: { color },
+      };
+      const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+      expect(schemaUtils.isSelect(color)).toBe(false);
+    });
   });
 }

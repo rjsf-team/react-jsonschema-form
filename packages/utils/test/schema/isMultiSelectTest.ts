@@ -64,5 +64,18 @@ export default function isMultiSelectTest(testValidator: TestValidatorType) {
       };
       expect(isMultiSelect({ validator: testValidator }, schema)).toBe(false);
     });
+    it('should be true for constant item options written as $refs', () => {
+      const colors: RJSFSchema = {
+        type: 'array',
+        uniqueItems: true,
+        items: { anyOf: [{ $ref: '#/definitions/red' }, { $ref: '#/definitions/blue' }] },
+      };
+      const rootSchema: RJSFSchema = {
+        definitions: { red: { const: 'red' }, blue: { const: 'blue' } },
+        type: 'object',
+        properties: { colors },
+      };
+      expect(createSchemaUtils({ validator: testValidator }, rootSchema).isMultiSelect(colors)).toBe(true);
+    });
   });
 }

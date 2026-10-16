@@ -64,6 +64,7 @@ import { collapses, restartSeeds } from './graph/recursionRule.ts';
 import type { ContainmentEdge } from './graph/recursionRule.ts';
 import isMultiSelect from './isMultiSelect.ts';
 import isSelect from './isSelect.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema, {
   dependencyOption,
   isLeafSchema,
@@ -1468,7 +1469,7 @@ export function ensureFormDataMatchingSchema<
     formData !== undefined && !isConstant<S>(schemaToMatch) && isSelect<T, S, F>(context, schemaToMatch, rootSchema);
   let validFormData: unknown = formData;
   if (isSelectField) {
-    const getOptionsList = optionsList<T, S, F>(schemaToMatch);
+    const getOptionsList = optionsList<T, S, F>(resolveConstantOptions<S>(schemaToMatch, rootSchema));
     // An empty option list has no value to check the data against, so the data is kept, as it is without the list
     if (getOptionsList?.length !== 0) {
       validFormData = getOptionsList?.some((option) => deepEquals(option.value, formData)) ? formData : undefined;
