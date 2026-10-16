@@ -340,6 +340,19 @@ describe('CFWorkerValidator validating a subschema by its place in the root', ()
     expect(validator.isValid({ $ref: '#/definitions/X' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/X' }, 5, rootSchema)).toBe(false);
   });
+  it('validates against the root itself where its $id ends in an empty fragment', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = {
+      $id: 'http://example.com/root.json#',
+      definitions: { X: { type: 'string' } },
+      type: 'object',
+      properties: { k: { $ref: '#/definitions/X' } },
+    };
+    expect(validator.isValid(rootSchema, { k: 's' }, rootSchema)).toBe(true);
+    expect(validator.isValid(rootSchema, { k: 5 }, rootSchema)).toBe(false);
+    expect(validator.validateFormData({ k: 's' }, rootSchema).errors).toEqual([]);
+    expect(validator.validateFormData({ k: 5 }, rootSchema).errors.map((error) => error.property)).toContain('.k');
+  });
   it('resolves a pointer under $defs to a property whose name holds characters a fragment may and may not hold, a # ending it', () => {
     const validator = customizeValidator();
     const property: RJSFSchema = { type: 'string' };

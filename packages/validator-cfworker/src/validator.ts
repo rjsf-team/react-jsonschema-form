@@ -88,6 +88,22 @@ function withCfworkerRefs(schema: GenericObjectType): GenericObjectType {
   );
 }
 
+/** Returns `schema` carrying the `$id` the engine is handed it under: the `$id` less any fragment, as
+ * `rootSchemaIdOf()` registers a root, so a schema is compared and built as the root it may be, the root as it is handed
+ * included. A schema whose `$id` is only a fragment, which names a place in the resource around it, is handed as it is.
+ *
+ * @param schema - The schema the engine is handed
+ * @returns - The schema with its `$id` as registered
+ */
+function asRegistered(schema: object): object {
+  const id: unknown = Reflect.get(schema, ID_KEY);
+  if (typeof id !== 'string') {
+    return schema;
+  }
+  const [document] = id.split('#', 1);
+  return document === '' || document === id ? schema : { ...schema, [ID_KEY]: document };
+}
+
 /** `ValidatorType` implementation backed by `@cfworker/json-schema`. */
 export default class CFWorkerValidator<
   S extends StrictRJSFSchema = RJSFSchema,
@@ -142,15 +158,18 @@ export default class CFWorkerValidator<
     this.hasRegisteredRootSchema = false;
   }
 
-  /** Returns a cached schema-bound validator or builds and caches a new one.
+  /** Returns a cached schema-bound validator or builds and caches a new one. The root is bound beside the schema unless
+   * the schema is registered under the root's own `$id`, which makes it the document the root is: the engine takes one
+   * schema per URI, and the schema's `$ref`s into that document resolve against the schema itself.
    *
    * @param id - The cache key for the schema
-   * @param schema - The schema to bind to the validator
+   * @param handed - The schema to bind to the validator, bound with its `$id` as `asRegistered()` gives it
    * @returns - The cached or newly constructed validator
    */
-  private getOrBuild(id: string, schema: object): Validator {
-    const rootSchema =
-      this.cachedRootSchema && !deepEquals(this.cachedRootSchema, schema) ? this.cachedRootSchema : undefined;
+  private getOrBuild(id: string, handed: object): Validator {
+    const schema = asRegistered(handed);
+    const rootId: unknown = this.cachedRootSchema && Reflect.get(this.cachedRootSchema, ID_KEY);
+    const rootSchema = Reflect.get(schema, ID_KEY) === rootId ? undefined : this.cachedRootSchema;
     const cached = this.validators.get(id);
     if (
       cached &&
