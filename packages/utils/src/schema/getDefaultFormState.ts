@@ -306,10 +306,7 @@ export function computeDefaults<
   // Apply `ui:definitions` at every node, keyed by the `$ref` `retrieveSchema()` recorded when it resolved this
   // node, so defaults see the same uiSchema `SchemaField` renders with.
   const uiSchema = uiSchemaDefinitions
-    ? resolveUiSchema<T, S, F>(rawSchema, localUiSchema, {
-        rootSchema,
-        uiSchemaDefinitions,
-      })
+    ? resolveUiSchema<T, S, F>(rawSchema, localUiSchema, { rootSchema, uiSchemaDefinitions })
     : localUiSchema;
   const computeDefaultsProps = uiSchema === localUiSchema ? inputProps : { ...inputProps, uiSchema };
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
@@ -430,10 +427,7 @@ export function computeDefaults<
       // constAsDefaults as 'never' for the recursion
       contextToCompute = {
         ...context,
-        defaultFormStateBehavior: {
-          ...defaultFormStateBehavior,
-          constAsDefaults: 'never',
-        },
+        defaultFormStateBehavior: { ...defaultFormStateBehavior, constAsDefaults: 'never' },
       };
     }
     // A whole value is picked as it stands, so an inherited default naming one of the options is the one to pick
@@ -481,10 +475,7 @@ export function computeDefaults<
           updatedRecurseList = _recurseList.concat(optionRef);
           const { [REF_KEY]: _ref, ...besideRef } = optionSchema;
           const referenced = findSchemaDefinition<S>(optionRef, rootSchema);
-          renderedOption = getRenderedOptionSchema<S>(remaining as S, {
-            ...referenced,
-            ...besideRef,
-          });
+          renderedOption = getRenderedOptionSchema<S>(remaining as S, { ...referenced, ...besideRef });
         }
         schemaToCompute = withDefaultOf(remaining, renderedOption) as S;
       }
@@ -749,7 +740,7 @@ export function getObjectDefaults<
       const keys = new Set<string>();
       const formDataRequired: string[] = [];
       Object.keys(formData as GenericObjectType)
-        .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
+        .filter((key) => !retrievedSchema.properties || !Object.hasOwn(retrievedSchema.properties, key))
         .forEach((key) => {
           keys.add(key);
           formDataRequired.push(key);
@@ -759,7 +750,7 @@ export function getObjectDefaults<
       // re-add stale entries that no longer exist in formData.
       if (isObject(defaults) && formDataRequired.length === 0) {
         Object.keys(defaults as GenericObjectType)
-          .filter((key) => !retrievedSchema.properties || !retrievedSchema.properties[key])
+          .filter((key) => !retrievedSchema.properties || !Object.hasOwn(retrievedSchema.properties, key))
           .forEach((key) => keys.add(key));
       }
       keys.forEach((key) => {
