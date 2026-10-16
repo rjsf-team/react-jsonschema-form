@@ -1,6 +1,8 @@
 import { Box, Flex, Heading, Separator, Spacer } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
 
+import { RequiredMarker } from '../components/ui/field.tsx';
+
 /** The `TitleField` is the template to use to render the title of a field. Its `id` goes on the title's text alone, as
  * an option selector beside a container's options is named by it, and the required marker and the optional data control
  * aren't part of that name
@@ -15,12 +17,8 @@ export default function TitleField<
   let heading = (
     <Heading as='h5'>
       <span id={id}>{title}</span>
-      {/* Marked as Chakra's `Field.RequiredIndicator` marks a required field's label */}
-      {required && (
-        <Box as='span' aria-hidden color='fg.error' ms={1}>
-          *
-        </Box>
-      )}
+      {/* Spaced as a `Field`'s label spaces its own marker, by its gap, which a heading has none of */}
+      {required && <RequiredMarker ms={1} />}
     </Heading>
   );
   if (optionalDataControl) {

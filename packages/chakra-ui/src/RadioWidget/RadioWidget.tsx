@@ -3,6 +3,7 @@ import { Stack } from '@chakra-ui/react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
   enumOptionSelectedValue,
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -46,6 +47,7 @@ export default function RadioWidget<
   } = getGroupLabelling<T, S, F>(props, 'radiogroup');
   const optionIndexes = new Map(domValues.map((domValue, index) => [domValue, index]));
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <Field
       mb={1}
@@ -81,7 +83,7 @@ export default function RadioWidget<
                   // oxlint-disable-next-line react/no-array-index-key
                   key={index}
                   disabled={disabled || itemDisabled || readonly}
-                  inputProps={{ ...optionAttributes, autoFocus: autofocus && index === 0 }}
+                  inputProps={{ ...optionAttributes, autoFocus: index === autofocusIndex }}
                 >
                   {option.label}
                 </Radio>

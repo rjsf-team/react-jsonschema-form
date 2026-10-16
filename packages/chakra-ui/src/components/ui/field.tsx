@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react';
-import { chakra, Field as ChakraField, useFieldContext, useFieldStyles } from '@chakra-ui/react';
+import { chakra, Field as ChakraField, useFieldContext, useFieldStyles, useSlotRecipe } from '@chakra-ui/react';
 
 export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>, 'label'> {
   label?: ReactNode;
@@ -12,6 +12,29 @@ export interface FieldProps extends Omit<ComponentProps<typeof ChakraField.Root>
   labelNamesNoControl?: boolean;
 }
 
+/** A label drawn as Chakra's `Field.Label` draws one, with the `field` recipe's label class and the style it is handed,
+ * for a label drawn without that component, which always gives it a `for`
+ *
+ * @param props - The label's attributes and children, and `css`, the recipe's label style
+ */
+export function RecipeLabel(props: ComponentProps<typeof chakra.label>) {
+  return <chakra.label className='chakra-field__label' {...props} />;
+}
+
+/** The `*` marking a required field, styled by the `field` recipe's `requiredIndicator` slot and hidden from a name, as
+ * Chakra's `Field.RequiredIndicator` draws it inside a `Field`, for a marker drawn outside one
+ *
+ * @param props - Style props for the marker, such as the spacing a label's own gap gives it inside a `Field`
+ */
+export function RequiredMarker(props: ComponentProps<typeof chakra.span>) {
+  const styles = useSlotRecipe({ key: 'field' })();
+  return (
+    <chakra.span className='chakra-field__requiredIndicator' css={styles.requiredIndicator} aria-hidden {...props}>
+      *
+    </chakra.span>
+  );
+}
+
 /** The field's label with no `for`: Ark's `Field.Label` always sets one, and ignores an undefined override. It keeps the
  * rest of that label's attributes, as the recipe's disabled style keys off `data-disabled`
  */
@@ -19,9 +42,9 @@ function LabelWithoutFor({ children }: { children: ReactNode }) {
   const { htmlFor: _htmlFor, ...labelProps } = useFieldContext().getLabelProps();
   const styles = useFieldStyles();
   return (
-    <chakra.label {...labelProps} className='chakra-field__label' css={styles.label}>
+    <RecipeLabel {...labelProps} css={styles.label}>
       {children}
-    </chakra.label>
+    </RecipeLabel>
   );
 }
 
