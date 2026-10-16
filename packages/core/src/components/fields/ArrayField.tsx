@@ -1047,7 +1047,8 @@ const NO_ITEMS: never[] = [];
  * A handler reads the rows from a ref rather than closing over the render's: a second handler in the same event has to
  * start from the rows the first one sent, which React has yet to render, and a handler closing over the rendered rows
  * would change identity with them and re-render every row on every edit. Each committed render installs its rows from
- * an insertion Effect, so a layout Effect of the same commit that calls a handler reads the rows that commit rendered.
+ * a layout Effect, which React runs children first: a handler called from a layout Effect of a row or a template in
+ * the same commit still reads the rows of the commit before, under the keys of which it reads the form's current items.
  */
 function useKeyedFormData<T = unknown>(formData: T[] = NO_ITEMS): KeyedFormDataState<T> {
   const items: T[] = Array.isArray(formData) ? formData : NO_ITEMS;
@@ -1140,14 +1141,19 @@ export default function ArrayField<
 
   /** Sends the rows a handler built from `rows`, keying them first so a second handler in the same event starts from
    * them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off the
-   * rows themselves, so the errors go nowhere the items did not
+   * rows themselves, so the errors go nowhere the items did not. A change `transformChange` refused leaves the items
+   * where they were, so the rows go back to `rows`: kept, a refused reorder, which leaves the length as it was, would
+   * hand each row's instance, and the state it holds, to another item
    */
   const commitRows = useCallback(
     (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
       const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
-      sendMove({ newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
+      const isRefused = sendMove({ newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
         onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
       );
+      if (isRefused) {
+        updateKeyedFormData(rows);
+      }
     },
     [sendMove, onChange, updateKeyedFormData, fieldPath],
   );

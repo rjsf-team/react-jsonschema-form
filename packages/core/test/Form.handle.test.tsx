@@ -163,6 +163,28 @@ describe('FormRef', () => {
       expect(node.querySelector('#root_choice-0')).toHaveFocus();
     });
 
+    it.each(['say "hi"', 'back\\slash', 'line\nbreak'])(
+      'falls back to the first control whose id starts with a field id holding a character a selector quotes: %j',
+      (name) => {
+        function ButtonGroup({ id }: WidgetProps) {
+          return (
+            <>
+              <button type='button' id={`${id}-0`} aria-label='a' />
+              <button type='button' id={`${id}-1`} aria-label='b' />
+            </>
+          );
+        }
+        const { node, handle } = mountWithHandle({
+          schema: { type: 'object', properties: { [name]: { type: 'string', enum: ['a', 'b'] } } },
+          uiSchema: { [name]: { 'ui:widget': ButtonGroup } },
+        });
+
+        act(() => handle.focusOnError(error(`.${name}`)));
+
+        expect(node.ownerDocument.activeElement).toBe(node.ownerDocument.getElementById(`root_${name}-0`));
+      },
+    );
+
     it('focuses the input of a form rendered into the document of an iframe', () => {
       const ref = createFormRef();
       const container = frameContainer();

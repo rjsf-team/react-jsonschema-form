@@ -381,8 +381,9 @@ export default function ObjectField<
   const uiSchema: UiSchema<T, S, F> = rawUiSchema ?? EMPTY_UI_SCHEMA;
   const { fields, schemaUtils, translateString, globalUiOptions, rootSchema, uiSchemaDefinitions } = registry;
   const { OptionalDataControlsField } = fields;
-  // Installed from an insertion Effect, so a layout Effect of the same commit that calls a handler reads the data that
-  // commit rendered
+  // The data a handler reads outside a `Form`, where there is no current data to read instead. Installed from a layout
+  // Effect, which React runs children first, so a handler a property calls from its own layout Effect in the same
+  // commit reads the data of the commit before
   const renderedFormData = useRef(formData);
   useLayoutEffect(() => {
     renderedFormData.current = formData;
@@ -444,6 +445,10 @@ export default function ObjectField<
   const onPropertyChange = useCallback(
     (value: T | undefined, path: FieldPath, newErrorSchema?: ErrorSchema<T>, changedId?: string) => {
       onChange(value, path, newErrorSchema, changedId);
+      // Checked before the path is parsed, since most objects hold no seeded property and this runs on every keystroke
+      if (seededProperties.current.size === 0) {
+        return;
+      }
       const key = fieldPathToList(path)[ownDepth];
       if (key !== undefined) {
         forgetChangedSeeds(String(key));
@@ -723,7 +728,15 @@ export default function ObjectField<
         }));
         setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
         // The errors the form holds under the old name describe the property, so they go to its new name with it
-        sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () => onChange(renamedObj, fieldPath));
+        const isRefused = sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
+          onChange(renamedObj, fieldPath),
+        );
+        if (isRefused) {
+          // The property keeps its name, and so its place among the others
+          setAdditionalPropertyOrder((order) =>
+            order.map((property) => (property === actualNewKey ? oldKey : property)),
+          );
+        }
         forgetChangedSeeds(oldKey, actualNewKey);
       }
     },

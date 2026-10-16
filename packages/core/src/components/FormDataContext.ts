@@ -12,8 +12,11 @@ interface FormDataAccess {
    * those keys along when the change for that path reaches it before `send` returns, the way `startTransition()` marks
    * the updates made inside its callback. Only the form holds them all, and a field's `onChange` has no way to say
    * where a key went.
+   *
+   * Returns whether `transformChange` refused that change, which leaves the keys where they were, so a field that
+   * moved its own record of them, such as an array's row keys, can move it back.
    */
-  sendMove(move: AnnouncedMove, send: () => void): void;
+  sendMove(move: AnnouncedMove, send: () => void): boolean;
   /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
 }

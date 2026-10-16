@@ -1337,6 +1337,27 @@ describe('ObjectField', () => {
       expect(handleOf(ref).getFormData()).toEqual({ num1: 0 });
     });
 
+    it('should keep a property in its place when transformChange refuses its rename', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { first: 'a', second: 'b' },
+        transformChange: (next, previous) => (isPlainObject(next) && 'renamed' in next ? previous : next),
+      });
+
+      const keyInput = elementOf(node, '#root_first-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'renamed');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b' });
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first-key',
+        'root_second-key',
+      ]);
+    });
+
     it('should seed from the uiSchema entry of a declared name a property is renamed onto', async () => {
       // The field the declared name brings up reads `uiSchema.count`, so seeding through `uiSchema.additionalProperties`
       // would hand that number field the `ui:initialValue` written for the string the other keys hold

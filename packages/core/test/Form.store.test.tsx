@@ -343,6 +343,73 @@ it.each(['layout', 'passive'] as const)(
   },
 );
 
+it('a blur and a focus a widget reports from its Effect cleanup as the form unmounts are dropped', () => {
+  const flushed = vi.fn();
+  function BlurOnUnmountWidget({ id, onBlur, onFocus, value }: WidgetProps) {
+    useEffect(
+      () => () => {
+        flushed();
+        onBlur(id, 'left');
+        onFocus(id, 'entered');
+      },
+      [id, onBlur, onFocus],
+    );
+    return <span>{String(value ?? '')}</span>;
+  }
+  const onBlur = vi.fn();
+  const onFocus = vi.fn();
+  const { unmount } = createFormComponent({
+    schema,
+    initialFormData: { name: 'a' },
+    uiSchema: { name: { 'ui:widget': BlurOnUnmountWidget } },
+    onBlur,
+    onFocus,
+  });
+
+  unmount();
+
+  expect(flushed).toHaveBeenCalledTimes(1);
+  expect(onBlur).not.toHaveBeenCalled();
+  expect(onFocus).not.toHaveBeenCalled();
+});
+
+it('a blur and a focus that reach a form hidden by Activity are dropped, and those after it is shown are reported', () => {
+  const reports = new Map<string, Pick<WidgetProps, 'onBlur' | 'onFocus'>>();
+  function RetainingWidget({ id, onBlur, onFocus, value }: WidgetProps) {
+    useEffect(() => {
+      reports.set(id, { onBlur, onFocus });
+    }, [id, onBlur, onFocus]);
+    return <span>{String(value ?? '')}</span>;
+  }
+  const report = (kind: 'onBlur' | 'onFocus') => reports.get('root_name')?.[kind]('root_name', 'a');
+  const calls: string[] = [];
+  const { hide, show } = renderInActivity(() => (
+    <Form
+      schema={schema}
+      validator={validator}
+      initialFormData={{ name: 'a' }}
+      uiSchema={{ name: { 'ui:widget': RetainingWidget } }}
+      onBlur={(id) => calls.push(`blur ${id}`)}
+      onFocus={(id) => calls.push(`focus ${id}`)}
+    />
+  ));
+  hide();
+
+  act(() => {
+    report('onFocus');
+    report('onBlur');
+  });
+  expect(calls).toEqual([]);
+
+  show();
+  act(() => {
+    report('onFocus');
+    report('onBlur');
+  });
+
+  expect(calls).toEqual(['focus root_name', 'blur root_name']);
+});
+
 it('a handle retained past the unmount validates without reporting the errors', () => {
   const ref = createFormRef();
   const invalidSchema: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: 3 } } };

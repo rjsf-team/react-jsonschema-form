@@ -5,20 +5,20 @@ import FormDataContext from '../components/FormDataContext.ts';
 import type { AnnouncedMove } from '../components/formState.ts';
 
 /** Sends a change that moves the keys of the array or object at `fieldPath`, see `FormDataAccess.sendMove()`. Outside a
- * `Form` there are no errors to move, so the change is just sent.
+ * `Form` there are no errors to move and no `transformChange` to refuse the change, so the change is just sent.
  *
  * @param fieldPath - The `FieldPath` of the array or object whose keys move
- * @returns - Calls `send` with the move announced
+ * @returns - Calls `send` with the move announced, and returns whether the form refused the change
  */
 export default function useSendMove(fieldPath: FieldPath) {
   const access = use(FormDataContext);
   return useCallback(
-    (move: Omit<AnnouncedMove, 'fieldPath'>, send: () => void) => {
+    (move: Omit<AnnouncedMove, 'fieldPath'>, send: () => void): boolean => {
       if (access) {
-        access.sendMove({ ...move, fieldPath }, send);
-      } else {
-        send();
+        return access.sendMove({ ...move, fieldPath }, send);
       }
+      send();
+      return false;
     },
     [access, fieldPath],
   );

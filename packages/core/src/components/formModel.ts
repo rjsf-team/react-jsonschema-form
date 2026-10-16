@@ -47,6 +47,17 @@ import {
 type Deliver = (report: () => void) => void;
 const deliverToCaller: Deliver = (report) => report();
 
+/** `value` as a quoted CSS string, for an attribute selector. An id is built from property names, which can hold a
+ * quote, a backslash or a line break, such as an additional property's the user typed, any of which would otherwise
+ * end the string or make the selector invalid
+ */
+function asCssString(value: string) {
+  const escaped = value
+    .replace(/["\\]/g, '\\$&')
+    .replace(/[\n\r\f]/g, (character) => `\\${character.charCodeAt(0).toString(16)} `);
+  return `"${escaped}"`;
+}
+
 /** The model holds the form's state between renders and performs every operation on it. An operation starts from the
  * current state and reads the props once, as it starts, so that everything it computes and reports belongs to one
  * moment.
@@ -72,8 +83,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let publishedProps = initialProps;
   // The state an operation starts from, for the store's and the committed props' present values
   let derivedCache: { props: FormProps<T, S, F>; from: FormState<T, S, F>; state: FormState<T, S, F> } | undefined;
-  // The key move of the change a field is sending, see `FormDataAccess.sendMove()`
+  // The key move of the change a field is sending, see `FormDataAccess.sendMove()`, and the last one whose change
+  // `transformChange` refused
   let announced: AnnouncedMove | undefined;
+  let refusedMove: AnnouncedMove | undefined;
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
   // what reaches it then: a draft a widget flushes from an Effect cleanup, a timer or a file read that finishes late,
   // or a call through a handle kept past the unmount. Reported through the `onChange` of the last render, it would be
@@ -179,7 +192,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const named = formElement instanceof view.HTMLFormElement ? formElement.elements.namedItem(elementId) : null;
     // if not an exact match, try finding a focusable element starting with the element id (like radio buttons or
     // checkboxes); some themes (e.g. shadcn) use button elements instead of native inputs for radio groups
-    const found = named ?? formElement.querySelector(`input[id^="${elementId}"], button[id^="${elementId}"]`);
+    const quotedId = asCssString(elementId);
+    const found = named ?? formElement.querySelector(`input[id^=${quotedId}], button[id^=${quotedId}]`);
     const field = found instanceof view.RadioNodeList ? found.item(0) : found;
     if (field instanceof view.HTMLElement) {
       field.focus();
@@ -229,14 +243,19 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   const applyEdit = (base: FormState<T, S, F>, change: FieldChange<T>, props: FormProps<T, S, F>) => {
     const isValidated = isLiveValidated(props);
     const edited = applyChangeToData(base, change, props);
-    const transformed = props.transformChange ? props.transformChange(edited.formData, base.formData) : edited.formData;
+    const returned = props.transformChange ? props.transformChange(edited.formData, base.formData) : edited.formData;
+    // Shared against the edit's data, so a copy that changes nothing, as `{ ...next }` with a field already trimmed is,
+    // takes the edit rather than deriving the whole form's data a second time
+    const transformed = Object.is(returned, base.formData) ? returned : replaceEqualDeep(edited.formData, returned);
     if (Object.is(transformed, edited.formData)) {
       return applyChangeToErrorsOf(edited, base.formData, change, props, isValidated);
     }
     if (Object.is(transformed, base.formData)) {
       return base;
     }
-    const rewrite: FieldChange<T> = { newValue: transformed, fieldPath: ROOT_FIELD_PATH };
+    // No field made the rewrite, so the errors the fields raised, the root's included, are carried through it as the
+    // edit left them
+    const rewrite: FieldChange<T> = { newValue: transformed, fieldPath: ROOT_FIELD_PATH, keepsOwnErrors: true };
     // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
     // the rewrite then carries through its one validation
     const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
@@ -269,9 +288,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     if (move) {
       announced = undefined;
     }
+    let isRefused = false;
     const committed = commit(
-      settled((base) =>
-        applyEdit(
+      settled((base) => {
+        const next = applyEdit(
           base,
           {
             newValue,
@@ -282,9 +302,15 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
             dropsOwnErrors: move?.dropsOwnErrors,
           },
           props,
-        ),
-      ),
+        );
+        // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
+        isRefused = next === base;
+        return next;
+      }),
     );
+    if (move && isRefused) {
+      refusedMove = move;
+    }
     deliver(() => props.onChange?.(toIChangeEvent(committed), id));
   };
 
@@ -390,13 +416,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
 
   return {
     /** The callback ref of the form element. React detaches it, with `null`, while an `<Activity>` hides the form as
-     * well as when the form unmounts; the element lives on through the former, so it is kept until the next one
-     * replaces it. A detached form makes no submit through it, see `attached()`.
+     * well as when the form unmounts, and attaches it again when the form is shown, so a handle kept past the unmount
+     * does not hold the form's DOM
      */
     setFormElement: (element: HTMLElement | null) => {
-      if (element) {
-        formElement = element;
-      }
+      formElement = element;
     },
     sendMove: (move: AnnouncedMove, send: () => void) => {
       announced = move;
@@ -407,6 +431,9 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
           announced = undefined;
         }
       }
+      const isRefused = refusedMove === move;
+      refusedMove = undefined;
+      return isRefused;
     },
     /** The latest value at `path`: an edit made since the form last rendered included */
     readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),
@@ -460,13 +487,20 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     handleSubmit,
     handleChange: (value: T | undefined, path: FieldPath, errors?: ErrorSchema<T>, id?: string) =>
       change(value, path, errors, id, callWithDeferredThrow),
+    // A detached form drops a blur or a focus as it drops a change: its handlers are those of the last render
     handleBlur: (id: string, data: unknown) => {
+      if (isDetached) {
+        return;
+      }
       const props = committedProps;
       // Before the blur reads the state, so it validates an edit `onBlur` makes instead of reverting it
       callWithDeferredThrow(() => props.onBlur?.(id, data));
       blur(id);
     },
     handleFocus: (id: string, data: unknown) => {
+      if (isDetached) {
+        return;
+      }
       const props = committedProps;
       callWithDeferredThrow(() => props.onFocus?.(id, data));
     },

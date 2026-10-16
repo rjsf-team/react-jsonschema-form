@@ -1,4 +1,4 @@
-import type { CustomValidator, ErrorTransformer, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import type { CustomValidator, ErrorTransformer, FieldProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { buttonId } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
@@ -26,6 +26,10 @@ const schema: RJSFSchema = {
 };
 
 const seed = (): Person => ({ first: '', second: '', nested: { inner: '' } });
+
+interface Root {
+  a?: string;
+}
 
 /** Renders a `Form<D>` with `props`, recording what `onChange` reports */
 function renderForm<D>(props: Omit<FormProps<D>, 'validator' | 'onChange'>) {
@@ -146,6 +150,65 @@ describe('transformChange', () => {
       { kind: 'x', tags: [null, null] },
       { kind: 'y', tags: [null, null] },
     ]);
+  });
+
+  it('refuses an array reorder, and each row keeps the state it holds with its own item', async () => {
+    // Both options take a string, so the option each row shows is the row's own state, not something its data says
+    const choiceSchema: RJSFSchema = {
+      type: 'array',
+      items: {
+        oneOf: [
+          { title: 'A', type: 'string' },
+          { title: 'B', type: 'string' },
+        ],
+      },
+    };
+    const refuseReorder: FormProps<string[]>['transformChange'] = (next, previous) =>
+      next?.[0] === previous?.[0] ? next : previous;
+    const { node } = renderForm<string[]>({
+      schema: choiceSchema,
+      initialFormData: ['x', 'y'],
+      transformChange: refuseReorder,
+    });
+    const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
+    await user.selectOptions(optionOf(0), 'B');
+
+    await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
+    expect(optionOf(0)).toHaveValue('1');
+    expect(optionOf(1)).toHaveValue('0');
+
+    // The rows a later handler starts from are the ones on screen, not the ones the refused reorder sent
+    await user.click(elementOf(node, `#${buttonId('root_1', 'remove')}`));
+    expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(1);
+    expect(optionOf(0)).toHaveValue('1');
+  });
+
+  it.each([
+    ['rewrites', (next: Root | undefined) => next && { ...next, a: next.a?.trim() }],
+    ['copies', (next: Root | undefined) => next && { ...next }],
+  ])('%s the edit of a root field that raises errors with it, and keeps the raise', async (_, transformChange) => {
+    function RaisingRootField({ formData, onChange, fieldPath }: FieldProps<Root>) {
+      return (
+        <button
+          type='button'
+          id='raise'
+          onClick={() => onChange({ ...formData, a: ' v ' }, fieldPath, { __errors: ['Root raise'] })}
+        >
+          Raise
+        </button>
+      );
+    }
+    const { node, reported } = renderForm<Root>({
+      schema: { type: 'object', properties: { a: { type: 'string' } } },
+      uiSchema: { 'ui:field': RaisingRootField },
+      initialFormData: {},
+      transformChange,
+    });
+
+    await user.click(elementOf(node, '#raise'));
+
+    expect(reported.at(-1)?.errorSchema).toEqual({ __errors: ['Root raise'] });
+    expect(reported.at(-1)?.errors.map(({ message }) => message)).toEqual(['Root raise']);
   });
 
   describe.each(['oneOf', 'anyOf'] as const)('an %s option switch', (keyword) => {

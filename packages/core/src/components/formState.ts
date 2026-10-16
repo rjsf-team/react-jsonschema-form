@@ -134,6 +134,10 @@ export interface FieldChange<T> {
   newOwnKeyOf?: KeyMove;
   /** For a change that moved keys, whether the errors raised at `fieldPath` itself go too; see `AnnouncedMove` */
   dropsOwnErrors?: boolean;
+  /** Whether the fields' own errors stay as they are: a change no field made, such as the data a `transformChange`
+   * writes over an edit, says nothing of what any field raised
+   */
+  keepsOwnErrors?: boolean;
 }
 
 /** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
@@ -640,7 +644,10 @@ function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends FormConte
   current: FormState<T, S, F>,
   change: FieldChange<T>,
 ): ErrorSchema<T> | undefined {
-  const { fieldPath, newKeyOf, newOwnKeyOf, dropsOwnErrors } = change;
+  const { fieldPath, newKeyOf, newOwnKeyOf, dropsOwnErrors, keepsOwnErrors } = change;
+  if (keepsOwnErrors) {
+    return current.customErrors;
+  }
   const path = fieldPathToList(fieldPath);
   const raised = raiseOf(change);
   let { customErrors } = current;
@@ -1961,14 +1968,19 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
 }
 
 /** The data the props seed the form with on mount and on `reset()`: `formData`, which is kept as another name for the
- * seed, or else `initialFormData`. A `null` seeds the same defaults an `undefined` does.
+ * seed, or else `initialFormData`. Only `undefined` leaves a prop unpassed, so a `null` `formData` is the seed, and
+ * seeds the same defaults an `undefined` does.
  *
  * @param props - The current props
  * @returns - The seed, or `undefined` when the props pass none
  */
 function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>): T | undefined {
   // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
-  return props.formData ?? props.initialFormData;
+  const { formData } = props;
+  if (formData === undefined) {
+    return props.initialFormData;
+  }
+  return formData;
 }
 
 export function initialState<T, S extends StrictRJSFSchema, F extends FormContextType>(

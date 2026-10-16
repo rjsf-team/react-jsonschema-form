@@ -377,6 +377,20 @@ describe('form data ownership', () => {
       expect(onChange.mock.calls[0][0].formData).toEqual({ a: 'Ax', b: 'B' });
       expect(input(container, 'root_a')).toHaveValue('Ax');
     });
+
+    it('a null formData is passed, so it is the seed over initialFormData and seeds the schema defaults', () => {
+      const { container } = render(
+        <Form
+          schema={withDefaults}
+          validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias winning over `initialFormData`
+          formData={null}
+          initialFormData={{ a: 'seed' }}
+        />,
+      );
+
+      expect(input(container, 'root_a')).toHaveValue('A');
+    });
   });
 
   describe('reset()', () => {

@@ -259,7 +259,7 @@ export function useDatePicker<V>({
   }, [draft, emptyValue, formatDate, onChange, value]);
 
   /** Tell the consumer the field has the focus, unless they have been told so already: where the popup is open, and
-   * so for a focus a close returns to the trigger, which `reportHeldFocus()` reports after that close's blur
+   * so for a focus a close returns to the trigger, which `reportClose()` reports after that close's blur
    */
   const reportFocus = useCallback(
     (reported: unknown = value) => {
