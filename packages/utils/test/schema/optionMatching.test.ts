@@ -115,4 +115,26 @@ describe('matching options through the schema graph', () => {
     expect(objectViews).toHaveLength(2);
     expect(getClosestMatchingOption(context, rootSchema, formData, objectViews, 0)).toBe(0);
   });
+  it('picks for data mutated in place since the last call what it holds now, at any depth', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { a: { type: 'string' } }, required: ['a'] },
+      { type: 'object', properties: { b: { type: 'string' } }, required: ['b'] },
+    ];
+    const rootSchema: RJSFSchema = { type: 'object', properties: { v: { anyOf: options } } };
+    const context = { validator: miniValidator() };
+    const inner: Record<string, string> = { a: 'x' };
+    const formData = { v: inner };
+    const outer: RJSFSchema[] = [
+      { type: 'object', properties: { v: { anyOf: options } } },
+      { type: 'object', properties: { w: { type: 'string' } } },
+    ];
+    expect(getClosestMatchingOption(context, rootSchema, inner, options)).toBe(0);
+    expect(getClosestMatchingOption(context, rootSchema, formData, outer)).toBe(0);
+
+    delete inner.a;
+    inner.b = 'y';
+
+    expect(getClosestMatchingOption(context, rootSchema, inner, options)).toBe(1);
+    expect(getClosestMatchingOption(context, rootSchema, formData, outer)).toBe(0);
+  });
 });
