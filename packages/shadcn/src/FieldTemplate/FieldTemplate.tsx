@@ -92,9 +92,9 @@ export default function FieldTemplate<
         )}
         {children}
         {rawDescription && !leavesPartsToCheckbox && (
-          <span className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': hasError })}>
+          <div className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': hasError })}>
             {description}
-          </span>
+          </div>
         )}
         {errors}
         {help}
