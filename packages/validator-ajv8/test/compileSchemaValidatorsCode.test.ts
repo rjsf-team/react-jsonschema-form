@@ -93,7 +93,7 @@ describe('compileSchemaValidatorsCode()', () => {
       },
     };
     const validateFns = evalValidatorCode(compileSchemaValidatorsCode(rootSchema));
-    const validateRoot = validateFns['http://x.example/root.json'];
+    const validateRoot = validateFns[schemaKey(rootSchema)];
     expect(validateRoot({ v: { k: 3 } })).toBe(true);
     expect(validateRoot({ v: { k: true } })).toBe(false);
   });
