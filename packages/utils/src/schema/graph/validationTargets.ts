@@ -4,6 +4,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  DISCRIMINATOR_PATH,
   ELSE_KEY,
   ID_KEY,
   IF_KEY,
@@ -16,10 +17,11 @@ import {
 } from '../../constants.ts';
 import hashForSchema from '../../hashForSchema.ts';
 import isObject, { isSchemaObject } from '../../isObject.ts';
+import { getByPath } from '../../pathUtils.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '../../types.ts';
 import KeyedMemo from './keyedMemo.ts';
 import { booleanSchema, schemaFrom } from './mergePlan.ts';
-import { isRootPointer, stringKeyword } from './parseSchemaGraph.ts';
+import { isRootPointer } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
 
 /** The suffix `withVariantId()` adds to an `$id`, matched at the end so deriving a variant of a variant replaces it
@@ -408,7 +410,10 @@ export function validationTargets<S extends StrictRJSFSchema = RJSFSchema>(graph
   // The field reads its discriminator from the schema it retrieves, which takes one declared beside a `$ref` to the
   // options or in another `allOf` entry, so each option is listed under every name a discriminator anywhere declares
   const discriminators = new Set(
-    nodes.flatMap((node) => stringKeyword(Reflect.get(node.raw, 'discriminator'), 'propertyName') ?? []),
+    nodes.flatMap((node) => {
+      const name = getByPath(node.raw, DISCRIMINATOR_PATH);
+      return typeof name === 'string' ? [name] : [];
+    }),
   );
   return [graph.rawRoot, ...nodes.flatMap((node) => nodeTargets(graph, node, discriminators))];
 }
