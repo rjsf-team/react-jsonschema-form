@@ -1865,7 +1865,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(formData.route.mux.p2s).toHaveLength(1);
       });
     });
-    it('keeps the fields of a $ref under a relative root $id through createSchemaUtils() (#5529)', () => {
+    it('keeps the fields of a $ref under a relative root $id through createSchemaUtils()', () => {
       const schema: RJSFSchema = {
         $schema: 'https://json-schema.org/draft/2020-12/schema',
         $id: 'nested/root.json',

@@ -5042,7 +5042,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieved).not.toHaveProperty('anyOf');
         expect(retrieved.required).toEqual(['b']);
       });
-      it('resolves a $ref under a relative $id against that $id (#5467)', () => {
+      it('resolves a $ref under a relative $id against that $id', () => {
         const rootSchema: RJSFSchema = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'https://example.com/root.json',
@@ -5058,7 +5058,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           expect.objectContaining({ type: 'string' }),
         );
       });
-      it("resolves an option's $ref under a relative $id against that $id, for the defaults and option scoring (#5467)", () => {
+      it("resolves an option's $ref under a relative $id against that $id, for the defaults and option scoring", () => {
         const rootSchema: RJSFSchema = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'https://example.com/root.json',
@@ -5084,7 +5084,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(schemaUtils.getClosestMatchingOption('s', handedOut, 1)).toBe(0);
         expect(schemaUtils.getClosestMatchingOption('s', rawOptions.map(schemaOf), 1)).toBe(0);
       });
-      it('resolves a $ref under a relative root $id to the resource it names, not one whose $id repeats the path (#5529)', () => {
+      it('resolves a $ref under a relative root $id to the resource it names, not one whose $id repeats the path', () => {
         const schema: RJSFSchema = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'a/root.json',
@@ -5151,7 +5151,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const a = retrieveProperty(testValidator, schema, 'a', schema);
         expect(retrieveProperty(testValidator, a, 'b', schema).type).toBe('number');
       });
-      it("resolves the same #/ $ref text in two resources to each one's own definition (#5529)", () => {
+      it("resolves the same #/ $ref text in two resources to each one's own definition", () => {
         const schema: RJSFSchema = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'https://example.com/root.json',

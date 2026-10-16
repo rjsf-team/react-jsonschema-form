@@ -1377,7 +1377,7 @@ describe('AJV8Validator', () => {
     beforeAll(() => {
       validator = new AJV8Validator({ AjvClass: Ajv2020 });
     });
-    describe('the root `createSchemaUtils()` rewrites under a relative base', () => {
+    describe('the root `createSchemaUtils()` hands out under a relative base', () => {
       const child = (id: string): RJSFSchema => ({
         $id: id,
         type: 'object',
@@ -1403,9 +1403,9 @@ describe('AJV8Validator', () => {
             x: { type: 'number' },
           },
         };
-        const rewritten = createSchemaUtils({ validator }, rootSchema).getRootSchema();
+        const handedOut = createSchemaUtils({ validator }, rootSchema).getRootSchema();
 
-        const { errors } = validator.validateFormData({ c: { a: 1 }, d: { a: 1 }, e: 'e' }, rewritten);
+        const { errors } = validator.validateFormData({ c: { a: 1 }, d: { a: 1 }, e: 'e' }, handedOut);
 
         expect(errors.map(({ stack }) => stack)).toStrictEqual([
           '.c.a must be string',

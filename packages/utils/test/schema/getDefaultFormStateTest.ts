@@ -8768,7 +8768,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const schemaUtils = createSchemaUtils({ validator: testValidator }, schema);
         expect(schemaUtils.getDefaultFormState(schemaUtils.getRootSchema())).toEqual({ l: 7 });
       });
-      it('fills the defaults of a $ref under a relative root $id through createSchemaUtils() (#5529)', () => {
+      it('fills the defaults of a $ref under a relative root $id through createSchemaUtils()', () => {
         const schema: RJSFSchema = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           $id: 'nested/root.json',

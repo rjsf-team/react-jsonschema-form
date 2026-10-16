@@ -344,7 +344,7 @@ describe('resolveUiSchema() - option walk through the schema graph', () => {
     expect(result.oneOf).toEqual([{ 'ui:title': 'Leaf' }]);
   });
 
-  it('walks the options of a $ref under a relative root $id from the root createSchemaUtils() hands out (#5529)', () => {
+  it('walks the options of a $ref under a relative root $id from the root createSchemaUtils() hands out', () => {
     const field: RJSFSchema = { $ref: 'child.json' };
     const rootSchema: RJSFSchema = {
       $schema: 'https://json-schema.org/draft/2020-12/schema',

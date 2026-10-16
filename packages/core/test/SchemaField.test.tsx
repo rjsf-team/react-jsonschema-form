@@ -1697,7 +1697,7 @@ describe('SchemaField', () => {
           expect(relative.querySelector('#root_p_w')).toHaveValue('w');
         });
 
-        it('renders and edits a field whose $ref sits under a relative nested $id (#5467)', async () => {
+        it('renders and edits a field whose $ref sits under a relative nested $id', async () => {
           const schema: RJSFSchema = {
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             $id: 'https://example.com/root.json',
@@ -1722,7 +1722,7 @@ describe('SchemaField', () => {
           );
         });
 
-        it("renders an additional key of a nested resource under a relative root $id with the resource's own definition (#5529)", () => {
+        it("renders an additional key of a nested resource under a relative root $id with the resource's own definition", () => {
           const schema: RJSFSchema = {
             $schema: 'https://json-schema.org/draft/2020-12/schema',
             $id: 'schemas/root.json',

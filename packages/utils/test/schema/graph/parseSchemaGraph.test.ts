@@ -318,7 +318,7 @@ describe('parseSchemaGraph()', () => {
       },
     };
 
-    it('resolves a relative $id against its parent base URI (#5467)', () => {
+    it('resolves a relative $id against its parent base URI', () => {
       const graph = parseSchemaGraph(schema);
       expect(at(graph, '/$defs/child').baseUri).toBe('https://example.com/child.json');
       expect(target(graph, '/$defs/child/properties/a').pointer).toBe('/$defs/child/$defs/x');
@@ -337,7 +337,7 @@ describe('parseSchemaGraph()', () => {
       expect(inner).toMatchObject({ pointer: '/$defs/holder/$defs/inner' });
       expect(target(graph, '/$defs/holder/$defs/inner/properties/z').pointer).toBe('/$defs/z');
     });
-    it('moves the base on an $id a pointer passes through a keyword holding one subschema, before it reaches data (#5529)', () => {
+    it('moves the base on an $id a pointer passes through a keyword holding one subschema, before it reaches data', () => {
       const graph = parseSchemaGraph(
         looseSchema({
           $schema: JSON_SCHEMA_DRAFT_2020_12,
@@ -351,7 +351,7 @@ describe('parseSchemaGraph()', () => {
       expect(target(graph, '/$defs/n').pointer).toBe('/$defs/a/not/x-meta/b');
       expect(target(graph, '/$defs/a/not/x-meta/b').pointer).toBe('/$defs/z');
     });
-    it('takes a relative root $id as the root base once (#5529)', () => {
+    it('takes a relative root $id as the root base once', () => {
       const relative: RJSFSchema = {
         $schema: JSON_SCHEMA_DRAFT_2020_12,
         $id: 'a/root.json',

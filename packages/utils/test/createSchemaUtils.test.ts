@@ -69,7 +69,7 @@ describe('createSchemaUtils()', () => {
       expect(schemaUtils2020.getRootSchema()).toBe(rootSchema2020);
     });
 
-    it('resolves a $ref under a relative root $id against that $id once (#5529)', () => {
+    it('resolves a $ref under a relative root $id against that $id once', () => {
       const c: RJSFSchema = { [REF_KEY]: 'child.json' };
       const relativeRoot: RJSFSchema = {
         [SCHEMA_KEY]: JSON_SCHEMA_DRAFT_2020_12,
