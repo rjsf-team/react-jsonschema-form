@@ -177,13 +177,13 @@ type RenderContext<T, S extends StrictRJSFSchema, F extends FormContextType> = P
 function resolveSchemaUtils<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   prev: Pick<RenderContext<T, S, F>, 'schemaUtils'> | undefined,
-): Pick<RenderContext<T, S, F>, 'schemaUtils'> {
+): SchemaUtilsType<T, S, F> {
   const { schema, validator, defaultFormStateBehavior, customMergeAllOf } = props;
   const schemaContext: SchemaContext<S, F> = { validator, defaultFormStateBehavior, customMergeAllOf };
   if (prev && !prev.schemaUtils.doesSchemaUtilsDiffer(schemaContext, schema)) {
-    return prev;
+    return prev.schemaUtils;
   }
-  return { schemaUtils: createSchemaUtils<T, S, F>(schemaContext, schema) };
+  return createSchemaUtils<T, S, F>(schemaContext, schema);
 }
 
 const UI_EMPTY_VALUE_KEY = 'ui:emptyValue';
@@ -226,18 +226,17 @@ function emptyValuesOf(uiSchema: unknown): unknown {
  * @param props - The current props
  * @param retrievedSchema - The schema resolved for the data the context is derived for
  * @param prev - The previous context, or the state holding one, whose references are retained where possible
- * @param resolved - The schema utilities for `props`, already resolved by the caller
+ * @param schemaUtils - The schema utilities for `props`, already resolved by the caller
  * @returns - The render context for the inputs
  */
 function deriveRenderContext<T, S extends StrictRJSFSchema, F extends FormContextType>(
   props: FormProps<T, S, F>,
   retrievedSchema: S,
   prev: RenderContext<T, S, F> | undefined,
-  resolved: Pick<RenderContext<T, S, F>, 'schemaUtils'>,
+  schemaUtils: SchemaUtilsType<T, S, F>,
 ): RenderContext<T, S, F> {
   // Defaulted the way `doesSchemaUtilsDiffer()` defaults it, so going from no settings to `{}` is not a change either
   const { uiSchema = {}, customValidate, transformErrors, defaultFormStateBehavior = {} } = props;
-  const { schemaUtils } = resolved;
   const rootSchema = schemaUtils.getRootSchema();
   // Shared before `replaceEqualDeep()` sees it, which compares a function by identity: an `arrayMinItems`
   // `computeSkipPopulate` written inline would then make every render look like a change of the settings. Settings
@@ -683,12 +682,8 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
 ): DerivedData<T, S, F> {
   const { isSanitized = false, edit, isReset = false } = options;
   const { uiSchema = {} } = props;
-  const resolved = resolveSchemaUtils(props, current);
-  const { schemaUtils } = resolved;
-  // Compared through `schemaUtils` rather than by the identity of `resolved` itself, which holds only because
-  // `resolveSchemaUtils()` hands `current` straight back: narrowing it to a copy would silently make this false
-  // forever, and with it every reuse below
-  const areSchemaUtilsReused = resolved.schemaUtils === current?.schemaUtils;
+  const schemaUtils = resolveSchemaUtils(props, current);
+  const areSchemaUtilsReused = schemaUtils === current?.schemaUtils;
   const rootSchema = schemaUtils.getRootSchema();
   // The data is shared against the committed data when there is some, so an unchanged subtree keeps the reference the
   // fields hold; on construction, against the caller's own value
@@ -734,7 +729,7 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
   // `idPrefix`, `widgets`, `templates`, `fields`, `formContext` and `uiSchema` too, none of which the utilities are
   // resolved from. `deriveRenderContext()` shares its result against `current`, so an unchanged context keeps every
   // reference the fields hold.
-  const context = deriveRenderContext(props, retrievedSchema, current, resolved);
+  const context = deriveRenderContext(props, retrievedSchema, current, schemaUtils);
   return { formData, context, areSchemaUtilsReused };
 }
 
@@ -937,13 +932,12 @@ function deriveControlledState<T, S extends StrictRJSFSchema, F extends FormCont
   current: FormState<T, S, F> | undefined,
   props: FormProps<T, S, F>,
 ): FormState<T, S, F> {
-  const resolved = resolveSchemaUtils(props, current);
-  const { schemaUtils } = resolved;
+  const schemaUtils = resolveSchemaUtils(props, current);
   const areSchemaUtilsReused = schemaUtils === current?.schemaUtils;
   const formData = current ? replaceEqualDeep(current.formData, props.formData) : props.formData;
   const isDataChanged = current !== undefined && formData !== current.formData;
   const retrievedSchema = resolveRetrievedSchema(current, schemaUtils, formData);
-  const context = deriveRenderContext(props, retrievedSchema, current, resolved);
+  const context = deriveRenderContext(props, retrievedSchema, current, schemaUtils);
   const { isSchemaChanged, isValidationPropChanged } = detectContextChanges(current, context);
   const edit = props.formData !== undefined;
   // Validated the way an edit is, with the schema resolved for this very data, whenever the utilities that resolve it
