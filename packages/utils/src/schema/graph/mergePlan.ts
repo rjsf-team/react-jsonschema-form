@@ -27,6 +27,23 @@ import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from './parseSchemaG
 /** The `$ref` targets entered on the way to a plan entry, from the nearest point the recursion rule restarts it at */
 export type RefPath = readonly NodeId[];
 
+/** Returns how often `target` occurs on `refPath` before its last entry, the ref path in effect where that entry was
+ * entered
+ *
+ * @param refPath - The ref path, ending at the target just entered
+ * @param target - The target to count
+ * @returns - The number of occurrences
+ */
+export function occurrencesBeforeLast(refPath: RefPath, target: NodeId): number {
+  let count = 0;
+  for (let index = 0; index < refPath.length - 1; index += 1) {
+    if (refPath[index] === target) {
+      count += 1;
+    }
+  }
+  return count;
+}
+
 /** A containment node a field is reached through, with the ref path of the plan entry that declares it */
 export interface Seed {
   readonly node: NodeId;
@@ -424,7 +441,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   private flatten(node: ObjectNode<S>, refPath: RefPath): Map<string | symbol, Provider<S>> {
     return flattenRef(this.graph, node, refPath, (target, path) => {
-      const cut = this.policy.cutRecursion && path.slice(0, -1).includes(target);
+      const cut = this.policy.cutRecursion && occurrencesBeforeLast(path, target) > 0;
       return !cut && this.enter(target, 'ref', path);
     });
   }

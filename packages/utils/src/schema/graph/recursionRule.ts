@@ -1,4 +1,5 @@
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
+import { occurrencesBeforeLast } from './mergePlan.ts';
 import type { MergePlan, Seed } from './mergePlan.ts';
 import type { NodeId, SchemaGraph } from './parseSchemaGraph.ts';
 import type { GuardChain } from './provenance.ts';
@@ -70,10 +71,8 @@ export function firstEnteredRefHit<S extends StrictRJSFSchema = RJSFSchema>(
   if (own.some(({ targets }) => targets.length > 0)) {
     return false;
   }
-  return plan.entries
-    .filter(({ edge }) => edge === 'ref')
-    .slice(0, 1)
-    .some(({ node, refPath }) => refPath.slice(0, -1).includes(node));
+  const firstRef = plan.entries.find(({ edge }) => edge === 'ref');
+  return firstRef !== undefined && occurrencesBeforeLast(firstRef.refPath, firstRef.node) > 0;
 }
 
 /** The count-2 check: some `$ref` the plan enters, through any edge, enters a target that already occurs twice or more
@@ -84,9 +83,7 @@ export function firstEnteredRefHit<S extends StrictRJSFSchema = RJSFSchema>(
  * @returns - Whether the check fires
  */
 export function count2Hit<S extends StrictRJSFSchema = RJSFSchema>(plan: MergePlan<S>): boolean {
-  return plan.entries.some(
-    ({ node, edge, refPath }) => edge === 'ref' && refPath.slice(0, -1).filter((target) => target === node).length >= 2,
-  );
+  return plan.entries.some(({ node, edge, refPath }) => edge === 'ref' && occurrencesBeforeLast(refPath, node) >= 2);
 }
 
 /** Returns whether a field collapses. The call root never does. The ref-path checks apply to every edge in the defaults
