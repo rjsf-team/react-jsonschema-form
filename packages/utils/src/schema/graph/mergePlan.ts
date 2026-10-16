@@ -330,12 +330,24 @@ function flattenRef<S extends StrictRJSFSchema>(
       }
     }
   }
-  for (const key of Reflect.ownKeys(node.raw)) {
-    if (key !== REF_KEY) {
-      keywords.set(key, { node, refPath });
-    }
+  for (const [key, provider] of ownProviders(node, refPath)) {
+    keywords.set(key, provider);
   }
   return keywords;
+}
+
+/** Returns the keywords `node` declares itself, its `$ref` aside, each provided by the node under `refPath` */
+function ownProviders<S extends StrictRJSFSchema>(
+  node: ObjectNode<S>,
+  refPath: RefPath,
+): Map<string | symbol, Provider<S>> {
+  const providers = new Map<string | symbol, Provider<S>>();
+  for (const key of Reflect.ownKeys(node.raw)) {
+    if (key !== REF_KEY) {
+      providers.set(key, { node, refPath });
+    }
+  }
+  return providers;
 }
 
 /** The definitions `refDefinition()` read, by graph and node */
@@ -743,9 +755,7 @@ export function ownChains<S extends StrictRJSFSchema = RJSFSchema>(
 ): Keywords<S>[] {
   return seeds.flatMap(({ node: id, refPath }) => {
     const node = graph.node(id);
-    return node.kind === 'schema'
-      ? [new Map(Reflect.ownKeys(node.raw).flatMap((key) => (key === REF_KEY ? [] : [[key, { node, refPath }]])))]
-      : [];
+    return node.kind === 'schema' ? [ownProviders(node, refPath)] : [];
   });
 }
 
