@@ -490,6 +490,21 @@ Otherwise the index of an option whose value is the whole `value` is returned, s
 
 - string | string[] | undefined: A single string index for the first `value` in `allEnumOptions`, if not `multiple`. Otherwise, the list of indexes for (each of) the value(s) in `value`.
 
+### enumOptionsAutofocusIndex&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Gets the index of the option a `RadioWidget` or `CheckboxesWidget` focuses under `ui:autofocus`. A radio group passes its value, so focus lands on its checked option, where Tab into the group lands, rather than on an unchecked one that Space would check. Otherwise, or where `ui:enumDisabled` disables the checked option, it is the first option that list leaves enabled, since a disabled option can't take focus.
+
+#### Parameters
+
+- enumOptions: EnumOptionsType&lt;S>[] | undefined - The widget's options
+- [enumDisabled]: EnumValue[] | undefined - The `ui:enumDisabled` list of enum values that should be rendered disabled
+- [autofocus=false]: boolean - Whether the widget is to take focus as it mounts
+- [checkedValue]: EnumOptionsType&lt;S>['value'] - A radio group's value, whose option takes focus where it is enabled
+
+#### Returns
+
+- number: The index of the option to focus, or -1 where the widget takes no focus or every option is disabled
+
 ### enumOptionsIsDisabled()
 
 Determines whether the option with the given `value` is one the `ui:enumDisabled` list disables.
