@@ -9736,6 +9736,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                         aria-autocomplete="list"
                         aria-expanded="false"
                         aria-haspopup="listbox"
+                        aria-label="Test field"
                         autocomplete="new-password"
                         class="ant-select-input"
                         id="root"

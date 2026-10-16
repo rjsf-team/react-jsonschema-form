@@ -5894,6 +5894,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
     >
       <div>
         <select
+          aria-label="Test field"
           class="form-select"
           id="root"
           multiple=""

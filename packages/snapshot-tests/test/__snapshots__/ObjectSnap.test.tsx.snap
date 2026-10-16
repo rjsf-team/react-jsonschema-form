@@ -3101,6 +3101,7 @@ exports[`object fields > with title and description with global label off > addi
               class="form-additional form-group col-xs-5"
             >
               <input
+                aria-label="foo"
                 class="form-control"
                 id="root_foo"
                 label="foo"
@@ -3174,6 +3175,7 @@ exports[`object fields > with title and description with global label off > obje
           class="form-group rjsf-field rjsf-field-string"
         >
           <input
+            aria-label="A"
             class="form-control"
             id="root_a"
             label="A"
@@ -3187,6 +3189,7 @@ exports[`object fields > with title and description with global label off > obje
           class="form-group rjsf-field rjsf-field-number"
         >
           <input
+            aria-label="B"
             class="form-control"
             id="root_b"
             inputmode="decimal"
@@ -3249,6 +3252,7 @@ exports[`object fields > with title and description with global label off > show
               class="form-additional form-group col-xs-5"
             >
               <input
+                aria-label="additionalProperty"
                 class="form-control"
                 id="root_additionalProperty"
                 label="additionalProperty"
