@@ -485,9 +485,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         isDetached = true;
       };
     },
-    /** Called from a layout Effect of every commit of the form with what it rendered: its props, the state it showed
-     * and the store's state that was derived from. Only recorded, for the operations that start from it; nothing is
-     * published, since the render already shows it.
+    /** Called from an insertion Effect of every commit of the form with what it rendered: its props, the state it
+     * showed and the store's state that was derived from. React runs every insertion Effect of a commit before any of
+     * its layout Effects, so a command from a layout Effect anywhere in the tree, an earlier sibling's or a widget's,
+     * starts from that commit's props; a layout Effect would run after those and leave them the previous commit's.
+     * Only recorded, for the operations that start from it; nothing is published, since the render already shows it.
      */
     committed: (nextProps: FormProps<T, S, F>, derived: FormState<T, S, F>, from: FormState<T, S, F>) => {
       committedProps = nextProps;
