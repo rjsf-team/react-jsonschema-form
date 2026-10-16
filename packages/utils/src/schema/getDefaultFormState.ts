@@ -1356,10 +1356,7 @@ function helperView<S extends StrictRJSFSchema, F extends FormContextType>(
   rawFormData: unknown,
 ): DefaultsView<S> {
   const field = callRoot<S>(rootSchema, rawSchema);
-  const behavior = context.defaultFormStateBehavior;
-  const retrieves =
-    shouldPopulateAllOfDefaults<S>(rawSchema, behavior) ||
-    (behavior?.emptyObjectFields !== 'skipEmptyDefaults' && IF_KEY in rawSchema);
+  const retrieves = stubsFor(context, field, new Set(Object.keys(rawSchema)));
   const formData = isObject(rawFormData) ? rawFormData : {};
   return retrieves
     ? settle<S, F>(context, { ...field, retrieves }, formData, formData)
