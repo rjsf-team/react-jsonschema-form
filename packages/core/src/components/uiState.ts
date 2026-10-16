@@ -25,6 +25,10 @@ import type { KeyMove } from './formState.ts';
 /** The option selected for a field's option list, and the field's data it holds for, see `useOptionSelection()` */
 export interface OptionSelection {
   readonly index: number;
+  /** Which pick of the user's the selection was made by, unique within the form: a field observes every pick by it,
+   * since picking the selected option again shows it where the data showed another
+   */
+  readonly pick: number;
   /** The field's data as the form last rendered it under the selection, and the data each change the form proposed
    * since leaves there: a parent answers a proposal with one of them, the proposal or, declining it, the data before.
    * Empty once the form rendered other data, which the selection is then only the preference in matching
@@ -255,6 +259,7 @@ export function createUiState() {
   // Read only through the methods below, never handed out, so the maps are written in place
   let selections = new Map<FieldPath, Map<string, OptionSelection>>();
   let expanded = new Set<FieldPath>();
+  let picks = 0;
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
   const selectionAt = (path: FieldPath, list: string) => selections.get(path)?.get(list);
@@ -276,11 +281,9 @@ export function createUiState() {
     selection: selectionAt,
     /** Selects option `index` of `list` at `path` for the field's `data` as it is shown */
     select: (path: FieldPath, list: string, index: number, data: unknown) => {
-      const current = selectionAt(path, list);
-      setSelection(path, list, { index, holdsFor: [data], isReleased: false });
-      if (current?.index !== index) {
-        notify();
-      }
+      picks += 1;
+      setSelection(path, list, { index, pick: picks, holdsFor: [data], isReleased: false });
+      notify();
     },
     /** Records the option shown for `data` before an edit inside the field, unless the selection already holds for that
      * data: the edit must not change which option the data is shown under
@@ -288,7 +291,7 @@ export function createUiState() {
     keep: (path: FieldPath, list: string, index: number, data: unknown) => {
       const current = selectionAt(path, list);
       if (current === undefined || !isHeldFor(current, data)) {
-        setSelection(path, list, { index, holdsFor: [data], isReleased: false });
+        setSelection(path, list, { index, pick: current?.pick ?? 0, holdsFor: [data], isReleased: false });
       }
     },
     /** Lets the data an edit to a property of the object's own that the options can disagree about leaves be matched
@@ -326,7 +329,7 @@ export function createUiState() {
         for (const [list, selection] of lists) {
           const holdsFor = isHeldFor(selection, data) ? [data] : [];
           if (holdsFor.length !== selection.holdsFor.length || selection.isReleased) {
-            lists.set(list, { index: selection.index, holdsFor, isReleased: false });
+            lists.set(list, { ...selection, holdsFor, isReleased: false });
           }
         }
       }
