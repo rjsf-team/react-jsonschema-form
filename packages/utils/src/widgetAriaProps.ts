@@ -14,18 +14,20 @@ export type WidgetAriaPropsInput<
   F extends FormContextType = FormContextType,
 > = SelectedOptionDescriptionProps<T, S, F> & Pick<WidgetProps<T, S, F>, 'aria-label' | 'aria-describedby'>;
 
-/** Return the `aria-label` and `aria-describedby` a `SelectWidget` gives the element a screen reader focuses. A widget
- * rendered inside another one, such as each select of an `AltDateWidget`, has no label of its own and an id that no
- * help or error element is rendered for, so only the caller can name it and link it to its field. The ids the caller
- * passed are followed by the selected option's description id, each id once, only while `SelectedOptionDescription`
- * renders it, the one the widget renders itself, so the description of the selected option is still announced.
- * Otherwise the id is left out: no element has it, and it may be another field's description id, as
- * `root_when_year__description` is for both the year select of `when` and a `when_year` property. A select its field's
- * plan reaches, with no ids from its caller, takes the attributes `getControlAttributes()` gives its control, the
- * selected option's description among its describers while it renders, and the caller's `aria-label` over the plan's.
- * A caller passing an empty `aria-describedby` describes the select by nothing but that description, as
- * `AdditionalPropertyKeySelect` does for a key, which has no description, help or errors of its own, rather than
- * leaving a select rendered without a plan to `ariaDescribedByIds()`, whose ids no element has.
+/** Return the `aria-label`, `aria-labelledby`, `aria-describedby` and `aria-invalid` a `SelectWidget` gives the element
+ * a screen reader focuses, all of which belong on that element. A select its field's plan reaches takes the attributes
+ * `getControlAttributes()` gives its control, with the ids its caller passed, then the selected option's description
+ * id, added to the plan's describers, each id once, and the caller's `aria-label` over the plan's unless it is empty,
+ * as `getControlAriaLabel()` reads it. A select rendered inside another widget, such as each date part of an
+ * `AltDateWidget`, has an id of its own that no help or error element is rendered for, so it is given a plan of its
+ * own, through which it is described by its field's parts. Without a plan, the caller's ids, even an empty
+ * `aria-describedby`, replace the `ariaDescribedByIds()` a widget rendered without one falls back to, whose ids no
+ * element may have.
+ *
+ * The selected option's description id is added only while `SelectedOptionDescription` renders it, the one element the
+ * widget renders itself, so the description of the selected option is still announced. Otherwise the id is left out:
+ * no element has it, and it may be another field's description id, as `root_when_year__description` is for both the
+ * year select of `when` and a `when_year` property.
  *
  * @param props - The widget's props, of which `id`, `presentation`, `aria-label`, `aria-describedby` and those
  *   `SelectedOptionDescription` reads are used
@@ -36,15 +38,12 @@ export default function widgetAriaProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetAriaPropsInput<T, S, F>): Omit<ControlAttributes, 'required'> {
-  const { 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy } = props;
+  const { 'aria-label': ariaLabel, 'aria-describedby': callerDescribedBy, presentation } = props;
   const selected = getSelectedOptionDescription<T, S, F>(props);
-  const ownDescribedBy = selected ? [selected.id] : [];
-  if (callerDescribedBy === undefined) {
-    const attributes = getControlAttributes<T, S, F>(props, ownDescribedBy);
-    return { ...attributes, 'aria-label': ariaLabel || attributes['aria-label'] };
+  const addedDescribedBy = [...(callerDescribedBy?.split(' ') ?? []), ...(selected ? [selected.id] : [])];
+  if (callerDescribedBy !== undefined && !presentation) {
+    return { 'aria-label': ariaLabel, 'aria-describedby': uniqueIds(addedDescribedBy).join(' ') || undefined };
   }
-  return {
-    'aria-label': ariaLabel,
-    'aria-describedby': uniqueIds([...callerDescribedBy.split(' '), ...ownDescribedBy]).join(' ') || undefined,
-  };
+  const attributes = getControlAttributes<T, S, F>(props, addedDescribedBy);
+  return { ...attributes, 'aria-label': ariaLabel || attributes['aria-label'] };
 }
