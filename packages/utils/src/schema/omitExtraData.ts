@@ -24,7 +24,7 @@ import type {
 import { closestOption } from './getClosestMatchingOption.ts';
 import { mergeAllOf, schemaFrom, schemaOfBoolean } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
-import { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
+import retrieveSchema, { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
  * object whose every own value is itself empty (recursive). Scalars like `0` and `false` are not empty.
@@ -304,8 +304,17 @@ export default function omitExtraData<
       isSchemaObject<S>(option) ? option : schemaOfBoolean(Boolean(option), rootSchema);
     let winning: unknown;
     if (fieldState) {
-      const options = oneOf.map(asOption);
-      winning = options[fieldState.selectedOption(fieldPathFromList(path), options, source, discriminator)];
+      // The field picks among its options as it renders them, each retrieved for its data, which can match the data
+      // where the option as written does not, as an `if`/`then` that declares a key does
+      const views = oneOf.map((option) =>
+        retrieveSchema<unknown, S, F>(
+          context,
+          isSchemaObject<S>(option) ? option : schemaFrom(rootSchema, {}),
+          rootSchema,
+          source,
+        ),
+      );
+      winning = oneOf[fieldState.selectedOption(fieldPathFromList(path), views, source, discriminator)];
     } else {
       // `additionalProperties: false` is relaxed for matching only, so the data's extra keys don't rule out the option
       // that is then applied with it, to omit them

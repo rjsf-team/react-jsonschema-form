@@ -949,6 +949,28 @@ describe('omitting extra data', () => {
     // Without `b`, `thing` is an optional object holding nothing, which omitting prunes as well
     expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData: {} }), expect.anything());
   });
+  it('keeps the data of the option the form shows where the option matches it only once retrieved for it', async () => {
+    const kind = { type: 'string' } as const;
+    const schema: RJSFSchema = {
+      anyOf: [
+        {
+          title: 'A',
+          type: 'object',
+          properties: { kind },
+          if: { properties: { kind: { const: 'a' } } },
+          then: { properties: { n: { type: 'number' }, extra: { type: 'string' } } },
+        },
+        { title: 'B', type: 'object', properties: { kind, n: { type: 'number' } } },
+      ],
+    };
+    const formData = { kind: 'a', n: 1, extra: 'x' };
+    const { node, onSubmit } = createFormComponent({ schema, initialFormData: formData, omitExtraData: true });
+    expect(getSelectedOptionValue(selectOf(node, 'root__anyof_select'))).toBe('A');
+
+    await submitForm(node, user);
+
+    expect(onSubmit).toHaveBeenLastCalledWith(expect.objectContaining({ formData }), expect.anything());
+  });
 });
 
 describe('a condition swapped inside the selected option', () => {

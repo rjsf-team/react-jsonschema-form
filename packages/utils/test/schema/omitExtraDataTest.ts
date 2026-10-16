@@ -1676,6 +1676,40 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(asked).toEqual([['thing', 2, { a: 'x', b: 'y' }]]);
       });
 
+      it('asks the form state among the options retrieved for the data, as the field renders them', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            thing: {
+              anyOf: [
+                false,
+                {
+                  type: 'object',
+                  properties: { a: { type: 'string' } },
+                  dependencies: { a: { properties: { b: { type: 'string' } } } },
+                },
+              ],
+            },
+          },
+        };
+        const asked: RJSFSchema[][] = [];
+        const fieldState: FormFieldState = {
+          selectedOption: (_fieldPath, options) => {
+            asked.push(options);
+            return 1;
+          },
+          isExpanded: () => false,
+        };
+        const formData = { thing: { a: 'x', b: 'y', c: 'z' } };
+        expect(omitExtraData({ validator: testValidator }, schema, schema, formData, fieldState)).toEqual({
+          thing: { a: 'x', b: 'y' },
+        });
+        expect(asked).toHaveLength(1);
+        const [rendered, dependent] = asked[0];
+        expect(rendered).toEqual({});
+        expect(Object.keys(dependent.properties ?? {})).toEqual(expect.arrayContaining(['a', 'b']));
+      });
+
       it('applies all anyOf branches when source is an empty array', () => {
         // An empty array is an empty collection — all branches are applied so defaults flow through.
         // Neither branch declares type:'array' so both return undefined; the outer type:'array'
