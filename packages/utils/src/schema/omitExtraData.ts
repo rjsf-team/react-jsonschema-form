@@ -13,6 +13,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import getClosestMatchingOption from './getClosestMatchingOption.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
 import { mergeAllOf, relaxOptionsForScoring, resolveOwnRef } from './retrieveSchema.ts';
 
 /** Returns true when a form value is considered empty: null/undefined/'', an empty array, or a plain
@@ -421,6 +422,8 @@ export default function omitExtraData<
       }
     }
 
+    // The options of a select are read as the constants they name, as the form renders them, `$ref`s included
+    localSchema = resolveConstantOptions<S>(localSchema, rootSchema);
     let filtered = handleAnyOf(localSchema, source, handleOneOf(localSchema.oneOf, localSchema, source, target));
 
     // A select holds one of its constants as a whole, so an `object` or `array` one has no contents to prune. A value of

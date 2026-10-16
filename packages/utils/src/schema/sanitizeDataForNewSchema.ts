@@ -8,6 +8,7 @@ import isPlainObject from '../isPlainObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import { getByPath, hasByPath } from '../pathUtils.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
 import retrieveSchema from './retrieveSchema.ts';
 
 const NO_VALUE = Symbol('no Value');
@@ -316,6 +317,8 @@ function sanitizeDataForNewSchemaInternal<
         oldRawKeyedSchema === newRawKeyedSchema
           ? oldKeyedSchema
           : retrieveSchema<T, S, F>(context, newRawKeyedSchema, rootSchema, formValue);
+      // `retrieveSchema()` hands a select's options out as written, so constants written as `$ref`s are read resolved
+      const newKeyedSelect = resolveConstantOptions<S>(newKeyedSchema, rootSchema);
       // Now get types and see if they are the same. A type that was guessed from the data of an `additionalProperties`
       // entry the schema puts no constraint on describes what that data was rather than what the schema requires, so
       // it is treated as no type at all: the data changing type is a change of data, not a change of schema. That only
@@ -340,7 +343,7 @@ function sanitizeDataForNewSchemaInternal<
         const isArrayValue = containerType === 'array' && Array.isArray(formValue);
         const isObjectValue =
           newSchemaTypeForKey === 'object' || (containerType === 'object' && isPlainObject(formValue));
-        const isContainer = (isObjectValue || isArrayValue) && !isWholeValueSelect<S>(newKeyedSchema);
+        const isContainer = (isObjectValue || isArrayValue) && !isWholeValueSelect<S>(newKeyedSelect);
         if (isContainer) {
           // SIDE-EFFECT: process the new schema type of object recursively to save iterations. A position the
           // old schema does not cover borrows the new schema as its old side (an array property the new schema
@@ -401,11 +404,11 @@ function sanitizeDataForNewSchemaInternal<
           // here (#5250). It runs only when a replacement would actually happen, since it costs a resolve
           // and a deep compare
           if (hasByPath(data, key)) {
-            const enumReplacement = replacementForInvalidEnumValue(newKeyedSchema, formValue);
+            const enumReplacement = replacementForInvalidEnumValue(newKeyedSelect, formValue);
             if (
               enumReplacement !== NO_VALUE &&
               (oldSchemaPrevRawForFrame === undefined ||
-                isWholeValueSelect<S>(newKeyedSchema) ||
+                isWholeValueSelect<S>(newKeyedSelect) ||
                 // The committed side: the old keyed schema resolved against the current value, compared
                 // against the new one, which needs no previous data. A pushed parent
                 // value or a reset can cross a conditional branch without settling, leaving the chain on the
@@ -493,13 +496,16 @@ function sanitizeDataForNewSchemaInternal<
       // filter comparison ask for it only when an enum check actually follows
       // `resolveOldSchemaPrev()` already memoizes, so this stays a plain read of it
       const resolveOldSchemaItemsPrevRaw = () => resolveOldSchemaPrev()?.[ITEMS_KEY] as S | undefined;
-      oldSchemaItems = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data as T);
+      const oldItemsSchema = retrieveSchema<T, S, F>(context, oldSchemaItemsRaw, rootSchema, data);
+      oldSchemaItems = oldItemsSchema;
       // The old and new raw items schema are usually the same object, so skip resolving a second time in that common
       // case
       const sameRawItemsSchema = oldSchemaItemsRaw === newSchemaItemsRaw;
-      newSchemaItems = sameRawItemsSchema
-        ? oldSchemaItems
-        : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data as T);
+      const newItemsSchema = sameRawItemsSchema
+        ? oldItemsSchema
+        : retrieveSchema<T, S, F>(context, newSchemaItemsRaw, rootSchema, data);
+      newSchemaItems = newItemsSchema;
+      const newItemsSelect = resolveConstantOptions<S>(newItemsSchema, rootSchema);
       // Now get types and see if they are the same
       const oldSchemaType = getByPath(oldSchemaItems, 'type');
       const newSchemaType = getByPath(newSchemaItems, 'type');
@@ -508,10 +514,10 @@ function sanitizeDataForNewSchemaInternal<
         const maxItems = newSchema.maxItems ?? -1;
         // Items whose type list also allows `null` are read through `getSchemaType()`, as a property is above, so an
         // object one holds is sanitized as an object item is and a `null` it allows stays as it is
-        const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newSchemaItems as S);
+        const itemsType = newSchemaType === undefined ? undefined : getSchemaType<S>(newItemsSchema);
         // An item picked from object constants is one of them as a whole, so it's filtered against the options below
         // rather than sanitized property by property, which would find no properties and drop it
-        if (itemsType === 'object' && !isWholeValueSelect<S>(newSchemaItems as S)) {
+        if (itemsType === 'object' && !isWholeValueSelect<S>(newItemsSelect)) {
           newFormData = data.reduce<unknown[]>((newValue, aValue: T, index: number) => {
             let itemValue: unknown = aValue;
             if (newSchemaType === 'object' || isPlainObject(aValue)) {
@@ -554,7 +560,7 @@ function sanitizeDataForNewSchemaInternal<
           // silently dropped by an unrelated sanitize pass (#5451), while a conditional that flipped between
           // the previous and current data shows up as a real difference and the filter still runs (#5250).
           // The comparison runs only when some item would actually be dropped, since it can cost a resolve
-          const newItemEnumValues = enumValuesForSchema(newSchemaItems as S);
+          const newItemEnumValues = enumValuesForSchema(newItemsSelect);
           const filtered = newItemEnumValues
             ? data.filter((item: unknown) => newItemEnumValues.some((v) => deepEquals(v, item)))
             : data;
@@ -562,7 +568,7 @@ function sanitizeDataForNewSchemaInternal<
             newItemEnumValues &&
             filtered.length < data.length &&
             (oldSchemaPrevRawForFrame === undefined ||
-              isWholeValueSelect<S>(newSchemaItems as S) ||
+              isWholeValueSelect<S>(newItemsSelect) ||
               // The committed side, as the scalar path compares it: a push or reset can cross a
               // conditional branch without settling, leaving the chain on the new side's branch while
               // the committed items schema still holds the branch the data came from (#5250). Where the
@@ -576,7 +582,7 @@ function sanitizeDataForNewSchemaInternal<
                 newSchemaItemsRaw,
                 oldData,
                 data,
-                newSchemaItems as S,
+                newItemsSchema,
               ))
               ? filtered
               : data;

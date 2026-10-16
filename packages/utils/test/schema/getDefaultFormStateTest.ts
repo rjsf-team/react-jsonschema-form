@@ -2430,6 +2430,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           e: [1],
         });
       });
+      it('defaults a select over object constants written as $refs as one written in place', () => {
+        const schema: RJSFSchema = {
+          definitions: { A: { const: { k: 'a' }, title: 'A' }, B: { const: { k: 'b' }, title: 'B' } },
+          type: 'object',
+          properties: { pick: { type: 'object', oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] } },
+        };
+        const withDefault: RJSFSchema = {
+          ...schema,
+          properties: { pick: { ...schema.properties?.pick, default: { k: 'b' } } },
+        };
+        const required: RJSFSchema = { ...schema, required: ['pick'] };
+        expect(getDefaultFormState({ validator: testValidator }, { schema: withDefault })).toEqual({
+          pick: { k: 'b' },
+        });
+        expect(getDefaultFormState({ validator: testValidator }, { schema: required })).toEqual({ pick: { k: 'a' } });
+      });
       it('defaults a oneOf select to the constant matching its own default', () => {
         const schema: RJSFSchema = {
           type: 'object',

@@ -153,5 +153,16 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
         ).toEqual(true);
       });
     });
+    it('returns true for a select over object constants written as $refs', () => {
+      const rootSchema: RJSFSchema = {
+        definitions: { A: { const: { k: 'a' }, title: 'A' }, B: { const: { k: 'b' }, title: 'B' } },
+        type: 'object',
+        properties: { pick: { type: 'object', oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] } },
+      };
+      const pick = createSchemaUtils({ validator: testValidator }, rootSchema).retrieveSchema(
+        typeof rootSchema.properties?.pick === 'object' ? rootSchema.properties.pick : {},
+      );
+      expect(getDisplayLabel({ validator: testValidator }, pick, {}, rootSchema)).toBe(true);
+    });
   });
 }

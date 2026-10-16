@@ -1894,5 +1894,14 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         c: { v: 'x' },
       });
     });
+    it('keeps the value of a select over object constants written as $refs whole', () => {
+      const schema: RJSFSchema = {
+        definitions: { A: { const: { k: 'a' }, title: 'A' }, B: { const: { k: 'b' }, title: 'B' } },
+        type: 'object',
+        properties: { pick: { type: 'object', oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] } },
+      };
+      const formData = { pick: { k: 'b' }, extra: 1 };
+      expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ pick: { k: 'b' } });
+    });
   });
 }

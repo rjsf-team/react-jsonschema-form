@@ -730,7 +730,12 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     !constIsAjvDataReference(schema)
   ) {
     defaults = schema[CONST_KEY];
-  } else if (isObject(defaults) && isObject(schema.default) && !xxxOf && !isWholeValueSelect<S>(schema)) {
+  } else if (
+    isObject(defaults) &&
+    isObject(schema.default) &&
+    !xxxOf &&
+    !isWholeValueSelect<S>(resolveConstantOptions<S>(schema, rootSchema))
+  ) {
     // For object defaults, merge defaults by precedence setting.
     // Skip this for anyOf/oneOf schemas, which need special handling, and for a select over object constants,
     // whose own default and inherited default each name a whole constant, so a blend of them names none.
@@ -765,7 +770,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
   } else if (xxxOf) {
     const choice = chooseOption<S, F>(context, rootSchema, schema, xxxOf, rawFormData, defaults, preferParentDefaults);
     isWholeValue = choice.isWholeValue;
-    if (!choice.picksWholeOption) {
+    if (choice.wholeOptions === undefined) {
       return foldOption<T, S, F>(choice.context, view, xxxOf, choice.index, { ...props, parentDefaults: defaults });
     }
     // Resolved here rather than by recursing into the option as a primitive select is, since the option's constant is
@@ -773,7 +778,7 @@ function foldView<T, S extends StrictRJSFSchema, F extends FormContextType>(
     // constant wins over an inherited default, as it does for a primitive `const`, unless constants are never defaults.
     // The `ui:initialValue`/`ui:emptyValue` below still apply, and any form data is kept as it is by `typeDefaults()`
     if (rawFormData === undefined && choice.context.defaultFormStateBehavior?.constAsDefaults !== 'never') {
-      defaults = toConstant<S>(xxxOf.options[choice.index]);
+      defaults = toConstant<S>(choice.wholeOptions[choice.index]);
     }
   }
 
@@ -834,14 +839,18 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   rawFormData: unknown,
   defaults: unknown,
   preferParentDefaults: boolean,
-): { context: SchemaContext<S, F>; index: number; isWholeValue: boolean; picksWholeOption: boolean } {
+): { context: SchemaContext<S, F>; index: number; isWholeValue: boolean; wholeOptions: S[] | undefined } {
   const { defaultFormStateBehavior } = context;
   const { type = 'null' } = withoutKeys(schema, key);
   // An object or array select holds one of its constants as a whole, the way a primitive select does. The options are
   // checked as well, since a non-empty `enum` makes the schema a select whatever they are, and only a constant can be
   // taken whole
-  const isWholeValue = isWholeValueSelect<S>(schema);
-  const picksWholeOption = isWholeValue && isConstantOptionList<S>(options, true);
+  const select = resolveConstantOptions<S>(schema, rootSchema);
+  const isWholeValue = isWholeValueSelect<S>(select);
+  const constants = getXxxOfOptions<S>(select)?.options;
+  const wholeOptions =
+    isWholeValue && constants !== undefined && isConstantOptionList<S>(constants, true) ? constants : undefined;
+  const picksWholeOption = wholeOptions !== undefined;
   // Checked on the schema rather than on the keyword read, so a `oneOf` beside the `anyOf` that is read still skips,
   // unless it is empty, which counts as no option list here as it does for the keyword read
   const skipsOneOfConstants =
@@ -859,7 +868,7 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
   const valueToMatch = rawFormData ?? (picksWholeOption ? inheritedDefault : schema.default);
   // A constant option equal to the value is the one it picked, whatever the validator makes of the others
   const equalOptionIndex = picksWholeOption
-    ? options.findIndex((option) => deepEquals(toConstant<S>(option), valueToMatch))
+    ? wholeOptions.findIndex((option) => deepEquals(toConstant<S>(option), valueToMatch))
     : -1;
   const index =
     equalOptionIndex !== -1
@@ -872,7 +881,7 @@ function chooseOption<S extends StrictRJSFSchema, F extends FormContextType>(
           0,
           getDiscriminatorFieldFromSchema<S>(schema),
         );
-  return { context: optionContext, index, isWholeValue, picksWholeOption };
+  return { context: optionContext, index, isWholeValue, wholeOptions };
 }
 
 /** Computes the defaults of a field from the option at `index` of the options it offers. An object renders its own
@@ -1280,7 +1289,7 @@ function typeDefaults<T, S extends StrictRJSFSchema, F extends FormContextType>(
   view: DefaultsView<S>,
   props: FoldProps<T, S, F>,
   defaults: unknown,
-  isWholeValue = isWholeValueSelect<S>(view.schema),
+  isWholeValue = isWholeValueSelect<S>(resolveConstantOptions<S>(view.schema, view.field.graph.rawRoot)),
 ): unknown {
   const { uiSchema, rawFormData } = props;
   // A select over object or array constants picks one of them as a whole, so it has no contents of its own to fill in,

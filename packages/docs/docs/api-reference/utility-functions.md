@@ -2106,7 +2106,7 @@ An app that swaps schemas at runtime needs it for the same reason the playground
 ### resolveConstantOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns `schema` with the own `$ref` of each of its `anyOf`/`oneOf` options resolved when that makes every option a constant, the shape a select is read from, and `schema` itself otherwise.
-`retrieveSchema()` hands an option written as a `$ref` out as it stands, for the field that renders it to retrieve, but a select renders no field per option, so `isSelect()`, `isMultiSelect()` and the fields read a select's options through this before `optionsList()` labels them.
+`retrieveSchema()` hands an option written as a `$ref` out as it stands, for the field that renders it to retrieve, but a select renders no field per option, so `isSelect()`, `isMultiSelect()`, `getDisplayLabel()`, `getDefaultFormState()`, `omitExtraData()`, `sanitizeDataForNewSchema()` and the fields read a select's options through this before `optionsList()` labels them or a select over object or array constants is told from a container.
 The result is made once per schema and shared.
 
 #### Parameters

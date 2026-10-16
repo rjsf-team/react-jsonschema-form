@@ -15,6 +15,7 @@ import type {
 import uiBooleanOption from '../uiBooleanOption.ts';
 import isFilesArray from './isFilesArray.ts';
 import isMultiSelect from './isMultiSelect.ts';
+import resolveConstantOptions from './resolveConstantOptions.ts';
 
 /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
  * should be displayed in a UI.
@@ -44,20 +45,23 @@ export default function getDisplayLabel<
     // Only the field's own `ui:widget` picks that field, so the `ui:globalOptions` one is left out
     const schemaType = getFieldTypeForUiSchema<T, S, F>(schema, uiSchema);
     const addedByAdditionalProperty = Boolean((schema as RJSFMarkedSchema)[ADDITIONAL_PROPERTY_FLAG]);
+    // `retrieveSchema()` hands a select's options out as written, so constants written as `$ref`s are read resolved
+    const isWholeValue = () =>
+      isWholeValueSelect<S>(rootSchema === undefined ? schema : resolveConstantOptions<S>(schema, rootSchema));
 
     // An `enum` or a constant `anyOf`/`oneOf` over objects or arrays renders as one select for the whole value, which is
     // labelled like any other select rather than left to the fields of its contents
     if (schemaType === 'array') {
       displayLabel =
         addedByAdditionalProperty ||
-        isWholeValueSelect<S>(schema) ||
+        isWholeValue() ||
         isMultiSelect<T, S, F>(context, schema, rootSchema) ||
         isFilesArray<T, S, F>(context, schema, uiSchema, rootSchema) ||
         isCustomWidget(uiSchema);
     }
 
     if (schemaType === 'object') {
-      displayLabel = addedByAdditionalProperty || isWholeValueSelect<S>(schema);
+      displayLabel = addedByAdditionalProperty || isWholeValue();
     }
     // A boolean is drawn by a checkbox, which renders the field's label itself after its input, so the template
     // renders none. Naming that same widget by the key it is registered under changes nothing about who draws that
