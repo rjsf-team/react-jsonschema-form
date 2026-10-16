@@ -18,6 +18,13 @@ function mergeDefinition<T, S extends StrictRJSFSchema, F extends FormContextTyp
   return mergeObjects(definition, localUiSchema) as UiSchema<T, S, F>;
 }
 
+/** Returns the name a `ui:definitions` entry for `schema` is keyed by. The marker comes first: a schema resolved from a
+ * definition is named by the definition it came from, where a `$ref` it still holds is one nothing has followed yet.
+ */
+function definitionRef(schema: unknown): string | undefined {
+  return stringKeyword(schema, RJSF_REF_KEY) ?? stringKeyword(schema, REF_KEY);
+}
+
 /** Resolves the uiSchema for a given schema, considering `ui:definitions` stored in the registry.
  *
  * Called at runtime for each field. When the schema contains a `$ref`, looks up the corresponding
@@ -43,9 +50,7 @@ export default function resolveUiSchema<
   rawLocalUiSchema: UiSchema<T, S, F> | undefined,
   registry: Pick<Registry<T, S, F>, 'rootSchema' | 'uiSchemaDefinitions'>,
 ): UiSchema<T, S, F> {
-  // The marker comes first: a schema resolved from a definition is named by the definition it came from, which is
-  // the name a `ui:definitions` entry is keyed by, where a `$ref` it still holds is one nothing has followed yet
-  const ref = stringKeyword(schema, RJSF_REF_KEY) ?? stringKeyword(schema, REF_KEY);
+  const ref = definitionRef(schema);
   const definitions = registry.uiSchemaDefinitions;
   const definitionUiSchema = ref && definitions ? definitions[ref] : undefined;
 
@@ -87,8 +92,7 @@ export default function resolveUiSchema<
 
         let hasExpanded = false;
         for (let i = 0; i < schemaOptions.length; i++) {
-          const option = schemaOptions[i] as S | undefined;
-          const optionRef = stringKeyword(option, RJSF_REF_KEY) ?? stringKeyword(option, REF_KEY);
+          const optionRef = definitionRef(schemaOptions[i]);
           if (optionRef && optionRef in definitions) {
             uiSchemaArray[i] = mergeDefinition(definitions[optionRef], uiSchemaArray[i] || {});
             hasExpanded = true;
