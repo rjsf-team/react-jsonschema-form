@@ -66,6 +66,7 @@ import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
+import type { NamedFieldFraming, NamedFieldPath } from './NamedFieldContext.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
@@ -514,8 +515,12 @@ function SchemaFieldRender<
   const { schemaUtils, globalFormOptions, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField, CyclicSchemaField } = fields;
   const readsFormData = useReadsFormData(SchemaField);
-  const pathNamedAbove = use(NamedFieldContext);
-  const namedAbove = pathNamedAbove === fieldPath;
+  const namedFieldAbove = use(NamedFieldContext);
+  const namedHere = namedFieldAbove?.fieldPath === fieldPath ? namedFieldAbove : undefined;
+  const namedAbove = namedHere !== undefined;
+  const framing: NamedFieldFraming = namedHere?.framing ?? 'own';
+  const optionsRenderedAbove = namedHere?.optionsRendered === true;
+  const shownOptionAbove = use(ShownOptionContext);
 
   const resolvedUiSchema = useMemo(() => {
     const ownUiSchema = resolveUiSchema<T, S, F>(_schema, _uiSchema, registry);
@@ -615,9 +620,13 @@ function SchemaFieldRender<
   );
   // The fallback UI renders the options itself, against the schema with its type pinned to the one its selector is on,
   // so rendering them here as well would show the same option selector twice — once for the union and once for the
-  // type in effect — and only the inner one would follow the type the user chose
+  // type in effect — and only the inner one would follow the type the user chose. Below a named field, the
+  // `SchemaField` that named it may have rendered them already
   const retrievesOptions =
-    fieldToRender !== undefined && fieldToRender.rendersOptionSelector && !fieldToRender.rendersOptionsItself;
+    !optionsRenderedAbove &&
+    fieldToRender !== undefined &&
+    fieldToRender.rendersOptionSelector &&
+    !fieldToRender.rendersOptionsItself;
   // `MultiSchemaField` renders the options it is handed. Memoized so a re-render that changed neither the schema nor
   // the data hands it the same array, which its callbacks key on
   const xxxOfOptions = useMemo(
@@ -648,6 +657,47 @@ function SchemaFieldRender<
   const shownOption = useMemo(
     () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
     [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
+  );
+  // The field below a named one is the field beside the options the `SchemaField` that named it renders
+  const fieldShownOption = optionsRenderedAbove ? shownOptionAbove : shownOption;
+
+  const rendersNamedField = fieldToRender?.rendersNamedField === true;
+  // `getDisplayLabel()` leaves the label to the field a `ui:field` names. `SchemaField` named that way is the default
+  // field, whose label is this field's template's, so it is labelled as though no field were named. A label left to
+  // any other named field is rendered by the `SchemaField` that field renders for its own data, if it renders one
+  const namesDefaultField = rendersNamedField && fieldToRender.FieldComponent === fields.SchemaField;
+  const resolvesField = fieldToRender !== undefined;
+  const labelling = useMemo(() => {
+    if (!resolvesField) {
+      return undefined;
+    }
+    const isLabelled = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+    if (!rendersNamedField) {
+      return { isLabelled, withholdsLabel: false };
+    }
+    const isLabelledUnnamed = schemaUtils.getDisplayLabel(
+      schema,
+      withoutNamedField<T, S, F>(uiSchema, globalUiOptions?.field),
+      globalUiOptions,
+    );
+    return namesDefaultField
+      ? { isLabelled: isLabelledUnnamed, withholdsLabel: false }
+      : { isLabelled, withholdsLabel: isLabelledUnnamed && !isLabelled };
+  }, [resolvesField, rendersNamedField, namesDefaultField, schemaUtils, schema, uiSchema, globalUiOptions]);
+  const withholdsLabel = labelling?.withholdsLabel === true;
+  // The selected option, and whatever renders this field's data below a field that is not named here, renders as a
+  // field of its own; only the named field leaves out what this one renders
+  const ownNamedFieldPath = useMemo<NamedFieldPath | undefined>(
+    () => (namedAbove || rendersNamedField ? { fieldPath, framing: 'own', optionsRendered: false } : namedFieldAbove),
+    [namedAbove, rendersNamedField, fieldPath, namedFieldAbove],
+  );
+  const optionsRendered = xxxOfOptions !== undefined;
+  const namedFieldPath = useMemo<NamedFieldPath | undefined>(
+    () =>
+      rendersNamedField
+        ? { fieldPath, framing: withholdsLabel ? 'label' : 'none', optionsRendered }
+        : ownNamedFieldPath,
+    [rendersNamedField, fieldPath, withholdsLabel, optionsRendered, ownNamedFieldPath],
   );
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
@@ -680,14 +730,14 @@ function SchemaFieldRender<
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
-  if (!uiField || !fieldToRender) {
+  if (!uiField || !fieldToRender || !labelling) {
     return withUiState(
       <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
         <CyclicSchemaField {...props} />
       </RawFormDataContext>,
     );
   }
-  const { FieldComponent, rendersNamedField, rendersOptionSelector } = fieldToRender;
+  const { FieldComponent, rendersOptionSelector } = fieldToRender;
 
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
@@ -741,7 +791,7 @@ function SchemaFieldRender<
     logOnce(message);
   }
 
-  const isLabelled = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  const { isLabelled } = labelling;
   let displayLabel = isLabelled;
 
   let XxxOfField: Field<T, S, F> | undefined;
@@ -791,9 +841,11 @@ function SchemaFieldRender<
   );
   // Always wrapped, since switching between a wrapped and a bare field component remounts it and everything below it
   const field = (
-    <ShownOptionContext value={shownOption}>
-      <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
-    </ShownOptionContext>
+    <NamedFieldContext value={namedFieldPath}>
+      <ShownOptionContext value={fieldShownOption}>
+        <RawFormDataContext value={readsFormData ? FieldComponent : undefined}>{fieldComponent}</RawFormDataContext>
+      </ShownOptionContext>
+    </NamedFieldContext>
   );
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
@@ -817,7 +869,8 @@ function SchemaFieldRender<
     XxxOfField && optionRendersFieldLabel<S>(schema, uiOptions.label, isLabelled)
       ? ''
       : uiOptions.description || props.schema.description || schema.description || '';
-  const { help } = uiOptions;
+  // The `SchemaField` that named this field renders its help whether or not it renders the label
+  const help = framing === 'label' ? undefined : uiOptions.help;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
@@ -887,40 +940,41 @@ function SchemaFieldRender<
   // The field component and the option field are each vouched for directly: a custom template may pass on a view of
   // the data. The named-field context is provided whether or not a field is named here, since adding or removing a
   // provider would remount everything below it
+  const content = (
+    <>
+      {field}
+      {XxxOfField && (
+        <NamedFieldContext value={ownNamedFieldPath}>
+          <ShownOptionContext value={shownOption}>
+            <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
+              <XxxOfField
+                name={name}
+                disabled={disabled}
+                readonly={readonly}
+                hideError={hideError}
+                errorSchema={errorSchema}
+                formData={formData}
+                fieldPath={fieldPath}
+                id={fieldId}
+                onBlur={props.onBlur}
+                onChange={handleOptionFieldChange}
+                onFocus={props.onFocus}
+                options={xxxOfOptions}
+                registry={registry}
+                required={effectiveRequired}
+                schema={schema}
+                uiSchema={optionsUiSchema}
+              />
+            </RawFormDataContext>
+          </ShownOptionContext>
+        </NamedFieldContext>
+      )}
+    </>
+  );
   return withUiState(
-    <NamedFieldContext value={rendersNamedField ? fieldPath : pathNamedAbove}>
-      <RawFormDataContext value={undefined}>
-        <FieldTemplate {...fieldProps}>
-          <>
-            {field}
-            {XxxOfField && (
-              <ShownOptionContext value={shownOption}>
-                <RawFormDataContext value={readsFormData ? XxxOfField : undefined}>
-                  <XxxOfField
-                    name={name}
-                    disabled={disabled}
-                    readonly={readonly}
-                    hideError={hideError}
-                    errorSchema={errorSchema}
-                    formData={formData}
-                    fieldPath={fieldPath}
-                    id={fieldId}
-                    onBlur={props.onBlur}
-                    onChange={handleOptionFieldChange}
-                    onFocus={props.onFocus}
-                    options={xxxOfOptions}
-                    registry={registry}
-                    required={effectiveRequired}
-                    schema={schema}
-                    uiSchema={optionsUiSchema}
-                  />
-                </RawFormDataContext>
-              </ShownOptionContext>
-            )}
-          </>
-        </FieldTemplate>
-      </RawFormDataContext>
-    </NamedFieldContext>,
+    <RawFormDataContext value={undefined}>
+      {framing === 'none' ? content : <FieldTemplate {...fieldProps}>{content}</FieldTemplate>}
+    </RawFormDataContext>,
   );
 }
 

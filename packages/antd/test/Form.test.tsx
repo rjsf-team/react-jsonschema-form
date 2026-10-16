@@ -1,5 +1,5 @@
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { ErrorSchema, RJSFSchema } from '@rjsf/utils';
+import type { ErrorSchema, FieldProps, RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -283,5 +283,40 @@ describe('antd specific tests', () => {
 
     await user.click(screen.getByRole('button', { name: button }));
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  function WrappingField(props: FieldProps) {
+    const { SchemaField } = props.registry.fields;
+    return <SchemaField {...props} />;
+  }
+  const describedSchema: RJSFSchema = {
+    type: 'object',
+    properties: { val: { type: 'string', title: 'Value', description: 'Desc' } },
+  };
+
+  test.each<[string, RJSFSchema, UiSchema]>([
+    ["ui:field: 'SchemaField'", describedSchema, { val: { 'ui:field': 'SchemaField', 'ui:help': 'Help' } }],
+    [
+      "ui:options.field: 'SchemaField'",
+      describedSchema,
+      { val: { 'ui:options': { field: 'SchemaField' }, 'ui:help': 'Help' } },
+    ],
+    [
+      'a $id wrapping SchemaField',
+      {
+        type: 'object',
+        properties: { val: { $id: 'wrapping', type: 'string', title: 'Value', description: 'Desc' } },
+      },
+      { val: { 'ui:help': 'Help' } },
+    ],
+  ])('renders one label, description and help for the field %s names', (_, schema, uiSchema) => {
+    const { container } = render(
+      <Form schema={schema} uiSchema={uiSchema} fields={{ wrapping: WrappingField }} validator={validator} />,
+    );
+
+    expect(container.querySelectorAll('input#root_val')).toHaveLength(1);
+    expect(container.querySelectorAll('label[for="root_val"]')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__description')).toHaveLength(1);
+    expect(container.querySelectorAll('#root_val__help')).toHaveLength(1);
   });
 });
