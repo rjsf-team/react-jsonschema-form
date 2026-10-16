@@ -1,8 +1,14 @@
+import { CONST_KEY, ENUM_KEY } from '../constants.ts';
 import { isSchemaObject } from '../isObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import type { AdoptedSchema } from './graph/parseSchemaGraph.ts';
-import { declaredProperty, holdsDeclaredKey, scoringTarget, targetOf } from './graph/validationTargets.ts';
+import {
+  declaredProperties,
+  declaredPropertyTarget,
+  holdsDeclaredKey,
+  scoringTarget,
+} from './graph/validationTargets.ts';
 import { nodeOfSchema } from './retrieveSchema.ts';
 
 /** An option as matching reads it: the node it stands for, or a boolean option given as one */
@@ -19,8 +25,9 @@ export function optionNodeOf<S extends StrictRJSFSchema = RJSFSchema>(option: un
 }
 
 /** Returns the index of the first option whose discriminator property says by its `const` or `enum` alone that it holds
- * the data's value for `discriminatorField`, which needs no validator; a discriminator of type `object` or `array` says
- * nothing this way
+ * the data's value for `discriminatorField`, which needs no validator: each declaration `declaredProperties()` finds
+ * that states a `const` or `enum` holds the value, and at least one states one. A declaration that is a boolean or of
+ * type `object` or `array` says nothing this way.
  *
  * @param options - The options
  * @param formData - The data being matched
@@ -43,13 +50,18 @@ export function simpleDiscriminatorMatch<S extends StrictRJSFSchema = RJSFSchema
     if (typeof option === 'boolean') {
       return false;
     }
-    const property = declaredProperty(option.graph, option.node, discriminatorField);
-    const node = property === undefined ? undefined : option.graph.node(property);
-    if (node?.kind !== 'schema' || node.raw.type === 'object' || node.raw.type === 'array') {
-      return false;
-    }
-    const enumValues: readonly unknown[] | undefined = node.raw.enum;
-    return node.raw.const === value || Boolean(enumValues?.includes(value));
+    const nodes = declaredProperties(option.graph, option.node, discriminatorField).map((id) => option.graph.node(id));
+    const raws = nodes.flatMap((node) =>
+      node.kind === 'schema' && node.raw.type !== 'object' && node.raw.type !== 'array' ? [node.raw] : [],
+    );
+    const stated: (readonly unknown[])[] = raws.flatMap((raw) => {
+      if (CONST_KEY in raw) {
+        return [[raw[CONST_KEY]]];
+      }
+      const enumValues = raw[ENUM_KEY];
+      return Array.isArray(enumValues) ? [enumValues] : [];
+    });
+    return raws.length === nodes.length && stated.length > 0 && stated.every((values) => values.includes(value));
   });
   return index < 0 ? undefined : index;
 }
@@ -78,13 +90,9 @@ export function optionMatches<S extends StrictRJSFSchema = RJSFSchema, F extends
   }
   const { graph, node } = option;
   if (discriminatorField) {
-    const discriminator = declaredProperty(graph, node, discriminatorField);
+    const discriminator = declaredPropertyTarget(graph, node, discriminatorField);
     if (discriminator !== undefined) {
-      return context.validator.isValid(
-        targetOf(graph, discriminator),
-        getByPath(formData, discriminatorField),
-        graph.rawRoot,
-      );
+      return context.validator.isValid(discriminator, getByPath(formData, discriminatorField), graph.rawRoot);
     }
   }
   return (

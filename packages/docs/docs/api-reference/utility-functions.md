@@ -2841,6 +2841,7 @@ An option whose `properties` name nothing matches only where it takes keys they 
 Where something in that scope declares `properties`, every `required` in the scope, and every `dependencies` entry listing names, is dropped for scoring, since a key the user has yet to fill in would fail it: an option stating one is validated as a copy without them, which names the subschemas below it by `$ref`s into the root and carries no `$id`.
 An option whose scope declares no `properties`, such as `{ required: ['email'] }`, is validated with its `required`, which is what it is chosen by.
 With a `discriminatorField`, an option whose property of that name has a `const` or `enum` holding the data's value matches without the validator, and one whose property says it by other keywords is matched by that property alone.
+The property is read from every declaration of it that applies whatever the data, so with `allOf: [{ $ref: Base }, { properties: { petType: { const: 'cat' } } }]`, where `Base` declares `petType` as any string, the option holds `petType: 'cat'` and no other value.
 
 #### Parameters
 

@@ -209,6 +209,62 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
       expect(schemaUtils.getClosestMatchingOption({ k: 'b' }, options)).toBe(1);
       expect(validator.isValid(rootSchema, { v: { k: 'b' } }, rootSchema)).toBe(true);
     });
+    describe('reads an option declaring its discriminator in an allOf entry beside a $ref to a base declaring it too', () => {
+      const pet = (kind: string, petType: RJSFSchema = { const: kind }): RJSFSchema => ({
+        allOf: [{ $ref: '#/definitions/Base' }, { properties: { petType, [kind]: { type: 'string' } } }],
+      });
+      const pets = (cat: RJSFSchema, dog: RJSFSchema): RJSFSchema => ({
+        discriminator: { propertyName: 'petType' },
+        oneOf: [cat, dog],
+      });
+      const base = (petType: RJSFSchema, cat: RJSFSchema = pet('cat'), dog: RJSFSchema = pet('dog')): RJSFSchema => ({
+        definitions: { Base: { type: 'object', properties: { petType } } },
+        type: 'object',
+        properties: { pet: pets(cat, dog) },
+      });
+      const generic: RJSFSchema = { type: 'string' };
+      const enumerating: RJSFSchema = { type: 'string', enum: ['cat', 'dog'] };
+      it.each([
+        ['a generic base', generic],
+        ['a base enumerating every kind', enumerating],
+      ])('choosing the option whose own declaration holds the value over %s', (_name, petType) => {
+        const rootSchema = base(petType);
+        const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+        const options = optionsOf(rootSchema.properties?.pet, 'oneOf');
+        expect(schemaUtils.getFirstMatchingOption({ petType: 'dog' }, options, 'petType')).toBe(1);
+        expect(schemaUtils.getFirstMatchingOption({ petType: 'dog' }, options)).toBe(1);
+        expect(schemaUtils.getClosestMatchingOption({ petType: 'dog' }, options, 0, 'petType')).toBe(1);
+        expect(schemaUtils.omitExtraData(rootSchema, { pet: { petType: 'dog', dog: 'woof', cat: 'x' } })).toEqual({
+          pet: { petType: 'dog', dog: 'woof' },
+        });
+      });
+      it('checking the value against a declaration the validator has to read, a pattern', () => {
+        const rootSchema = base(generic, pet('cat', { pattern: '^c' }), pet('dog', { pattern: '^d' }));
+        const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+        const options = optionsOf(rootSchema.properties?.pet, 'oneOf');
+        expect(schemaUtils.getFirstMatchingOption({ petType: 'dog' }, options, 'petType')).toBe(1);
+      });
+      it('choosing a dependency oneOf option the same way', () => {
+        const kind = (value: string): RJSFSchema => ({
+          allOf: [
+            { $ref: '#/definitions/Base' },
+            { properties: { k: { enum: [value] }, [value]: { type: 'string', default: value.toUpperCase() } } },
+          ],
+        });
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            Base: { properties: { k: { type: 'string', enum: ['a', 'b'] } } },
+            A: kind('a'),
+            B: kind('b'),
+          },
+          type: 'object',
+          properties: { k: { type: 'string', enum: ['a', 'b'] } },
+          dependencies: { k: { oneOf: [{ $ref: '#/definitions/A' }, { $ref: '#/definitions/B' }] } },
+        };
+        const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+        expect(schemaUtils.getDefaultFormState(rootSchema, { k: 'b' })).toEqual({ k: 'b', b: 'B' });
+      });
+    });
   });
 }
 

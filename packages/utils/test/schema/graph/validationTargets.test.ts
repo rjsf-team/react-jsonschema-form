@@ -2,6 +2,7 @@ import type { RJSFSchema } from '../../../src/index.ts';
 import parseSchemaGraph from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { SchemaGraph } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import {
+  declaredPropertyTarget,
   holdsDeclaredKey,
   pointerTo,
   scoringTarget,
@@ -158,6 +159,33 @@ describe('scoringTarget()', () => {
     expect(scored(schema, '/oneOf/0')).toEqual({
       definitions: { s: { $ref: '#/oneOf/0/definitions/s' } },
       properties: { kind: { $ref: '#/oneOf/0/properties/kind' } },
+    });
+  });
+});
+
+describe('declaredPropertyTarget()', () => {
+  it('checks the value against every declaration that applies whatever the data', () => {
+    const root: RJSFSchema = {
+      definitions: { Base: { properties: { kind: { type: 'string' } } } },
+      discriminator: { propertyName: 'kind' },
+      oneOf: [{ allOf: [{ $ref: '#/definitions/Base' }, { properties: { kind: { const: 'a' } } }] }],
+    };
+    const graph = parseSchemaGraph(root);
+    const target = declaredPropertyTarget(graph, nodeAt(graph, '/oneOf/0'), 'kind');
+    expect(target).toEqual({
+      allOf: [{ $ref: '#/definitions/Base/properties/kind' }, { $ref: '#/oneOf/0/allOf/1/properties/kind' }],
+    });
+    expect(validationTargets(graph)).toContain(target);
+  });
+  it('reads only the first declaration of a then or an else, which apply to different data', () => {
+    const root: RJSFSchema = {
+      oneOf: [
+        { if: {}, then: { properties: { kind: { const: 'a' } } }, else: { properties: { kind: { const: 'b' } } } },
+      ],
+    };
+    const graph = parseSchemaGraph(root);
+    expect(declaredPropertyTarget(graph, nodeAt(graph, '/oneOf/0'), 'kind')).toEqual({
+      $ref: '#/oneOf/0/then/properties/kind',
     });
   });
 });
