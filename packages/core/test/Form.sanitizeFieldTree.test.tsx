@@ -49,6 +49,32 @@ describe('sanitize as a diff of the field trees before and after a change', () =
     expect(last?.color).toBe('r');
   });
 
+  it.each([
+    { property: true, expected: { kind: 't', a: 'x' }, holds: 'keeps the value of', which: 'any value' },
+    { property: false, expected: { kind: 't' }, holds: 'drops the value of', which: 'none' },
+  ])('$holds a property whose schema becomes $property, which holds $which', async ({ property, expected }) => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: { kind: { type: 'string', enum: ['s', 't'] } },
+      if: { properties: { kind: { const: 's' } } },
+      then: { properties: { a: { type: 'string' } } },
+      else: { properties: { a: property } },
+    };
+    const events: IChangeEvent<{ kind?: string; a?: unknown }>[] = [];
+    const { container } = render(
+      <Form<{ kind?: string; a?: unknown }>
+        schema={schema}
+        validator={validator}
+        initialFormData={{ kind: 's', a: 'x' }}
+        onChange={(event) => events.push(event)}
+      />,
+    );
+
+    await user.selectOptions(elementOf(container, '#root_kind'), 't');
+
+    expect(events[events.length - 1].formData).toEqual(expected);
+  });
+
   it('judges each edit of a parent-owned form against the value the parent rendered (#5250 controlled)', async () => {
     interface PetData {
       pet: { mode?: string; color?: string };
