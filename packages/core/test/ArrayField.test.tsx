@@ -3056,6 +3056,7 @@ describe('ArrayField', () => {
             type: 'string',
             format: 'alt-date',
           },
+          labelFor: null,
         },
         {
           widgetName: 'AltDateTimeWidget',
@@ -3063,6 +3064,7 @@ describe('ArrayField', () => {
             type: 'string',
             format: 'alt-datetime',
           },
+          labelFor: null,
         },
         {
           widgetName: 'CheckboxesWidget',

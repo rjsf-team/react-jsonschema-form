@@ -629,6 +629,12 @@ describe('an anyOf/oneOf whose options all render a container', () => {
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
   });
 
+  it("draws that label with no for in core's FieldTemplate", () => {
+    const { node } = createFormComponent({ schema: { type: 'object', properties: { pet } } });
+
+    expect(node.querySelector(`#${fieldLabelId('root_pet')}`)?.closest('label')).not.toHaveAttribute('for');
+  });
+
   it('keeps the for where an option renders a control under the field id', () => {
     const { outerTemplatePlans } = renderPlans({
       type: 'object',
@@ -939,5 +945,56 @@ describe('a widget rendering a group of controls', () => {
       expect(checkbox).toHaveAttribute('aria-invalid', 'true');
       expect(checkbox.getAttribute('aria-describedby')!.split(' ')).toContain(errorId('root_foo'));
     });
+  });
+});
+
+describe('an alt-date field', () => {
+  it.each(['alt-date', 'alt-datetime'])(
+    "names the %s parts' group by the template label, which draws no for",
+    (widget) => {
+      const { node } = createFormComponent({
+        schema: { type: 'object', properties: { when: { type: 'string', title: 'When' } } },
+        uiSchema: { when: { 'ui:widget': widget } },
+      });
+
+      expect(node.querySelector(`#${fieldLabelId('root_when')}`)?.closest('label')).not.toHaveAttribute('for');
+      expect(screen.getByRole('group', { name: 'When' })).toHaveAttribute('id', 'root_when');
+    },
+  );
+
+  it('keeps its parts the items of a list inside the group, rather than giving the list the role', () => {
+    createFormComponent({
+      schema: { type: 'object', properties: { when: { type: 'string', title: 'When' } } },
+      uiSchema: { when: { 'ui:widget': 'alt-date' } },
+    });
+
+    const list = within(screen.getByRole('group', { name: 'When' })).getByRole('list');
+    expect(within(list).getAllByRole('listitem').length).toBeGreaterThan(0);
+  });
+
+  it("describes each part by the field's parts that render, and marks it invalid while its errors show", () => {
+    const { node } = createFormComponent({
+      schema: { type: 'object', properties: { when: { type: 'string', title: 'When', description: 'The day' } } },
+      uiSchema: { when: { 'ui:widget': 'alt-date' } },
+      extraErrors: { when: { __errors: ['is wrong'] } },
+    });
+    const year = screen.getByRole('combobox', { name: 'When, year' });
+
+    expect(year).toHaveAttribute('aria-describedby', `${errorId('root_when')} root_when__description`);
+    expect(year).toHaveAttribute('aria-invalid', 'true');
+    expect(year).not.toHaveAttribute('aria-labelledby');
+    year
+      .getAttribute('aria-describedby')!
+      .split(' ')
+      .forEach((id) => expect(node.querySelector(`#${id}`)).not.toBeNull());
+  });
+
+  it('describes each part by none of the ids that render nothing', () => {
+    createFormComponent({
+      schema: { type: 'object', properties: { when: { type: 'string', title: 'When' } } },
+      uiSchema: { when: { 'ui:widget': 'alt-date' } },
+    });
+
+    expect(screen.getByRole('combobox', { name: 'When, year' })).not.toHaveAttribute('aria-describedby');
   });
 });
