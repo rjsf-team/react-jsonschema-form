@@ -181,6 +181,29 @@ describe("react-bootstrap widgets carry their field's plan on the element a user
       expectReferencesResolve(container);
     },
   );
+
+  test.each(['alt-date', 'alt-datetime'])(
+    "marks, styles and describes each of a %s field's date parts by the field's errors",
+    (widget) => {
+      const { container } = render(
+        <Form
+          schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+          uiSchema={{ when: { 'ui:widget': widget } }}
+          extraErrors={{ when: { __errors: ['pick a date'] } }}
+          validator={validator}
+        />,
+      );
+
+      const parts = screen.getAllByRole('combobox');
+      expect(parts.length).toBeGreaterThan(0);
+      for (const part of parts) {
+        expect(part).toHaveAttribute('aria-invalid', 'true');
+        expect(part).toHaveClass('is-invalid');
+        expect(part).toHaveAccessibleDescription('pick a date');
+      }
+      expectReferencesResolve(container);
+    },
+  );
 });
 
 describe('react-bootstrap focusOnFirstError', () => {
