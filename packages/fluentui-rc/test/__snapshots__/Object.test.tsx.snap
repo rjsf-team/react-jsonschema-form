@@ -4843,6 +4843,7 @@ exports[`object fields > with title and description with global label off > addi
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="foo"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_foo"
                       name="root_foo"
@@ -4962,6 +4963,7 @@ exports[`object fields > with title and description with global label off > obje
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
+                    aria-label="A"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_a"
                     name="root_a"
@@ -4987,6 +4989,7 @@ exports[`object fields > with title and description with global label off > obje
                   class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
+                    aria-label="B"
                     class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     id="root_b"
                     inputmode="decimal"
@@ -5068,6 +5071,7 @@ exports[`object fields > with title and description with global label off > show
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="additionalProperty"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_additionalProperty"
                       name="root_additionalProperty"

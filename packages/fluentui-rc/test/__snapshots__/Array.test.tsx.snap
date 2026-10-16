@@ -5933,6 +5933,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="Test item"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -6076,6 +6077,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="Test item"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       name="root_1"
@@ -6347,6 +6349,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="Test item"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_0"
                       name="root_0"
@@ -6376,6 +6379,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                     class="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                   >
                     <input
+                      aria-label="Test item"
                       class="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                       id="root_1"
                       inputmode="decimal"
