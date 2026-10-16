@@ -390,8 +390,10 @@ function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
 }
 
 /** A copy of `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold
- * nothing, an empty `__errors` included, which a raise at an ancestor would read as errors still being there. `path`
- * is that of `errorSchema` itself
+ * nothing, an empty `__errors` or a `null` or `undefined` child included, which a raise at an ancestor would read as
+ * errors still being there. `path` is that of `errorSchema` itself. An array a raise holds for the items of an array
+ * field is copied as the object keyed by index that `toErrorSchema()` builds, which is what the paths here and the
+ * merges walk
  */
 function pruneErrorSchema(
   errorSchema: ErrorSchema,
@@ -405,8 +407,9 @@ function pruneErrorSchema(
         // Copied, so the form does not hold on to an array the field that raised it may go on to change
         kept[key] = [...value];
       }
-    } else {
-      const child = isPlainObject(value) ? pruneErrorSchema(value, isDropped, [...path, key]) : value;
+    } else if (value != null) {
+      const child =
+        isPlainObject(value) || Array.isArray(value) ? pruneErrorSchema(value, isDropped, [...path, key]) : value;
       if (!isPlainObject(child) || Object.keys(child).length > 0) {
         kept[key] = child;
       }
@@ -1909,12 +1912,10 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   props: FormProps<T, S, F>,
   formData: T | undefined,
 ): FormState<T, S, F> {
-  const { extraErrors } = props;
   return {
     ...current,
     formData,
-    errors: extraErrors ? toErrorList(extraErrors) : [],
-    errorSchema: extraErrors ?? {},
+    ...mergeErrors({ errors: [], errorSchema: {} }, props.extraErrors),
     schemaValidationErrors: [],
     schemaValidationErrorSchema: {},
   };

@@ -1,5 +1,6 @@
 import isPlainObject from './isPlainObject.ts';
 import mergeObjects from './mergeObjects.ts';
+import normalizeErrorSchema from './normalizeErrorSchema.ts';
 import toErrorList from './toErrorList.ts';
 import type { ErrorSchema, ValidationData } from './types.ts';
 
@@ -40,7 +41,9 @@ function withoutMergedErrors(additionalErrorSchema: Record<string, unknown>, err
  * two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
  * `toErrorList()` on the `errors` in the `validationData`. If no `additionalErrorSchema` is passed, or an empty one,
  * then `validationData` is returned. The existing `errors` are always kept, also when their `errorSchema` is empty, as
- * it is when a `transformErrors` clears every `message`.
+ * it is when a `transformErrors` clears every `message`. An array either `ErrorSchema` holds for the items of an array
+ * field is merged as the object keyed by index that `toErrorSchema()` builds, so it neither replaces the other's errors
+ * for those items nor is appended to an array of them.
  *
  * @param validationData - The current `ValidationData` into which to merge the additional errors
  * @param [additionalErrorSchema] - The optional additional set of errors in an `ErrorSchema`
@@ -57,14 +60,15 @@ export default function validationDataMerge<T = unknown>(
     return validationData;
   }
   const { errors: oldErrors, errorSchema: oldErrorSchema } = validationData;
-  let additional = additionalErrorSchema;
-  let errorSchema = additionalErrorSchema;
+  let additional = normalizeErrorSchema(additionalErrorSchema);
+  let errorSchema = additional;
   if (oldErrorSchema && Object.keys(oldErrorSchema).length > 0) {
+    const existing = normalizeErrorSchema(oldErrorSchema);
     // One copy drives both the merged `ErrorSchema` and the list, so they cannot disagree on what is a duplicate
     if (preventDuplicates) {
-      additional = withoutMergedErrors(additionalErrorSchema, oldErrorSchema) as ErrorSchema<T>;
+      additional = withoutMergedErrors(additional, existing) as ErrorSchema<T>;
     }
-    errorSchema = mergeObjects(oldErrorSchema, additional, true) as ErrorSchema<T>;
+    errorSchema = mergeObjects(existing, additional, true) as ErrorSchema<T>;
   }
   const errors = toErrorList(additional);
   return { errorSchema, errors: [...oldErrors, ...errors] };

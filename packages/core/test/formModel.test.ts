@@ -1,4 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { ROOT_FIELD_PATH, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import type { FormProps } from '../src/components/Form.tsx';
@@ -78,5 +79,22 @@ describe('proposing()', () => {
     expect(listener).toHaveBeenCalledTimes(2);
     // The field's record of the proposal outlives the commit, until the render it asked for
     expect(model.epoch()).toBe(epoch);
+  });
+});
+
+describe('the errors a field raises', () => {
+  it('leave no node behind for the items a raised array holds nothing for, once the rest are dropped', () => {
+    const props: FormProps = {
+      schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' } } } },
+      validator,
+    };
+    const model = createFormModel(props, initialState(props));
+    model.mount();
+    model.attach();
+
+    model.handleChange({ list: ['a', 'b'] }, ROOT_FIELD_PATH, { list: [undefined, { __errors: ['taken'] }] });
+    model.handleChange('c', toFieldPath(1, toFieldPath('list')));
+
+    expect(model.getSnapshot().state.customErrors).toBeUndefined();
   });
 });

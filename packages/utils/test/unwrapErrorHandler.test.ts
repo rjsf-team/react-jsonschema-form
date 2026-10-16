@@ -21,4 +21,16 @@ describe('unwrapErrorHandler()', () => {
   it('A fully loaded FormValidation returns the associated ErrorSchema', () => {
     expect(unwrapErrorHandler(POPULATED_WRAPPER)).toEqual(TEST_ERROR_SCHEMA);
   });
+  it('strips the addError() functions from an array of item handlers, keying the items by index', () => {
+    const handler = createErrorHandler({ list: [{ name: 'a' }, { name: 'b' }] });
+    handler.list![1]!.name!.addError('taken');
+    const returned = { ...handler, list: [handler.list![0], handler.list![1]] } as unknown as FormValidation;
+    expect(unwrapErrorHandler(returned)).toStrictEqual({
+      [ERRORS_KEY]: [],
+      list: {
+        0: { [ERRORS_KEY]: [], name: { [ERRORS_KEY]: [] } },
+        1: { [ERRORS_KEY]: [], name: { [ERRORS_KEY]: ['taken'] } },
+      },
+    });
+  });
 });

@@ -341,12 +341,12 @@ type IsAny<V> = 0 extends 1 & V ? true : false;
 /** Values that are objects but hold no form fields of their own, so their error node has no children and their
  * uiSchema has no nested field entries.
  *
- * `createErrorHandler()` and `toErrorList()` recurse through `isPlainObject()`, so at runtime every class instance is
- * a leaf. TypeScript has no way to say "plain object", so this lists the built-in classes a form-data type plausibly
- * holds: the two a custom widget most commonly hands back (the built-in date and file widgets store strings), and the
- * collection, pattern, URL and promise classes whose non-method properties (`size`, `source`, `href`) would otherwise
- * be offered as field names. A user-defined class instance still gets its properties offered as children, which
- * accepts a node the runtime never builds.
+ * `createErrorHandler()` and `toErrorList()` recurse only into plain objects and arrays, so at runtime every class
+ * instance is a leaf. TypeScript has no way to say "plain object", so this lists the built-in classes a form-data type
+ * plausibly holds: the two a custom widget most commonly hands back (the built-in date and file widgets store strings),
+ * and the collection, pattern, URL and promise classes whose non-method properties (`size`, `source`, `href`) would
+ * otherwise be offered as field names. A user-defined class instance still gets its properties offered as children,
+ * which accepts a node the runtime never builds.
  */
 type AtomicValue =
   | Date
