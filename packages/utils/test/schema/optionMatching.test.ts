@@ -1,5 +1,5 @@
 import type { RJSFSchema } from '../../src/index.ts';
-import { omitExtraData, retrieveSchema } from '../../src/index.ts';
+import { getClosestMatchingOption, getFirstMatchingOption, omitExtraData, retrieveSchema } from '../../src/index.ts';
 import { miniValidator } from './graph/miniValidator.ts';
 
 describe('matching options through the schema graph', () => {
@@ -30,6 +30,16 @@ describe('matching options through the schema graph', () => {
       v: { kind: 'b', b: 2 },
     });
     expect(validator.calls).toBe(0);
+  });
+  it('matches past an option holding a patternProperties pattern no flag compiles', () => {
+    const options: RJSFSchema[] = [
+      { type: 'object', properties: { a: { type: 'string' } }, patternProperties: { '(?<x': { type: 'string' } } },
+      { type: 'object', properties: { b: { type: 'number' } } },
+    ];
+    const rootSchema: RJSFSchema = { oneOf: options };
+    const validator = miniValidator();
+    expect(getFirstMatchingOption({ validator }, { b: 1 }, options, rootSchema)).toBe(1);
+    expect(getClosestMatchingOption({ validator }, rootSchema, { b: 1 }, options)).toBe(1);
   });
   it('omits by a boolean option the data matches', () => {
     const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [true] } } };
