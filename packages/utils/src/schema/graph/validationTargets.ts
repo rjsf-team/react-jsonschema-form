@@ -337,14 +337,7 @@ type DeclaredKeys = boolean | { readonly names: ReadonlySet<string>; readonly pa
 const declaredKeysMemo = new KeyedMemo<DeclaredKeys>();
 
 function declaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
-  const keys = [graph, id];
-  const memoized = declaredKeysMemo.peek(keys);
-  if (memoized !== undefined) {
-    return memoized;
-  }
-  const declared = readDeclaredKeys(graph, id);
-  declaredKeysMemo.set(keys, declared);
-  return declared;
+  return declaredKeysMemo.get([graph, id], () => readDeclaredKeys(graph, id));
 }
 
 function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
