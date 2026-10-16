@@ -5256,7 +5256,6 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <label
                     class="form-label"
-                    for="root_optionalObjectWithOneofs"
                     id="root_optionalObjectWithOneofs__label"
                   >
                     optionalObjectWithOneofs
@@ -5356,7 +5355,6 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <label
                     class="form-label"
-                    for="root_optionalArrayWithAnyofs"
                     id="root_optionalArrayWithAnyofs__label"
                   >
                     optionalArrayWithAnyofs
@@ -6236,7 +6234,6 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <label
                     class="form-label"
-                    for="root_optionalObjectWithOneofs"
                     id="root_optionalObjectWithOneofs__label"
                   >
                     optionalObjectWithOneofs
@@ -6337,7 +6334,6 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <label
                     class="form-label"
-                    for="root_optionalArrayWithAnyofs"
                     id="root_optionalArrayWithAnyofs__label"
                   >
                     optionalArrayWithAnyofs

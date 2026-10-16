@@ -1,6 +1,7 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
@@ -49,6 +50,7 @@ export default function RadioWidget<
     'radiogroup',
   );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus, value);
   return (
     <Form.Group className='mb-0' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
@@ -68,7 +70,7 @@ export default function RadioWidget<
               disabled={disabled || itemDisabled || readonly}
               checked={checked}
               required={required}
-              autoFocus={autofocus && index === 0}
+              autoFocus={index === autofocusIndex}
               isInvalid={invalid}
               value={domValues[index]}
               onChange={handleChange}
