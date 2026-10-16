@@ -1,4 +1,10 @@
-import { allowsAdditionalProperties, getAdditionalPropertySchema } from '../additionalPropertiesUtils.ts';
+import {
+  additionalPropertiesKeyword,
+  allowsAdditionalProperties,
+  conjoin,
+  getAdditionalPropertySchema,
+  withJoinedSchemas,
+} from '../additionalPropertiesUtils.ts';
 import {
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
@@ -835,24 +841,13 @@ function stubSchemaForSubSchema<S extends StrictRJSFSchema = RJSFSchema>(
   return { ...(offersOptions ? subSchema : stubbableSchema<S>(subSchema)), type };
 }
 
-/** Returns the subschema a key has to meet under both `own` and `other`, which each describe it, allow it (`true`
- * or `undefined`) or forbid it (`false`)
- */
-function conjoin(own: unknown, other: unknown): unknown {
-  if (own === undefined || own === true) {
-    return other ?? own;
-  }
-  if (other === undefined || other === true) {
-    return own;
-  }
-  return own === false || other === false ? false : { [ALL_OF_KEY]: [own, other] };
-}
-
 /** Returns `schema` with the extra-key keywords of the `option` selected beside it joined to its own, which is how the
  * field the two render one property set for describes the keys neither declares: `additionalProperties` and
  * `unevaluatedProperties` become the `allOf` of the two, one side's where the other declares none or allows any key,
  * and `false` where either is, and the option's `patternProperties` join the schema's, a pattern both declare
- * becoming the `allOf` of its two subschemas
+ * becoming the `allOf` of its two subschemas. The schema's `unevaluatedProperties` says nothing about the keys an option
+ * naming either keyword evaluates, so it is left out of the join beside one. The joined schema carries the two, so
+ * `getAdditionalPropertySchema()` describes a key by each of them apart, as the stubs are described.
  *
  * @param schema - The object schema
  * @param option - The option selected beside it
@@ -860,8 +855,11 @@ function conjoin(own: unknown, other: unknown): unknown {
  */
 function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S, option: S): S {
   const joined: GenericObjectType = { ...schema };
+  const optionEvaluatesRest = additionalPropertiesKeyword<S>(option) !== undefined;
   for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY]) {
-    const value = conjoin(Reflect.get(schema, keyword), Reflect.get(option, keyword));
+    const own: unknown =
+      keyword === UNEVALUATED_PROPERTIES_KEY && optionEvaluatesRest ? undefined : Reflect.get(schema, keyword);
+    const value = conjoin(own, Reflect.get(option, keyword));
     if (value !== undefined) {
       joined[keyword] = value;
     }
@@ -874,16 +872,25 @@ function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
     }
     joined[PATTERN_PROPERTIES_KEY] = patterns;
   }
-  return schemaFrom(schema, joined);
+  return withJoinedSchemas<S>(schemaFrom(schema, joined), extraKeyKeywords<S>(schema), extraKeyKeywords<S>(option));
+}
+
+/** Returns the keywords of `schema` that describe the keys its `properties` don't name */
+function extraKeyKeywords<S extends StrictRJSFSchema>(schema: S): S {
+  const keywords: GenericObjectType = {};
+  for (const keyword of [ADDITIONAL_PROPERTIES_KEY, UNEVALUATED_PROPERTIES_KEY, PATTERN_PROPERTIES_KEY]) {
+    keywords[keyword] = Reflect.get(schema, keyword);
+  }
+  return schemaFrom(schema, keywords);
 }
 
 /** Stubs each key of `aFormData` that neither the schema's `properties` nor those of the `option` selected beside it
  * declare among the schema's `properties`, flagged with `ADDITIONAL_PROPERTY_FLAG`, and returns the schema with the
  * option's extra-key keywords joined to its own (see `withOptionExtraKeys()`). A key the option declares is left to the
- * option, which renders it. Any other key is described by the schema's extra-key keywords and by the option's, each
- * read on its own and the two conjoined, since a pattern or `additionalProperties` one side declares says nothing about
- * a key the other forbids: a key either forbids is stubbed as `{ type: 'null' }`, a `$ref` or an `allOf` is resolved before the stub is built, and a
- * subschema naming no type is given the one `getAdditionalPropertyType()` reads out of it, its options resolved, or
+ * option, which renders it. Any other key is described as `getAdditionalPropertySchema()` describes it for the joined
+ * schema, by the schema's extra-key keywords and by the option's apart and the two conjoined: a key either forbids is
+ * stubbed as `{ type: 'null' }`, a `$ref` or an `allOf` is resolved before the stub is built, and a subschema naming no
+ * type is given the one `getAdditionalPropertyType()` reads out of it, its options resolved, or
  * else the type of the data the key holds.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
@@ -916,10 +923,7 @@ export function stubExistingAdditionalProperties<
       getAdditionalPropertyType<S>(retrieveSchema<T, S, F>(context, subSchema, rootSchema, undefined, true)),
     );
   for (const key of extraKeys) {
-    const keySchema =
-      option === undefined
-        ? getAdditionalPropertySchema<S>(theSchema, key)
-        : conjoin(getAdditionalPropertySchema<S>(theSchema, key), getAdditionalPropertySchema<S>(option, key));
+    const keySchema = getAdditionalPropertySchema<S>(joined, key);
     let stub: S;
     if (keySchema === false) {
       // The schema forbids the key, so the property has no subschema of its own to render it with and no value the

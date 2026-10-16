@@ -4,6 +4,7 @@ import type { RJSFSchema } from '../../src/index.ts';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   GUESSED_TYPE_FLAG,
+  getAdditionalPropertySchema,
   createSchemaUtils,
   getByPath,
   getRenderedOptionSchema,
@@ -2749,6 +2750,37 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0).properties?.x1,
           ).toEqual({ type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true });
         }
+      });
+      it("leaves a key the option evaluates out of the object's unevaluatedProperties", () => {
+        const formData = { x: 'hi', 'p-1': 'v' };
+        const schema: RJSFSchema = {
+          type: 'object',
+          unevaluatedProperties: false,
+          oneOf: [{ additionalProperties: { type: 'string' } }, { patternProperties: { '^p-': { type: 'string' } } }],
+        };
+        const describedByRest = retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0);
+        expect(describedByRest.properties).toEqual({
+          x: { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+          'p-1': { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+        expect(getAdditionalPropertySchema(describedByRest, 'newKey')).toEqual({ type: 'string' });
+        const describedByPattern = retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 1);
+        expect(describedByPattern.properties).toEqual({
+          x: { type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true },
+          'p-1': { type: 'string', [ADDITIONAL_PROPERTY_FLAG]: true },
+        });
+        expect(getAdditionalPropertySchema(describedByPattern, 'p-2')).toEqual({ allOf: [{ type: 'string' }] });
+        expect(getAdditionalPropertySchema(describedByPattern, 'newKey')).toBe(false);
+      });
+      it('describes a new key of the joined field as it stubs an existing one', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          patternProperties: { '^x': { type: 'string' } },
+          oneOf: [{ properties: { a: { type: 'string' } }, additionalProperties: false }],
+        };
+        const field = retrieveSchema({ validator: testValidator }, schema, schema, { a: 'v', xa: 'hi' }, false, 0);
+        expect(field.properties?.xa).toEqual({ type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true });
+        expect(getAdditionalPropertySchema(field, 'xb')).toBe(false);
       });
       it('stubs the extra keys an option alone describes with the object, and none for the option itself', () => {
         const schema: RJSFSchema = {
