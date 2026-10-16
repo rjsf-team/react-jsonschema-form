@@ -25,7 +25,7 @@ import type { XxxOfOptions } from '../getXxxOfOptions.ts';
 import isConstant from '../isConstant.ts';
 import isConstantOptionList from '../isConstantOptionList.ts';
 import isFixedItems from '../isFixedItems.ts';
-import isObject from '../isObject.ts';
+import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData.ts';
 import mergeObjects from '../mergeObjects.ts';
@@ -568,6 +568,11 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   const { graph } = field;
   if (field.seeds.length === 0) {
     return ownView(field, field.fallback ?? schemaFrom(graph.rawRoot, {}), data);
+  }
+  // A leaf merges nothing, under any policy, and holds no `$ref` to collapse on, so its plan would be itself
+  const leaf = inherited || field.retrieves ? undefined : leafOf(field);
+  if (isSchemaObject<S>(leaf)) {
+    return ownView(field, leaf, data);
   }
   const planFor = (seeds: readonly Seed[], cutRecursion = false): PlannedField<S> => {
     const fieldData = { graph, seeds, data, depData, selections: options.selections, cutRecursion };
