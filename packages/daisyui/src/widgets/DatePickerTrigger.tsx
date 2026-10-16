@@ -2,10 +2,26 @@ import type { MouseEvent, ReactNode, RefObject } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FieldPresentation, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getControlAttributes } from '@rjsf/utils';
+import { getControlAttributes, getControlFallbackName, TranslatableString } from '@rjsf/utils';
 
-import { hasLabelToReference } from '../utils.ts';
-import { getDatePickerName } from './datePickerHooks.ts';
+/** The name a picker's trigger falls back to where no label names it, which the dialog it opens takes too, so the two
+ * can't drift apart: the field's label, else its placeholder, or the translated date prompt for a field with neither
+ *
+ * @param label - The field's label, empty when it has no title
+ * @param placeholder - The field's placeholder, if any
+ * @param registry - The field's registry, for the translated prompt
+ * @returns - The name
+ */
+function getDatePickerName<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  label: string | undefined,
+  placeholder: string | undefined,
+  registry: Registry<T, S, F>,
+) {
+  return getControlFallbackName<T, S, F>(
+    { label: label ?? '', placeholder, registry },
+    TranslatableString.AriaDateLabel,
+  );
+}
 
 interface DatePickerTriggerProps<
   T = unknown,
@@ -16,13 +32,11 @@ interface DatePickerTriggerProps<
   id: string;
   /** The field's label, empty when it has no title */
   label?: string;
-  /** The field's property name, which the label naming this button falls back to */
-  name?: string;
-  /** Whether the label is hidden, in which case the template renders none */
-  hideLabel?: boolean;
-  /** The field's plan, which says whether a label names this button */
+  /** Whether a label the template draws names this button, as `isNamedByTemplateLabel()` says of the widget's props */
+  named: boolean;
+  /** The field's plan, whose control attributes this button carries */
   presentation?: FieldPresentation;
-  /** The field's placeholder, displayed where it holds no date */
+  /** The field's placeholder, displayed where it holds no date, and naming it where it has no label */
   placeholder?: string;
   /** The date the picker is holding, formatted for display, `undefined` where it holds none */
   formattedValue?: string;
@@ -54,7 +68,8 @@ interface DatePickerTriggerProps<
  *
  * Its text is the value it holds, falling back to the placeholder, then to the field's label, and last to the
  * translated prompt, so it is never blank on the screen. A combobox takes no name from its text, so where no label,
- * nor the plan, names it, it is named by the field's label, or the translated prompt for a field with no title.
+ * nor the plan, names it, it is named by the field's label, or for a field with no title its placeholder, else the
+ * translated prompt.
  *
  * @param props - The value to display and the state to display it in, with the handlers for each way into the popup
  */
@@ -65,8 +80,7 @@ export default function DatePickerTrigger<
 >({
   id,
   label,
-  name,
-  hideLabel,
+  named,
   presentation,
   placeholder,
   formattedValue,
@@ -82,9 +96,8 @@ export default function DatePickerTrigger<
   registry,
 }: DatePickerTriggerProps<T, S, F>) {
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
-  const fallbackName = getDatePickerName<T, S, F>(label, registry);
+  const fallbackName = getDatePickerName<T, S, F>(label, placeholder, registry);
   const text = formattedValue || placeholder || fallbackName;
-  const named = hasLabelToReference({ label, name, hideLabel, presentation });
 
   return (
     <button
@@ -120,6 +133,8 @@ interface DatePickerDialogProps<T, S extends StrictRJSFSchema, F extends FormCon
   id: string;
   /** The field's label, empty when it has no title */
   label?: string;
+  /** The field's placeholder, which names it where it has no label */
+  placeholder?: string;
   /** The field's registry, for the translated prompt */
   registry: Registry<T, S, F>;
   children: ReactNode;
@@ -127,15 +142,15 @@ interface DatePickerDialogProps<T, S extends StrictRJSFSchema, F extends FormCon
 
 /** The dialog both picker widgets open their calendar in, which their trigger controls, named as the trigger is
  *
- * @param props - The popup's id, the field's label and registry it is named from, and its contents
+ * @param props - The popup's id, the field's label, placeholder and registry it is named from, and its contents
  */
 export function DatePickerDialog<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ id, label, registry, children }: DatePickerDialogProps<T, S, F>) {
+>({ id, label, placeholder, registry, children }: DatePickerDialogProps<T, S, F>) {
   return (
-    <div id={id} role='dialog' aria-label={getDatePickerName<T, S, F>(label, registry)}>
+    <div id={id} role='dialog' aria-label={getDatePickerName<T, S, F>(label, placeholder, registry)}>
       {children}
     </div>
   );

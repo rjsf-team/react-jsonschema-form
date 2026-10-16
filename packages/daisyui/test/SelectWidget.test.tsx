@@ -306,6 +306,18 @@ describe('SelectWidget', () => {
     );
   });
 
+  test('names a select with no title by its placeholder before the translated prompt', () => {
+    render(
+      <Form
+        schema={{ type: 'string', enum: ['a', 'b'] }}
+        uiSchema={{ 'ui:placeholder': 'Pick one' }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pick one');
+  });
+
   test('reports focus and blur for the dropdown as a whole, with the current value', async () => {
     const onFocus = vi.fn();
     const onBlur = vi.fn();

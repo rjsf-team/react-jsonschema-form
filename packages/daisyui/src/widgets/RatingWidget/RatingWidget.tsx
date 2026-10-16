@@ -30,7 +30,6 @@ export default function RatingWidget<
     htmlName,
     value,
     label,
-    name,
     presentation,
     required,
     disabled,
@@ -104,7 +103,6 @@ export default function RatingWidget<
   const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
     id,
     label,
-    name,
     hideLabel,
     presentation,
     role: 'radiogroup',

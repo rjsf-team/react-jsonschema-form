@@ -6188,7 +6188,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="label"
-                    for="root_optionalObjectWithOneofs"
                     id="root_optionalObjectWithOneofs__label"
                   >
                     <span
@@ -6357,7 +6356,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="label"
-                    for="root_optionalArrayWithAnyofs"
                     id="root_optionalArrayWithAnyofs__label"
                   >
                     <span
@@ -7261,7 +7259,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="label"
-                    for="root_optionalObjectWithOneofs"
                     id="root_optionalObjectWithOneofs__label"
                   >
                     <span
@@ -7434,7 +7431,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="label"
-                    for="root_optionalArrayWithAnyofs"
                     id="root_optionalArrayWithAnyofs__label"
                   >
                     <span

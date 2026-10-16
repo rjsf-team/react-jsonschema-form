@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import type { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
@@ -36,7 +37,6 @@ export default function CheckboxesWidget<
   const {
     id,
     htmlName,
-    name,
     disabled,
     options,
     value,
@@ -78,12 +78,12 @@ export default function CheckboxesWidget<
   const { group: groupProps, option: optionAttributes } = getGroupAndOptionProps({
     id,
     label,
-    name,
     hideLabel,
     presentation,
     role: 'group',
   });
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <div className='form-control'>
       {/* Use a vertical layout with proper spacing */}
@@ -105,7 +105,7 @@ export default function CheckboxesWidget<
                 value={domValues[index]}
                 checked={enumOptionsIsSelected<S>(option.value, selected)}
                 disabled={optionDisabled}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 data-index={index}
                 onChange={handleChange}
                 onFocus={focusHandlers[index]}
