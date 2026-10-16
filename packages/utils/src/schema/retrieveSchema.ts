@@ -149,9 +149,6 @@ const handedOut = new WeakSet<object>();
 
 const OPTION_KEYWORDS: readonly ('anyOf' | 'oneOf')[] = [ANY_OF_KEY, ONE_OF_KEY];
 
-/** The keywords whose subschemas describe array rows, which a view drops where it handed out nothing for them */
-const ITEM_KEYWORDS: readonly ('items' | 'additionalItems')[] = ['items', 'additionalItems'];
-
 function handOut<S extends StrictRJSFSchema>(schema: S, provenance: Provenance<S>): S {
   const stamped = stamp(schema, provenance);
   handedOut.add(stamped);
@@ -392,25 +389,23 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     seedsOfItem === undefined || seedsOfItem.length === 0 || !isSchemaObject<S>(value) || isDecided(value)
       ? value
       : handOut(value, child(seedsOfItem, edge, true).provenance);
+  const tuple = (entries: unknown[]) =>
+    entries.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem'));
+  // A view drops the row keywords that hold nothing, rather than holding them as undefined
+  const setRows = (keyword: 'items' | 'additionalItems', value: unknown) => {
+    if (value === undefined) {
+      Reflect.deleteProperty(merged, keyword);
+    } else {
+      Reflect.set(merged, keyword, value);
+    }
+  };
   const { items, additionalItems } = merged;
-  if (Array.isArray(items)) {
-    Reflect.set(
-      merged,
-      'items',
-      items.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem')),
-    );
-  } else {
-    Reflect.set(merged, 'items', item(items, seedsAt(plan, ITEMS_KEY), 'item'));
-  }
+  setRows(ITEMS_KEY, Array.isArray(items) ? tuple(items) : item(items, seedsAt(plan, ITEMS_KEY), 'item'));
   const prefixItems: unknown = Reflect.get(merged, 'prefixItems');
   if (Array.isArray(prefixItems)) {
-    Reflect.set(
-      merged,
-      'prefixItems',
-      prefixItems.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem')),
-    );
+    Reflect.set(merged, 'prefixItems', tuple(prefixItems));
   }
-  Reflect.set(merged, 'additionalItems', item(additionalItems, seedsAt(plan, 'additionalItems'), 'item'));
+  setRows('additionalItems', item(additionalItems, seedsAt(plan, 'additionalItems'), 'item'));
   for (const keyword of OPTION_KEYWORDS) {
     const options = merged[keyword];
     if (Array.isArray(options)) {
@@ -434,11 +429,6 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
           return resolveOptions ? buildView(context, root, provenance, data, false) : handOut(option, provenance);
         }),
       );
-    }
-  }
-  for (const key of ITEM_KEYWORDS) {
-    if (merged[key] === undefined) {
-      Reflect.deleteProperty(merged, key);
     }
   }
   const stubsExtraKeys = allowsAdditionalProperties<S>(merged);
