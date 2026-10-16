@@ -229,13 +229,17 @@ function judge<S extends StrictRJSFSchema>(
   return undefined;
 }
 
-/** The subschemas the properties of a field are rendered with, an option's over the field's own */
-function propertiesOf<S extends StrictRJSFSchema>(layers: readonly S[]): Map<string, S> {
-  const properties = new Map<string, S>();
+/** The subschemas the properties of a field are rendered with, an option's over the field's own. A `true` property
+ * holds any value, and a `false` one none, so it holds no property of the data
+ */
+function propertiesOf<S extends StrictRJSFSchema>(layers: readonly S[]): Map<string, S | true> {
+  const properties = new Map<string, S | true>();
   for (const layer of layers) {
     for (const [key, property] of Object.entries(layer.properties ?? {})) {
-      if (isSchemaObject<S>(property)) {
+      if (isSchemaObject<S>(property) || property === true) {
         properties.set(key, property);
+      } else if (property === false) {
+        properties.delete(key);
       }
     }
   }
@@ -311,13 +315,15 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     for (const key of Object.keys(newValue)) {
       const childPath = [...path, key];
       const newChild = newProperties.get(key);
+      const oldChild = oldProperties.get(key);
       let next: unknown = newValue[key];
-      if (newChild !== undefined) {
+      // A `true` property holds the value whatever it is, so there is nothing to judge it by
+      if (newChild !== undefined && newChild !== true) {
         const previousValue = valueAt(oldValue, previousKeyOf(key));
         next = walk(
           ctx,
           {
-            oldRaw: oldProperties.get(key),
+            oldRaw: oldChild === true ? undefined : oldChild,
             newRaw: newChild,
             oldValue: previousValue,
             newValue: newValue[key],
@@ -328,7 +334,7 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
           },
           childPath,
         );
-      } else if (oldProperties.has(key) && !isEdited(ctx, childPath)) {
+      } else if (newChild === undefined && oldChild !== undefined && !isEdited(ctx, childPath)) {
         next = DROP;
       }
       if (next !== newValue[key]) {
