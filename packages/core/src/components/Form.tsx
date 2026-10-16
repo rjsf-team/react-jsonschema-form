@@ -1,5 +1,14 @@
 import type { ElementType, ReactNode, Ref, SubmitEvent } from 'react';
-import { memo, useEffect, useImperativeHandle, useLayoutEffect, useMemo, useState, useSyncExternalStore } from 'react';
+import {
+  memo,
+  useEffect,
+  useImperativeHandle,
+  useInsertionEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import type {
   CustomValidator,
   ErrorSchema,
@@ -193,10 +202,12 @@ export interface FormProps<
    */
   transformErrors?: ErrorTransformer<Uninferred<T>, S, F>;
   /** Returns the data an edit leaves the form with, given the data the edit produced and the data before it: `next` to
-   * take the edit as it is, `previous` to refuse it, or another value, such as `next` with a field trimmed. It runs
-   * for every edit, a field's change and `setFieldValue()` alike, before the form stores the result, validates it and
-   * reports it through `onChange`. It must be pure, since the form may call it again for the same edit, and should
-   * return `next`'s unchanged subtrees as they are, so their fields do not render again.
+   * take the edit as it is, `previous`, or a copy of it, to refuse it, or another value, such as `next` with a field
+   * trimmed. It runs for every edit, a field's change and `setFieldValue()` alike, and for those alone: what the form
+   * derives on its own, the defaults for a new schema, the live omit a blur runs and a `reset()`, is stored and
+   * reported through `onChange` without it. It runs before the form stores the result, validates it and reports it.
+   * It must be pure, since the form may call it again for the same edit, and should return `next`'s unchanged subtrees
+   * as they are, so their fields do not render again.
    */
   transformChange?: (next: Uninferred<T> | undefined, previous: Uninferred<T> | undefined) => Uninferred<T> | undefined;
   /** If set to true, then the first field with an error will receive the focus when the form is submitted with errors
@@ -313,6 +324,17 @@ type ValidationProps<T, S extends StrictRJSFSchema, F extends FormContextType> =
   'customValidate' | 'transformErrors'
 >;
 
+/** Attaches the form to its model for as long as it is shown, from the first layout Effect in the form's subtree: React
+ * runs a subtree's layout Effects children first and siblings in order, so this setup runs before any field's,
+ * including when an `<Activity>` shows the form again or StrictMode replays the Effects, and an edit a widget makes
+ * from a layout Effect then is taken. React runs the cleanups in the same order when the form unmounts or is hidden,
+ * so a field's layout cleanup finds the form detached and a draft it flushes is dropped, as the contract says
+ */
+function Attachment({ attach }: { attach: () => () => void }) {
+  useLayoutEffect(() => attach(), [attach]);
+  return null;
+}
+
 /** The model holds the state; rendering derives from it and the props what to show, and each commit hands that back */
 function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>(
   props: FormProps<T, S, F>,
@@ -336,13 +358,14 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   if (state !== cache.state) {
     setCache({ model, published, props, state });
   }
-  // Layout Effects, since what they do is tied to what the form shows: each commit tells the model the props and the
-  // state it rendered, which operations start from, and the attachment ends when the form unmounts or an `<Activity>`
-  // hides it. A field's own layout Effect runs before the form's, so it still sees the props of the commit before
-  useLayoutEffect(() => {
+  // Each commit tells the model the props and the state it rendered, which operations start from. From an insertion
+  // Effect, since React runs every insertion Effect of a commit before any layout Effect in it: a command issued from
+  // a layout Effect, a widget's or an earlier sibling's, then starts from the props of the commit that runs it, where
+  // a layout Effect of the form's own would run after both. Hidden content renders, and runs its insertion Effects, so
+  // the model keeps up while an `<Activity>` hides the form; the attachment is the `Attachment` rendered below
+  useInsertionEffect(() => {
     model.committed(props, state, published);
   });
-  useLayoutEffect(() => model.attached(), [model]);
   // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData: formDataProp } = props;
   useEffect(() => {
@@ -428,6 +451,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         onSubmit={model.handleSubmit}
         ref={setFormElement}
       >
+        <Attachment attach={model.attached} />
         {showErrorList === 'top' && renderErrors()}
         <SchemaFieldComponent
           name=''

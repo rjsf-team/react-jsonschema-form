@@ -722,19 +722,19 @@ export default function ObjectField<
         });
         const renamedObj = Object.assign({}, ...keyValues);
 
-        setLastRenamedProperty((previous) => ({
-          previousKey: oldKey !== previous.currentKey ? oldKey : previous.previousKey,
-          currentKey: actualNewKey,
-        }));
-        setAdditionalPropertyOrder((order) => order.map((property) => (property === oldKey ? actualNewKey : property)));
         // The errors the form holds under the old name describe the property, so they go to its new name with it
         const isRefused = sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
           onChange(renamedObj, fieldPath),
         );
-        if (isRefused) {
-          // The property keeps its name, and so its place among the others
+        // Recorded once the rename is taken: a refused one leaves the property its name, its place among the others
+        // and the React key the last rename gave another property, so that property keeps its instance
+        if (!isRefused) {
+          setLastRenamedProperty((previous) => ({
+            previousKey: oldKey !== previous.currentKey ? oldKey : previous.previousKey,
+            currentKey: actualNewKey,
+          }));
           setAdditionalPropertyOrder((order) =>
-            order.map((property) => (property === actualNewKey ? oldKey : property)),
+            order.map((property) => (property === oldKey ? actualNewKey : property)),
           );
         }
         forgetChangedSeeds(oldKey, actualNewKey);

@@ -4,9 +4,9 @@ import type { EventFormData } from './IChangeEvent.ts';
 
 /** Public methods exposed by a Form ref.
  * Commands read and write Form's latest stored value, edits made earlier in the same tick included. Use event handlers
- * for user actions, or passive Effects for synchronization after prop changes. A layout Effect inside the form, a
- * widget's, runs before the form takes the props of its commit, so a command it issues sees the previous ones; one
- * outside the form sees the new props. A form that has unmounted, or that an `<Activity>` hides, which React asks to
+ * for user actions, or Effects for synchronization after prop changes: the form takes the props of a commit before any
+ * layout Effect of that commit runs, so a command issued from one, a widget's or a sibling's, starts from them. A form
+ * that has unmounted, or that an `<Activity>` hides, which React asks to
  * be treated alike, drops changes, `reset()` and `submit()`, and its validation methods return their result without
  * calling `onError`.
  */
@@ -18,8 +18,9 @@ export interface FormRef<T = unknown> {
   /** Submits the form through its element, before this returns: schema validation checks the stored value and
    * `onSubmit` or `onError` is called. When the inputs show the stored value, the browser's constraint validation
    * checks them first, as for a submit button, and an input it rejects blocks the submit. After an edit React has yet
-   * to show, the inputs describe data the form no longer holds, so schema validation alone checks the value. Does
-   * nothing when `tagName` renders something other than a `<form>`.
+   * to show, the inputs describe data the form no longer holds, so schema validation alone checks the value. An
+   * element another `tagName` renders has no `requestSubmit()`, so it gets a submit event dispatched to it, which skips
+   * the browser's constraint validation as well.
    */
   submit(): void;
   /** Clears the validation errors and resets the data to the props' `formData`, or else `initialFormData`, and the

@@ -740,7 +740,7 @@ A pure function that decides what an edit leaves the form with. The form calls i
 />
 ```
 
-Return `next`'s unchanged subtrees as they are, so their fields do not render again. The function must be pure: the form may call it again for the same edit. It is not called for `reset()` or for a blur.
+Return `next`'s unchanged subtrees as they are, so their fields do not render again. A copy of `previous` refuses the edit as `previous` itself does. The function must be pure: the form may call it again for the same edit. It is not called for what the form derives on its own: the defaults for a new schema, the live omit a blur runs, or a `reset()`.
 
 ## translateString
 

@@ -1072,6 +1072,64 @@ describe('form data ownership', () => {
       expect(log.value).toEqual({ a: '', b: 'shown' });
     });
 
+    it.each([false, true])(
+      'takes an edit a widget makes from a layout Effect as a hidden form is shown again (StrictMode: %s)',
+      (reactStrictMode) => {
+        const log = createParentLog<Data>();
+        // A new widget each time, so its layout Effect sets the field as the form is shown, before the form's own
+        // layout Effects run
+        const parent = (to: string) => {
+          const form = (
+            <AcceptingParent<Data>
+              schema={schema}
+              uiSchema={{ a: { 'ui:widget': settingWidget(useLayoutEffect, to) } }}
+              initialValue={{ a: '', b: '' }}
+              log={log}
+            />
+          );
+          return reactStrictMode ? <StrictMode>{form}</StrictMode> : form;
+        };
+        const { hide, show } = renderInActivity(parent, 'mounted');
+        expect(log.value).toEqual({ a: 'mounted', b: '' });
+        hide('mounted');
+
+        show('shown');
+
+        expect(log.value).toEqual({ a: 'shown', b: '' });
+      },
+    );
+
+    it('a command from a layout Effect earlier in the tree starts from the props of its commit', () => {
+      const onlyA: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
+      const ref = createFormRef<Data>();
+      function Sync({ hasB }: { hasB: boolean }) {
+        useLayoutEffect(() => {
+          if (hasB) {
+            handleOf(ref).setFieldValue('b', 'set');
+          }
+        }, [hasB]);
+        return null;
+      }
+      const tree = (hasB: boolean) => (
+        <>
+          <Sync hasB={hasB} />
+          <Form<Data>
+            ref={ref}
+            schema={hasB ? schema : onlyA}
+            validator={validator}
+            omitExtraData
+            liveOmit='onChange'
+          />
+        </>
+      );
+      const { rerender } = render(tree(false));
+
+      rerender(tree(true));
+
+      // Set under the schema that declares `b`, so the live omit keeps it
+      expect(handleOf(ref).getFormData()).toEqual({ b: 'set' });
+    });
+
     it('a setFieldValue from inside onChange builds on the edit being handled', async () => {
       const ref = createFormRef<Data>();
       const reported: Data[] = [];

@@ -257,14 +257,20 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const isValidated = isLiveValidated(props);
     const edited = applyChangeToData(base, change, props);
     const returned = props.transformChange ? props.transformChange(edited.formData, base.formData) : edited.formData;
-    // Shared against the edit's data, so a copy that changes nothing, as `{ ...next }` with a field already trimmed is,
-    // takes the edit rather than deriving the whole form's data a second time
-    const transformed = Object.is(returned, base.formData) ? returned : replaceEqualDeep(edited.formData, returned);
-    if (Object.is(transformed, edited.formData)) {
+    if (Object.is(returned, edited.formData)) {
       return applyChangeToErrorsOf(edited, base.formData, change, props, isValidated);
     }
-    if (Object.is(transformed, base.formData)) {
+    // A copy of the data before the edit refuses it as that data itself does: shared against it, a copy comes back as
+    // it, and the refusal is what undoes the key moves the edit announced. Anything else is shared against the edit's
+    // data, so a copy that changes nothing of the edit, as `{ ...next }` with a field already trimmed is, takes the
+    // edit rather than deriving the whole form's data a second time
+    const kept = Object.is(returned, base.formData) ? returned : replaceEqualDeep(base.formData, returned);
+    if (Object.is(kept, base.formData)) {
       return base;
+    }
+    const transformed = replaceEqualDeep(edited.formData, returned);
+    if (Object.is(transformed, edited.formData)) {
+      return applyChangeToErrorsOf(edited, base.formData, change, props, isValidated);
     }
     // No field made the rewrite, so the errors the fields raised, the root's included, are carried through it as the
     // edit left them
@@ -377,10 +383,13 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
         return;
       }
       const view = formWindow();
-      if (!view || !(formElement instanceof view.HTMLFormElement)) {
+      if (!view || !(formElement instanceof view.HTMLElement)) {
         return;
       }
-      if (current().formData === rendered.formData) {
+      // Only a `<form>` has `requestSubmit()`, and only inputs that show the stored data describe it, so an element
+      // another `tagName` renders, or a form with an edit React has yet to show, gets a submit event dispatched to it
+      // instead, which `handleSubmit()` takes without the browser's constraint validation
+      if (formElement instanceof view.HTMLFormElement && current().formData === rendered.formData) {
         formElement.requestSubmit();
       } else {
         formElement.dispatchEvent(new view.SubmitEvent('submit', { bubbles: true, cancelable: true }));

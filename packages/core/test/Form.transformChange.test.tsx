@@ -82,12 +82,13 @@ describe('transformChange', () => {
       next && { ...next, first: next.first?.trim() };
     const { node, reported } = renderForm<Person>({
       schema: lengthSchema,
-      initialFormData: { first: 'ab' },
+      initialFormData: { first: 'a' },
       transformChange,
       liveValidate: 'onChange',
     });
 
-    await user.type(input(node, 'root_first'), ' ');
+    // The edit, `ab `, is long enough; the trimmed data the form keeps is not
+    await user.type(input(node, 'root_first'), 'b ');
 
     expect(input(node, 'root_first')).toHaveValue('ab');
     expect(reported.at(-1)?.errors.map(({ property }) => property)).toEqual(['.first']);
@@ -181,6 +182,34 @@ describe('transformChange', () => {
     await user.click(elementOf(node, `#${buttonId('root_1', 'remove')}`));
     expect(node.querySelectorAll('.rjsf-array-item')).toHaveLength(1);
     expect(optionOf(0)).toHaveValue('1');
+  });
+
+  it('refuses an array reorder with a copy of the data before it, and each row keeps its own state', async () => {
+    const choiceSchema: RJSFSchema = {
+      type: 'array',
+      items: {
+        oneOf: [
+          { title: 'A', type: 'string' },
+          { title: 'B', type: 'string' },
+        ],
+      },
+    };
+    // A copy of the data before the edit refuses it as that data itself does
+    const refuseWithCopy: FormProps<string[]>['transformChange'] = (next, previous) =>
+      next?.[0] === previous?.[0] ? next : [...(previous ?? [])];
+    const { node } = renderForm<string[]>({
+      schema: choiceSchema,
+      initialFormData: ['x', 'y'],
+      transformChange: refuseWithCopy,
+    });
+    const optionOf = (index: number) => elementOf(node, `#root_${index}__oneof_select`);
+    await user.selectOptions(optionOf(0), 'B');
+
+    await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
+
+    expect(input(node, 'root_0')).toHaveValue('x');
+    expect(optionOf(0)).toHaveValue('1');
+    expect(optionOf(1)).toHaveValue('0');
   });
 
   it.each([

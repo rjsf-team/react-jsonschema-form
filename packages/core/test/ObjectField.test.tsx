@@ -1337,6 +1337,52 @@ describe('ObjectField', () => {
       expect(handleOf(ref).getFormData()).toEqual({ num1: 0 });
     });
 
+    it('should keep a property in its place when transformChange refuses its rename with a copy of the data before', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { first: 'a', second: 'b' },
+        transformChange: (next, previous) =>
+          isPlainObject(next) && 'renamed' in next && isPlainObject(previous) ? { ...previous } : next,
+      });
+
+      const keyInput = elementOf(node, '#root_first-key');
+      await user.clear(keyInput);
+      await user.type(keyInput, 'renamed');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ first: 'a', second: 'b' });
+      expect([...node.querySelectorAll('input[id$="-key"]')].map((keyField) => keyField.id)).toEqual([
+        'root_first-key',
+        'root_second-key',
+      ]);
+    });
+
+    it('should keep the instance of the last renamed property when transformChange refuses another rename', async () => {
+      const ref = createFormRef<GenericObjectType>();
+      const { node } = createFormComponent({
+        ref,
+        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        initialFormData: { A: 'a', C: 'c' },
+        transformChange: (next, previous) => (isPlainObject(next) && 'D' in next ? previous : next),
+      });
+      const keyA = elementOf(node, '#root_A-key');
+      await user.clear(keyA);
+      await user.type(keyA, 'B');
+      await user.tab();
+      const valueB = elementOf(node, '#root_B');
+
+      const keyC = elementOf(node, '#root_C-key');
+      await user.clear(keyC);
+      await user.type(keyC, 'D');
+      await user.tab();
+
+      expect(handleOf(ref).getFormData()).toEqual({ B: 'a', C: 'c' });
+      // The same element: the refused rename did not move the React key the accepted one gave the property
+      expect(elementOf(node, '#root_B')).toBe(valueB);
+    });
+
     it('should keep a property in its place when transformChange refuses its rename', async () => {
       const ref = createFormRef<GenericObjectType>();
       const { node } = createFormComponent({

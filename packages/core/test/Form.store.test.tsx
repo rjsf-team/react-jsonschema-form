@@ -83,7 +83,7 @@ it('renders seeded data on the server without a browser or effect publishing a s
   expect(markup).toContain('value="server"');
 });
 
-it("new props reach a field's passive Effects of the commit that renders them, and its layout Effects the commit after", () => {
+it("new props reach a field's layout and passive Effects of the commit that renders them", () => {
   const ref = createFormRef<{ name?: string; extra?: string }>();
   const phases: [string, unknown, unknown][] = [];
   const before: RJSFSchema = { type: 'object', properties: { name: { type: 'string' }, extra: { type: 'string' } } };
@@ -105,9 +105,9 @@ it("new props reach a field's passive Effects of the commit that renders them, a
   const { rerender } = render(<Form {...props} schema={before} initialFormData={{ name: 'kept' }} />);
   phases.length = 0;
   rerender(<Form {...props} schema={after} initialFormData={{ name: 'kept' }} />);
-  // A field's layout Effects run before the form's, which hand the model the props of the commit
+  // The form hands the model the props of the commit from an insertion Effect, before any layout Effect runs
   expect(phases).toEqual([
-    ['layout', 'added', { name: 'kept' }],
+    ['layout', 'added', { name: 'kept', extra: 'added' }],
     ['passive', 'added', { name: 'kept', extra: 'added' }],
   ]);
 });

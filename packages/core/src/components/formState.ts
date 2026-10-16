@@ -578,8 +578,16 @@ function moveSettledArrayAtPath(
  * @returns - The pairing view of `written`
  */
 function pairingViewOfWrite(written: unknown, own: unknown, view: unknown, settled: unknown): unknown {
-  if (deepEquals(written, own)) {
-    return view;
+  return writtenView(written, own, view, settled)[0];
+}
+
+/** `pairingViewOfWrite()` with whether `written` holds what `own` does, decided in the one walk that builds the view:
+ * a container is unchanged when its keys are and every child is, so no subtree is compared again at each level above
+ * it
+ */
+function writtenView(written: unknown, own: unknown, view: unknown, settled: unknown): [unknown, boolean] {
+  if (Object.is(written, own)) {
+    return [view, true];
   }
   if (
     Array.isArray(written) &&
@@ -588,20 +596,34 @@ function pairingViewOfWrite(written: unknown, own: unknown, view: unknown, settl
     written.length === own.length &&
     view.length === own.length
   ) {
-    return Array.from(view, (item, index) =>
-      pairingViewOfWrite(written[index], own[index], item, Array.isArray(settled) ? settled[index] : undefined),
-    );
+    let isUnchanged = true;
+    const items = Array.from(view, (item, index) => {
+      const [itemView, isItemUnchanged] = writtenView(
+        written[index],
+        own[index],
+        item,
+        Array.isArray(settled) ? settled[index] : undefined,
+      );
+      isUnchanged &&= isItemUnchanged;
+      return itemView;
+    });
+    return isUnchanged ? [view, true] : [items, false];
   }
   if (isPlainObject(written) && isPlainObject(own) && isPlainObject(view)) {
     const settledObject = isPlainObject(settled) ? settled : {};
-    return Object.fromEntries(
-      Object.entries(view).map(([key, value]) => [
-        key,
-        pairingViewOfWrite(written[key], own[key], value, settledObject[key]),
-      ]),
+    const viewKeys = new Set(Object.keys(view));
+    // The keys the view does not hold are compared once here, where the walk does not reach them
+    let isUnchanged = [...new Set([...Object.keys(written), ...Object.keys(own)])].every(
+      (key) => viewKeys.has(key) || deepEquals(written[key], own[key]),
     );
+    const entries = Object.entries(view).map(([key, value]) => {
+      const [childView, isChildUnchanged] = writtenView(written[key], own[key], value, settledObject[key]);
+      isUnchanged &&= isChildUnchanged;
+      return [key, childView];
+    });
+    return isUnchanged ? [view, true] : [Object.fromEntries(entries), false];
   }
-  return settled;
+  return deepEquals(written, own) ? [view, true] : [settled, false];
 }
 
 /** `validation` after the keys of the array or object at `path` moved, the list by the rule `moveErrorSchemaKeys()`
@@ -1846,12 +1868,10 @@ export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends F
  * leaves it
  */
 function extraErrorsAlone<T>(extraErrors: ErrorSchema<T> | undefined): ErrorState<T> {
-  return {
-    errors: extraErrors ? toErrorList(extraErrors) : [],
-    errorSchema: extraErrors ?? {},
-    schemaValidationErrors: [],
-    schemaValidationErrorSchema: {},
-  };
+  // Merged into nothing rather than listed as they are, so an array `extraErrors` holds for the items of an array
+  // field is keyed by index, as every `ErrorSchema` the form hands out is
+  const { errors, errorSchema } = validationDataMerge<T>({ errors: [], errorSchema: {} }, extraErrors);
+  return { errors, errorSchema, schemaValidationErrors: [], schemaValidationErrorSchema: {} };
 }
 
 /** The state after `reset()`: the data is re-derived from the props' seed the way an initial render does it, every

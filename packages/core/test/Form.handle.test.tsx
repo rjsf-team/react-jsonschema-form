@@ -102,13 +102,14 @@ describe('FormRef', () => {
       expect(() => act(() => handle.submit())).not.toThrow();
     });
 
-    it('cannot submit when tagName renders something other than a form', () => {
-      // Only a `<form>` has `requestSubmit()`; the documented cost of another `tagName` is that native submission is
-      // gone, and the programmatic one goes with it
+    it('submits through a dispatched submit event when tagName renders something other than a form', () => {
+      // Only a `<form>` has `requestSubmit()`, so the element gets the submit event the form's handler takes instead
       const { handle, onSubmit } = mountWithHandle({ schema, initialFormData: { name: 'a' }, tagName: 'div' });
 
-      expect(() => act(() => handle.submit())).not.toThrow();
-      expect(onSubmit).not.toHaveBeenCalled();
+      act(() => handle.submit());
+
+      expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(onSubmit.mock.lastCall?.[0].formData).toEqual({ name: 'a' });
     });
 
     it('does nothing once the form is unmounted', () => {
