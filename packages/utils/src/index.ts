@@ -42,8 +42,10 @@ import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getArrayDescription from './getArrayDescription.ts';
 import getChangedFields from './getChangedFields.ts';
+import getControlAriaLabel from './getControlAriaLabel.ts';
 import getControlAttributes from './getControlAttributes.ts';
 import getControlDescribedBy from './getControlDescribedBy.ts';
+import getControlFallbackName from './getControlFallbackName.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
 import getDateElementProps from './getDateElementProps.ts';
 import type { DateTimeLocalValueResult } from './getDateTimeLocalValue.ts';
@@ -87,6 +89,7 @@ import getVisibleErrors from './getVisibleErrors.ts';
 import type { WidgetAliasFor } from './getWidget.tsx';
 import getWidget, {
   DEFAULT_BOOLEAN_WIDGET,
+  getFieldTypeForUiSchema,
   getFieldTypeForWidget,
   getWidgetType,
   resolveWidget,
@@ -129,6 +132,7 @@ import isEnumOptionsGroup from './isEnumOptionsGroup.ts';
 import isFixedItems from './isFixedItems.ts';
 import isFormDataAvailable from './isFormDataAvailable.ts';
 import isLabelledByTemplate from './isLabelledByTemplate.ts';
+import isNamedByTemplateLabel from './isNamedByTemplateLabel.ts';
 import isObject, { isSchemaObject } from './isObject.ts';
 import isPlainObject from './isPlainObject.ts';
 import isWholeValueSelect from './isWholeValueSelect.ts';
@@ -193,6 +197,7 @@ import validationDataMerge from './validationDataMerge.ts';
 import type { WidgetAriaPropsInput } from './widgetAriaProps.ts';
 import widgetAriaProps from './widgetAriaProps.ts';
 import widgetDrawsLabel from './widgetDrawsLabel.ts';
+import widgetDrawsLabelText from './widgetDrawsLabelText.ts';
 import withIdRefPrefix from './withIdRefPrefix.ts';
 
 export type * from './types.ts';
@@ -271,8 +276,10 @@ export {
   getAdditionalPropertySchema,
   getArrayDescription,
   getChangedFields,
+  getControlAriaLabel,
   getControlAttributes,
   getControlDescribedBy,
+  getControlFallbackName,
   getDateElementProps,
   getDateTimeLocalValue,
   getDecimalSeparator,
@@ -282,6 +289,7 @@ export {
   getExampleSuggestions,
   getFieldClassNames,
   getFieldLabel,
+  getFieldTypeForUiSchema,
   getFieldTypeForWidget,
   getFreePropertyNames,
   getGroupAttributes,
@@ -338,6 +346,7 @@ export {
   isFixedItems,
   isFormDataAvailable,
   isLabelledByTemplate,
+  isNamedByTemplateLabel,
   isObject,
   isPlainObject,
   isSchemaObject,
@@ -416,6 +425,7 @@ export {
   WIDGET_FIELD_PRESENTATION,
   widgetAriaProps,
   widgetDrawsLabel,
+  widgetDrawsLabelText,
   withIdRefPrefix,
   bracketNameGenerator,
   dotNotationNameGenerator,

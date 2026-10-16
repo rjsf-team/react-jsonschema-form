@@ -5,7 +5,14 @@ import { render } from '@testing-library/react';
 
 import { getWidgetKey } from '../src/getWidget.tsx';
 import type { Registry, RJSFSchema, WidgetProps, Widget } from '../src/index.ts';
-import { getFieldTypeForWidget, getWidget, getWidgetType, resolveWidget, ROOT_FIELD_PATH } from '../src/index.ts';
+import {
+  getFieldTypeForUiSchema,
+  getFieldTypeForWidget,
+  getWidget,
+  getWidgetType,
+  resolveWidget,
+  ROOT_FIELD_PATH,
+} from '../src/index.ts';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -391,6 +398,18 @@ describe('getFieldTypeForWidget()', () => {
     [{}, 'text', undefined],
   ])('should return the type of the field rendering %j with the widget %s', (schema, widget, expected) => {
     expect(getFieldTypeForWidget(schema, widget)).toBe(expected);
+  });
+});
+
+describe('getFieldTypeForUiSchema()', () => {
+  const schema: RJSFSchema = { type: ['null', 'number', 'string'] };
+  it("should return the type of the field rendering the field's own ui:widget", () => {
+    expect(getFieldTypeForUiSchema(schema, { 'ui:widget': 'textarea' })).toBe('string');
+    expect(getFieldTypeForUiSchema(schema, { 'ui:options': { widget: 'textarea' } })).toBe('string');
+  });
+  it('should resolve the schema type without a uiSchema, or ignoring ui:globalOptions', () => {
+    expect(getFieldTypeForUiSchema(schema)).toBe('number');
+    expect(getFieldTypeForUiSchema(schema, { 'ui:globalOptions': { widget: 'textarea' } })).toBe('number');
   });
 });
 

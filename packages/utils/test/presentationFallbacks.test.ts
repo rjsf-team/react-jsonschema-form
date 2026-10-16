@@ -1,14 +1,20 @@
-import type { FieldPresentation, ResolvedPresentationDeclaration } from '../src/index.ts';
+import type { FieldPresentation, Registry, ResolvedPresentationDeclaration } from '../src/index.ts';
 import {
+  englishStringTranslator,
+  getControlAriaLabel,
+  getControlFallbackName,
   hasTemplateErrors,
   hasWidgetErrors,
+  isNamedByTemplateLabel,
   resolveFieldPresentation,
   templateDrawsDescription,
   templateDrawsLabel,
   templateDrawsPlannedLabel,
   templateLabelFor,
   templateMarksRequired,
+  TranslatableString,
   widgetDrawsLabel,
+  widgetDrawsLabelText,
 } from '../src/index.ts';
 
 const ID = 'root_foo';
@@ -145,5 +151,72 @@ describe('templateDrawsPlannedLabel()', () => {
   it('draws none without a plan, whatever displayLabel says', () => {
     const props = { label: 'Foo', displayLabel: true };
     expect(templateDrawsPlannedLabel(props)).toBe(false);
+  });
+});
+
+describe('isNamedByTemplateLabel()', () => {
+  it("answers from the plan where there is one, whatever the widget's own props say", () => {
+    expect(isNamedByTemplateLabel({ presentation: plan(), label: '' })).toBe(true);
+    expect(isNamedByTemplateLabel({ presentation: plan({ showLabel: false }), label: 'Foo' })).toBe(false);
+    const option = plan({ declaration: { ...TEMPLATE, label: 'self' }, inherited: plan() });
+    expect(isNamedByTemplateLabel({ presentation: option, label: 'Foo' })).toBe(true);
+  });
+  it('is named without a plan by a label shown with text', () => {
+    expect(isNamedByTemplateLabel({ label: 'Foo' })).toBe(true);
+    expect(isNamedByTemplateLabel({ label: 'Foo', hideLabel: true })).toBe(false);
+    expect(isNamedByTemplateLabel({ label: '' })).toBe(false);
+  });
+  it("isn't named without a plan by the property name or a required field's marker, which no template draws alone", () => {
+    const untitledRequired = { label: '', name: 'foo', required: true };
+    expect(isNamedByTemplateLabel(untitledRequired)).toBe(false);
+  });
+});
+
+describe('getControlFallbackName()', () => {
+  const registry = { translateString: englishStringTranslator } as Registry;
+  it("names a control by the field's label, or by the translated prompt for a field with no title", () => {
+    expect(getControlFallbackName({ label: 'Color', registry })).toBe('Color');
+    expect(getControlFallbackName({ label: '', registry })).toBe(
+      englishStringTranslator(TranslatableString.SelectPlaceholder),
+    );
+    expect(getControlFallbackName({ label: '', registry }, TranslatableString.AriaDateLabel)).toBe(
+      englishStringTranslator(TranslatableString.AriaDateLabel),
+    );
+  });
+  it('names a control with no label by its placeholder before the prompt', () => {
+    expect(getControlFallbackName({ label: '', placeholder: 'Pick one', registry })).toBe('Pick one');
+    expect(getControlFallbackName({ label: 'Color', placeholder: 'Pick one', registry })).toBe('Color');
+  });
+});
+
+describe('widgetDrawsLabelText()', () => {
+  it("draws a label where the widget draws its field's label and it has text", () => {
+    const self = { ...TEMPLATE, label: 'self' as const };
+    expect(widgetDrawsLabelText({ presentation: plan({ declaration: self }), label: 'Foo' })).toBe(true);
+    expect(widgetDrawsLabelText({ presentation: plan({ declaration: self }), label: '' })).toBe(false);
+    expect(widgetDrawsLabelText({ presentation: plan(), label: 'Foo' })).toBe(false);
+  });
+  it('follows hideLabel without a plan', () => {
+    expect(widgetDrawsLabelText({ label: 'Foo' })).toBe(true);
+    expect(widgetDrawsLabelText({ label: 'Foo', hideLabel: true })).toBe(false);
+    expect(widgetDrawsLabelText({ label: '' })).toBe(false);
+  });
+});
+
+describe('getControlAriaLabel()', () => {
+  const registry = { translateString: englishStringTranslator } as Registry;
+  it('keeps the aria-label it is given, and falls back where it is empty', () => {
+    expect(getControlAriaLabel({ label: 'Color', registry }, 'Pick a color')).toBe('Pick a color');
+    expect(getControlAriaLabel({ label: 'Color', hideLabel: true, registry }, '')).toBe('Color');
+  });
+  it('gives none where the widget draws a label that names the control', () => {
+    expect(getControlAriaLabel({ label: 'Color', hideLabel: true, registry }, undefined, true)).toBeUndefined();
+  });
+  it('gives none where a label the template draws names the control', () => {
+    expect(getControlAriaLabel({ label: 'Foo', presentation: plan(), registry })).toBeUndefined();
+  });
+  it('falls back to getControlFallbackName() where no label names the control', () => {
+    expect(getControlAriaLabel({ label: 'Foo', presentation: plan({ showLabel: false }), registry })).toBe('Foo');
+    expect(getControlAriaLabel({ label: '', placeholder: 'Pick one', registry })).toBe('Pick one');
   });
 });
