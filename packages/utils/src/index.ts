@@ -17,6 +17,7 @@ import dateElementLabel, { dateElementAriaLabel } from './dateElementLabel.ts';
 import dateRangeOptions from './dateRangeOptions.ts';
 import deepEquals, { deepEqualsUndefinedAsMissing } from './deepEquals.ts';
 import englishStringTranslator from './englishStringTranslator.ts';
+import enumOptionsAutofocusIndex from './enumOptionsAutofocusIndex.ts';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue.ts';
 import enumOptionsDomValues from './enumOptionsDomValues.ts';
 import enumOptionSelectedValue from './enumOptionSelectedValue.ts';
@@ -256,6 +257,7 @@ export {
   enumOptionSelectedValue,
   enumOptionValueDecoder,
   enumOptionValueLabel,
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIndexForValue,
