@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Upgraded `@x0k/json-schema-merge` to `^1.1.0`, which merges `if`/`then`/`else`, `properties`/`patternProperties`/`additionalProperties` and `items`/`additionalItems` as groups. `omitExtraData()` merges an object's `allOf` before evaluating its conditions, and the older merge could pair one entry's `else` with another entry's `if`, so data from an inactive branch was kept. The same merge in `retrieveSchema()` no longer lets an `additionalProperties` or `additionalItems` from one `allOf` entry act on another entry's `properties`/`patternProperties`/`items`
 - Fixed `retrieveSchema()` treating a `$ref` shared by several `dependencies` `oneOf` branches, `allOf` entries, `then`/`else` branches, `anyOf`/`oneOf` options or root properties as a recursion cycle, leaving it unresolved, fixing [#5434](https://github.com/rjsf-team/react-jsonschema-form/issues/5434). Reference resolution now tracks a path-scoped recursion stack, so a `$ref` is a cycle only when it is already being expanded on the current path, and previously expanded schemas keep their source ref on the path through `RJSF_REF_KEY`. Shared references resolve in every branch while recursive schemas still terminate
+- Documented on `Experimental_DefaultFormStateBehavior.allOf` which `allOf` and `if-then-else` defaults `skipDefaults` still provides, related to [#3869](https://github.com/rjsf-team/react-jsonschema-form/issues/3869) ([#5444](https://github.com/rjsf-team/react-jsonschema-form/pull/5444))
 
 ## @rjsf/validator-ata
 
@@ -40,6 +41,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Upgraded dependencies with minor or patch version bumps across all packages, including `nx`/`@nx/js`, `vite`, `@vitejs/plugin-react`, `@tailwindcss/cli`, `knip` and `lint-staged`, plus the playground's `monaco-editor` from `^0.55.1` to `^0.57.0`. Added `pnpm` overrides that pin `@types/react` and `@types/react-dom` to React 18 so libraries with an optional `@types/react` peer don't typecheck against React 19's types, plus one that holds `jsdom` at `~30.0.1` because 30.1 needs the global `Iterator` that Node 20 lacks. Renamed the vitest configs to `.mts` so Vite's `native` config loader can load them as ESM ([#5420](https://github.com/rjsf-team/react-jsonschema-form/pull/5420))
+- Documented in the `allOf` section of `form-props.md`, and on `Experimental_DefaultFormStateBehavior.allOf`, which `allOf` and `if-then-else` defaults `skipDefaults` still provides, and added tests for those cases, related to [#3869](https://github.com/rjsf-team/react-jsonschema-form/issues/3869) ([#5444](https://github.com/rjsf-team/react-jsonschema-form/pull/5444))
 
 # 6.11.0
 

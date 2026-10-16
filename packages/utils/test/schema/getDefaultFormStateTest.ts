@@ -1,6 +1,11 @@
+import { createDeepAllOfMerge } from '@x0k/json-schema-merge';
 import type { MockInstance } from 'vitest';
 
-import type { Experimental_DefaultFormStateBehavior, RJSFSchema } from '../../src/index.ts';
+import type {
+  Experimental_CustomMergeAllOf,
+  Experimental_DefaultFormStateBehavior,
+  RJSFSchema,
+} from '../../src/index.ts';
 import { createSchemaUtils, getDefaultFormState, noop } from '../../src/index.ts';
 import {
   AdditionalItemsHandling,
@@ -13,6 +18,7 @@ import {
   ensureFormDataMatchingSchema,
 } from '../../src/schema/getDefaultFormState.ts';
 import { resolveDependencies } from '../../src/schema/retrieveSchema.ts';
+import shallowAllOfMerge from '../../src/schema/shallowAllOfMerge.ts';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData.ts';
 import type { TestValidatorType } from './types.ts';
 
@@ -5653,6 +5659,67 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
     describe('defaults with allOf', () => {
       let schema: RJSFSchema;
+      const animalInfoSchema: RJSFSchema = {
+        properties: {
+          animal: {
+            type: 'string',
+            default: 'Cat',
+            enum: ['Cat', 'Fish'],
+          },
+        },
+        allOf: [
+          {
+            if: {
+              properties: {
+                animal: {
+                  const: 'Cat',
+                },
+              },
+            },
+            then: {
+              properties: {
+                food: {
+                  type: 'string',
+                  default: 'meat',
+                  enum: ['meat', 'grass', 'fish'],
+                },
+              },
+              required: ['food'],
+            },
+          },
+        ],
+      };
+      const animalInfoObjectSchema: RJSFSchema = {
+        title: 'Example',
+        type: 'object',
+        properties: {
+          animalInfo: animalInfoSchema,
+        },
+      };
+      const animalInfoArraySchema: RJSFSchema = { type: 'array', items: animalInfoSchema };
+      const rootAllOfSchema: RJSFSchema = {
+        ...animalInfoObjectSchema,
+        allOf: [{ properties: { name: { type: 'string' } } }],
+      };
+      const [animalCondition] = animalInfoSchema.allOf as RJSFSchema[];
+      const fishFirstAnimalInfoSchema: RJSFSchema = {
+        properties: { animal: { type: 'string', default: 'Cat', enum: ['Cat', 'Fish', 'Dog'] } },
+        allOf: [
+          {
+            if: { properties: { animal: { const: 'Fish' } } },
+            then: { properties: { food: { type: 'string', default: 'grass' } } },
+          },
+          {
+            if: { properties: { animal: { const: 'Dog' } } },
+            then: { properties: { food: { type: 'string', default: 'fish' } } },
+          },
+          animalCondition,
+        ],
+      };
+
+      afterEach(() => {
+        testValidator.reset?.();
+      });
 
       it('should populate root defaults for allOf', () => {
         schema = {
@@ -5687,46 +5754,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
       describe('default form state behaviour: allOf = "populateDefaults"', () => {
         it('should populate default values correctly', () => {
-          schema = {
-            title: 'Example',
-            type: 'object',
-            properties: {
-              animalInfo: {
-                properties: {
-                  animal: {
-                    type: 'string',
-                    default: 'Cat',
-                    enum: ['Cat', 'Fish'],
-                  },
-                },
-                allOf: [
-                  {
-                    if: {
-                      properties: {
-                        animal: {
-                          const: 'Cat',
-                        },
-                      },
-                    },
-                    then: {
-                      properties: {
-                        food: {
-                          type: 'string',
-                          default: 'meat',
-                          enum: ['meat', 'grass', 'fish'],
-                        },
-                      },
-                      required: ['food'],
-                    },
-                  },
-                ],
-              },
-            },
-          };
-
           expect(
-            computeDefaults(testValidator, schema, {
-              rootSchema: schema,
+            computeDefaults(testValidator, animalInfoObjectSchema, {
+              rootSchema: animalInfoObjectSchema,
               experimental_defaultFormStateBehavior: { allOf: 'populateDefaults' },
             }),
           ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
@@ -5814,17 +5844,345 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           });
         });
+
+        it('should populate the conditional defaults of an allOf in array items', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              animalInfoArraySchema,
+              [{ animal: 'Cat' }],
+              animalInfoArraySchema,
+              undefined,
+              { allOf: 'populateDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat', food: 'meat' }]);
+        });
+
+        // Pins a known limitation rather than intended behavior; see the matching skipDefaults test below.
+        it('should fill in the first then default in array items with no data even when its if does not match the defaulted value (known limitation)', () => {
+          const fishFirstArraySchema: RJSFSchema = { type: 'array', items: fishFirstAnimalInfoSchema };
+          expect(
+            getDefaultFormState(testValidator, fishFirstArraySchema, [{}], fishFirstArraySchema, undefined, {
+              allOf: 'populateDefaults',
+            }),
+          ).toEqual([{ animal: 'Cat', food: 'grass' }]);
+        });
       });
 
       describe('default form state behaviour: allOf = "skipDefaults"', () => {
+        const directConditionArraySchema: RJSFSchema = {
+          type: 'array',
+          items: { properties: animalInfoSchema.properties, ...animalCondition },
+        };
+        const directIfArraySchema: RJSFSchema = {
+          type: 'array',
+          items: {
+            ...animalInfoSchema,
+            properties: { ...animalInfoSchema.properties, x: {} },
+            if: { properties: { x: { const: 1 } } },
+          },
+        };
+        const nestedPlacements = [
+          {
+            where: 'array items',
+            wrap: (schema: RJSFSchema): RJSFSchema => ({ type: 'array', items: schema }),
+            wrapData: (data: object) => [data],
+          },
+          {
+            where: 'an object property',
+            wrap: (schema: RJSFSchema): RJSFSchema => ({ type: 'object', properties: { nested: schema } }),
+            wrapData: (data: object) => ({ nested: data }),
+          },
+        ];
+
         it('should populate default values correctly', () => {
           expect(
-            computeDefaults(testValidator, schema, {
-              rootSchema: schema,
+            computeDefaults(testValidator, animalInfoObjectSchema, {
+              rootSchema: animalInfoObjectSchema,
               experimental_defaultFormStateBehavior: { allOf: 'skipDefaults' },
             }),
           ).toEqual({ animalInfo: { animal: 'Cat' } });
         });
+
+        it('should not populate the conditional defaults of an allOf in array items', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              animalInfoArraySchema,
+              [{ animal: 'Cat' }],
+              animalInfoArraySchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat' }]);
+        });
+
+        it('should skip the plain property defaults of a nested allOf too', () => {
+          const plainAllOfSchema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              animalInfo: {
+                type: 'object',
+                properties: { name: { type: 'string', default: 'Tom' } },
+                allOf: [{ properties: { animal: { type: 'string', default: 'Cat' } } }],
+              },
+            },
+          };
+          expect(
+            getDefaultFormState(testValidator, plainAllOfSchema, undefined, plainAllOfSchema, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ animalInfo: { name: 'Tom' } });
+        });
+
+        it("should populate the conditional defaults of the root schema's own allOf, which skipDefaults does not skip", () => {
+          expect(
+            getDefaultFormState(testValidator, animalInfoSchema, { animal: 'Cat' }, animalInfoSchema, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ animal: 'Cat', food: 'meat' });
+        });
+
+        it('should skip the allOf of the oneOf option picked on the initial render, even in the root schema', () => {
+          const rootOneOfSchema: RJSFSchema = { oneOf: [{ type: 'object', ...animalInfoSchema }] };
+          expect(
+            getDefaultFormState(testValidator, rootOneOfSchema, undefined, rootOneOfSchema, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ animal: 'Cat' });
+        });
+
+        it('should pick the if-then-else branch from the form data, so a then default whose if requires a defaulted value is left out', () => {
+          // The mock validator cannot evaluate `required`, so it returns what the real validators do here; the claim
+          // itself is only exercised by the ajv8, ata and cfworker runs of this test.
+          testValidator.setReturnValues({ isValid: [false] });
+          const requiredAnimalSchema: RJSFSchema = {
+            ...animalInfoSchema,
+            allOf: [{ ...animalCondition, if: { ...(animalCondition.if as RJSFSchema), required: ['animal'] } }],
+          };
+          expect(
+            getDefaultFormState(testValidator, requiredAnimalSchema, undefined, requiredAnimalSchema, undefined, {
+              allOf: 'skipDefaults',
+            }),
+          ).toEqual({ animal: 'Cat' });
+        });
+
+        // Pins a known limitation rather than intended behavior: the if is checked against the form data, not the
+        // computed defaults, so a Cat default gets the Fish entry's food. A fix that evaluates the if against the
+        // defaults is expected to change this result.
+        it('should fill in the first then default on empty data even when its if does not match the defaulted value (known limitation)', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              fishFirstAnimalInfoSchema,
+              undefined,
+              fishFirstAnimalInfoSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+            ),
+          ).toEqual({ animal: 'Cat', food: 'grass' });
+        });
+
+        it('should drop the whole allOf when a custom merger throws on the conflicting then defaults', () => {
+          consoleWarnSpy.mockClear();
+          const conflict = new Error('conflicting food defaults');
+          const mergeAllOfUnlessFoodDefaultsConflict: Experimental_CustomMergeAllOf = (schema) => {
+            const foodDefaults = new Set(
+              (schema.allOf as RJSFSchema[]).map(
+                (entry) => (entry.properties?.food as RJSFSchema | undefined)?.default,
+              ),
+            );
+            foodDefaults.delete(undefined);
+            if (foodDefaults.size > 1) {
+              throw conflict;
+            }
+            return shallowAllOfMerge(schema) as RJSFSchema;
+          };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              animalInfoSchema,
+              { animal: 'Cat' },
+              animalInfoSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              mergeAllOfUnlessFoodDefaultsConflict,
+            ),
+          ).toEqual({ animal: 'Cat', food: 'meat' });
+          expect(consoleWarnSpy).not.toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
+          expect(
+            getDefaultFormState(
+              testValidator,
+              fishFirstAnimalInfoSchema,
+              undefined,
+              fishFirstAnimalInfoSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              mergeAllOfUnlessFoodDefaultsConflict,
+            ),
+          ).toEqual({ animal: 'Cat' });
+          expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', conflict);
+        });
+
+        it('should populate the conditional defaults of an if-then-else placed directly in array items', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              directConditionArraySchema,
+              [{ animal: 'Cat' }],
+              directConditionArraySchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat', food: 'meat' }]);
+        });
+
+        it('should not populate the conditional defaults of an if-then-else placed directly in array items when emptyObjectFields is skipEmptyDefaults', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              directConditionArraySchema,
+              [{ animal: 'Cat' }],
+              directConditionArraySchema,
+              undefined,
+              { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat' }]);
+        });
+
+        it("should populate a property's allOf conditional defaults once a deep custom merger merges the root's allOf", () => {
+          const deepAllOfMerge: Experimental_CustomMergeAllOf = (schema) => {
+            const merged = shallowAllOfMerge(schema) as RJSFSchema;
+            const properties = Object.fromEntries(
+              Object.entries(merged.properties ?? {}).map(([key, property]) => [
+                key,
+                typeof property === 'object' && 'allOf' in property ? shallowAllOfMerge(property) : property,
+              ]),
+            );
+            return { ...merged, properties } as RJSFSchema;
+          };
+          const formData = { animalInfo: { animal: 'Cat' } };
+          expect(
+            getDefaultFormState(
+              testValidator,
+              rootAllOfSchema,
+              formData,
+              rootAllOfSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              deepAllOfMerge,
+            ),
+          ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
+          expect(
+            getDefaultFormState(
+              testValidator,
+              animalInfoObjectSchema,
+              formData,
+              animalInfoObjectSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              deepAllOfMerge,
+            ),
+          ).toEqual(formData);
+        });
+
+        it("should populate a property's allOf conditional defaults with @x0k/json-schema-merge's createDeepAllOfMerge", () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              rootAllOfSchema,
+              { animalInfo: { animal: 'Cat' } },
+              rootAllOfSchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+              createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf,
+            ),
+          ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
+        });
+
+        it.each(nestedPlacements)(
+          "should populate a property's allOf conditional defaults with createDeepAllOfMerge in $where whose schema also has a direct if",
+          ({ wrap, wrapData }) => {
+            const deepMerge = createDeepAllOfMerge(shallowAllOfMerge) as Experimental_CustomMergeAllOf;
+            const directIfSchema = wrap({ ...rootAllOfSchema, if: { properties: { x: { const: 1 } } }, then: {} });
+            const allOfSchema = wrap(rootAllOfSchema);
+            const formData = wrapData({ animalInfo: { animal: 'Cat' } });
+            const getDefaults = (schema: RJSFSchema, behavior: Experimental_DefaultFormStateBehavior) =>
+              getDefaultFormState(testValidator, schema, formData, schema, undefined, behavior, deepMerge);
+            expect(getDefaults(directIfSchema, { allOf: 'skipDefaults' })).toEqual(
+              wrapData({ animalInfo: { animal: 'Cat', food: 'meat' } }),
+            );
+            expect(getDefaults(allOfSchema, { allOf: 'skipDefaults' })).toEqual(formData);
+            expect(
+              getDefaults(directIfSchema, { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' }),
+            ).toEqual(formData);
+          },
+        );
+
+        it('should populate the conditional defaults of an allOf in array items whose schema also has a direct if', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              directIfArraySchema,
+              [{ animal: 'Cat' }],
+              directIfArraySchema,
+              undefined,
+              { allOf: 'skipDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat', food: 'meat' }]);
+        });
+
+        it('should not populate the conditional defaults of an allOf next to a direct if in array items when emptyObjectFields is skipEmptyDefaults', () => {
+          expect(
+            getDefaultFormState(
+              testValidator,
+              directIfArraySchema,
+              [{ animal: 'Cat' }],
+              directIfArraySchema,
+              undefined,
+              { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' },
+            ),
+          ).toEqual([{ animal: 'Cat' }]);
+        });
+
+        const dependencyCases: { entry: string; dependency: RJSFSchema }[] = [
+          { entry: 'an allOf with an if-then-else', dependency: { allOf: [animalCondition] } },
+          {
+            entry: 'an allOf with a plain property default',
+            dependency: { allOf: [{ properties: { food: { type: 'string', default: 'meat' } } }] },
+          },
+          { entry: 'a direct if-then-else', dependency: animalCondition },
+          {
+            entry: 'an if-then-else whose if requires the property',
+            dependency: { ...animalCondition, if: { properties: { animal: { const: 'Cat' } }, required: ['animal'] } },
+          },
+        ];
+        it.each(
+          nestedPlacements.flatMap((placement) =>
+            dependencyCases.map((dependencyCase) => ({ ...placement, ...dependencyCase })),
+          ),
+        )(
+          'should populate the defaults of $entry in a dependencies entry in $where once its property has a value, even when emptyObjectFields is skipEmptyDefaults',
+          ({ wrap, wrapData, dependency }) => {
+            const dependentSchema = (animal: RJSFSchema): RJSFSchema =>
+              wrap({ type: 'object', properties: { animal }, dependencies: { animal: dependency } });
+            const defaultedSchema = dependentSchema({ type: 'string', default: 'Cat' });
+            const noDefaultSchema = dependentSchema({ type: 'string' });
+            const formData = wrapData({});
+            const getDefaults = (schema: RJSFSchema, behavior: Experimental_DefaultFormStateBehavior) =>
+              getDefaultFormState(testValidator, schema, formData, schema, undefined, behavior);
+            expect(getDefaults(defaultedSchema, { allOf: 'skipDefaults' })).toEqual(
+              wrapData({ animal: 'Cat', food: 'meat' }),
+            );
+            expect(
+              getDefaults(defaultedSchema, { allOf: 'skipDefaults', emptyObjectFields: 'skipEmptyDefaults' }),
+            ).toEqual(wrapData({ animal: 'Cat', food: 'meat' }));
+            expect(getDefaults(defaultedSchema, { allOf: 'skipDefaults', emptyObjectFields: 'skipDefaults' })).toEqual(
+              formData,
+            );
+            expect(getDefaults(noDefaultSchema, { allOf: 'skipDefaults' })).toEqual(formData);
+          },
+        );
       });
     });
     describe('defaults with oneOf', () => {
