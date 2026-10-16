@@ -278,6 +278,41 @@ describe('compileSchemaValidatorsCode', () => {
     expect(validator.isValid(rootSchema, { a: 'x' }, rootSchema)).toBe(false);
     expect(schemaUtils.getFirstMatchingOption({ k: 'b' }, options)).toBe(1);
   });
+  describe('resolves a $ref naming a resource of the root by a URI', () => {
+    const definitions: Record<string, RJSFSchema> = {
+      A: { type: 'object', properties: { k: { type: 'string', pattern: '^a' } }, required: ['k'] },
+      B: { type: 'object', properties: { k: { type: 'string', pattern: '^b' } }, required: ['k'] },
+    };
+    const naming = (document: string): RJSFSchema => ({
+      $id: 'http://example.com/x/a.json',
+      definitions,
+      type: 'object',
+      properties: {
+        v: { oneOf: [{ $ref: `${document}#/definitions/A` }, { $ref: `${document}#/definitions/B` }] },
+      },
+    });
+    test.each<[string, RJSFSchema]>([
+      ['relative to the root', naming('a.json')],
+      ['with its host in another case', naming('http://EXAMPLE.com/x/a.json')],
+      ['through dot segments', naming('http://example.com/x/../x/a.json')],
+      ['with an unreserved character percent-encoded', naming('http://example.com/x/%61.json')],
+      [
+        'of a resource nested in the root',
+        {
+          $id: 'http://example.com/a.json',
+          type: 'object',
+          properties: {
+            n: { $id: 'http://example.com/n.json', definitions },
+            v: { oneOf: [{ $ref: 'n.json#/definitions/A' }, { $ref: 'n.json#/definitions/B' }] },
+          },
+        },
+      ],
+    ])('%s', (_name, rootSchema) => {
+      const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+      expect(validator.validateFormData({ v: { k: 'b' } }, rootSchema).errors).toEqual([]);
+      expect(validator.isValid(rootSchema, { v: { k: 'c' } }, rootSchema)).toBe(false);
+    });
+  });
   test('resolves a $ref to an anchor to the subschema carrying it', () => {
     const n: RJSFSchema = { $anchor: 'nodeA', type: 'number' };
     const s: RJSFSchema = { $anchor: 'nodeS', type: 'string' };

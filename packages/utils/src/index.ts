@@ -139,6 +139,7 @@ import resolveDefaultWidget from './resolveDefaultWidget.ts';
 import resolveUiSchema from './resolveUiSchema.ts';
 import schemaHasNestedConditional from './schemaHasNestedConditional.ts';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue.ts';
+import { normalizeUri, resolveUri } from './schemaUri.ts';
 import SelectedOptionDescription from './SelectedOptionDescription.tsx';
 import type { SelectedOptionDescriptionProps } from './SelectedOptionDescription.tsx';
 import shouldRenderOptionalField, { getOptionalDataControlsType } from './shouldRenderOptionalField.ts';
@@ -356,6 +357,8 @@ export {
   withIdRefPrefix,
   withRootIdRefPrefix,
   rootSchemaIdOf,
+  normalizeUri,
+  resolveUri,
   bracketNameGenerator,
   dotNotationNameGenerator,
 };
