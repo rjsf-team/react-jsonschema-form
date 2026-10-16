@@ -94,15 +94,19 @@ function optionDeclaresValueFor<
   return isPlainObject(optionDefault) && Object.hasOwn(optionDefault, key);
 }
 
-/** The field holding the options under `xxxOfKey` with `option` as its only one, and the field's uiSchema with the
- * option's as its only one, which is how the field's own defaults for that option are computed
+/** The field holding the options with `option` as its only one, and the field's uiSchema with the option's as its
+ * only one, which is how the field's own defaults for that option are computed; undefined when there is no field
+ * holding options
  */
 function fieldWithOnlyOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  parentSchema: S,
-  xxxOfKey: string,
+  parentSchema: S | undefined,
   option: S | undefined,
   optionUiSchema: UiSchema<T, S, F> | undefined,
-): { schema: S; uiSchema: GenericObjectType | undefined } {
+): { schema: S; uiSchema: GenericObjectType | undefined } | undefined {
+  const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
+  if (!parentSchema || !xxxOfKey) {
+    return undefined;
+  }
   return {
     schema: { ...parentSchema, [xxxOfKey]: [option] },
     uiSchema: optionUiSchema && { [xxxOfKey]: [optionUiSchema] },
@@ -242,11 +246,10 @@ export default function formDataForNewOption<
       if (deepEquals(bareDefaults, formData)) {
         return true;
       }
-      const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
-      if (!xxxOfKey) {
+      const field = fieldWithOnlyOption<T, S, F>(parentSchema, oldOption, oldOptionUiSchema);
+      if (!field) {
         return false;
       }
-      const field = fieldWithOnlyOption<T, S, F>(parentSchema, xxxOfKey, oldOption, oldOptionUiSchema);
       const defaultsAsSeeded = (value: unknown) =>
         schemaUtils.getDefaultFormState(
           field.schema,
@@ -269,11 +272,10 @@ export default function formDataForNewOption<
      * the option's object properties are written as a switch from another object option writes them. Undefined for any
      * other option */
     const fieldDefaultsForNewOption = (sanitized: T | undefined) => {
-      const xxxOfKey = parentSchema && getXxxOfKey<S>(parentSchema);
-      if (!xxxOfKey || !isPlainObject(defaultsForNewOption())) {
+      const field = fieldWithOnlyOption<T, S, F>(parentSchema, newOption, newOptionUiSchema);
+      if (!field || !isPlainObject(defaultsForNewOption())) {
         return undefined;
       }
-      const field = fieldWithOnlyOption<T, S, F>(parentSchema, xxxOfKey, newOption, newOptionUiSchema);
       // A field that held nothing has no key a user cleared, so it holds no `undefined` key either: one would keep the
       // `default` an ancestor declares for that key from reaching it when `Form` fills the data in
       const held = isPlainObject(sanitized)
