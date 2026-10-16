@@ -72,6 +72,7 @@ export default function AltDateWidget<
                 onBlur={onBlur}
                 onFocus={onFocus}
                 autofocus={autofocus && i === 0}
+                presentation={presentation}
               />
             </div>
           );
