@@ -6760,7 +6760,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_optionalObjectWithOneofs"
                     id="root_optionalObjectWithOneofs__label"
                   >
                     optionalObjectWithOneofs
@@ -6895,7 +6894,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_optionalArrayWithAnyofs"
                     id="root_optionalArrayWithAnyofs__label"
                   >
                     optionalArrayWithAnyofs
@@ -7856,7 +7854,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_optionalObjectWithOneofs"
                     id="root_optionalObjectWithOneofs__label"
                   >
                     optionalObjectWithOneofs
@@ -7992,7 +7989,6 @@ exports[`single fields > optional data controls > does not show optional control
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_optionalArrayWithAnyofs"
                     id="root_optionalArrayWithAnyofs__label"
                   >
                     optionalArrayWithAnyofs

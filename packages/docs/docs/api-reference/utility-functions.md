@@ -2973,25 +2973,6 @@ toPath('a.0.b'); // ['a', '0', 'b']
 getByPath(formData, toPath(error.property)); // the usual pairing with the path utilities
 ```
 
-### triggerValueId()
-
-Return a consistent `id` for the element inside a picker's trigger that displays the selected value.
-A trigger that is a `button` is named by the label pointing at it, which replaces its own contents, so the value it displays is only announced where something references this id — `aria-describedby`, the way a native control announces its value after its name.
-
-#### Parameters
-
-- id: string - The id of the trigger
-
-#### Returns
-
-- string: The consistent id for the element displaying its value
-
-#### Example
-
-```typescript
-triggerValueId('root_birthday'); // 'root_birthday__value'
-```
-
 ### uiBooleanOption()
 
 Reads a boolean `ui:` option, such as `ui:required`, `ui:hideError` or `ui:label`, the way JavaScript reads a condition.

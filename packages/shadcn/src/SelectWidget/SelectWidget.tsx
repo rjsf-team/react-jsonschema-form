@@ -12,11 +12,12 @@ import {
   enumOptionsDomValues,
   enumOptionsValueForIndex,
   flattenGroupedOptions,
+  getControlAriaLabel,
+  getControlFallbackName,
   getOptionValueFormat,
   groupEnumOptions,
   hasWidgetErrors,
   isEnumOptionsGroup,
-  isLabelledByTemplate,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   TranslatableString,
@@ -66,7 +67,6 @@ export default function SelectWidget<
     id,
     options,
     required,
-    name,
     disabled,
     readonly,
     value,
@@ -80,7 +80,6 @@ export default function SelectWidget<
     className,
     registry,
     uiSchema,
-    label,
     presentation,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
@@ -121,15 +120,10 @@ export default function SelectWidget<
 
   const cnClassName = cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className);
 
-  const placeholderPrompt = registry.translateString(TranslatableString.SelectPlaceholder);
-  const placeholderText = placeholder || placeholderPrompt;
-  // The template's label shows the property name for a field with no title, and `*` when required; under the plan, a
-  // label the template draws here or for a field above names the select. With none, the single select's combobox,
-  // which takes no name from the item it displays, is named by the field's label, or by the select prompt for a field
-  // with no title, such as an array item
-  const labelNamesSelect = presentation
-    ? isLabelledByTemplate(presentation)
-    : !hideLabel && (!!label || !!name || !!required);
+  const placeholderText = placeholder || registry.translateString(TranslatableString.SelectPlaceholder);
+  // With no label naming it, a combobox, which takes no name from the item it displays, is named by the field's label,
+  // or, for a field with no title, such as an array item, by its placeholder, else the select prompt
+  const fallbackName = getControlFallbackName<T, S, F>(props);
 
   return (
     <div className='p-0.5'>
@@ -146,7 +140,7 @@ export default function SelectWidget<
           disabled={disabled || readonly}
           required={required}
           placeholder={placeholderText}
-          ariaLabel={ariaLabel ?? (labelNamesSelect ? undefined : label || placeholderPrompt)}
+          ariaLabel={getControlAriaLabel<T, S, F>(props, ariaLabel)}
           ariaLabelledby={ariaLabelledby}
           ariaInvalid={ariaInvalid}
           className={cnClassName}
@@ -157,9 +151,9 @@ export default function SelectWidget<
       ) : (
         <FancyMultiSelect
           id={id}
-          // A caller's `aria-label` names the combobox over the field's label. `label` is "" for an untitled root field or
-          // an explicit `ui:title: ""`, which would leave the combobox unnamed
-          label={ariaLabel || label || placeholderText}
+          // cmdk names its input by this text alone, so a caller's `aria-label` names it over the field's label, as the
+          // fallback name does where the field has no title
+          label={ariaLabel || fallbackName}
           placeholder={placeholderText}
           autoFocus={autofocus}
           disabled={disabled || readonly}

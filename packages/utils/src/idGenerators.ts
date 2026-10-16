@@ -144,18 +144,6 @@ export function fieldLabelId(id: string) {
   return `${id}__label`;
 }
 
-/** Return a consistent `id` for the element inside a picker's trigger that displays the selected value. A trigger that
- * is a `button` is named by the label pointing at it, which replaces its own contents, so the value it displays is
- * only announced where something references it — `aria-describedby`, the way a native control announces its value
- * after its name.
- *
- * @param id - The id of the trigger
- * @returns - The consistent id for the element displaying its value
- */
-export function triggerValueId(id: string) {
-  return `${id}__value`;
-}
-
 /** Return a consistent `id` for one of the date element selectors an `AltDateWidget` renders, so a theme can point a
  * label at the year, month or day control rather than rebuilding this shape itself. Note that the separator here is
  * always `_`, independent of the form's `idSeparator`
