@@ -20,6 +20,7 @@ import {
   createSchemaUtils,
   deepEquals,
   deepEqualsUndefinedAsMissing,
+  errorSchemaChild,
   getChangedFields,
   getDiscriminatorFieldFromSchema,
   getUiOptions,
@@ -389,9 +390,24 @@ function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
+/** Sets `value` under `key` as an own data property of the object `acc` being built. A JSON-sourced `__proto__` key is
+ * a field name like any other, and a plain assignment would reach the setter and swap `acc`'s prototype for `value`.
+ * Only that key is defined, since the prune walks the validator's whole `ErrorSchema` and a definition costs more than
+ * an assignment
+ */
+function setOwnKey(acc: Record<string, unknown>, key: string, value: unknown) {
+  if (key === '__proto__') {
+    Object.defineProperty(acc, key, { value, enumerable: true, writable: true, configurable: true });
+  } else {
+    acc[key] = value;
+  }
+}
+
 /** A copy of `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold
- * nothing, an empty `__errors` included, which a raise at an ancestor would read as errors still being there. `path`
- * is that of `errorSchema` itself
+ * nothing, an empty `__errors` or a `null` or `undefined` child included, which a raise at an ancestor would read as
+ * errors still being there. `path` is that of `errorSchema` itself. An array a raise holds for the items of an array
+ * field is copied as the object keyed by index that `toErrorSchema()` builds, which is what the paths here and the
+ * merges walk
  */
 function pruneErrorSchema(
   errorSchema: ErrorSchema,
@@ -405,10 +421,11 @@ function pruneErrorSchema(
         // Copied, so the form does not hold on to an array the field that raised it may go on to change
         kept[key] = [...value];
       }
-    } else {
-      const child = isPlainObject(value) ? pruneErrorSchema(value, isDropped, [...path, key]) : value;
+    } else if (value != null) {
+      const node = errorSchemaChild(key, value);
+      const child = node ? pruneErrorSchema(node, isDropped, [...path, key]) : value;
       if (!isPlainObject(child) || Object.keys(child).length > 0) {
-        kept[key] = child;
+        setOwnKey(kept, key, child);
       }
     }
   }
@@ -494,7 +511,7 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
     const newKey = key === ERRORS_KEY ? key : newKeyOf(key);
     if (newKey !== undefined) {
       // A rename onto a key that holds errors, such as a declared property the data lacks, keeps both
-      moved[newKey] = Object.hasOwn(moved, newKey) ? mergeObjects(moved[newKey], node, true) : node;
+      setOwnKey(moved, newKey, Object.hasOwn(moved, newKey) ? mergeObjects(moved[newKey], node, true) : node);
     }
   }
   return replaceErrorSchemaNode(errorSchema, path, moved);
@@ -1909,12 +1926,10 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
   props: FormProps<T, S, F>,
   formData: T | undefined,
 ): FormState<T, S, F> {
-  const { extraErrors } = props;
   return {
     ...current,
     formData,
-    errors: extraErrors ? toErrorList(extraErrors) : [],
-    errorSchema: extraErrors ?? {},
+    ...mergeErrors({ errors: [], errorSchema: {} }, props.extraErrors),
     schemaValidationErrors: [],
     schemaValidationErrorSchema: {},
   };

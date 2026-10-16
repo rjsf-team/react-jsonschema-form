@@ -1,4 +1,5 @@
 import type { RJSFSchema } from '@rjsf/utils';
+import { ROOT_FIELD_PATH, toErrorList, toFieldPath } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import type { FormProps } from '../src/components/Form.tsx';
@@ -8,8 +9,8 @@ import { initialState } from '../src/components/formState.ts';
 const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
 
 /** A self-owned form's model as `Form`'s Effects leave it after the first commit: mounted and attached */
-function createMountedModel(onChange?: FormProps['onChange']) {
-  const props: FormProps = { schema, validator, onChange };
+function createMountedModel(overrides: Partial<FormProps> = {}) {
+  const props: FormProps = { schema, validator, ...overrides };
   const model = createFormModel(props, initialState(props));
   const unmount = model.mount();
   model.attach();
@@ -19,7 +20,7 @@ function createMountedModel(onChange?: FormProps['onChange']) {
 describe('the reports a detached model holds', () => {
   it('are delivered when the form is shown again', () => {
     const onChange = vi.fn();
-    const { model } = createMountedModel(onChange);
+    const { model } = createMountedModel({ onChange });
     model.detach();
 
     model.handle.setFieldValue('a', 'x');
@@ -31,7 +32,7 @@ describe('the reports a detached model holds', () => {
 
   it('are released by the unmount, and none is held after it', () => {
     const onChange = vi.fn();
-    const { model, unmount } = createMountedModel(onChange);
+    const { model, unmount } = createMountedModel({ onChange });
     model.detach();
     model.handle.setFieldValue('a', 'held while hidden');
     unmount();
@@ -78,5 +79,58 @@ describe('proposing()', () => {
     expect(listener).toHaveBeenCalledTimes(2);
     // The field's record of the proposal outlives the commit, until the render it asked for
     expect(model.epoch()).toBe(epoch);
+  });
+});
+
+describe('the errors a field raises', () => {
+  it('leave no node behind for the items a raised array holds nothing for, once the rest are dropped', () => {
+    const { model, unmount } = createMountedModel({
+      schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' } } } },
+    });
+
+    model.handleChange({ list: ['a', 'b'] }, ROOT_FIELD_PATH, { list: [undefined, { __errors: ['taken'] }] });
+    model.handleChange('c', toFieldPath(1, toFieldPath('list')));
+
+    expect(model.getSnapshot().state.customErrors).toBeUndefined();
+    unmount();
+  });
+
+  it('keep the errors of a property named __proto__ in a raised array as that property', () => {
+    const { model, unmount } = createMountedModel({
+      schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'object' } } } },
+    });
+
+    model.handleChange({ list: [{}] }, ROOT_FIELD_PATH, {
+      list: [JSON.parse('{"__proto__": {"__errors": ["taken"]}}')],
+    });
+
+    const { customErrors } = model.getSnapshot().state;
+    expect(Object.getPrototypeOf(customErrors?.list?.[0])).toBe(Object.prototype);
+    expect(toErrorList(customErrors)).toEqual([
+      { property: '.list.0.__proto__', message: 'taken', stack: '.list.0.__proto__ taken' },
+    ]);
+    unmount();
+  });
+
+  it('keep the errors of a property named __proto__ as that property when a sibling is renamed', () => {
+    const { model, unmount } = createMountedModel({
+      schema: { type: 'object', properties: { obj: { type: 'object', additionalProperties: { type: 'string' } } } },
+    });
+    const objPath = toFieldPath('obj');
+
+    model.handleChange({ obj: { a: 'x' } }, ROOT_FIELD_PATH, {
+      obj: JSON.parse('{"__proto__": {"__errors": ["proto"]}, "a": {"__errors": ["renamed"]}}'),
+    });
+    model.sendMove({ fieldPath: objPath, newKeyOf: (key) => (key === 'a' ? 'c' : key) }, () =>
+      model.handleChange({ c: 'x' }, objPath),
+    );
+
+    const { customErrors } = model.getSnapshot().state;
+    expect(Object.getPrototypeOf(customErrors?.obj)).toBe(Object.prototype);
+    expect(toErrorList(customErrors)).toEqual([
+      { property: '.obj.__proto__', message: 'proto', stack: '.obj.__proto__ proto' },
+      { property: '.obj.c', message: 'renamed', stack: '.obj.c renamed' },
+    ]);
+    unmount();
   });
 });

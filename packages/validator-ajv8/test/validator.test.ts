@@ -752,6 +752,32 @@ describe('AJV8Validator', () => {
             ]);
           });
         });
+        describe('customValidate returns an array for the items of an array field', () => {
+          it("lists its errors and keeps ajv's for the other items", () => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              properties: {
+                list: {
+                  type: 'array',
+                  items: { type: 'object', properties: { name: { type: 'string', minLength: 3 } } },
+                },
+              },
+            };
+            const validate = (_formData: unknown, errors: FormValidation): FormValidation => ({
+              ...errors,
+              list: [{ name: { __errors: ['taken'] } }],
+            });
+            const result = validator.validateFormData({ list: [{ name: 'abc' }, { name: 'a' }] }, schema, validate);
+            expect(result.errorSchema.list).toEqual({
+              0: { name: { __errors: ['taken'] } },
+              1: { name: { __errors: ['must NOT have fewer than 3 characters'] } },
+            });
+            expect(result.errors.map(({ stack }) => stack)).toEqual([
+              '.list.1.name must NOT have fewer than 3 characters',
+              '.list.0.name taken',
+            ]);
+          });
+        });
         describe('uiSchema declares ui:initialValue', () => {
           it('passes customValidate a formData reflecting the ui:initialValue default, matching what the form renders', () => {
             const validate = vi.fn((_formData: unknown, errors: FormValidation) => errors);

@@ -597,6 +597,21 @@ Return a consistent `id` for the field error element.
 
 - string: The consistent id for the field error element from the given `id`
 
+### errorSchemaChild()
+
+Returns the `value` under `key` when it is a child node of an `ErrorSchema`: a plain object, or an array holding the errors of an array field's items, which the walks of an `ErrorSchema` descend into.
+An `__errors` array holds messages, not nodes, so a value under `__errors` is never a child.
+Any other object, such as a class instance or a plain object made in another realm (an iframe, say), is not a supported node: its `__errors` still show on its field, but are not listed, do not block the submit and are not dropped with a field's raised errors.
+
+#### Parameters
+
+- key: string - The key the value sits under
+- value: unknown - The value under `key`
+
+#### Returns
+
+- Record&lt;string, unknown> | unknown[] | undefined: `value` when the walks of an `ErrorSchema` descend into it, otherwise `undefined`
+
 ### examplesId()
 
 Return a consistent `id` for the field examples element.
@@ -2349,7 +2364,8 @@ If `time` is false, then the time portion of the string is removed.
 
 ### toErrorList&lt;T = unknown>()
 
-Converts an `errorSchema` into a list of `RJSFValidationErrors`
+Converts an `errorSchema` into a list of `RJSFValidationErrors`.
+The errors of an array's items are listed whether the `errorSchema` keys them by index in an object, as `toErrorSchema()` does, or holds them in an array
 
 #### Parameters
 
@@ -2489,7 +2505,10 @@ unsetByPath(obj, ['a', 'missing']); // true, nothing to remove
 
 ### unwrapErrorHandler&lt;T = unknown>()
 
-Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it
+Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it.
+An array of the handlers of an array field's items, which a `customValidate` may return, is unwrapped into the object keyed by index that `toErrorSchema()` builds.
+A `null` or `undefined` child, such as the entry such an array holds for an item without errors, is left out.
+What sits under `__errors` is a leaf, as every other walk of an `ErrorSchema` reads it.
 
 #### Parameters
 
@@ -2593,8 +2612,10 @@ Converts a UTC date string, an epoch number or a `Date` into a local Date format
 ### validationDataMerge&lt;T = unknown>()
 
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `toErrorList()` on the `errors` in the `validationData`.
-If no `additionalErrorSchema` is passed, or an empty one, then `validationData` is returned.
 The existing `errors` are always kept, also when their `errorSchema` is empty, as it is when a `transformErrors` clears every `message`.
+An array either `ErrorSchema` holds for the items of an array field is returned as the object keyed by index that `toErrorSchema()` builds, so it neither replaces the other's errors for those items nor is appended to an array of them, and the result has that shape whether or not there is anything to merge.
+A `null` or `undefined` either `ErrorSchema` holds for an item or field without errors is left out of the merge rather than replacing the other's errors there.
+If no `additionalErrorSchema` is passed, or one that holds nothing, then `validationData` itself is returned when its `errorSchema` holds no such array and no `null` or `undefined`.
 
 #### Parameters
 
