@@ -17,7 +17,7 @@ export interface GuardChain {
 }
 
 /** What a field's provenance records beyond its graph and its parent: its seeds and the guard chain of its ancestors */
-export interface ProvenanceFields {
+interface ProvenanceFields {
   readonly seeds: readonly Seed[];
   readonly chain?: GuardChain;
   /** For an `anyOf`/`oneOf` option, the set and `setKey` of the plan of the field offering it: an option whose own plan

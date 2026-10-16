@@ -26,7 +26,7 @@ export interface BooleanNode {
 }
 
 /** Why a `$ref` resolves to no subschema */
-export type InvalidReason = 'dangling' | 'circular-alias';
+type InvalidReason = 'dangling' | 'circular-alias';
 
 /** What a `$ref` that resolves to no subschema points at: `message` is the error whatever enters the reference
  * throws

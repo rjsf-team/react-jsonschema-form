@@ -122,7 +122,7 @@ export function restartSeeds(seeds: readonly Seed[]): Seed[] {
 }
 
 /** A child as its parent hands it on: its seeds and the guard chain it is checked against */
-export interface ChildField {
+interface ChildField {
   readonly seeds: readonly Seed[];
   readonly chain?: GuardChain;
   readonly dataDriven: boolean;
