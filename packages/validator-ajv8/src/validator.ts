@@ -47,12 +47,6 @@ export default class AJV8Validator<
    */
   private lastSeenRootSchema?: S;
 
-  /** True once a `rootSchema` has been registered with Ajv in this lifecycle.
-   *
-   * @private
-   */
-  private hasRegisteredRootSchema = false;
-
   /** The keys `isValid()` added schemas to Ajv under. A schema such as `{ $ref: '#/definitions/x' }` means something
    * else under every root, and one with an `$id` of its own is keyed by that `$id` whatever root it names, so they are
    * removed whenever another root is checked against or the one registered under the same id is replaced.
@@ -61,7 +55,8 @@ export default class AJV8Validator<
    */
   private readonly subschemaIds = new Set<string>();
 
-  /** The id the root `isValid()` last checked against is registered under
+  /** The id the root `isValid()` last checked against is registered under, once one has been registered in this
+   * lifecycle
    *
    * @private
    */
@@ -101,7 +96,6 @@ export default class AJV8Validator<
     this.subschemaIds.clear();
     this.currentRootSchemaId = undefined;
     this.lastSeenRootSchema = undefined;
-    this.hasRegisteredRootSchema = false;
   }
 
   /** Replaces the root registered under `rootSchemaId` with `rootSchema`, dropping the subschemas compiled against the
@@ -266,8 +260,19 @@ export default class AJV8Validator<
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   handleSchemaUpdate(rootSchema: S): void {
-    if (this.lastSeenRootSchema === rootSchema && this.hasRegisteredRootSchema) {
-      return;
+    this.registerRootSchema(rootSchema);
+  }
+
+  /** Registers `rootSchema` as `handleSchemaUpdate()` describes, returning the id it is registered under. The id is
+   * normalized through the `uriResolver` only when the root changes, since `isValid()` names the root by it on every
+   * call.
+   *
+   * @param rootSchema - The root schema used to provide $ref resolutions
+   * @returns - The id the root is registered under
+   */
+  private registerRootSchema(rootSchema: S): string {
+    if (this.lastSeenRootSchema === rootSchema && this.currentRootSchemaId !== undefined) {
+      return this.currentRootSchemaId;
     }
     const rootSchemaId = ajvRootSchemaId(rootSchema, this.ajv.opts.uriResolver);
     // add the rootSchema ROOT_SCHEMA_PREFIX as id.
@@ -290,7 +295,7 @@ export default class AJV8Validator<
       this.currentRootSchemaId = rootSchemaId;
     }
     this.lastSeenRootSchema = rootSchema;
-    this.hasRegisteredRootSchema = true;
+    return rootSchemaId;
   }
 
   /** Validates data against a schema, returning true if the data is valid, or
@@ -307,14 +312,10 @@ export default class AJV8Validator<
     let schemaId: string | undefined;
     let compiled = false;
     try {
-      this.handleSchemaUpdate(rootSchema);
+      const rootSchemaId = this.registerRootSchema(rootSchema);
       // A `$ref` local to the root, such as the `{ $ref: '#/properties/a/if' }` a form validates a condition with,
       // names the root by the id it is registered under, whatever the schema holding it is registered as
-      const schemaWithIdRefPrefix = withAjvRootIdRefPrefix<S>(
-        schema,
-        rootSchema,
-        ajvRootSchemaId(rootSchema, this.ajv.opts.uriResolver),
-      );
+      const schemaWithIdRefPrefix = withAjvRootIdRefPrefix<S>(schema, rootSchema, rootSchemaId);
       schemaId = schemaKey(schemaWithIdRefPrefix);
       // Add schema by an explicit ID so it can be fetched later
       // Fall back to using compile if necessary
