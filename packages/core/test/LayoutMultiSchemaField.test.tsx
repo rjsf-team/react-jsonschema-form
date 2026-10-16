@@ -877,6 +877,76 @@ describe('LayoutMultiSchemaField', () => {
       expect(templateProps?.displayLabel).toBe(true);
       expect(widgetProps?.hideLabel).toBe(true);
     });
+    test('hands its template the same plan across a render that changes nothing it reads', () => {
+      const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        recordTemplateProps(props);
+        return <FakeFieldTemplate {...props} />;
+      }
+      const props = getProps();
+      const registry = getTestRegistry(
+        props.schema,
+        {},
+        { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
+        { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget },
+      );
+      const { rerender } = render(<LayoutMultiSchemaField {...props} registry={registry} />);
+      rerender(<LayoutMultiSchemaField {...props} registry={registry} />);
+
+      const plans = recordTemplateProps.mock.calls.map(([templateProps]) => templateProps.presentation);
+      expect(plans.length).toBeGreaterThan(1);
+      expect(plans.at(-1)).toBe(plans[0]);
+    });
+    test('hands its template the same plan across renders when its selector names no type', () => {
+      const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        recordTemplateProps(props);
+        return <FakeFieldTemplate {...props} />;
+      }
+      const options: RJSFSchema[] = SIMPLE_ONEOF_SCHEMAS.map((option) => ({
+        ...option,
+        properties: { answer: { default: (option.properties!.answer as RJSFSchema).default } },
+      }));
+      const schema: RJSFSchema = { ...SIMPLE_ONEOF, oneOf: options };
+      const props = getProps({ schema, options });
+      const registry = getTestRegistry(
+        schema,
+        {},
+        { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
+        { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget },
+      );
+      const { rerender } = render(<LayoutMultiSchemaField {...props} registry={registry} />);
+      rerender(<LayoutMultiSchemaField {...props} registry={registry} />);
+
+      const plans = recordTemplateProps.mock.calls.map(([templateProps]) => templateProps.presentation);
+      expect(plans.length).toBeGreaterThan(1);
+      expect(plans.at(-1)).toBe(plans[0]);
+    });
+    test('hands its template the same plan across a change of data when its selector names no type', () => {
+      const recordTemplateProps = vi.fn<(props: FieldTemplateProps) => void>();
+      function RecordingFieldTemplate(props: FieldTemplateProps) {
+        recordTemplateProps(props);
+        return <FakeFieldTemplate {...props} />;
+      }
+      const options: RJSFSchema[] = SIMPLE_ONEOF_SCHEMAS.map((option) => ({
+        ...option,
+        properties: { answer: { default: (option.properties!.answer as RJSFSchema).default } },
+      }));
+      const schema: RJSFSchema = { ...SIMPLE_ONEOF, oneOf: options };
+      const props = getProps({ schema, options, formData: { answer: '1' } });
+      const registry = getTestRegistry(
+        schema,
+        {},
+        { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: RecordingFieldTemplate },
+        { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget },
+      );
+      const { rerender } = render(<LayoutMultiSchemaField {...props} registry={registry} />);
+      rerender(<LayoutMultiSchemaField {...props} formData={{ answer: '1', note: 'x' }} registry={registry} />);
+
+      const plans = recordTemplateProps.mock.calls.map(([templateProps]) => templateProps.presentation);
+      expect(plans.length).toBeGreaterThan(1);
+      expect(plans.at(-1)).toBe(plans[0]);
+    });
     test('has a widget a theme declares as drawing its label draw it, with the template drawing none', () => {
       const { templateProps, widgetProps } = renderRecording({}, { widgets: { RadioWidget: { label: 'self' } } });
 

@@ -11,7 +11,16 @@ import type {
   UiSchema,
   Widget,
 } from '@rjsf/utils';
-import { ANY_OF_KEY, getPresentationDeclaration, resolveFieldPresentation, schemaRequiresTrueValue } from '@rjsf/utils';
+import {
+  ANY_OF_KEY,
+  getPresentationDeclaration,
+  getSchemaType,
+  isObject,
+  ITEMS_KEY,
+  REF_KEY,
+  resolveFieldPresentation,
+  schemaRequiresTrueValue,
+} from '@rjsf/utils';
 
 import getFieldWidget, { displaysLabel, withoutDescribers } from './fieldWidgetUtils.ts';
 
@@ -62,6 +71,34 @@ export interface SchemaFieldPresentationInputs<
   required: boolean;
   /** The plan of the field above rendering the same id */
   inherited?: FieldPresentation;
+}
+
+/** Whether no option of a field's `anyOf`/`oneOf` renders a control under the field's id for a label's `for` to name:
+ * each renders a container, an object or an array, or nothing at all, as a `null` does, so the field's label names its
+ * selector alone. An option naming no type renders with the field's, as `getRenderedOptionSchema()` gives it. An option
+ * given by a `$ref` isn't resolved here and counts as one that may render a control
+ *
+ * @param schema - The schema of the field rendering the options
+ * @param xxxOfKey - The keyword its options are under
+ * @returns - True when no option renders a control
+ */
+function optionsRenderNoControl<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  xxxOfKey: typeof ANY_OF_KEY | typeof ONE_OF_KEY,
+) {
+  const options: unknown = schema[xxxOfKey];
+  const fieldType = getSchemaType<S>(schema);
+  return (
+    Array.isArray(options) &&
+    options.length > 0 &&
+    options.every((option) => {
+      if (!isObject(option) || Object.hasOwn(option, REF_KEY)) {
+        return false;
+      }
+      const type = getSchemaType<S>(option as S) ?? fieldType;
+      return type === 'object' || type === 'array' || type === 'null';
+    })
+  );
 }
 
 /** Whether the field renders a control for a template label to name
@@ -151,9 +188,19 @@ export default function useSchemaFieldPresentation<
       fieldKey: plannedKey,
       widget,
     });
+    if (xxxOfKey === undefined) {
+      return declared;
+    }
     // The field rendering the options draws its label only through its selector, so with the selector withheld, as for
     // an opted-out optional field, there is no label of its own, and the field below keeps the heading it draws
-    return xxxOfKey !== undefined && hidden ? { ...declared, label: 'template' as const } : declared;
+    if (hidden) {
+      return { ...declared, label: 'template' as const };
+    }
+    // Options that render no control leave a `for` at the field's id naming nothing, so the label names the selector
+    // through `aria-labelledby` alone
+    return optionsRenderNoControl<S>(schema, xxxOfKey)
+      ? { ...declared, labelledBy: 'aria-labelledby' as const }
+      : declared;
   }, [registry, schema, plannedField, plannedKey, widget, xxxOfKey, hidden]);
   // A control holding `false` left alone, as an unchecked checkbox does, would fail the browser's own check of a native
   // `required` for a value the schema accepts, so it is required, by its attribute and its marker alike, only where the

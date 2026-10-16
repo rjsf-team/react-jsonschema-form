@@ -571,6 +571,55 @@ describe('the plan SchemaField builds', () => {
   });
 });
 
+describe('an anyOf/oneOf whose options all render a container', () => {
+  const pet: RJSFSchema = {
+    title: 'Pet',
+    oneOf: [
+      { title: 'Dog', type: 'object', properties: { bark: { type: 'string' } } },
+      { title: 'Cat', type: 'array', items: { type: 'string' } },
+    ],
+  };
+
+  it('plans its label as naming its control through aria-labelledby, since a for would name no control', () => {
+    const { outerTemplatePlans } = renderPlans({ type: 'object', properties: { pet } });
+
+    expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBe(fieldLabelId('root_pet'));
+    expect(screen.getByRole('combobox')).toHaveAccessibleName('Pet');
+  });
+
+  it('keeps the for where an option renders a control under the field id', () => {
+    const { outerTemplatePlans } = renderPlans({
+      type: 'object',
+      properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { title: 'Name', type: 'string' }] } },
+    });
+
+    expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
+  });
+
+  it.each<[string, RJSFSchema]>([
+    ['an object field whose options name no properties beside them', { ...pet, type: 'object' }],
+    [
+      'an array field whose options take its type',
+      { title: 'Pet', type: 'array', oneOf: [{ items: { type: 'string' } }, { items: { type: 'number' } }] },
+    ],
+    ['a field with an option rendering nothing', { ...pet, oneOf: [pet.oneOf![0], { title: 'None', type: 'null' }] }],
+  ])('plans the label of %s as naming its control through aria-labelledby', (_, petSchema) => {
+    const { outerTemplatePlans } = renderPlans({ type: 'object', properties: { pet: petSchema } });
+
+    expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBe(fieldLabelId('root_pet'));
+  });
+
+  it('keeps the for where an option is a $ref it does not resolve', () => {
+    const { outerTemplatePlans } = renderPlans({
+      type: 'object',
+      definitions: { name: { type: 'string' } },
+      properties: { pet: { ...pet, oneOf: [...pet.oneOf!, { $ref: '#/definitions/name' }] } },
+    });
+
+    expect(outerTemplatePlans.get('root_pet')?.control?.attributes['aria-labelledby']).toBeUndefined();
+  });
+});
+
 describe('a widget rendering a group of controls', () => {
   it('names its radiogroup by the label and marks the radiogroup invalid rather than its radios', () => {
     const { node } = createFormComponent({
