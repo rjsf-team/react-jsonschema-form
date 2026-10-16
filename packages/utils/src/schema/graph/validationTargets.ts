@@ -154,6 +154,19 @@ export function declaredProperty<S extends StrictRJSFSchema = RJSFSchema>(
   id: NodeId,
   key: string,
 ): NodeId | undefined {
+  return declaredProperties.get([graph, id, key], () => findDeclaredProperty(graph, id, key) ?? null) ?? undefined;
+}
+
+/** The node `declaredProperty()` finds, per graph, option and key, or `null` where nothing in the scope declares it:
+ * an option is matched on its discriminator on every edit, and walking its scope each time repeats the same answer
+ */
+const declaredProperties = new KeyedMemo<NodeId | null>();
+
+function findDeclaredProperty<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  key: string,
+): NodeId | undefined {
   for (const node of scopeOf(graph, id)) {
     const property = graph.child(node.id, PROPERTIES_KEY, key);
     if (property !== undefined) {
@@ -176,11 +189,19 @@ export function dependencyCondition<S extends StrictRJSFSchema = RJSFSchema>(
   option: NodeId,
   key: string,
 ): S | undefined {
-  const property = declaredProperty(graph, option, key);
-  return property === undefined
-    ? undefined
-    : schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: targetOf(graph, property) } });
+  const condition = dependencyConditions.get([graph, option, key], () => {
+    const property = declaredProperty(graph, option, key);
+    return property === undefined
+      ? null
+      : schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: targetOf(graph, property) } });
+  });
+  return isSchemaObject<S>(condition) ? condition : undefined;
 }
+
+/** The conditions `dependencyCondition()` builds, per graph, option and key, or `null` where the option declares no
+ * such property, so a validator caching what it compiles by schema is handed the same object every time
+ */
+const dependencyConditions = new KeyedMemo<object | null>();
 
 /** Which of the keywords in an option's scope scoring drops: the `required`s with the `dependencies` entries listing
  * names, and the `additionalProperties: false`s
