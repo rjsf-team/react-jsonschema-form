@@ -95,10 +95,13 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                       >
                         <div
                           class="my-1"
-                          id="root_tasks__title"
                         >
                           <h5>
-                            tasks
+                            <span
+                              id="root_tasks__title"
+                            >
+                              tasks
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -121,10 +124,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   <div>
                                     <div
                                       class="my-1"
-                                      id="root_tasks_0__title"
                                     >
                                       <h5>
-                                        tasks-1
+                                        <span
+                                          id="root_tasks_0__title"
+                                        >
+                                          tasks-1
+                                        </span>
+                                        *
                                       </h5>
                                       <hr
                                         class="border-0 bg-secondary mt-0"
@@ -290,10 +297,14 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                   <div>
                                     <div
                                       class="my-1"
-                                      id="root_tasks_1__title"
                                     >
                                       <h5>
-                                        tasks-2
+                                        <span
+                                          id="root_tasks_1__title"
+                                        >
+                                          tasks-2
+                                        </span>
+                                        *
                                       </h5>
                                       <hr
                                         class="border-0 bg-secondary mt-0"
@@ -546,10 +557,13 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                       >
                         <div
                           class="my-1"
-                          id="root_tags__title"
                         >
                           <h5>
-                            tags
+                            <span
+                              id="root_tags__title"
+                            >
+                              tags
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -962,10 +976,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      person
+                      <span
+                        id="root_person__title"
+                      >
+                        person
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -1051,10 +1068,13 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                           <div>
                             <div
                               class="my-1"
-                              id="root_person_address__title"
                             >
                               <h5>
-                                address
+                                <span
+                                  id="root_person_address__title"
+                                >
+                                  address
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -1540,10 +1560,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                       >
                         <div
                           class="my-1"
-                          id="root_tasks__title"
                         >
                           <h5>
-                            tasks
+                            <span
+                              id="root_tasks__title"
+                            >
+                              tasks
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -1566,10 +1589,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   <div>
                                     <div
                                       class="my-1"
-                                      id="root_tasks_0__title"
                                     >
                                       <h5>
-                                        tasks-1
+                                        <span
+                                          id="root_tasks_0__title"
+                                        >
+                                          tasks-1
+                                        </span>
+                                        *
                                       </h5>
                                       <hr
                                         class="border-0 bg-secondary mt-0"
@@ -1735,10 +1762,14 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                   <div>
                                     <div
                                       class="my-1"
-                                      id="root_tasks_1__title"
                                     >
                                       <h5>
-                                        tasks-2
+                                        <span
+                                          id="root_tasks_1__title"
+                                        >
+                                          tasks-2
+                                        </span>
+                                        *
                                       </h5>
                                       <hr
                                         class="border-0 bg-secondary mt-0"
@@ -1991,10 +2022,13 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                       >
                         <div
                           class="my-1"
-                          id="root_tags__title"
                         >
                           <h5>
-                            tags
+                            <span
+                              id="root_tags__title"
+                            >
+                              tags
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -2298,10 +2332,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      person
+                      <span
+                        id="root_person__title"
+                      >
+                        person
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -2387,10 +2424,13 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                           <div>
                             <div
                               class="my-1"
-                              id="root_person_address__title"
                             >
                               <h5>
-                                address
+                                <span
+                                  id="root_person_address__title"
+                                >
+                                  address
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -3129,10 +3169,13 @@ exports[`single fields > Cyclic schema 1`] = `
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            A registration form
+            <span
+              id="root__title"
+            >
+              A registration form
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -3164,10 +3207,13 @@ exports[`single fields > Cyclic schema 1`] = `
                 <div>
                   <div
                     class="my-1"
-                    id="root_child__title"
                   >
                     <h5>
-                      A registration form
+                      <span
+                        id="root_child__title"
+                      >
+                        A registration form
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -4472,10 +4518,13 @@ exports[`single fields > optional data controls > does not show optional control
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -4499,10 +4548,13 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <h5>
-                      nestedObjectOptional
+                      <span
+                        id="root_nestedObjectOptional__title"
+                      >
+                        nestedObjectOptional
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -4557,10 +4609,13 @@ exports[`single fields > optional data controls > does not show optional control
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObjectOptional__title"
                             >
                               <h5>
-                                deepObjectOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                >
+                                  deepObjectOptional
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -4620,10 +4675,14 @@ exports[`single fields > optional data controls > does not show optional control
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObject__title"
                             >
                               <h5>
-                                deepObject
+                                <span
+                                  id="root_nestedObjectOptional_deepObject__title"
+                                >
+                                  deepObject
+                                </span>
+                                *
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -4690,10 +4749,13 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     <h5>
-                                      deepArrayOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional__title"
+                                      >
+                                        deepArrayOptional
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -4775,10 +4837,13 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     <h5>
-                                      deepArrayOptional2
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                      >
+                                        deepArrayOptional2
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -4860,10 +4925,14 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     <h5>
-                                      deepArray
+                                      <span
+                                        id="root_nestedObjectOptional_deepArray__title"
+                                      >
+                                        deepArray
+                                      </span>
+                                      *
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -4950,10 +5019,13 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <h5>
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -5028,10 +5100,14 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -5098,10 +5174,14 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -5409,10 +5489,13 @@ exports[`single fields > optional data controls > does not show optional control
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -5436,10 +5519,13 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <h5>
-                      nestedObjectOptional
+                      <span
+                        id="root_nestedObjectOptional__title"
+                      >
+                        nestedObjectOptional
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -5495,10 +5581,13 @@ exports[`single fields > optional data controls > does not show optional control
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObjectOptional__title"
                             >
                               <h5>
-                                deepObjectOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                >
+                                  deepObjectOptional
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -5559,10 +5648,14 @@ exports[`single fields > optional data controls > does not show optional control
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObject__title"
                             >
                               <h5>
-                                deepObject
+                                <span
+                                  id="root_nestedObjectOptional_deepObject__title"
+                                >
+                                  deepObject
+                                </span>
+                                *
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -5630,10 +5723,13 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     <h5>
-                                      deepArrayOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional__title"
+                                      >
+                                        deepArrayOptional
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -5716,10 +5812,13 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     <h5>
-                                      deepArrayOptional2
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                      >
+                                        deepArrayOptional2
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -5802,10 +5901,14 @@ exports[`single fields > optional data controls > does not show optional control
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     <h5>
-                                      deepArray
+                                      <span
+                                        id="root_nestedObjectOptional_deepArray__title"
+                                      >
+                                        deepArray
+                                      </span>
+                                      *
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -5893,10 +5996,13 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <h5>
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -5972,10 +6078,14 @@ exports[`single fields > optional data controls > does not show optional control
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -6043,10 +6153,14 @@ exports[`single fields > optional data controls > does not show optional control
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -6358,10 +6472,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -6385,7 +6502,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <div
                       class="p-0 container-fluid"
@@ -6397,7 +6513,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           class="col-11"
                         >
                           <h5>
-                            nestedObjectOptional
+                            <span
+                              id="root_nestedObjectOptional__title"
+                            >
+                              nestedObjectOptional
+                            </span>
                           </h5>
                         </div>
                         <div
@@ -6480,7 +6600,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObjectOptional__title"
                             >
                               <div
                                 class="p-0 container-fluid"
@@ -6492,7 +6611,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                     class="col-11"
                                   >
                                     <h5>
-                                      deepObjectOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepObjectOptional__title"
+                                      >
+                                        deepObjectOptional
+                                      </span>
                                     </h5>
                                   </div>
                                   <div
@@ -6555,10 +6678,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObject__title"
                             >
                               <h5>
-                                deepObject
+                                <span
+                                  id="root_nestedObjectOptional_deepObject__title"
+                                >
+                                  deepObject
+                                </span>
+                                *
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -6625,10 +6752,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     <h5>
-                                      deepArrayOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional__title"
+                                      >
+                                        deepArrayOptional
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -6710,7 +6840,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     <div
                                       class="p-0 container-fluid"
@@ -6722,7 +6851,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                           class="col-11"
                                         >
                                           <h5>
-                                            deepArrayOptional2
+                                            <span
+                                              id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                            >
+                                              deepArrayOptional2
+                                            </span>
                                           </h5>
                                         </div>
                                         <div
@@ -6795,10 +6928,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     <h5>
-                                      deepArray
+                                      <span
+                                        id="root_nestedObjectOptional_deepArray__title"
+                                      >
+                                        deepArray
+                                      </span>
+                                      *
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -6885,7 +7022,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <div
                             class="p-0 container-fluid"
@@ -6897,7 +7033,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 class="col-11"
                               >
                                 <h5>
-                                  nestedArrayOptional
+                                  <span
+                                    id="root_nestedArrayOptional__title"
+                                  >
+                                    nestedArrayOptional
+                                  </span>
                                 </h5>
                               </div>
                               <div
@@ -7060,10 +7200,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -7130,10 +7274,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -7222,7 +7370,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <div>
                           <div
                             class="my-1"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <div
                               class="p-0 container-fluid"
@@ -7234,7 +7381,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                   class="col-11"
                                 >
                                   <h5>
-                                    optionalObjectWithOneofs
+                                    <span
+                                      id="root_optionalObjectWithOneofs__title"
+                                    >
+                                      optionalObjectWithOneofs
+                                    </span>
                                   </h5>
                                 </div>
                                 <div
@@ -7322,7 +7473,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               >
                                 <div
                                   class="my-1"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <div
                                     class="p-0 container-fluid"
@@ -7334,7 +7484,11 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         class="col-11"
                                       >
                                         <h5>
-                                          optionalArrayWithAnyofs
+                                          <span
+                                            id="root_optionalArrayWithAnyofs__title"
+                                          >
+                                            optionalArrayWithAnyofs
+                                          </span>
                                         </h5>
                                       </div>
                                       <div
@@ -7416,10 +7570,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -7443,10 +7600,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <h5>
-                      nestedObjectOptional
+                      <span
+                        id="root_nestedObjectOptional__title"
+                      >
+                        nestedObjectOptional
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -7502,10 +7662,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObjectOptional__title"
                             >
                               <h5>
-                                deepObjectOptional
+                                <span
+                                  id="root_nestedObjectOptional_deepObjectOptional__title"
+                                >
+                                  deepObjectOptional
+                                </span>
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -7539,10 +7702,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                           <div>
                             <div
                               class="my-1"
-                              id="root_nestedObjectOptional_deepObject__title"
                             >
                               <h5>
-                                deepObject
+                                <span
+                                  id="root_nestedObjectOptional_deepObject__title"
+                                >
+                                  deepObject
+                                </span>
+                                *
                               </h5>
                               <hr
                                 class="border-0 bg-secondary mt-0"
@@ -7610,10 +7777,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional__title"
                                   >
                                     <h5>
-                                      deepArrayOptional
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional__title"
+                                      >
+                                        deepArrayOptional
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -7696,10 +7866,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArrayOptional2__title"
                                   >
                                     <h5>
-                                      deepArrayOptional2
+                                      <span
+                                        id="root_nestedObjectOptional_deepArrayOptional2__title"
+                                      >
+                                        deepArrayOptional2
+                                      </span>
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -7743,10 +7916,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                 >
                                   <div
                                     class="my-1"
-                                    id="root_nestedObjectOptional_deepArray__title"
                                   >
                                     <h5>
-                                      deepArray
+                                      <span
+                                        id="root_nestedObjectOptional_deepArray__title"
+                                      >
+                                        deepArray
+                                      </span>
+                                      *
                                     </h5>
                                     <hr
                                       class="border-0 bg-secondary mt-0"
@@ -7834,10 +8011,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <h5>
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -7975,10 +8155,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -8046,10 +8230,14 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -8139,10 +8327,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                         <div>
                           <div
                             class="my-1"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <h5>
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h5>
                             <hr
                               class="border-0 bg-secondary mt-0"
@@ -8201,10 +8392,13 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               >
                                 <div
                                   class="my-1"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <h5>
-                                    optionalArrayWithAnyofs
+                                    <span
+                                      id="root_optionalArrayWithAnyofs__title"
+                                    >
+                                      optionalArrayWithAnyofs
+                                    </span>
                                   </h5>
                                   <hr
                                     class="border-0 bg-secondary mt-0"
@@ -8257,10 +8451,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -8284,7 +8481,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <div
                       class="p-0 container-fluid"
@@ -8296,7 +8492,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                           class="col-11"
                         >
                           <h5>
-                            nestedObjectOptional
+                            <span
+                              id="root_nestedObjectOptional__title"
+                            >
+                              nestedObjectOptional
+                            </span>
                           </h5>
                         </div>
                         <div
@@ -8366,7 +8566,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <div
                             class="p-0 container-fluid"
@@ -8378,7 +8577,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                 class="col-11"
                               >
                                 <h5>
-                                  nestedArrayOptional
+                                  <span
+                                    id="root_nestedArrayOptional__title"
+                                  >
+                                    nestedArrayOptional
+                                  </span>
                                 </h5>
                               </div>
                               <div
@@ -8444,10 +8647,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -8514,10 +8721,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -8606,7 +8817,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         <div>
                           <div
                             class="my-1"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <div
                               class="p-0 container-fluid"
@@ -8618,7 +8828,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                   class="col-11"
                                 >
                                   <h5>
-                                    optionalObjectWithOneofs
+                                    <span
+                                      id="root_optionalObjectWithOneofs__title"
+                                    >
+                                      optionalObjectWithOneofs
+                                    </span>
                                   </h5>
                                 </div>
                                 <div
@@ -8706,7 +8920,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               >
                                 <div
                                   class="my-1"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <div
                                     class="p-0 container-fluid"
@@ -8718,7 +8931,11 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                                         class="col-11"
                                       >
                                         <h5>
-                                          optionalArrayWithAnyofs
+                                          <span
+                                            id="root_optionalArrayWithAnyofs__title"
+                                          >
+                                            optionalArrayWithAnyofs
+                                          </span>
                                         </h5>
                                       </div>
                                       <div
@@ -8800,10 +9017,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            test
+            <span
+              id="root__title"
+            >
+              test
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"
@@ -8827,10 +9047,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObjectOptional__title"
                   >
                     <h5>
-                      nestedObjectOptional
+                      <span
+                        id="root_nestedObjectOptional__title"
+                      >
+                        nestedObjectOptional
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -8871,10 +9094,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArrayOptional__title"
                         >
                           <h5>
-                            nestedArrayOptional
+                            <span
+                              id="root_nestedArrayOptional__title"
+                            >
+                              nestedArrayOptional
+                            </span>
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -8911,10 +9137,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                 <div>
                   <div
                     class="my-1"
-                    id="root_nestedObject__title"
                   >
                     <h5>
-                      nestedObject
+                      <span
+                        id="root_nestedObject__title"
+                      >
+                        nestedObject
+                      </span>
+                      *
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -8982,10 +9212,14 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                       >
                         <div
                           class="my-1"
-                          id="root_nestedArray__title"
                         >
                           <h5>
-                            nestedArray
+                            <span
+                              id="root_nestedArray__title"
+                            >
+                              nestedArray
+                            </span>
+                            *
                           </h5>
                           <hr
                             class="border-0 bg-secondary mt-0"
@@ -9075,10 +9309,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                         <div>
                           <div
                             class="my-1"
-                            id="root_optionalObjectWithOneofs__title"
                           >
                             <h5>
-                              optionalObjectWithOneofs
+                              <span
+                                id="root_optionalObjectWithOneofs__title"
+                              >
+                                optionalObjectWithOneofs
+                              </span>
                             </h5>
                             <hr
                               class="border-0 bg-secondary mt-0"
@@ -9137,10 +9374,13 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               >
                                 <div
                                   class="my-1"
-                                  id="root_optionalArrayWithAnyofs__title"
                                 >
                                   <h5>
-                                    optionalArrayWithAnyofs
+                                    <span
+                                      id="root_optionalArrayWithAnyofs__title"
+                                    >
+                                      optionalArrayWithAnyofs
+                                    </span>
                                   </h5>
                                   <hr
                                     class="border-0 bg-secondary mt-0"
@@ -11083,10 +11323,13 @@ exports[`single fields > title field 1`] = `
       <div>
         <div
           class="my-1"
-          id="root__title"
         >
           <h5>
-            Titre 1
+            <span
+              id="root__title"
+            >
+              Titre 1
+            </span>
           </h5>
           <hr
             class="border-0 bg-secondary mt-0"

@@ -1,5 +1,12 @@
 import type { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getTemplates, getUiOptions, hasTemplateErrors, templateDrawsLabel, templateLabelFor } from '@rjsf/utils';
+import {
+  getTemplates,
+  getUiOptions,
+  hasTemplateErrors,
+  templateDrawsLabel,
+  templateLabelFor,
+  templateMarksRequired,
+} from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
 
 export default function FieldTemplate<
@@ -72,7 +79,7 @@ export default function FieldTemplate<
             className={hasError ? 'text-danger' : ''}
           >
             {label}
-            {required ? '*' : null}
+            {templateMarksRequired<T, S, F>(props) ? '*' : null}
           </Form.Label>
         )}
         {children}

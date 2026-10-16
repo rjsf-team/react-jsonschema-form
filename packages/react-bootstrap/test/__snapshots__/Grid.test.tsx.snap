@@ -24,10 +24,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -1221,10 +1224,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -2443,10 +2449,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -3285,10 +3294,13 @@ exports[`Complex grid > renders person and address and employment in a complex g
                 <div>
                   <div
                     class="my-1"
-                    id="root_person__title"
                   >
                     <h5>
-                      Person Info
+                      <span
+                        id="root_person__title"
+                      >
+                        Person Info
+                      </span>
                     </h5>
                     <hr
                       class="border-0 bg-secondary mt-0"
@@ -4479,10 +4491,13 @@ exports[`Three even column grid > renders person and address in three columns, n
               <div>
                 <div
                   class="my-1"
-                  id="root_person__title"
                 >
                   <h5>
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h5>
                   <hr
                     class="border-0 bg-secondary mt-0"
@@ -5147,10 +5162,13 @@ exports[`Two even column grid > renders person and address in two columns, no em
               <div>
                 <div
                   class="my-1"
-                  id="root_person__title"
                 >
                   <h5>
-                    Person Info
+                    <span
+                      id="root_person__title"
+                    >
+                      Person Info
+                    </span>
                   </h5>
                   <hr
                     class="border-0 bg-secondary mt-0"

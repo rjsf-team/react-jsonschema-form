@@ -3372,10 +3372,13 @@ exports[`with title and description > array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -3472,10 +3475,13 @@ exports[`with title and description > array icons 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -3917,10 +3923,13 @@ exports[`with title and description > fixed array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4073,10 +4082,13 @@ exports[`with title and description from both > array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4173,10 +4185,13 @@ exports[`with title and description from both > array icons 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4618,10 +4633,13 @@ exports[`with title and description from both > fixed array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4774,10 +4792,13 @@ exports[`with title and description from uiSchema > array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -4874,10 +4895,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
@@ -5319,10 +5343,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
             >
               <div
                 class="my-1"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <hr
                   class="border-0 bg-secondary mt-0"
