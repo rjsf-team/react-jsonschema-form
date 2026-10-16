@@ -218,8 +218,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   private readonly rootBase: string;
   private readonly offset: number;
   private readonly own: SchemaNode<S>[] = [];
-  private readonly objects = new WeakMap<object, NodeId>();
-  private readonly objectNodes = new Map<NodeId, ObjectNode<S>>();
+  private readonly objects = new WeakMap<object, ObjectNode<S>>();
   /** The nodes parsed from data, which a `$ref` reached through a keyword holding no subschemas */
   private readonly dataNodes = new Set<NodeId>();
   private readonly pointers = new Map<string, NodeId>();
@@ -257,7 +256,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   }
 
   byObject(raw: object): NodeId | undefined {
-    return this.objects.get(raw) ?? this.base?.byObject(raw);
+    return this.knownObject(raw)?.id;
   }
 
   child(id: NodeId, keyword: string, key?: string): NodeId | undefined {
@@ -357,8 +356,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   }
 
   private knownObject(raw: object): ObjectNode<S> | undefined {
-    const id = this.objects.get(raw);
-    return id === undefined ? this.base?.knownObject(raw) : this.objectNodes.get(id);
+    return this.objects.get(raw) ?? this.base?.knownObject(raw);
   }
 
   private visitObject(value: S, pointer: string, base: string, data: boolean): ObjectNode<S> {
@@ -382,8 +380,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     if (literalId !== undefined) {
       node.literalId = literalId;
     }
-    this.objects.set(value, node.id);
-    this.objectNodes.set(node.id, node);
+    this.objects.set(value, node);
     this.add(node);
     if (data) {
       this.dataNodes.add(node.id);
@@ -510,8 +507,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
 
   private addSynthetic(node: ObjectNode<S>): ObjectNode<S> {
     this.add(node);
-    this.objects.set(node.raw, node.id);
-    this.objectNodes.set(node.id, node);
+    this.objects.set(node.raw, node);
     return node;
   }
 
