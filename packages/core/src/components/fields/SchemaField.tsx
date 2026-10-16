@@ -802,7 +802,10 @@ function SchemaFieldRender<
     fieldComponentId = fieldPathToId(toFieldPath('XxxOf', fieldPath), globalFormOptions);
   }
 
-  const { __errors, ...fieldErrorSchema } = errorSchema ?? {};
+  const { __errors: ownErrorSchemaErrors, ...fieldErrorSchema } = errorSchema ?? {};
+  // The `SchemaField` that named the field hands it the field's own errors as `rawErrors`, taken out of its
+  // `errorSchema`, and that is how a named field passes them on to the bare field it renders
+  const __errors = framedAbove ? props.rawErrors : ownErrorSchemaErrors;
 
   const fieldComponent = (
     <FieldComponent

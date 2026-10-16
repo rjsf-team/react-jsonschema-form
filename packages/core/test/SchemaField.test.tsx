@@ -671,6 +671,34 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
     });
 
+    it.each<[string, RJSFSchema, UiSchema]>([
+      ['no field', schema, {}],
+      ["ui:field: 'SchemaField'", schema, { val: { 'ui:field': 'SchemaField' } }],
+      ['a ui:field wrapping SchemaField', schema, { val: { 'ui:field': 'wrapping' } }],
+      ['a ui:options.field wrapping SchemaField', schema, { val: { 'ui:options': { field: 'wrapping' } } }],
+      ['a ui:globalOptions.field wrapping SchemaField', schema, { 'ui:globalOptions': { field: 'wrapping' } }],
+      ['a $id wrapping SchemaField', { type: 'object', properties: { val: { $id: 'wrapping', type: 'string' } } }, {}],
+    ])("hands the widget the field's own errors with %s named, and renders them once", (_, schema, uiSchema) => {
+      const renderWidget = vi.fn<(id: string, rawErrors: WidgetProps['rawErrors']) => void>();
+      function TextWidget(props: WidgetProps) {
+        renderWidget(props.id, props.rawErrors);
+        return <input id={props.id} />;
+      }
+      const { node } = createFormComponent({
+        schema,
+        uiSchema,
+        extraErrors: { val: { __errors: ['bad'] } },
+        showErrorList: false,
+        widgets: { TextWidget },
+        fields: { wrapping: WrappingField },
+      });
+
+      expect(renderWidget).toHaveBeenLastCalledWith('root_val', ['bad']);
+      expect(new Set(renderWidget.mock.calls.map(([id]) => id))).toEqual(new Set(['root_val']));
+      expect(screen.getAllByText('bad')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_val__error')).toHaveLength(1);
+    });
+
     const describedSchema: RJSFSchema = {
       type: 'object',
       properties: { val: { type: 'string', title: 'Value', description: 'Desc' } },
