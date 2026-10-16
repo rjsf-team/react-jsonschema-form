@@ -416,6 +416,7 @@ should change the heading of the (upcoming) version to include a major version b
 - `ObjectFieldTemplate` lays out the optional data control with the properties where it draws no heading, as under `ui:label: false`, rather than dropping it with the heading, as core's does ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `MultiSchemaFieldTemplate` lays out no row for a selector it isn't given, as while an optional `anyOf`/`oneOf` field has no data, rather than an empty `<div>` ([#5401](https://github.com/rjsf-team/react-jsonschema-form/issues/5401), [#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 - `FieldErrorTemplate` renders a field's errors in one list under `errorId()`, where it rendered each message under that same id, so a field with two errors repeated it ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
+- `RadioWidget`, `CheckboxesWidget` and `SelectWidget` draw no label for a required field with no label text, which would hold only its `*` and name the control "star", where the old `<Label required>` and the select drew one; the radios and the dropdown stay `required`. A `SelectWidget` no label names is named by the field's label, its placeholder or the translated prompt, through `aria-label`, as a combobox takes no name from the value it displays ([#5490](https://github.com/rjsf-team/react-jsonschema-form/issues/5490))
 
 ## @rjsf/mantine
 

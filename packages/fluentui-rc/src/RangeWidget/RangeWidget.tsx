@@ -2,7 +2,7 @@ import type { FocusEvent } from 'react';
 import type { SliderProps } from '@fluentui/react-components';
 import { Label, Slider } from '@fluentui/react-components';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getControlAttributes, labelValue, rangeSpec, widgetDrawsLabel } from '@rjsf/utils';
+import { getControlAttributes, labelValue, rangeSpec, widgetDrawsLabelText } from '@rjsf/utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
  * in a div, with the value along side it.
@@ -29,7 +29,8 @@ export default function RangeWidget<
     htmlName,
     presentation,
   } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  // A label holding only a required field's `*` would name the slider "star", so one is drawn only with text
+  const hideLabel = !widgetDrawsLabelText<T, S, F>(props);
   const sliderProps = {
     value,
     label,
@@ -48,7 +49,7 @@ export default function RangeWidget<
     <>
       {labelValue(
         <Label required={required} htmlFor={id}>
-          {label || undefined}
+          {label}
         </Label>,
         hideLabel,
       )}
