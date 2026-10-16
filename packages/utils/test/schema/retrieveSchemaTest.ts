@@ -5044,6 +5044,23 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieved).not.toHaveProperty('anyOf');
         expect(retrieved.required).toEqual(['b']);
       });
+      it.each(['https://json-schema.org/draft/2019-09/schema', 'https://json-schema.org/draft/2020-12/schema'])(
+        "under %s, reads a field's own $ref with keywords beside it as the allOf of both, as where another $ref reaches it",
+        ($schema) => {
+          const rootSchema: RJSFSchema = {
+            $schema,
+            type: 'object',
+            $defs: { Pet: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
+            properties: { cat: { $ref: '#/$defs/Pet', properties: { meow: { type: 'string' } } } },
+          };
+          const schemaUtils = createSchemaUtils({ validator: testValidator }, rootSchema);
+          const cat = schemaUtils.retrieveSchema(
+            schemaOf(schemaUtils.retrieveSchema(schemaUtils.getRootSchema()).properties?.cat),
+          );
+          expect(cat.properties).toEqual({ meow: { type: 'string' }, name: { type: 'string' } });
+          expect(cat.required).toEqual(['name']);
+        },
+      );
       it('resolves a $ref under a relative $id against that $id', () => {
         const rootSchema: RJSFSchema = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',

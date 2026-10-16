@@ -50,6 +50,7 @@ import buildPlan, {
   booleanSchema,
   cachedPolicy,
   childSeeds,
+  conjunctionOf,
   refDefinition,
   schemaFrom,
   seedsAt,
@@ -283,7 +284,8 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
 const ownRefs = new KeyedMemo<object>();
 
 /** Returns a schema's own `$ref` resolved, the definition overridden by the keywords beside the reference and marked
- * with it, as a schema an option's `$ref` stands for is scored and validated. The reference is resolved through the
+ * with it, as a schema an option's `$ref` stands for is scored and validated. Under draft 2019-09 and 2020-12 it is
+ * instead the `allOf` of the keywords beside the reference and of the reference alone, as the form reads it. The reference is resolved through the
  * schema graph, from where the schema sits in the root, as the form resolves it. Only that reference is followed: the
  * validator follows those below it against the root schema. The result is made once per schema and shared, so that a
  * memo keyed on it hits across calls, and a caller copies it rather than changing it.
@@ -305,11 +307,11 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
     return known;
   }
   const { graph, seeds } = fieldOf<S>(rootGraph, schema);
-  const resolved: S = {
-    ...refDefinition<S>(graph, seeds[0].node),
-    ...withoutKeys(schema, REF_KEY),
-    [RJSF_REF_KEY]: ref,
-  };
+  const conjunction = conjunctionOf<S>(graph, seeds[0].node);
+  const resolved: S =
+    conjunction === undefined
+      ? { ...refDefinition<S>(graph, seeds[0].node), ...withoutKeys(schema, REF_KEY), [RJSF_REF_KEY]: ref }
+      : { ...conjunction.raw, [RJSF_REF_KEY]: ref };
   ownRefs.set(keys, resolved);
   return resolved;
 }

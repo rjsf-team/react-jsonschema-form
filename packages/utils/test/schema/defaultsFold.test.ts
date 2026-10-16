@@ -551,6 +551,42 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     expect(defaultsOf({ definitions, type: 'object', properties: { v: { $ref: D('M') } } })).toEqual({ v: { b: 'b' } });
   });
 
+  it.each(['https://json-schema.org/draft/2019-09/schema', draft2020])(
+    "under %s, fills a field's own $ref with keywords beside it as the allOf of both, as where another $ref reaches it",
+    ($schema) => {
+      const Pet: RJSFSchema = {
+        type: 'object',
+        properties: { name: { type: 'string', default: 'n' } },
+        required: ['name'],
+      };
+      const meow: RJSFSchema = {
+        properties: { meow: { type: 'string', default: 'm' } },
+        if: { properties: { meow: { const: 'm' } } },
+        then: { properties: { t: { type: 'string', default: 't' } } },
+      };
+      const inPlace: RJSFSchema = {
+        $schema,
+        $defs: { Pet },
+        type: 'object',
+        properties: { cat: { $ref: '#/$defs/Pet', ...meow } },
+      };
+      const reached: RJSFSchema = {
+        $schema,
+        $defs: { Pet, Cat: { $ref: '#/$defs/Pet', ...meow } },
+        type: 'object',
+        properties: { cat: { $ref: '#/$defs/Cat' } },
+      };
+      const filled = { cat: { meow: 'm', t: 't', name: 'n' } };
+      const populate: DefaultFormStateBehavior = { allOf: 'populateDefaults' };
+      expect(defaultsOf(inPlace, undefined, populate)).toEqual(filled);
+      expect(defaultsOf(reached, undefined, populate)).toEqual(filled);
+      const skipEmpty: DefaultFormStateBehavior = { ...populate, emptyObjectFields: 'skipEmptyDefaults' };
+      expect(defaultsOf(inPlace, undefined, skipEmpty)).toEqual(filled);
+      expect(defaultsOf(reached, undefined, skipEmpty)).toEqual(filled);
+      expect(defaultsOf(inPlace)).toEqual(defaultsOf(reached));
+    },
+  );
+
   it('resolves a $ref to an $anchor, and one under a nested $id with a path segment against that $id', () => {
     const target: RJSFSchema = { type: 'object', properties: { v: { type: 'string', default: 'v' } } };
     const anchored = { ...target, $anchor: 'nodeA' };

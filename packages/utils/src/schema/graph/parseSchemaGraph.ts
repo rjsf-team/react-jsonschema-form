@@ -61,9 +61,9 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   readonly pureRef: boolean;
   /** The node the `$ref` resolves to, which is an `InvalidNode` when it resolves to nothing */
   readonly ref?: NodeId;
-  /** Under draft 2019-09 or 2020-12, for a `$ref` with keywords beside it that resolves: the node it reads as where
-   * another `$ref` reaches it, the `allOf` of those keywords and of the `$ref` alone, since those dialects apply a
-   * `$ref` beside other keywords rather than replacing them
+  /** Under draft 2019-09 or 2020-12, for a `$ref` with keywords beside it that resolves: the node it reads as, the
+   * `allOf` of those keywords and of the `$ref` alone, since those dialects apply a `$ref` beside other keywords rather
+   * than replacing them
    */
   readonly conjunction?: NodeId;
 }

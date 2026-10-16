@@ -9,6 +9,7 @@ import {
 import type { RJSFSchema, SchemaContext } from '../../../src/index.ts';
 import buildPlan, {
   childSeeds,
+  conjunctionOf,
   ownChains,
   refDefinition,
   seedsAt,
@@ -120,13 +121,20 @@ describe('buildPlan()', () => {
           $schema: dialect,
           allOf: [{ properties: { meow: { type: 'boolean' } } }, { $ref: D('Pet') }],
         });
-        // The keywords beside the $ref the field itself holds still override its target
-        expect(keywordsOf(planOf({ $schema: dialect, definitions, $ref: D('Pet'), properties: {} }))).toEqual({
+        // The field's own $ref with keywords beside it is conjoined with its target in the same way
+        const inPlace = planOf({
+          $schema: dialect,
+          definitions,
+          $ref: D('Pet'),
+          properties: { meow: { type: 'boolean' } },
+        });
+        expect(keywordsOf(inPlace)).toEqual({
           $schema: dialect,
           type: 'object',
-          properties: {},
+          properties: { meow: { type: 'boolean' }, kind: { type: 'string' } },
           required: ['kind'],
         });
+        expect(Reflect.get(inPlace.schema, RJSF_REF_KEY)).toBe(D('Pet'));
       },
     );
     it('throws for a $ref that resolves to nothing or a chain that loops', () => {
@@ -692,6 +700,28 @@ describe('ownChains()', () => {
     ]);
     expect(chains).toHaveLength(1);
     expect(propertyNames({ graph, chains })).toEqual(['own', 'flag']);
+  });
+});
+
+describe('conjunctionOf()', () => {
+  it('returns the allOf a $ref with keywords beside it reads as under 2020-12, and nothing for any other node', () => {
+    const rootSchema: RJSFSchema = {
+      $schema: JSON_SCHEMA_DRAFT_2020_12,
+      $defs: { x: { type: 'string' }, t: true },
+      properties: { beside: { $ref: '#/$defs/x', title: 'beside' }, pure: { $ref: '#/$defs/x' } },
+    };
+    const graph = parseSchemaGraph(rootSchema);
+    const at = (pointer: string) => graph.byPointer(pointer) ?? graph.root;
+    expect(conjunctionOf(graph, at('/properties/beside'))?.raw).toEqual({
+      allOf: [{ title: 'beside' }, { $ref: '#/$defs/x' }],
+    });
+    expect(conjunctionOf(graph, at('/properties/pure'))).toBeUndefined();
+    expect(conjunctionOf(graph, at('/$defs/t'))).toBeUndefined();
+    const draft07 = parseSchemaGraph({
+      definitions: { x: {} },
+      properties: { p: { $ref: '#/definitions/x', title: 't' } },
+    });
+    expect(conjunctionOf(draft07, draft07.byPointer('/properties/p') ?? draft07.root)).toBeUndefined();
   });
 });
 

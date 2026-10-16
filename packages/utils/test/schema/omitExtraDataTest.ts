@@ -988,6 +988,22 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         });
       });
 
+      it.each(['https://json-schema.org/draft/2019-09/schema', 'https://json-schema.org/draft/2020-12/schema'])(
+        "under %s, keeps the fields of both a field's own $ref and the keywords beside it, as the form renders them",
+        ($schema) => {
+          const schema: RJSFSchema = {
+            $schema,
+            type: 'object',
+            $defs: { Pet: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
+            properties: { cat: { $ref: '#/$defs/Pet', properties: { meow: { type: 'string' } } } },
+          };
+          const formData = { cat: { name: 'x', meow: 'y', extra: 'drop' } };
+          expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
+            cat: { name: 'x', meow: 'y' },
+          });
+        },
+      );
+
       it('resolves a $ref under a relative $id against that $id', () => {
         const schema: RJSFSchema = {
           $schema: 'https://json-schema.org/draft/2020-12/schema',

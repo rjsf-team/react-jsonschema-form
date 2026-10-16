@@ -288,15 +288,35 @@ export function cachedPolicy<S extends StrictRJSFSchema = RJSFSchema>(
   return policy;
 }
 
-/** Returns the node a `$ref` target reads as where a `$ref` reaches it: its `conjunction`, where it has one
+/** Returns the node a subschema reads as, whether it is a field's own or a `$ref` reaches it: its `conjunction`, where
+ * it has one
  *
- * @param graph - The graph the target is in
- * @param target - The target
- * @returns - The node whose keywords the target contributes
+ * @param graph - The graph the subschema is in
+ * @param target - The subschema
+ * @returns - The node whose keywords the subschema contributes
  */
 export function asTarget<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, target: ObjectNode<S>): ObjectNode<S> {
   const conjunction = target.conjunction === undefined ? undefined : graph.node(target.conjunction);
   return conjunction?.kind === 'schema' ? conjunction : target;
+}
+
+/** Returns the `conjunction` the node `from` reads as, for a `$ref` with keywords beside it under draft 2019-09 or
+ * 2020-12, and undefined for any other node
+ *
+ * @param graph - The graph holding the node
+ * @param from - The node
+ * @returns - The conjunction, if the node has one
+ */
+export function conjunctionOf<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  from: NodeId,
+): ObjectNode<S> | undefined {
+  const node = graph.node(from);
+  if (node.kind !== 'schema') {
+    return undefined;
+  }
+  const conjunction = asTarget(graph, node);
+  return conjunction === node ? undefined : conjunction;
 }
 
 /** Returns the schema holding each of `keywords` as the node providing it holds it */
@@ -472,7 +492,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (node.kind !== 'schema') {
       return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
-    const keywords = this.flatten(node, refPath);
+    const keywords = this.flatten(asTarget(this.graph, node), refPath);
     if (top && this.policy.allOf === 'if' && keywords.has(IF_KEY)) {
       this.mergeAllOf = true;
     }
