@@ -1,10 +1,18 @@
 import type { ReactNode } from 'react';
 import { useCallback, useMemo, useState } from 'react';
 import { Box, Group } from '@mantine/core';
-import { DateInput, TimePicker } from '@mantine/dates';
+import { assignTime, DateInput, TimePicker } from '@mantine/dates';
 import type { DateStringValue } from '@mantine/dates';
 import type { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { ariaDescribedByIds, getDateTimeLocalValue, labelValue, widgetDrawsLabel } from '@rjsf/utils';
+import {
+  ariaDescribedByIds,
+  dateElementAriaLabel,
+  dateElementLabel,
+  getDateTimeLocalValue,
+  labelValue,
+  TranslatableString,
+  widgetDrawsLabel,
+} from '@rjsf/utils';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat.js';
 
@@ -48,8 +56,10 @@ const TIME_FORMAT = 'HH:mm:ss';
 const DATE_ONLY_FORMAT = 'YYYY-MM-DD';
 const DATE_ONLY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-const withTimeOfDay = (date: DateStringValue | Date, time: string) =>
-  dayjs(`${dayjs(date).format(DATE_ONLY_FORMAT)} ${time}`, `${DATE_ONLY_FORMAT} ${TIME_FORMAT}`).toDate();
+const withTimeOfDay = (date: DateStringValue | Date, time: string) => {
+  const dateString = dayjs(date).format(DATE_ONLY_FORMAT);
+  return dayjs(assignTime(dateString, time)).toDate();
+};
 
 /** The `DateTimeInput` is a base component that used by other Date-Time widget components. When `schema.format` is
  * `date-time` (or `datetime`), the value is converted to/from a UTC ISO string instead of the naive `valueFormat`
@@ -87,6 +97,7 @@ export default function DateTimeInput<
     displayFormat,
     withTime,
     schema,
+    registry,
   } = props;
   const hideLabel = !widgetDrawsLabel<T, S, F>(props);
 
@@ -95,10 +106,13 @@ export default function DateTimeInput<
   const { timePickerProps } = options;
   const [pendingTime, setPendingTime] = useState('');
 
-  const parsedValue =
-    requiresOffset || typeof value !== 'string'
-      ? offsetValueParser(localValue)
-      : dateParser(localValue, valueFormat as string);
+  const parsedValue = useMemo(
+    () =>
+      requiresOffset || typeof value !== 'string'
+        ? offsetValueParser(localValue)
+        : dateParser(localValue, valueFormat as string),
+    [requiresOffset, value, localValue, valueFormat],
+  );
   const timeValue = parsedValue ? dayjs(parsedValue).format(TIME_FORMAT) : pendingTime;
 
   const commit = useCallback(
@@ -112,6 +126,7 @@ export default function DateTimeInput<
     (nextValue: DateStringValue | Date | null) => {
       const isDateOnly = typeof nextValue === 'string' && DATE_ONLY_PATTERN.test(nextValue);
       commit(withTime && nextValue && isDateOnly ? withTimeOfDay(nextValue, timeValue || '00:00:00') : nextValue);
+      setPendingTime('');
     },
     [commit, withTime, timeValue],
   );
@@ -147,33 +162,42 @@ export default function DateTimeInput<
   const error = getWidgetError<T, S, F>(props);
 
   const ariaContainer = ariaDescribedByProps.inputContainer;
+  const { translateString } = registry;
+  const withSeconds =
+    (typeof displayFormat === 'string' && displayFormat.includes('s')) ||
+    (typeof valueFormat === 'string' && valueFormat.includes('s'));
   const timeContainer = useCallback(
     (children: ReactNode) =>
       ariaContainer(
         <Group gap='xs' wrap='nowrap' align='flex-start'>
           <Box flex={1}>{children}</Box>
           <TimePicker
+            {...themeProps}
+            {...(timePickerProps as GenericObjectType | undefined)}
             value={timeValue}
             onChange={handleTimeChange}
             onFocus={handleFocus}
             onBlur={handleBlur}
-            withSeconds
+            withSeconds={withSeconds}
             disabled={disabled}
             readOnly={readonly}
             error={!!error}
             role='group'
-            aria-label={`${label || 'Date'} time`}
-            hoursInputLabel='Hours'
-            minutesInputLabel='Minutes'
-            secondsInputLabel='Seconds'
-            amPmInputLabel='AM/PM'
+            aria-label={dateElementAriaLabel(
+              dateElementLabel(TranslatableString.TimeLabel, translateString),
+              translateString,
+              label,
+            )}
+            hoursInputLabel={dateElementLabel(TranslatableString.HourLabel, translateString)}
+            minutesInputLabel={dateElementLabel(TranslatableString.MinuteLabel, translateString)}
+            secondsInputLabel={dateElementLabel(TranslatableString.SecondLabel, translateString)}
             hoursInputProps={{
               id: `${id}-time`,
               'aria-describedby': ariaDescribedByIds(id),
               'aria-invalid': !!error || undefined,
+              ...timePickerProps?.hoursInputProps,
             }}
-            popoverProps={{ withinPortal: false }}
-            {...(timePickerProps as GenericObjectType | undefined)}
+            popoverProps={{ withinPortal: false, ...timePickerProps?.popoverProps }}
           />
         </Group>,
       ),
@@ -189,15 +213,22 @@ export default function DateTimeInput<
       error,
       label,
       timePickerProps,
+      themeProps,
+      translateString,
+      withSeconds,
     ],
   );
-  const containerProps = withTime
-    ? {
-        ...ariaDescribedByProps,
-        inputContainer: timeContainer,
-        wrapperProps: { ...ariaDescribedByProps.wrapperProps, inputContainer: timeContainer },
-      }
-    : ariaDescribedByProps;
+  const containerProps = useMemo(
+    () =>
+      withTime
+        ? {
+            ...ariaDescribedByProps,
+            inputContainer: timeContainer,
+            wrapperProps: { ...ariaDescribedByProps.wrapperProps, inputContainer: timeContainer },
+          }
+        : ariaDescribedByProps,
+    [withTime, ariaDescribedByProps, timeContainer],
+  );
 
   return (
     <DateInput
