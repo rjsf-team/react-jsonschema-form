@@ -568,6 +568,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** `JUNK_OPTION_ID` is removed: option scoring no longer validates a junk option, and nothing read it
 - **BREAKING CHANGE:** `relaxOptionsForScoring()` is removed. Option scoring no longer called it: `omitExtraData()` relaxes the whole scope of an option itself, from where the option sits in the root. To score options with their `additionalProperties: false` relaxed yourself, hand `getClosestMatchingOption()` or `getFirstMatchingOption()` copies of them with `additionalProperties: true`
 - **BREAKING CHANGE:** `schemaParser()` is removed. Call `getValidationSchemas(rootSchema)`, which lists the schemas a form hands its validator, in its place
+- An `if` below a subschema carrying an `$id` of its own is checked against that resource, so a `$ref` inside the `if` reaches the resource's definitions. It was handed to the validator detached from where it sits, its `$ref`s read against the root's base: with `n: { $id: 'nested.json', definitions: { kind: { const: 'nested' } }, if: { properties: { kind: { $ref: '#/definitions/kind' } } }, then, else }` and the data `{ n: { kind: 'nested' } }`, the `else` applied
 
 ## @rjsf/validator-ajv8
 
