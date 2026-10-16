@@ -824,12 +824,14 @@ export function tupleSeeds<S extends StrictRJSFSchema = RJSFSchema>(seeding: See
  *
  * @param seeding - The object field's graph and chains
  * @param key - The child's key
- * @returns - The child's seeds, in merge order, and its edge
+ * @returns - The child's seeds, in merge order, and its edge; for a declared property, whether patterns are merged in
  */
 export function childSeeds<S extends StrictRJSFSchema = RJSFSchema>(
   seeding: Seeding<S>,
   key: string,
-): { seeds: readonly Seed[]; edge: 'property' | 'patternKey' | 'additionalKey' } {
+):
+  | { seeds: readonly Seed[]; edge: 'property'; patterned: boolean }
+  | { seeds: readonly Seed[]; edge: 'patternKey' | 'additionalKey' } {
   const patterns = seeding.chains.flatMap((chain) => {
     const provider = chain.get(PATTERN_PROPERTIES_KEY);
     return provider === undefined
@@ -841,7 +843,7 @@ export function childSeeds<S extends StrictRJSFSchema = RJSFSchema>(
   });
   const declared = seedsAt(seeding, PROPERTIES_KEY, key);
   if (declared.length > 0) {
-    return { seeds: [...declared, ...patterns], edge: 'property' };
+    return { seeds: [...declared, ...patterns], edge: 'property', patterned: patterns.length > 0 };
   }
   return patterns.length > 0
     ? { seeds: patterns, edge: 'patternKey' }

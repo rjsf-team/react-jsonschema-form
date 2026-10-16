@@ -351,13 +351,15 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     Reflect.set(merged, PROPERTIES_KEY, {});
   } else if (isObject(properties)) {
     const entries = Object.entries(properties).map(([key, value]): [string, unknown] => {
-      const declared = seedsAt(plan, PROPERTIES_KEY, key);
-      if (declared.length === 0 || (isObject(value) && isDecided(value))) {
+      if (isObject(value) && isDecided(value)) {
         return [key, value];
       }
-      const { seeds: propertySeeds, edge } = childSeeds(plan, key);
+      const found = childSeeds(plan, key);
+      if (found.edge !== 'property') {
+        return [key, value];
+      }
       // A property its patterns are merged into is not the subschema it was declared as, so it is handed out merged
-      const patterned = propertySeeds.length > declared.length;
+      const { seeds: propertySeeds, edge, patterned } = found;
       if (!patterned && !isSchemaObject<S>(value)) {
         return [key, value];
       }
