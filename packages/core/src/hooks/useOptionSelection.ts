@@ -102,7 +102,7 @@ export function useShownOption<T, S extends StrictRJSFSchema, F extends FormCont
 
 /** Reads and writes the option selected for the `anyOf`/`oneOf` options of the field at `fieldPath`. The selection is
  * the form's state, kept by the path of the field and the option list (the list's place in the root schema), so it
- * outlives the field's components and follows the array moves the form is told of, and a condition that swaps the list
+ * outlives the field's components and follows the moves the form is told of, of array items and of additional properties renamed or removed, and a condition that swaps the list
  * the field offers starts the choice over. `SchemaField` reads it to stub the extra keys of the data once, with the
  * selected option, and `AnyOfField`/`OneOfField` read and write it, as a custom field rendering the options has to.
  *

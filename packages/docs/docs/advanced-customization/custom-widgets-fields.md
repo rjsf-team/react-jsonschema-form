@@ -414,7 +414,7 @@ A field component will always be passed the following props:
   );
   ```
 
-The option a union field shows is the form's state, not the field's: `SchemaField` reads it too, to stub the extra keys of an object once, with the selected option, and it outlives the field's components and follows the array moves the form makes.
+The option a union field shows is the form's state, not the field's: `SchemaField` reads it too, to stub the extra keys of an object once, with the selected option, and it outlives the field's components and follows the moves the form makes, of array items and of additional properties renamed or removed.
 A custom `AnyOfField` or `OneOfField` reads and writes it with `useOptionSelection()` from `@rjsf/core`, rather than keeping its own, and sends the data for a newly selected option through `onChange` as before:
 
 ```tsx
