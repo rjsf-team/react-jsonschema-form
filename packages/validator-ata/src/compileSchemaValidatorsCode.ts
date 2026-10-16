@@ -1,5 +1,14 @@
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ALL_OF_KEY, getByPath, ID_KEY, isObject, REF_KEY, getValidationSchemas } from '@rjsf/utils';
+import {
+  ALL_OF_KEY,
+  getByPath,
+  ID_KEY,
+  isObject,
+  normalizeUri,
+  REF_KEY,
+  resolveUri,
+  getValidationSchemas,
+} from '@rjsf/utils';
 import { Validator } from 'ata-validator';
 
 import { COLOR_FORMAT_REGEX, DATA_URL_FORMAT_REGEX } from './createAtaInstance.ts';
@@ -65,16 +74,62 @@ function resourceIdOf(value: unknown): string | undefined {
   return typeof id === 'string' && !id.startsWith('#') ? id : undefined;
 }
 
-/** Returns the fragment of `ref` where it names a place in `resource`: a `$ref` starting with `#`, or one spelled with
- * the `$id` of the resource as written, less any fragment that `$id` holds
+/** A resource of the root, a subschema the root is or that carries an `$id` making it one, with the base URI the
+ * `$ref`s below it are read against
  */
-function localFragment(ref: string, resource: unknown): string | undefined {
-  if (ref.startsWith('#')) {
-    return ref;
-  }
+interface Resource {
+  readonly schema: unknown;
+  readonly base: string;
+}
+
+/** Returns the URI `uri` names its document by, for comparing it with another: what precedes its fragment, normalized
+ * as the schema graph normalizes it
+ */
+function documentKey(uri: string): string {
+  return normalizeUri(uri.split('#', 1)[0]);
+}
+
+/** Returns the resource `value` is under the base URI `base` of the one around it: itself where it carries an `$id`
+ * making it one, or undefined
+ */
+function resourceAt(value: unknown, base: string): Resource | undefined {
+  const id = resourceIdOf(value);
+  return id === undefined ? undefined : { schema: value, base: resolveUri(base, id) };
+}
+
+/** Returns the resource `rootSchema` is and every resource of it, by `documentKey()` of its base URI, the first found
+ * where two share one
+ */
+function resourcesOf(rootSchema: unknown): { root: Resource; resources: Map<string, Resource> } {
+  const root: Resource = resourceAt(rootSchema, '') ?? { schema: rootSchema, base: '' };
+  const resources = new Map<string, Resource>([[documentKey(root.base), root]]);
+  const visit = (node: unknown, base: string) => {
+    if (!isObject(node)) {
+      return;
+    }
+    const resource = node === rootSchema ? root : resourceAt(node, base);
+    if (resource !== undefined && !resources.has(documentKey(resource.base))) {
+      resources.set(documentKey(resource.base), resource);
+    }
+    subschemasOf(node).forEach((subschema) => visit(subschema, resource?.base ?? base));
+  };
+  visit(rootSchema, root.base);
+  return { root, resources };
+}
+
+/** Returns the resource of the root `ref` names and the fragment it names in it, `#` for the resource itself, reading
+ * the document part of `ref` against the base URI of the resource around it as JSON Schema does, so that any spelling
+ * of a resource's URI names it. The fragment is kept as written, since a lone surrogate it may hold has no URI
+ * encoding.
+ */
+function referenced(
+  ref: string,
+  around: Resource,
+  resources: ReadonlyMap<string, Resource>,
+): [Resource, string] | undefined {
   const [document, ...fragment] = ref.split('#');
-  const [id] = (resourceIdOf(resource) ?? '').split('#', 1);
-  return id !== '' && document === id ? `#${fragment.join('#')}` : undefined;
+  const resource = document === '' ? around : resources.get(documentKey(resolveUri(around.base, document)));
+  return resource === undefined ? undefined : [resource, `#${fragment.join('#')}`];
 }
 
 /** Returns the subschema of `resource` carrying the anchor `name`, as an `$anchor` or as a draft-07 `$id` that is only
@@ -102,15 +157,15 @@ function anchored(resource: unknown, name: string): unknown {
 /** Returns the subschema the `$ref` fragment `fragment` names in `resource`, the resource itself for `#`, and the
  * innermost resource the path to it passes through, which the `$ref`s below the subschema are read against
  */
-function locate(resource: unknown, fragment: string): [unknown, unknown] {
+function locate(resource: Resource, fragment: string): [unknown, Resource] {
   if (fragment !== '#' && !fragment.startsWith('#/')) {
-    return [anchored(resource, decodeURIComponent(fragment.slice(1))), resource];
+    return [anchored(resource.schema, decodeURIComponent(fragment.slice(1))), resource];
   }
-  let node = resource;
+  let node = resource.schema;
   let base = resource;
   for (const token of fragment.split('/').slice(1).map(decodeToken)) {
-    if (resourceIdOf(node) !== undefined) {
-      base = node;
+    if (node !== resource.schema) {
+      base = resourceAt(node, base.base) ?? base;
     }
     node = getByPath(node, [token]);
   }
@@ -136,7 +191,9 @@ function compilable(schema: unknown): GenericObjectType {
  * anchor or neither, is carried in a single container of the document under a generated name the `$ref` is renamed
  * to, and the document's own containers, which only the renamed `$ref`s could name, are dropped. A `$ref` is read
  * against the innermost resource around it, an option with an `$id` of its own included, whose `$id` is then dropped,
- * every `$ref` read against it having been renamed. One that names nothing there, or one into another document, is
+ * every `$ref` read against it having been renamed: its document part is resolved against that resource's base URI and
+ * names whichever resource of the root has that URI, however it is spelled. One that names nothing there, or one into
+ * another document, is
  * left as it is, which leaves ata nothing to compile and the module reporting it when the schema is first validated
  * against. Only the keywords holding subschemas are rewritten, never the data a `const` or a `default` holds.
  *
@@ -146,17 +203,22 @@ function compilable(schema: unknown): GenericObjectType {
  */
 function standalone(schema: GenericObjectType, rootSchema: object): GenericObjectType {
   const container = isObject(getByPath(rootSchema, ['$defs'])) ? '$defs' : 'definitions';
+  const { root, resources } = resourcesOf(rootSchema);
   const names = new Map<unknown, Map<string, string>>();
-  const pending: [string, unknown, unknown][] = [];
+  const pending: [string, unknown, Resource][] = [];
   let count = 0;
-  const renamed = (ref: string, base: unknown): string => {
-    const fragment = localFragment(ref, base);
-    const [subschema, subschemaBase] = fragment === undefined ? [] : locate(base, fragment);
-    if (fragment === undefined || subschema === undefined) {
+  const renamed = (ref: string, around: Resource): string => {
+    const target = referenced(ref, around, resources);
+    if (target === undefined) {
       return ref;
     }
-    const known = names.get(base) ?? new Map<string, string>();
-    names.set(base, known);
+    const [resource, fragment] = target;
+    const [subschema, subschemaBase] = locate(resource, fragment);
+    if (subschema === undefined) {
+      return ref;
+    }
+    const known = names.get(resource.schema) ?? new Map<string, string>();
+    names.set(resource.schema, known);
     let name = known.get(fragment);
     if (name === undefined) {
       name = `rjsf:${count}`;
@@ -166,14 +228,15 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     }
     return `#/${container}/${name}`;
   };
-  const rewrite = (value: unknown, base: unknown): unknown => {
+  const rewrite = (value: unknown, around: Resource): unknown => {
     if (!isObject(value)) {
       return value;
     }
-    const inner = resourceIdOf(value) === undefined ? base : value;
+    const resource = value === around.schema ? undefined : resourceAt(value, around.base);
+    const inner = resource ?? around;
     const copy = Object.fromEntries(
       Object.entries(value).flatMap(([key, child]) =>
-        key === ID_KEY && inner === value ? [] : [[key, mapKeyword(key, child, (sub) => rewrite(sub, inner))]],
+        key === ID_KEY && inner.schema === value ? [] : [[key, mapKeyword(key, child, (sub) => rewrite(sub, inner))]],
       ),
     );
     const ref: unknown = value[REF_KEY];
@@ -190,7 +253,7 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
     const allOf: unknown = siblings[ALL_OF_KEY];
     return { ...siblings, [ALL_OF_KEY]: [...(Array.isArray(allOf) ? allOf : []), reference] };
   };
-  const { definitions: _definitions, $defs: _defs, ...document } = compilable(rewrite(schema, rootSchema));
+  const { definitions: _definitions, $defs: _defs, ...document } = compilable(rewrite(schema, root));
   const carried: GenericObjectType = {};
   for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
     const [name, value, base] = next;

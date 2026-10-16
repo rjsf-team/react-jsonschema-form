@@ -1908,6 +1908,19 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 
 - GenericObjectType: The merged schema object
 
+### normalizeUri()
+
+Normalizes a URI for comparison, as the schema graph compares the URIs of the resources a root holds: the scheme and host are lowercased, a default port and dot segments are dropped, and percent-encoded unreserved characters are decoded.
+A validator package that has to tell which resource of the root a `$ref` names uses it, with [resolveUri()](#resolveuri), to read the `$ref` as the form does.
+
+#### Parameters
+
+- uri: string - The URI to normalize
+
+#### Returns
+
+- string: The URI in the form two spellings of the same URI share
+
 ### optionalControlsId()
 
 Return a consistent `id` for the optional data controls `element`
@@ -2195,6 +2208,20 @@ Resolution order (later sources override earlier):
 #### Returns
 
 - UiSchema&lt;T, S, F>: The resolved uiSchema with definitions merged in
+
+### resolveUri()
+
+Resolves the URI-reference `ref` against the base URI `base` as RFC 3986 does, accepting a relative `base` as a schema's `$id` may be, and returns `ref` as written for a base it cannot resolve against, such as an opaque `urn:` base with a relative-path `ref`.
+It is how the schema graph reads a `$ref` or a nested `$id` against the resource around it.
+
+#### Parameters
+
+- base: string - The base URI, possibly relative or empty
+- ref: string - The URI-reference to resolve
+
+#### Returns
+
+- string: The resolved URI
 
 ### resolveWidget&lt;T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = FormContextType>()
 
