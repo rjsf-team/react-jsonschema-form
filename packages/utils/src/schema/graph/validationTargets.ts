@@ -407,18 +407,19 @@ function compiledPattern(pattern: string): RegExp[] {
 }
 
 function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
-  const scope = scopeOf(graph, id).flatMap((node) =>
+  const scope = scopeOf(graph, id);
+  const declaring = scope.flatMap((node) =>
     isObject(node.raw.properties) ? [{ node, declared: Object.keys(node.raw.properties) }] : [],
   );
-  if (scope.length === 0) {
+  if (declaring.length === 0) {
     return true;
   }
-  const names = new Set(scope.flatMap(({ declared }) => declared));
+  const names = new Set(declaring.flatMap(({ declared }) => declared));
   if (names.size === 0) {
-    return scope.some(({ node }) => allowsAdditionalProperties(node.raw));
+    return declaring.some(({ node }) => allowsAdditionalProperties(node.raw));
   }
   const patterns = scope
-    .flatMap(({ node }) => graph.subschemas(node.id, PATTERN_PROPERTIES_KEY))
+    .flatMap((node) => graph.subschemas(node.id, PATTERN_PROPERTIES_KEY))
     .flatMap(([pattern]) => compiledPattern(pattern));
   return { names, patterns };
 }

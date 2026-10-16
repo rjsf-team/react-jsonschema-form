@@ -131,6 +131,17 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
         expect(schemaUtils.getClosestMatchingOption({ kind: 'b' }, options)).toBe(1);
       }
     });
+    it('counts a key a patternProperties names in an allOf entry declaring no properties', () => {
+      const options: RJSFSchema[] = [
+        { type: 'object', properties: { b: { type: 'number' } }, additionalProperties: false },
+        { type: 'object', properties: { a: { type: 'string' } }, allOf: [{ patternProperties: { '^x_': {} } }] },
+      ];
+      const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf: options } } };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      expect(schemaUtils.getFirstMatchingOption({ x_1: 5 }, options)).toBe(1);
+      expect(schemaUtils.getClosestMatchingOption({ x_1: 5 }, options)).toBe(1);
+      expect(schemaUtils.omitExtraData(rootSchema, { v: { x_1: 5 } })).toEqual({ v: { x_1: 5 } });
+    });
     it('applies no dependency oneOf option when the property fits two, one of them declaring it in an allOf entry', () => {
       const rootSchema: RJSFSchema = {
         type: 'object',
