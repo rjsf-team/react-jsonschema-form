@@ -236,6 +236,97 @@ describe('compileSchemaValidatorsCode', () => {
     const { errors } = validator.validateFormData({ w: { id: 'a', more: 'm', x: 1 } }, rootSchema);
     expect(errors.map((error) => error.property)).toEqual(['.w.x']);
   });
+  test('compiles a root holding an option with an $id of its own, which ata compiles nothing for as it stands', () => {
+    const rootSchema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        p: {
+          oneOf: [
+            { $id: 'myOption', type: 'object', additionalProperties: { type: 'string' } },
+            { type: 'object', properties: { n: { type: 'number' } }, required: ['n'] },
+          ],
+        },
+      },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    expect(validator.validateFormData({ p: { n: 1 } }, rootSchema).errors).toEqual([]);
+    expect(validator.isValid(rootSchema, { p: [] }, rootSchema)).toBe(false);
+  });
+  test('resolves a $ref spelled with the absolute $id of the resource around it as one local to it', () => {
+    const options: RJSFSchema[] = [
+      { $ref: 'http://example.com/root.json#/definitions/A' },
+      { $ref: 'http://example.com/root.json#/definitions/B' },
+    ];
+    const rootSchema: RJSFSchema = {
+      $id: 'http://example.com/root.json',
+      definitions: {
+        n: { type: 'number' },
+        A: { type: 'object', properties: { k: { const: 'a' } }, required: ['k'] },
+        B: { type: 'object', properties: { k: { const: 'b' } }, required: ['k'] },
+      },
+      type: 'object',
+      properties: { a: { $ref: 'http://example.com/root.json#/definitions/n' }, v: { oneOf: options } },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+    expect(validator.validateFormData({ a: 5, v: { k: 'b' } }, rootSchema).errors).toEqual([]);
+    expect(validator.isValid(rootSchema, { a: 'x' }, rootSchema)).toBe(false);
+    expect(schemaUtils.getFirstMatchingOption({ k: 'b' }, options)).toBe(1);
+  });
+  test('resolves a $ref to an anchor to the subschema carrying it', () => {
+    const n: RJSFSchema = { $anchor: 'nodeA', type: 'number' };
+    const s: RJSFSchema = { $anchor: 'nodeS', type: 'string' };
+    const options: RJSFSchema[] = [{ $ref: '#nodeS' }, { $ref: '#nodeA' }];
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { n, s },
+      type: 'object',
+      properties: { a: { $ref: '#nodeA' }, u: { oneOf: options } },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    const schemaUtils = createSchemaUtils({ validator }, rootSchema);
+    expect(validator.validateFormData({ a: 5 }, rootSchema).errors).toEqual([]);
+    expect(validator.isValid(rootSchema, { a: 'x' }, rootSchema)).toBe(false);
+    expect(schemaUtils.getFirstMatchingOption(5, options)).toBe(1);
+  });
+  test('leaves a $ref to an anchor of a resource nested in the one around it as it is', () => {
+    const inner: RJSFSchema = { $id: 'http://example.com/inner.json', $anchor: 'inner', type: 'number' };
+    const rootSchema: RJSFSchema = {
+      $schema: 'https://json-schema.org/draft/2020-12/schema',
+      $defs: { inner },
+      properties: { i: { $ref: '#inner' } },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    expect(() => validator.isValid(rootSchema, { i: 5 }, rootSchema)).toThrow(
+      'was not compiled to a standalone validator',
+    );
+  });
+  test('resolves a $ref to a draft-07 anchor, an $id that is only a fragment', () => {
+    const rootSchema: RJSFSchema = {
+      definitions: { n: { $id: '#nodeA', type: 'number' } },
+      type: 'object',
+      properties: { a: { $ref: '#nodeA' } },
+    };
+    const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);
+    expect(validator.isValid(rootSchema, { a: 5 }, rootSchema)).toBe(true);
+    expect(validator.isValid(rootSchema, { a: 'x' }, rootSchema)).toBe(false);
+  });
+  test('leaves a $ref key in the data a const, an enum, a default or examples hold as it is', () => {
+    const value = { $ref: '#/definitions/n' };
+    const rootSchema: RJSFSchema = {
+      definitions: { n: { type: 'number' } },
+      type: 'object',
+      properties: {
+        c: { const: value },
+        e: { enum: [value] },
+        d: { type: 'object', default: value, examples: [value] },
+      },
+    };
+    const code = compileSchemaValidatorsCode(rootSchema);
+    const validator = createPrecompiledValidator(loadModule(code), rootSchema);
+    expect(validator.validateFormData({ c: value, e: value, d: value }, rootSchema).errors).toEqual([]);
+    expect(validator.isValid(rootSchema, { c: { $ref: '#/definitions/rjsf:0' } }, rootSchema)).toBe(false);
+  });
   test('compiles a schema holding only annotations, which ata compiles no validator for as it stands', () => {
     const rootSchema: RJSFSchema = { title: 'Anything' };
     const validator = createPrecompiledValidator(loadModule(compileSchemaValidatorsCode(rootSchema)), rootSchema);

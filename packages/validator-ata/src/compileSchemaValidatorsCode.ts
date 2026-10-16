@@ -9,6 +9,54 @@ function decodeToken(token: string): string {
   return decodeURIComponent(token).replaceAll('~1', '/').replaceAll('~0', '~');
 }
 
+/** The keywords whose values hold subschemas, by the shape of the value: one subschema, an array of them, or a map of
+ * names, which are data, to them. Every other keyword, `const`, `enum`, `default` and `examples` among them, holds data
+ * a `$ref` key in which is no reference.
+ */
+const SUBSCHEMA_KEYWORDS = new Set([
+  'items',
+  'additionalItems',
+  'additionalProperties',
+  'contains',
+  'propertyNames',
+  'not',
+  'if',
+  'then',
+  'else',
+  'unevaluatedItems',
+  'unevaluatedProperties',
+  'contentSchema',
+]);
+const SUBSCHEMA_ARRAY_KEYWORDS = new Set(['items', 'prefixItems', ALL_OF_KEY, 'anyOf', 'oneOf']);
+const SUBSCHEMA_MAP_KEYWORDS = new Set([
+  'properties',
+  'patternProperties',
+  'definitions',
+  '$defs',
+  'dependentSchemas',
+  'dependencies',
+]);
+
+/** Returns the value of the keyword `key` with each subschema it holds replaced by what `map` returns for it */
+function mapKeyword(key: string, value: unknown, map: (subschema: unknown) => unknown): unknown {
+  if (SUBSCHEMA_ARRAY_KEYWORDS.has(key) && Array.isArray(value)) {
+    return value.map(map);
+  }
+  if (SUBSCHEMA_MAP_KEYWORDS.has(key) && isObject(value)) {
+    return Object.fromEntries(Object.entries(value).map(([name, subschema]) => [name, map(subschema)]));
+  }
+  return SUBSCHEMA_KEYWORDS.has(key) ? map(value) : value;
+}
+
+/** Returns the subschemas `schema` holds under its keywords */
+function subschemasOf(schema: GenericObjectType): unknown[] {
+  const subschemas: unknown[] = [];
+  for (const [key, value] of Object.entries(schema)) {
+    mapKeyword(key, value, (subschema) => subschemas.push(subschema));
+  }
+  return subschemas;
+}
+
 /** Returns the `$id` that makes `value` a resource of its own, which the `#` fragment of a `$ref` below it is read
  * against. A draft-07 `$id` that is only a fragment names an anchor in the resource around it instead.
  */
@@ -17,13 +65,50 @@ function resourceIdOf(value: unknown): string | undefined {
   return typeof id === 'string' && !id.startsWith('#') ? id : undefined;
 }
 
-/** Returns the subschema at the `$ref` fragment `ref` of `resource`, the resource itself for `#`, and the innermost
- * resource the path to it passes through, which the `$ref`s below the subschema are read against
+/** Returns the fragment of `ref` where it names a place in `resource`: a `$ref` starting with `#`, or one spelled with
+ * the `$id` of the resource as written, less any fragment that `$id` holds
  */
-function locate(resource: unknown, ref: string): [unknown, unknown] {
+function localFragment(ref: string, resource: unknown): string | undefined {
+  if (ref.startsWith('#')) {
+    return ref;
+  }
+  const [document, ...fragment] = ref.split('#');
+  const [id] = (resourceIdOf(resource) ?? '').split('#', 1);
+  return id !== '' && document === id ? `#${fragment.join('#')}` : undefined;
+}
+
+/** Returns the subschema of `resource` carrying the anchor `name`, as an `$anchor` or as a draft-07 `$id` that is only
+ * a fragment, looked for outside the resources nested in it, whose anchors are their own
+ */
+function anchored(resource: unknown, name: string): unknown {
+  const visit = (node: unknown): unknown => {
+    if (!isObject(node) || (node !== resource && resourceIdOf(node) !== undefined)) {
+      return undefined;
+    }
+    if (node.$anchor === name || node[ID_KEY] === `#${name}`) {
+      return node;
+    }
+    for (const subschema of subschemasOf(node)) {
+      const found = visit(subschema);
+      if (found !== undefined) {
+        return found;
+      }
+    }
+    return undefined;
+  };
+  return visit(resource);
+}
+
+/** Returns the subschema the `$ref` fragment `fragment` names in `resource`, the resource itself for `#`, and the
+ * innermost resource the path to it passes through, which the `$ref`s below the subschema are read against
+ */
+function locate(resource: unknown, fragment: string): [unknown, unknown] {
+  if (fragment !== '#' && !fragment.startsWith('#/')) {
+    return [anchored(resource, decodeURIComponent(fragment.slice(1))), resource];
+  }
   let node = resource;
   let base = resource;
-  for (const token of ref.split('/').slice(1).map(decodeToken)) {
+  for (const token of fragment.split('/').slice(1).map(decodeToken)) {
     if (resourceIdOf(node) !== undefined) {
       base = node;
     }
@@ -46,13 +131,14 @@ function compilable(schema: unknown): GenericObjectType {
 
 /** Returns `schema` as a document ata compiles on its own. ata names no subschema of another document, resolves a
  * `$ref` only to an entry of the `definitions` or `$defs` of the document it compiles, does not percent-decode it,
- * compiles nothing for a document holding both containers, and compiles nothing for one whose container holds an entry
- * carrying an `$id`. So every subschema of the root the document reaches through a `$ref`, a definition or not, is
- * carried in a single container of the document under a generated name the `$ref` is renamed to, without an `$id` of
- * its own, and the document's own containers, which only the renamed `$ref`s could name, are dropped. A `$ref` is read
- * against the innermost resource around it, an option with an `$id` of its own included, which is why a carried
- * subschema can go without its `$id`. One that names nothing there, or one into another document, is left as it is,
- * which leaves ata nothing to compile and the module reporting it when the schema is first validated against.
+ * compiles nothing for a document holding both containers, and compiles nothing for one holding a subschema that
+ * carries an `$id` of its own. So every subschema of the root the document reaches through a `$ref`, a definition, an
+ * anchor or neither, is carried in a single container of the document under a generated name the `$ref` is renamed
+ * to, and the document's own containers, which only the renamed `$ref`s could name, are dropped. A `$ref` is read
+ * against the innermost resource around it, an option with an `$id` of its own included, whose `$id` is then dropped,
+ * every `$ref` read against it having been renamed. One that names nothing there, or one into another document, is
+ * left as it is, which leaves ata nothing to compile and the module reporting it when the schema is first validated
+ * against. Only the keywords holding subschemas are rewritten, never the data a `const` or a `default` holds.
  *
  * @param schema - A schema `getValidationSchemas()` lists
  * @param rootSchema - The root it was listed for
@@ -64,30 +150,32 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
   const pending: [string, unknown, unknown][] = [];
   let count = 0;
   const renamed = (ref: string, base: unknown): string => {
-    const [subschema, subschemaBase] = ref.startsWith('#') ? locate(base, ref) : [];
-    if (subschema === undefined) {
+    const fragment = localFragment(ref, base);
+    const [subschema, subschemaBase] = fragment === undefined ? [] : locate(base, fragment);
+    if (fragment === undefined || subschema === undefined) {
       return ref;
     }
     const known = names.get(base) ?? new Map<string, string>();
     names.set(base, known);
-    let name = known.get(ref);
+    let name = known.get(fragment);
     if (name === undefined) {
       name = `rjsf:${count}`;
       count += 1;
-      known.set(ref, name);
+      known.set(fragment, name);
       pending.push([name, subschema, subschemaBase]);
     }
     return `#/${container}/${name}`;
   };
   const rewrite = (value: unknown, base: unknown): unknown => {
-    if (Array.isArray(value)) {
-      return value.map((item) => rewrite(item, base));
-    }
     if (!isObject(value)) {
       return value;
     }
     const inner = resourceIdOf(value) === undefined ? base : value;
-    const copy = Object.fromEntries(Object.entries(value).map(([key, child]) => [key, rewrite(child, inner)]));
+    const copy = Object.fromEntries(
+      Object.entries(value).flatMap(([key, child]) =>
+        key === ID_KEY && inner === value ? [] : [[key, mapKeyword(key, child, (sub) => rewrite(sub, inner))]],
+      ),
+    );
     const ref: unknown = value[REF_KEY];
     if (typeof ref !== 'string') {
       return copy;
@@ -106,9 +194,7 @@ function standalone(schema: GenericObjectType, rootSchema: object): GenericObjec
   const carried: GenericObjectType = {};
   for (let next = pending.pop(); next !== undefined; next = pending.pop()) {
     const [name, value, base] = next;
-    const entry = compilable(rewrite(value, base));
-    const { [ID_KEY]: _id, ...withoutId } = entry;
-    carried[name] = resourceIdOf(entry) === undefined ? entry : withoutId;
+    carried[name] = compilable(rewrite(value, base));
   }
   return count === 0 ? document : { ...document, [container]: carried };
 }
