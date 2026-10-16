@@ -2972,8 +2972,8 @@ A copy carrying `RJSF_REF_CYCLE_KEY: false` is retrieved like any other copy of 
 With a `selectedOption`, the extra keys of the data are stubbed once, for the field and the option selected among the options of the keyword `getXxxOfKey()` reads together.
 A key the option declares is left to the option, which renders it.
 The field takes the option's extra-key keywords beside its own: `additionalProperties` and `unevaluatedProperties` become the `allOf` of the two, one side's where the other declares none or allows any key, and `false` where either is, and the option's `patternProperties` join the field's, a pattern both declare becoming the `allOf` of its two subschemas.
-Every other key is stubbed as those keywords describe it.
-The options themselves are handed out without stubs.
+Every other key is stubbed as the field's keywords and the option's describe it, each side read on its own and the two `allOf`ed, so a key either side forbids is stubbed as `{ type: 'null' }` whatever the other allows.
+The options of an object field are handed out without stubs; a field of any other type renders no field of its own beside the option, so it leaves the option to stub its own extra keys.
 Without a `selectedOption`, the extra keys are stubbed for the field alone, a key an option declares included.
 
 #### Parameters
