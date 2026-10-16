@@ -16,7 +16,7 @@ import {
   logOnce,
   ID_KEY,
   REF_KEY,
-  ROOT_SCHEMA_PREFIX,
+  rootSchemaIdOf,
   schemaKey,
   withIdRefPrefix,
 } from '@rjsf/utils';
@@ -126,12 +126,6 @@ export default class CFWorkerValidator<
    */
   private hasRegisteredRootSchema = false;
 
-  /** The id `handleSchemaUpdate` registered the last root under, which the local `$ref`s `isValid` rewrites name
-   *
-   * @private
-   */
-  private rootSchemaId = ROOT_SCHEMA_PREFIX;
-
   /** Constructs a `CFWorkerValidator` instance using the provided options.
    *
    * @param [options={}] - The options used to configure the cfworker validator
@@ -233,10 +227,8 @@ export default class CFWorkerValidator<
       return;
     }
     // Registered under its own `$id`, a root is what both its own `$ref`s, which resolve against that `$id`, and the
-    // local `$ref`s `withIdRefPrefix()` prefixes with it resolve into. An empty `$id` names nothing, so a
-    // root without one is registered under `ROOT_SCHEMA_PREFIX` instead
-    const rootSchemaId = rootSchema[ID_KEY] || ROOT_SCHEMA_PREFIX;
-    this.rootSchemaId = rootSchemaId;
+    // local `$ref`s `withIdRefPrefix()` prefixes with it resolve into
+    const rootSchemaId = rootSchemaIdOf(rootSchema);
     const rootWithId =
       rootSchema[ID_KEY] === rootSchemaId
         ? (rootSchema as object)
@@ -263,7 +255,7 @@ export default class CFWorkerValidator<
     let id: string | undefined;
     try {
       this.handleSchemaUpdate(rootSchema);
-      const schemaWithIdRefPrefix = withCfworkerRefs(withIdRefPrefix<S>(schema, this.rootSchemaId));
+      const schemaWithIdRefPrefix = withCfworkerRefs(withIdRefPrefix<S>(schema, rootSchemaIdOf(rootSchema)));
       id = schemaKey(schemaWithIdRefPrefix);
       const validator = this.getOrBuild(id, schemaWithIdRefPrefix);
       return validator.validate(normalizeFormDataForValidation(formData)).valid;
