@@ -552,6 +552,19 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(screen.getByRole('slider')).toHaveFocus();
       });
 
+      it("focuses the first star of a RatingWidget's radiogroup", async () => {
+        const { node } = createFormComponent({
+          schema: { type: 'integer', minimum: 3, maximum: 5 },
+          uiSchema: { 'ui:widget': 'RatingWidget' },
+          formData: 1,
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getAllByRole('radio')[0]).toHaveFocus();
+      });
+
       it('passes over an unfocusable input whose id starts with the field id for a focusable one after it', async () => {
         const ChoiceWidget = ({ id }: WidgetProps) => (
           <div>

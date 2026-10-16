@@ -1,6 +1,7 @@
 import type { FocusEvent } from 'react';
 import { useCallback } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { getGroupAttributes } from '@rjsf/utils';
 
 /** The `RatingWidget` component renders a star or heart rating input
  *
@@ -11,6 +12,7 @@ import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from 
  * - Handles required, disabled, and readonly states
  * - Provides focus and blur event handling for accessibility
  * - Uses Unicode characters for better visual representation
+ * - Renders its stars as a `radiogroup`, named and described by its field's plan, as `RadioWidget` is
  *
  * @param props - The `WidgetProps` for this component
  */
@@ -30,8 +32,13 @@ export default function RatingWidget<
   schema,
   options,
   htmlName,
+  presentation,
 }: WidgetProps<T, S, F>) {
   const { stars = 5, shape = 'star' } = options;
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
 
   // Use schema.maximum if provided, otherwise use stars option (limited to 1-5)
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
@@ -81,7 +88,10 @@ export default function RatingWidget<
 
   return (
     <div
+      id={id}
       className='rating-widget'
+      {...groupAttributes}
+      aria-required={required || undefined}
       style={{
         display: 'inline-flex',
         fontSize: '1.5rem',
@@ -105,6 +115,7 @@ export default function RatingWidget<
             role='radio'
             aria-checked={starValue === value}
             aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
+            {...optionAttributes}
             style={{
               color: isFilled ? '#FFD700' : '#ccc',
               padding: '0 0.2rem',
@@ -118,7 +129,6 @@ export default function RatingWidget<
       })}
       <input
         type='hidden'
-        id={id}
         name={htmlName || id}
         value={value || ''}
         required={required}
