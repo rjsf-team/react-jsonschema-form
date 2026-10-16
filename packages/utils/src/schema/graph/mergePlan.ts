@@ -154,7 +154,7 @@ const conditionMemo = new KeyedMemo<boolean>();
 /** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
  * object each time, as an object field's is on every edit, reuse its plan
  */
-const plans = new KeyedMemo<object>();
+const plans = new KeyedMemo<MergePlan<StrictRJSFSchema>>();
 
 /** Returns the keywords of `source` on a schema of the plan's type. A literal or a merge result is not known to be an
  * `S`, so the copy starts as `template`, which is one, with every keyword removed. A `source` that is not an object,
@@ -722,11 +722,12 @@ export function ownChains<S extends StrictRJSFSchema = RJSFSchema>(
   });
 }
 
-/** The graph each plan was built in, which is how a plan read back from the memo is known to be one of its graph */
-const planGraphs = new WeakMap<object, SchemaGraph<StrictRJSFSchema>>();
-
-function isPlanOf<S extends StrictRJSFSchema>(value: unknown, graph: SchemaGraph<S>): value is MergePlan<S> {
-  return typeof value === 'object' && value !== null && planGraphs.get(value) === graph;
+/** Whether a plan read back from the memo, which holds the plans of every schema type, is one of `graph` */
+function isPlanOf<S extends StrictRJSFSchema>(
+  value: MergePlan<StrictRJSFSchema> | undefined,
+  graph: SchemaGraph<S>,
+): value is MergePlan<S> {
+  return value?.graph === graph;
 }
 
 /** Builds the merge plan of the field `input.seeds` seed, memoized per seeds, data, policy and context: the same
@@ -767,7 +768,6 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     return memoized;
   }
   const plan = new PlanBuilder(context, graph, data, depData, resolved).build(seeds);
-  planGraphs.set(plan, graph);
   if (plan.readsData) {
     plans.setLatest(keys, [data, depData], plan);
   } else {
