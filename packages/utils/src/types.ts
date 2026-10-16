@@ -360,6 +360,10 @@ type AtomicValue =
   | WeakMap<WeakKey, unknown>
   | WeakSet<WeakKey>;
 
+/** Marks the `length` of array data, so that it gets a `never` node while a field whose data is `never` keeps a leaf */
+declare const arrayLength: unique symbol;
+type ArrayLength = typeof arrayLength;
+
 /** The data whose keys become the children of an error node for a value of type `V`.
  *
  * Normalizing the data type here is what keeps an error node a plain keyed object. Mapping over `keyof V` directly
@@ -376,10 +380,15 @@ type ErrorTreeChildData<V> = unknown extends V ? Record<string, any> : ChildData
  * A tuple keeps each declared position's own type, so index `0` of a `[string, { city: string }]` is a leaf while
  * index `1` has children. An array has no per-position type to keep, so it gets a numeric index signature holding the
  * element type; a tuple with a rest element gets both, and a declared position takes precedence over the index
- * signature because they live in the same object type rather than an intersection.
+ * signature because they live in the same object type rather than an intersection. Its `length` holds `ArrayLength`,
+ * whose node is `never`, so a JS array, which that index signature would otherwise accept, is rejected as the node: the
+ * trees `toErrorSchema()` and `createErrorHandler()` build key the items by index in a plain object. A union member
+ * with a `length` field keeps it.
  */
 type ChildDataOf<V> = V extends readonly unknown[]
-  ? { [key in Extract<keyof V, `${number}`> | (number extends V['length'] ? number : never)]: V[key] }
+  ? { [key in Extract<keyof V, `${number}`> | (number extends V['length'] ? number : never)]: V[key] } & {
+      length: ArrayLength;
+    }
   : V extends AtomicValue
     ? Record<never, never>
     : V extends object
@@ -392,8 +401,12 @@ type ChildKeys<D> = D extends unknown ? keyof D : never;
 /** The child data every member of `D` holds at `key`, for the members that have one */
 type ChildAt<D, K extends PropertyKey> = D extends unknown ? (K extends keyof D ? D[K] : never) : never;
 
-/** A child error node. `any` short-circuits so that data of an unconstrained type keeps an unconstrained node */
-type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : ErrorTree<V, Node>;
+/** Whether `V` is the `ArrayLength` marker itself. `never` extends every type, so it is ruled out first */
+type IsArrayLength<V> = [V] extends [never] ? false : [V] extends [ArrayLength] ? true : false;
+
+/** A child error node. `any` short-circuits so that data of an unconstrained type keeps an unconstrained node, and the
+ * `ArrayLength` an array's `length` holds becomes `never` */
+type ErrorTreeChild<V, Node> = IsAny<V> extends true ? any : IsArrayLength<V> extends true ? never : ErrorTree<V, Node>;
 
 /** The recursive error tree for data of type `V`, carrying `Node` at every level.
  *

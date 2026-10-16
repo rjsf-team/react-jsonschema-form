@@ -12,6 +12,8 @@ interface Data {
   either: string | { city: string };
   eitherShape: { city: string } | { zip: number };
   eitherList: string | string[];
+  measured: { length: number } | string[];
+  retired: never;
   pair: [string, { city: string }];
   labelled: [string, ...{ city: string }[]];
   loose: unknown;
@@ -84,6 +86,28 @@ describe('ErrorSchema type', () => {
     expect(leadingLeaf.labelled?.[0]?.__errors).toEqual(['bad label']);
     expect(restObject.labelled?.[3]?.city?.__errors).toEqual(['bad city']);
     expect(wrongLeadingLeaf.labelled?.[0]).toBeDefined();
+  });
+
+  it('rejects an array as the node of array data, which toErrorSchema() keys by index', () => {
+    // @ts-expect-error an array's items are keyed by index in an object
+    const listOfLeaves: ErrorSchema<Data> = { tags: [{ __errors: ['bad tag'] }] };
+    // @ts-expect-error an array's items are keyed by index in an object
+    const listOfObjects: ErrorSchema<Data> = { items: [{ label: { __errors: ['bad label'] } }] };
+    // @ts-expect-error a tuple's positions are keyed by index in an object
+    const tuple: ErrorSchema<Data> = { pair: [{ __errors: ['bad label'] }] };
+    // @ts-expect-error an array's items are keyed by index in an object
+    const arrayRoot: ErrorSchema<string[]> = [{ __errors: ['bad item'] }];
+    const lengthField: ErrorSchema<Data> = { measured: { length: { __errors: ['too long'] } } };
+    const untyped: ErrorSchema = { list: [{ __errors: ['bad item'] }] };
+    const neverField: ErrorSchema<Data> = { retired: { __errors: ['no longer accepted'] } };
+
+    expect(listOfLeaves.tags).toBeDefined();
+    expect(listOfObjects.items).toBeDefined();
+    expect(tuple.pair).toBeDefined();
+    expect(arrayRoot).toBeDefined();
+    expect(lengthField.measured?.length?.__errors).toEqual(['too long']);
+    expect(neverField.retired?.__errors).toEqual(['no longer accepted']);
+    expect(untyped.list).toBeDefined();
   });
 
   it('describes a form whose root is not an object', () => {

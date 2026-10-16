@@ -33,4 +33,13 @@ describe('unwrapErrorHandler()', () => {
       },
     });
   });
+  it('leaves out the null and undefined children of an array of item handlers and of an object', () => {
+    const handler = createErrorHandler({ list: ['a', 'b'] });
+    handler.list![1]!.addError('taken');
+    const returned = { ...handler, list: [null, handler.list![1]], other: undefined } as unknown as FormValidation;
+    expect(unwrapErrorHandler(returned)).toStrictEqual({
+      [ERRORS_KEY]: [],
+      list: { 1: { [ERRORS_KEY]: ['taken'] } },
+    });
+  });
 });

@@ -1,5 +1,5 @@
 import { ERRORS_KEY } from './constants.ts';
-import { isErrorSchemaChild } from './normalizeErrorSchema.ts';
+import errorSchemaChild from './errorSchemaChild.ts';
 import type { ErrorSchema, RJSFValidationError } from './types.ts';
 
 /** Converts an `errorSchema` into a list of `RJSFValidationErrors`. The errors of an array's items are listed whether
@@ -30,9 +30,7 @@ function errorsFrom(errorSchema: Record<string, unknown> | unknown[], fieldPath:
     ? errors.map((message: string) => ({ property, message, stack: `${property} ${message}` }))
     : [];
   return Object.entries<unknown>(errorSchema).reduce((currentList, [key, childSchema]) => {
-    if (isErrorSchemaChild(key, childSchema)) {
-      return currentList.concat(errorsFrom(childSchema, [...fieldPath, key]));
-    }
-    return currentList;
+    const node = errorSchemaChild(key, childSchema);
+    return node ? currentList.concat(errorsFrom(node, [...fieldPath, key])) : currentList;
   }, errorList);
 }

@@ -20,6 +20,7 @@ import {
   createSchemaUtils,
   deepEquals,
   deepEqualsUndefinedAsMissing,
+  errorSchemaChild,
   getChangedFields,
   getDiscriminatorFieldFromSchema,
   getUiOptions,
@@ -408,8 +409,8 @@ function pruneErrorSchema(
         kept[key] = [...value];
       }
     } else if (value != null) {
-      const child =
-        isPlainObject(value) || Array.isArray(value) ? pruneErrorSchema(value, isDropped, [...path, key]) : value;
+      const node = errorSchemaChild(key, value);
+      const child = node ? pruneErrorSchema(node, isDropped, [...path, key]) : value;
       if (!isPlainObject(child) || Object.keys(child).length > 0) {
         kept[key] = child;
       }

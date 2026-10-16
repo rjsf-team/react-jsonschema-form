@@ -9,8 +9,8 @@ import { initialState } from '../src/components/formState.ts';
 const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
 
 /** A self-owned form's model as `Form`'s Effects leave it after the first commit: mounted and attached */
-function createMountedModel(onChange?: FormProps['onChange']) {
-  const props: FormProps = { schema, validator, onChange };
+function createMountedModel(overrides: Partial<FormProps> = {}) {
+  const props: FormProps = { schema, validator, ...overrides };
   const model = createFormModel(props, initialState(props));
   const unmount = model.mount();
   model.attach();
@@ -20,7 +20,7 @@ function createMountedModel(onChange?: FormProps['onChange']) {
 describe('the reports a detached model holds', () => {
   it('are delivered when the form is shown again', () => {
     const onChange = vi.fn();
-    const { model } = createMountedModel(onChange);
+    const { model } = createMountedModel({ onChange });
     model.detach();
 
     model.handle.setFieldValue('a', 'x');
@@ -32,7 +32,7 @@ describe('the reports a detached model holds', () => {
 
   it('are released by the unmount, and none is held after it', () => {
     const onChange = vi.fn();
-    const { model, unmount } = createMountedModel(onChange);
+    const { model, unmount } = createMountedModel({ onChange });
     model.detach();
     model.handle.setFieldValue('a', 'held while hidden');
     unmount();
@@ -84,17 +84,14 @@ describe('proposing()', () => {
 
 describe('the errors a field raises', () => {
   it('leave no node behind for the items a raised array holds nothing for, once the rest are dropped', () => {
-    const props: FormProps = {
+    const { model, unmount } = createMountedModel({
       schema: { type: 'object', properties: { list: { type: 'array', items: { type: 'string' } } } },
-      validator,
-    };
-    const model = createFormModel(props, initialState(props));
-    model.mount();
-    model.attach();
+    });
 
     model.handleChange({ list: ['a', 'b'] }, ROOT_FIELD_PATH, { list: [undefined, { __errors: ['taken'] }] });
     model.handleChange('c', toFieldPath(1, toFieldPath('list')));
 
     expect(model.getSnapshot().state.customErrors).toBeUndefined();
+    unmount();
   });
 });

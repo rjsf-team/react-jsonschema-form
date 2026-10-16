@@ -1,17 +1,5 @@
-import { ERRORS_KEY } from './constants.ts';
-import isPlainObject from './isPlainObject.ts';
+import errorSchemaChild from './errorSchemaChild.ts';
 import type { ErrorSchema } from './types.ts';
-
-/** Whether `value` under `key` is a child node of an `ErrorSchema`: a plain object, or an array holding the errors of an
- * array field's items. An `__errors` array holds messages, not nodes.
- *
- * @param key - The key the value sits under
- * @param value - The value under `key`
- * @returns - True when the walks of an `ErrorSchema` descend into `value`
- */
-export function isErrorSchemaChild(key: string, value: unknown): value is Record<string, unknown> | unknown[] {
-  return key !== ERRORS_KEY && (isPlainObject(value) || Array.isArray(value));
-}
 
 /** The node with every array below it, and itself if it is one, rewritten as a plain object keyed by index, or the
  * node itself when there is none. A `null` or `undefined` child holds no errors and is left out, as a hole is, since
@@ -54,7 +42,8 @@ function normalizeNode(node: Record<string, unknown> | unknown[]): Record<string
  * @returns - The value in the shape `toErrorSchema()` builds
  */
 function normalizeChild(key: string, value: unknown): unknown {
-  return isErrorSchemaChild(key, value) ? normalizeNode(value) : value;
+  const node = errorSchemaChild(key, value);
+  return node ? normalizeNode(node) : value;
 }
 
 /** Rewrites the arrays an `ErrorSchema` holds for the items of an array field as plain objects keyed by index, the
