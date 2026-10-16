@@ -74,6 +74,7 @@ export default class ATAValidator<
   reset() {
     this.validators.clear();
     this.lastSeenRootSchema = undefined;
+    this.cachedRootSchema = undefined;
     this.hasRegisteredRootSchema = false;
   }
 
@@ -208,8 +209,9 @@ export default class ATAValidator<
       rootSchema[ID_KEY] === rootSchemaId
         ? (rootSchema as object)
         : { ...(rootSchema as object), [ID_KEY]: rootSchemaId };
-    const cached = this.validators.get(rootSchemaId);
-    if (!cached || !deepEquals(cached.schema, rootWithId)) {
+    // Compared with the root registered last rather than with the validator cached under its id, which
+    // `rawValidation()` of a root that was not registered builds beside the registered one
+    if (this.cachedRootSchema === undefined || !deepEquals(this.cachedRootSchema, rootWithId)) {
       // Every validator built so far resolves its `$ref`s against the root it was built beside, so a schema such as
       // `{ $ref: '#/definitions/x' }`, which means something else under every root, is built again for this one
       this.validators.clear();

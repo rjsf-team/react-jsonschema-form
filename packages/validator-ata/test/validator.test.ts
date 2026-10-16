@@ -562,4 +562,25 @@ describe('ATAValidator resolving a $ref local to the root', () => {
     expect(validator.isValid({ $ref: '#/definitions/x' }, 's', rootSchema)).toBe(true);
     expect(validator.isValid({ $ref: '#/definitions/x' }, 5, rootSchema)).toBe(false);
   });
+  it('resolves against the root it is handed after validating that root while another was registered', () => {
+    const validator = customizeValidator();
+    const rootA: RJSFSchema = { $id: 'http://a.example/root.json', definitions: { x: { type: 'string' } } };
+    const rootB: RJSFSchema = { $id: 'http://b.example/root.json', definitions: { x: { type: 'number' } } };
+    const ref: RJSFSchema = { $ref: '#/definitions/x' };
+    expect(validator.isValid(ref, 's', rootA)).toBe(true);
+    expect(validator.isValid(ref, 1, rootB)).toBe(true);
+    validator.validateFormData({}, rootA);
+    expect(validator.isValid(ref, 's', rootA)).toBe(true);
+    expect(validator.isValid(ref, 1, rootA)).toBe(false);
+  });
+  it('resolves against an edited root under the same $id that was validated before it was registered', () => {
+    const validator = customizeValidator();
+    const rootSchema: RJSFSchema = { $id: 'http://a.example/root.json', definitions: { x: { type: 'string' } } };
+    const ref: RJSFSchema = { $ref: '#/definitions/x' };
+    expect(validator.isValid(ref, 's', rootSchema)).toBe(true);
+    const edited: RJSFSchema = { ...rootSchema, definitions: { x: { type: 'number' } } };
+    validator.validateFormData({}, edited);
+    expect(validator.isValid(ref, 1, edited)).toBe(true);
+    expect(validator.isValid(ref, 's', edited)).toBe(false);
+  });
 });
