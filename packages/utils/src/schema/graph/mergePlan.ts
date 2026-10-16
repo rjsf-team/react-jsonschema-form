@@ -147,11 +147,10 @@ export interface PlanInput<S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 const NO_DATA = Object.freeze({});
 
 const conditionMemo = new KeyedMemo<boolean>();
-const planMemo = new KeyedMemo<object>();
-/** The plans whose build read nothing of the data, which hold for any data: memoizing them apart lets a field whose
- * data is a new object each time, as an object field's is on every edit, reuse its plan
+/** The plans, a plan whose build read nothing of the data stored for any data: that lets a field whose data is a new
+ * object each time, as an object field's is on every edit, reuse its plan
  */
-const dataFreePlans = new KeyedMemo<object>();
+const plans = new KeyedMemo<object>();
 
 /** Returns the keywords of `source` on a schema of the plan's type. A literal or a merge result is not known to be an
  * `S`, so the copy starts as `template`, which is one, with every keyword removed. A `source` that is not an object,
@@ -749,11 +748,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     selectOption,
     optionsInheritRefPath,
   ];
-  const dataFree = dataFreePlans.peek(keys);
-  if (isPlanOf(dataFree, graph)) {
-    return dataFree;
-  }
-  const memoized = planMemo.peekLatest(keys, [data, depData]);
+  const memoized = plans.peekAny(keys, [data, depData]);
   if (isPlanOf(memoized, graph)) {
     return memoized;
   }
@@ -766,9 +761,9 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
   }).build(seeds);
   planGraphs.set(plan, graph);
   if (plan.readsData) {
-    planMemo.setLatest(keys, [data, depData], plan);
+    plans.setLatest(keys, [data, depData], plan);
   } else {
-    dataFreePlans.set(keys, plan);
+    plans.set(keys, plan);
   }
   return plan;
 }

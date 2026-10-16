@@ -45,6 +45,15 @@ describe('KeyedMemo', () => {
     expect(memo.peekLatest(['k'], [undefined, 'a'])).toBeUndefined();
     expect(memo.peekLatest(['other'], [null, Number.NaN])).toBeUndefined();
   });
+  it('peeks at the value stored for any data before the one stored for the last data', () => {
+    const memo = new KeyedMemo<string>();
+    expect(memo.peekAny(['k', 'deeper'], ['a'])).toBeUndefined();
+    memo.setLatest(['k'], ['a'], 'latest');
+    expect(memo.peekAny(['k'], ['a'])).toBe('latest');
+    expect(memo.peekAny(['k'], ['b'])).toBeUndefined();
+    memo.set(['k'], 'any');
+    expect(memo.peekAny(['k'], ['b'])).toBe('any');
+  });
   it('stores nothing for data holding an object, which a caller may mutate in place', () => {
     const memo = new KeyedMemo<string>();
     const data = { a: 1 };

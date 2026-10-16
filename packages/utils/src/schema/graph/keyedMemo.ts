@@ -16,18 +16,31 @@ function isWeakKey(key: unknown): key is object {
   return (typeof key === 'object' && key !== null) || typeof key === 'function';
 }
 
+interface LevelMap<K, V> {
+  get(key: K): MemoLevel<V> | undefined;
+  set(key: K, level: MemoLevel<V>): void;
+}
+
+function levelIn<K, V>(map: LevelMap<K, V>, key: K): MemoLevel<V> {
+  let level = map.get(key);
+  if (level === undefined) {
+    level = createLevel<V>();
+    map.set(key, level);
+  }
+  return level;
+}
+
 function nextLevel<V>(level: MemoLevel<V>, key: unknown): MemoLevel<V> {
-  const found = isWeakKey(key) ? level.byObject.get(key) : level.byValue.get(key);
-  if (found !== undefined) {
-    return found;
-  }
-  const created = createLevel<V>();
-  if (isWeakKey(key)) {
-    level.byObject.set(key, created);
-  } else {
-    level.byValue.set(key, created);
-  }
-  return created;
+  return isWeakKey(key) ? levelIn(level.byObject, key) : levelIn(level.byValue, key);
+}
+
+function foundLevel<V>(level: MemoLevel<V>, key: unknown): MemoLevel<V> | undefined {
+  return isWeakKey(key) ? level.byObject.get(key) : level.byValue.get(key);
+}
+
+function latestFor<V>(level: MemoLevel<V> | undefined, data: readonly unknown[]): V | undefined {
+  const latest = level?.latest;
+  return latest?.data.every((datum, index) => Object.is(datum, data[index])) ? latest.value : undefined;
 }
 
 /** A memo keyed on a list of values compared by identity (`SameValueZero` for primitives). The graph memoizes condition
@@ -40,6 +53,15 @@ export default class KeyedMemo<V> {
 
   private level(keys: readonly unknown[]): MemoLevel<V> {
     return keys.reduce<MemoLevel<V>>((level, key) => nextLevel(level, key), nextLevel(this.root, keys.length));
+  }
+
+  /** The level `keys` lead to, without creating the levels a lookup that misses would otherwise leave behind */
+  private find(keys: readonly unknown[]): MemoLevel<V> | undefined {
+    let level = foundLevel(this.root, keys.length);
+    for (let index = 0; level !== undefined && index < keys.length; index += 1) {
+      level = foundLevel(level, keys[index]);
+    }
+    return level;
   }
 
   /** Returns the value stored under `keys`, computing and storing it on the first call
@@ -60,7 +82,7 @@ export default class KeyedMemo<V> {
    * @returns - The stored value, or undefined when none is stored
    */
   peek(keys: readonly unknown[]): V | undefined {
-    return this.level(keys).entry?.value;
+    return this.find(keys)?.entry?.value;
   }
 
   /** Stores `value` under `keys`
@@ -79,8 +101,19 @@ export default class KeyedMemo<V> {
    * @returns - The stored value, or undefined when the last one stored was for other data
    */
   peekLatest(keys: readonly unknown[], data: readonly unknown[]): V | undefined {
-    const { latest } = this.level(keys);
-    return latest?.data.every((datum, index) => Object.is(datum, data[index])) ? latest.value : undefined;
+    return latestFor(this.find(keys), data);
+  }
+
+  /** Returns the value stored under `keys` for any data, or else the one last stored under them for `data`, with one
+   * walk of the keys
+   *
+   * @param keys - The keys, in order
+   * @param data - The data, compared by identity
+   * @returns - The stored value, or undefined when neither is stored
+   */
+  peekAny(keys: readonly unknown[], data: readonly unknown[]): V | undefined {
+    const level = this.find(keys);
+    return level?.entry === undefined ? latestFor(level, data) : level.entry.value;
   }
 
   /** Stores `value` under `keys` for `data`, in place of the value stored for other data, unless `data` holds an
