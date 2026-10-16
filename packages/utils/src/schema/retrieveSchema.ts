@@ -408,8 +408,8 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     });
     Reflect.set(merged, PROPERTIES_KEY, Object.fromEntries(entries));
   }
-  const item = (value: unknown, seedsOfItem: readonly Seed[] | undefined, edge: ContainmentEdge) =>
-    seedsOfItem === undefined || seedsOfItem.length === 0 || !isSchemaObject<S>(value) || isDecided(value)
+  const item = (value: unknown, seedsOfItem: readonly Seed[], edge: ContainmentEdge) =>
+    seedsOfItem.length === 0 || !isSchemaObject<S>(value) || isDecided(value)
       ? value
       : stubOf(graph.rawRoot, value, child(seedsOfItem, edge, true).provenance);
   const tuple = (entries: unknown[]) =>
