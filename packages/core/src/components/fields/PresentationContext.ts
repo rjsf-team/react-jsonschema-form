@@ -1,8 +1,8 @@
 import { createContext, use } from 'react';
 import type { FieldPresentation } from '@rjsf/utils';
 
-/** What a field hands the field below it that renders the same id: the selected `anyOf`/`oneOf` option, or the value
- * field of the fallback UI */
+/** What a field hands the field below it that renders the same id: the selected `anyOf`/`oneOf` option, the value
+ * field of the fallback UI, or the field a custom field wrapping `SchemaField` renders */
 export interface InheritedPresentation {
   /** The id of the field that built the plan */
   id: string;

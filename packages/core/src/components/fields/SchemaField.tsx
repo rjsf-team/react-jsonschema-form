@@ -284,6 +284,7 @@ function getFieldComponent<
   optionsReplaceNamedField: boolean;
   plannedAsOptions: boolean;
   fieldKey: string | undefined;
+  handsDownOwnParts: boolean;
 } {
   const { widget } = uiOptions;
   const { fields, globalFormOptions } = registry;
@@ -421,14 +422,32 @@ function getFieldComponent<
   // like a withheld field it is planned as the field that renders its options, whose template labels it
   const isPureUnion =
     yieldsToOptions && !schema.properties && !schema.additionalProperties && !schema.patternProperties;
+  const plannedAsOptions = isWithheld || isPureUnion;
+  /** A field the form's author supplies, through a `ui:field` or a `$id`, may render `SchemaField` under its own id
+   * without drawing the parts it was planned to draw itself, as a wrapper adding markup around the field does, so it
+   * hands those parts down to the field below rather than keeping them. The fallback UI and the option fields relay
+   * the plan to a field below that way and draw those parts themselves, and `ObjectField` and `ArrayField`, which a
+   * `ui:field` can name too, draw their heading and description themselves, which the option beside them compares its
+   * own with. One withheld for its options, as a `$id` can name, is planned as the field rendering them, whose
+   * selector draws those parts
+   */
+  const handsDownOwnParts =
+    (namedField !== undefined || (schemaId !== undefined && componentName === schemaId)) &&
+    !plannedAsOptions &&
+    !isFallbackField &&
+    FieldComponent !== fields.AnyOfField &&
+    FieldComponent !== fields.OneOfField &&
+    FieldComponent !== fields.ObjectField &&
+    FieldComponent !== fields.ArrayField;
   return {
     FieldComponent: isWithheld ? RenderNothing : FieldComponent,
     // `yieldsToOptions` requires `!rendersOptionsItself`, so the flags read the same whether or not the field is withheld
     rendersOptionsItself,
     rendersOptionSelector,
     optionsReplaceNamedField,
-    plannedAsOptions: isWithheld || isPureUnion,
+    plannedAsOptions,
     fieldKey,
+    handsDownOwnParts,
   };
 }
 
@@ -453,6 +472,50 @@ function getPresentationBesideOptions(presentation: FieldPresentation): FieldPre
   };
 }
 
+/** Gets a part of a field's plan with the field's own drawing of it taken away, so nothing draws a part the field was
+ * planned to draw itself
+ *
+ * @param part - The part of the plan
+ * @returns - The part, `none` where the field was to draw it
+ */
+function withoutOwnDrawing<P extends PartPresentation>(part: P): P {
+  return part.by === 'self' ? { ...part, by: 'none' } : part;
+}
+
+/** Gets a field's label, description, help and errors with the field's own drawing of each taken away
+ *
+ * @param presentation - The field's plan
+ * @returns - The four parts, each `none` where the field was to draw it
+ */
+function withoutOwnParts({ label, description, help, errors }: FieldPresentation) {
+  return {
+    label: withoutOwnDrawing(label),
+    description: withoutOwnDrawing(description),
+    help: withoutOwnDrawing(help),
+    errors: withoutOwnDrawing(errors),
+  };
+}
+
+/** Gets the plan a field the form's author supplies hands the field below it rendering the same id: the label,
+ * description and help it was planned to draw itself are left to that field, which draws them, so a wrapper drawing
+ * none of them doesn't leave its description drawn nowhere and named by its control's `aria-describedby`. The parts its
+ * template draws stay above. Errors it was planned to draw itself are drawn by none, since a field below takes the
+ * errors of the field above as drawn there, and its control is described by none of the ids of the parts handed down
+ *
+ * @param presentation - The plan of the field the author supplies
+ * @returns - The plan the field below inherits
+ */
+function getPresentationHandedDown(presentation: FieldPresentation): FieldPresentation {
+  const { label, description, help, errors } = presentation;
+  const ownIds = new Set(
+    [label, description, help, errors].filter((part) => part.by === 'self').map((part) => part.id),
+  );
+  if (ownIds.size === 0) {
+    return presentation;
+  }
+  return { ...presentation, ...withoutOwnParts(presentation), ...withoutDescribers(presentation, ownIds) };
+}
+
 /** Gets the plan the field rendering a field component's options is handed when that component is not planned as it:
  * the parts the component draws itself are its own, such as a custom field's label or an object's heading, so the
  * options' selector draws none of them. A container's heading, which renders under the label id its plan gives it,
@@ -468,35 +531,13 @@ function getPresentationBesideOptions(presentation: FieldPresentation): FieldPre
  * @returns - The plan of the field rendering the options
  */
 function getOptionsPresentation(presentation: FieldPresentation, id: string, isContainer: boolean): FieldPresentation {
-  const { label, description, help, errors, control, describedBy } = presentation;
-  const notDrawn = <P extends PartPresentation>(part: P): P => (part.by === 'self' ? { ...part, by: 'none' } : part);
-  const namedByHeading = isContainer && control === undefined && label.by === 'self';
-  const parts = {
-    label: namedByHeading ? { ...label, by: 'above' as const } : notDrawn(label),
-    description: notDrawn(description),
-    help: notDrawn(help),
-    errors: notDrawn(errors),
-  };
-  if (namedByHeading) {
-    const attributes = getDescribedControlAttributes(describedBy, errors.messages);
-    return { ...presentation, ...parts, control: { id, attributes } };
+  if (!isContainer) {
+    return getPresentationHandedDown(presentation);
   }
   if (isContainer) {
     return { ...presentation, ...parts };
   }
-  const ownIds = new Set(
-    [label, description, help, errors].filter((part) => part.by === 'self').map((part) => part.id),
-  );
-  const shownDescribers = describedBy.filter((describer) => !ownIds.has(describer));
-  let shownControl = control;
-  if (control) {
-    const { 'aria-describedby': _describedBy, 'aria-invalid': _invalid, ...attributes } = control.attributes;
-    shownControl = {
-      ...control,
-      attributes: { ...attributes, ...getDescribedControlAttributes(shownDescribers, errors.messages) },
-    };
-  }
-  return { ...presentation, ...parts, describedBy: shownDescribers, control: shownControl };
+  return { ...presentation, ...parts };
 }
 
 /** Whether a field's label goes undrawn only because its template has no control for it to name, as an `anyOf`/`oneOf`
@@ -766,10 +807,18 @@ function SchemaFieldRender<
     required: effectiveRequired,
     inherited: inheritedPresentation?.plan,
   });
-  // What the field below rendering this same id inherits: the option field, or the fallback UI's value field
+  // What the field below rendering this same id inherits: the option field, the fallback UI's value field, or the field
+  // a custom field wrapping `SchemaField` renders
+  const handsDownOwnParts = fieldToRender?.handsDownOwnParts;
   const presentationBelow = useMemo(
-    () => presentation && { id: fieldId, plan: presentation, title, schemaDescription },
-    [fieldId, presentation, title, schemaDescription],
+    () =>
+      presentation && {
+        id: fieldId,
+        plan: handsDownOwnParts ? getPresentationHandedDown(presentation) : presentation,
+        title,
+        schemaDescription,
+      },
+    [fieldId, presentation, handsDownOwnParts, title, schemaDescription],
   );
   const fieldComponentPresentation = useMemo(
     () => (plannedAsOptions && presentation ? getPresentationBesideOptions(presentation) : presentation),
