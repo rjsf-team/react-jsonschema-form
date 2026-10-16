@@ -15,7 +15,6 @@ exports[`format iso-date-time 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -55,7 +54,6 @@ exports[`format iso-time 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -187,7 +185,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 class="p-0.5"
                                               >
                                                 <input
-                                                  aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                                   class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                                   data-slot="input"
                                                   id="root_tasks_0_title"
@@ -408,7 +405,6 @@ exports[`nameGenerator > bracketNameGenerator > array of objects 1`] = `
                                                 class="p-0.5"
                                               >
                                                 <input
-                                                  aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                                   class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                                   data-slot="input"
                                                   id="root_tasks_1_title"
@@ -739,7 +735,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                       class="p-0.5"
                                     >
                                       <input
-                                        aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                         data-slot="input"
                                         id="root_tags_0"
@@ -876,7 +871,6 @@ exports[`nameGenerator > bracketNameGenerator > array of strings 1`] = `
                                       class="p-0.5"
                                     >
                                       <input
-                                        aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                         data-slot="input"
                                         id="root_tags_1"
@@ -1082,21 +1076,21 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_choices"
                     id="root_choices__label"
                   >
                     choices
                   </label>
                   <div
+                    aria-labelledby="root_choices__label"
                     class="flex flex-col gap-2"
+                    id="root_choices"
+                    role="group"
                   >
                     <div
                       class="flex items-center gap-2"
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_choices__error root_choices__description root_choices__help"
-                        aria-required="false"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -1126,8 +1120,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_choices__error root_choices__description root_choices__help"
-                        aria-required="false"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -1157,8 +1149,6 @@ exports[`nameGenerator > bracketNameGenerator > checkboxes field 1`] = `
                     >
                       <button
                         aria-checked="false"
-                        aria-describedby="root_choices__error root_choices__description root_choices__help"
-                        aria-required="false"
                         class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                         data-slot="checkbox"
                         data-state="unchecked"
@@ -1272,7 +1262,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_person_firstName"
@@ -1309,7 +1298,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_person_lastName"
@@ -1377,7 +1365,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_person_address_street"
@@ -1414,7 +1401,6 @@ exports[`nameGenerator > bracketNameGenerator > nested object 1`] = `
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_person_address_city"
@@ -1482,7 +1468,6 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                 >
                   <label
                     class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    for="root_option"
                     id="root_option__label"
                   >
                     option
@@ -1491,13 +1476,14 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                     class="mb-0"
                   >
                     <div
-                      aria-describedby="root_option__error root_option__description root_option__help"
+                      aria-labelledby="root_option__label"
                       aria-orientation="vertical"
                       aria-required="false"
                       class="gap-3 flex flex-wrap flex-col"
                       data-orientation="vertical"
                       data-slot="radio-group"
                       dir="ltr"
+                      id="root_option"
                       role="radiogroup"
                       style="outline: none;"
                       tabindex="0"
@@ -1520,6 +1506,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         />
                         <input
                           aria-hidden="true"
+                          name="root[option]"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -1551,6 +1538,7 @@ exports[`nameGenerator > bracketNameGenerator > radio field 1`] = `
                         />
                         <input
                           aria-hidden="true"
+                          name="root[option]"
                           style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                           tabindex="-1"
                           type="radio"
@@ -1727,7 +1715,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_firstName"
@@ -1764,7 +1751,6 @@ exports[`nameGenerator > bracketNameGenerator > simple fields 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_age__error root_age__description root_age__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_age"
@@ -1883,7 +1869,6 @@ exports[`nameGenerator > bracketNameGenerator > textarea field 1`] = `
                     class="flex p-0.5"
                   >
                     <textarea
-                      aria-describedby="root_description__error root_description__description root_description__help"
                       class="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
                       data-slot="textarea"
                       id="root_description"
@@ -2019,7 +2004,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 class="p-0.5"
                                               >
                                                 <input
-                                                  aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
                                                   class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                                   data-slot="input"
                                                   id="root_tasks_0_title"
@@ -2240,7 +2224,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of objects 1`] = `
                                                 class="p-0.5"
                                               >
                                                 <input
-                                                  aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
                                                   class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                                   data-slot="input"
                                                   id="root_tasks_1_title"
@@ -2571,7 +2554,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                       class="p-0.5"
                                     >
                                       <input
-                                        aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
                                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                         data-slot="input"
                                         id="root_tags_0"
@@ -2708,7 +2690,6 @@ exports[`nameGenerator > dotNotationNameGenerator > array of strings 1`] = `
                                       class="p-0.5"
                                     >
                                       <input
-                                        aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
                                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                         data-slot="input"
                                         id="root_tags_1"
@@ -2954,7 +2935,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_person_firstName"
@@ -2991,7 +2971,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_person_lastName"
@@ -3059,7 +3038,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_person_address_street"
@@ -3096,7 +3074,6 @@ exports[`nameGenerator > dotNotationNameGenerator > nested object 1`] = `
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_person_address_city"
@@ -3277,7 +3254,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_firstName"
@@ -3314,7 +3290,6 @@ exports[`nameGenerator > dotNotationNameGenerator > simple fields 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_age__error root_age__description root_age__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_age"
@@ -3411,13 +3386,13 @@ exports[`radio widget with options sharing a String() in the realValue format (#
           class="mb-0"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-orientation="vertical"
             aria-required="false"
             class="gap-3 flex flex-wrap flex-col"
             data-orientation="vertical"
             data-slot="radio-group"
             dir="ltr"
+            id="root"
             role="radiogroup"
             style="outline: none;"
             tabindex="0"
@@ -3440,6 +3415,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
               />
               <input
                 aria-hidden="true"
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -3498,6 +3474,7 @@ exports[`radio widget with options sharing a String() in the realValue format (#
               <input
                 aria-hidden="true"
                 checked=""
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -4396,7 +4373,6 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
         class="flex flex-col gap-2"
       >
         <div
-          aria-describedby="root__description"
           class="relative "
         >
           <div>
@@ -4412,6 +4388,7 @@ exports[`single fields > checkbox field with description in schema and FieldTemp
           >
             <button
               aria-checked="false"
+              aria-describedby="root__description"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -4523,7 +4500,6 @@ exports[`single fields > checkbox field with label and description 1`] = `
         class="flex flex-col gap-2"
       >
         <div
-          aria-describedby="root__description"
           class="relative "
         >
           <div>
@@ -4539,6 +4515,7 @@ exports[`single fields > checkbox field with label and description 1`] = `
           >
             <button
               aria-checked="false"
+              aria-describedby="root__description"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -4591,7 +4568,6 @@ exports[`single fields > checkbox field with label and rich text description 1`]
         class="flex flex-col gap-2"
       >
         <div
-          aria-describedby="root__description"
           class="relative "
         >
           <div>
@@ -4615,6 +4591,7 @@ exports[`single fields > checkbox field with label and rich text description 1`]
           >
             <button
               aria-checked="false"
+              aria-describedby="root__description"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -4668,21 +4645,21 @@ exports[`single fields > checkboxes field 1`] = `
       >
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
           id="root__label"
         >
           An enum list rendered as checkboxes
         </label>
         <div
+          aria-labelledby="root__label"
           class="flex flex-col gap-2"
+          id="root"
+          role="group"
         >
           <div
             class="flex items-center gap-2"
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -4712,8 +4689,6 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -4743,8 +4718,6 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -4774,8 +4747,6 @@ exports[`single fields > checkboxes field 1`] = `
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -4829,21 +4800,22 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
       >
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
           id="root__label"
         >
           Checkbox Group
         </label>
         <div
+          aria-labelledby="root__label"
           class="flex flex-row gap-4 flex-wrap"
+          id="root"
+          role="group"
         >
           <div
             class="flex items-center gap-2"
           >
             <button
               aria-checked="true"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
+              aria-describedby="root__description root__help"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="checked"
@@ -4897,8 +4869,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
+              aria-describedby="root__description root__help"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -4928,8 +4899,7 @@ exports[`single fields > checkboxes widget with custom options and labels 1`] = 
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
+              aria-describedby="root__description root__help"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -5001,21 +4971,22 @@ exports[`single fields > checkboxes widget with required field 1`] = `
       >
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
           id="root__label"
         >
           Required Checkbox Group
         </label>
         <div
+          aria-labelledby="root__label"
           class="flex flex-col gap-2"
+          id="root"
+          role="group"
         >
           <div
             class="flex items-center gap-2"
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
+              aria-describedby="root__description"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -5045,8 +5016,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
+              aria-describedby="root__description"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -5076,8 +5046,7 @@ exports[`single fields > checkboxes widget with required field 1`] = `
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
+              aria-describedby="root__description"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -5167,7 +5136,7 @@ exports[`single fields > field with description 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                      aria-describedby="root_my-field__description"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_my-field"
@@ -5246,7 +5215,7 @@ exports[`single fields > field with description in uiSchema 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                      aria-describedby="root_my-field__description"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_my-field"
@@ -5325,7 +5294,7 @@ exports[`single fields > field with markdown description 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                      aria-describedby="root_my-field__description"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_my-field"
@@ -5410,7 +5379,7 @@ exports[`single fields > field with markdown description in uiSchema 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                      aria-describedby="root_my-field__description"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_my-field"
@@ -5467,7 +5436,6 @@ exports[`single fields > format color 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -5507,7 +5475,6 @@ exports[`single fields > format date 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -5547,7 +5514,6 @@ exports[`single fields > format datetime 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -5587,7 +5553,6 @@ exports[`single fields > format time 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -5678,7 +5643,8 @@ exports[`single fields > help and error display 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
+            aria-describedby="root__error root__help"
+            aria-invalid="true"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border-destructive focus-visible:ring-0"
             data-slot="input"
             id="root"
@@ -5782,7 +5748,6 @@ exports[`single fields > hidden label 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -5847,7 +5812,6 @@ exports[`single fields > number field 0 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -5890,7 +5854,6 @@ exports[`single fields > number field 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -6002,7 +5965,6 @@ exports[`single fields > optional data controls > does not show optional control
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObjectOptional_test"
@@ -6070,7 +6032,6 @@ exports[`single fields > optional data controls > does not show optional control
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -6143,7 +6104,6 @@ exports[`single fields > optional data controls > does not show optional control
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_nestedObjectOptional_deepObject_deepTest"
@@ -6569,7 +6529,6 @@ exports[`single fields > optional data controls > does not show optional control
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObject_test"
@@ -6787,7 +6746,6 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="p-0.5"
                                   >
                                     <input
-                                      aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                       data-slot="input"
                                       id="root_optionalObjectWithOneofs_name"
@@ -7058,7 +7016,6 @@ exports[`single fields > optional data controls > does not show optional control
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObjectOptional_test"
@@ -7127,7 +7084,6 @@ exports[`single fields > optional data controls > does not show optional control
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_nestedObjectOptional_deepObjectOptional_deepTest"
@@ -7201,7 +7157,6 @@ exports[`single fields > optional data controls > does not show optional control
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_nestedObjectOptional_deepObject_deepTest"
@@ -7632,7 +7587,6 @@ exports[`single fields > optional data controls > does not show optional control
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObject_test"
@@ -7853,7 +7807,6 @@ exports[`single fields > optional data controls > does not show optional control
                                     class="p-0.5"
                                   >
                                     <input
-                                      aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
                                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                       data-slot="input"
                                       id="root_optionalObjectWithOneofs_name"
@@ -8175,7 +8128,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObjectOptional_test"
@@ -8323,7 +8275,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_nestedObjectOptional_deepObject_deepTest"
@@ -8722,7 +8673,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       class="p-0.5"
                                     >
                                       <input
-                                        aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                         data-slot="input"
                                         id="root_nestedArrayOptional_0"
@@ -8887,7 +8837,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObject_test"
@@ -9293,7 +9242,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObjectOptional_test"
@@ -9403,7 +9351,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                         class="p-0.5"
                                       >
                                         <input
-                                          aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
                                           class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                           data-slot="input"
                                           id="root_nestedObjectOptional_deepObject_deepTest"
@@ -9717,7 +9664,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                                       class="p-0.5"
                                     >
                                       <input
-                                        aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
                                         class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                         data-slot="input"
                                         id="root_nestedArrayOptional_0"
@@ -9885,7 +9831,6 @@ exports[`single fields > optional data controls > shows "add" and "remove" optio
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObject_test"
@@ -10385,7 +10330,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 id="root_nestedObject_test"
@@ -10883,7 +10827,6 @@ exports[`single fields > optional data controls > shows "add" optional controls 
                               class="p-0.5"
                             >
                               <input
-                                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
                                 class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                                 data-slot="input"
                                 disabled=""
@@ -11145,7 +11088,6 @@ exports[`single fields > password field 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -11185,13 +11127,13 @@ exports[`single fields > radio field 1`] = `
           class="mb-0"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-orientation="vertical"
             aria-required="false"
             class="gap-3 flex flex-wrap flex-col"
             data-orientation="vertical"
             data-slot="radio-group"
             dir="ltr"
+            id="root"
             role="radiogroup"
             style="outline: none;"
             tabindex="0"
@@ -11214,6 +11156,7 @@ exports[`single fields > radio field 1`] = `
               />
               <input
                 aria-hidden="true"
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -11245,6 +11188,7 @@ exports[`single fields > radio field 1`] = `
               />
               <input
                 aria-hidden="true"
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -11288,7 +11232,6 @@ exports[`single fields > radio widget with description in schema and FieldTempla
       >
         <label
           class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          for="root"
           id="root__label"
         >
           test
@@ -11297,13 +11240,14 @@ exports[`single fields > radio widget with description in schema and FieldTempla
           class="mb-0"
         >
           <div
-            aria-describedby="root__error root__description root__help"
+            aria-labelledby="root__label"
             aria-orientation="vertical"
             aria-required="false"
             class="gap-3 flex flex-wrap flex-col"
             data-orientation="vertical"
             data-slot="radio-group"
             dir="ltr"
+            id="root"
             role="radiogroup"
             style="outline: none;"
             tabindex="0"
@@ -11313,6 +11257,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             >
               <button
                 aria-checked="false"
+                aria-describedby="root__description"
                 class="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                 data-orientation="vertical"
                 data-radix-collection-item=""
@@ -11326,6 +11271,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               />
               <input
                 aria-hidden="true"
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -11344,6 +11290,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
             >
               <button
                 aria-checked="false"
+                aria-describedby="root__description"
                 class="border-input text-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 aspect-square size-4 shrink-0 rounded-full border shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
                 data-orientation="vertical"
                 data-radix-collection-item=""
@@ -11357,6 +11304,7 @@ exports[`single fields > radio widget with description in schema and FieldTempla
               />
               <input
                 aria-hidden="true"
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -11596,7 +11544,7 @@ exports[`single fields > schema examples 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help root__examples"
+            aria-describedby="root__examples"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -11656,7 +11604,7 @@ exports[`single fields > schema examples with mixed types (string examples and n
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help root__examples"
+            aria-describedby="root__examples"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -11928,14 +11876,14 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
       >
         <div
           class="flex flex-col gap-2"
+          id="root"
+          role="group"
         >
           <div
             class="flex items-center gap-2"
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -11965,8 +11913,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-disabled=""
               data-slot="checkbox"
@@ -11999,8 +11945,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -12030,8 +11974,6 @@ exports[`single fields > select field multiple choice enumDisabled using checkbo
           >
             <button
               aria-checked="false"
-              aria-describedby="root__error root__description root__help"
-              aria-required="false"
               class="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
               data-slot="checkbox"
               data-state="unchecked"
@@ -12366,13 +12308,13 @@ exports[`single fields > select field single choice enumDisabled using radio wid
           class="mb-0"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-orientation="vertical"
             aria-required="false"
             class="gap-3 flex flex-wrap flex-col"
             data-orientation="vertical"
             data-slot="radio-group"
             dir="ltr"
+            id="root"
             role="radiogroup"
             style="outline: none;"
             tabindex="0"
@@ -12395,6 +12337,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               />
               <input
                 aria-hidden="true"
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -12429,6 +12372,7 @@ exports[`single fields > select field single choice enumDisabled using radio wid
               <input
                 aria-hidden="true"
                 disabled=""
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -12474,7 +12418,6 @@ exports[`single fields > select field single choice form disabled using radio wi
           class="mb-0"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-orientation="vertical"
             aria-required="false"
             class="gap-3 flex flex-wrap flex-col"
@@ -12482,6 +12425,7 @@ exports[`single fields > select field single choice form disabled using radio wi
             data-orientation="vertical"
             data-slot="radio-group"
             dir="ltr"
+            id="root"
             role="radiogroup"
             style="outline: none;"
             tabindex="-1"
@@ -12507,6 +12451,7 @@ exports[`single fields > select field single choice form disabled using radio wi
               <input
                 aria-hidden="true"
                 disabled=""
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -12541,6 +12486,7 @@ exports[`single fields > select field single choice form disabled using radio wi
               <input
                 aria-hidden="true"
                 disabled=""
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -12818,7 +12764,6 @@ exports[`single fields > select field single choice uiSchema disabled using radi
           class="mb-0"
         >
           <div
-            aria-describedby="root__error root__description root__help"
             aria-orientation="vertical"
             aria-required="false"
             class="gap-3 flex flex-wrap flex-col"
@@ -12826,6 +12771,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
             data-orientation="vertical"
             data-slot="radio-group"
             dir="ltr"
+            id="root"
             role="radiogroup"
             style="outline: none;"
             tabindex="-1"
@@ -12851,6 +12797,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
               <input
                 aria-hidden="true"
                 disabled=""
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -12885,6 +12832,7 @@ exports[`single fields > select field single choice uiSchema disabled using radi
               <input
                 aria-hidden="true"
                 disabled=""
+                name="root"
                 style="position: absolute; pointer-events: none; opacity: 0; margin: 0px; transform: translateX(-100%); width: 0px; height: 0px;"
                 tabindex="-1"
                 type="radio"
@@ -13187,13 +13135,11 @@ exports[`single fields > slider field 1`] = `
         class="flex flex-col gap-2"
       >
         <span
-          aria-describedby="root__error root__description root__help"
           aria-disabled="false"
           class="relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col"
           data-orientation="horizontal"
           data-slot="slider"
           dir="ltr"
-          id="root"
           style="--radix-slider-thumb-transform: translateX(-50%);"
         >
           <span
@@ -13220,12 +13166,14 @@ exports[`single fields > slider field 1`] = `
               data-orientation="horizontal"
               data-radix-collection-item=""
               data-slot="slider-thumb"
+              id="root"
               role="slider"
               style=""
               tabindex="0"
             />
           </span>
           <input
+            name="root"
             style="display: none;"
             value="75"
           />
@@ -13268,7 +13216,7 @@ exports[`single fields > string field > field with markdown help and description
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
+            aria-describedby="root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13353,7 +13301,7 @@ exports[`single fields > string field > field with markdown help text 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
+            aria-describedby="root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13429,7 +13377,7 @@ exports[`single fields > string field > field with markdown help text without a 
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
+            aria-describedby="root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13488,7 +13436,6 @@ exports[`single fields > string field > format data-url 1`] = `
             class="p-0.5"
           >
             <input
-              aria-describedby="root__error root__description root__help"
               class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
               data-slot="input"
               id="root"
@@ -13529,7 +13476,6 @@ exports[`single fields > string field > format email 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13569,7 +13515,6 @@ exports[`single fields > string field > format uri 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13609,7 +13554,6 @@ exports[`single fields > string field > regular 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13656,7 +13600,7 @@ exports[`single fields > string field > required field with markdown help 1`] = 
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
+            aria-describedby="root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13720,7 +13664,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13761,7 +13704,6 @@ exports[`single fields > string field > string field with allowClearTextInputs a
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13828,7 +13770,6 @@ exports[`single fields > string field > string field with placeholder 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -13868,7 +13809,6 @@ exports[`single fields > textarea field 1`] = `
           class="flex p-0.5"
         >
           <textarea
-            aria-describedby="root__error root__description root__help"
             class="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
             data-slot="textarea"
             id="root"
@@ -13945,7 +13885,6 @@ exports[`single fields > title field 1`] = `
                     class="p-0.5"
                   >
                     <input
-                      aria-describedby="root_title__error root_title__description root_title__help"
                       class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                       data-slot="input"
                       id="root_title"
@@ -14026,7 +13965,6 @@ exports[`single fields > up/down field 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -14067,7 +14005,6 @@ exports[`single fields > using custom tagName 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
             id="root"
@@ -14107,7 +14044,6 @@ exports[`string field with autocapitalize 1`] = `
           class="p-0.5"
         >
           <input
-            aria-describedby="root__error root__description root__help"
             autocapitalize="words"
             class="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
             data-slot="input"
