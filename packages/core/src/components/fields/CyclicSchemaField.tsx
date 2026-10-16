@@ -24,11 +24,14 @@ export default function CyclicSchemaField<
   const expanded = useSyncExternalStore(uiState.subscribe, readExpanded, readExpanded);
   const { globalUiOptions, fields, schemaUtils } = registry;
   const rootSchema = schemaUtils.getRootSchema();
-  const expandedSchema = useMemo(() => expandRefCycle<S>(schema, rootSchema), [schema, rootSchema]);
+  const expandedSchema = useMemo(
+    () => (expanded ? expandRefCycle<S>(schema, rootSchema) : undefined),
+    [expanded, schema, rootSchema],
+  );
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const { CyclicSchemaExpandTemplate } = getTemplates<T, S, F>(registry, uiOptions);
-  if (!expanded) {
+  if (expandedSchema === undefined) {
     return (
       <CyclicSchemaExpandTemplate
         registry={registry}
