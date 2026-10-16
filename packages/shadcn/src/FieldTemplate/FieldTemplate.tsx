@@ -3,6 +3,7 @@ import {
   getTemplates,
   getUiOptions,
   hasTemplateErrors,
+  templateDrawsDescription,
   templateDrawsLabel,
   templateLabelFor,
   templateMarksRequired,
@@ -92,7 +93,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
-        {rawDescription && !leavesPartsToCheckbox && (
+        {templateDrawsDescription<T, S, F>(props) && rawDescription && !leavesPartsToCheckbox && (
           <div className={cn('text-xs font-medium text-muted-foreground', { ' text-destructive': hasError })}>
             {description}
           </div>
