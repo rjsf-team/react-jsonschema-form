@@ -1,6 +1,6 @@
 import { Switch } from '@mantine/core';
 import { formTests, themeTests } from '@rjsf/snapshot-tests';
-import type { WidgetProps } from '@rjsf/utils';
+import type { RJSFSchema, WidgetProps } from '@rjsf/utils';
 import { helpId, optionHelpId } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
@@ -307,5 +307,22 @@ describe('mantine FieldHelpTemplate', () => {
     expect(help[0]).toHaveTextContent('Pick a pet');
     expect(container.querySelector(`[id="${optionHelpId('root_pet')}"]`)).toHaveTextContent('Dogs bark');
     expect(screen.getByRole('textbox')).toHaveAccessibleDescription('Pick a pet Dogs bark');
+  });
+});
+
+describe('mantine focuses its groups as core does', () => {
+  test.each<[string, RJSFSchema, string]>([
+    ['radio', { type: 'string', enum: ['red', 'green'] }, 'radio'],
+    ['checkboxes', { type: 'array', items: { type: 'string', enum: ['red', 'green'] }, uniqueItems: true }, 'checkbox'],
+  ])('focuses the first %s a user can choose under ui:autofocus', (widget, color, role) => {
+    render(
+      <WrappedForm
+        schema={{ type: 'object', properties: { color } }}
+        uiSchema={{ color: { 'ui:widget': widget, 'ui:autofocus': true, 'ui:enumDisabled': ['red'] } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.getAllByRole(role)[1]).toHaveFocus();
   });
 });

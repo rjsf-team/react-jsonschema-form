@@ -1,9 +1,8 @@
 import type { ReactElement, ChangeEvent, FocusEvent } from 'react';
 import { useCallback } from 'react';
-import { Checkbox, Input } from '@mantine/core';
+import { Checkbox } from '@mantine/core';
 import type { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps } from '@rjsf/utils';
 import {
-  errorId,
   getControlAttributes,
   hasWidgetErrors,
   labelValue,
@@ -11,7 +10,7 @@ import {
   widgetDrawsLabel,
 } from '@rjsf/utils';
 
-import { errorLines, getDescriptionProps, getWidgetErrors } from '../utils.tsx';
+import { getDescriptionProps, getWidgetErrors, renderErrors } from '../utils.tsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -68,7 +67,7 @@ export default function CheckboxWidget<
   );
 
   const { description } = getDescriptionProps(props);
-  const errors = errorLines(getWidgetErrors<T, S, F>(props));
+  const errors = getWidgetErrors<T, S, F>(props);
   const invalid = hasWidgetErrors<T, S, F>(props);
   return (
     <>
@@ -100,11 +99,7 @@ export default function CheckboxWidget<
         {...getControlAttributes<T, S, F>(props)}
         aria-invalid={invalid || undefined}
       />
-      {errors && (
-        <Input.Error id={errorId(id)} mt='calc(var(--mantine-spacing-xs) / 2)'>
-          {errors}
-        </Input.Error>
-      )}
+      {renderErrors(id, errors, { mt: 'calc(var(--mantine-spacing-xs) / 2)' })}
     </>
   );
 }

@@ -1,6 +1,13 @@
 import type { ReactElement, ReactNode } from 'react';
 import { createContext, Fragment, use, useCallback, useMemo } from 'react';
-import type { BoxProps, ElementProps, InputWrapperFactory, InputWrapperProps, StylesApiProps } from '@mantine/core';
+import type {
+  BoxProps,
+  ElementProps,
+  InputWrapperFactory,
+  InputWrapperProps,
+  MantineStyleProps,
+  StylesApiProps,
+} from '@mantine/core';
 import {
   Box,
   extractStyleProps,
@@ -225,11 +232,17 @@ export function getWidgetError<
  *
  * @param id - The id of the field
  * @param errors - The errors to render
+ * @param [errorProps] - Style props for the error element, such as the spacing a control drawn outside an
+ *   `Input.Wrapper` gives it
  * @returns - The error element, or null when there are no errors
  */
-export function renderErrors(id: string, errors: readonly ReactNode[]) {
+export function renderErrors(id: string, errors: readonly ReactNode[], errorProps?: MantineStyleProps) {
   const lines = errorLines(errors);
-  return lines ? <Input.Error id={errorId(id)}>{lines}</Input.Error> : null;
+  return lines ? (
+    <Input.Error {...errorProps} id={errorId(id)}>
+      {lines}
+    </Input.Error>
+  ) : null;
 }
 
 /** Gets the own errors of an object, which its template draws, as its field's plan says, with the field's
