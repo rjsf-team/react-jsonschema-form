@@ -2,12 +2,16 @@ import { useMemo } from 'react';
 import type {
   EnumOptionsType,
   ErrorSchema,
+  FieldPresentation,
+  FieldPresentationInputs,
   FieldProps,
   FormContextType,
+  Registry,
   RJSFSchema,
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
+  Widget,
 } from '@rjsf/utils';
 import {
   getByPath,
@@ -110,6 +114,67 @@ export function computeEnumOptions<
   return enumOptions;
 }
 
+/** Gets the schema of the selector property, taking `inferredType` when it declares no type of its own, memoised since
+ * the plan is memoised on it and a typeless selector would otherwise hand it a new schema every render. Keyed on the
+ * property's own schema rather than on `enumOptions`, which is rebuilt with every change of the data
+ *
+ * @param enumOptions - The options, whose first holds the selector property
+ * @param selectorField - The name of the selector property
+ * @param inferredType - The type of the selected option, or the field's base type
+ * @returns - The selector's schema
+ */
+function useSelectorSchema<S extends StrictRJSFSchema>(
+  enumOptions: EnumOptionsType<S>[],
+  selectorField: string,
+  inferredType: S['type'] | string | undefined,
+): S {
+  const propertySchema = getPropertySchema<S>(enumOptions[0]?.schema, selectorField);
+  return useMemo(
+    () => (propertySchema.type ? propertySchema : { ...propertySchema, type: inferredType }),
+    [propertySchema, inferredType],
+  );
+}
+
+/** Builds the plan of a `LayoutMultiSchemaField`, which no `SchemaField` renders, with the resolvers `SchemaField` plans a
+ * field rendering its selector widget with, memoised on what it reads, as `SchemaField` memoises its plans (#5490
+ * decision 19)
+ *
+ * @param inputs - The field's id, registry, the schema its selector renders and its widget, and its own label,
+ *   description, help, errors and whether it renders a control
+ * @returns - The plan
+ */
+function useLayoutPresentation<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  inputs: Omit<FieldPresentationInputs, 'declaration' | 'componentId' | 'inherited'> & {
+    registry: Registry<T, S, F>;
+    schema: S;
+    widget: Widget<T, S, F> | string | undefined;
+  },
+): FieldPresentation {
+  const { id, registry, schema, widget, label, showLabel, description, help, errors, hideError, hasControl, required } =
+    inputs;
+  return useMemo(
+    () =>
+      resolveFieldPresentation({
+        id,
+        declaration: getPresentationDeclaration<T, S, F>(registry, {
+          schema,
+          field: registry.fields.LayoutMultiSchemaField,
+          fieldKey: 'LayoutMultiSchemaField',
+          widget,
+        }),
+        label,
+        showLabel,
+        description,
+        help,
+        errors,
+        hideError,
+        hasControl,
+        required,
+      }),
+    [id, registry, schema, widget, label, showLabel, description, help, errors, hideError, hasControl, required],
+  );
+}
+
 /** The `LayoutMultiSchemaField` is an adaptation of the `MultiSchemaField` but changed considerably to only
  * support `anyOf`/`oneOf` fields that are being displayed in a `LayoutGridField` where the field selection is shown as
  * a radio group by default. It expects that a `selectorField` is provided (either directly via the `discriminator`
@@ -141,7 +206,7 @@ export default function LayoutMultiSchemaField<
     errorSchema,
     hideError,
   } = props;
-  const { fields, widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
+  const { widgets, schemaUtils, globalUiOptions, uiSchemaDefinitions } = registry;
   const sendOptionSwitch = useSendOptionSwitch(fieldPath);
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const enumOptions = useMemo(
@@ -187,10 +252,8 @@ export default function LayoutMultiSchemaField<
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
   }
   const selectedOption = getByPath(formData, selectorField);
-  let optionSchema = getPropertySchema<S>(enumOptions[0]?.schema, selectorField);
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
-  // If the subschema doesn't declare a type, infer the type from the parent schema
-  optionSchema = optionSchema?.type ? optionSchema : { ...optionSchema, type: option?.type || baseType };
+  const optionSchema = useSelectorSchema<S>(enumOptions, selectorField, option?.type || baseType);
   const { Widget } = resolveWidget<T, S, F>(optionSchema, widget, widgets);
 
   // Resolved as `SchemaField` resolves it: the field's own `ui:hideError`, then the one handed down, then
@@ -200,7 +263,8 @@ export default function LayoutMultiSchemaField<
     hideError ??
     uiBooleanOption(globalUiOptions?.hideError);
 
-  const rawErrors = errorSchema?.[ERRORS_KEY] ?? [];
+  const ownErrors = errorSchema?.[ERRORS_KEY];
+  const rawErrors = ownErrors ?? [];
   const fieldErrorSchema = { ...errorSchema } as ErrorSchema<T>;
   delete fieldErrorSchema[ERRORS_KEY];
 
@@ -253,21 +317,20 @@ export default function LayoutMultiSchemaField<
   const hasErrors = hasVisibleErrors({ rawErrors, hideError: hideFieldError });
   const { help: ownHelp, description: uiDescription } = uiOptions;
   const hidden = widget === 'hidden' || deprecatedHandling === 'hide';
+  const showLabel = uiBooleanOption(uiOptions.label) ?? true;
+  const fieldDescription = uiDescription || schema.description || '';
   // Not rendered by a `SchemaField`, so it plans itself with the same resolvers, as a field rendering its selector
   // widget, with no field above it rendering the same id
-  const presentation = resolveFieldPresentation({
+  const presentation = useLayoutPresentation<T, S, F>({
     id,
-    declaration: getPresentationDeclaration<T, S, F>(registry, {
-      schema: optionSchema,
-      field: fields.LayoutMultiSchemaField,
-      fieldKey: 'LayoutMultiSchemaField',
-      widget,
-    }),
+    registry,
+    schema: optionSchema,
+    widget,
     label,
-    showLabel: uiBooleanOption(uiOptions.label) ?? true,
-    description: uiDescription || schema.description || '',
+    showLabel,
+    description: fieldDescription,
     help: ownHelp,
-    errors: rawErrors,
+    errors: ownErrors,
     hideError: hideFieldError,
     hasControl: !hidden,
     required,
