@@ -2215,6 +2215,19 @@ it in a component, e.g. `const { Widget } = resolveWidget(schema, widget, regist
 
 - An error if there is no `Widget` component that can be returned
 
+### rootSchemaIdOf&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+Returns the id a validator registers the root schema under, which is the prefix [withRootIdRefPrefix()](#withrootidrefprefixsextendsstrictrjsfschemarjsfschema) gives a local `$ref`: the root's own `$id` less any fragment, which names a place in the document rather than the document a pointer is read in, or the value of the `ROOT_SCHEMA_PREFIX` constant where that leaves nothing, as for no `$id`, an empty one or one that is only a fragment, such as `#root`.
+So `http://example.com/root.json#foo` gives `http://example.com/root.json`.
+
+#### Parameters
+
+- rootSchema: S - The root schema
+
+#### Returns
+
+- string: The id the root is registered under
+
 ### schemaHasNestedConditional&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Recursively checks whether the given raw `schema` contains a `dependencies` or `if` keyword anywhere below its top level, e.g. inside a nested object's `properties`, a `$ref`, an array's tuple `items`, or an `additionalProperties`, `unevaluatedProperties` or `patternProperties` entry.
@@ -2231,18 +2244,6 @@ Recursively checks whether the given raw `schema` contains a `dependencies` or `
 #### Returns
 
 - boolean: True if a `dependencies` or `if` keyword exists below the root of the schema
-
-### rootSchemaIdOf&lt;S extends StrictRJSFSchema = RJSFSchema>()
-
-Returns the id a validator registers the root schema under, which is the prefix [withRootIdRefPrefix()](#withrootidrefprefixsextendsstrictrjsfschemarjsfschema) gives a local `$ref`: the root's own `$id`, or the value of the `ROOT_SCHEMA_PREFIX` constant where it has none, since an empty `$id` names nothing a `$ref` could resolve against.
-
-#### Parameters
-
-- rootSchema: S - The root schema
-
-#### Returns
-
-- string: The id the root is registered under
 
 ### schemaKey&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -2696,8 +2697,8 @@ This is used in isValid to make references to the rootSchema
 
 ### withRootIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
-Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id a validator registers `rootSchema` under, as [rootSchemaIdOf()](#rootschemaidofsextendsstrictrjsfschemarjsfschema) returns it: the root's own `$id`, or the value of the `ROOT_SCHEMA_PREFIX` constant where it has none.
-An id ending in an empty fragment names the same document as one without it, so that `#` is left out: `withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })` gives `{ $ref: 'http://example.com/root.json#/if' }`.
+Recursively prefixes every `$ref` local to the root document, one starting with `#`, with the id a validator registers `rootSchema` under, as [rootSchemaIdOf()](#rootschemaidofsextendsstrictrjsfschemarjsfschema) returns it: the root's own `$id` less any fragment, or the value of the `ROOT_SCHEMA_PREFIX` constant where that leaves nothing.
+So `withRootIdRefPrefix({ $ref: '#/if' }, { $id: 'http://example.com/root.json#' })` gives `{ $ref: 'http://example.com/root.json#/if' }`.
 A validator applies it to a schema it validates beside `rootSchema`, so that a `$ref` local to the root resolves against the root whatever the schema holding it is registered as.
 
 #### Parameters
