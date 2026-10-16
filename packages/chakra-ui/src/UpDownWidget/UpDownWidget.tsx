@@ -33,7 +33,9 @@ export default function UpDownWidget<
       {...chakraProps}
     >
       <NumberInputRoot
-        value={value}
+        // Zag's number input is uncontrolled while `value` is `undefined`, and would go on showing the last number
+        // after the form clears the value, so a missing value is passed as the empty input it is
+        value={value ?? ''}
         onValueChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}

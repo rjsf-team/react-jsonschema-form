@@ -68,6 +68,33 @@ describe('UpDownWidget value', () => {
     await waitFor(() => expect(screen.getByRole('spinbutton')).toHaveValue('9'));
   });
 
+  it.each<[string, (form: FormRef) => void]>([
+    ['clears the value from outside the widget', (form) => form.setFieldValue('', undefined)],
+    ['resets to a seed without the value', (form) => form.reset()],
+  ])('shows nothing once the form %s', async (_, clear) => {
+    const ref = createRef<FormRef>();
+    render(
+      <Form
+        ref={ref}
+        schema={{ type: 'object', properties: { n: { type: 'integer' } } }}
+        uiSchema={{ n: { 'ui:widget': 'updown' } }}
+        initialFormData={{}}
+        validator={validator}
+      />,
+    );
+    const input = screen.getByRole('spinbutton');
+    await user.type(input, '5');
+    await waitFor(() => expect(input).toHaveValue('5'));
+
+    act(() => {
+      if (ref.current) {
+        clear(ref.current);
+      }
+    });
+
+    await waitFor(() => expect(input).toHaveValue(''));
+  });
+
   it('shows what the user types', async () => {
     render(
       <Form
