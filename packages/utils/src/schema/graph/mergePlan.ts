@@ -108,6 +108,10 @@ export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
   readonly optionsInheritRefPath?: boolean;
 }
 
+/** A policy with its defaults filled in */
+type ResolvedPolicy<S extends StrictRJSFSchema> = Required<Omit<PlanPolicy<S>, 'selectOption'>> &
+  Pick<PlanPolicy<S>, 'selectOption'>;
+
 /** A field's merge plan: its ordered entries, their set, and the merged schema with its children's seeds */
 export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
   readonly graph: SchemaGraph<S>;
@@ -352,11 +356,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly graph: SchemaGraph<S>;
   private readonly data: unknown;
   private readonly depData: unknown;
-  private readonly allOf: boolean | 'if';
-  private readonly conditions: boolean;
-  private readonly cutRecursion: boolean;
-  private readonly selectOption: PlanPolicy<S>['selectOption'];
-  private readonly optionsInheritRefPath: boolean;
+  private readonly policy: ResolvedPolicy<S>;
   private mergeAllOf: boolean;
   private readsData = false;
   /** How many `then`, `else` and `dependencies` branches are being expanded: a branch has its `allOf` merged whatever
@@ -369,17 +369,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     graph: SchemaGraph<S>,
     data: unknown,
     depData: unknown,
-    policy: Required<Omit<PlanPolicy<S>, 'selectOption'>> & Pick<PlanPolicy<S>, 'selectOption'>,
+    policy: ResolvedPolicy<S>,
   ) {
     this.context = context;
     this.graph = graph;
     this.data = data;
     this.depData = depData;
-    this.allOf = policy.allOf;
-    this.conditions = policy.conditions;
-    this.cutRecursion = policy.cutRecursion;
-    this.selectOption = policy.selectOption;
-    this.optionsInheritRefPath = policy.optionsInheritRefPath;
+    this.policy = policy;
     this.mergeAllOf = policy.allOf === true;
   }
 
@@ -413,7 +409,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   private flatten(node: ObjectNode<S>, refPath: RefPath): Map<string | symbol, Provider<S>> {
     return flattenRef(this.graph, node, refPath, (target, path) => {
-      const cut = this.cutRecursion && path.slice(0, -1).includes(target);
+      const cut = this.policy.cutRecursion && path.slice(0, -1).includes(target);
       return !cut && this.enter(target, 'ref', path);
     });
   }
@@ -433,7 +429,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
     const keywords = this.flatten(node, refPath);
-    if (top && this.allOf === 'if' && keywords.has(IF_KEY)) {
+    if (top && this.policy.allOf === 'if' && keywords.has(IF_KEY)) {
       this.mergeAllOf = true;
     }
     const schema = schemaFrom(
@@ -451,7 +447,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       part = this.applyOption(part, ONE_OF_KEY, keywords.get(ONE_OF_KEY), dependencies);
     }
     part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY), keywords.get(PROPERTIES_KEY));
-    if (this.conditions) {
+    if (this.policy.conditions) {
       part = this.applyCondition(part, keywords, dependencyKey);
     }
     part = this.applyAllOf(part, keywords.get(ALL_OF_KEY), dependencyKey);
@@ -626,11 +622,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
         : conditionNode.kind === 'boolean' && conditionNode.value;
     }
     const resolved = new PlanBuilder(this.context, this.graph, this.data, this.depData, {
+      ...this.policy,
       allOf: true,
-      conditions: this.conditions,
-      cutRecursion: this.cutRecursion,
-      selectOption: this.selectOption,
-      optionsInheritRefPath: this.optionsInheritRefPath,
     }).build([{ node: option, refPath: [] }]);
     const properties: unknown = resolved.schema.properties;
     return isObject(properties) ? properties[key] : undefined;
@@ -691,8 +684,8 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       list: Reflect.get(provider.node.raw, keyword),
       dependencies,
     };
-    this.readsData ||= this.selectOption !== undefined;
-    const chosen = this.selectOption?.({
+    this.readsData ||= this.policy.selectOption !== undefined;
+    const chosen = this.policy.selectOption?.({
       ...request,
       graph: this.graph,
       data: this.data,
@@ -701,7 +694,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     });
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });
-    const optionRefPath = this.optionsInheritRefPath ? provider.refPath : [];
+    const optionRefPath = this.policy.optionsInheritRefPath ? provider.refPath : [];
     const option = selected === undefined ? undefined : this.expand(options[selected], optionRefPath, 'option', false);
     return option === undefined ? part : mergeBranch(part, option);
   }
@@ -749,33 +742,29 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
 ): MergePlan<S> {
   const { context, graph, seeds, data, policy } = input;
   const depData = input.depData === undefined ? data : input.depData;
-  const allOf = policy?.allOf ?? true;
-  const conditions = policy?.conditions ?? true;
-  const cutRecursion = policy?.cutRecursion ?? false;
-  const selectOption = policy?.selectOption;
-  const optionsInheritRefPath = policy?.optionsInheritRefPath ?? false;
+  const resolved: ResolvedPolicy<S> = {
+    allOf: policy?.allOf ?? true,
+    conditions: policy?.conditions ?? true,
+    cutRecursion: policy?.cutRecursion ?? false,
+    selectOption: policy?.selectOption,
+    optionsInheritRefPath: policy?.optionsInheritRefPath ?? false,
+  };
   const keys = [
     context.validator,
     context.customMergeAllOf,
     graph,
     seedsKey(seeds),
-    allOf,
-    conditions,
-    cutRecursion,
-    selectOption,
-    optionsInheritRefPath,
+    resolved.allOf,
+    resolved.conditions,
+    resolved.cutRecursion,
+    resolved.selectOption,
+    resolved.optionsInheritRefPath,
   ];
   const memoized = plans.peekAny(keys, [data, depData]);
   if (isPlanOf(memoized, graph)) {
     return memoized;
   }
-  const plan = new PlanBuilder(context, graph, data, depData, {
-    allOf,
-    conditions,
-    cutRecursion,
-    selectOption,
-    optionsInheritRefPath,
-  }).build(seeds);
+  const plan = new PlanBuilder(context, graph, data, depData, resolved).build(seeds);
   planGraphs.set(plan, graph);
   if (plan.readsData) {
     plans.setLatest(keys, [data, depData], plan);
