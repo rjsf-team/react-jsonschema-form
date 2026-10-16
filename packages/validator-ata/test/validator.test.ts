@@ -6,7 +6,14 @@ import type {
   RJSFValidationError,
   UiSchema,
 } from '@rjsf/utils';
-import { createSchemaUtils, ErrorSchemaBuilder, ID_KEY, ROOT_SCHEMA_PREFIX, getValidationTarget, noop } from '@rjsf/utils';
+import {
+  createSchemaUtils,
+  ErrorSchemaBuilder,
+  ID_KEY,
+  ROOT_SCHEMA_PREFIX,
+  getValidationTarget,
+  noop,
+} from '@rjsf/utils';
 import type { Validator } from 'ata-validator';
 
 import pointerValidationTests, {
