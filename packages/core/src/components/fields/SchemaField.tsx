@@ -634,19 +634,6 @@ function SchemaFieldRender<
     [xxxOfOptions, selectedOption, schema, schemaUtils, _schema, formData],
   );
   const hasOptions = xxxOfOptions !== undefined;
-  // Whether the selected option's field is labelled by its template, which below a field named here no longer sees the
-  // `ui:field` that turns the label off. Only that raw key does, so without it the field's own answer holds
-  const optionFieldLabelled = useMemo(
-    () =>
-      hasOptions && namesField && uiSchema[UI_FIELD_KEY]
-        ? schemaUtils.getDisplayLabel(
-            schema,
-            withoutNamedField<T, S, F>(uiSchema, globalUiOptions?.field),
-            globalUiOptions,
-          )
-        : undefined,
-    [hasOptions, namesField, uiSchema, schemaUtils, schema, globalUiOptions],
-  );
   const shownOption = useMemo(
     () => (xxxOfOptions ? { fieldPath, options: xxxOfOptions, list, selectedOption, selectOption } : undefined),
     [xxxOfOptions, list, selectedOption, selectOption, fieldPath],
@@ -816,7 +803,7 @@ function SchemaFieldRender<
   // The field of the selected option renders a description in that case, its own or, where it declares none, this
   // field's, so the template, which may render the description of a field it leaves unlabelled, is handed none
   const description =
-    XxxOfField && optionRendersFieldLabel<S>(schema, uiOptions.label, optionFieldLabelled ?? isLabelled)
+    XxxOfField && optionRendersFieldLabel<S>(schema, uiOptions.label, isLabelled)
       ? ''
       : uiOptions.description || props.schema.description || schema.description || '';
   const { help } = uiOptions;

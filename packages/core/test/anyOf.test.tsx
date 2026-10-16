@@ -1,10 +1,10 @@
 import { createRef, StrictMode, useEffect, useState } from 'react';
-import type { FieldProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
-import { noop, toFieldPath } from '@rjsf/utils';
+import type { FieldProps, FieldTemplateProps, FormValidation, RJSFSchema, WidgetProps } from '@rjsf/utils';
+import { descriptionId, noop, toFieldPath } from '@rjsf/utils';
 import type { ValidatorFunctions } from '@rjsf/validator-ajv8';
 import validator, { createPrecompiledValidator } from '@rjsf/validator-ajv8';
 import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
 import AnyOfField from '../src/components/fields/MultiSchemaField.tsx';
@@ -1990,6 +1990,31 @@ describe('anyOf', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
       expect(selects).toHaveLength(1);
+    });
+    it("should render the field's description once with a template that renders every description it is handed", () => {
+      const FieldTemplate = ({ id, rawDescription, children }: FieldTemplateProps) => (
+        <div>
+          {rawDescription && <div id={descriptionId(id)}>{rawDescription}</div>}
+          {children}
+        </div>
+      );
+      const { node } = createFormComponent({
+        schema: {
+          type: 'string',
+          description: 'DESCRIPTION',
+          anyOf: [
+            { title: 'A', minLength: 1 },
+            { title: 'B', maxLength: 3 },
+          ],
+        },
+        uiSchema,
+        templates: { FieldTemplate },
+      });
+
+      // The option's field renders the description its template is handed, so the template of the field holding the
+      // options rendering it as well would repeat the DOM id that `aria-describedby` points at
+      expect(screen.getAllByText('DESCRIPTION')).toHaveLength(1);
+      expect(node.querySelectorAll('[id="root__description"]')).toHaveLength(1);
     });
   });
 
