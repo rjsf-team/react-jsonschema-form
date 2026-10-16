@@ -13,7 +13,7 @@ import isObject, { isSchemaObject } from '../isObject.ts';
 import isWholeValueSelect from '../isWholeValueSelect.ts';
 import type { FormContextType, GenericObjectType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { closestOption } from './getClosestMatchingOption.ts';
-import { mergeAllOf, schemaFrom } from './graph/mergePlan.ts';
+import { mergeAllOf, schemaOfBoolean } from './graph/mergePlan.ts';
 import resolveConstantOptions from './resolveConstantOptions.ts';
 import { conditionHolds, resolveOwnRef } from './retrieveSchema.ts';
 
@@ -271,7 +271,7 @@ export default function omitExtraData<
     const winning: unknown = oneOf[bestIndex];
     const resolved: S = isSchemaObject<S>(winning)
       ? resolveOwnRef<S>(winning, rootSchema)
-      : schemaFrom(rootSchema, winning ? {} : { not: {} });
+      : schemaOfBoolean(Boolean(winning), rootSchema);
     return omit(resolved, source, target, false);
   }
 
