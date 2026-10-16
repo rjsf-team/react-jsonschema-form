@@ -490,6 +490,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
 
   private holds(key: string, condition: S, data: unknown): boolean {
     this.readsData = true;
+    // The memo stores no check of an object, which a caller may mutate in place between builds
+    if (typeof data === 'object' && data !== null) {
+      return this.context.validator.isValid(condition, data, this.graph.rawRoot);
+    }
     const keys = [this.context.validator, this.graph, key];
     const memoized = conditionMemo.peekLatest(keys, [data]);
     if (memoized !== undefined) {
@@ -720,8 +724,9 @@ function isPlanOf<S extends StrictRJSFSchema>(value: unknown, graph: SchemaGraph
 
 /** Builds the merge plan of the field `input.seeds` seed, memoized per seeds, data, policy and context: the same
  * inputs give the same plan object while the data is the last the plan was built for, and a plan whose build read
- * nothing of the data is the same object for any data. Checks of an `if` or a dependency condition are
- * memoized per (node, data), so a parent's lookahead and the child's own build do not check the same condition twice.
+ * nothing of the data is the same object for any data. A check of an `if` or a dependency condition is memoized per
+ * node for the last data it was made on, so a parent's lookahead and the child's own build do not check the same
+ * condition twice, unless the data is an object, which is checked again on every build.
  *
  * @param input - The graph, seeds, data, policy and context of the field
  * @returns - The field's merge plan
