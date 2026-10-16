@@ -52,6 +52,10 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   readonly pointer: string;
   /** The base URI `$ref`s inside the subschema resolve against */
   readonly baseUri: string;
+  /** The base URI of the subschema holding this one, which its own `$id` resolves against: one object reached in two
+   * resources is a node in each, since its `$ref`s resolve against each
+   */
+  readonly outerBase: string;
   readonly raw: S;
   /** Whether the subschema is a `$ref` and nothing that changes what it resolves to */
   readonly pureRef: boolean;
@@ -84,18 +88,22 @@ export interface SchemaGraph<S extends StrictRJSFSchema = RJSFSchema> {
    * are written; a value that is not a subschema is left out
    */
   subschemas(id: NodeId, keyword: string): [string, NodeId][];
-  /** The node parsed from the object subschema `raw`, if one was */
-  byObject(raw: object): NodeId | undefined;
-  /** Returns the node `raw` parsed to, parsing a schema from outside the root into a graph that extends this one with
-   * it, once per object. A call root such as the `{ allOf: [property, ...patterns] }` a caller builds, or an option
-   * spread over its parent, is such a schema: its `$ref`s resolve against the root like any other.
+  /** The node parsed from the object subschema `raw` under the base URI `outerBase`, if one was, or else the node first
+   * parsed from it
    */
-  adopt(raw: S): AdoptedSchema<S>;
+  byObject(raw: object, outerBase?: string): NodeId | undefined;
+  /** Returns the node `raw` parsed to, parsing a schema from outside the root into a graph that extends this one with
+   * it, once per object and base. A call root such as the `{ allOf: [property, ...patterns] }` a caller builds, or an
+   * option spread over its parent, is such a schema: its `$ref`s resolve against the root like any other, or against
+   * `outerBase` where it is given.
+   */
+  adopt(raw: S, outerBase?: string): AdoptedSchema<S>;
   /** Returns the node `raw` parsed to, `raw` being a copy a caller made of the schema `of` stands for, such as a spread
    * of it with a keyword of its own made on every render: a copy whose keywords are those of the last copy adopted for
-   * `of` is not parsed again, so the plans made for one are made for the other
+   * `of` is not parsed again, so the plans made for one are made for the other. The copy is parsed where the node
+   * `copied` it copies sits, so its `$ref`s resolve against the resource that node is in.
    */
-  adoptCopy(raw: S, of: object): AdoptedSchema<S>;
+  adoptCopy(raw: S, of: object, copied: NodeId): AdoptedSchema<S>;
 }
 
 /** A schema's node and the graph holding it: the graph `adopt()` was called on when the schema was parsed with it, or
@@ -208,14 +216,15 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   private readonly rootBase: string;
   private readonly offset: number;
   private readonly own: SchemaNode<S>[] = [];
-  private readonly objects = new WeakMap<object, ObjectNode<S>>();
+  /** The nodes parsed from each object, in the order they were: one per base URI it was reached under */
+  private readonly objects = new WeakMap<object, ObjectNode<S>[]>();
   /** The nodes parsed from data, which a `$ref` reached through a keyword holding no subschemas */
   private readonly dataNodes = new Set<NodeId>();
   private readonly pointers = new Map<string, NodeId>();
   private readonly resources = new Map<string, ObjectNode<S>>();
   private readonly anchors = new Map<string, NodeId>();
   private readonly pendingRefs: Mutable<ObjectNode<S>>[] = [];
-  private readonly overlays = new WeakMap<object, AdoptedSchema<S>>();
+  private readonly overlays = new WeakMap<object, Map<string, AdoptedSchema<S>>>();
   private readonly copies = new WeakMap<object, { readonly raw: S; readonly adopted: AdoptedSchema<S> }>();
 
   constructor(rawRoot: S, base?: Graph<S>) {
@@ -244,8 +253,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     return this.pointers.get(pointer) ?? this.base?.byPointer(pointer);
   }
 
-  byObject(raw: object): NodeId | undefined {
-    return this.knownObject(raw)?.id;
+  byObject(raw: object, outerBase?: string): NodeId | undefined {
+    return (outerBase === undefined ? undefined : this.knownObject(raw, outerBase))?.id ?? this.knownObject(raw)?.id;
   }
 
   child(id: NodeId, keyword: string, key?: string): NodeId | undefined {
@@ -277,26 +286,33 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     });
   }
 
-  adopt(raw: S): AdoptedSchema<S> {
-    const known = this.byObject(raw);
+  adopt(raw: S, outerBase: string = this.rootBase): AdoptedSchema<S> {
+    const known = this.byObject(raw, outerBase);
     if (known !== undefined) {
       return { graph: this, node: known };
     }
-    let adopted = this.overlays.get(raw);
+    let byBase = this.overlays.get(raw);
+    if (byBase === undefined) {
+      byBase = new Map();
+      this.overlays.set(raw, byBase);
+    }
+    let adopted = byBase.get(outerBase);
     if (adopted === undefined) {
       const overlay = new Graph<S>(this.rawRoot, this);
-      adopted = { graph: overlay, node: overlay.parse(raw, EXTERNAL_POINTER, this.rootBase).id };
-      this.overlays.set(raw, adopted);
+      adopted = { graph: overlay, node: overlay.parse(raw, EXTERNAL_POINTER, outerBase).id };
+      byBase.set(outerBase, adopted);
     }
     return adopted;
   }
 
-  adoptCopy(raw: S, of: object): AdoptedSchema<S> {
+  adoptCopy(raw: S, of: object, copied: NodeId): AdoptedSchema<S> {
     const last = this.copies.get(of);
     if (last !== undefined && sameKeywords(last.raw, raw)) {
       return last.adopted;
     }
-    const adopted = this.adopt(raw);
+    const node = this.node(copied);
+    // A boolean sits in no resource of its own, so a copy of what it reads as is parsed as a call root
+    const adopted = this.adopt(raw, node.kind === 'schema' ? node.outerBase : this.rootBase);
     this.copies.set(of, { raw, adopted });
     return adopted;
   }
@@ -307,7 +323,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     if (typeof sub === 'boolean') {
       return this.byPointer(childPointer(node.pointer, tokens));
     }
-    return isObject(sub) ? this.byObject(sub) : undefined;
+    return isObject(sub) ? this.byObject(sub, node.baseUri) : undefined;
   }
 
   private parse(raw: S, pointer: string, base: string): ObjectNode<S> {
@@ -341,12 +357,30 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     return isSchemaObject<S>(value) ? this.visitObject(value, pointer, base, data).id : undefined;
   }
 
-  private knownObject(raw: object): ObjectNode<S> | undefined {
-    return this.objects.get(raw) ?? this.base?.knownObject(raw);
+  /** The node parsed from `raw` under `outerBase`, or the one first parsed from it where no base is given */
+  private knownObject(raw: object, outerBase?: string): ObjectNode<S> | undefined {
+    const known = this.base?.knownObject(raw, outerBase);
+    if (known !== undefined) {
+      return known;
+    }
+    const nodes = this.objects.get(raw);
+    return outerBase === undefined ? nodes?.[0] : nodes?.find((node) => node.outerBase === outerBase);
+  }
+
+  private addObject(node: ObjectNode<S>): void {
+    const nodes = this.objects.get(node.raw);
+    if (nodes === undefined) {
+      this.objects.set(node.raw, [node]);
+    } else {
+      nodes.push(node);
+    }
   }
 
   private visitObject(value: S, pointer: string, base: string, data: boolean): ObjectNode<S> {
-    const known = this.knownObject(value);
+    // An object reached again under the base it was parsed under is that node. Within the root, one reached under
+    // another base is a node of its own, since its `$ref`s resolve against that base; a schema from outside the root
+    // reaches the root's own subschemas, whose nodes it shares
+    const known = this.knownObject(value, base) ?? (this.base === undefined ? undefined : this.knownObject(value));
     if (known !== undefined) {
       if (!this.pointers.has(pointer)) {
         this.pointers.set(pointer, known.id);
@@ -359,10 +393,11 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       id: this.nextId(),
       pointer,
       baseUri: resourceId === undefined ? base : resolveUri(base, resourceId),
+      outerBase: base,
       raw: value,
       pureRef: isPureRef(value),
     };
-    this.objects.set(value, node);
+    this.addObject(node);
     this.add(node);
     if (data) {
       this.dataNodes.add(node.id);
@@ -456,6 +491,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       ...node,
       id: this.nextId(),
       pointer: `${pointer}/0`,
+      outerBase: node.baseUri,
       raw: schemaFrom(node.raw, Object.fromEntries(Object.entries(node.raw).filter(([key]) => key !== REF_KEY))),
       ref: undefined,
       conjunction: undefined,
@@ -475,6 +511,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       id: this.nextId(),
       pointer: `${pointer}/1`,
       baseUri: node.baseUri,
+      outerBase: node.baseUri,
       raw: schemaFrom(node.raw, { [REF_KEY]: refOf(node.raw) }),
       pureRef: true,
       ref: node.ref,
@@ -484,6 +521,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       id: this.nextId(),
       pointer,
       baseUri: node.baseUri,
+      outerBase: node.baseUri,
       raw: schemaFrom(node.raw, { [ALL_OF_KEY]: [siblings.raw, reference.raw] }),
       pureRef: false,
     }).id;
@@ -491,7 +529,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
 
   private addSynthetic(node: ObjectNode<S>): ObjectNode<S> {
     this.add(node);
-    this.objects.set(node.raw, node);
+    this.addObject(node);
     return node;
   }
 
@@ -549,7 +587,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     const hashAt = absolute.indexOf('#');
     const uri = hashAt < 0 ? absolute : absolute.slice(0, hashAt);
     const fragment = decodeFragment(hashAt < 0 ? '' : absolute.slice(hashAt + 1));
-    const resource = uri === '' ? this.knownObject(this.rawRoot) : this.resourceAt(resourceKey(uri));
+    const resource = uri === '' ? this.knownObject(this.rawRoot, '') : this.resourceAt(resourceKey(uri));
     if (resource === undefined || fragment === undefined) {
       return undefined;
     }
@@ -602,7 +640,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       return this.visit(current, pointer, base, position !== 'schema');
     }
     if (isObject(current)) {
-      return this.byObject(current);
+      return this.byObject(current, base);
     }
     return typeof current === 'boolean' ? this.byPointer(pointer) : undefined;
   }

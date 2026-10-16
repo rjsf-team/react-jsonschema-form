@@ -216,12 +216,29 @@ function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): 
   if (handedOut.has(schema)) {
     return stamped;
   }
-  const adopted = stamped.graph.adoptCopy(schema, stamped);
+  const adopted = stamped.graph.adoptCopy(schema, stamped, stamped.seeds[0].node);
   return childProvenance(
     stamped,
     { seeds: [{ node: adopted.node, refPath: stamped.seeds[0].refPath }], chain: stamped.chain },
     adopted.graph,
   );
+}
+
+/** The node of the option `option` a plan's merged `keyword` list holds at `index`: the one a chain providing the list
+ * holds there, which is the one parsed under the base of the resource that provider is in, since one object reached in
+ * two resources is a node in each
+ */
+function optionNode<S extends StrictRJSFSchema>(
+  plan: MergePlan<S>,
+  keyword: string,
+  index: number,
+  option: S,
+): NodeId | undefined {
+  const provided = seedsAt(plan, keyword, String(index)).find((seed) => {
+    const node = plan.graph.node(seed.node);
+    return node.kind === 'schema' && node.raw === option;
+  });
+  return provided?.node ?? plan.graph.byObject(option);
 }
 
 /** The policy views are planned with: every `allOf` is merged, and an option only where the schema offering it has
@@ -439,8 +456,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
       Reflect.set(
         merged,
         keyword,
-        options.map((option) => {
-          const node = isSchemaObject<S>(option) && !isDecided(option) ? graph.byObject(option) : undefined;
+        options.map((option, index) => {
+          const node =
+            isSchemaObject<S>(option) && !isDecided(option) ? optionNode(plan, keyword, index, option) : undefined;
           if (node === undefined) {
             return option;
           }

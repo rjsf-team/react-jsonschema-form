@@ -131,6 +131,22 @@ describe('parseSchemaGraph()', () => {
       expect(graph.byPointer('/properties/a')).toBe(graph.byPointer('/properties/b'));
       expect(graph.node(graph.byObject(shared) ?? -1).pointer).toBe('/properties/a');
     });
+    it('gives an object reached in two resources a node per resource, its $ref resolved in each', () => {
+      const shared: RJSFSchema = { $ref: '#/$defs/t' };
+      const graph = parseSchemaGraph({
+        $schema: JSON_SCHEMA_DRAFT_2020_12,
+        $id: 'https://example.com/root.json',
+        $defs: {
+          A: { $id: 'a.json', $defs: { t: { type: 'string' } }, properties: { p: shared } },
+          B: { $id: 'b.json', $defs: { t: { type: 'number' } }, properties: { p: shared } },
+        },
+      });
+      expect(target(graph, '/$defs/A/properties/p').pointer).toBe('/$defs/A/$defs/t');
+      expect(target(graph, '/$defs/B/properties/p').pointer).toBe('/$defs/B/$defs/t');
+      expect(graph.child(at(graph, '/$defs/B').id, 'properties', 'p')).toBe(graph.byPointer('/$defs/B/properties/p'));
+      expect(graph.byObject(shared)).toBe(graph.byPointer('/$defs/A/properties/p'));
+      expect(graph.byObject(shared, 'https://example.com/b.json')).toBe(graph.byPointer('/$defs/B/properties/p'));
+    });
     it('parses an object that contains itself', () => {
       const looped: RJSFSchema = { type: 'object', properties: {} };
       Reflect.set(looped.properties ?? {}, 'self', looped);
@@ -435,12 +451,32 @@ describe('parseSchemaGraph()', () => {
     it('parses a copy once while each copy for the same key has the keywords of the last', () => {
       const of = {};
       const keywords = { $ref: '#/$defs/a', title: 'T' };
-      const adopted = graph.adoptCopy({ ...keywords }, of);
-      expect(graph.adoptCopy({ ...keywords }, of)).toBe(adopted);
-      expect(graph.adoptCopy({ ...keywords }, {})).not.toBe(adopted);
-      const retitled = graph.adoptCopy({ ...keywords, title: 'U' }, of);
+      const adopted = graph.adoptCopy({ ...keywords }, of, graph.root);
+      expect(graph.adoptCopy({ ...keywords }, of, graph.root)).toBe(adopted);
+      expect(graph.adoptCopy({ ...keywords }, {}, graph.root)).not.toBe(adopted);
+      const retitled = graph.adoptCopy({ ...keywords, title: 'U' }, of, graph.root);
       expect(retitled).not.toBe(adopted);
-      expect(graph.adoptCopy({ ...keywords, title: 'U', description: 'D' }, of)).not.toBe(retitled);
+      expect(graph.adoptCopy({ ...keywords, title: 'U', description: 'D' }, of, graph.root)).not.toBe(retitled);
+    });
+    it('parses a copy where the node it copies sits, a boolean as a call root', () => {
+      const root: RJSFSchema = {
+        $schema: JSON_SCHEMA_DRAFT_2020_12,
+        $id: 'https://example.com/root.json',
+        $defs: {
+          t: { type: 'string' },
+          flag: true,
+          A: { $id: 'a.json', $defs: { t: { type: 'number' } }, properties: { p: { $ref: '#/$defs/t' } } },
+        },
+      };
+      const nested = parseSchemaGraph(root);
+      const fromA = nested.adoptCopy(
+        { $ref: '#/$defs/t', title: 'T' },
+        {},
+        nested.byPointer('/$defs/A/properties/p') ?? -1,
+      );
+      expect(objectNode(fromA.graph, fromA.node).ref).toBe(nested.byPointer('/$defs/A/$defs/t'));
+      const fromFlag = nested.adoptCopy({ $ref: '#/$defs/t' }, {}, nested.byPointer('/$defs/flag') ?? -1);
+      expect(objectNode(fromFlag.graph, fromFlag.node).ref).toBe(nested.byPointer('/$defs/t'));
     });
     it('follows a chain through the nodes of the graph it extends to a boolean, and to data as nothing', () => {
       const base = parseSchemaGraph(

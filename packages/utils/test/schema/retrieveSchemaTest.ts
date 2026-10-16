@@ -6,9 +6,11 @@ import {
   GUESSED_TYPE_FLAG,
   createSchemaUtils,
   getByPath,
+  getRenderedOptionSchema,
   isObject,
   PROPERTIES_KEY,
   retrieveSchema,
+  RJSF_PROVENANCE_KEY,
   RJSF_REF_CYCLE_KEY,
   RJSF_REF_KEY,
   noop,
@@ -5150,6 +5152,61 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         };
         const a = retrieveProperty(testValidator, schema, 'a', schema);
         expect(retrieveProperty(testValidator, a, 'b', schema).type).toBe('number');
+      });
+      it('hands out each object option a customMergeAllOf lists for the field, wherever it puts it', () => {
+        const b: RJSFSchema = { title: 'b' };
+        const c: RJSFSchema = { title: 'c' };
+        const schema: RJSFSchema = { allOf: [{ anyOf: [true] }, { anyOf: [b, c] }] };
+        const customMergeAllOf = (merged: RJSFSchema): RJSFSchema => ({ anyOf: [b, true, c], title: merged.title });
+        const retrieved = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, schema);
+        const [first, second, third] = retrieved.anyOf ?? [];
+        expect(second).toBe(true);
+        expect([first, third].map((option) => isObject(option) && RJSF_PROVENANCE_KEY in option)).toEqual([true, true]);
+        expect(retrieveSchema({ validator: testValidator }, schemaOf(third), schema)).toEqual({ title: 'c' });
+      });
+      it("resolves the $ref of one object reached in two resources against each resource's own definitions", () => {
+        const shared: RJSFSchema = { $ref: '#/$defs/t' };
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            A: { $id: 'a.json', $defs: { t: { type: 'string' } }, type: 'object', properties: { p: shared } },
+            B: { $id: 'b.json', $defs: { t: { type: 'number' } }, type: 'object', properties: { p: shared } },
+          },
+          type: 'object',
+          properties: { a: { $ref: 'a.json' }, b: { $ref: 'b.json' } },
+        };
+        const root = retrieveSchema({ validator: testValidator }, schema, schema, {});
+        const a = retrieveProperty(testValidator, root, 'a', schema, {});
+        const b = retrieveProperty(testValidator, root, 'b', schema, {});
+        expect(retrieveProperty(testValidator, a, 'p', schema).type).toBe('string');
+        expect(retrieveProperty(testValidator, b, 'p', schema).type).toBe('number');
+      });
+      it('resolves the $ref of a copy of a subschema handed out inside a nested resource against that resource', () => {
+        const schema: RJSFSchema = {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://example.com/root.json',
+          $defs: {
+            t: { type: 'string', title: 'root t' },
+            A: {
+              $id: 'a.json',
+              $defs: { t: { type: 'number', title: 'A t' } },
+              type: 'object',
+              properties: { p: { $ref: '#/$defs/t' }, q: { minimum: 1, anyOf: [{ $ref: '#/$defs/t' }] } },
+            },
+          },
+          type: 'object',
+          properties: { a: { $ref: 'a.json' } },
+        };
+        const root = retrieveSchema({ validator: testValidator }, schema, schema, {});
+        const a = retrieveProperty(testValidator, root, 'a', schema, {});
+        const p = schemaOf(a.properties?.p);
+        expect(retrieveSchema({ validator: testValidator }, { ...p, description: 'copy' }, schema).type).toBe('number');
+        const q = retrieveProperty(testValidator, a, 'q', schema);
+        const option = schemaOf(q.anyOf?.[0]);
+        expect(retrieveSchema({ validator: testValidator }, option, schema).title).toBe('A t');
+        const rendered = getRenderedOptionSchema(q, option);
+        expect(retrieveSchema({ validator: testValidator }, rendered, schema).title).toBe('A t');
       });
       it("resolves the same #/ $ref text in two resources to each one's own definition", () => {
         const schema: RJSFSchema = {
