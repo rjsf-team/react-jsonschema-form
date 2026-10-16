@@ -15,7 +15,7 @@ export interface OptionSelectionState {
 }
 
 /** `OptionSelectionState`, and what `SchemaField` calls before an edit inside the field */
-export interface ShownOptionState extends OptionSelectionState {
+interface ShownOptionState extends OptionSelectionState {
   /** Records the option shown before an edit inside the option, so the edit cannot change which option it is shown
    * under
    */

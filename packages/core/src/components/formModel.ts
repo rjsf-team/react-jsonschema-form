@@ -400,7 +400,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       dropsOwnErrors: move?.dropsOwnErrors,
     };
     const next = applyChange(pending ?? start, edit, props);
-    uiState.edited(fieldPath, (path) => getAt(next.formData, fieldPathToList(path)), start.isControlled);
+    uiState.edited(fieldPath, (path) => getAt(next.formData, path), start.isControlled);
     if (!start.isControlled) {
       // A reentrant operation may have committed while this one was being calculated, so report what was committed
       const committed = commit(start, next, (base) => applyChange(base, edit, props));
@@ -621,7 +621,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
       if (!isDetached() && snapshot === renderedSnapshot) {
         pending = undefined;
         epoch += 1;
-        uiState.rendered((path) => getAt(derived.formData, fieldPathToList(path)));
+        uiState.rendered((path) => getAt(derived.formData, path));
       }
     },
     /** The setup of a layout Effect, which React runs when the form mounts and when an `<Activity>` shows it again:
