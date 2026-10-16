@@ -126,6 +126,21 @@ export interface AdoptedSchema<S extends StrictRJSFSchema = RJSFSchema> {
  */
 export const EXTERNAL_POINTER = '~external';
 
+/** The pointer token the nodes `addConjunction()` adds are placed under. JSON pointer escaping only puts a `~` before a
+ * `0` or a `1`, so no location in the root has it.
+ */
+const CONJUNCTION_TOKEN = '~conjunction';
+
+/** Returns whether the node `pointer` names a location in the graph's `rawRoot`, which the nodes parsed from outside
+ * it and those of the `allOf` a chained `$ref` is read as do not
+ *
+ * @param pointer - The pointer of a node
+ * @returns - Whether the pointer names a location in the root
+ */
+export function isRootPointer(pointer: string): boolean {
+  return !pointer.startsWith(EXTERNAL_POINTER) && !pointer.includes(`/${CONJUNCTION_TOKEN}`);
+}
+
 /** The keywords that can stand beside a `$ref` without changing what it resolves to */
 const PURE_REF_KEYS = new Set([REF_KEY, DEFINITIONS_KEY, '$defs', SCHEMA_KEY, '$comment', 'title', 'description']);
 
@@ -518,7 +533,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
    * `EXTERNAL_POINTER` is.
    */
   private addConjunction(node: ObjectNode<S>): NodeId {
-    const pointer = `${node.pointer}/~conjunction`;
+    const pointer = `${node.pointer}/${CONJUNCTION_TOKEN}`;
     const siblings = this.addSynthetic({
       ...node,
       id: this.nextId(),
