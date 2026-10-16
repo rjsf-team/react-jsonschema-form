@@ -114,11 +114,15 @@ export function targetOf<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaG
   return node.kind === 'schema' ? node.raw : booleanSchema(node, graph.rawRoot);
 }
 
-/** Returns the nodes whose keywords apply wherever the node `id` applies, whatever the data: the node, what its `$ref`
- * resolves to, its `allOf` entries, its `then`/`else` and its `dependencies` schemas, each followed the same way and
- * each listed once
+/** Returns the nodes whose keywords apply wherever the node `id` applies: the node, what its `$ref` resolves to and its
+ * `allOf` entries, and, unless `unconditional`, its `then`/`else` and its `dependencies` schemas, which apply only for
+ * some data. Each is followed the same way and listed once.
  */
-function scopeOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): ObjectNode<S>[] {
+function scopeOf<S extends StrictRJSFSchema>(
+  graph: SchemaGraph<S>,
+  id: NodeId,
+  unconditional = false,
+): ObjectNode<S>[] {
   const seen = new Set<NodeId>();
   const nodes: ObjectNode<S>[] = [];
   const visit = (next: NodeId | undefined) => {
@@ -133,6 +137,9 @@ function scopeOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId):
     nodes.push(node);
     visit(node.ref);
     graph.subschemas(next, ALL_OF_KEY).forEach(([, member]) => visit(member));
+    if (unconditional) {
+      return;
+    }
     visit(graph.child(next, THEN_KEY));
     visit(graph.child(next, ELSE_KEY));
     graph.subschemas(next, DEPENDENCIES_KEY).forEach(([, dependency]) => visit(dependency));
@@ -141,40 +148,64 @@ function scopeOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId):
   return nodes;
 }
 
-/** Returns the node of the property `key` the option `id` declares, the first one met in the order `scopeOf()` lists
- * the nodes in
+/** Returns the nodes of the property `key` the option `id` declares: every declaration that applies whatever the data,
+ * as the OpenAPI spelling `allOf: [{ $ref: Base }, { properties: { petType: { const: 'cat' } } }]` declares it twice,
+ * and the value has to fit each of them. Where only a `then`, an `else` or a `dependencies` schema declares it, the
+ * first of those is read alone: a `then` and its `else` apply to different data, and no value need fit both.
  *
  * @param graph - The graph of the root
  * @param id - The option, or any subschema declaring properties
  * @param key - The property name
- * @returns - The property's node, or undefined when nothing in the scope declares it
+ * @returns - The property's nodes, none when nothing in the scope declares it
  */
-export function declaredProperty<S extends StrictRJSFSchema = RJSFSchema>(
+export function declaredProperties<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
   id: NodeId,
   key: string,
-): NodeId | undefined {
-  return declaredProperties.get([graph, id, key], () => findDeclaredProperty(graph, id, key) ?? null) ?? undefined;
+): readonly NodeId[] {
+  return declarations.get([graph, id, key], () => {
+    const declaredIn = (nodes: ObjectNode<S>[]) =>
+      nodes.flatMap((node) => {
+        const property = graph.child(node.id, PROPERTIES_KEY, key);
+        return property === undefined ? [] : [property];
+      });
+    const always = declaredIn(scopeOf(graph, id, true));
+    return always.length > 0 ? always : declaredIn(scopeOf(graph, id)).slice(0, 1);
+  });
 }
 
-/** The node `declaredProperty()` finds, per graph, option and key, or `null` where nothing in the scope declares it:
- * an option is matched on its discriminator on every edit, and walking its scope each time repeats the same answer
+/** The nodes `declaredProperties()` finds, per graph, option and key: an option is matched on its discriminator on
+ * every edit, and walking its scope each time repeats the same answer
  */
-const declaredProperties = new KeyedMemo<NodeId | null>();
+const declarations = new KeyedMemo<readonly NodeId[]>();
 
-function findDeclaredProperty<S extends StrictRJSFSchema>(
+/** Returns what a validator checks the value of the property `key` the option `id` declares with: what `targetOf()`
+ * hands it for the one declaration `declaredProperties()` finds, or an `allOf` of them for several
+ *
+ * @param graph - The graph of the root
+ * @param id - The option, or any subschema declaring properties
+ * @param key - The property name
+ * @returns - The schema to hand the validator, or undefined when nothing in the scope declares the property
+ */
+export function declaredPropertyTarget<S extends StrictRJSFSchema = RJSFSchema>(
   graph: SchemaGraph<S>,
   id: NodeId,
   key: string,
-): NodeId | undefined {
-  for (const node of scopeOf(graph, id)) {
-    const property = graph.child(node.id, PROPERTIES_KEY, key);
-    if (property !== undefined) {
-      return property;
+): S | undefined {
+  const target = declaredPropertyTargets.get([graph, id, key], () => {
+    const targets = declaredProperties(graph, id, key).map((property) => targetOf(graph, property));
+    if (targets.length < 2) {
+      return targets[0] ?? null;
     }
-  }
-  return undefined;
+    return schemaFrom(graph.rawRoot, { [ALL_OF_KEY]: targets });
+  });
+  return isSchemaObject<S>(target) ? target : undefined;
 }
+
+/** The schemas `declaredPropertyTarget()` returns, per graph, option and key, or `null` where nothing declares the
+ * property, so a validator caching what it compiles by schema is handed the same object every time
+ */
+const declaredPropertyTargets = new KeyedMemo<object | null>();
 
 /** Returns the schema a dependency's `oneOf` option is matched on: an object whose `key` holds what the option says
  * the property holds
@@ -190,10 +221,10 @@ export function dependencyCondition<S extends StrictRJSFSchema = RJSFSchema>(
   key: string,
 ): S | undefined {
   const condition = dependencyConditions.get([graph, option, key], () => {
-    const property = declaredProperty(graph, option, key);
+    const property = declaredPropertyTarget(graph, option, key);
     return property === undefined
       ? null
-      : schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: targetOf(graph, property) } });
+      : schemaFrom(graph.rawRoot, { type: 'object', properties: { [key]: property } });
   });
   return isSchemaObject<S>(condition) ? condition : undefined;
 }
@@ -451,9 +482,9 @@ function nodeTargets<S extends StrictRJSFSchema>(
       targets.push(schemaFrom(graph.rawRoot, {}));
     }
     for (const name of discriminators) {
-      const discriminator = declaredProperty(graph, option, name);
+      const discriminator = declaredPropertyTarget(graph, option, name);
       if (discriminator !== undefined) {
-        targets.push(targetOf(graph, discriminator));
+        targets.push(discriminator);
       }
     }
   }

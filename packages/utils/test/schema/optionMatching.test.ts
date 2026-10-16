@@ -15,6 +15,22 @@ describe('matching options through the schema graph', () => {
     });
     expect(validator.calls).toBe(0);
   });
+  it('matches by const alone an option whose base declares the discriminator with neither a const nor an enum', () => {
+    const option = (kind: string): RJSFSchema => ({
+      allOf: [{ $ref: '#/definitions/Base' }, { properties: { kind: { const: kind }, [kind]: {} } }],
+    });
+    const field: RJSFSchema = { discriminator: { propertyName: 'kind' }, oneOf: [option('a'), option('b')] };
+    const rootSchema: RJSFSchema = {
+      definitions: { Base: { properties: { kind: { type: 'string' } } } },
+      type: 'object',
+      properties: { v: field },
+    };
+    const validator = miniValidator();
+    expect(omitExtraData({ validator }, rootSchema, rootSchema, { v: { kind: 'b', a: 1, b: 2 } })).toEqual({
+      v: { kind: 'b', b: 2 },
+    });
+    expect(validator.calls).toBe(0);
+  });
   it('omits by a boolean option the data matches', () => {
     const rootSchema: RJSFSchema = { type: 'object', properties: { v: { oneOf: [true] } } };
     expect(omitExtraData({ validator: miniValidator() }, rootSchema, rootSchema, { v: { a: 1 } })).toEqual({
