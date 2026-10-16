@@ -157,6 +157,11 @@ function isPureRef(raw: object): boolean {
 
 type Mutable<T> = { -readonly [K in keyof T]: T[K] };
 
+/** Whether the keyword `key` holds `value` as one subschema, a boolean read as one wherever the keyword holds one */
+function holdsOneSubschema(key: string, shape: string | undefined, value: unknown): boolean {
+  return shape === 'single' || (typeof value === 'boolean' && isSubschemaKeyword(key));
+}
+
 /** The subschemas the keyword `key` holds as `value`, each with the pointer tokens leading to it from the schema
  * holding the keyword; a boolean is read as a subschema wherever the keyword holds one
  */
@@ -165,7 +170,7 @@ function subschemaEntries(key: string, value: unknown): [string[], unknown][] {
   if ((shape === 'map' || shape === 'array') && typeof value === 'object' && value !== null) {
     return Object.entries(value).map(([name, sub]) => [[key, name], sub]);
   }
-  return shape === 'single' || (typeof value === 'boolean' && isSubschemaKeyword(key)) ? [[[key], value]] : [];
+  return holdsOneSubschema(key, shape, value) ? [[[key], value]] : [];
 }
 
 interface WalkStart {
@@ -255,8 +260,9 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
         ? this.nodeAt(node, [keyword, key], Reflect.get(value, key))
         : undefined;
     }
-    const single = shape === 'single' || (typeof value === 'boolean' && isSubschemaKeyword(keyword));
-    return key === undefined && single ? this.nodeAt(node, [keyword], value) : undefined;
+    return key === undefined && holdsOneSubschema(keyword, shape, value)
+      ? this.nodeAt(node, [keyword], value)
+      : undefined;
   }
 
   subschemas(id: NodeId, keyword: string): [string, NodeId][] {
