@@ -618,6 +618,15 @@ describe('ATAValidator validating a subschema by its place in the root', () => {
     expect(validator.isValid(pointer, 's', rootSchema)).toBe(true);
     expect(validator.isValid(pointer, 5, rootSchema)).toBe(false);
   });
+  it('resolves a pointer below a property whose name holds a lone surrogate, which has no URI encoding', () => {
+    const validator = customizeValidator();
+    const condition: RJSFSchema = { properties: { v: { const: 'x' } }, required: ['v'] };
+    const rootSchema: RJSFSchema = { properties: { 'a\uD800b': { if: condition } } };
+    const pointer = getValidationTarget(condition, rootSchema);
+    expect(pointer).toEqual({ $ref: '#/properties/a\uD800b/if' });
+    expect(validator.isValid(pointer, { v: 'x' }, rootSchema)).toBe(true);
+    expect(validator.isValid(pointer, { v: 'y' }, rootSchema)).toBe(false);
+  });
   it('resolves a pointer into a dependencies entry named like a keyword', () => {
     const validator = customizeValidator();
     const rootSchema: RJSFSchema = {
