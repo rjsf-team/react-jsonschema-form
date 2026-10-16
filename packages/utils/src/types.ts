@@ -123,7 +123,8 @@ export interface Experimental_DefaultFormStateBehavior {
    * `experimental_customMergeAllOf` built on a deep merger also turns a property's `allOf: [{ if, then }]` into a
    * direct `if-then-else` wherever it merges an `allOf` (the root's own, or one next to a direct `if` in a nested object
    * schema, but not a nested `allOf` on its own), so that property's `then` default is filled in under `skipDefaults`
-   * too, unless `emptyObjectFields` is `skipEmptyDefaults`.
+   * too, unless `emptyObjectFields` is `skipEmptyDefaults`. The `allOf` and `if-then-else` of a nested object's
+   * `dependencies` entry are resolved once its property has a value, whatever `emptyObjectFields` is.
    * See the `allOf` section of `experimental_defaultFormStateBehavior` in the form props docs for examples of each case.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
