@@ -205,17 +205,17 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : undefined;
   };
   // The score a list of options nested under a property contributes: what the picked option scores, plus one where the
-  // data matches it
-  const scoreOf = (index: number, matches: boolean) => {
+  // data matches it, as the option picked here without scoring does
+  const scoreOfMatch = (index: number) => {
     let score: number | undefined;
     return () => {
-      score ??= (matches ? 1 : 0) + calculateIndexScore<T, S, F>(context, rootSchema, resolved(index), formData);
+      score ??= 1 + calculateIndexScore<T, S, F>(context, rootSchema, resolved(index), formData);
       return score;
     };
   };
   const simpleMatch = simpleDiscriminatorMatch(optionNodes, formData, discriminatorField);
   if (simpleMatch !== undefined) {
-    return { index: simpleMatch, score: scoreOf(simpleMatch, true) };
+    return { index: simpleMatch, score: scoreOfMatch(simpleMatch) };
   }
   const validIndexes =
     formData === undefined
@@ -224,7 +224,7 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
           optionMatches<S, F>(context, formData, option, relax, discriminatorField) ? [index] : [],
         );
   if (validIndexes.length === 1) {
-    return { index: validIndexes[0], score: scoreOf(validIndexes[0], true) };
+    return { index: validIndexes[0], score: scoreOfMatch(validIndexes[0]) };
   }
   // With no option matching, every option is a candidate, and the pick is always one of the candidates
   const candidates = validIndexes.length > 0 ? validIndexes : [...options.keys()];
@@ -242,7 +242,8 @@ function scoreOptions<T, S extends StrictRJSFSchema, F extends FormContextType>(
       }
     }
   }
-  return { index: best.index, score: scoreOf(best.index, validIndexes.includes(best.index)) };
+  const score = (validIndexes.includes(best.index) ? 1 : 0) + best.score;
+  return { index: best.index, score: () => score };
 }
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
