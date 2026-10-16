@@ -89,6 +89,41 @@ describe('createSchemaUtils()', () => {
       );
       expect(schemaUtilsNoId.getRootSchema()).toEqual(noIdSchema);
     });
+
+    // A key under `properties` names a property of the data, so a property named `$ref` is not a reference
+    describe('a property named $ref (#5457)', () => {
+      it('keeps the property of the schema from the issue under an absolute root $id', () => {
+        const schema: RJSFSchema = {
+          [SCHEMA_KEY]: JSON_SCHEMA_DRAFT_2020_12,
+          [ID_KEY]: 'https://example.com/root.json',
+          type: 'object',
+          [PROPERTIES_KEY]: { [REF_KEY]: { type: 'object' } },
+        };
+        const schemaUtilsWithRefProperty = createSchemaUtils({ validator: testValidator }, schema);
+        expect(schemaUtilsWithRefProperty.getRootSchema()).toEqual(schema);
+        expect(schemaUtilsWithRefProperty.retrieveSchema(schemaUtilsWithRefProperty.getRootSchema())).toEqual(schema);
+      });
+
+      it('resolves a reference to a definition that has a property named $ref', () => {
+        const node: RJSFSchema = {
+          type: 'object',
+          [PROPERTIES_KEY]: { [REF_KEY]: { type: 'object', [PROPERTIES_KEY]: { nodeId: { type: 'string' } } } },
+        };
+        const schema: RJSFSchema = {
+          [SCHEMA_KEY]: JSON_SCHEMA_DRAFT_2020_12,
+          [ID_KEY]: 'https://example.com/graph.json',
+          type: 'object',
+          [PROPERTIES_KEY]: { link: { [REF_KEY]: '#/$defs/node' } },
+          $defs: { node },
+        };
+        const schemaUtilsWithRefProperty = createSchemaUtils({ validator: testValidator }, schema);
+        const link = schemaUtilsWithRefProperty.getRootSchema()[PROPERTIES_KEY]?.link;
+        expect(link).toBeTypeOf('object');
+        expect(typeof link === 'object' && schemaUtilsWithRefProperty.retrieveSchema(link)[PROPERTIES_KEY]).toEqual(
+          node[PROPERTIES_KEY],
+        );
+      });
+    });
   });
 
   describe('constructed with a validator where a SchemaContext belongs', () => {
