@@ -50,6 +50,11 @@ describe('findSchemaDefinition()', () => {
     });
   });
 
+  it('returns one definition across calls for the same $ref and root', () => {
+    expect(findSchemaDefinition('#/definitions/constrained', rootSchema)).toBe(
+      findSchemaDefinition('#/definitions/constrained', rootSchema),
+    );
+  });
   it('throws for a $ref that names nothing, and for one given no root', () => {
     expect(() => findSchemaDefinition('#/definitions/missing', rootSchema)).toThrow(
       'Could not find a definition for #/definitions/missing.',
