@@ -2472,6 +2472,26 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ]);
       });
     });
+    describe('prototype-named dependency keys', () => {
+      it('withExactlyOneSubschema() ignores an inherited member of a branch properties', () => {
+        const schema: RJSFSchema = { type: 'object' };
+        const oneOf: RJSFSchema['oneOf'] = [{ properties: { foo: { type: 'string' } } }];
+        const isValid = vi.fn(() => true);
+        const validator = { ...testValidator, isValid } as typeof testValidator;
+        expect(withExactlyOneSubschema({ validator }, schema, schema, 'toString', oneOf, false, [])).toEqual([schema]);
+        expect(isValid).not.toHaveBeenCalled();
+      });
+
+      it('retrieveSchema() does not apply a dependency named after an inherited member', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          dependencies: { toString: { properties: { b: { type: 'string' } } } },
+        };
+        const result = retrieveSchema({ validator: testValidator }, schema, schema, { a: 'x', toString: 't' });
+        expect(Object.keys(result.properties!)).toEqual(['a']);
+      });
+    });
     describe('withPatternProperties()', () => {
       it('validates schemas with conditions inside patternProperties', () => {
         const schema: RJSFSchema = {
