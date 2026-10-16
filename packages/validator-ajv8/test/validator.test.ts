@@ -3501,6 +3501,37 @@ describe('AJV8Validator resolving a $ref local to the root', () => {
     expect(schemaUtils.getFirstMatchingOption({ v: 'b' }, options)).toBe(0);
     expect(schemaUtils.getClosestMatchingOption({ v: 'b' }, options)).toBe(0);
   });
+  it('matches the options beside dependencies of an object reached in two resources as each resource reads them', () => {
+    const shared: RJSFSchema = {
+      type: 'object',
+      properties: { k: { type: 'string' } },
+      dependencies: { k: { properties: { d: { type: 'string' } } } },
+      oneOf: [{ $ref: '#/$defs/o1' }, { $ref: '#/$defs/o2' }],
+    };
+    const resource = (id: string, first: string, second: string): RJSFSchema => ({
+      $id: id,
+      $defs: {
+        o1: { properties: { k: { const: first }, one: { type: 'string' } } },
+        o2: { properties: { k: { const: second }, two: { type: 'string' } } },
+        s: shared,
+      },
+    });
+    const rootSchema: RJSFSchema = {
+      $id: 'http://x/root.json',
+      type: 'object',
+      $defs: { A: resource('http://x/a.json', 'x', 'y'), B: resource('http://x/b.json', 'y', 'x') },
+      properties: { pa: { $ref: 'http://x/a.json#/$defs/s' }, pb: { $ref: 'http://x/b.json#/$defs/s' } },
+    };
+    const schemaUtils = createSchemaUtils({ validator: new AJV8Validator({}) }, rootSchema);
+    const view = schemaUtils.retrieveSchema(rootSchema, { pa: { k: 'x' }, pb: { k: 'x' } });
+    const propertyKeys = (key: string) => {
+      const property = view.properties?.[key];
+      const retrieved = schemaUtils.retrieveSchema(isSchemaObject(property) ? property : {}, { k: 'x' });
+      return Object.keys(retrieved.properties ?? {});
+    };
+    expect(propertyKeys('pa')).toEqual(['k', 'one', 'd']);
+    expect(propertyKeys('pb')).toEqual(['k', 'two', 'd']);
+  });
   it('compiles a schema with an $id of its own anew under each root it is checked against', () => {
     const validator = new AJV8Validator({});
     const rootA: RJSFSchema = { $id: 'http://a.example/root.json', definitions: { x: { type: 'string' } } };
