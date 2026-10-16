@@ -411,7 +411,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   const item = (value: unknown, seedsOfItem: readonly Seed[] | undefined, edge: ContainmentEdge) =>
     seedsOfItem === undefined || seedsOfItem.length === 0 || !isSchemaObject<S>(value) || isDecided(value)
       ? value
-      : handOut(value, child(seedsOfItem, edge, true).provenance);
+      : stubOf(graph.rawRoot, value, child(seedsOfItem, edge, true).provenance);
   const tuple = (entries: unknown[]) =>
     entries.map((entry, index) => item(entry, tupleSeeds(plan, index), 'tupleItem'));
   // A view drops the row keywords that hold nothing, rather than holding them as undefined
@@ -449,7 +449,9 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
             chain: optionChain,
             optionOf: { setKey: plan.setKey, set: plan.set },
           });
-          return resolveOptions ? buildView(context, root, provenance, data, false) : handOut(option, provenance);
+          return resolveOptions
+            ? buildView(context, root, provenance, data, false)
+            : stubOf(graph.rawRoot, option, provenance);
         }),
       );
     }
