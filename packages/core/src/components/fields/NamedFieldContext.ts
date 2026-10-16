@@ -15,8 +15,9 @@ export interface NamedFieldPath {
 /** The data path a `SchemaField` above has rendered the field its `ui:field` or `$id` names for. One that declines the
  * field it names, as a `FallbackField` that yields to the `anyOf`/`oneOf` options does, claims no path. Every
  * `SchemaField` below at that same path renders as though no field were named, so a named field that renders
- * `SchemaField` for its own data, as `ui:field: 'SchemaField'` does, renders once rather than until the heap runs out
- * (#5377), and the selected `anyOf`/`oneOf` option, which renders at that path too, doesn't render it a second time.
+ * `registry.fields.SchemaField` for its own data renders once rather than until the heap runs out (#5377), and the
+ * selected `anyOf`/`oneOf` option, which renders at that path too, doesn't render it a second time. `SchemaField`
+ * itself names no field here, since it is the field that renders the data with none named.
  * The one the named field renders is the bare field, without a template or options: the `SchemaField` that named it
  * owns the field's label, description, help, extra-key row and option selector, so each renders once
  */
