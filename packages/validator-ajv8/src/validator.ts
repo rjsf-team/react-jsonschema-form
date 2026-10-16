@@ -105,13 +105,20 @@ export default class AJV8Validator<
   }
 
   /** Replaces the root registered under `rootSchemaId` with `rootSchema`, dropping the subschemas compiled against the
-   * one it replaces
+   * one it replaces. Ajv also registers a root under its own `$id`, less an empty fragment, which is not
+   * `rootSchemaId` where the `uriResolver` normalizes it, so that registration is dropped too: left in place, it
+   * answers a lookup by that `$id` with the root it replaced.
    *
    * @param rootSchema - The root schema to register
    * @param rootSchemaId - The id to register it under
    * @param validate - Whether Ajv validates the root against its meta-schema
    */
   private replaceRootSchema(rootSchema: S, rootSchemaId: string, validate: boolean) {
+    const replaced = this.ajv.schemas[rootSchemaId]?.schema;
+    const ownId = isObject(replaced) ? replaced[ID_KEY] : undefined;
+    if (typeof ownId === 'string') {
+      this.ajv.removeSchema(ownId.replace(/#$/, ''));
+    }
     this.ajv.removeSchema(rootSchemaId);
     this.removeSubschemas();
     if (isObject(rootSchema)) {
