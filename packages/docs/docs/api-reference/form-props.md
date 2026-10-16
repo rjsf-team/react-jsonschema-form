@@ -730,15 +730,19 @@ Keep it pure. The form calls it while React renders whenever the errors on scree
 
 ## transformChange
 
-A pure function that decides what an edit leaves the form with. The form calls it with the data the edit produced and the data before it, for a field's change and for `setFieldValue()`, before it stores the result, validates it and reports it through [`onChange`](#onchange). Return `next` to take the edit, `previous` to refuse it, or another value, such as `next` with a field trimmed:
+A pure function that decides what an edit leaves the form with. The form calls it with the data the edit produced and the data before it, for a field's change and for `setFieldValue()`, before it stores the result, validates it and reports it through [`onChange`](#onchange). Return `next` to take the edit, `previous` to refuse it, or another value, such as `next` with a field upper-cased:
 
 ```tsx
 <Form
   schema={schema}
   validator={validator}
-  transformChange={(next, previous) => (isAllowed(next.title) ? { ...next, title: next.title.trim() } : previous)}
+  transformChange={(next, previous) =>
+    (next?.title ?? '').length > 80 ? previous : { ...next, code: next?.code?.toUpperCase() }
+  }
 />
 ```
+
+It runs for every keystroke, so a rewrite has to hold for a value the user is still typing, and for a field they cleared, which is `undefined`. Upper-casing does; trimming would remove a space as soon as it is typed, so `hello world` would come out as `helloworld`. Trim on submit instead.
 
 Return `next`'s unchanged subtrees as they are, so their fields do not render again. A copy of `previous` refuses the edit as `previous` itself does. The function must be pure: the form may call it again for the same edit. It is not called for what the form derives on its own: the defaults for a new schema, the live omit a blur runs, or a `reset()`.
 
