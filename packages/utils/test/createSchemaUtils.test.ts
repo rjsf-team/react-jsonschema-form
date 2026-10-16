@@ -9,6 +9,7 @@ import type {
 } from '../src/index.ts';
 import {
   createSchemaUtils,
+  getValidationTarget,
   ID_KEY,
   JSON_SCHEMA_DRAFT_2020_12,
   noop,
@@ -16,6 +17,7 @@ import {
   REF_KEY,
   SCHEMA_KEY,
 } from '../src/index.ts';
+import { miniValidator } from './schema/graph/miniValidator.ts';
 import getTestValidator from './testUtils/getTestValidator.ts';
 
 describe('createSchemaUtils()', () => {
@@ -274,6 +276,25 @@ describe('createSchemaUtils()', () => {
       expect(resolved).not.toEqual(plain);
       expect(utils.retrieveSchema(withRefs, {})).toBe(plain);
       expect(utils.retrieveSchema(withRefs, {}, true)).toBe(resolved);
+    });
+
+    it('keeps a result that shares subtrees with the previous one standing for the subschema it was retrieved from', () => {
+      const option: RJSFSchema = {
+        type: 'object',
+        allOf: [{ required: ['kind'] }],
+        required: ['id'],
+        properties: { kind: { type: 'string' }, id: { type: 'string' } },
+        if: { properties: { kind: { const: 'a' } } },
+        then: { properties: { extra: { type: 'string' } } },
+      };
+      const root: RJSFSchema = { type: 'object', properties: { pet: { oneOf: [option, { type: 'object' }] } } };
+      const utils = createSchemaUtils({ validator: miniValidator() }, root);
+      const first = utils.retrieveSchema(option, { kind: 'a' });
+      const second = utils.retrieveSchema(option, { kind: 'x' });
+      expect(second.required).toBe(first.required);
+      expect(second.properties).not.toHaveProperty('extra');
+      expect(getValidationTarget(first, root)).toEqual({ $ref: '#/properties/pet/oneOf/0' });
+      expect(getValidationTarget(second, root)).toEqual({ $ref: '#/properties/pet/oneOf/0' });
     });
 
     it('resolves a non-object schema, which cannot be a cache key, afresh each time', () => {

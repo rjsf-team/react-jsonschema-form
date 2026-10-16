@@ -52,6 +52,26 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
       expect(schemaUtils.getFirstMatchingOption({ b: 1 }, optionsOf(refs, 'oneOf'))).toBe(1);
       expect(schemaUtils.getFirstMatchingOption({ kind: 'x' }, optionsOf(kinds, 'oneOf'))).toBe(1);
     });
+    it('scores options retrieved again with other data, sharing subtrees with the last results, by their pointers', () => {
+      const pet: RJSFSchema = {
+        type: 'object',
+        allOf: [{ required: ['kind'] }],
+        required: ['id'],
+        properties: { kind: { type: 'string' }, id: { type: 'string' } },
+        if: { properties: { kind: { const: 'a' } } },
+        then: { properties: { extra: { type: 'string' } } },
+      };
+      const rootSchema: RJSFSchema = {
+        type: 'object',
+        properties: { pet: { oneOf: [pet, { type: 'object', properties: { n: { type: 'number' } } }] } },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      const options = optionsOf(rootSchema.properties?.pet, 'oneOf');
+      const viewsFor = (data: object) => options.map((option) => schemaUtils.retrieveSchema(option, data));
+      viewsFor({ kind: 'a', id: '1' });
+      const data = { kind: 'x', id: '1' };
+      expect(schemaUtils.getClosestMatchingOption(data, viewsFor(data))).toBe(0);
+    });
     it('checks an if that is a $ref into a root carrying an $id against that root', () => {
       const rootSchema: RJSFSchema = {
         $id: 'http://example.com/root.json',

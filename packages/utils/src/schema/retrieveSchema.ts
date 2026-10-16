@@ -38,6 +38,7 @@ import type {
   ValidatorType,
 } from '../types.ts';
 import { firstMatchingOption, optionNodeOf } from './getFirstMatchingOption.ts';
+import { markHandedOut, isHandedOut } from './graph/handedOut.ts';
 import KeyedMemo from './graph/keyedMemo.ts';
 import buildPlan, {
   cachedPolicy,
@@ -140,20 +141,14 @@ function isLeaf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schema: S): b
     return false;
   }
   const stamped = readProvenance<S>(schema, graph);
-  return stamped === undefined || (handedOut.has(schema) && mergesNothing(stamped.graph, stamped.seeds));
+  return stamped === undefined || (isHandedOut(schema) && mergesNothing(stamped.graph, stamped.seeds));
 }
-
-/** The schemas `retrieveSchema()` handed out. A schema found here is one of them as it was handed out, so it is
- * resolved from its provenance alone; one that only carries a provenance is a copy a caller made of one, possibly with
- * keywords of its own, so it is resolved from its keywords.
- */
-const handedOut = new WeakSet<object>();
 
 const OPTION_KEYWORDS: readonly ('anyOf' | 'oneOf')[] = [ANY_OF_KEY, ONE_OF_KEY];
 
 function handOut<S extends StrictRJSFSchema>(schema: S, provenance: Provenance<S>): S {
   const stamped = stamp(schema, provenance);
-  handedOut.add(stamped);
+  markHandedOut(stamped);
   return stamped;
 }
 
@@ -223,7 +218,7 @@ export function fieldOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, schem
   if (Reflect.get(schema, RJSF_REF_CYCLE_KEY) === false) {
     return childProvenance(stamped, { seeds: restartSeeds(stamped.seeds) });
   }
-  if (handedOut.has(schema)) {
+  if (isHandedOut(schema)) {
     return stamped;
   }
   const adopted = stamped.graph.adoptCopy(schema, stamped, stamped.seeds[0].node);
@@ -299,7 +294,7 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
 export function nodeOfSchema<S extends StrictRJSFSchema = RJSFSchema>(schema: S, rootSchema: S): AdoptedSchema<S> {
   const graph = parseSchemaGraph<S>(rootSchema);
   const stamped = readProvenance<S>(schema, graph);
-  if (stamped !== undefined && handedOut.has(schema) && stamped.seeds.length === 1) {
+  if (stamped !== undefined && isHandedOut(schema) && stamped.seeds.length === 1) {
     return { graph: stamped.graph, node: stamped.seeds[0].node };
   }
   return graph.adopt(schema);
