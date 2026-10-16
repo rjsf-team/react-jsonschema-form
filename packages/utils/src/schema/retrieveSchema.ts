@@ -577,7 +577,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     (field.optionOf === undefined || field.stubsOwnExtraKeys === true) && allowsAdditionalProperties<S>(fieldSchema);
   const view = handOut(
     stubsExtraKeys
-      ? stubExistingAdditionalProperties<unknown, S, F>(context, fieldSchema, graph.rawRoot, data, option?.properties)
+      ? stubExistingAdditionalProperties<unknown, S, F>(context, merged, graph.rawRoot, data, option)
       : fieldSchema,
     field,
   );
@@ -855,10 +855,12 @@ function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
   return schemaFrom(schema, joined);
 }
 
-/** Stubs each key of `aFormData` that neither the schema's `properties` nor the `optionProperties` of the option
- * selected beside it declare among the schema's `properties`, flagged with `ADDITIONAL_PROPERTY_FLAG`. A key the option
- * declares is left to the option, which renders it. Any other key is described by the schema's extra-key keywords: a
- * key they forbid is stubbed as `{ type: 'null' }`, a `$ref` or an `allOf` is resolved before the stub is built, and a
+/** Stubs each key of `aFormData` that neither the schema's `properties` nor those of the `option` selected beside it
+ * declare among the schema's `properties`, flagged with `ADDITIONAL_PROPERTY_FLAG`, and returns the schema with the
+ * option's extra-key keywords joined to its own (see `withOptionExtraKeys()`). A key the option declares is left to the
+ * option, which renders it. Any other key is described by the schema's extra-key keywords and by the option's, each
+ * read on its own and the two conjoined, since a pattern or `additionalProperties` one side declares says nothing about
+ * a key the other forbids: a key either forbids is stubbed as `{ type: 'null' }`, a `$ref` or an `allOf` is resolved before the stub is built, and a
  * subschema naming no type is given the one `getAdditionalPropertyType()` reads out of it, its options resolved, or
  * else the type of the data the key holds.
  *
@@ -866,19 +868,21 @@ function withOptionExtraKeys<S extends StrictRJSFSchema = RJSFSchema>(schema: S,
  * @param theSchema - The schema for which the existing additional properties is desired
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [aFormData] - The current formData, if any, to assist retrieving a schema
- * @param [optionProperties] - The `properties` of the option selected beside the schema, retrieved for the data
+ * @param [option] - The option selected beside the schema, retrieved for the data
  * @returns - The updated schema with additional properties stubbed
  */
 export function stubExistingAdditionalProperties<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->(context: SchemaContext<S, F>, theSchema: S, rootSchema?: S, aFormData?: T, optionProperties: object = {}): S {
+>(context: SchemaContext<S, F>, theSchema: S, rootSchema?: S, aFormData?: T, option?: S): S {
+  const joined = option === undefined ? theSchema : withOptionExtraKeys<S>(theSchema, option);
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
-    ...theSchema,
-    properties: { ...theSchema.properties },
+    ...joined,
+    properties: { ...joined.properties },
   };
+  const optionProperties: object = option?.properties ?? {};
   const formData: GenericObjectType = aFormData && isObject(aFormData) ? aFormData : {};
   // `Object.hasOwn`, since `in` answers for the names on `Object.prototype` too, and a property called `constructor`
   // or `toString` left unstubbed is a value with no field to edit or remove it with
@@ -890,13 +894,16 @@ export function stubExistingAdditionalProperties<
       getAdditionalPropertyType<S>(retrieveSchema<T, S, F>(context, subSchema, rootSchema, undefined, true)),
     );
   for (const key of extraKeys) {
-    const keySchema = getAdditionalPropertySchema<S>(schema, key);
+    const keySchema =
+      option === undefined
+        ? getAdditionalPropertySchema<S>(theSchema, key)
+        : conjoin(getAdditionalPropertySchema<S>(theSchema, key), getAdditionalPropertySchema<S>(option, key));
     let stub: S;
     if (keySchema === false) {
       // The schema forbids the key, so the property has no subschema of its own to render it with and no value the
       // schema allows
       stub = { type: 'null' } as S;
-    } else if (isObject(keySchema)) {
+    } else if (isSchemaObject<S>(keySchema)) {
       // A `$ref` and an `allOf` describe the property through other schemas, so they are resolved into the one schema
       // they describe before it is stubbed. A subschema that describes the property itself is stubbed as it stands,
       // and `SchemaField` resolves the stub again to render it
