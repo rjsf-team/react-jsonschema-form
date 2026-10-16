@@ -8,10 +8,6 @@ import { createWidgets } from '../widgets/index.ts';
 // declaration belongs to the widget keys, so a `BaseInputTemplate` replacing this theme's has to draw them too
 const baseInputWidgetKeys = ['TextWidget', 'EmailWidget', 'URLWidget', 'UpDownWidget'];
 
-// This theme's widgets whose field id is on no element a label's `for` can name: the slider's thumb is a `div`, and an
-// alt-date's parts each take an id of their own
-const labelledByWidgetKeys: ReadonlySet<string> = new Set(['RangeWidget', 'AltDateWidget', 'AltDateTimeWidget']);
-
 /** Which parts of a field this theme's fields and widgets draw themselves, over `@rjsf/core`'s: every widget draws its
  * own label and description, the option selector of an `anyOf`/`oneOf` names and describes the field and the fallback
  * UI's value field labels itself, since this theme's template draws a label and description only for a widget declared
@@ -26,12 +22,10 @@ function createPresentation(widgetKeys: readonly string[]): ThemePresentation {
   return {
     default: { label: 'self', description: 'self' },
     widgets: {
-      ...Object.fromEntries(
-        [...widgetKeys, ...baseInputWidgetKeys].map((key) => [
-          key,
-          { errors: 'self', ...(labelledByWidgetKeys.has(key) && { labelledBy: 'aria-labelledby' }) } as const,
-        ]),
-      ),
+      ...Object.fromEntries([...widgetKeys, ...baseInputWidgetKeys].map((key) => [key, { errors: 'self' } as const])),
+      // The slider's thumb, which carries the field id, is a `div`, which a label's `for` can't name. `@rjsf/core`
+      // already declares its alt-date widgets so, and its declaration is layered beneath this theme's
+      RangeWidget: { errors: 'self', labelledBy: 'aria-labelledby' },
       RatingWidget: { label: 'template', description: 'template' },
     },
     fields: {
