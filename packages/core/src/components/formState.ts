@@ -722,8 +722,11 @@ function deriveFormData<T, S extends StrictRJSFSchema, F extends FormContextType
       const sanitized = replaceEqualDeep(formData, sanitizeFieldTree(previous, tree, current.uiState, edit));
       // Wrapped in an object to deal with a scalar or `undefined` value. Data a round has already produced would only
       // produce it again, which ends a loop of conditions that flip each other
+      if (sanitized === formData) {
+        break;
+      }
       const hash = hashObject({ formData: sanitized });
-      if (sanitized === formData || seen.includes(hash)) {
+      if (seen.includes(hash)) {
         formData = sanitized;
         break;
       }

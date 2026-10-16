@@ -44,29 +44,36 @@ export interface FieldTree<T, S extends StrictRJSFSchema, F extends FormContextT
   retrievedSchema: S;
 }
 
-/** The key of the array or object at `path` that the change moved to `key`, which is where its previous value is */
-function previousKeyOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+/** Whether `path` is the edited path or one of its ancestors */
+function isEdited<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  { editedPath }: TreeContext<T, S, F>,
+  path: FieldPathList,
+): boolean {
+  return editedPath !== undefined && path.length <= editedPath.length && path.every((key, i) => editedPath[i] === key);
+}
+
+/** Where the value of each key of the array or object at `path` was before the change: under the key the change moved
+ * to it, where `path` is the edited path, and otherwise under the key itself
+ */
+function previousKeys<T, S extends StrictRJSFSchema, F extends FormContextType>(
   ctx: TreeContext<T, S, F>,
   path: FieldPathList,
   previous: unknown,
-  key: string,
-): string | undefined {
+): (key: string) => string | undefined {
   const { newKeyOf, editedPath } = ctx;
   if (!newKeyOf || path.length !== editedPath?.length || !isEdited(ctx, path)) {
-    return key;
+    return (key) => key;
   }
-  return isObject(previous) || Array.isArray(previous)
-    ? Object.keys(previous).find((oldKey) => newKeyOf(oldKey) === key)
-    : undefined;
-}
-
-/** Whether `path` is the edited path or one of its ancestors */
-function isEdited<T, S extends StrictRJSFSchema, F extends FormContextType>(
-  ctx: TreeContext<T, S, F>,
-  path: FieldPathList,
-): boolean {
-  const { editedPath } = ctx;
-  return editedPath !== undefined && path.length <= editedPath.length && path.every((key, i) => editedPath[i] === key);
+  const oldKeyOf = new Map<string, string>();
+  if (isObject(previous) || Array.isArray(previous)) {
+    for (const oldKey of Object.keys(previous)) {
+      const newKey = newKeyOf(oldKey);
+      if (newKey !== undefined && !oldKeyOf.has(newKey)) {
+        oldKeyOf.set(newKey, oldKey);
+      }
+    }
+  }
+  return (key) => oldKeyOf.get(key);
 }
 
 /** The value `container` holds under `key`, if any */
@@ -283,8 +290,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (newLayers.length === 0) {
     return newValue;
   }
-  const oldDefault = keywordOf(oldLayers, DEFAULT_KEY) ?? oldInherited;
-  const newDefault = keywordOf(newLayers, DEFAULT_KEY) ?? newInherited;
+  const oldOwnDefault = keywordOf(oldLayers, DEFAULT_KEY);
+  const newOwnDefault = keywordOf(newLayers, DEFAULT_KEY);
+  const oldDefault = oldOwnDefault ?? oldInherited;
+  const newDefault = newOwnDefault ?? newInherited;
   // The edited value and the values holding it are the user's
   if (!edited) {
     const judged = judge(oldLayers, newLayers, newValue, oldDefault, newDefault, isItem);
@@ -298,15 +307,14 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
   if (isPlainObject(newValue)) {
     const oldProperties = propertiesOf(oldLayers);
     const newProperties = propertiesOf(newLayers);
-    const oldOwnDefault = keywordOf(oldLayers, DEFAULT_KEY);
-    const newOwnDefault = keywordOf(newLayers, DEFAULT_KEY);
+    const previousKeyOf = previousKeys(ctx, path, oldValue);
     let result: Record<string, unknown> = newValue;
     for (const key of Object.keys(newValue)) {
       const childPath = [...path, key];
       const newChild = newProperties.get(key);
       let next: unknown = newValue[key];
       if (newChild !== undefined) {
-        const previousValue = valueAt(oldValue, previousKeyOf(ctx, path, oldValue, key));
+        const previousValue = valueAt(oldValue, previousKeyOf(key));
         next = walk(
           ctx,
           {
@@ -338,9 +346,10 @@ function walk<T, S extends StrictRJSFSchema, F extends FormContextType>(
     return result;
   }
   if (Array.isArray(newValue)) {
+    const previousKeyOf = previousKeys(ctx, path, oldValue);
     const items = newValue.map((item: unknown, index) => {
       const newItem = itemOf(newLayers, index);
-      const previousIndex = previousKeyOf(ctx, path, oldValue, String(index));
+      const previousIndex = previousKeyOf(String(index));
       return newItem === undefined
         ? item
         : walk(

@@ -248,12 +248,18 @@ function isAtOrAbove(path: FieldPath, edited: FieldPathList): boolean {
  * and object keys the form is told of, as the errors do.
  */
 export function createUiState() {
-  let selections = new Map<FieldPath, ReadonlyMap<string, OptionSelection>>();
+  // Read only through the methods below, never handed out, so the maps are written in place
+  let selections = new Map<FieldPath, Map<string, OptionSelection>>();
   let expanded = new Set<FieldPath>();
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
   const setSelection = (path: FieldPath, list: string, selection: OptionSelection) => {
-    selections = new Map(selections).set(path, new Map(selections.get(path)).set(list, selection));
+    const lists = selections.get(path);
+    if (lists) {
+      lists.set(list, selection);
+    } else {
+      selections.set(path, new Map([[list, selection]]));
+    }
   };
   return {
     subscribe: (listener: () => void) => {
@@ -299,10 +305,9 @@ export function createUiState() {
       for (const [at, lists] of selections) {
         if (isAtOrAbove(at, segments)) {
           const data = dataAt(at);
-          selections = new Map(selections).set(
-            at,
-            new Map([...lists].map(([list, selection]) => [list, heldAfterEdit(selection, data, isProposal)])),
-          );
+          for (const [list, selection] of lists) {
+            lists.set(list, heldAfterEdit(selection, data, isProposal));
+          }
         }
       }
     },
@@ -315,7 +320,7 @@ export function createUiState() {
         for (const [list, selection] of lists) {
           const holdsFor = isHeldFor(selection, data) ? [data] : [];
           if (holdsFor.length !== selection.holdsFor.length || selection.isReleased) {
-            setSelection(at, list, { index: selection.index, holdsFor, isReleased: false });
+            lists.set(list, { index: selection.index, holdsFor, isReleased: false });
           }
         }
       }
@@ -328,7 +333,7 @@ export function createUiState() {
     /** Moves the selections and expansions under the array or object at `container` as its keys moved */
     move: (container: FieldPath, newKeyOf: KeyMove) => {
       const containerSegments = fieldPathToList(container);
-      const movedSelections = new Map<FieldPath, ReadonlyMap<string, OptionSelection>>();
+      const movedSelections = new Map<FieldPath, Map<string, OptionSelection>>();
       for (const [path, lists] of selections) {
         const to = movedPath(path, containerSegments, newKeyOf);
         if (to !== undefined) {
