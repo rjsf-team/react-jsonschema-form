@@ -24292,6 +24292,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                             >
                               <input
                                 aria-invalid="false"
+                                aria-label="Test item"
                                 class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                                 id="root_0"
                                 name="root_0"
@@ -24435,6 +24436,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                             >
                               <input
                                 aria-invalid="false"
+                                aria-label="Test item"
                                 class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                                 id="root_1"
                                 name="root_1"
@@ -25616,6 +25618,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                             >
                               <input
                                 aria-invalid="false"
+                                aria-label="Test item"
                                 class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                                 id="root_0"
                                 name="root_0"
@@ -25678,6 +25681,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                             >
                               <input
                                 aria-invalid="false"
+                                aria-label="Test item"
                                 class="MuiInputBase-input MuiOutlinedInput-input emotion-11"
                                 id="root_1"
                                 inputmode="decimal"

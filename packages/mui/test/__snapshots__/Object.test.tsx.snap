@@ -24989,6 +24989,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     >
                       <input
                         aria-invalid="false"
+                        aria-label="foo"
                         class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                         id="root_foo"
                         name="root_foo"
@@ -25495,6 +25496,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
                   >
                     <input
                       aria-invalid="false"
+                      aria-label="A"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-6"
                       id="root_a"
                       name="root_a"
@@ -25539,6 +25541,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
                   >
                     <input
                       aria-invalid="false"
+                      aria-label="B"
                       class="MuiInputBase-input MuiOutlinedInput-input emotion-6"
                       id="root_b"
                       inputmode="decimal"
@@ -26403,6 +26406,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                     >
                       <input
                         aria-invalid="false"
+                        aria-label="additionalProperty"
                         class="MuiInputBase-input MuiOutlinedInput-input emotion-7"
                         id="root_additionalProperty"
                         name="root_additionalProperty"
