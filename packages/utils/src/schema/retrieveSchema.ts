@@ -262,10 +262,14 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
   return getFirstMatchingOption({ validator }, data, resolved, graph.rawRoot, discriminator);
 }
 
+/** The schemas `resolveOwnRef()` made, by graph and the schema holding the reference */
+const ownRefs = new KeyedMemo<object>();
+
 /** Returns a schema's own `$ref` resolved, the definition overridden by the keywords beside the reference and marked
  * with it, as a schema an option's `$ref` stands for is scored and validated. The reference is resolved through the
  * schema graph, from where the schema sits in the root, as the form resolves it. Only that reference is followed: the
- * validator follows those below it against the root schema.
+ * validator follows those below it against the root schema. The result is made once per schema and shared, so that a
+ * memo keyed on it hits across calls, and a caller copies it rather than changing it.
  *
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
@@ -277,8 +281,20 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
   if (typeof ref !== 'string') {
     return schema;
   }
-  const { graph, seeds } = fieldOf<S>(parseSchemaGraph<S>(rootSchema), schema);
-  return { ...refDefinition<S>(graph, seeds[0].node), ...withoutKeys(schema, REF_KEY), [RJSF_REF_KEY]: ref };
+  const rootGraph = parseSchemaGraph<S>(rootSchema);
+  const keys = [rootGraph, schema];
+  const known = ownRefs.peek(keys);
+  if (isSchemaObject<S>(known)) {
+    return known;
+  }
+  const { graph, seeds } = fieldOf<S>(rootGraph, schema);
+  const resolved: S = {
+    ...refDefinition<S>(graph, seeds[0].node),
+    ...withoutKeys(schema, REF_KEY),
+    [RJSF_REF_KEY]: ref,
+  };
+  ownRefs.set(keys, resolved);
+  return resolved;
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */
@@ -474,10 +490,7 @@ const BRANCH_KEYWORDS: string[] = [ALL_OF_KEY, DEPENDENCIES_KEY, ELSE_KEY, THEN_
 function resolvedFrom<S extends StrictRJSFSchema>(schema: S, rootSchema: S): S {
   const resolved = resolveOwnRef<S>(schema, rootSchema);
   const siblingBranches = BRANCH_KEYWORDS.filter((keyword) => Reflect.get(schema, keyword) !== undefined);
-  if (siblingBranches.length > 0) {
-    Reflect.set(resolved, SIBLING_BRANCHES, siblingBranches);
-  }
-  return resolved;
+  return siblingBranches.length > 0 ? { ...resolved, [SIBLING_BRANCHES]: siblingBranches } : resolved;
 }
 
 /** Returns the references a branch `keyword` of `schema` is resolved with: `enteredRefs` less the `$ref` `schema` was

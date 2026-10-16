@@ -104,7 +104,7 @@ export default function omitExtraData<
         // Resolve $ref so we can inspect the effective required list for the inner schema.
         let sd = isSchemaObject<S>(schemaDef) ? schemaDef : ({} as S);
         if (sd.$ref !== undefined) {
-          sd = resolveRef(sd);
+          sd = resolveOwnRef<S>(sd, rootSchema);
         }
         // A key the `patternProperties` match is described by the `allOf` of every pattern matching it, which is where
         // the names it requires live: read off the wrapper around them it requires nothing, and a required child
@@ -341,26 +341,6 @@ export default function omitExtraData<
    */
   const mergedAllOfSchemas = new WeakMap<object, S>();
 
-  /** Each schema's `$ref` resolved once per call, so that the same reference is the same object everywhere it is read:
-   * the `allOf` merges are remembered under it, and resolved twice, such a schema would be merged twice over for every
-   * node of the form data it describes
-   */
-  const resolvedRefs = new WeakMap<object, S>();
-
-  /** Resolves a schema's own `$ref` against this call's `rootSchema`, through the schema graph as the form resolves it
-   *
-   * @param referring - The schema holding the reference
-   * @returns - The schema it reads as
-   */
-  function resolveRef(referring: S): S {
-    let resolved = resolvedRefs.get(referring);
-    if (resolved === undefined) {
-      resolved = resolveOwnRef<S>(referring, rootSchema);
-      resolvedRefs.set(referring, resolved);
-    }
-    return resolved;
-  }
-
   /** Resolves the reference of one `allOf` entry. Only its own `$ref` needs resolving: the merge would hoist it rather
    * than follow it, where the ones below are resolved as `omit()` reaches them
    *
@@ -417,7 +397,7 @@ export default function omitExtraData<
     const { $ref: ref, allOf } = localSchema;
 
     if (ref !== undefined) {
-      return omit(resolveRef(localSchema), source, target, useSourceAsFallback);
+      return omit(resolveOwnRef<S>(localSchema, rootSchema), source, target, useSourceAsFallback);
     }
     if (allOf) {
       localSchema = mergeAllOfOnce(localSchema, allOf);
