@@ -15,8 +15,9 @@ import {
   THEN_KEY,
 } from '../../constants.ts';
 import hashForSchema from '../../hashForSchema.ts';
-import isObject from '../../isObject.ts';
+import isObject, { isSchemaObject } from '../../isObject.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '../../types.ts';
+import KeyedMemo from './keyedMemo.ts';
 import { booleanSchema, schemaFrom } from './mergePlan.ts';
 import { isRootPointer, stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
@@ -64,6 +65,11 @@ function refTo(pointer: string): string {
   return `#${encodeURI(pointer).replaceAll('#', '%23')}`;
 }
 
+/** The `{ $ref }` `pointerTo()` names each node by, per graph and node, or `null` for a node it gives none, so a
+ * validator caching what it compiles by schema is handed the same object for a node every time
+ */
+const pointers = new KeyedMemo<object | null>();
+
 /** Returns `{ $ref }` naming the node `id` where it sits in the root, which a validator resolves against the root it is
  * given, or undefined for a node with no location there or a boolean one, which holds no `$ref` for a pointer to keep
  * in reach and which ata reads as `true` behind a `$ref`
@@ -73,11 +79,21 @@ function refTo(pointer: string): string {
  * @returns - The `$ref` wrapper
  */
 export function pointerTo<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S | undefined {
-  const node = graph.node(id);
-  if (node.kind !== 'schema' || !isRootPointer(node.pointer)) {
+  const keys = [graph, id];
+  const memoized = pointers.peek(keys);
+  if (memoized === null) {
     return undefined;
   }
-  return schemaFrom(graph.rawRoot, { [REF_KEY]: refTo(node.pointer) });
+  if (isSchemaObject<S>(memoized)) {
+    return memoized;
+  }
+  const node = graph.node(id);
+  const pointer =
+    node.kind === 'schema' && isRootPointer(node.pointer)
+      ? schemaFrom(graph.rawRoot, { [REF_KEY]: refTo(node.pointer) })
+      : undefined;
+  pointers.set(keys, pointer ?? null);
+  return pointer;
 }
 
 /** Returns what a validator checks the subschema `id` with: `{ $ref }` naming it in the root, or the subschema itself
@@ -279,20 +295,68 @@ export function scoringTarget<S extends StrictRJSFSchema = RJSFSchema>(
   id: NodeId,
   relax: boolean,
 ): S {
+  const keys = [graph, id, relax];
+  const memoized = scoringTargets.peek(keys);
+  if (isSchemaObject<S>(memoized)) {
+    return memoized;
+  }
+  const target = buildScoringTarget(graph, id, relax);
+  scoringTargets.set(keys, target);
+  return target;
+}
+
+/** The schemas `scoringTarget()` returns, per graph, node and `relax`: an option is matched on every edit, and a
+ * validator hashes a schema it is handed to find what it compiled for it
+ */
+const scoringTargets = new KeyedMemo<object>();
+
+function buildScoringTarget<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId, relax: boolean): S {
   const node = graph.node(id);
   if (node.kind !== 'schema') {
     return targetOf(graph, id);
   }
   const pointer = pointerTo(graph, id);
   const scope = scopeOf(graph, id);
-  const loosening = { required: scope.some(declaresProperties), additionalProperties: relax };
+  const loosening = { required: scope.some((member) => isObject(member.raw.properties)), additionalProperties: relax };
   return pointer !== undefined && !scope.some((member) => loosens(member, loosening))
     ? pointer
     : derive(graph, node, loosening, new Set());
 }
 
-function declaresProperties(node: ObjectNode): boolean {
-  return isObject(node.raw.properties);
+/** What of an option's scope `holdsDeclaredKey()` reads: the names and patterns its `properties` and
+ * `patternProperties` declare, or the answer, where it does not depend on the data
+ */
+type DeclaredKeys = boolean | { readonly names: ReadonlySet<string>; readonly patterns: readonly RegExp[] };
+
+/** The `DeclaredKeys` of each option, per graph and node */
+const declaredKeysMemo = new KeyedMemo<DeclaredKeys>();
+
+function declaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
+  const keys = [graph, id];
+  const memoized = declaredKeysMemo.peek(keys);
+  if (memoized !== undefined) {
+    return memoized;
+  }
+  const declared = readDeclaredKeys(graph, id);
+  declaredKeysMemo.set(keys, declared);
+  return declared;
+}
+
+function readDeclaredKeys<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): DeclaredKeys {
+  const scope = scopeOf(graph, id).flatMap((node) =>
+    isObject(node.raw.properties) ? [{ node, declared: Object.keys(node.raw.properties) }] : [],
+  );
+  if (scope.length === 0) {
+    return true;
+  }
+  const names = new Set(scope.flatMap(({ declared }) => declared));
+  if (names.size === 0) {
+    return scope.some(({ node }) => allowsAdditionalProperties(node.raw));
+  }
+  const patterns = scope
+    .flatMap(({ node }) => graph.subschemas(node.id, PATTERN_PROPERTIES_KEY))
+    .map(([pattern]) => patternRegExp(pattern));
+  return { names, patterns };
 }
 
 /** Returns whether the object `data` holds a key the option `id` declares, which scoring asks on top of the option's
@@ -311,23 +375,14 @@ export function holdsDeclaredKey<S extends StrictRJSFSchema = RJSFSchema>(
   id: NodeId,
   data: unknown,
 ): boolean {
-  const scope = scopeOf(graph, id).flatMap((node) =>
-    isObject(node.raw.properties) ? [{ node, declared: Object.keys(node.raw.properties) }] : [],
+  const declared = declaredKeys(graph, id);
+  if (typeof declared === 'boolean') {
+    return declared;
+  }
+  const { names, patterns } = declared;
+  return (
+    !isObject(data) || Object.keys(data).some((key) => names.has(key) || patterns.some((pattern) => pattern.test(key)))
   );
-  if (scope.length === 0) {
-    return true;
-  }
-  const names = new Set(scope.flatMap(({ declared }) => declared));
-  if (names.size === 0) {
-    return scope.some(({ node }) => allowsAdditionalProperties(node.raw));
-  }
-  if (!isObject(data)) {
-    return true;
-  }
-  const patterns = scope
-    .flatMap(({ node }) => graph.subschemas(node.id, PATTERN_PROPERTIES_KEY))
-    .map(([pattern]) => patternRegExp(pattern));
-  return Object.keys(data).some((key) => names.has(key) || patterns.some((pattern) => pattern.test(key)));
 }
 
 /** Returns every schema the form hands a validator for the root of `graph`: the root itself; each `if`; each
