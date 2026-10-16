@@ -527,6 +527,19 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         expect(screen.getAllByRole('radio')[0]).toHaveFocus();
       });
 
+      it.each(['alt-date', 'alt-datetime'])("focuses the first part of an %s's group", async (widget) => {
+        const { node } = createFormComponent({
+          schema: { type: 'string', minLength: 100 },
+          uiSchema: { 'ui:widget': widget },
+          formData: '2020-01-01',
+          focusOnFirstError: true,
+        });
+
+        await submitForm(node, user);
+
+        expect(screen.getAllByRole('combobox')[0]).toHaveFocus();
+      });
+
       it('passes over an unfocusable input whose id starts with the field id for a focusable one after it', async () => {
         const ChoiceWidget = ({ id }: WidgetProps) => (
           <div>

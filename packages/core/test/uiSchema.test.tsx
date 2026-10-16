@@ -741,6 +741,14 @@ describe('uiSchema', () => {
           { 'ui:autofocus': true },
         );
       });
+
+      it('should focus on the first radio a user can choose when the first is disabled', () => {
+        shouldFocus(
+          { type: 'string', enum: ['red', 'green', 'blue'] },
+          { 'ui:widget': 'radio', 'ui:autofocus': true, 'ui:enumDisabled': ['red'] },
+          'input[value="1"]',
+        );
+      });
     });
 
     describe('object', () => {
@@ -840,6 +848,14 @@ describe('uiSchema', () => {
           },
           'input',
           ['bar'],
+        );
+      });
+
+      it('should focus on the first checkbox a user can choose when the first is disabled', () => {
+        shouldFocus(
+          { type: 'array', items: { type: 'string', enum: ['foo', 'bar', 'baz'] }, uniqueItems: true },
+          { 'ui:widget': 'checkboxes', 'ui:autofocus': true, 'ui:enumDisabled': ['foo'] },
+          'input[value="1"]',
         );
       });
     });

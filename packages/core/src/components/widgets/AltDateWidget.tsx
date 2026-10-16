@@ -1,7 +1,10 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { DateElement, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
+import { DateElement, getGroupAttributes, TranslatableString, useAltDateWidgetProps } from '@rjsf/utils';
 
-/** The `AltDateWidget` is an alternative widget for rendering date properties.
+/** The `AltDateWidget` is an alternative widget for rendering date properties. Its list of date parts sits in the
+ * `group` carrying the field's id, named by the template's label through `aria-labelledby`, since no part carries that
+ * id for a `for` to name. The group wraps the list rather than replacing its role, so the parts stay its list items
+ *
  * @param props - The `WidgetProps` for this component
  */
 function AltDateWidget<
@@ -19,44 +22,49 @@ function AltDateWidget<
     registry,
     onBlur,
     onFocus,
+    presentation,
   } = props;
   const { translateString } = registry;
+  const { group } = getGroupAttributes<T, S, F>({ id, presentation }, 'group');
   const { elements, handleChange, handleClear, handleSetNow } = useAltDateWidgetProps(props);
 
   return (
-    <ul className='list-inline'>
-      {elements.map((elemProps, i) => (
-        // oxlint-disable-next-line react/no-array-index-key
-        <li className='list-inline-item' key={i}>
-          <DateElement
-            rootId={id}
-            label={label}
-            select={handleChange}
-            {...elemProps}
-            disabled={disabled}
-            readonly={readonly}
-            registry={registry}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            autofocus={autofocus && i === 0}
-          />
-        </li>
-      ))}
-      {(options.hideNowButton !== 'undefined' ? !options.hideNowButton : true) && (
-        <li className='list-inline-item'>
-          <button type='button' className='btn btn-info btn-now' onClick={handleSetNow}>
-            {translateString(TranslatableString.NowLabel)}
-          </button>
-        </li>
-      )}
-      {(options.hideClearButton !== 'undefined' ? !options.hideClearButton : true) && (
-        <li className='list-inline-item'>
-          <button type='button' className='btn btn-warning btn-clear' onClick={handleClear}>
-            {translateString(TranslatableString.ClearLabel)}
-          </button>
-        </li>
-      )}
-    </ul>
+    <div id={id} {...group}>
+      <ul className='list-inline'>
+        {elements.map((elemProps, i) => (
+          // oxlint-disable-next-line react/no-array-index-key
+          <li className='list-inline-item' key={i}>
+            <DateElement
+              rootId={id}
+              label={label}
+              select={handleChange}
+              {...elemProps}
+              disabled={disabled}
+              readonly={readonly}
+              registry={registry}
+              onBlur={onBlur}
+              onFocus={onFocus}
+              autofocus={autofocus && i === 0}
+              presentation={presentation}
+            />
+          </li>
+        ))}
+        {!options.hideNowButton && (
+          <li className='list-inline-item'>
+            <button type='button' className='btn btn-info btn-now' onClick={handleSetNow}>
+              {translateString(TranslatableString.NowLabel)}
+            </button>
+          </li>
+        )}
+        {!options.hideClearButton && (
+          <li className='list-inline-item'>
+            <button type='button' className='btn btn-warning btn-clear' onClick={handleClear}>
+              {translateString(TranslatableString.ClearLabel)}
+            </button>
+          </li>
+        )}
+      </ul>
+    </div>
   );
 }
 
