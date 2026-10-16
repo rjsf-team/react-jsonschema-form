@@ -8729,6 +8729,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
 
     describe('own prototype-named properties', () => {
+      it('keeps an additionalProperties key named like an Object.prototype member', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+        };
+        const result = getDefaultFormState(
+          { validator: testValidator },
+          { schema: { ...schema, default: JSON.parse('{"constructor":"c","valueOf":"v"}') }, formData: { a: 'x' } },
+        );
+        expect(Object.getOwnPropertyDescriptor(result, 'constructor')?.value).toBe('c');
+        expect(Object.getOwnPropertyDescriptor(result, 'valueOf')?.value).toBe('v');
+      });
+
       it('keeps extra form data through the public entry point', () => {
         const schema: RJSFSchema = { type: 'object', properties: { a: { type: 'string' } } };
         expect(
