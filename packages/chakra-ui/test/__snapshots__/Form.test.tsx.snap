@@ -15599,7 +15599,7 @@ exports[`single fields > checkbox field 1`] = `
             >
               <input
                 aria-invalid="false"
-                aria-labelledby="field::root::label"
+                aria-labelledby=""
                 id="root"
                 name="root"
                 style="border: 0px; clip: rect(0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; word-wrap: normal;"

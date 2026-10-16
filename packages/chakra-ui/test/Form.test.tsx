@@ -619,17 +619,26 @@ describe('chakra-ui labels the core widgets that draw no label of their own', ()
     expect(screen.getByRole('radiogroup')).toHaveAccessibleName('Score');
   });
 
-  test.each(['alt-date', 'alt-datetime'])('labels a %s field from the template', (widget) => {
-    render(
-      <WrappedForm
-        schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
-        uiSchema={{ when: { 'ui:widget': widget } }}
-        validator={validator}
-      />,
-    );
+  test.each(['alt-date', 'alt-datetime'])(
+    'labels a %s field from the template, naming the group of its parts',
+    (widget) => {
+      const { container } = render(
+        <WrappedForm
+          schema={{ type: 'object', properties: { when: { type: 'string', title: 'When' } } }}
+          uiSchema={{ when: { 'ui:widget': widget } }}
+          validator={validator}
+        />,
+      );
 
-    expect(document.getElementById('root_when__label')).toHaveTextContent('When');
-  });
+      const label = document.getElementById('root_when__label');
+      expect(label).toHaveTextContent('When');
+      expect(label).not.toHaveAttribute('for');
+      expect(screen.getByRole('button', { name: 'Now' }).closest('fieldset')).toHaveAccessibleName('When');
+      container.querySelectorAll('label[for]').forEach((labelFor) => {
+        expect(container.querySelector(`[id="${labelFor.getAttribute('for')}"]`)).toBeInTheDocument();
+      });
+    },
+  );
 });
 
 describe('chakra-ui ArrayFieldTemplate', () => {
@@ -733,6 +742,7 @@ describe('chakra-ui names a control whose label ui:label false hides', () => {
     ['text input', 'textbox', { type: 'string' }, {}],
     ['radio group', 'radiogroup', { type: 'string', enum: ['a', 'b'] }, { 'ui:widget': 'radio' }],
     ['range', 'slider', { type: 'number' }, { 'ui:widget': 'range' }],
+    ['checkbox', 'checkbox', { type: 'boolean' }, {}],
   ])('names a %s by the label text ui:label false hides', (_, role, schema, uiSchema) => {
     const { container } = render(
       <WrappedForm
