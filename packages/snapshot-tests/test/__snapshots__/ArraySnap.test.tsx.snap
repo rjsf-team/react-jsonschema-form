@@ -3738,6 +3738,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <input
+                  aria-label="Test item"
                   class="form-control"
                   id="root_0"
                   label="Test item"
@@ -3811,6 +3812,7 @@ exports[`with title and description with global label off > array icons 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <input
+                  aria-label="Test item"
                   class="form-control"
                   id="root_1"
                   label="Test item"
@@ -3915,6 +3917,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
       class="form-group rjsf-field rjsf-field-array"
     >
       <select
+        aria-label="Test field"
         class="form-control"
         id="root"
         multiple=""
@@ -3975,6 +3978,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-string"
               >
                 <input
+                  aria-label="Test item"
                   class="form-control"
                   id="root_0"
                   label="Test item"
@@ -3998,6 +4002,7 @@ exports[`with title and description with global label off > fixed array 1`] = `
                 class="form-group rjsf-field rjsf-field-number"
               >
                 <input
+                  aria-label="Test item"
                   class="form-control"
                   id="root_1"
                   inputmode="decimal"

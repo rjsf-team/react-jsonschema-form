@@ -9818,6 +9818,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
                 aria-expanded="false"
                 aria-haspopup="listbox"
                 aria-invalid="false"
+                aria-label="Test field"
                 autocomplete="off"
                 class="mantine-MultiSelect-inputField m_45c4369d mantine-PillsInputField-field"
                 data-type="visible"
@@ -9859,6 +9860,7 @@ exports[`with title and description with global label off > checkboxes 1`] = `
         style="display: none; z-index: 300; top: 0px; left: 0px; --combobox-option-fz: var(--mantine-font-size-sm); --combobox-option-padding: var(--combobox-option-padding-sm);"
       >
         <div
+          aria-label="Test field"
           class="m_b2821a6e mantine-MultiSelect-options"
           id="mantine-i"
           role="listbox"
