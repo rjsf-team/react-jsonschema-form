@@ -11,6 +11,7 @@ import type {
 import {
   ANY_OF_KEY,
   deepEquals,
+  deepEqualsUndefinedAsMissing,
   ERRORS_KEY,
   getDiscriminatorFieldFromSchema,
   getRenderedOptionSchema,
@@ -38,9 +39,8 @@ interface OptionSelection<T> {
   selectedOption: number;
   formData: T | undefined;
   id: string;
-  /** The data the user's last option switch sent, so re-matching the option to the data does not override the
-   * explicit choice. It is needed even when the data follows the switch, since getDefaultFormState populates undefined
-   * properties that make deepEquals see a false formData change.
+  /** The data the user's last option switch sent, so the data the form answers it with tells an accepted switch, which
+   * keeps the explicit choice, from one refused or rewritten, which the option is re-matched to
    */
   switched: { formData: T | undefined } | undefined;
 }
@@ -67,23 +67,22 @@ function optionForData<
 ): number {
   const { selectedOption, switched } = selection;
   const { schemaUtils } = registry;
-  const isFormDataChanged = !deepEquals(formData, selection.formData);
   if (switched) {
-    // A switch that sent the data the form already held has nothing to undo
-    if (isFormDataChanged || deepEquals(formData, switched.formData)) {
+    // The data came back as the switch sent it, so the form accepted the switch
+    if (deepEqualsUndefinedAsMissing(formData, switched.formData)) {
       return selectedOption;
     }
-    // The data did not follow the switch, which is what an `onChange` that answers it by setting the field back
-    // looks like, or a custom parent of the field that kept the data it had: the chosen option stays while the data
-    // still fits it, so a form whose data matches several options keeps the explicit choice, and one whose data does
-    // not is put back on the option that describes it
+    // The data is not what the switch sent, which is what a `transformChange` or an `onChange` that refuses or
+    // rewrites it looks like, or a custom parent of the field that kept the data it had: the chosen option stays while
+    // the data the form kept still fits it, so a form whose data matches several options keeps the explicit choice,
+    // and one whose data does not is put on the option that describes it
     const chosen = selectedOption >= 0 ? options[selectedOption] : undefined;
     // The retrieved option is not the schema its own `$id` names, and a validator caches what it compiles under
     // that `$id`, so it is validated under one derived from its content, as the option scoring does
     if (chosen && schemaUtils.getValidator().isValid(withVariantId<S>(chosen), formData, registry.rootSchema)) {
       return selectedOption;
     }
-  } else if (!isFormDataChanged) {
+  } else if (deepEquals(formData, selection.formData)) {
     return selectedOption;
   }
   return schemaUtils.getClosestMatchingOption(

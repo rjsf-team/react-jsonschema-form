@@ -191,6 +191,33 @@ describe('transformChange', () => {
       expect(handleOf(ref).getFormData()).toEqual({ status: { by: 'me' } });
       expect(reported.filter(({ formData }) => formData.status?.by !== 'me')).toEqual([]);
     });
+
+    it.each([
+      { rewrite: { by: 'you' }, option: '0', field: 'by', value: 'you', gone: 'reason' },
+      { rewrite: { until: 'later' }, option: '2', field: 'until', value: 'later', gone: 'reason' },
+      { rewrite: { reason: 'n/a' }, option: '1', field: 'reason', value: 'n/a', gone: 'by' },
+    ])(
+      'rewritten to $rewrite, puts the selector on the option the data the form keeps fits',
+      async ({ rewrite, option, field, value, gone }) => {
+        const transformChange: FormProps<Decision>['transformChange'] = (next, previous) =>
+          next?.status?.by === previous?.status?.by ? next : { status: rewrite };
+        const ref = createFormRef<Decision>();
+        const { node, reported } = renderForm<Decision>({
+          ref,
+          schema: decisionSchema,
+          initialFormData: { status: { by: 'me' } },
+          transformChange,
+        });
+
+        await user.selectOptions(selector(node), 'Rejected');
+
+        expect(selector(node)).toHaveValue(option);
+        expect(node.querySelector(`#root_status_${field}`)).toHaveValue(value);
+        expect(node.querySelector(`#root_status_${gone}`)).not.toBeInTheDocument();
+        expect(handleOf(ref).getFormData()).toEqual({ status: rewrite });
+        expect(reported.at(-1)?.formData).toEqual({ status: rewrite });
+      },
+    );
   });
 
   describe('under liveValidate', () => {
