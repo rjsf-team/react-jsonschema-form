@@ -373,6 +373,7 @@ it('a draft a widget flushes as its form unmounts does not reach the form that r
           key={record.id}
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={record.data}
           uiSchema={{ name: { 'ui:widget': DraftWidget } }}
           onChange={(event) => setRecord((current) => ({ ...current, data: event.formData }))}
@@ -453,6 +454,7 @@ describe('a formData passed to a form hidden by Activity', () => {
           ref={ref}
           schema={{ type: 'object', properties: { name: { type: 'string' }, other: { type: 'string' } } }}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
           formData={formData}
           onChange={onChange}
         />
@@ -525,6 +527,7 @@ describe('validateForm() from a passive Effect after a prop change (#5034)', () 
           ref={ref}
           schema={activeSchema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={(event) => setFormData(event.formData ?? '')}
           onError={noop}
@@ -575,7 +578,14 @@ describe('validateForm() from a passive Effect after a prop change (#5034)', () 
       }, []);
       return (
         <>
-          <Form<string> ref={ref} schema={schemaA} validator={validator} formData={valueA} readonly onError={noop} />
+          <Form<string>
+            ref={ref}
+            schema={schemaA}
+            validator={validator}
+            initialFormData={valueA}
+            readonly
+            onError={noop}
+          />
           <button type='button' onClick={() => handleOf(ref).setFieldValue('', valueB)}>
             Toggle data
           </button>

@@ -223,6 +223,7 @@ should change the heading of the (upcoming) version to include a major version b
 - **BREAKING CHANGE:** `FormState`, the class component's state type, is no longer exported; `IChangeEvent` is the public shape of what reaches the callbacks ([jimmycallin#115](https://github.com/jimmycallin/react-jsonschema-form/pull/115))
 - Without live validation, an edit clears the validator's errors of the fields whose values it replaced in every form, where v6 did so only for a form passed `formData`, and the errors an item reorder, a property rename or an option switch moved stay with the values they moved with. In development, the `formData` passed to `onChange` is deep-frozen ([jimmycallin#115](https://github.com/jimmycallin/react-jsonschema-form/pull/115))
 - `Form` hands each commit's props and state to its model from a layout Effect, so a widget's layout Effect in the commit that renders new props still sees the previous ones ([jimmycallin#115](https://github.com/jimmycallin/react-jsonschema-form/pull/115))
+- `formData` is deprecated in favour of `initialFormData`, which it is another name for: the form reads it only on mount and on `reset()`, which the name `formData` hides by reading as a controlled value. It still works and still wins when both are passed. See [the upgrade guide](https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v7.x%20upgrade%20guide#form-owns-its-data-breaking-change) ([jimmycallin#115](https://github.com/jimmycallin/react-jsonschema-form/pull/115))
 
 ## @rjsf/daisyui
 

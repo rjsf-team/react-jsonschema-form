@@ -326,7 +326,7 @@ describe('FieldTemplate', () => {
         <Form
           schema={{ type: 'object', additionalProperties: { type: 'string', title: 'Extra', enum: ['a', 'b'] } }}
           uiSchema={{ additionalProperties: { 'ui:widget': 'radio' } }}
-          formData={{ foo: 'a' }}
+          initialFormData={{ foo: 'a' }}
           validator={validator}
         />,
       );
@@ -378,7 +378,7 @@ describe('FieldTemplate', () => {
       ['a root field', dateSchema, '2020-05-03', altDate, ''],
     ])('for %s', (_, schema, formData, uiSchema, namePrefix) => {
       test('names each of its selects with its own label, and describes it with the value it shows', () => {
-        render(<Form schema={schema} uiSchema={uiSchema} formData={formData} validator={validator} />);
+        render(<Form schema={schema} uiSchema={uiSchema} initialFormData={formData} validator={validator} />);
 
         // Each select is named by its `aria-label`, replacing the contents that display the value, so the
         // value is exposed as the description instead. Both are spelled out rather than read back off the elements,
@@ -403,7 +403,7 @@ describe('FieldTemplate', () => {
     };
 
     test('is named by the label, and describes itself with the option it displays', () => {
-      render(<Form schema={colorSchema} formData={{ color: 'green' }} validator={validator} />);
+      render(<Form schema={colorSchema} initialFormData={{ color: 'green' }} validator={validator} />);
 
       const dropdown = screen.getByRole('button', { name: 'Color' });
       expect(dropdown).toBe(screen.getByLabelText('Color'));
@@ -435,7 +435,7 @@ describe('FieldTemplate', () => {
               },
             },
           }}
-          formData={{ region: 'DE' }}
+          initialFormData={{ region: 'DE' }}
           validator={validator}
         />,
       );
@@ -453,7 +453,7 @@ describe('FieldTemplate', () => {
       render(
         <Form
           schema={colorSchema}
-          formData={{ color: 'green' }}
+          initialFormData={{ color: 'green' }}
           validator={validator}
           templates={{
             FieldTemplate: ({ id, label, children }) => (
@@ -478,7 +478,7 @@ describe('FieldTemplate', () => {
             additionalProperties: { type: 'string' },
             propertyNames: { enum: ['alpha', 'beta'] },
           }}
-          formData={{ alpha: 'a' }}
+          initialFormData={{ alpha: 'a' }}
           validator={validator}
         />,
       );
@@ -493,7 +493,7 @@ describe('FieldTemplate', () => {
     render(
       <Form
         schema={{ type: 'object', properties: { birthday: { type: 'string', format: 'date', title: 'Birthday' } } }}
-        formData={{ birthday: '2020-05-03' }}
+        initialFormData={{ birthday: '2020-05-03' }}
         validator={validator}
       />,
     );
@@ -519,7 +519,11 @@ describe('FieldTemplate', () => {
 
     test('renders no label, and so no required asterisk, for an untitled required array item', () => {
       const { container } = render(
-        <Form schema={{ type: 'array', items: { type: 'string' } }} formData={['first']} validator={validator} />,
+        <Form
+          schema={{ type: 'array', items: { type: 'string' } }}
+          initialFormData={['first']}
+          validator={validator}
+        />,
       );
 
       expect(templateLabelFor(container, 'root_0')).toBeNull();
@@ -546,7 +550,7 @@ describe('FieldTemplate', () => {
       render(
         <Form
           schema={{ type: 'object', properties: { when: { type: 'string', format: 'date', title: '' } } }}
-          formData={{ when: '2020-05-03' }}
+          initialFormData={{ when: '2020-05-03' }}
           validator={validator}
         />,
       );

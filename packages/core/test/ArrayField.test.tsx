@@ -2072,7 +2072,7 @@ describe('ArrayField', () => {
         };
         const { node, onChange, rerender } = createFormComponent({
           schema,
-          formData: [],
+          initialFormData: [],
           templates,
         });
 
@@ -2084,7 +2084,7 @@ describe('ArrayField', () => {
 
         expectToHaveBeenCalledWithFormData(onChange, [undefined], 'root');
 
-        rerender({ schema, formData: [undefined], templates });
+        rerender({ schema, initialFormData: [undefined], templates });
 
         expect(node.querySelectorAll('.rjsf-field-string')).toHaveLength(1);
       });
@@ -2502,6 +2502,7 @@ describe('ArrayField', () => {
             schema={{ type: 'array', items: { type: 'string' } }}
             uiSchema={{ 'ui:options': { itemLabel: '.', copyable: true } }}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => apply(() => setData(event.formData))}
           />
@@ -3574,7 +3575,7 @@ describe('ArrayField', () => {
       ] satisfies [string, RJSFSchema][])('renders the array errors of %s when they are not hidden', async (_, foo) => {
         const { node } = createFormComponent({
           schema: { type: 'object', properties: { foo } },
-          formData: { foo: ['a'] },
+          initialFormData: { foo: ['a'] },
           customValidate: addArrayError,
           templates: { ArrayFieldTemplate: ErrorListingArrayFieldTemplate },
           showErrorList: false,
@@ -3591,7 +3592,7 @@ describe('ArrayField', () => {
         const { node } = createFormComponent({
           schema: { type: 'object', properties: { foo } },
           uiSchema: { 'ui:hideError': true },
-          formData: { foo: ['a'] },
+          initialFormData: { foo: ['a'] },
           customValidate: addArrayError,
           templates: { ArrayFieldTemplate: ErrorListingArrayFieldTemplate },
           showErrorList: false,
@@ -3619,7 +3620,7 @@ describe('ArrayField', () => {
         const { node } = createFormComponent({
           schema: { type: 'object', properties: { foo } },
           uiSchema: { 'ui:hideError': true },
-          formData: { foo: ['a'] },
+          initialFormData: { foo: ['a'] },
           customValidate: addItemError,
           templates: { ArrayFieldTemplate: RecordingArrayFieldTemplate },
           showErrorList: false,
@@ -4190,7 +4191,7 @@ describe('ArrayField', () => {
         { name: 'Jane', age: 25 },
       ];
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       // Should render textareas for name fields based on static uiSchema
       const textareas = node.querySelectorAll('textarea');
@@ -4209,7 +4210,7 @@ describe('ArrayField', () => {
 
       const formData = ['', ''];
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       const inputs = node.querySelectorAll<HTMLInputElement>('.rjsf-array-item input[type="text"]');
       expect(inputs).toHaveLength(2);
@@ -4312,7 +4313,7 @@ describe('ArrayField', () => {
         { name: 'Regular Task', priority: 'normal' },
       ];
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       // First item should have textarea due to high priority
       const firstItemTextarea = node.querySelectorAll('.rjsf-array-item')[0].querySelector('textarea');
@@ -4356,7 +4357,7 @@ describe('ArrayField', () => {
 
       const formData = [{ name: 'First' }, { name: 'Second' }, { name: 'Third' }];
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       // Should log error for second item
       expect(consoleErrorStub).toHaveBeenLastCalledWith(
@@ -4397,7 +4398,7 @@ describe('ArrayField', () => {
       };
 
       const formData = ['First', 'Second'];
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       // Should log error for second item
       expect(consoleErrorStub).toHaveBeenLastCalledWith(
@@ -4450,7 +4451,7 @@ describe('ArrayField', () => {
         { name: 'Hidden Item', visible: false },
       ];
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       // Both items should render
       const arrayItems = node.querySelectorAll('.rjsf-array-item');
@@ -4487,7 +4488,7 @@ describe('ArrayField', () => {
 
       const formData: any[] = [];
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       // Function should not be called for empty array
       expect(dynamicUiSchemaFunction).toHaveBeenCalledTimes(0);
@@ -4576,7 +4577,7 @@ describe('ArrayField', () => {
         { title: 'Second Post', tags: ['javascript'] },
       ];
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       // First item title should be textarea
       const firstItemTitle = node
@@ -4952,6 +4953,7 @@ describe('ArrayField', () => {
           <Form
             schema={schema}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             templates={{ ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate }}
             onChange={(event) => {

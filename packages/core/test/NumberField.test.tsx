@@ -159,7 +159,10 @@ describe('NumberField', () => {
       ['a small negative number with a fraction', 'number', -1.5e-9, '-1.5e-9'],
       ['a very large integer', 'integer', 1e21, '1e+21'],
     ])('should let the browser accept %s that JavaScript renders with an exponent', (_, type, formData, rendered) => {
-      const { node } = createFormComponent({ schema: { type: type as 'number' | 'integer' }, formData });
+      const { node } = createFormComponent({
+        schema: { type: type as 'number' | 'integer' },
+        initialFormData: formData,
+      });
 
       const input = node.querySelector('input')!;
       expect(input).toHaveValue(rendered);
@@ -1045,7 +1048,7 @@ describe('NumberField', () => {
         widgets: {
           custom: CustomWidget,
         },
-        formData: 2.3,
+        initialFormData: 2.3,
       });
 
       // NumberField only comma-formats the value for the built-in text widget, so this input keeps "2.3"

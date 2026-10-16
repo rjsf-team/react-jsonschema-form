@@ -1967,6 +1967,7 @@ export function applySubmit<T, S extends StrictRJSFSchema, F extends FormContext
  * @returns - The seed, or `undefined` when the props pass none
  */
 function seedOf<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>): T | undefined {
+  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   return props.formData ?? props.initialFormData;
 }
 

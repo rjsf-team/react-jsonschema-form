@@ -35,7 +35,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const { node, onSubmit } = createFormComponent({
         ref: createRef(),
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       await submitForm(node, user);
@@ -58,7 +58,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const { node, onSubmit, onError } = createFormComponent({
         ref: createRef(),
         schema,
-        formData,
+        initialFormData: formData,
       });
 
       await submitForm(node, user);
@@ -77,7 +77,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const { node, onSubmit, onError } = createFormComponent({
         ref: createRef(),
         schema: { type },
-        formData,
+        initialFormData: formData,
       });
 
       await submitForm(node, user);
@@ -91,7 +91,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const { node, onSubmit, onError } = createFormComponent({
         ref: createRef(),
         schema: { type: 'boolean' },
-        formData: 0,
+        initialFormData: 0,
       });
 
       await submitForm(node, user);
@@ -502,7 +502,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       rerender({
         ref: createRef(),
         schema,
-        formData: currentFormData,
+        initialFormData: currentFormData,
         defaultFormStateBehavior: { emptyObjectFields: 'populateAllDefaults' },
       });
 
@@ -611,9 +611,11 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
         type: 'object',
         properties: { name: { type: 'string' }, other: { type: 'string', default: 'defaulted' } },
       };
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       const { node, rerender } = createFormComponent({ schema, formData: { name: 'a' }, onChange: () => {} });
 
       await user.type(input(node, 'root_name'), 'x');
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       rerender({ schema, formData: { name: 'loaded' }, onChange: () => {} });
 
       expect(input(node, 'root_name')).toHaveValue('ax');
@@ -938,7 +940,7 @@ describeRepeated('Form common: event handlers', (createFormComponent) => {
       const formData = {
         foo: '',
       };
-      const { node, onError } = createFormComponent({ schema, formData });
+      const { node, onError } = createFormComponent({ schema, initialFormData: formData });
 
       await submitForm(node, user);
 

@@ -203,7 +203,7 @@ describe('ObjectField', () => {
         foo: 'heyyou',
         bar: true,
       };
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
 
       expect(node.querySelector('.rjsf-field input[type=text]')).toHaveValue(formData.foo);
       expect(node.querySelector('.rjsf-field input[type=checkbox]')).toBeChecked();
@@ -351,7 +351,7 @@ describe('ObjectField', () => {
       };
       const { node, rerender } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           email: 'Appie@hotmail.com',
           emailConfirm: 'wrong@wrong.com',
         },
@@ -366,7 +366,7 @@ describe('ObjectField', () => {
 
       rerender({
         schema,
-        formData: {
+        initialFormData: {
           email: 'Appie@hotmail.com',
           emailConfirm: 'Appie@hotmail.com',
         },
@@ -555,7 +555,7 @@ describe('ObjectField', () => {
           Bar: 'B',
         },
       };
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
       // click submit
       await submitForm(node, user);
       const fooDotBarErrors = node.querySelectorAll('#root_Foo.Bar__error');
@@ -1168,7 +1168,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'number' },
           patternProperties: { '^pct_': { type: 'number', default: 50 } },
         },
-        formData: { score: 0 },
+        initialFormData: { score: 0 },
       });
 
       const keyInput = node.querySelector('#root_score-key')!;
@@ -1901,12 +1901,12 @@ describe('ObjectField', () => {
       const formData = { first: 'one', promoted: 'two' };
       const { node, rerender } = createFormComponent({
         schema: initialSchema,
-        formData,
+        initialFormData: formData,
       });
 
       rerender({
         schema: updatedSchema,
-        formData,
+        initialFormData: formData,
       });
 
       const promotedInputs = node.querySelectorAll<HTMLInputElement>('input[id="root_promoted"]');
@@ -2079,7 +2079,7 @@ describe('ObjectField', () => {
       // `deprecatedHandling` defaults to `label`, so the property's label carries a marker its key must not pick up
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', additionalProperties: { type: 'string', deprecated: true } },
-        formData: { first: 'a value' },
+        initialFormData: { first: 'a value' },
       });
 
       const keyInput = node.querySelector<HTMLInputElement>('#root_first-key')!;
@@ -2533,7 +2533,7 @@ describe('ObjectField', () => {
     it('should start a new object rather than spread a string held by a type list naming object', async () => {
       const { onChange } = createFormComponent({
         schema: { type: ['null', 'object', 'string'], additionalProperties: { type: 'string' } },
-        formData: 'abc',
+        initialFormData: 'abc',
       });
 
       await user.click(screen.getByRole('button', { name: 'Add' }));
@@ -3113,7 +3113,7 @@ describe('ObjectField', () => {
     };
 
     it('should render the additional property key as a select of the allowed names', () => {
-      const { node } = createFormComponent({ schema, formData: { a: 'first' } });
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
       expect(keySelect).not.toBeNull();
@@ -3123,7 +3123,7 @@ describe('ObjectField', () => {
     });
 
     it('should leave the names sibling properties already hold out of the select', () => {
-      const { node } = createFormComponent({ schema, formData: { a: 'first', c: 'second' } });
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'first', c: 'second' } });
 
       const optionsFor = (key: string) =>
         [...node.querySelector<HTMLSelectElement>(`select#root_${key}-key`)!.options]
@@ -3134,7 +3134,7 @@ describe('ObjectField', () => {
     });
 
     it('should rename the property as soon as a name is selected', async () => {
-      const { node, onChange } = createFormComponent({ schema, formData: { a: 'first' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
       await user.selectOptions(node.querySelector('select#root_a-key')!, 'd');
 
@@ -3142,7 +3142,7 @@ describe('ObjectField', () => {
     });
 
     it('should add a new property under the first allowed name that is still free', async () => {
-      const { node, onChange } = createFormComponent({ schema, formData: { a: 'first' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
 
@@ -3152,7 +3152,7 @@ describe('ObjectField', () => {
     it('should skip a name the schema declares as a property of its own when adding', async () => {
       const { node, onChange } = createFormComponent({
         schema: { ...schema, properties: { a: { type: 'string' } } },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3169,7 +3169,7 @@ describe('ObjectField', () => {
           patternProperties: { '^a': { type: 'string' } },
           propertyNames: { enum: ['xyz', 'abc'] },
         },
-        formData: { xyz: 'first' },
+        initialFormData: { xyz: 'first' },
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3224,7 +3224,7 @@ describe('ObjectField', () => {
           additionalProperties: false,
           propertyNames: { enum: ['xyz', 'abc'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3244,7 +3244,7 @@ describe('ObjectField', () => {
           additionalProperties: false,
           propertyNames: { enum: ['xyz'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3262,7 +3262,7 @@ describe('ObjectField', () => {
           unevaluatedProperties: false,
           propertyNames: { enum: ['xyz'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3301,7 +3301,7 @@ describe('ObjectField', () => {
           patternProperties: { '^a': false },
           propertyNames: { enum: ['abc', 'zzz'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3320,7 +3320,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'number' },
           propertyNames: { enum: ['abc', 'zzz'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3339,7 +3339,7 @@ describe('ObjectField', () => {
           unevaluatedProperties: { type: 'number' },
           propertyNames: { enum: ['zzz', 'abc'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3355,7 +3355,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string' },
           propertyNames: { enum: ['xyz', 'abc'] },
         },
-        formData: {},
+        initialFormData: {},
       });
 
       await user.click(node.querySelector('.rjsf-object-property-expand button')!);
@@ -3372,7 +3372,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string', deprecated: true },
           propertyNames: { enum: ['a', 'b'] },
         },
-        formData: { a: 'first' },
+        initialFormData: { a: 'first' },
       });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
@@ -3387,7 +3387,7 @@ describe('ObjectField', () => {
     it('should offer no add button once every allowed name is taken', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { a: '1', b: '2', c: '3', d: '4' },
+        initialFormData: { a: '1', b: '2', c: '3', d: '4' },
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -3397,7 +3397,7 @@ describe('ObjectField', () => {
       // An empty `enum` matches nothing, so no key could validate and the object has to stay as it is
       const { node } = createFormComponent({
         schema: { ...schema, propertyNames: { enum: [] } },
-        formData: {},
+        initialFormData: {},
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -3406,7 +3406,7 @@ describe('ObjectField', () => {
     it('should offer no add button once every allowed name is taken by a declared property', () => {
       const { node } = createFormComponent({
         schema: { ...schema, properties: { a: {}, b: {}, c: {}, d: {} } },
-        formData: {},
+        initialFormData: {},
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -3420,7 +3420,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string' },
           propertyNames: { $ref: '#/definitions/keys' },
         },
-        formData: { a: '1', b: '2' },
+        initialFormData: { a: '1', b: '2' },
       });
 
       expect(node.querySelector('.rjsf-object-property-expand button')).toBeNull();
@@ -3429,7 +3429,7 @@ describe('ObjectField', () => {
     it('should keep the text input for a property with no name left to offer', () => {
       const { node } = createFormComponent({
         schema,
-        formData: { a: '1', b: '2', c: '3', d: '4', zzz: '5' },
+        initialFormData: { a: '1', b: '2', c: '3', d: '4', zzz: '5' },
       });
 
       expect(node.querySelector('select#root_zzz-key')).toBeNull();
@@ -3437,7 +3437,7 @@ describe('ObjectField', () => {
     });
 
     it('should show a key the enum no longer allows as a disabled option rather than a blank select', () => {
-      const { node } = createFormComponent({ schema, formData: { a: '1', zzz: '2' } });
+      const { node } = createFormComponent({ schema, initialFormData: { a: '1', zzz: '2' } });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_zzz-key')!;
       expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual([
@@ -3451,7 +3451,7 @@ describe('ObjectField', () => {
     });
 
     it('should offer no blank placeholder option to select', () => {
-      const { node } = createFormComponent({ schema, formData: { a: 'first' } });
+      const { node } = createFormComponent({ schema, initialFormData: { a: 'first' } });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
       expect([...keySelect.options].some((option) => option.value === '')).toBe(false);
@@ -3464,7 +3464,7 @@ describe('ObjectField', () => {
         additionalProperties: { type: 'string' },
         propertyNames: { $ref: '#/definitions/keys' },
       };
-      const { node } = createFormComponent({ schema: refSchema, formData: { a: 'first' } });
+      const { node } = createFormComponent({ schema: refSchema, initialFormData: { a: 'first' } });
 
       const keySelect = node.querySelector<HTMLSelectElement>('select#root_a-key')!;
       expect([...keySelect.options].map((option) => option.textContent).filter(Boolean)).toEqual(['a', 'b']);
@@ -3478,7 +3478,7 @@ describe('ObjectField', () => {
         propertyNames: { $ref: '#/definitions/missing' },
       };
 
-      const { node } = createFormComponent({ schema: brokenRefSchema, formData: { a: 'first' } });
+      const { node } = createFormComponent({ schema: brokenRefSchema, initialFormData: { a: 'first' } });
 
       expect(node.querySelector('select#root_a-key')).toBeNull();
       expect(node.querySelector('input#root_a-key')).toHaveValue('a');
@@ -3487,7 +3487,7 @@ describe('ObjectField', () => {
     it('should keep the text input when propertyNames carries no enum', () => {
       const { node } = createFormComponent({
         schema: { ...schema, propertyNames: { maxLength: 3 } },
-        formData: { a: 'first' },
+        initialFormData: { a: 'first' },
       });
 
       expect(node.querySelector('select#root_a-key')).toBeNull();
@@ -3502,7 +3502,7 @@ describe('ObjectField', () => {
           additionalProperties: { type: 'string' },
           propertyNames: { enum: ['a', 'b'] },
         },
-        formData: { a: 'first', b: 'second' },
+        initialFormData: { a: 'first', b: 'second' },
       });
 
       expect(node.querySelector('#root_a-key')).toBeNull();

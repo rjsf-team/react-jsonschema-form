@@ -1498,7 +1498,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
             then: withCfg('a'),
             else: withCfg('b', 5),
           },
-          formData: { mode: 'a', cfg: { name: 'a' } },
+          initialFormData: { mode: 'a', cfg: { name: 'a' } },
           liveValidate: 'onChange',
         });
 
@@ -1665,7 +1665,7 @@ describeRepeated('Form common: error contextualization', (createFormComponent) =
         // ui:required anywhere in the uiSchema, getUiRequiredErrorSchema() also returns `{}` — an empty-but-truthy
         // object that must not be treated the same as "nothing to merge".
         const transformErrors = (errors: RJSFValidationError[]) => errors.map((error) => ({ ...error, message: '' }));
-        const { node, onError } = createFormComponent({ schema, formData: {}, transformErrors });
+        const { node, onError } = createFormComponent({ schema, initialFormData: {}, transformErrors });
         await submitForm(node, user, true);
         expect(onError).toHaveBeenCalled();
         expect(onError.mock.calls[0][0]).toHaveLength(1);

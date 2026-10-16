@@ -140,6 +140,7 @@ describe('render stability across sibling fields', () => {
         <Form
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           templates={{ FieldTemplate: CountingFieldTemplate }}
           onChange={(event) => {
@@ -173,7 +174,7 @@ describe('render stability across sibling fields', () => {
         <Form
           schema={schema}
           validator={validator}
-          formData={initialFormData()}
+          initialFormData={initialFormData()}
           uiSchema={{ first: { 'ui:help': <span>tick {tick >= 0 ? 'help' : ''}</span> } }}
           formContext={{ label: 'stable' }}
           templates={{ FieldTemplate: CountingFieldTemplate }}
@@ -364,7 +365,7 @@ describe('render stability across sibling fields', () => {
           uiSchema={{ first: { 'ui:widget': 'custom' } }}
           widgets={{ custom: widget }}
           validator={validator}
-          formData={{ first: '' }}
+          initialFormData={{ first: '' }}
         />
       );
     }
@@ -409,6 +410,7 @@ describe('render stability across sibling fields', () => {
             schema={schema}
             validator={validator}
             templates={templates}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={value}
             onChange={(event) => {
               const upper = event.formData.first.toUpperCase();
@@ -442,7 +444,7 @@ describe('render stability across sibling fields', () => {
           <Form
             schema={schema}
             validator={validator}
-            formData={initialFormData()}
+            initialFormData={initialFormData()}
             extraErrors={extraErrors}
             templates={templates}
             onChange={() => undefined}
@@ -530,7 +532,7 @@ describe('render stability across sibling fields', () => {
           ref={ref}
           schema={constrained}
           validator={validator}
-          formData={{ first: '', second: '', nested: { inner: '' } }}
+          initialFormData={{ first: '', second: '', nested: { inner: '' } }}
           templates={templates}
           onChange={() => undefined}
         />,

@@ -779,7 +779,7 @@ describe('anyOf', () => {
       properties: { userId: { anyOf: [{ type: 'number' }, { type: 'string' }] } },
     };
 
-    const { node } = createFormComponent({ schema, formData: { userId: NaN } });
+    const { node } = createFormComponent({ schema, initialFormData: { userId: NaN } });
 
     expect(node.querySelector('select')).toBeInTheDocument();
   });
@@ -2243,7 +2243,7 @@ describe('anyOf', () => {
       const schema: RJSFSchema = {
         anyOf: [{ const: 0 }, { const: 1 }],
       };
-      const { node, onChange } = createFormComponent({ schema, formData: 1 });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: 1 });
 
       const select = node.querySelector<HTMLSelectElement>('select#root');
       expect(select).toBeInTheDocument();

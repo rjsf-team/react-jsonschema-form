@@ -101,7 +101,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           foo: ['blah'],
         },
       });
@@ -124,7 +124,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           data: null,
         },
       });
@@ -153,7 +153,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
 
       const { node } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           data1: 123,
           data2: ['one', 'two', 'three'],
         },
@@ -751,7 +751,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       });
       const { node, onChange } = createFormComponent({
         schema: modeSwap({ additionalProperties: extraFor('a') }, { additionalProperties: extraFor('b') }),
-        formData: { mode: 'a', extra: { tag: 'a' } },
+        initialFormData: { mode: 'a', extra: { tag: 'a' } },
       });
 
       await selectMode(node, 'b');
@@ -771,7 +771,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       };
       const { node, onChange } = createFormComponent({
         schema: modeSwap({ properties: { cfg: cfgFor('a'), meta } }, { properties: { cfg: cfgFor('b'), meta } }),
-        formData: { mode: 'a', meta: { createdBy: 'server' } },
+        initialFormData: { mode: 'a', meta: { createdBy: 'server' } },
       });
 
       await selectMode(node, 'b');
@@ -794,7 +794,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
           { properties: { cfg: cfgFor('a'), anything: true, unvalued: { type: 'string' } } },
           { properties: { cfg: cfgFor('b'), anything: { type: 'string' }, unvalued: true } },
         ),
-        formData: { mode: 'a', anything: 'kept' },
+        initialFormData: { mode: 'a', anything: 'kept' },
       });
 
       await selectMode(node, 'b');
@@ -1061,7 +1061,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
             },
           ],
         },
-        formData: { mode: 'a', cfg: { name: 'a' } },
+        initialFormData: { mode: 'a', cfg: { name: 'a' } },
       });
 
       await selectMode(node, 'b');
@@ -1096,7 +1096,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
             },
           ],
         },
-        formData: { mode: 'a', cfg: { x: 1 }, tail: 't' },
+        initialFormData: { mode: 'a', cfg: { x: 1 }, tail: 't' },
       });
 
       await selectMode(node, 'b');
@@ -1137,7 +1137,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
             },
           ],
         },
-        formData: { tail: 't', cfg: { x: 1 }, mode: 'a' },
+        initialFormData: { tail: 't', cfg: { x: 1 }, mode: 'a' },
       });
 
       await selectMode(node, 'b');
@@ -1162,7 +1162,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
           then: withCfg('a'),
           else: withCfg('b'),
         },
-        formData: { mode: 'a', cfg: { name: 'a' }, extra: 'user text' },
+        initialFormData: { mode: 'a', cfg: { name: 'a' }, extra: 'user text' },
       });
 
       await selectMode(node, 'b');
@@ -1282,7 +1282,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     it('replaces a refill that a later iteration retypes', async () => {
       const { node, onChange } = createFormComponent({
         schema: retypingCascade({ type: 'string', default: 'final' }),
-        formData: retypingCascadeData,
+        initialFormData: retypingCascadeData,
       });
 
       await selectMode(node, 'b');
@@ -1296,7 +1296,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
     it('leaves a key empty when the schema that rejected its refill declares nothing', async () => {
       const { node, onChange } = createFormComponent({
         schema: retypingCascade({ type: 'string' }),
-        formData: retypingCascadeData,
+        initialFormData: retypingCascadeData,
         liveValidate: 'onChange',
       });
 
@@ -1339,7 +1339,7 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       };
       const { node, onChange } = createFormComponent({
         schema: { type: 'object', properties: { wrap: wrapped } },
-        formData: { wrap: { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } } },
+        initialFormData: { wrap: { mode: 'a', kind: { v: 'k1' }, cfg: { name: 'a' } } },
         liveValidate: 'onChange',
       });
 

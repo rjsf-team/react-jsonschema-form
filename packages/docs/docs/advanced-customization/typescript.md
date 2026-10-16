@@ -71,7 +71,7 @@ const formData: FormData = {};
 
 const validator = customizeValidator();
 
-render(<Form<FormData> schema={schema} validator={validator} formData={formData} />, document.getElementById('app'));
+render(<Form<FormData> schema={schema} validator={validator} initialFormData={formData} />, document.getElementById('app'));
 ```
 
 ### S

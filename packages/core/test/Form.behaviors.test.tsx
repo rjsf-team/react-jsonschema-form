@@ -51,7 +51,7 @@ describe('Error paths that collide with prototype keys', () => {
         constructor: constructorFieldSchema,
       },
     };
-    const { node } = createFormComponent({ schema, formData: { constructor: 'ab' } });
+    const { node } = createFormComponent({ schema, initialFormData: { constructor: 'ab' } });
 
     await submitForm(node, user);
 
@@ -172,6 +172,7 @@ describe('Live validation onBlur', () => {
           schema={schema}
           validator={validator}
           liveValidate='onBlur'
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => setValue(event.formData ?? null)}
           // Recreated on every render of the parent, which is what makes the form see a changed identity prop on
@@ -214,6 +215,7 @@ describe('Live validation onBlur', () => {
             validator={validator}
             liveValidate={liveValidate}
             extraErrors={extraErrors}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={value}
             onChange={(event) => setValue(event.formData)}
           />
@@ -271,7 +273,7 @@ describe('Live validation onBlur', () => {
               validator={validator}
               liveValidate='onChange'
               extraErrors={extraErrors}
-              formData={shortName}
+              initialFormData={shortName}
               className={className}
             />
           </>
@@ -696,7 +698,11 @@ describe('omitExtraData on submit', () => {
   const formData = { foo: 'bar', baz: 'baz' };
 
   it('validates the current formData, extra fields included, if omitExtraData is false', async () => {
-    const { node, onSubmit, onError } = createFormComponent({ schema, formData, omitExtraData: false });
+    const { node, onSubmit, onError } = createFormComponent({
+      schema,
+      initialFormData: formData,
+      omitExtraData: false,
+    });
 
     await submitForm(node, user);
 
@@ -705,7 +711,7 @@ describe('omitExtraData on submit', () => {
   });
 
   it('validates and submits only the fields the schema describes if omitExtraData is true', async () => {
-    const { node, onSubmit, onError } = createFormComponent({ schema, formData, omitExtraData: true });
+    const { node, onSubmit, onError } = createFormComponent({ schema, initialFormData: formData, omitExtraData: true });
 
     await submitForm(node, user);
 
@@ -733,7 +739,7 @@ describe('omitExtraData prunes empty optional objects', () => {
   it('prunes an empty optional object on submit when omitExtraData is true', async () => {
     const { node, onSubmit } = createFormComponent({
       schema,
-      formData: { name: 'Alice', address: {} },
+      initialFormData: { name: 'Alice', address: {} },
       omitExtraData: true,
     });
 
@@ -759,7 +765,7 @@ describe('omitExtraData prunes empty optional objects', () => {
 
     const { node, onSubmit } = createFormComponent({
       schema: requiredAddressSchema,
-      formData: { name: 'Alice', address: {} },
+      initialFormData: { name: 'Alice', address: {} },
       omitExtraData: true,
     });
 
@@ -771,7 +777,7 @@ describe('omitExtraData prunes empty optional objects', () => {
   it('keeps an optional object when it has a non-empty field', async () => {
     const { node, onSubmit } = createFormComponent({
       schema,
-      formData: { name: 'Alice', address: { street: '123 Main St' } },
+      initialFormData: { name: 'Alice', address: { street: '123 Main St' } },
       omitExtraData: true,
     });
 
@@ -1033,6 +1039,7 @@ describe('Async errors', () => {
         <Form
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={({ formData: next }: IChangeEvent) => setFormData((next as Record<string, unknown>) ?? {})}
           extraErrors={extraErrors}
@@ -1137,6 +1144,7 @@ describe('Deriving state from changed props', () => {
           schema={schema}
           validator={validator}
           liveValidate='onChange'
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={(event) => setFormData(event.formData)}
           {...steps[step]}
@@ -1244,7 +1252,7 @@ describe('Deriving state from changed props', () => {
           <button type='button' onClick={() => setMerge(() => lastWins)}>
             swap
           </button>
-          <Form schema={allOfSchema} validator={validator} formData={{ a: 'x' }} customMergeAllOf={merge} />
+          <Form schema={allOfSchema} validator={validator} initialFormData={{ a: 'x' }} customMergeAllOf={merge} />
         </>
       );
     }
@@ -1453,7 +1461,7 @@ describe('Committing a handler result', () => {
     const { node } = createFormComponent({
       ref: formRef,
       schema,
-      formData: { name: 'short', extra: 'x' },
+      initialFormData: { name: 'short', extra: 'x' },
       omitExtraData: true,
       liveOmit: 'onBlur',
       onBlur: () => formRef.current!.validateForm(),
@@ -1478,6 +1486,7 @@ describe('Committing a handler result', () => {
           schema={schema}
           validator={validator}
           liveValidate='onBlur'
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={formData}
           onChange={(e) => setFormData(e.formData)}
           onBlur={() => {
@@ -1513,6 +1522,7 @@ describe('Committing a handler result', () => {
           <Form
             schema={{ type: 'string' }}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={formData}
             className={`changes-${changeCount}`}
             widgets={{ TextWidget: RecordingWidget }}
@@ -1567,7 +1577,7 @@ describe('validateForm()', () => {
           schema={schema}
           uiSchema={uiSchema}
           validator={validator}
-          formData={listData}
+          initialFormData={listData}
           formContext={formContext}
         />
       );
@@ -1581,7 +1591,12 @@ describe('validateForm()', () => {
 
   it('validates the current formData, extra fields included, if omitExtraData is false', () => {
     const formRef = createFormRef();
-    const { onError } = createFormComponent({ ref: formRef, schema: strictSchema, formData, omitExtraData: false });
+    const { onError } = createFormComponent({
+      ref: formRef,
+      schema: strictSchema,
+      initialFormData: formData,
+      omitExtraData: false,
+    });
 
     act(() => {
       expect(formRef.current!.validateForm()).toBe(false);
@@ -1592,7 +1607,12 @@ describe('validateForm()', () => {
 
   it('validates only the fields the schema describes if omitExtraData is true', () => {
     const formRef = createFormRef();
-    const { onError } = createFormComponent({ ref: formRef, schema: strictSchema, formData, omitExtraData: true });
+    const { onError } = createFormComponent({
+      ref: formRef,
+      schema: strictSchema,
+      initialFormData: formData,
+      omitExtraData: true,
+    });
 
     act(() => {
       expect(formRef.current!.validateForm()).toBe(true);
@@ -1613,7 +1633,7 @@ describe('validateForm()', () => {
           },
         },
       },
-      formData: {},
+      initialFormData: {},
       ref,
     };
     const { rerender, node } = createFormComponent(props);
@@ -1629,7 +1649,7 @@ describe('validateForm()', () => {
     // populate the input and trigger a re-render from the parent.
     const textNode = node.querySelector<HTMLInputElement>('#root_input')!;
     await user.type(textNode, 'populated value');
-    rerender({ ...props, formData: { input: 'populated value' } });
+    rerender({ ...props, initialFormData: { input: 'populated value' } });
     // // error should still be present.
     errors = node.querySelectorAll('.error-detail');
     // screen.debug();
@@ -1660,7 +1680,7 @@ describe('validateForm()', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      formData: { foo: 'valid' },
+      initialFormData: { foo: 'valid' },
       extraErrors,
       extraErrorsAreWarnings: true,
     };
@@ -1694,7 +1714,7 @@ describe('validateForm()', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      formData: { foo: 'valid' },
+      initialFormData: { foo: 'valid' },
       extraErrors,
     };
     const { node, onError } = createFormComponent(props);
@@ -1729,7 +1749,7 @@ describe('validateForm()', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      formData: {},
+      initialFormData: {},
       extraErrors,
       extraErrorsAreWarnings: true,
     };
@@ -1804,7 +1824,7 @@ describe('validateForm()', () => {
     const props: NoValFormProps = {
       ref: formRef,
       schema,
-      formData: { foo: 'valid' },
+      initialFormData: { foo: 'valid' },
       extraErrors,
     };
     const { node, rerender } = createFormComponent(props);
@@ -2408,7 +2428,7 @@ describe('optionalDataControls', () => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: thingSchema,
       uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
-      formData: { thing: {} },
+      initialFormData: { thing: {} },
     });
 
     expect(node.querySelector('#root_thing_a')).toEqual(null);
@@ -2427,7 +2447,7 @@ describe('optionalDataControls', () => {
     const { node, onSubmit, onError } = createFormComponent({
       schema: thingSchema,
       uiSchema: { ...objectOnUiSchema, thing: { a: { 'ui:required': true } } },
-      formData: { thing: {} },
+      initialFormData: { thing: {} },
       noHtml5Validate: true,
     });
 
@@ -2539,7 +2559,7 @@ describe('nameGenerator', () => {
     const formData = {
       tags: ['foo', 'bar'],
     };
-    const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
+    const { node } = createFormComponent({ schema, initialFormData: formData, nameGenerator: bracketNameGenerator });
 
     const firstTagInput = node.querySelector('#root_tags_0');
     const secondTagInput = node.querySelector('#root_tags_1');
@@ -2570,7 +2590,7 @@ describe('nameGenerator', () => {
         { title: 'Task 2', done: true },
       ],
     };
-    const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
+    const { node } = createFormComponent({ schema, initialFormData: formData, nameGenerator: bracketNameGenerator });
 
     const firstTaskTitleInput = node.querySelector('#root_tasks_0_title');
     const firstTaskDoneInput = node.querySelector('#root_tasks_0_done');
@@ -2734,6 +2754,7 @@ describe('initialFormData feature to prevent form reset', () => {
 
     const props: NoValFormProps = {
       schema,
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias beside its `initialFormData` twin
       ...(formData !== undefined && { formData }),
     };
 
@@ -3353,7 +3374,7 @@ describe('dependencies/oneOf constraint violation produces validation errors on 
       commands: 'docker_ps',
       env: 'develop',
     };
-    const { node, onSubmit, onError } = createFormComponent({ schema, formData });
+    const { node, onSubmit, onError } = createFormComponent({ schema, initialFormData: formData });
     await submitForm(node, user);
 
     expect(onSubmit).not.toHaveBeenCalled();

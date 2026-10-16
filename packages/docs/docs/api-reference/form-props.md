@@ -471,7 +471,9 @@ See [AntD Customization](themes/antd/uiSchema.md#formcontext) for formContext cu
 
 ## formData
 
-Another name for [`initialFormData`](#initialformdata), kept so that a form written for v6 keeps working: the seed of the form's data, read and filled in with the schema's defaults when the form mounts and when `reset()` is called. When both are passed, `formData` is the seed. Prefer `initialFormData` in new code.
+Deprecated: use [`initialFormData`](#initialformdata), which this is another name for. The form reads it only when it mounts and when `reset()` is called, which the name `formData` hides by reading as a controlled value.
+
+It is kept so that a form written for v6 keeps working, and seeds the form exactly as `initialFormData` does. When both are passed, `formData` is the seed.
 
 The form owns its data after it mounts. The usual v6 pattern keeps working, since the value `onChange` reports is the form's own and passing it back changes nothing:
 
@@ -538,7 +540,7 @@ id="root_first">` when rendering `first`.
 
 ## initialFormData
 
-The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), another name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call `setFieldValue('', data)` on its ref.
+The seed of the form's data, the way `defaultValue` works on an `<input>`. It is read, and filled in with the schema's defaults, when the form mounts and when `reset()` is called, and ignored otherwise, so a value written inline does not replace the data the form holds on a re-render. Every edit is reported through [`onChange`](#onchange); read the current value with [`getFormData()`](../advanced-customization/internals.md#read-form-data-programmatically). When both props are passed, [`formData`](#formdata), a deprecated name for this prop, is the seed and `initialFormData` is ignored. To show other data after mount, remount the form under a `key`, or call `setFieldValue('', data)` on its ref.
 
 ## nameGenerator
 

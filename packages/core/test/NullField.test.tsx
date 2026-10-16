@@ -43,7 +43,7 @@ describe('NullField', () => {
         schema: {
           type: 'null',
         },
-        formData: 3,
+        initialFormData: 3,
         // oxlint-disable-next-line typescript/no-deprecated -- exercises the deprecated `noValidate` prop
         noValidate: true,
       });

@@ -145,6 +145,7 @@ describe('parent harnesses', () => {
           schema={schema}
           uiSchema={uiSchema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={data}
           formContext={{ name: data?.name }}
           onChange={(event) => setData(event.formData)}
@@ -632,6 +633,7 @@ describe('typing in a custom widget under a parent that renders for every change
         <Form<Data>
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={data}
           uiSchema={{ name: { 'ui:widget': CustomTextarea } }}
           onChange={(event) => setData(event.formData)}

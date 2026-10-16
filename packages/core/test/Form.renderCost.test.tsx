@@ -114,7 +114,7 @@ describe('render cost of one update', () => {
         validator={validator}
         uiSchema={{ name: { 'ui:widget': UpperCaseWidget } }}
         onChange={onChange}
-        formData={{ name: 'AB' }}
+        initialFormData={{ name: 'AB' }}
       />,
     );
     vi.mocked(buildRegistry).mockClear();

@@ -196,7 +196,7 @@ describe('Validation', () => {
         function acceptEverything(_: FormProps['formData'], errors: FormValidation) {
           return errors;
         }
-        const props: NoValFormProps = { schema, formData: 'a', liveValidate: 'onChange' };
+        const props: NoValFormProps = { schema, initialFormData: 'a', liveValidate: 'onChange' };
         const { node, rerender } = createFormComponent({ ...props, customValidate: acceptEverything });
         expect(node.textContent).not.toContain('Invalid');
 
@@ -426,7 +426,7 @@ describe('Validation', () => {
         });
 
         it('renders the error list after the fields when showErrorList is bottom', async () => {
-          const { node: bottomNode } = createFormComponent({ schema, formData: {}, showErrorList: 'bottom' });
+          const { node: bottomNode } = createFormComponent({ schema, initialFormData: {}, showErrorList: 'bottom' });
           await submitForm(bottomNode, user, true);
 
           expect(bottomNode.firstElementChild).not.toHaveClass('errors');

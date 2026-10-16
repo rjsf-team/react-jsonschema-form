@@ -52,7 +52,7 @@ describe('FormRef', () => {
     });
 
     it('returns the formData passed', () => {
-      const { handle } = mountWithHandle({ schema, formData: { name: 'parent' }, onChange: () => {} });
+      const { handle } = mountWithHandle({ schema, initialFormData: { name: 'parent' }, onChange: () => {} });
 
       expect(handle.getFormData()).toEqual({ name: 'parent' });
     });

@@ -2784,7 +2784,7 @@ describe('StringField', () => {
         uiSchema: {
           'ui:options': { filePreview: true },
         },
-        formData,
+        initialFormData: formData,
       });
 
       const preview = node.querySelector<HTMLImageElement>('img.file-preview');
@@ -2802,7 +2802,7 @@ describe('StringField', () => {
         uiSchema: {
           'ui:options': { filePreview: true },
         },
-        formData,
+        initialFormData: formData,
       });
 
       const download = node.querySelector<HTMLLinkElement>('a.file-download');
@@ -2834,7 +2834,7 @@ describe('StringField', () => {
           type: 'string',
           format: 'data-url',
         },
-        formData,
+        initialFormData: formData,
       });
 
       // Find the delete button

@@ -93,7 +93,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     it('Submits when shipping address is filled out, billing address is not needed', async () => {
       const { node, onSubmit } = createFormComponent({
         schema,
-        formData: {
+        initialFormData: {
           shipping_address: {
             street_address: '21, Jump Street',
             city: 'Babel',
@@ -134,7 +134,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     it('Errors when minItems is set, field is required, and minimum number of items are not present with IgnoreMinItemsUnlessRequired flag set', async () => {
       const { node, onError } = createFormComponent({
         schema: { ...schema, required: ['albums'] },
-        formData: {
+        initialFormData: {
           albums: ['Until We Have Faces'],
         },
         defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
@@ -155,7 +155,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     it('Submits when minItems is set, field is not required, and no items are present with IgnoreMinItemsUnlessRequired flag set', async () => {
       const { node, onSubmit } = createFormComponent({
         schema,
-        formData: {},
+        initialFormData: {},
         defaultFormStateBehavior: { arrayMinItems: { populate: 'requiredOnly' } },
       });
       await submitForm(node, user);
@@ -177,7 +177,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
           type: 'string',
           default: 'foobar',
         },
-        formData: 'some value',
+        initialFormData: 'some value',
       };
       const { rerender: rerenderFn, onChange } = createFormComponent(formProps);
       onChangeProp = onChange;
@@ -187,7 +187,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
     describe('when the form mounts with null form data', () => {
       it('should take the null as no data and render the default without calling onChange', () => {
         const nullRef = createFormRef();
-        const { onChange } = createFormComponent({ ...formProps, ref: nullRef, formData: null });
+        const { onChange } = createFormComponent({ ...formProps, ref: nullRef, initialFormData: null });
 
         expect(onChange).not.toHaveBeenCalled();
         expect(handleOf(nullRef).getFormData()).toBe('foobar');
@@ -204,7 +204,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         rerender({
           ...formProps,
           schema: newSchema,
-          formData: 'some value',
+          initialFormData: 'some value',
         }),
       );
 
@@ -223,7 +223,6 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         rerender({
           ...formProps,
           schema: newSchema,
-          formData: undefined,
           initialFormData: null,
         });
         act(() => handleOf(ref).reset());
@@ -250,6 +249,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
             },
           },
         };
+        // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
         return <Form onChange={onChange} schema={schema} formData={formData} validator={validator} />;
       }
 
@@ -275,7 +275,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
       const formProps: Omit<FormProps, 'validator'> = {
         ref: createRef(),
         schema: { type: 'string' },
-        formData: 'initial',
+        initialFormData: 'initial',
       };
 
       it('should call submit handler with the data set through setFieldValue', async () => {
@@ -318,7 +318,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
         const { onSubmit, node } = createFormComponent({
           ref: objectRef,
           schema: { type: 'object', properties: { foo: { type: 'string' } } },
-          formData: {},
+          initialFormData: {},
         });
 
         act(() => handleOf(objectRef).setFieldValue('', { foo: 'yo' }));
@@ -337,7 +337,7 @@ describeRepeated('Form common: form state updates', (createFormComponent) => {
           },
         };
         const arrayRef = createFormRef();
-        const { node, onSubmit } = createFormComponent({ ref: arrayRef, schema, formData: [] });
+        const { node, onSubmit } = createFormComponent({ ref: arrayRef, schema, initialFormData: [] });
 
         act(() => handleOf(arrayRef).setFieldValue('', ['yo']));
 

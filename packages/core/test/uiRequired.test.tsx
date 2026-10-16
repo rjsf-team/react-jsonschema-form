@@ -9,7 +9,7 @@ const user = userEvent.setup();
 
 describe('ui:required enforcement', () => {
   async function expectSubmitBlocked(schema: RJSFSchema, uiSchema: UiSchema, formData?: unknown) {
-    const { node, onSubmit, onError } = createFormComponent({ schema, uiSchema, formData });
+    const { node, onSubmit, onError } = createFormComponent({ schema, uiSchema, initialFormData: formData });
     await submitForm(node, user, true);
     expect(onSubmit).not.toHaveBeenCalled();
     expect(onError).toHaveBeenCalled();

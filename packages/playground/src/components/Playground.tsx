@@ -119,6 +119,8 @@ const INITIAL_LIVE_SETTINGS: LiveSettings = {
 };
 
 type LoadData = Sample & {
+  /** The data of a shared link, which carries it under this name */
+  formData?: unknown;
   theme?: string;
   liveSettings: LoadedLiveSettings;
   sampleName?: string;
@@ -169,7 +171,8 @@ export function loadedState(
     // Always reset templates and fields
     templates = {},
     fields = {},
-    formData: loadedFormData,
+    formData: sharedFormData,
+    initialFormData: sampleFormData,
     theme: dataTheme = currentTheme,
     extraErrors,
     liveSettings: loadedLiveSettings,
@@ -191,6 +194,7 @@ export function loadedState(
     validator !== undefined && Object.hasOwn(validators, validator) ? validator : DEFAULT_VALIDATOR;
 
   // The playground owns the form data, so it seeds the schema defaults itself, the way any controlled parent does
+  const loadedFormData = sharedFormData ?? sampleFormData;
   let formData = loadedFormData;
   try {
     // A sample passes the current validator and a shared link carries its own

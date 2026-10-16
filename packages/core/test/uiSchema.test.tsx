@@ -2334,7 +2334,7 @@ describe('uiSchema', () => {
           const uiSchema: UiSchema = {};
           const formData = ['a', 'b'];
 
-          const rendered = createFormComponent({ schema, uiSchema, formData });
+          const rendered = createFormComponent({ schema, uiSchema, initialFormData: formData });
           node = rendered.node;
         });
 
@@ -2767,7 +2767,7 @@ describe('uiSchema', () => {
         ],
       };
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       expect(node.querySelectorAll("input[placeholder='Node name']")).toHaveLength(5);
     });
@@ -2807,7 +2807,7 @@ describe('uiSchema', () => {
         tree: [{ name: 'L0', children: [{ name: 'L1', children: [] }] }],
       };
 
-      const { node } = createFormComponent({ schema, uiSchema, formData });
+      const { node } = createFormComponent({ schema, uiSchema, initialFormData: formData });
 
       const selects = node.querySelectorAll('select');
       expect(selects.length).toBeGreaterThanOrEqual(2);
@@ -3143,7 +3143,7 @@ describe('uiSchema', () => {
         a_b: { 'ui:required': false },
         a: { b: { 'ui:required': false } },
       };
-      createFormComponent({ schema, uiSchema, formData: { a: {} } });
+      createFormComponent({ schema, uiSchema, initialFormData: { a: {} } });
       expect(consoleWarnSpy).toHaveBeenCalledTimes(2);
       expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a_b)'));
       expect(consoleWarnSpy).toHaveBeenCalledWith(expect.stringContaining('"root_a_b" (a.b)'));

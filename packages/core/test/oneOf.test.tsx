@@ -454,7 +454,7 @@ describe('oneOf', () => {
       });
       const { node, onChange } = createFormComponent({
         schema: { oneOf: [optionFor('a'), optionFor('b')] },
-        formData: { kind: 'a', runner: { name: 'a' } },
+        initialFormData: { kind: 'a', runner: { name: 'a' } },
         defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
       });
 
@@ -508,7 +508,7 @@ describe('oneOf', () => {
           { title: 'b', type: 'array', items: { type: 'number' }, default: [2] },
         ],
       };
-      const { node, onChange } = createFormComponent({ schema, formData: [7, 8] });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: [7, 8] });
 
       await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -534,7 +534,7 @@ describe('oneOf', () => {
     });
     const { node, onChange } = createFormComponent({
       schema: { oneOf: [optionFor('a'), optionFor('b')] },
-      formData: { kind: 'a', runner: { name: 'a', ratio: 0 } },
+      initialFormData: { kind: 'a', runner: { name: 'a', ratio: 0 } },
     });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -637,7 +637,7 @@ describe('oneOf', () => {
         },
       ],
     };
-    const { node, onChange } = createFormComponent({ schema, formData: { kind: 'a', flag: false } });
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { kind: 'a', flag: false } });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -660,7 +660,7 @@ describe('oneOf', () => {
     });
     const { node, onChange } = createFormComponent({
       schema: { oneOf: [optionFor('a', 'MIT'), optionFor('b', 'Apache')] },
-      formData: { kind: 'a', license: 'custom' },
+      initialFormData: { kind: 'a', license: 'custom' },
     });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
@@ -694,7 +694,10 @@ describe('oneOf', () => {
         },
       ],
     };
-    const { node, onChange } = createFormComponent({ schema, formData: { kind: 'a', runner: { name: 'typed' } } });
+    const { node, onChange } = createFormComponent({
+      schema,
+      initialFormData: { kind: 'a', runner: { name: 'typed' } },
+    });
 
     await user.selectOptions(node.querySelector<HTMLSelectElement>('#root__oneof_select')!, '1');
 
@@ -2517,7 +2520,7 @@ describe('oneOf', () => {
           },
         },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: 'X' } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: 'X' } });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
       expect(select).toBeInTheDocument();
@@ -2555,7 +2558,7 @@ describe('oneOf', () => {
           mylist: { oneOf: [{ const: 'foo' }, { const: 'bar' }] },
         },
       };
-      const { node, onChange } = createFormComponent({ schema, formData: { myprop: 'foo' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { myprop: 'foo' } });
 
       expect(node.querySelector('#root_myprop__oneof_select')).toHaveValue('2');
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
@@ -2790,7 +2793,7 @@ describe('oneOf', () => {
 
     it('should not infer a type or write form data for an empty oneOf', () => {
       const schema: RJSFSchema = { type: 'object', properties: { myprop: { oneOf: [] } } };
-      const { node, onChange } = createFormComponent({ schema, formData: {} });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
 
       expect(node.querySelector('.unsupported-field')).toBeInTheDocument();
       expect(onChange).not.toHaveBeenCalled();
@@ -2806,7 +2809,7 @@ describe('oneOf', () => {
         properties: { myprop: { oneOf: [{ title: 'none', type: 'object' }, { $ref: '#/$defs/falsy' }] } },
         $defs: { falsy: { title: 'falsy', const: value } },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: value } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: value } });
 
       expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
       expect(node.querySelector(selector)).toBeInTheDocument();
@@ -2817,7 +2820,7 @@ describe('oneOf', () => {
         type: 'object',
         properties: { myprop: { title: 'X', oneOf: [{ title: 'None', const: null }] } },
       };
-      const { node } = createFormComponent({ schema, formData: { myprop: null } });
+      const { node } = createFormComponent({ schema, initialFormData: { myprop: null } });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_myprop');
       expect(select).toBeInTheDocument();
@@ -2840,7 +2843,7 @@ describe('oneOf', () => {
             },
           },
         };
-        const { node, onChange } = createFormComponent({ schema, uiSchema, formData: { v: { a: 1 } } });
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: { v: { a: 1 } } });
 
         expect(node.querySelector('.unsupported-field')).not.toBeInTheDocument();
         const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
@@ -2854,7 +2857,7 @@ describe('oneOf', () => {
           type: 'object',
           properties: { v: { anyOf: [{ const: [1, 2] }, { const: [3] }, { const: null }] } },
         };
-        const { node, onChange } = createFormComponent({ schema, uiSchema, formData: {} });
+        const { node, onChange } = createFormComponent({ schema, uiSchema, initialFormData: {} });
 
         const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
         expect([...select.options].map((option) => option.text)).toEqual(['', '[1,2]', '[3]', 'null']);
@@ -2867,7 +2870,7 @@ describe('oneOf', () => {
           type: 'object',
           properties: { v: { anyOf: [{ const: [1, 2] }, { const: [3] }] } },
         };
-        const { node } = createFormComponent({ schema, uiSchema, formData: { v: [3] } });
+        const { node } = createFormComponent({ schema, uiSchema, initialFormData: { v: [3] } });
 
         expect(getSelectedOptionValue(node.querySelector<HTMLSelectElement>('select#root_v')!)).toEqual('[3]');
       });
@@ -2970,7 +2973,7 @@ describe('oneOf', () => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({ schema, formData: {} });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: {} });
 
       const select = node.querySelector<HTMLSelectElement>('select#root_v')!;
       expect([...select.options].map((option) => option.text)).toEqual(['', 'None', 'One', 'Bee']);

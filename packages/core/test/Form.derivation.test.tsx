@@ -61,7 +61,7 @@ describe('state derivation', () => {
       schema: conditional,
       liveValidate: 'onChange',
       showErrorList: 'top',
-      formData: { c: 'no', d: 1 },
+      initialFormData: { c: 'no', d: 1 },
     });
     act(() => handleOf(ref).setFieldValue('', { c: 'yes', d: 1 }));
 

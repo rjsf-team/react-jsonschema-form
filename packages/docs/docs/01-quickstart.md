@@ -103,7 +103,7 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 ## Form initialization
 
-Often you'll want to prefill a form with existing data; this is done by passing a `formData` prop object matching the schema:
+Often you'll want to prefill a form with existing data; this is done by passing an `initialFormData` prop object matching the schema:
 
 ```tsx
 import Form from '@rjsf/core';
@@ -127,12 +127,12 @@ const formData = {
   done: true,
 };
 
-render(<Form schema={schema} formData={formData} validator={validator} />, document.getElementById('app'));
+render(<Form schema={schema} initialFormData={formData} validator={validator} />, document.getElementById('app'));
 ```
 
-> Note: If your form has a single field, pass a single value to `formData`. ex: `formData="Charlie"`
+> Note: If your form has a single field, pass a single value to `initialFormData`. ex: `initialFormData="Charlie"`
 
-> WARNING: If you have situations where your parent component can re-render, make sure you listen to the `onChange` event and update the data you pass to the `formData` attribute.
+The form reads `initialFormData` when it mounts, so a parent re-rendering with it leaves the user's edits in place.
 
 ### Form event handlers
 
@@ -140,7 +140,7 @@ You can use event handlers such as `onChange`, `onError`, `onSubmit`, `onFocus`,
 
 ### Keeping a copy of the data
 
-`<Form />` owns its data, as an [uncontrolled input](https://react.dev/reference/react-dom/components/input#providing-an-initial-value-for-an-input) does: `initialFormData` seeds it when the form mounts, and `formData` is another name for that seed. To keep a copy of the value in your own state, store what `onChange` reports, as in the below example. To show another record, remount the form under a `key`.
+`<Form />` owns its data, as an [uncontrolled input](https://react.dev/reference/react-dom/components/input#providing-an-initial-value-for-an-input) does: `initialFormData` seeds it when the form mounts (the deprecated `formData` prop is another name for that seed). To keep a copy of the value in your own state, store what `onChange` reports, as in the below example. To show another record, remount the form under a `key`.
 
 ```tsx
 import Form from '@rjsf/core';

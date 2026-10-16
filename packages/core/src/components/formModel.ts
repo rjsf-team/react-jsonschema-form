@@ -82,6 +82,7 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   // Development only, for the warning about a `formData` passed after mount, which the form ignores: the prop as the
   // last commit passed it, and every object the form's data has been, since a parent that stores what `onChange`
   // reported passes those back, later ones as well as the latest
+  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   let lastFormDataProp = initialProps.formData;
   const heldData = new WeakSet<object>();
   let isIgnoredFormDataWarned = false;

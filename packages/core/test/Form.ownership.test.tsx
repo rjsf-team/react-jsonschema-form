@@ -98,7 +98,7 @@ describe('form data ownership', () => {
     });
 
     it('a spy handler sees each edit, and the form keeps showing it', async () => {
-      const { node, onChange } = createFormComponent({ schema, formData: { a: 'a' } });
+      const { node, onChange } = createFormComponent({ schema, initialFormData: { a: 'a' } });
 
       await user.click(elementOf(node, '#root_a'));
       await user.paste('b');
@@ -153,6 +153,7 @@ describe('form data ownership', () => {
       const uiSchema = { a: { 'ui:widget': recordingWidget(seen) } };
       const onChange = vi.fn();
       function Parent({ value }: { value: Data }) {
+        // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
         return <Form schema={schema} uiSchema={uiSchema} validator={validator} formData={value} onChange={onChange} />;
       }
       const { rerender, container } = render(<Parent value={{ a: 'old' }} />);
@@ -179,6 +180,7 @@ describe('form data ownership', () => {
             schema={schema}
             uiSchema={uiSchema}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
             formData={value}
             className={`tick-${tick}`}
             onChange={noop}
@@ -199,6 +201,7 @@ describe('form data ownership', () => {
       function Parent({ schema: current, value }: { schema: RJSFSchema; value: Data }) {
         return (
           <StrictMode>
+            {/* oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning */}
             <Form ref={ref} schema={current} validator={validator} formData={value} onChange={onChange} />
           </StrictMode>
         );
@@ -219,6 +222,7 @@ describe('form data ownership', () => {
       const record: Data = { a: 'record' };
       function Parent({ tick }: { tick: number }) {
         return (
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
           <Form schema={schema} validator={validator} formData={record} className={`tick-${tick}`} onChange={noop} />
         );
       }
@@ -237,6 +241,7 @@ describe('form data ownership', () => {
           ref={ref}
           schema={{ type: 'number' }}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
           formData={Number.NaN}
           onChange={noop}
         />,
@@ -270,6 +275,7 @@ describe('form data ownership', () => {
           <Form<Data>
             schema={schema}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => apply(() => setData(event.formData))}
           />
@@ -320,6 +326,7 @@ describe('form data ownership', () => {
               ref={ref}
               schema={schema}
               validator={validator}
+              // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
               formData={data}
               onChange={(event) => setData(event.formData)}
             />
@@ -340,6 +347,7 @@ describe('form data ownership', () => {
     it('a formData that becomes undefined, or another value, leaves the data as it is', () => {
       const onChange = vi.fn();
       function Parent({ value }: { value: Data | undefined }) {
+        // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
         return <Form schema={withDefaults} validator={validator} formData={value} onChange={onChange} />;
       }
       const { rerender, container } = render(<Parent value={{ a: 'x' }} />);
@@ -358,7 +366,7 @@ describe('form data ownership', () => {
     it('a null formData seeds the schema defaults, and a field edit builds on them', async () => {
       const onChange = vi.fn();
       const { container } = render(
-        <Form schema={withDefaults} validator={validator} formData={null} onChange={onChange} />,
+        <Form schema={withDefaults} validator={validator} initialFormData={null} onChange={onChange} />,
       );
       expect(input(container, 'root_a')).toHaveValue('A');
 
@@ -382,6 +390,7 @@ describe('form data ownership', () => {
       const ref = createFormRef();
       const onChange = vi.fn();
       const { container } = render(
+        // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: reset() re-reads the latest `formData`
         <Form ref={ref} schema={withDefault} validator={validator} formData={{ a: 'x' }} onChange={onChange} />,
       );
       await act(async () => {
@@ -410,7 +419,7 @@ describe('form data ownership', () => {
           ref={ref}
           schema={withDefault}
           validator={validator}
-          formData={{ a: 'x' }}
+          initialFormData={{ a: 'x' }}
           extraErrors={extraErrors}
           onChange={noop}
         />,
@@ -470,6 +479,7 @@ describe('form data ownership', () => {
               ref={ref}
               schema={withDefault}
               validator={validator}
+              // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
               formData={data}
               onChange={(event) => {
                 reported.push(event.formData);
@@ -500,7 +510,7 @@ describe('form data ownership', () => {
   describe('data that loads after mount', () => {
     it('is shown by rendering the form once it arrives', () => {
       function Parent({ record }: { record?: Data }) {
-        return record ? <Form schema={schema} validator={validator} formData={record} onChange={noop} /> : null;
+        return record ? <Form schema={schema} validator={validator} initialFormData={record} onChange={noop} /> : null;
       }
       const { rerender, container } = render(<Parent />);
       expect(container.querySelector('#root_a')).not.toBeInTheDocument();
@@ -516,7 +526,7 @@ describe('form data ownership', () => {
         if (!record) {
           return <span>loading</span>;
         }
-        return <Form key={id} schema={schema} validator={validator} formData={record} onChange={onChange} />;
+        return <Form key={id} schema={schema} validator={validator} initialFormData={record} onChange={onChange} />;
       }
       const { rerender, container } = render(<Parent id='1' />);
       expect(container).toHaveTextContent('loading');
@@ -537,7 +547,7 @@ describe('form data ownership', () => {
             key={record ? 'record' : 'fallback'}
             schema={schema}
             validator={validator}
-            formData={record ?? {}}
+            initialFormData={record ?? {}}
             onChange={noop}
           />
         );
@@ -663,6 +673,7 @@ describe('form data ownership', () => {
       await user.clear(input(node, 'root_a'));
       await user.paste('edited');
 
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias passed beside `initialFormData`
       rerender({ schema, initialFormData: { a: 'own' }, formData: { a: 'late' } });
 
       expect(node.querySelector('#root_a')).toHaveValue('edited');
@@ -726,6 +737,7 @@ describe('form data ownership', () => {
           ref={ref}
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={data}
           onChange={(event) => {
             const edit = event.formData;
@@ -820,6 +832,7 @@ describe('form data ownership', () => {
             ref={ref}
             schema={schema}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => {
               reported.push(event.formData);
@@ -926,11 +939,11 @@ describe('form data ownership', () => {
     it('edits from the Effects of the commit that renders another record are made on that record', () => {
       const onChange = vi.fn();
       const props = { schema, validator, uiSchema: settingUiSchema, onChange };
-      const { rerender } = render(<Form<Data> key='1' {...props} formData={{ a: 'layout', b: 'passive' }} />);
+      const { rerender } = render(<Form<Data> key='1' {...props} initialFormData={{ a: 'layout', b: 'passive' }} />);
       onChange.mockClear();
 
       // The parent loads another record under its own key, in which both widgets set their field again
-      rerender(<Form<Data> key='2' {...props} formData={{ a: 'x', b: 'y' }} />);
+      rerender(<Form<Data> key='2' {...props} initialFormData={{ a: 'x', b: 'y' }} />);
 
       expect(onChange.mock.calls.map(([event]: IChangeEvent<Data>[]) => event.formData)).toEqual([
         { a: 'layout', b: 'y' },
@@ -1013,6 +1026,7 @@ describe('form data ownership', () => {
             ref={ref}
             schema={schema}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => {
               const edit = event.formData;
@@ -1049,6 +1063,7 @@ describe('form data ownership', () => {
             ref={ref}
             schema={schema}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => {
               const edit = event.formData;
@@ -1072,6 +1087,7 @@ describe('form data ownership', () => {
 
     it('a new formData object leaves the edits a parent never stored, and a missing handler stops nothing', async () => {
       const ref = createFormRef();
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       const { rerender } = render(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} />);
       await act(async () => {
         handleOf(ref).setFieldValue('a', 'x');
@@ -1079,6 +1095,7 @@ describe('form data ownership', () => {
       });
       expect(handleOf(ref).getFormData()).toEqual({ a: 'x', b: 'y' });
       const onChange = vi.fn();
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias: a `formData` passed after mount is ignored with a warning
       rerender(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} onChange={onChange} />);
 
       await act(async () => {
@@ -1092,7 +1109,7 @@ describe('form data ownership', () => {
     it('every operation in one tick calls onChange with its own value', async () => {
       const ref = createFormRef();
       const onChange = vi.fn();
-      render(<Form ref={ref} schema={schema} validator={validator} formData={{ a: '' }} onChange={onChange} />);
+      render(<Form ref={ref} schema={schema} validator={validator} initialFormData={{ a: '' }} onChange={onChange} />);
 
       await act(async () => {
         handleOf(ref).setFieldValue('a', 'x');
@@ -1117,7 +1134,7 @@ describe('form data ownership', () => {
         <Form
           schema={nested}
           validator={validator}
-          formData={{ a: '', list: ['one'], when }}
+          initialFormData={{ a: '', list: ['one'], when }}
           onChange={(event) => {
             seen = event;
           }}
@@ -1241,6 +1258,7 @@ describe('form data ownership', () => {
             ref={ref}
             schema={objectSchema}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={data}
             onChange={(event) => {
               if (isStoring) {
@@ -1268,7 +1286,7 @@ describe('form data ownership', () => {
     it('getFormData() returns the formData passed, when the schema adds no default, and the edits made since', async () => {
       const passed = createFormRef();
       const value = { a: 'parent' };
-      render(<Form ref={passed} schema={schema} validator={validator} formData={value} onChange={noop} />);
+      render(<Form ref={passed} schema={schema} validator={validator} initialFormData={value} onChange={noop} />);
       expect(handleOf(passed).getFormData()).toBe(value);
 
       const owned = createFormRef();
@@ -1287,7 +1305,7 @@ describe('form data ownership', () => {
           ref={ref}
           schema={schema}
           validator={validator}
-          formData={{ a: 'x', extra: 'gone' }}
+          initialFormData={{ a: 'x', extra: 'gone' }}
           omitExtraData
           onSubmit={onSubmit}
           onChange={onChange}
@@ -1816,7 +1834,7 @@ describe('a throwing callback a field reports from an Effect', () => {
             schema={schema}
             uiSchema={{ a: { 'ui:widget': ChangeOnMountWidget } }}
             validator={validator}
-            formData={{}}
+            initialFormData={{}}
             onChange={boom}
           />
         </Boundary>,

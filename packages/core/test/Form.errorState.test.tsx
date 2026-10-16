@@ -105,7 +105,7 @@ describe('Error state consistency when deriving from new props', () => {
           validator={validator}
           liveValidate='onChange'
           extraErrors={serverErrors}
-          formData={shortName}
+          initialFormData={shortName}
           className={className}
         />
       </>
@@ -129,6 +129,7 @@ describe('Error state consistency when deriving from new props', () => {
           validator={validator}
           liveValidate={liveValidate}
           widgets={widgets}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => setValue(event.formData)}
         />
@@ -169,7 +170,7 @@ describe('Error state consistency when deriving from new props', () => {
             schema={current}
             validator={validator}
             liveValidate='onBlur'
-            formData={shortName}
+            initialFormData={shortName}
             className={className}
           />
         </>
@@ -232,7 +233,7 @@ describe('Error state consistency when deriving from new props', () => {
           schema={schema}
           uiSchema={raisingUiSchema}
           validator={validator}
-          formData={shortName}
+          initialFormData={shortName}
           className={className}
           {...formProps}
         />
@@ -651,11 +652,13 @@ describe('Error state consistency when deriving from new props', () => {
 
     it('keeps the error on the moved item when the parent stores nothing back, across its later renders', async () => {
       // The parent never follows `onChange`; the form owns the reorder and shows it
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias beside its `initialFormData` twin
       const { container, rerender } = render(<Parent formData={arrayData} />);
 
       await submitAndMoveFirstItemDown(container);
       expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
       expect(fieldErrorsById(container)).toEqual({ root_arr_1: ['must NOT have fewer than 3 characters'] });
+      // oxlint-disable-next-line typescript/no-deprecated -- pins the deprecated alias beside its `initialFormData` twin
       rerender(<Parent formData={arrayData} restyles={1} />);
 
       expect(inputValues(container)).toEqual(['bbbb', 'a', 'cccc']);
@@ -677,7 +680,13 @@ describe('Error state consistency when deriving from new props', () => {
         }
       };
       const { container } = render(
-        <Form ref={ref} schema={countedSchema} validator={validator} formData={arrayData} onChange={countMove} />,
+        <Form
+          ref={ref}
+          schema={countedSchema}
+          validator={validator}
+          initialFormData={arrayData}
+          onChange={countMove}
+        />,
       );
 
       await submitAndMoveFirstItemDown(container);
@@ -740,6 +749,7 @@ describe('Error state consistency when deriving from new props', () => {
             schema={arraySchema}
             validator={validator}
             className={`restyled-${restyles}`}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={value}
             onChange={(event) => setValue(event.formData)}
           />
@@ -818,7 +828,7 @@ describe('Error state consistency when deriving from new props', () => {
     const arrayData = { arr: ['a', 'bbbb', 'cccc'] };
     const arrayServerErrors: ErrorSchema = { arr: { 2: { __errors: ['server'] } } };
     function Parent({ extraErrors }: { extraErrors?: ErrorSchema }) {
-      return <Form schema={arraySchema} validator={validator} formData={arrayData} extraErrors={extraErrors} />;
+      return <Form schema={arraySchema} validator={validator} initialFormData={arrayData} extraErrors={extraErrors} />;
     }
     const { container, rerender } = render(<Parent extraErrors={arrayServerErrors} />);
 
@@ -869,7 +879,7 @@ describe('Error state consistency when deriving from new props', () => {
             schema={addrSchema}
             uiSchema={addrUiSchema}
             validator={validator}
-            formData={addrData}
+            initialFormData={addrData}
             extraErrors={extraErrors}
             className={className}
           />
@@ -1381,7 +1391,7 @@ describe('Error state consistency when deriving from new props', () => {
       remaining: string[];
     }[])('$name', async ({ schema, before, validated, after, remaining }) => {
       const ref = createFormRef();
-      const { container, node } = createFormComponent({ ref, schema, formData: before });
+      const { container, node } = createFormComponent({ ref, schema, initialFormData: before });
 
       await submitForm(node, user);
       expect(errorListMessages(container)).toEqual(validated);
@@ -1394,7 +1404,7 @@ describe('Error state consistency when deriving from new props', () => {
     it('keeps the error an invalid schema is reported with, which describes no field, when a field changes', async () => {
       const invalid: RJSFSchema = { type: 'object', properties: { name: { type: 'string', minLength: -1 } } };
       const ref = createFormRef();
-      const { container, node } = createFormComponent({ ref, schema: invalid, formData: { name: 'a' } });
+      const { container, node } = createFormComponent({ ref, schema: invalid, initialFormData: { name: 'a' } });
 
       await submitForm(node, user);
       const listed = errorListMessages(container);
@@ -1417,7 +1427,7 @@ describe('Error state consistency when deriving from new props', () => {
         },
       };
       const ref = createFormRef();
-      const { node } = createFormComponent({ ...props, ref, formData: 'a' });
+      const { node } = createFormComponent({ ...props, ref, initialFormData: 'a' });
 
       await submitForm(node, user);
       const validated = shown.mock.lastCall?.[0];
@@ -1455,7 +1465,7 @@ describe('Error state consistency when deriving from new props', () => {
           ref,
           schema: invalid,
           transformErrors,
-          formData: { name: 'a' },
+          initialFormData: { name: 'a' },
         });
 
         await submitForm(node, user);
@@ -1495,7 +1505,7 @@ describe('Error state consistency when deriving from new props', () => {
         ref,
         schema: pair,
         transformErrors,
-        formData: { name: 'short', other: 'brief' },
+        initialFormData: { name: 'short', other: 'brief' },
       });
 
       await submitForm(node, user);
@@ -1523,7 +1533,7 @@ describe('Error state consistency when deriving from new props', () => {
         ref,
         schema: named,
         transformErrors,
-        formData: { $schema: 'short', name: 'short' },
+        initialFormData: { $schema: 'short', name: 'short' },
       });
 
       await submitForm(node, user);
@@ -1563,6 +1573,7 @@ describe('Error state consistency when deriving from new props', () => {
               uiSchema={raisingUiSchema}
               validator={validator}
               customValidate={customValidate}
+              // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
               formData={value}
               onChange={(event) => setValue(event.formData)}
             />
@@ -1597,7 +1608,7 @@ describe('Error state consistency when deriving from new props', () => {
       };
       const seed = { name: 'a', other: 'b' };
       const ref = createFormRef();
-      const { container, node, rerender } = createFormComponent({ ...props, ref, formData: seed });
+      const { container, node, rerender } = createFormComponent({ ...props, ref, initialFormData: seed });
 
       await submitForm(node, user);
       act(() => handleOf(ref).setFieldValue('', { name: 'a', other: 'c' }));
@@ -1606,7 +1617,7 @@ describe('Error state consistency when deriving from new props', () => {
       rerender({
         ...props,
         ref,
-        formData: seed,
+        initialFormData: seed,
         extraErrors: { other: { __errors: ['from the server'] } },
       });
 
@@ -1614,10 +1625,10 @@ describe('Error state consistency when deriving from new props', () => {
     });
 
     it('keeps every error when the parent renders the same data again', async () => {
-      const { container, node, rerender } = createFormComponent({ schema: leaf, formData: 'short' });
+      const { container, node, rerender } = createFormComponent({ schema: leaf, initialFormData: 'short' });
 
       await submitForm(node, user);
-      rerender({ schema: leaf, formData: 'short' });
+      rerender({ schema: leaf, initialFormData: 'short' });
 
       expect(errorListMessages(container)).toEqual([tooShort]);
     });

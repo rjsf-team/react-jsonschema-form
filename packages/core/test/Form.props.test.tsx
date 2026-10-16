@@ -53,6 +53,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
             ref={ref}
             schema={steps[step].schema}
             validator={validator}
+            // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
             formData={formData}
             onChange={(event, id) => {
               onChange(event, id);
@@ -119,7 +120,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     const formData = { foo: 'foo', bar: 'bar' };
 
     it('should enable all items', () => {
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
 
       expect(node.querySelectorAll('input:disabled')).toHaveLength(0);
     });
@@ -127,7 +128,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('should disable all items', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         disabled: true,
       });
 
@@ -137,7 +138,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('should disable the submit button', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         disabled: true,
       });
 
@@ -148,7 +149,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('disabling the submit button via ui:schema - ui:submitButtonOptions props is still possible', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:submitButtonOptions': { props: { disabled: true } } },
       });
 
@@ -159,7 +160,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('disabling the submit button via ui:schema - ui:options, submitButtonOptions props is still possible', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:options': { submitButtonOptions: { submitText: 'hello', props: { disabled: true } } } },
       });
 
@@ -171,7 +172,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('if both ui:submitButtonProps and the main form disabled props are provided, and either of them are true, the button will be disabled', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:submitButtonOptions': { props: { disabled: false } } },
         disabled: true,
       });
@@ -183,7 +184,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('if both ui:submitButtonProps and the main form disabled props are provided, but false, then submit button will not be disabled', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         uiSchema: { 'ui:submitButtonOptions': { props: { disabled: false } } },
         disabled: false,
       });
@@ -204,7 +205,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     const formData = { foo: 'foo', bar: { baz: 'baz' } };
 
     it('should not have any readonly items', () => {
-      const { node } = createFormComponent({ schema, formData });
+      const { node } = createFormComponent({ schema, initialFormData: formData });
 
       expect(node.querySelectorAll('input:read-only')).toHaveLength(0);
     });
@@ -212,7 +213,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
     it('should readonly all items', () => {
       const { node } = createFormComponent({
         schema,
-        formData,
+        initialFormData: formData,
         readonly: true,
       });
 
@@ -284,7 +285,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       const formProps: Omit<FormProps, 'validator'> = {
         ref: createRef(),
         liveValidate: 'onChange',
-        formData: {
+        initialFormData: {
           areaCode: '123455',
         },
         schema: {
@@ -354,7 +355,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
           minLength: 8,
           pattern: 'd+',
         },
-        formData: 'short',
+        initialFormData: 'short',
       };
 
       const { node, onError, rerender } = createFormComponent(formProps);
@@ -448,7 +449,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
           description: 'my description',
           items: { type: 'string' },
         },
-        formData: ['foo', 'bar'],
+        initialFormData: ['foo', 'bar'],
         templates: { ArrayFieldTemplate: ArrayTemplateWithForm },
         onSubmit: outerOnSubmit,
       });
@@ -498,7 +499,7 @@ describeRepeated('Form common: form props and updates', (createFormComponent) =>
       const formData = {
         type1: 'FOO',
       };
-      const { node, onError } = createFormComponent({ schema, formData });
+      const { node, onError } = createFormComponent({ schema, initialFormData: formData });
       await submitForm(node, user);
       expect(onError).not.toHaveBeenCalled();
     });

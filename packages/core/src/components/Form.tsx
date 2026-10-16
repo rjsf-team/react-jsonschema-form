@@ -52,6 +52,9 @@ export interface FormProps<
    * data after that, so passing back what `onChange` reported changes nothing, and passing another value is ignored,
    * with a warning in development. To show other data, remount the form with a `key`, or call
    * `setFieldValue('', data)` on its ref.
+   *
+   * @deprecated Use `initialFormData`, which this is another name for. The form reads it only on mount and on
+   * `reset()`, which the name `formData` hides by reading as a controlled value.
    */
   formData?: T;
   /** The seed of the form's data, like `defaultValue` on an `<input>`: read when the form mounts and when `reset()` is
@@ -340,6 +343,7 @@ function Form<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     model.committed(props, state, published);
   });
   useLayoutEffect(() => model.attached(), [model]);
+  // oxlint-disable-next-line typescript/no-deprecated -- the form still reads the deprecated alias
   const { formData: formDataProp } = props;
   useEffect(() => {
     if (isDevelopment) {

@@ -208,6 +208,7 @@ describe('settled snapshot sanitization', () => {
         <Form<PetData>
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             log.reported.push(event.formData);
@@ -472,6 +473,7 @@ describe('settled snapshot sanitization', () => {
         <Form<SwapData>
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             events.push(event);
@@ -554,6 +556,7 @@ describe('settled snapshot sanitization', () => {
           ref={ref}
           schema={schema}
           validator={validator}
+          // oxlint-disable-next-line typescript/no-deprecated -- pins the v6 echo pattern, passing back what onChange reported as `formData`
           formData={value}
           onChange={(event) => {
             log?.reported.push(event.formData);
