@@ -2723,6 +2723,33 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
         expect(joined.unevaluatedProperties).toEqual({ type: 'string' });
       });
+      it('describes a key by the object and by the option apart, so neither one allowing it lifts the other forbidding it', () => {
+        const formData = { x1: 'v' };
+        const forbiddingOption: RJSFSchema = { properties: { b: { type: 'string' } }, unevaluatedProperties: false };
+        const optionForbids: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: { type: 'string' },
+          oneOf: [forbiddingOption],
+        };
+        const objectForbids: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          additionalProperties: false,
+          oneOf: [{ patternProperties: { '^x': { type: 'string' } } }],
+        };
+        const optionForbidsBesidePattern: RJSFSchema = {
+          type: 'object',
+          properties: { a: { type: 'string' } },
+          patternProperties: { '^x': { type: 'string' } },
+          oneOf: [{ properties: { a: {} }, additionalProperties: false }],
+        };
+        for (const schema of [optionForbids, objectForbids, optionForbidsBesidePattern]) {
+          expect(
+            retrieveSchema({ validator: testValidator }, schema, schema, formData, false, 0).properties?.x1,
+          ).toEqual({ type: 'null', [ADDITIONAL_PROPERTY_FLAG]: true });
+        }
+      });
       it('stubs the extra keys an option alone describes with the object, and none for the option itself', () => {
         const schema: RJSFSchema = {
           type: 'object',
