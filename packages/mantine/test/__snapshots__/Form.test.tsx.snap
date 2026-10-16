@@ -62,7 +62,7 @@ exports[`format iso-date-time 1`] = `
               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
             >
               <div
-                aria-label="Date time"
+                aria-label="Time"
                 class="m_8fb7ebe7 mantine-Input-input mantine-TimePicker-input"
                 data-variant="default"
                 id="mantine-i"
@@ -77,7 +77,7 @@ exports[`format iso-date-time 1`] = `
                   >
                     <input
                       aria-describedby="root__error root__description root__help"
-                      aria-label="Hours"
+                      aria-label="hour"
                       aria-valuemax="23"
                       aria-valuemin="0"
                       aria-valuenow="0"
@@ -94,7 +94,7 @@ exports[`format iso-date-time 1`] = `
                       :
                     </span>
                     <input
-                      aria-label="Minutes"
+                      aria-label="minute"
                       aria-valuemax="59"
                       aria-valuemin="0"
                       aria-valuenow="0"
@@ -111,7 +111,7 @@ exports[`format iso-date-time 1`] = `
                       :
                     </span>
                     <input
-                      aria-label="Seconds"
+                      aria-label="second"
                       aria-valuemax="59"
                       aria-valuemin="0"
                       aria-valuenow="0"
@@ -8322,7 +8322,7 @@ exports[`single fields > format datetime 1`] = `
               style="--input-height: var(--input-height-sm); --input-fz: var(--mantine-font-size-sm);"
             >
               <div
-                aria-label="Date time"
+                aria-label="Time"
                 class="m_8fb7ebe7 mantine-Input-input mantine-TimePicker-input"
                 data-variant="default"
                 id="mantine-i"
@@ -8337,7 +8337,7 @@ exports[`single fields > format datetime 1`] = `
                   >
                     <input
                       aria-describedby="root__error root__description root__help"
-                      aria-label="Hours"
+                      aria-label="hour"
                       aria-valuemax="23"
                       aria-valuemin="0"
                       aria-valuenow="0"
@@ -8354,7 +8354,7 @@ exports[`single fields > format datetime 1`] = `
                       :
                     </span>
                     <input
-                      aria-label="Minutes"
+                      aria-label="minute"
                       aria-valuemax="59"
                       aria-valuemin="0"
                       aria-valuenow="0"
@@ -8371,7 +8371,7 @@ exports[`single fields > format datetime 1`] = `
                       :
                     </span>
                     <input
-                      aria-label="Seconds"
+                      aria-label="second"
                       aria-valuemax="59"
                       aria-valuemin="0"
                       aria-valuenow="0"
