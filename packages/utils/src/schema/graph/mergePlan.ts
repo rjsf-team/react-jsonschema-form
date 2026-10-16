@@ -272,6 +272,14 @@ export function asTarget<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, targ
   return conjunction?.kind === 'schema' ? conjunction : target;
 }
 
+/** Returns the schema holding each of `keywords` as the node providing it holds it */
+function keywordSchema<S extends StrictRJSFSchema>(template: S, keywords: Keywords<S>): S {
+  return schemaFrom(
+    template,
+    Object.fromEntries([...keywords].map(([key, provider]) => [key, Reflect.get(provider.node.raw, key)])),
+  );
+}
+
 /** Returns the keywords of `node` with the node providing each: the target's, overridden by the keywords beside its
  * `$ref`, along the whole chain of references, each target read as `asTarget()` reads it. `enter` is asked before each
  * target is followed, with the ref path extended by it; one it declines adds nothing.
@@ -337,10 +345,7 @@ function readRefDefinition<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, fr
     return schemaFrom(graph.rawRoot, {});
   }
   const keywords = flattenRef(graph, asTarget(graph, target), [], () => true);
-  return schemaFrom(
-    target.raw,
-    Object.fromEntries([...keywords].map(([key, provider]) => [key, Reflect.get(provider.node.raw, key)])),
-  );
+  return keywordSchema(target.raw, keywords);
 }
 
 /** Builds one field's plan. Entries are added in this order: the `$ref` override, the chosen option, the
@@ -432,10 +437,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (top && this.policy.allOf === 'if' && keywords.has(IF_KEY)) {
       this.mergeAllOf = true;
     }
-    const schema = schemaFrom(
-      node.raw,
-      Object.fromEntries([...keywords].map(([key, provider]) => [key, Reflect.get(provider.node.raw, key)])),
-    );
+    const schema = keywordSchema(node.raw, keywords);
     const ref: unknown = Reflect.get(node.raw, REF_KEY);
     if (typeof ref === 'string') {
       Reflect.set(schema, RJSF_REF_KEY, ref);
