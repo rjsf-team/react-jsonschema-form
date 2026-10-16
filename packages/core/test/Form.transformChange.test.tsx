@@ -1,9 +1,18 @@
-import type { CustomValidator, ErrorTransformer, FieldProps, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import { useId } from 'react';
+import type {
+  CustomValidator,
+  ErrorTransformer,
+  FieldProps,
+  FieldTemplateProps,
+  RJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { buttonId } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
+import { collectDeferredThrows } from '../../../testing/deferredThrows.ts';
 import Form, { FieldTemplate as DefaultFieldTemplate } from '../src/index.ts';
 import type { FormProps, IChangeEvent } from '../src/index.ts';
 import { createFormRef, elementOf, handleOf, input } from './testUtils.tsx';
@@ -210,6 +219,79 @@ describe('transformChange', () => {
     expect(input(node, 'root_0')).toHaveValue('x');
     expect(optionOf(0)).toHaveValue('1');
     expect(optionOf(1)).toHaveValue('0');
+  });
+
+  describe('rewrites an array add or reorder, and no row hands its instance to another item', () => {
+    /** Shows its item, and which instance of the widget shows it: the state a row holds, as focus or a draft would be */
+    function InstanceWidget({ id, value }: WidgetProps) {
+      return <input id={id} data-instance={useId()} value={value ?? ''} readOnly />;
+    }
+    const itemsSchema: RJSFSchema = { type: 'array', items: { type: 'string', default: 'new' } };
+    /** Each item shown, with the instance that shows it */
+    const shown = (node: Element) =>
+      Array.from(node.querySelectorAll<HTMLInputElement>('input[data-instance]'), (row) => [
+        row.value,
+        row.dataset.instance,
+      ]);
+    /** Whether every row that shows an item after an edit was either made for it or showed that same item before */
+    const keepsItsItem = (before: (string | undefined)[][], after: (string | undefined)[][]) => {
+      const itemOf = new Map(before.map(([item, instance]) => [instance, item]));
+      return after.every(([item, instance]) => !itemOf.has(instance) || itemOf.get(instance) === item);
+    };
+
+    it.each<[string, NonNullable<FormProps<string[]>['transformChange']>, string[], string, string[]]>([
+      [
+        'an add the rewrite puts first',
+        (next, previous) =>
+          next && previous && next.length > previous.length ? [...next.slice(-1), ...previous] : next,
+        ['b', 'c'],
+        '.rjsf-array-item-add button',
+        ['new', 'b', 'c'],
+      ],
+      [
+        'a reorder the rewrite sorts',
+        (next) => next && [...next].sort(),
+        ['c', 'b', 'a'],
+        `#${buttonId('root_0', 'moveDown')}`,
+        ['a', 'b', 'c'],
+      ],
+    ])('%s', async (_, transformChange, initialFormData, button, kept) => {
+      const { node } = renderForm<string[]>({
+        schema: itemsSchema,
+        uiSchema: { items: { 'ui:widget': InstanceWidget } },
+        initialFormData,
+        transformChange,
+      });
+      const before = shown(node);
+
+      await user.click(elementOf(node, button));
+
+      const after = shown(node);
+      expect(after.map(([item]) => item)).toEqual(kept);
+      expect(keepsItsItem(before, after)).toBe(true);
+    });
+
+    it('a reorder whose transformChange throws leaves every row where it was', async () => {
+      const deferred = collectDeferredThrows();
+      const { node } = renderForm<string[]>({
+        schema: itemsSchema,
+        uiSchema: { items: { 'ui:widget': InstanceWidget } },
+        initialFormData: ['a', 'b'],
+        transformChange: (next, previous) => {
+          if (next?.[0] !== previous?.[0]) {
+            throw new Error('boom');
+          }
+          return next;
+        },
+      });
+      const before = shown(node);
+
+      await user.click(elementOf(node, `#${buttonId('root_0', 'moveDown')}`));
+      await deferred.settle();
+
+      expect(deferred.thrown).toEqual([new Error('boom')]);
+      expect(shown(node)).toEqual(before);
+    });
   });
 
   it.each([

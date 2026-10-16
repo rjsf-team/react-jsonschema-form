@@ -17,6 +17,7 @@ import {
   getByPath,
   toPath,
   allowAdditionalItems,
+  deepEquals,
   getItemUiSchemaForItem,
   getStaticItemsUiSchema,
   getTemplates,
@@ -1143,19 +1144,33 @@ export default function ArrayField<
    * them, and saying where each item went, so the form moves the items' errors along. Where that is, is read off the
    * rows themselves, so the errors go nowhere the items did not. A change `transformChange` refused leaves the items
    * where they were, so the rows go back to `rows`: kept, a refused reorder, which leaves the length as it was, would
-   * hand each row's instance, and the state it holds, to another item
+   * hand each row's instance, and the state it holds, to another item. A change it rewrote may have put any item
+   * anywhere, so a row keeps its key only where the form kept the item the change put there, and every other item gets
+   * a row of its own
    */
   const commitRows = useCallback(
     (rows: KeyedFormDataType<T>[], newKeyedFormData: KeyedFormDataType<T>[]) => {
       const newIndexes = new Map(newKeyedFormData.map((row, index) => [row, index]));
-      const isRefused = sendMove({ newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
+      const outcome = sendMove({ newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
         onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
       );
-      if (isRefused) {
+      if (outcome === 'refused') {
         updateKeyedFormData(rows);
+      } else if (outcome !== 'taken') {
+        const edited: unknown[] = Array.isArray(outcome.edited) ? outcome.edited : [];
+        const kept: KeyedFormDataType<T>[] = [];
+        readRows().forEach(({ item }, index) => {
+          const row = newKeyedFormData[index];
+          const { key, order } =
+            row && index < edited.length && deepEquals(item, edited[index])
+              ? row
+              : newRowId([...newKeyedFormData, ...kept]);
+          kept.push({ key, order, item });
+        });
+        updateKeyedFormData(kept);
       }
     },
-    [sendMove, onChange, updateKeyedFormData, fieldPath],
+    [sendMove, onChange, updateKeyedFormData, fieldPath, readRows, newRowId],
   );
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data

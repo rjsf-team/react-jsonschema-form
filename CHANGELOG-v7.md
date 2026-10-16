@@ -229,6 +229,8 @@ should change the heading of the (upcoming) version to include a major version b
 - A `transformChange` that returns a copy of the data before the edit refuses it, as returning that data itself does, so the key moves the edit announced, an array reorder's row keys or a renamed property's place, are undone ([#5556](https://github.com/rjsf-team/react-jsonschema-form/pull/5556))
 - A rename `transformChange` refuses leaves the React key the last accepted rename gave another property, so that property keeps its instance and focus ([#5556](https://github.com/rjsf-team/react-jsonschema-form/pull/5556))
 - `submit()` submits a form whose `tagName` renders something other than a `<form>` by dispatching a submit event to it, where it did nothing ([#5556](https://github.com/rjsf-team/react-jsonschema-form/pull/5556))
+- A field's change runs `transformChange`, `customValidate` and `transformErrors` the way it calls `onChange`, rethrowing a throw from a timer, so one that throws on a change a widget reports from an Effect no longer unmounts the form. Such a change stores nothing, and an array or object move it carried is undone ([#5556](https://github.com/rjsf-team/react-jsonschema-form/pull/5556))
+- An array add, copy, remove or reorder that `transformChange` rewrites keeps a row's instance only where the form kept the item the change put there, and gives every other item a row of its own, so a sort or filter in `transformChange` never hands one item's row, and the focus or state it holds, to another ([#5556](https://github.com/rjsf-team/react-jsonschema-form/pull/5556))
 
 ## @rjsf/daisyui
 

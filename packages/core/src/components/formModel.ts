@@ -20,7 +20,7 @@ import {
 
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove, FieldChange } from './formState.ts';
+import type { AnnouncedMove, FieldChange, MoveOutcome } from './formState.ts';
 import {
   applyBlur,
   applyChangeToData,
@@ -40,12 +40,13 @@ import {
   validateFormData,
 } from './formState.ts';
 
-/** How a report reaches the consumer's callback: a handle method calls it directly, so a throw reaches the method's
- * caller, while a field, which may report from an Effect inside React's commit phase, where a throw from the
- * consumer's callback would unmount the form, has it made through `callWithDeferredThrow()`
+/** How an operation that calls the consumer's functions runs: a handle method runs it directly, so a throw reaches the
+ * method's caller, while a field, which may report from an Effect inside React's commit phase, where a throw from the
+ * consumer's `transformChange`, validation callbacks or `onChange` would unmount the form, runs it through
+ * `callWithDeferredThrow()`
  */
-type Deliver = (report: () => void) => void;
-const deliverToCaller: Deliver = (report) => report();
+type Deliver = (operation: () => void) => void;
+const deliverToCaller: Deliver = (operation) => operation();
 
 /** `value` as a quoted CSS string, for an attribute selector. An id is built from property names, which can hold a
  * quote, a backslash or a line break, such as an additional property's the user typed, any of which would otherwise
@@ -83,10 +84,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
   let publishedProps = initialProps;
   // The state an operation starts from, for the store's and the committed props' present values
   let derivedCache: { props: FormProps<T, S, F>; from: FormState<T, S, F>; state: FormState<T, S, F> } | undefined;
-  // The key move of the change a field is sending, see `FormDataAccess.sendMove()`, and the last one whose change
-  // `transformChange` refused
+  // The key move of the change a field is sending, see `FormDataAccess.sendMove()`, and what became of the last change
+  // that carried one
   let announced: AnnouncedMove | undefined;
-  let refusedMove: AnnouncedMove | undefined;
+  let moved: { move: AnnouncedMove; outcome: MoveOutcome } | undefined;
   // A form an `<Activity>` hides is detached as an unmounted one is, the way React asks of hidden content, and drops
   // what reaches it then: a draft a widget flushes from an Effect cleanup, a timer or a file read that finishes late,
   // or a call through a handle kept past the unmount. Reported through the `onChange` of the last render, it would be
@@ -252,25 +253,35 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
    * itself for a refused one, or other data, written over the whole form with no key move after the change's own
    * error moves. The data is decided before anything validates it, so live validation, `customValidate` and
    * `transformErrors` run once, on the data the form keeps. Pure, as `settled()` asks: it may run again on a newer base.
+   *
+   * @returns - The next state, and for a rewritten change the state the change alone would have left
    */
-  const applyEdit = (base: FormState<T, S, F>, change: FieldChange<T>, props: FormProps<T, S, F>) => {
+  const applyEdit = (
+    base: FormState<T, S, F>,
+    change: FieldChange<T>,
+    props: FormProps<T, S, F>,
+  ): { next: FormState<T, S, F>; edited?: FormState<T, S, F> } => {
     const isValidated = isLiveValidated(props);
     const edited = applyChangeToData(base, change, props);
     const returned = props.transformChange ? props.transformChange(edited.formData, base.formData) : edited.formData;
     if (Object.is(returned, edited.formData)) {
-      return applyChangeToErrorsOf(edited, base.formData, change, props, isValidated);
+      return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
+    }
+    if (Object.is(returned, base.formData)) {
+      return { next: base };
     }
     // A copy of the data before the edit refuses it as that data itself does: shared against it, a copy comes back as
     // it, and the refusal is what undoes the key moves the edit announced. Anything else is shared against the edit's
-    // data, so a copy that changes nothing of the edit, as `{ ...next }` with a field already trimmed is, takes the
-    // edit rather than deriving the whole form's data a second time
-    const kept = Object.is(returned, base.formData) ? returned : replaceEqualDeep(base.formData, returned);
-    if (Object.is(kept, base.formData)) {
-      return base;
-    }
+    // data first, so a copy that changes nothing of the edit, as `{ ...next }` with a field already upper-cased is,
+    // takes it in one walk rather than deriving the whole form's data a second time. Only a key move whose data equals
+    // the data before it, such as two equal items swapped, needs the second walk to tell a refusal from a copy
     const transformed = replaceEqualDeep(edited.formData, returned);
-    if (Object.is(transformed, edited.formData)) {
-      return applyChangeToErrorsOf(edited, base.formData, change, props, isValidated);
+    const isCopyOfEdit = Object.is(transformed, edited.formData);
+    if ((!isCopyOfEdit || change.newKeyOf) && Object.is(replaceEqualDeep(base.formData, transformed), base.formData)) {
+      return { next: base };
+    }
+    if (isCopyOfEdit) {
+      return { next: applyChangeToErrorsOf(edited, base.formData, change, props, isValidated) };
     }
     // No field made the rewrite, so the errors the fields raised, the root's included, are carried through it as the
     // edit left them
@@ -279,17 +290,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     // the rewrite then carries through its one validation
     const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
     const rewritten = applyChangeToData(withEditErrors, rewrite, props);
-    return applyChangeToErrorsOf(rewritten, edited.formData, rewrite, props, isValidated);
+    return { next: applyChangeToErrorsOf(rewritten, edited.formData, rewrite, props, isValidated), edited };
   };
 
   /** Applies a change to the field at `fieldPath` with `applyEdit()`, commits the result and reports it through
-   * `onChange`, which is called before this returns, the way `deliver` says.
+   * `onChange`, all run the way `deliver` says. A change that throws, from `transformChange` or a validation callback,
+   * commits nothing, so the key move it carried is refused.
    *
    * @param newValue - The new value at `fieldPath`
    * @param fieldPath - The `FieldPath` of the change at which to set the formData
    * @param [newErrorSchema] - The new `ErrorSchema` based on the field change
    * @param [id] - The id of the field that caused the change
-   * @param [deliver] - How `onChange` is called
+   * @param [deliver] - How the change runs
    */
   const change = (
     newValue: T | undefined,
@@ -306,31 +318,40 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const move = announced?.fieldPath === fieldPath ? announced : undefined;
     if (move) {
       announced = undefined;
+      moved = { move, outcome: 'refused' };
     }
-    let isRefused = false;
-    const committed = commit(
-      settled((base) => {
-        const next = applyEdit(
-          base,
-          {
-            newValue,
-            fieldPath,
-            newErrorSchema,
-            newKeyOf: move?.newKeyOf,
-            newOwnKeyOf: move?.newOwnKeyOf,
-            dropsOwnErrors: move?.dropsOwnErrors,
-          },
-          props,
-        );
-        // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
-        isRefused = next === base;
-        return next;
-      }),
-    );
-    if (move && isRefused) {
-      refusedMove = move;
-    }
-    deliver(() => props.onChange?.(toIChangeEvent(committed), id));
+    deliver(() => {
+      let outcome: MoveOutcome = 'taken';
+      const committed = commit(
+        settled((base) => {
+          const { next, edited } = applyEdit(
+            base,
+            {
+              newValue,
+              fieldPath,
+              newErrorSchema,
+              newKeyOf: move?.newKeyOf,
+              newOwnKeyOf: move?.newOwnKeyOf,
+              dropsOwnErrors: move?.dropsOwnErrors,
+            },
+            props,
+          );
+          // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
+          if (next === base) {
+            outcome = 'refused';
+          } else if (edited) {
+            outcome = { edited: getAt<unknown>(edited.formData, fieldPathToList(fieldPath)) };
+          } else {
+            outcome = 'taken';
+          }
+          return next;
+        }),
+      );
+      if (move) {
+        moved = { move, outcome };
+      }
+      props.onChange?.(toIChangeEvent(committed), id);
+    });
   };
 
   /** What a blurred field does to the form, after the `Form`'s `onBlur`: any live validation and live omit that the
@@ -462,9 +483,10 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
           announced = undefined;
         }
       }
-      const isRefused = refusedMove === move;
-      refusedMove = undefined;
-      return isRefused;
+      // A change that never reached the form at the move's path, as from a field outside it, is the field's own
+      const outcome = moved?.move === move ? moved.outcome : 'taken';
+      moved = undefined;
+      return outcome;
     },
     /** The latest value at `path`: an edit made since the form last rendered included */
     readField: <D>(path: FieldPath) => getAt<D>(current().formData, fieldPathToList(path)),

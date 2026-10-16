@@ -1959,4 +1959,37 @@ describe('a throwing callback a field reports from an Effect', () => {
     expect(screen.queryByText('Fallback')).toBeNull();
     expect(document.querySelector('form')).toBeInTheDocument();
   });
+
+  it("a transformChange that throws on a widget's layout Effect change keeps the form mounted, and the data as it was", async () => {
+    function ChangeOnMountWidget({ onChange }: WidgetProps) {
+      useLayoutEffect(() => {
+        onChange('mounted');
+      }, [onChange]);
+      return null;
+    }
+    const ref = createFormRef<Data>();
+    const onChange = vi.fn();
+
+    const rethrown = await rethrownFromTimers(async () => {
+      render(
+        <Boundary>
+          <Form<Data>
+            ref={ref}
+            schema={schema}
+            uiSchema={{ a: { 'ui:widget': ChangeOnMountWidget } }}
+            validator={validator}
+            initialFormData={{ a: 'seed' }}
+            transformChange={boom}
+            onChange={onChange}
+          />
+        </Boundary>,
+      );
+    });
+
+    expect(rethrown).toEqual([new Error('boom')]);
+    expect(screen.queryByText('Fallback')).toBeNull();
+    expect(document.querySelector('form')).toBeInTheDocument();
+    expect(handleOf(ref).getFormData()).toEqual({ a: 'seed' });
+    expect(onChange).not.toHaveBeenCalled();
+  });
 });
