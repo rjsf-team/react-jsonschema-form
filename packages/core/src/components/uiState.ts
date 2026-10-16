@@ -257,6 +257,7 @@ export function createUiState() {
   let expanded = new Set<FieldPath>();
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach((listener) => listener());
+  const selectionAt = (path: FieldPath, list: string) => selections.get(path)?.get(list);
   const setSelection = (path: FieldPath, list: string, selection: OptionSelection) => {
     const lists = selections.get(path);
     if (lists) {
@@ -272,10 +273,10 @@ export function createUiState() {
         listeners.delete(listener);
       };
     },
-    selection: (path: FieldPath, list: string): OptionSelection | undefined => selections.get(path)?.get(list),
+    selection: selectionAt,
     /** Selects option `index` of `list` at `path` for the field's `data` as it is shown */
     select: (path: FieldPath, list: string, index: number, data: unknown) => {
-      const current = selections.get(path)?.get(list);
+      const current = selectionAt(path, list);
       setSelection(path, list, { index, holdsFor: [data], isReleased: false });
       if (current?.index !== index) {
         notify();
@@ -285,7 +286,7 @@ export function createUiState() {
      * data: the edit must not change which option the data is shown under
      */
     keep: (path: FieldPath, list: string, index: number, data: unknown) => {
-      const current = selections.get(path)?.get(list);
+      const current = selectionAt(path, list);
       if (current === undefined || !isHeldFor(current, data)) {
         setSelection(path, list, { index, holdsFor: [data], isReleased: false });
       }
@@ -295,7 +296,7 @@ export function createUiState() {
      * still holds it, so a parent declining the edit leaves the option shown
      */
     release: (path: FieldPath, list: string) => {
-      const current = selections.get(path)?.get(list);
+      const current = selectionAt(path, list);
       if (current !== undefined && !current.isReleased) {
         setSelection(path, list, { ...current, isReleased: true });
       }
@@ -304,11 +305,12 @@ export function createUiState() {
      * the data before, unless the edit is a proposal the parent may decline. The data a released edit leaves is left to
      * be matched
      */
-    edited: (path: FieldPath, dataAt: (path: FieldPath) => unknown, isProposal: boolean) => {
+    edited: (path: FieldPath, dataAt: (path: FieldPathList) => unknown, isProposal: boolean) => {
       const segments = fieldPathToList(path);
       for (const [at, lists] of selections) {
-        if (isPathPrefix(fieldPathToList(at), segments)) {
-          const data = dataAt(at);
+        const atSegments = fieldPathToList(at);
+        if (isPathPrefix(atSegments, segments)) {
+          const data = dataAt(atSegments);
           for (const [list, selection] of lists) {
             lists.set(list, heldAfterEdit(selection, data, isProposal));
           }
@@ -318,9 +320,9 @@ export function createUiState() {
     /** Records the data the form rendered at each selection's field: the one data the selection holds for from now on,
      * or none where the field showed other data, matched again. It changes no option shown, so nothing is notified
      */
-    rendered: (dataAt: (path: FieldPath) => unknown) => {
+    rendered: (dataAt: (path: FieldPathList) => unknown) => {
       for (const [at, lists] of selections) {
-        const data = dataAt(at);
+        const data = dataAt(fieldPathToList(at));
         for (const [list, selection] of lists) {
           const holdsFor = isHeldFor(selection, data) ? [data] : [];
           if (holdsFor.length !== selection.holdsFor.length || selection.isReleased) {
@@ -331,7 +333,7 @@ export function createUiState() {
     },
     isExpanded: (path: FieldPath) => expanded.has(path),
     expand: (path: FieldPath) => {
-      expanded = new Set(expanded).add(path);
+      expanded.add(path);
       notify();
     },
     /** Moves the selections and expansions under the array or object at `container` as its keys moved */
