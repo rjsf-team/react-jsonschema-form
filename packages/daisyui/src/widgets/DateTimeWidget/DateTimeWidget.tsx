@@ -1,13 +1,13 @@
 import type { ChangeEvent } from 'react';
 import { memo, useCallback, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { getDateTimeLocalValue, TranslatableString, widgetDrawsLabel } from '@rjsf/utils';
+import { getDateTimeLocalValue, isNamedByTemplateLabel, TranslatableString } from '@rjsf/utils';
 import { format, isValid } from 'date-fns';
 
 import DatePickerCalendar from '../DatePickerCalendar.tsx';
 import type { DatePickerCalendarProps } from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker } from '../datePickerHooks.ts';
-import DatePickerTrigger, { DatePickerDialog } from '../DatePickerTrigger.tsx';
+import DatePickerTrigger, { DatePickerDialog, getDatePickerName } from '../DatePickerTrigger.tsx';
 
 /** Props for the DateTimePicker popup component, which is the calendar's own plus the time input's
  */
@@ -77,21 +77,10 @@ export default function DateTimeWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    value,
-    label,
-    name,
-    presentation,
-    placeholder,
-    options,
-    disabled,
-    readonly,
-    autofocus,
-    schema,
-    registry,
-  } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { id, value, label, presentation, placeholder, options, disabled, readonly, autofocus, schema, registry } =
+    props;
+  const named = isNamedByTemplateLabel<T, S, F>(props);
+  const pickerName = getDatePickerName<T, S, F>(props);
   const { localValue } = getDateTimeLocalValue(schema, value);
   const formatDate = useDateFormatter<S>(schema, 'date-time');
   // Initialize the local date from the parent's value. For `iso-date-time`, a stored value that happens to
@@ -172,9 +161,8 @@ export default function DateTimeWidget<
       <div className='w-full'>
         <DatePickerTrigger<T, S, F>
           id={id}
-          label={label}
-          name={name}
-          hideLabel={hideLabel}
+          fallbackName={pickerName}
+          named={named}
           presentation={presentation}
           placeholder={placeholder}
           formattedValue={formattedValue}
@@ -187,7 +175,6 @@ export default function DateTimeWidget<
           onClick={togglePicker}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          registry={registry}
         />
         {isOpen && (
           <div
@@ -196,7 +183,7 @@ export default function DateTimeWidget<
             className='absolute z-[100] mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
             onClick={handleContainerClick}
           >
-            <DatePickerDialog<T, S, F> id={popupId} label={label} registry={registry}>
+            <DatePickerDialog id={popupId} name={pickerName}>
               <MemoizedDateTimePickerPopup
                 id={`${id}-picker`}
                 selectedDate={displayedDate}

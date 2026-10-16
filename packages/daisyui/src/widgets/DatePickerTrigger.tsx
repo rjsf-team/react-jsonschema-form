@@ -2,27 +2,33 @@ import type { MouseEvent, ReactNode, RefObject } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { FieldPresentation, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getControlAttributes } from '@rjsf/utils';
+import { getControlAttributes, getControlFallbackName, TranslatableString } from '@rjsf/utils';
 
-import { hasLabelToReference } from '../utils.ts';
-import { getDatePickerName } from './datePickerHooks.ts';
+/** The name a picker's trigger falls back to where no label names it, which the dialog it opens takes too: the field's
+ * label, else its placeholder, or the translated date prompt for a field with neither. Each widget computes it once and
+ * hands the string to both, so the two can't drift apart
+ *
+ * @param props - The widget's `label`, empty when the field has no title, `placeholder`, and `registry`, for the
+ *   translated prompt
+ * @returns - The name
+ */
+export function getDatePickerName<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  props: Pick<WidgetProps<T, S, F>, 'label' | 'placeholder' | 'registry'>,
+) {
+  return getControlFallbackName<T, S, F>(props, TranslatableString.AriaDateLabel);
+}
 
-interface DatePickerTriggerProps<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
-> {
+interface DatePickerTriggerProps {
   /** The field's `id`, which is also this button's, so the template's label names it through its own `htmlFor` */
   id: string;
-  /** The field's label, empty when it has no title */
-  label?: string;
-  /** The field's property name, which the label naming this button falls back to */
-  name?: string;
-  /** Whether the label is hidden, in which case the template renders none */
-  hideLabel?: boolean;
-  /** The field's plan, which says whether a label names this button */
+  /** The name from `getDatePickerName()`, which this button displays with nothing else to show and is named by where no
+   * label names it, as the dialog it opens is */
+  fallbackName: string;
+  /** Whether a label the template draws names this button, as `isNamedByTemplateLabel()` says of the widget's props */
+  named: boolean;
+  /** The field's plan, whose control attributes this button carries */
   presentation?: FieldPresentation;
-  /** The field's placeholder, displayed where it holds no date */
+  /** The field's placeholder, displayed where it holds no date, and naming it where it has no label */
   placeholder?: string;
   /** The date the picker is holding, formatted for display, `undefined` where it holds none */
   formattedValue?: string;
@@ -44,8 +50,6 @@ interface DatePickerTriggerProps<
   onFocus: () => void;
   /** Reports blur */
   onBlur: () => void;
-  /** The field's registry, for the translated text a trigger with nothing else to show falls back to */
-  registry: Registry<T, S, F>;
 }
 
 /** The button both picker widgets open their popup from, which is the whole of what a screen reader and a pointer
@@ -54,7 +58,8 @@ interface DatePickerTriggerProps<
  *
  * Its text is the value it holds, falling back to the placeholder, then to the field's label, and last to the
  * translated prompt, so it is never blank on the screen. A combobox takes no name from its text, so where no label,
- * nor the plan, names it, it is named by the field's label, or the translated prompt for a field with no title.
+ * nor the plan, names it, it is named by the field's label, or for a field with no title its placeholder, else the
+ * translated prompt.
  *
  * @param props - The value to display and the state to display it in, with the handlers for each way into the popup
  */
@@ -64,9 +69,8 @@ export default function DatePickerTrigger<
   F extends FormContextType = FormContextType,
 >({
   id,
-  label,
-  name,
-  hideLabel,
+  fallbackName,
+  named,
   presentation,
   placeholder,
   formattedValue,
@@ -79,12 +83,9 @@ export default function DatePickerTrigger<
   onClick,
   onFocus,
   onBlur,
-  registry,
-}: DatePickerTriggerProps<T, S, F>) {
+}: DatePickerTriggerProps) {
   const controlAttributes = getControlAttributes<T, S, F>({ id, presentation });
-  const fallbackName = getDatePickerName<T, S, F>(label, registry);
   const text = formattedValue || placeholder || fallbackName;
-  const named = hasLabelToReference({ label, name, hideLabel, presentation });
 
   return (
     <button
@@ -115,27 +116,21 @@ export default function DatePickerTrigger<
   );
 }
 
-interface DatePickerDialogProps<T, S extends StrictRJSFSchema, F extends FormContextType> {
+interface DatePickerDialogProps {
   /** The popup's id, which the trigger's `aria-controls` points at while it is open */
   id: string;
-  /** The field's label, empty when it has no title */
-  label?: string;
-  /** The field's registry, for the translated prompt */
-  registry: Registry<T, S, F>;
+  /** The name from `getDatePickerName()`, which the trigger falls back to as well */
+  name: string;
   children: ReactNode;
 }
 
 /** The dialog both picker widgets open their calendar in, which their trigger controls, named as the trigger is
  *
- * @param props - The popup's id, the field's label and registry it is named from, and its contents
+ * @param props - The popup's id, the name it shares with the trigger, and its contents
  */
-export function DatePickerDialog<
-  T = unknown,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = FormContextType,
->({ id, label, registry, children }: DatePickerDialogProps<T, S, F>) {
+export function DatePickerDialog({ id, name, children }: DatePickerDialogProps) {
   return (
-    <div id={id} role='dialog' aria-label={getDatePickerName<T, S, F>(label, registry)}>
+    <div id={id} role='dialog' aria-label={name}>
       {children}
     </div>
   );

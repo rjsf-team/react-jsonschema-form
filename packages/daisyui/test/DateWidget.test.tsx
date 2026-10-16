@@ -504,6 +504,14 @@ describe('DateWidget', () => {
       expect(onChange.mock.calls[0][0].formData).toEqual({ birthday: '2020-05-17' });
     });
 
+    test('is named by its placeholder where it has no label', () => {
+      const { container } = render(
+        <Form schema={schema} uiSchema={{ 'ui:placeholder': 'Pick a day' }} validator={validator} />,
+      );
+
+      expect(container.querySelector('button[aria-haspopup]')).toHaveAccessibleName('Pick a day');
+    });
+
     // With no label, and no title to name it by, the translated prompt names it, and the date is its value
     test('is named by the translated prompt where nothing else names it', () => {
       const { container } = render(<Form schema={schema} formData='2020-05-03' validator={validator} />);

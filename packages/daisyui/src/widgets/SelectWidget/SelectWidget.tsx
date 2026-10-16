@@ -9,23 +9,22 @@ import type {
   WidgetProps,
 } from '@rjsf/utils';
 import {
-  TranslatableString,
   enumOptionsDeselectValue,
   enumOptionValueLabel,
   enumOptionsIndexForValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
+  getControlFallbackName,
   groupEnumOptions,
   isEnumOptionsGroup,
+  isNamedByTemplateLabel,
   logUnsupportedDefaultForEnum,
   SelectedOptionDescription,
   useSelectFocusHandlers,
   widgetAriaProps,
   widgetDrawsLabel,
 } from '@rjsf/utils';
-
-import { hasLabelToReference } from '../../utils.ts';
 
 function getDisplayValue(val: unknown) {
   if (val === undefined || val === null) {
@@ -65,7 +64,6 @@ export default function SelectWidget<
     id,
     options,
     label,
-    name,
     presentation,
     disabled,
     placeholder,
@@ -158,10 +156,10 @@ export default function SelectWidget<
   const listboxId = `${id}__listbox`;
   // A combobox takes no name from its contents, which are its value, so with no label or `aria-label` naming it, it is
   // named by the field's label, as the label drawn for it would, or, for a field with no title, such as an array item
-  // or an untitled option selector, by the translated prompt, as `DatePickerTrigger` is. The plan points it at a label
-  // through `aria-labelledby` only where `hasLabelToReference()` already reports one
-  const named = hasLabelToReference({ label, name, hideLabel, presentation });
-  const fallbackName = label || registry.translateString(TranslatableString.SelectPlaceholder);
+  // or an untitled option selector, by its placeholder, else the translated prompt, as `DatePickerTrigger` is. The plan
+  // points it at a label through `aria-labelledby` only where `isNamedByTemplateLabel()` already reports one
+  const named = isNamedByTemplateLabel<T, S, F>(props);
+  const fallbackName = getControlFallbackName<T, S, F>({ label, placeholder, registry });
 
   function renderOption(option: IndexedEnumOptionType<S>) {
     const isSelected = selectedIndexes.includes(String(option.index));

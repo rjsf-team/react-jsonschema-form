@@ -1,11 +1,11 @@
 import { useCallback, useEffect, useMemo } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { TranslatableString, widgetDrawsLabel } from '@rjsf/utils';
+import { isNamedByTemplateLabel, TranslatableString } from '@rjsf/utils';
 import { format, startOfDay } from 'date-fns';
 
 import DatePickerCalendar, { CALENDAR_MIN_WIDTH } from '../DatePickerCalendar.tsx';
 import { readDateOnly, readInstant, useDateFormatter, useDatePicker, windowOf } from '../datePickerHooks.ts';
-import DatePickerTrigger, { DatePickerDialog } from '../DatePickerTrigger.tsx';
+import DatePickerTrigger, { DatePickerDialog, getDatePickerName } from '../DatePickerTrigger.tsx';
 
 /** The calendar day at the front of a date-time, whatever separator, time and zone follow it */
 const LEADING_DAY = /^\d{4}-\d{2}-\d{2}/;
@@ -89,21 +89,10 @@ export default function DateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    value,
-    label,
-    name,
-    presentation,
-    placeholder,
-    options,
-    disabled,
-    readonly,
-    autofocus,
-    schema,
-    registry,
-  } = props;
-  const hideLabel = !widgetDrawsLabel<T, S, F>(props);
+  const { id, value, label, presentation, placeholder, options, disabled, readonly, autofocus, schema, registry } =
+    props;
+  const named = isNamedByTemplateLabel<T, S, F>(props);
+  const pickerName = getDatePickerName<T, S, F>(props);
   const initialDate = useMemo(() => parseDateValue(value), [value]);
   const formatDate = useDateFormatter<S>(schema, 'date');
   const {
@@ -190,9 +179,8 @@ export default function DateWidget<
       <div className='w-full'>
         <DatePickerTrigger<T, S, F>
           id={id}
-          label={label}
-          name={name}
-          hideLabel={hideLabel}
+          fallbackName={pickerName}
+          named={named}
           presentation={presentation}
           placeholder={placeholder}
           formattedValue={formattedValue}
@@ -205,7 +193,6 @@ export default function DateWidget<
           onClick={togglePicker}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          registry={registry}
         />
         {isOpen && (
           <div
@@ -218,7 +205,7 @@ export default function DateWidget<
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <DatePickerDialog<T, S, F> id={popupId} label={label} registry={registry}>
+            <DatePickerDialog id={popupId} name={pickerName}>
               <div className='p-3' style={{ minWidth: CALENDAR_MIN_WIDTH, minHeight: 350 }}>
                 <DatePickerCalendar
                   selectedDate={displayedDate}
