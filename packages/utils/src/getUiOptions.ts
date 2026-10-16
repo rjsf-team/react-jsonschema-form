@@ -30,7 +30,8 @@ function isOptionKey(key: string): key is `ui:${string}` {
  *
  * @param [uiSchema={}] - The UI Schema from which to get any `ui:xxx` options
  * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
- * @returns - An object containing all the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`
+ * @returns - An object containing all the `ui:xxx` options with the `ui:` stripped off along with the `globalOptions`
+ *            other than `required`
  */
 export default function getUiOptions<
   T = unknown,

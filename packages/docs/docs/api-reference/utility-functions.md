@@ -1351,6 +1351,8 @@ This will allow you to use `TEST_IDS.examplePropertyName` within your tests, whi
 
 Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
 Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
+A global `required` is left out: `ui:required` is a field's own, since validation reads it from the field's own uiSchema alone, so a form-wide one would mark fields required that validation doesn't require.
+`ui:definitions` and `ui:globalOptions` aren't options either.
 
 #### Parameters
 
@@ -1359,7 +1361,7 @@ Any `globalOptions` will always be returned, unless they are overridden by optio
 
 #### Returns
 
-- UIOptionsType&lt;T, S, F> An object containing all of the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`
+- UIOptionsType&lt;T, S, F> An object containing all of the `ui:xxx` options with the `ui:` stripped off along with the `globalOptions` other than `required`
 
 ### getUnionTypes()
 
