@@ -68,6 +68,31 @@ export default function pointerValidationTests(buildValidator: (rootSchema: RJSF
         t: 't',
       });
     });
+    it("checks an if below a nested $id against that resource's definitions", () => {
+      const rootSchema: RJSFSchema = {
+        $id: 'http://example.com/root.json',
+        definitions: { kind: { const: 'root' } },
+        type: 'object',
+        properties: {
+          n: {
+            $id: 'http://example.com/nested.json',
+            definitions: { kind: { const: 'nested' } },
+            type: 'object',
+            properties: { kind: { type: 'string' } },
+            if: { properties: { kind: { $ref: '#/definitions/kind' } }, required: ['kind'] },
+            then: { properties: { t: { type: 'string', default: 't' } } },
+            else: { properties: { e: { type: 'string', default: 'e' } } },
+          },
+        },
+      };
+      const schemaUtils = createSchemaUtils({ validator: buildValidator(rootSchema) }, rootSchema);
+      expect(schemaUtils.getDefaultFormState(rootSchema, { n: { kind: 'nested' } })).toEqual({
+        n: { kind: 'nested', t: 't' },
+      });
+      expect(schemaUtils.getDefaultFormState(rootSchema, { n: { kind: 'root' } })).toEqual({
+        n: { kind: 'root', e: 'e' },
+      });
+    });
     it('applies the dependency oneOf option matched on a property whose name ends in #', () => {
       const rootSchema: RJSFSchema = {
         type: 'object',
