@@ -66,7 +66,7 @@ import useUiState from '../../hooks/useUiState.ts';
 import { retrievedOptionsOf } from '../uiState.ts';
 import UiStateContext from '../UiStateContext.ts';
 import NamedFieldContext from './NamedFieldContext.ts';
-import type { NamedFieldFraming, NamedFieldPath } from './NamedFieldContext.ts';
+import type { NamedFieldPath } from './NamedFieldContext.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import ShownOptionContext from './ShownOptionContext.ts';
@@ -518,7 +518,7 @@ function SchemaFieldRender<
   const namedFieldAbove = use(NamedFieldContext);
   const namedHere = namedFieldAbove?.fieldPath === fieldPath ? namedFieldAbove : undefined;
   const namedAbove = namedHere !== undefined;
-  const framing: NamedFieldFraming = namedHere?.framing ?? 'own';
+  const framedAbove = namedHere?.framedAbove === true;
   const optionsRenderedAbove = namedHere?.optionsRendered === true;
   const shownOptionAbove = use(ShownOptionContext);
 
@@ -662,42 +662,17 @@ function SchemaFieldRender<
   const fieldShownOption = optionsRenderedAbove ? shownOptionAbove : shownOption;
 
   const rendersNamedField = fieldToRender?.rendersNamedField === true;
-  // `getDisplayLabel()` leaves the label to the field a `ui:field` names. `SchemaField` named that way is the default
-  // field, whose label is this field's template's, so it is labelled as though no field were named. A label left to
-  // any other named field is rendered by the `SchemaField` that field renders for its own data, if it renders one
-  const namesDefaultField = rendersNamedField && fieldToRender.FieldComponent === fields.SchemaField;
-  const resolvesField = fieldToRender !== undefined;
-  const labelling = useMemo(() => {
-    if (!resolvesField) {
-      return undefined;
-    }
-    const isLabelled = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-    if (!rendersNamedField) {
-      return { isLabelled, withholdsLabel: false };
-    }
-    const isLabelledUnnamed = schemaUtils.getDisplayLabel(
-      schema,
-      withoutNamedField<T, S, F>(uiSchema, globalUiOptions?.field),
-      globalUiOptions,
-    );
-    return namesDefaultField
-      ? { isLabelled: isLabelledUnnamed, withholdsLabel: false }
-      : { isLabelled, withholdsLabel: isLabelledUnnamed && !isLabelled };
-  }, [resolvesField, rendersNamedField, namesDefaultField, schemaUtils, schema, uiSchema, globalUiOptions]);
-  const withholdsLabel = labelling?.withholdsLabel === true;
   // The selected option, and whatever renders this field's data below a field that is not named here, renders as a
-  // field of its own; only the named field leaves out what this one renders
+  // field of its own; only the named field renders inside this one's template
   const ownNamedFieldPath = useMemo<NamedFieldPath | undefined>(
-    () => (namedAbove || rendersNamedField ? { fieldPath, framing: 'own', optionsRendered: false } : namedFieldAbove),
+    () =>
+      namedAbove || rendersNamedField ? { fieldPath, framedAbove: false, optionsRendered: false } : namedFieldAbove,
     [namedAbove, rendersNamedField, fieldPath, namedFieldAbove],
   );
   const optionsRendered = xxxOfOptions !== undefined;
   const namedFieldPath = useMemo<NamedFieldPath | undefined>(
-    () =>
-      rendersNamedField
-        ? { fieldPath, framing: withholdsLabel ? 'label' : 'none', optionsRendered }
-        : ownNamedFieldPath,
-    [rendersNamedField, fieldPath, withholdsLabel, optionsRendered, ownNamedFieldPath],
+    () => (rendersNamedField ? { fieldPath, framedAbove: true, optionsRendered } : ownNamedFieldPath),
+    [rendersNamedField, fieldPath, optionsRendered, ownNamedFieldPath],
   );
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
@@ -730,7 +705,7 @@ function SchemaFieldRender<
   // Stop $ref cycles: `retrieveSchema()` hands out a property whose $ref leads back round a recursion with this flag,
   // which is when the field is left unresolved above. The check must come after all hook calls to satisfy React's
   // rules of hooks.
-  if (!uiField || !fieldToRender || !labelling) {
+  if (!uiField || !fieldToRender) {
     return withUiState(
       <RawFormDataContext value={readsFormData ? CyclicSchemaField : undefined}>
         <CyclicSchemaField {...props} />
@@ -791,7 +766,15 @@ function SchemaFieldRender<
     logOnce(message);
   }
 
-  const { isLabelled } = labelling;
+  // `getDisplayLabel()` leaves the label to the field a `ui:field` names, which draws it if it wants one. `SchemaField`
+  // named that way is the default field, whose label is this field's template's, so it is labelled as though no field
+  // were named
+  const namesDefaultField = rendersNamedField && FieldComponent === fields.SchemaField;
+  const isLabelled = schemaUtils.getDisplayLabel(
+    schema,
+    namesDefaultField ? withoutNamedField<T, S, F>(uiSchema, globalUiOptions?.field) : uiSchema,
+    globalUiOptions,
+  );
   let displayLabel = isLabelled;
 
   let XxxOfField: Field<T, S, F> | undefined;
@@ -869,8 +852,7 @@ function SchemaFieldRender<
     XxxOfField && optionRendersFieldLabel<S>(schema, uiOptions.label, isLabelled)
       ? ''
       : uiOptions.description || props.schema.description || schema.description || '';
-  // The `SchemaField` that named this field renders its help whether or not it renders the label
-  const help = framing === 'label' ? undefined : uiOptions.help;
+  const { help } = uiOptions;
   const hidden = uiOptions.widget === 'hidden' || deprecatedHandling === 'hide';
 
   const hasErrors = hasVisibleErrors({ rawErrors: __errors, hideError });
@@ -973,7 +955,7 @@ function SchemaFieldRender<
   );
   return withUiState(
     <RawFormDataContext value={undefined}>
-      {framing === 'none' ? content : <FieldTemplate {...fieldProps}>{content}</FieldTemplate>}
+      {framedAbove ? content : <FieldTemplate {...fieldProps}>{content}</FieldTemplate>}
     </RawFormDataContext>,
   );
 }

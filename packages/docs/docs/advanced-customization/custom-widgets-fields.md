@@ -553,7 +553,7 @@ render(<Form schema={schema} validator={validator} fields={fields} />, document.
 ```
 
 A `$id` names the field the way [`ui:field`](../api-reference/uiSchema.md#uifield) does, after the field's own `ui:field` and `ui:globalOptions.field`: the field renders beside an `anyOf`/`oneOf` option selector, or in place of the options with `ui:fieldReplacesAnyOrOneOf`.
-A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names, inside the label, description, help and option selector the field's own `SchemaField` already rendered, so each renders once.
+A named field is applied once per data path, so one that renders `registry.fields.SchemaField` for its own data gets the default field for the schema there, whatever the `uiSchema` it passes names, as the bare field, inside the label, description, help, extra-key row and option selector the field's own `SchemaField` renders, so each renders once. A field named by `ui:field` draws its own label, as the label is left to it.
 
 ### Wrapping an existing field to customize it
 

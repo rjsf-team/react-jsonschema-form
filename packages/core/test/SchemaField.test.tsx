@@ -692,11 +692,15 @@ describe('SchemaField', () => {
         describedSchema,
         { 'ui:globalOptions': { field: 'SchemaField' }, val: { 'ui:help': 'Help' } },
       ],
-      ['a ui:field wrapping SchemaField', describedSchema, { val: { 'ui:field': 'wrapping', 'ui:help': 'Help' } }],
       [
         'a ui:options.field wrapping SchemaField',
         describedSchema,
         { val: { 'ui:options': { field: 'wrapping' }, 'ui:help': 'Help' } },
+      ],
+      [
+        'a ui:globalOptions.field wrapping SchemaField',
+        describedSchema,
+        { 'ui:globalOptions': { field: 'wrapping' }, val: { 'ui:help': 'Help' } },
       ],
       ['a $id wrapping SchemaField', describedIdSchema, { val: { 'ui:help': 'Help' } }],
     ])('renders one label, description and help for the field %s names', (_, schema, uiSchema) => {
@@ -705,6 +709,19 @@ describe('SchemaField', () => {
       expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
       expect(node.querySelectorAll('label[for="root_val"]')).toHaveLength(1);
       expect(node.querySelectorAll('#root_val__description')).toHaveLength(1);
+      expect(node.querySelectorAll('#root_val__help')).toHaveLength(1);
+    });
+
+    it('leaves the label to a field a ui:field names that wraps SchemaField, rendering its help once', () => {
+      const { node } = createFormComponent({
+        schema: describedSchema,
+        uiSchema: { val: { 'ui:field': 'wrapping', 'ui:help': 'Help' } },
+        fields: { wrapping: WrappingField },
+      });
+
+      expect(node.querySelectorAll('input#root_val')).toHaveLength(1);
+      expect(node.querySelector('label[for="root_val"]')).not.toBeInTheDocument();
+      expect(node.querySelector('#root_val__description')).not.toBeInTheDocument();
       expect(node.querySelectorAll('#root_val__help')).toHaveLength(1);
     });
 
@@ -718,6 +735,21 @@ describe('SchemaField', () => {
         "ui:options.field: 'SchemaField'",
         { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
         { val: { 'ui:options': { field: 'SchemaField' } } },
+      ],
+      [
+        "ui:globalOptions.field: 'SchemaField'",
+        { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
+        { 'ui:globalOptions': { field: 'SchemaField' } },
+      ],
+      [
+        'a ui:field wrapping SchemaField',
+        { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
+        { val: { 'ui:field': 'wrapping' } },
+      ],
+      [
+        'a ui:options.field wrapping SchemaField',
+        { type: 'object', properties: { val: { type: 'string', anyOf: [{ minLength: 2 }, { maxLength: 5 }] } } },
+        { val: { 'ui:options': { field: 'wrapping' } } },
       ],
       [
         'a $id wrapping SchemaField',
@@ -760,14 +792,34 @@ describe('SchemaField', () => {
       expect(onChange).toHaveBeenLastCalledWith(expect.objectContaining({ formData: { b: 3 } }), 'root_b');
     });
 
-    it.each<[string, UiSchema]>([
-      ["ui:field: 'SchemaField'", { additionalProperties: { 'ui:field': 'SchemaField' } }],
-      ["ui:options.field: 'SchemaField'", { additionalProperties: { 'ui:options': { field: 'SchemaField' } } }],
-    ])('renders one key input and one remove button for an extra key the field %s names', (_, uiSchema) => {
+    it.each<[string, RJSFSchema, UiSchema]>([
+      [
+        "ui:field: 'SchemaField'",
+        { type: 'object', additionalProperties: { type: 'string' } },
+        { additionalProperties: { 'ui:field': 'SchemaField' } },
+      ],
+      [
+        "ui:options.field: 'SchemaField'",
+        { type: 'object', additionalProperties: { type: 'string' } },
+        { additionalProperties: { 'ui:options': { field: 'SchemaField' } } },
+      ],
+      [
+        'a ui:field wrapping SchemaField',
+        { type: 'object', additionalProperties: { type: 'string' } },
+        { additionalProperties: { 'ui:field': 'wrapping' } },
+      ],
+      [
+        'a ui:options.field wrapping SchemaField',
+        { type: 'object', additionalProperties: { type: 'string' } },
+        { additionalProperties: { 'ui:options': { field: 'wrapping' } } },
+      ],
+      ['a $id wrapping SchemaField', { type: 'object', additionalProperties: { $id: 'wrapping', type: 'string' } }, {}],
+    ])('renders one key input and one remove button for an extra key the field %s names', (_, schema, uiSchema) => {
       const { node } = createFormComponent({
-        schema: { type: 'object', additionalProperties: { type: 'string' } },
+        schema,
         uiSchema,
         formData: { foo: 'x' },
+        fields: { wrapping: WrappingField },
       });
 
       expect(node.querySelectorAll('input')).toHaveLength(2);
