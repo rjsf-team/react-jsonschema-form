@@ -57,7 +57,15 @@ import buildPlan, {
   tupleSeeds,
   withoutKeys,
 } from './graph/mergePlan.ts';
-import type { Keywords, MergePlan, OptionChoice, PlanEntry, PlanPolicy, Seed } from './graph/mergePlan.ts';
+import type {
+  Keywords,
+  MergePlan,
+  OptionChoice,
+  OptionPolicy,
+  PlanEntry,
+  PlanPolicy,
+  Seed,
+} from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
 import type { NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { collapses, restartSeeds } from './graph/recursionRule.ts';
@@ -385,8 +393,9 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
   conditions: boolean,
   selections: ReadonlyMap<NodeId, number>,
   cutRecursion = false,
+  optionPolicy?: OptionPolicy,
 ): PlanPolicy<S> {
-  let key = `defaults|${allOf}|${conditions}|${cutRecursion}`;
+  let key = `defaults|${allOf}|${conditions}|${cutRecursion}|${optionPolicy?.allOf}|${optionPolicy?.conditions}`;
   for (const [provider, index] of selections) {
     key += `|${provider}:${index}`;
   }
@@ -399,6 +408,7 @@ function policyFor<S extends StrictRJSFSchema, F extends FormContextType>(
     // An option the fold selects keeps the ref path of the node offering it: restarting it, as render does, would
     // restart it at every level of a recursion through an option chosen without data, which nothing then bounds
     optionsInheritRefPath: true,
+    optionPolicy,
   }));
 }
 
@@ -442,10 +452,9 @@ function stubsFor<S extends StrictRJSFSchema, F extends FormContextType>(
 }
 
 /** A field's plan, with the `allOf` and `if` policies it was planned with */
-interface PlannedField<S extends StrictRJSFSchema> {
+interface PlannedField<S extends StrictRJSFSchema> extends OptionPolicy {
   readonly plan: MergePlan<S>;
-  readonly allOf: boolean | 'if';
-  readonly conditions: boolean;
+  readonly optionPolicy?: OptionPolicy;
 }
 
 /** The view of a field planned with `plan` */
@@ -503,6 +512,42 @@ function ownView<S extends StrictRJSFSchema>(field: DefaultsField<S>, schema: S,
   };
 }
 
+/** What a field is planned from, besides its policies */
+interface PlanRequest<S extends StrictRJSFSchema> {
+  readonly graph: SchemaGraph<S>;
+  readonly seeds: readonly Seed[];
+  readonly data: unknown;
+  readonly depData: unknown;
+  readonly selections: ReadonlyMap<NodeId, number>;
+  readonly cutRecursion: boolean;
+}
+
+function planWith<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  { graph, seeds, data, depData, selections, cutRecursion }: PlanRequest<S>,
+  { allOf, conditions }: OptionPolicy,
+  optionPolicy?: OptionPolicy,
+): PlannedField<S> {
+  const policy = policyFor(context.validator, graph, allOf, conditions, selections, cutRecursion, optionPolicy);
+  return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions, optionPolicy };
+}
+
+/** Plans a field that is not read whole, under the policies its behavior and its own keywords call for */
+function planUnretrieved<S extends StrictRJSFSchema, F extends FormContextType>(
+  context: SchemaContext<S, F>,
+  request: PlanRequest<S>,
+): PlannedField<S> {
+  const behavior = context.defaultFormStateBehavior;
+  const populate = behavior?.allOf === 'populateDefaults';
+  if (behavior?.emptyObjectFields !== 'skipEmptyDefaults') {
+    return planWith(context, request, { allOf: populate || 'if', conditions: true });
+  }
+  const withoutConditions = planWith(context, request, { allOf: populate, conditions: false });
+  return populate && ownKeywords(withoutConditions.plan).has(ALL_OF_KEY)
+    ? planWith(context, request, { allOf: true, conditions: true })
+    : withoutConditions;
+}
+
 /** Plans `field` for `data` and the dependency data `depData` with the options selected so far, and applies the
  * recursion rule to the plan. A collapsed field that is not within an expansion yet is expanded once, restarting
  * its seeds; one within an expansion keeps all but its recursive edges.
@@ -518,37 +563,21 @@ function settle<S extends StrictRJSFSchema, F extends FormContextType>(
   data: unknown,
   depData: unknown,
   options: OptionState = NO_OPTIONS,
-  inherited?: Pick<PlannedField<S>, 'allOf' | 'conditions'>,
+  inherited?: Pick<PlannedField<S>, 'allOf' | 'conditions' | 'optionPolicy'>,
 ): DefaultsView<S> {
   const { graph } = field;
   if (field.seeds.length === 0) {
     return ownView(field, field.fallback ?? schemaFrom(graph.rawRoot, {}), data);
   }
-  const behavior = context.defaultFormStateBehavior;
-  const populate = behavior?.allOf === 'populateDefaults';
-  const planWith = (
-    seeds: readonly Seed[],
-    allOf: boolean | 'if',
-    conditions: boolean,
-    cutRecursion: boolean,
-  ): PlannedField<S> => {
-    const policy = policyFor(context.validator, graph, allOf, conditions, options.selections, cutRecursion);
-    return { plan: buildPlan<S, F>({ context, graph, seeds, data, depData, policy }), allOf, conditions };
-  };
   const planFor = (seeds: readonly Seed[], cutRecursion = false): PlannedField<S> => {
+    const fieldData = { graph, seeds, data, depData, selections: options.selections, cutRecursion };
     if (inherited) {
-      return planWith(seeds, inherited.allOf, inherited.conditions, cutRecursion);
+      return planWith(context, fieldData, inherited, inherited.optionPolicy);
     }
     if (field.retrieves) {
-      return planWith(seeds, true, true, cutRecursion);
+      return planWith(context, fieldData, { allOf: true, conditions: true });
     }
-    if (behavior?.emptyObjectFields !== 'skipEmptyDefaults') {
-      return planWith(seeds, populate || 'if', true, cutRecursion);
-    }
-    const withoutConditions = planWith(seeds, populate, false, cutRecursion);
-    return populate && ownKeywords(withoutConditions.plan).has(ALL_OF_KEY)
-      ? planWith(seeds, true, true, cutRecursion)
-      : withoutConditions;
+    return planUnretrieved(context, fieldData);
   };
   const planned = planFor(field.seeds);
   if (!collapses(graph, planned.plan, { edge: field.edge, view: 'defaults' })) {
@@ -932,9 +961,25 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const optionNode = choice.options[index];
   const selections = new Map(view.options.selections).set(choice.provider, index);
+  // A field read whole merges its own `allOf` and `if`, but its option is read as the same option under a property is
+  const optionPolicy = field.retrieves
+    ? planUnretrieved(context, {
+        graph,
+        seeds: field.seeds,
+        data: view.data,
+        depData: view.depData,
+        selections: NO_OPTIONS.selections,
+        cutRecursion: false,
+      })
+    : undefined;
+  const inherited = {
+    allOf: view.allOf,
+    conditions: view.conditions,
+    optionPolicy: optionPolicy && { allOf: optionPolicy.allOf, conditions: optionPolicy.conditions },
+  };
   // The rule applies to the field with its option merged, since a recursion through an option enters its `$ref` only
   // there: the option collapses where the same recursion written as a property does, whatever the data holds below it
-  const merged = settle(context, field, view.data, view.depData, { selections, chosen }, view);
+  const merged = settle(context, field, view.data, view.depData, { selections, chosen }, inherited);
   if (rendersOwnField) {
     return foldView<T, S, F>(context, merged, branchProps);
   }
@@ -948,7 +993,14 @@ function foldOption<T, S extends StrictRJSFSchema, F extends FormContextType>(
       .map(({ refPath }) => ({ node: optionNode, refPath })),
     data: view.data,
     depData: view.depData,
-    policy: policyFor(context.validator, graph, view.allOf, view.conditions, NO_OPTIONS.selections, merged.collapsed),
+    policy: policyFor(
+      context.validator,
+      graph,
+      inherited.optionPolicy?.allOf ?? view.allOf,
+      inherited.optionPolicy?.conditions ?? view.conditions,
+      NO_OPTIONS.selections,
+      merged.collapsed,
+    ),
   });
   const rendered = getRenderedOptionSchema<S>(remaining, optionAlone.schema);
   return foldView<T, S, F>(

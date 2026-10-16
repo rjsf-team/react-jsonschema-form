@@ -705,6 +705,32 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     });
   });
 
+  describe('an option chosen at the root', () => {
+    const withOption = (option: RJSFSchema, beside: RJSFSchema = {}) => ({
+      root: { type: 'object', ...beside, oneOf: [option] } satisfies RJSFSchema,
+      property: {
+        type: 'object',
+        properties: { p: { type: 'object', ...beside, oneOf: [option] } },
+      } satisfies RJSFSchema,
+    });
+    it("follows allOf: 'skipDefaults' for its allOf as under a property, the root's own allOf merged", () => {
+      const option: RJSFSchema = {
+        allOf: [{ properties: { a: { default: 'A' } } }, { properties: { b: { default: 'B' } } }],
+      };
+      const { root, property } = withOption(option);
+      expect(defaultsOf(root, {})).toEqual({});
+      expect(defaultsOf(property, {})).toEqual({});
+      const own = withOption(option, { allOf: [{ properties: { r: { type: 'string', default: 'R' } } }] });
+      expect(defaultsOf(own.root, {})).toEqual({ r: 'R' });
+    });
+    it("follows emptyObjectFields: 'skipEmptyDefaults' for its if as under a property", () => {
+      const { root, property } = withOption({ if: true, then: { properties: { t: { default: 'T' } } } });
+      const behavior: DefaultFormStateBehavior = { emptyObjectFields: 'skipEmptyDefaults' };
+      expect(defaultsOf(root, {}, behavior)).toEqual({});
+      expect(defaultsOf(property, {}, behavior)).toEqual({});
+    });
+  });
+
   it('resolves a $ref to an $anchor, and one under a nested $id with a path segment against that $id', () => {
     const target: RJSFSchema = { type: 'object', properties: { v: { type: 'string', default: 'v' } } };
     const anchored = { ...target, $anchor: 'nodeA' };

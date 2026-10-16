@@ -129,11 +129,22 @@ export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
    * path and its recursion collapses like any other.
    */
   readonly optionsInheritRefPath?: boolean;
+  /** The `allOf` and `if` policies a chosen option is expanded under, where they are not the field's own: a field the
+   * defaults read whole, as `retrieveSchema()` resolves it, merges its own `allOf` and `if` but not those of an option
+   * it is merged with, which `allOf: 'if'` merges only where the field's own keywords hold an `if`
+   */
+  readonly optionPolicy?: OptionPolicy;
 }
 
 /** A policy with its defaults filled in */
-type ResolvedPolicy<S extends StrictRJSFSchema> = Required<Omit<PlanPolicy<S>, 'selectOption'>> &
-  Pick<PlanPolicy<S>, 'selectOption'>;
+/** The `allOf` and `if` policies of `PlanPolicy.optionPolicy` */
+export interface OptionPolicy {
+  readonly allOf: boolean | 'if';
+  readonly conditions: boolean;
+}
+
+type ResolvedPolicy<S extends StrictRJSFSchema> = Required<Omit<PlanPolicy<S>, 'selectOption' | 'optionPolicy'>> &
+  Pick<PlanPolicy<S>, 'selectOption' | 'optionPolicy'>;
 
 /** A field's merge plan: its ordered entries, their set, and the merged schema with its children's seeds */
 export interface MergePlan<S extends StrictRJSFSchema = RJSFSchema> {
@@ -450,6 +461,9 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
   private readonly depData: unknown;
   private readonly policy: ResolvedPolicy<S>;
   private mergeAllOf: boolean;
+  private conditions: boolean;
+  /** Whether the keywords of a seed hold an `if`, which `allOf: 'if'` merges the `allOf`s for */
+  private seedHasCondition = false;
   private readsData = false;
   /** How many `then`, `else` and `dependencies` branches are being expanded: a branch has its `allOf` merged whatever
    * the policy, as `retrieveSchema()` retrieves a branch whole before merging it
@@ -469,6 +483,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     this.depData = depData;
     this.policy = policy;
     this.mergeAllOf = policy.allOf === true;
+    this.conditions = policy.conditions;
   }
 
   build(seeds: readonly Seed[]): MergePlan<S> {
@@ -533,8 +548,13 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       return { schema: booleanSchema(node, this.graph.rawRoot), chains: [] };
     }
     const keywords = this.flatten(asTarget(this.graph, node), refPath);
-    if (top && this.policy.allOf === 'if' && (keywords.has(IF_KEY) || declaresCondition(this.graph, id))) {
-      this.mergeAllOf = true;
+    if (
+      top &&
+      (this.policy.allOf === 'if' || this.policy.optionPolicy?.allOf === 'if') &&
+      (keywords.has(IF_KEY) || declaresCondition(this.graph, id))
+    ) {
+      this.seedHasCondition = true;
+      this.mergeAllOf ||= this.policy.allOf === 'if';
     }
     const schema = keywordSchema(node.raw, keywords);
     const ref: unknown = Reflect.get(node.raw, REF_KEY);
@@ -548,7 +568,7 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
       part = this.applyOption(part, ONE_OF_KEY, keywords.get(ONE_OF_KEY), dependencies);
     }
     part = this.applyDependencies(part, keywords.get(DEPENDENCIES_KEY), keywords.get(PROPERTIES_KEY));
-    if (this.policy.conditions) {
+    if (this.conditions) {
       part = this.applyCondition(part, keywords, dependencyKey);
     }
     part = this.applyAllOf(part, keywords.get(ALL_OF_KEY), dependencyKey);
@@ -796,8 +816,24 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     const selected = chosen !== undefined && chosen >= 0 && chosen < options.length ? chosen : undefined;
     this.choices.push({ ...request, selected });
     const optionRefPath = this.policy.optionsInheritRefPath ? provider.refPath : [];
-    const option = selected === undefined ? undefined : this.expand(options[selected], optionRefPath, 'option', false);
+    const option = selected === undefined ? undefined : this.expandOption(options[selected], optionRefPath);
     return option === undefined ? part : mergeBranch(part, option);
+  }
+
+  private expandOption(id: NodeId, refPath: RefPath): Part<S> | undefined {
+    const { optionPolicy } = this.policy;
+    if (optionPolicy === undefined) {
+      return this.expand(id, refPath, 'option', false);
+    }
+    const { mergeAllOf, conditions } = this;
+    this.mergeAllOf = optionPolicy.allOf === true || (optionPolicy.allOf === 'if' && this.seedHasCondition);
+    this.conditions = optionPolicy.conditions;
+    try {
+      return this.expand(id, refPath, 'option', false);
+    } finally {
+      this.mergeAllOf = mergeAllOf;
+      this.conditions = conditions;
+    }
   }
 }
 
@@ -848,6 +884,7 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     cutRecursion: policy?.cutRecursion ?? false,
     selectOption: policy?.selectOption,
     optionsInheritRefPath: policy?.optionsInheritRefPath ?? false,
+    optionPolicy: policy?.optionPolicy,
   };
   const keys = [
     context.validator,
@@ -859,6 +896,8 @@ export default function buildPlan<S extends StrictRJSFSchema = RJSFSchema, F ext
     resolved.cutRecursion,
     resolved.selectOption,
     resolved.optionsInheritRefPath,
+    resolved.optionPolicy?.allOf,
+    resolved.optionPolicy?.conditions,
   ];
   const memoized = plans.peekAny(keys, [data, depData]);
   if (isPlanOf(memoized, graph)) {
