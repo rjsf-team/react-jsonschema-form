@@ -394,10 +394,10 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
     return handOut(withoutKeys(seedNode.raw, REF_KEY), field);
   }
   const merged = withoutKeys(plan.schema, RJSF_REF_CYCLE_KEY);
-  // An option merged in is the one the data matches, so the choice it was is not offered again, and an empty list
-  // beside `dependencies` offers no choice to merge one from
-  for (const { keyword, options, dependencies, selected } of plan.choices) {
-    if (selected !== undefined || (dependencies && options.length === 0)) {
+  // An option merged in is the one the data matches, so the choice it was is not offered again, unless the option
+  // declares options of its own, and an empty list beside `dependencies` offers no choice to merge one from
+  for (const { keyword, list, options, dependencies, selected } of plan.choices) {
+    if (list === merged[keyword] && (selected !== undefined || (dependencies && options.length === 0))) {
       Reflect.deleteProperty(merged, keyword);
     }
   }

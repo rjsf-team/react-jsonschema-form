@@ -5046,6 +5046,32 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieved).not.toHaveProperty('anyOf');
         expect(retrieved.required).toEqual(['b']);
       });
+      it.each(['anyOf', 'oneOf'] as const)(
+        'keeps the %s the option merged beside dependencies declares of its own',
+        (keyword) => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: { a: { type: 'string' } },
+            dependencies: { a: ['a'] },
+            [keyword]: [
+              {
+                properties: { k: { const: 'one' } },
+                [keyword]: [
+                  { properties: { p: { type: 'string' } }, required: ['p'] },
+                  { properties: { q: { type: 'number' } }, required: ['q'] },
+                ],
+              },
+              { properties: { k: { const: 'two' } } },
+            ],
+          };
+          const retrieved = retrieveSchema({ validator: testValidator }, schema, schema, { k: 'one', q: 2 });
+          expect(retrieved.properties).toHaveProperty('k');
+          expect(retrieved[keyword]?.map((option) => (isObject(option) ? option.required : option))).toEqual([
+            ['p'],
+            ['q'],
+          ]);
+        },
+      );
       it.each(['https://json-schema.org/draft/2019-09/schema', 'https://json-schema.org/draft/2020-12/schema'])(
         "under %s, reads a field's own $ref with keywords beside it as the allOf of both, as where another $ref reaches it",
         ($schema) => {
