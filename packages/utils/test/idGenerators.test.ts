@@ -15,7 +15,6 @@ import {
   optionId,
   selectedOptionDescriptionId,
   titleId,
-  triggerValueId,
 } from '../src/index.ts';
 
 const SIMPLE_ID = 'simpleID';
@@ -38,9 +37,6 @@ describe('idGenerators', () => {
   });
   it('field label id is generated for simple id', () => {
     expect(fieldLabelId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__label`);
-  });
-  it('trigger value id is generated for simple id', () => {
-    expect(triggerValueId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__value`);
   });
   it('date element id is generated for simple id', () => {
     expect(dateElementId(SIMPLE_ID, 'year')).toEqual(`${SIMPLE_ID}_year`);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { RJSFSchema } from '@rjsf/utils';
-import { TranslatableString } from '@rjsf/utils';
+import { englishStringTranslator, TranslatableString } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
@@ -685,19 +685,42 @@ describe('SelectWidget whose combobox the field label names', () => {
   }
 
   // A combobox takes no name from the item it displays, which is its value, so it is neither named nor described by it
+  // `SchemaField` hands an untitled field its property name as its label, which the template's label shows
   test('is named by the label showing the property name of an untitled field, holding its value', () => {
-    const combobox = renderLabelled({ label: '', name: 'color' }, 'color');
+    const combobox = renderLabelled({ label: 'color', name: 'color' }, 'color');
 
     expect(combobox).toHaveAccessibleName('color');
     expect(combobox).not.toHaveAccessibleDescription(expect.stringContaining('Red'));
     expect(combobox).toHaveTextContent('Red');
   });
 
-  test('is named by the label showing only the required mark, holding its value', () => {
-    const combobox = renderLabelled({ label: '', name: '', required: true }, '*');
+  // The template draws no label holding only a required field's `*`, which would name it "star"
+  test('names a required select with no label text by the select prompt, holding its value', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({
+          id: 'root_color',
+          value: 'red',
+          label: '',
+          required: true,
+          options: { enumOptions },
+        })}
+      />,
+    );
+    const combobox = screen.getByRole('combobox', { expanded: false });
 
-    expect(combobox).toHaveAccessibleName('*');
+    expect(combobox).toHaveAccessibleName(englishStringTranslator(TranslatableString.SelectPlaceholder));
     expect(combobox).toHaveTextContent('Red');
+  });
+
+  test('names a select with no label text by its placeholder before the select prompt', () => {
+    render(
+      <SelectWidget
+        {...makeWidgetMockProps({ id: 'root_color', label: '', placeholder: 'Pick one', options: { enumOptions } })}
+      />,
+    );
+
+    expect(screen.getByRole('combobox', { expanded: false })).toHaveAccessibleName('Pick one');
   });
 });
 

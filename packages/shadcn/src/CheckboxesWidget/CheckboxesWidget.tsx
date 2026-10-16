@@ -1,5 +1,6 @@
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
+  enumOptionsAutofocusIndex,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
@@ -52,6 +53,7 @@ export default function CheckboxesWidget<
     'group',
   );
 
+  const autofocusIndex = enumOptionsAutofocusIndex<S>(enumOptions, enumDisabled, autofocus);
   return (
     <div
       id={id}
@@ -80,7 +82,7 @@ export default function CheckboxesWidget<
                 className={checkboxClassName}
                 checked={checked}
                 value={domValues[index]}
-                autoFocus={autofocus && index === 0}
+                autoFocus={index === autofocusIndex}
                 onBlur={blurHandlers[index]}
                 onFocus={focusHandlers[index]}
                 {...optionAttributes}

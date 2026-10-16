@@ -123,7 +123,6 @@ import {
   optionLabelId,
   selectedOptionDescriptionId,
   titleId,
-  triggerValueId,
 } from './idGenerators.ts';
 import isComponentType from './isComponentType.ts';
 import isConstant from './isConstant.ts';
@@ -414,7 +413,6 @@ export {
   fieldPathToName,
   toPath,
   propertyToPath,
-  triggerValueId,
   uiBooleanOption,
   unsetByPath,
   unwrapErrorHandler,

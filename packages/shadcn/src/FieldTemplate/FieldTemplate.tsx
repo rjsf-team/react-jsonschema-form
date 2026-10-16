@@ -77,7 +77,8 @@ export default function FieldTemplate<
       registry={registry}
     >
       <div className='flex flex-col gap-2'>
-        {displayLabel && !leavesPartsToCheckbox && (
+        {/* No label without text, which would hold only a required field's `*` and name the control "star" */}
+        {displayLabel && !!label && !leavesPartsToCheckbox && (
           <label
             className={cn(
               'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
