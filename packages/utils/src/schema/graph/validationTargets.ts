@@ -18,14 +18,8 @@ import hashForSchema from '../../hashForSchema.ts';
 import isObject from '../../isObject.ts';
 import type { GenericObjectType, RJSFSchema, StrictRJSFSchema } from '../../types.ts';
 import { booleanSchema, schemaFrom } from './mergePlan.ts';
-import { stringKeyword } from './parseSchemaGraph.ts';
+import { isRootPointer, stringKeyword } from './parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph } from './parseSchemaGraph.ts';
-
-/** A pointer token starting with a `~` that JSON pointer escaping cannot produce, which is how the graph places the
- * nodes that have no location in the root: those parsed from a schema a caller built, and the `allOf` it reads a
- * chained `$ref` as
- */
-const NOT_IN_ROOT = /(^|\/)~[^01]/;
 
 /** The suffix `withVariantId()` adds to an `$id`, matched at the end so deriving a variant of a variant replaces it
  * rather than stacking another one on
@@ -80,7 +74,7 @@ function refTo(pointer: string): string {
  */
 export function pointerTo<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S | undefined {
   const node = graph.node(id);
-  if (node.kind !== 'schema' || NOT_IN_ROOT.test(node.pointer)) {
+  if (node.kind !== 'schema' || !isRootPointer(node.pointer)) {
     return undefined;
   }
   return schemaFrom(graph.rawRoot, { [REF_KEY]: refTo(node.pointer) });
@@ -349,7 +343,7 @@ export function validationTargets<S extends StrictRJSFSchema = RJSFSchema>(graph
   const nodes: ObjectNode<S>[] = [];
   for (let id = 0; id < graph.size; id += 1) {
     const node = graph.node(id);
-    if (node.kind === 'schema' && !NOT_IN_ROOT.test(node.pointer)) {
+    if (node.kind === 'schema' && isRootPointer(node.pointer)) {
       nodes.push(node);
     }
   }
