@@ -136,14 +136,13 @@ export function closestOption<
   if (simpleMatch !== undefined) {
     return simpleMatch;
   }
-  const resolvedOptions = options.map((option) =>
-    isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : undefined,
-  );
-
   // Reduce the array of options down to a list of the indexes that are considered matching options
-  const allValidIndexes = optionNodes.flatMap((option, index) =>
-    formData !== undefined && optionMatches<S, F>(context, formData, option, relax, discriminatorField) ? [index] : [],
-  );
+  const allValidIndexes =
+    formData === undefined
+      ? []
+      : optionNodes.flatMap((option, index) =>
+          optionMatches<S, F>(context, formData, option, relax, discriminatorField) ? [index] : [],
+        );
 
   // There is only one valid index, so return it!
   if (allValidIndexes.length === 1) {
@@ -151,8 +150,11 @@ export function closestOption<
   }
   if (!allValidIndexes.length) {
     // No indexes were valid, so we'll score all the options, add all the indexes
-    allValidIndexes.push(...resolvedOptions.keys());
+    allValidIndexes.push(...options.keys());
   }
+  const resolvedOptions = options.map((option) =>
+    isSchemaObject<S>(option) ? resolveOwnRef<S>(option, rootSchema) : undefined,
+  );
   interface BestType {
     bestIndex: number;
     bestScore: number;
