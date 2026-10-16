@@ -285,12 +285,11 @@ export function dependencyOption<S extends StrictRJSFSchema, F extends FormConte
  */
 const ownRefs = new KeyedMemo<object>();
 
-/** Returns a schema's own `$ref` resolved, the definition overridden by the keywords beside the reference and marked
- * with it, as a schema an option's `$ref` stands for is scored and validated. Under draft 2019-09 and 2020-12, where
- * those keywords do more than annotate, it is instead the `allOf` of them and of the definition, as the form reads it.
- * The reference is resolved through the schema graph, from where the schema sits in the root, as the form resolves it.
- * Only that reference is followed: the validator follows those below it against the root schema. The result is made once per schema and shared, so that a
- * memo keyed on it hits across calls, and a caller copies it rather than changing it.
+/** Returns a schema's own `$ref` resolved and marked with it, as a schema an option's `$ref` stands for is scored and
+ * validated: the definition overridden by the keywords beside the reference where those only annotate, and otherwise
+ * the `allOf` of them and of the definition, as the form reads it. The reference is resolved through the schema graph,
+ * from where the schema sits in the root, as the form resolves it. Only that reference is followed: the validator
+ * follows those below it against the root schema. The result is made once per schema and shared, so that a memo keyed on it hits across calls, and a caller copies it rather than changing it.
  *
  * @param schema - The schema whose own `$ref` is to be resolved
  * @param rootSchema - The root schema the reference names a definition of
@@ -522,47 +521,8 @@ function normalizeBooleanSchema<S extends StrictRJSFSchema = RJSFSchema>(schema:
   return (schema ? {} : { not: {} }) as S;
 }
 
-/** The branch keywords that stood beside the `$ref` a schema was resolved from, on a schema the branch resolution below
- * resolved. A branch beside the `$ref` is not part of the definition, so the reference is not on the path of what the
- * branch declares: a `$ref` to the same definition in there is a second use of it, not a way back into it. The merge
- * plan knows this from where each entry was entered; this resolution, which `schemaParser()` runs on until it reads
- * the plan, carries it on the copy.
- */
-const SIBLING_BRANCHES = Symbol('__rjsf_sibling_branches');
-
-const BRANCH_KEYWORDS: string[] = [ALL_OF_KEY, DEPENDENCIES_KEY, ELSE_KEY, THEN_KEY];
-
-/** Resolves a schema's own `$ref`, recording which branch keywords stood beside it
- *
- * @param schema - The schema holding the `$ref`
- * @param rootSchema - The root schema the reference names a definition of
- * @returns - The schema with its own reference resolved
- */
-function resolvedFrom<S extends StrictRJSFSchema>(schema: S, rootSchema: S): S {
-  const resolved = resolveOwnRef<S>(schema, rootSchema);
-  const siblingBranches = BRANCH_KEYWORDS.filter((keyword) => Reflect.get(schema, keyword) !== undefined);
-  return siblingBranches.length > 0 ? { ...resolved, [SIBLING_BRANCHES]: siblingBranches } : resolved;
-}
-
-/** Returns the references a branch `keyword` of `schema` is resolved with: `enteredRefs` less the `$ref` `schema` was
- * resolved from when the keyword stood beside it
- *
- * @param schema - The schema whose branch is resolved
- * @param enteredRefs - The references already resolved into `schema`
- * @param keyword - The branch keyword
- * @returns - The references the branch is resolved with
- */
-function branchRefs(schema: object, enteredRefs: readonly string[], keyword: string): readonly string[] {
-  const sourceRef: unknown = Reflect.get(schema, RJSF_REF_KEY);
-  const siblingBranches: unknown = Reflect.get(schema, SIBLING_BRANCHES);
-  return Array.isArray(siblingBranches) && siblingBranches.includes(keyword)
-    ? enteredRefs.filter((ref) => ref !== sourceRef)
-    : enteredRefs;
-}
-
 /** Merges a resolved `branch` of a `schema` into it, keeping the `RJSF_REF_KEY` that says where `schema` itself was
- * resolved from, and the branch keywords beside that reference, which `mergeSchemas()` would otherwise replace with the
- * branch's
+ * resolved from, which `mergeSchemas()` would otherwise replace with the branch's
  *
  * @param schema - The schema the branch belongs to
  * @param branch - The resolved branch to merge into it
@@ -573,12 +533,6 @@ function mergeBranch<S extends StrictRJSFSchema = RJSFSchema>(schema: S, branch:
   const ownRef: unknown = Reflect.get(schema, RJSF_REF_KEY);
   if (ownRef !== undefined) {
     Reflect.set(merged, RJSF_REF_KEY, ownRef);
-    const siblingBranches: unknown = Reflect.get(schema, SIBLING_BRANCHES);
-    if (siblingBranches === undefined) {
-      Reflect.deleteProperty(merged, SIBLING_BRANCHES);
-    } else {
-      Reflect.set(merged, SIBLING_BRANCHES, siblingBranches);
-    }
   }
   return merged;
 }
@@ -615,24 +569,12 @@ export function resolveCondition<
   const conditionValue = context.validator.isValid(expression as S, formData ?? {}, rootSchema);
   const schemaLessConditional = resolvedSchemaLessConditional as S;
   let resolvedSchemas = [schemaLessConditional];
-  const branches: [string, unknown][] = expandAllBranches
-    ? [
-        [THEN_KEY, then],
-        [ELSE_KEY, otherwise],
-      ]
-    : [conditionValue ? [THEN_KEY, then] : [ELSE_KEY, otherwise]];
+  const branches: unknown[] = expandAllBranches ? [then, otherwise] : [conditionValue ? then : otherwise];
   // A boolean branch merges as the schema it reads as, where expanding every branch leaves it out
-  const schemas = branches.flatMap(([keyword, branch]) => {
+  const schemas = branches.flatMap((branch) => {
     const branchSchema = typeof branch === 'boolean' && !expandAllBranches ? normalizeBooleanSchema<S>(branch) : branch;
     return isSchemaObject<S>(branchSchema)
-      ? retrieveSchemaInternal<T, S, F>(
-          context,
-          branchSchema,
-          rootSchema,
-          formData,
-          expandAllBranches,
-          branchRefs(schema, enteredRefs, keyword),
-        )
+      ? retrieveSchemaInternal<T, S, F>(context, branchSchema, rootSchema, formData, expandAllBranches, enteredRefs)
       : [];
   });
   if (schemas.length) {
@@ -870,7 +812,7 @@ export function resolveSchema<
         rootSchema,
         formData,
         expandAllBranches,
-        branchRefs(schema, enteredRefs, ALL_OF_KEY),
+        enteredRefs,
       ),
     );
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
@@ -916,7 +858,7 @@ export function resolveReference<
   }
   return retrieveSchemaInternal<T, S, F>(
     context,
-    resolvedFrom<S>(schema, rootSchema),
+    resolveOwnRef<S>(schema, rootSchema),
     rootSchema,
     formData,
     expandAllBranches,
@@ -2083,14 +2025,13 @@ export function withDependentSchema<
   enteredRefs: readonly string[],
   formData?: T,
 ): S[] {
-  const dependencyRefs = branchRefs(schema, enteredRefs, DEPENDENCIES_KEY);
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
     context,
     dependencyValue,
     rootSchema,
     formData,
     expandAllBranches,
-    dependencyRefs,
+    enteredRefs,
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
@@ -2104,7 +2045,7 @@ export function withDependentSchema<
       if (!isSchemaObject<S>(subschema) || !(REF_KEY in subschema)) {
         return [subschema];
       }
-      return resolveReference<T, S, F>(context, subschema, rootSchema, expandAllBranches, dependencyRefs, formData);
+      return resolveReference<T, S, F>(context, subschema, rootSchema, expandAllBranches, enteredRefs, formData);
     });
     const allPermutations = getAllPermutationsOfXxxOf(resolvedOneOfs);
     return allPermutations.flatMap((resolvedOneOf) =>
@@ -2186,7 +2127,7 @@ export function withExactlyOneSubschema<
       rootSchema,
       formData,
       expandAllBranches,
-      branchRefs(schema, enteredRefs, DEPENDENCIES_KEY),
+      enteredRefs,
     );
     return schemas.map((resolvedSubschema) => mergeBranch<S>(schema, resolvedSubschema));
   });

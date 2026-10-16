@@ -106,8 +106,8 @@ export interface OptionRequest<S extends StrictRJSFSchema = RJSFSchema> extends 
 
 /** The policies a view of the plan sets, which are not part of the recursion rule */
 export interface PlanPolicy<S extends StrictRJSFSchema = RJSFSchema> {
-  /** Which `allOf`s are merged: all of them (`true`, as the form renders them); none but the seeds' conjunction
-   * (`false`); or, for the defaults view, those of a field whose seed resolves to a schema with an `if` (`'if'`), whose
+  /** Which `allOf`s are merged: all of them (`true`, as the form renders them); none but the conjunctions keywords
+   * beside a `$ref` read as (`false`); or, for the defaults view, those of a field whose seed resolves to a schema with an `if` (`'if'`), whose
    * defaults are those of the whole schema the field renders
    */
   readonly allOf: boolean | 'if';
@@ -324,8 +324,8 @@ export function asTarget<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, targ
   return conjunction?.kind === 'schema' ? conjunction : target;
 }
 
-/** Returns the `conjunction` the node `from` reads as, for a `$ref` with keywords beside it under draft 2019-09 or
- * 2020-12, and undefined for any other node
+/** Returns the `conjunction` the node `from` reads as, for a `$ref` with keywords beside it other than annotations,
+ * and undefined for any other node
  *
  * @param graph - The graph holding the node
  * @param from - The node
@@ -412,10 +412,10 @@ function declaresCondition<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id
 /** The definitions `refDefinition()` read, by graph and node */
 const definitions = new KeyedMemo<object>();
 
-/** Returns the definition the `$ref` of the node `from` names, read as the plan reads a `$ref` target, its chain of
- * references followed, so that the form and the scoring of options read a reference alike. A boolean definition reads
- * as the empty schema, and so does a node holding no `$ref`. The definition is made once per node and shared, so a
- * caller copies it rather than changing it.
+/** Returns the definition the `$ref` of the node `from` names, as the form reads it: the target with its own `$ref`s
+ * followed, each one's annotations beside it over the target's, and any other keywords beside it merged with the
+ * target as the `allOf` of both. A boolean definition reads as the empty schema, and so does a node holding no `$ref`.
+ * The definition is made once per node and shared, so a caller copies it rather than changing it.
  *
  * @param graph - The graph holding the node
  * @param from - The node holding the reference
@@ -423,27 +423,34 @@ const definitions = new KeyedMemo<object>();
  * @throws - An error for a reference that resolves to nothing or a chain of references that loops
  */
 export function refDefinition<S extends StrictRJSFSchema = RJSFSchema>(graph: SchemaGraph<S>, from: NodeId): S {
-  const keys = [graph, from];
+  const node = graph.node(from);
+  return node.kind === 'schema' && node.ref !== undefined
+    ? definitionOf(graph, node.ref)
+    : schemaFrom(graph.rawRoot, {});
+}
+
+/** Returns the schema the node `id` reads as, its own `$ref` followed as `refDefinition()` follows one */
+function definitionOf<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, id: NodeId): S {
+  const keys = [graph, id];
   const known = definitions.peek(keys);
   if (isSchemaObject<S>(known)) {
     return known;
   }
-  const definition = readRefDefinition(graph, from);
+  const node = graph.node(id);
+  if (node.kind === 'invalid') {
+    throw new Error(node.message);
+  }
+  if (node.kind === 'boolean' || node.ref === undefined) {
+    return node.kind === 'boolean' ? schemaFrom(graph.rawRoot, {}) : node.raw;
+  }
+  const target = definitionOf(graph, node.ref);
+  const beside = withoutKeys(node.raw, REF_KEY);
+  const definition = schemaFrom(
+    node.raw,
+    node.conjunction === undefined ? { ...target, ...beside } : shallowAllOfMerge({ allOf: [beside, target] }),
+  );
   definitions.set(keys, definition);
   return definition;
-}
-
-function readRefDefinition<S extends StrictRJSFSchema>(graph: SchemaGraph<S>, from: NodeId): S {
-  const node = graph.node(from);
-  const target = node.kind === 'schema' && node.ref !== undefined ? graph.node(node.ref) : undefined;
-  if (target?.kind === 'invalid') {
-    throw new Error(target.message);
-  }
-  if (target?.kind !== 'schema') {
-    return schemaFrom(graph.rawRoot, {});
-  }
-  const keywords = flattenRef(graph, asTarget(graph, target), [], () => true);
-  return keywordSchema(target.raw, keywords);
 }
 
 /** Builds one field's plan. Entries are added in this order: the `$ref` override, the chosen option, the
@@ -579,7 +586,10 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
    * since the entries are part of the dependency's schema
    */
   private applyAllOf(part: Part<S>, provider: Provider<S> | undefined, dependencyKey: string | undefined): Part<S> {
-    if (provider === undefined || (!this.mergeAllOf && this.branchDepth === 0)) {
+    if (
+      provider === undefined ||
+      (!this.mergeAllOf && this.branchDepth === 0 && provider.node.conjunctionOf === undefined)
+    ) {
       return part;
     }
     const members = this.graph

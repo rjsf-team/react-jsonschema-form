@@ -172,12 +172,12 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     };
     const option: RJSFSchema = { $ref: '#/components/schemas/M' };
 
-    it('reads a definition no $ref of the root reaches as the form reads it, the keywords beside a chained $ref winning', () => {
+    it('reads a definition no $ref of the root reaches as the form reads it, the keywords beside a chained $ref merged in', () => {
       const unreached: RJSFSchema = { components };
       const reached: RJSFSchema = { components, properties: { x: { $ref: '#/components/schemas/M' } } };
       const expected = {
         type: 'object',
-        properties: { b: { type: 'string' } },
+        properties: { b: { type: 'string' }, a: { type: 'string' } },
         [RJSF_REF_KEY]: '#/components/schemas/M',
       };
 
@@ -4594,14 +4594,15 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           };
         });
         const result = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, formData);
-        // The field's `allOf` is merged once, with the `allOf` the dependency would bring, which `trigger` does not
-        // qualify since the schema declares it no property
-        expect(customMergeAllOf).toHaveBeenCalledTimes(1);
+        // The `$ref` and the `dependencies` beside it read as one `allOf`, merged beside the definition's own and the one
+        // the dependency brings: `trigger` qualifies, since the keywords beside the `$ref` declare no property
+        expect(customMergeAllOf).toHaveBeenCalledTimes(3);
         expect(result).toEqual({
-          type: 'object',
           properties: {
             base: { type: 'string' },
             additional: { type: 'boolean' },
+            prop1: { type: 'string' },
+            prop2: { type: 'number' },
           },
           allOf: undefined,
           [RJSF_REF_KEY]: '#/definitions/baseSchema',
@@ -4685,6 +4686,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           type: 'object',
           properties: {
             base: { type: 'string' },
+            prop: { type: 'string' },
           },
           [RJSF_REF_KEY]: '#/definitions/testRef',
         });
@@ -4772,14 +4774,14 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           };
         });
         const result = retrieveSchema({ validator: testValidator, customMergeAllOf }, schema, rootSchema, formData);
-        // The field's `allOf` is merged once, with the `allOf` the dependency would bring, which `dep1` does not
-        // qualify since the schema declares it no property
-        expect(customMergeAllOf).toHaveBeenCalledTimes(1);
+        // `level1` and its `dependencies` read as one `allOf`, merged beside `level2`'s own and the one `dep1` brings,
+        // which qualifies since the keywords beside the `$ref` declare no property
+        expect(customMergeAllOf).toHaveBeenCalledTimes(3);
         expect(result).toEqual({
-          type: 'object',
           properties: {
             base: { type: 'string' },
             additional: { type: 'number' },
+            nested1: { type: 'string' },
           },
           allOf: undefined,
           [RJSF_REF_KEY]: '#/definitions/level1',

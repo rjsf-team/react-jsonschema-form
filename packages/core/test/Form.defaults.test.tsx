@@ -238,17 +238,17 @@ describeRepeated('Form common: schema definitions and defaults', (createFormComp
       expect(node.querySelector<HTMLInputElement>('input[type=text]')!).toHaveValue('newKey');
     });
 
-    it('should let a keyword beside a $ref in additionalProperties win, as it does beside any other $ref', async () => {
-      // Resolution layers a schema's own keywords over the referenced ones wherever a `$ref` appears, and
-      // the add button seeds the new property from the same resolved schema the field renders it with, so the sibling
-      // `type` is the one both of them read
+    it('should apply the keywords beside a $ref in additionalProperties with its target, as beside any other $ref', async () => {
+      // Resolution conjoins a schema's own keywords with the referenced ones wherever a `$ref` appears, and the add
+      // button seeds the new property from the same resolved schema the field renders it with, so the `type` the
+      // definition declares is the one both of them read
       const schema: RJSFSchema = {
         definitions: {
-          testdef: { type: 'number' },
+          testdef: { type: 'string' },
         },
         type: 'object',
         additionalProperties: {
-          type: 'string',
+          maxLength: 20,
           $ref: '#/definitions/testdef',
         },
       };

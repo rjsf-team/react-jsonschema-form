@@ -62,11 +62,15 @@ export interface ObjectNode<S extends StrictRJSFSchema = RJSFSchema> {
   readonly pureRef: boolean;
   /** The node the `$ref` resolves to, which is an `InvalidNode` when it resolves to nothing */
   readonly ref?: NodeId;
-  /** Under draft 2019-09 or 2020-12, for a `$ref` that resolves with keywords beside it that do more than annotate: the
-   * node it reads as, the `allOf` of those keywords and of the `$ref` alone, since those dialects apply a `$ref` beside
-   * other keywords rather than replacing them
+  /** For a `$ref` that resolves with keywords beside it other than annotations: the node it reads as, the `allOf` of
+   * those keywords and of the `$ref` alone, as JSON Schema applies a `$ref` beside other keywords rather than replacing
+   * them. Annotations alone stay beside the `$ref` and override the target's own.
    */
   readonly conjunction?: NodeId;
+  /** On the node `conjunction` names, the node it is the conjunction of: its `allOf` is how JSON Schema reads keywords
+   * beside a `$ref`, rather than one a schema declares, so it is merged whatever merges a declared `allOf`
+   */
+  readonly conjunctionOf?: NodeId;
 }
 
 export type SchemaNode<S extends StrictRJSFSchema = RJSFSchema> = BooleanNode | InvalidNode | ObjectNode<S>;
@@ -123,14 +127,14 @@ export const EXTERNAL_POINTER = '~external';
 /** The keywords that can stand beside a `$ref` without changing what it resolves to */
 const PURE_REF_KEYS = new Set([REF_KEY, DEFINITIONS_KEY, '$defs', SCHEMA_KEY, '$comment', 'title', 'description']);
 
-/** The keywords that identify a schema, hold definitions for others or only annotate the instance, so a `$ref` beside
- * nothing else reads as its target with those annotations on top, as an `allOf` adding only annotations does
+/** The keywords that say nothing a value has to meet: those that identify a schema or hold definitions for others, and
+ * the annotations, which beside a `$ref` override the target's rather than combining with them. A `$ref` beside
+ * nothing else has nothing to be the `allOf` of.
  */
 const NON_CONSTRAINING_KEYS = new Set([
   REF_KEY,
   ID_KEY,
   '$anchor',
-  DEFAULT_KEY,
   DEFINITIONS_KEY,
   '$defs',
   SCHEMA_KEY,
@@ -224,8 +228,8 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   readonly rawRoot: S;
   readonly root: NodeId;
   readonly base?: Graph<S>;
-  /** Whether the root is draft 2019-09 or 2020-12, under which `$anchor` names a location and the keywords beside a
-   * `$ref` apply alongside it: a draft-07 `$ref` ignores them, an `$id` beside it included
+  /** Whether the root is draft 2019-09 or 2020-12, under which `$anchor` names a location and an `$id` beside a `$ref`
+   * starts a resource: a draft-07 `$ref` ignores it
    */
   private readonly laterDialect: boolean;
   private readonly rootBase: string;
@@ -480,7 +484,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       const failure = this.chainFailure(ref, node, hops);
       if (failure === undefined) {
         node.ref = hops.get(node.id);
-        if (this.laterDialect && Object.keys(node.raw).some((key) => !NON_CONSTRAINING_KEYS.has(key))) {
+        if (Object.keys(node.raw).some((key) => !NON_CONSTRAINING_KEYS.has(key))) {
           node.conjunction = this.addConjunction(node);
         }
       } else {
@@ -540,6 +544,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       outerBase: node.baseUri,
       raw: schemaFrom(node.raw, { [ALL_OF_KEY]: [siblings.raw, reference.raw] }),
       pureRef: false,
+      conjunctionOf: node.id,
     }).id;
   }
 

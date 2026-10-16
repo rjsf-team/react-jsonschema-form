@@ -64,7 +64,7 @@ function keywordsOf(plan: MergePlan): unknown {
 
 describe('buildPlan()', () => {
   describe('$ref', () => {
-    it('overrides the target keyword by keyword with the siblings, as v7 resolves a $ref with siblings', () => {
+    it('overrides the annotations of the target with those beside the $ref', () => {
       const plan = planOf({
         definitions: { A: { type: 'object', title: 'A', properties: { x: { type: 'string' } } } },
         $ref: D('A'),
@@ -93,7 +93,7 @@ describe('buildPlan()', () => {
         ['/definitions/C', 'ref', ['/definitions/B', '/definitions/C']],
       ]);
     });
-    it.each([JSON_SCHEMA_DRAFT_2019_09, JSON_SCHEMA_DRAFT_2020_12])(
+    it.each(['http://json-schema.org/draft-07/schema#', JSON_SCHEMA_DRAFT_2019_09, JSON_SCHEMA_DRAFT_2020_12])(
       'under %s, conjoins a target reached through a $ref with its own target',
       (dialect) => {
         const definitions = {
@@ -115,12 +115,10 @@ describe('buildPlan()', () => {
           ['/definitions/Pet', 'ref', ['/definitions/Cat', '/definitions/Pet']],
         ]);
         expect(Reflect.get(plan.schema, RJSF_REF_KEY)).toBe(D('Cat'));
-        // Where the `allOf`s are not merged, the conjunction stays one `allOf`
+        // Where the `allOf`s a schema declares are not merged, the conjunction still is: it is how the keywords beside
+        // the `$ref` read, not an `allOf` of the schema
         const unmerged = planOf({ $schema: dialect, definitions, $ref: D('Cat') }, { policy: { allOf: false } });
-        expect(keywordsOf(unmerged)).toEqual({
-          $schema: dialect,
-          allOf: [{ properties: { meow: { type: 'boolean' } } }, { $ref: D('Pet') }],
-        });
+        expect(keywordsOf(unmerged)).toEqual(keywordsOf(plan));
         // The field's own $ref with keywords beside it is conjoined with its target in the same way
         const inPlace = planOf({
           $schema: dialect,
@@ -288,13 +286,13 @@ describe('buildPlan()', () => {
       expect(keywordsOf(plan)).toEqual({ title: 'T' });
       expect(Reflect.get(plan.schema, RJSF_REF_KEY)).toBe(D('S'));
     });
-    it('takes a branch the field does not override from the node providing it', () => {
+    it('takes the branch the if of the target chooses, a then beside the $ref having no if beside it', () => {
       const plan = planOf({
         definitions: { S: { if: false, else: { title: 'from the target' } } },
         $ref: D('S'),
         then: { title: 'beside the $ref' },
       });
-      expect(keywordsOf(plan)).toEqual({ title: 'from the target' });
+      expect(keywordsOf(plan)).toEqual({ title: 'from the target', then: { title: 'beside the $ref' } });
     });
     it('drops the conditional keywords when there is no branch to take or the if is not a schema', () => {
       expect(keywordsOf(planOf({ if: true, else: { title: 'e' } }))).toEqual({});
@@ -343,12 +341,13 @@ describe('buildPlan()', () => {
       expect(planOf(schema, { data: {}, depData: { a: 'default' } }).schema.properties).toHaveProperty('extra');
       expect(planOf(schema, { data: {} }).schema.properties).not.toHaveProperty('extra');
     });
-    it('qualifies a dependency on the properties its declaring node declares beside its $ref, not merged ones', () => {
+    it('qualifies a dependency on the properties the node declaring it declares, not merged ones', () => {
       const declaring: RJSFSchema = { properties: { z: {} }, dependencies: { a: { title: 'applied' } } };
-      // The `properties` beside the `$ref` override the definition's, as they do for the schema the dependencies read
+      // The `properties` beside the `$ref` are their own member of the conjunction, so they qualify no dependency of
+      // the definition
       expect(
         planOf({ definitions: { D: declaring }, $ref: D('D'), properties: { a: {} } }, { data: { a: 1 } }).schema.title,
-      ).toBe('applied');
+      ).toBeUndefined();
       expect(planOf({ definitions: { D: declaring }, $ref: D('D') }, { data: { a: 1 } }).schema.title).toBeUndefined();
       // A property an `allOf` entry declares is merged after the dependencies are judged
       expect(
@@ -607,7 +606,7 @@ describe('buildPlan()', () => {
         ['/definitions/second/items', ['/definitions/second']],
       ]);
     });
-    it('lists a property a branch, the own keywords and an allOf member all declare in merge order, the branch first', () => {
+    it('lists a property a branch, the own keywords, an allOf member and the $ref target declare in merge order', () => {
       const plan = planOf({
         definitions: { A: { properties: { p: { title: 'target' } } }, M: { properties: { p: { title: 'member' } } } },
         $ref: D('A'),
@@ -620,6 +619,7 @@ describe('buildPlan()', () => {
         ['/then/properties/p', []],
         ['/properties/p', []],
         ['/definitions/M/properties/p', ['/definitions/M']],
+        ['/definitions/A/properties/p', ['/definitions/A']],
       ]);
       expect(plan.schema.properties).toEqual({ p: { title: 'branch' } });
     });
@@ -737,6 +737,15 @@ describe('conjunctionOf()', () => {
     });
     expect(conjunctionOf(draft07, draft07.byPointer('/properties/p') ?? draft07.root)).toBeUndefined();
   });
+  it('reads a draft-07 $ref with constraints beside it as the allOf of both too', () => {
+    const graph = parseSchemaGraph({
+      definitions: { x: { type: 'string' } },
+      properties: { beside: { $ref: '#/definitions/x', minLength: 1 } },
+    });
+    expect(conjunctionOf(graph, graph.byPointer('/properties/beside') ?? graph.root)?.raw).toEqual({
+      allOf: [{ minLength: 1 }, { $ref: '#/definitions/x' }],
+    });
+  });
 });
 
 describe('refDefinition()', () => {
@@ -770,10 +779,12 @@ describe('refDefinition()', () => {
     return id;
   };
 
-  it('resolves a $ref against the base URI of the node holding it, conjoining a chained target', () => {
-    expect(refDefinition(graph, node('/$defs/child/properties/a/anyOf/0'))).toEqual({
-      allOf: [{ minLength: 1 }, { $ref: '#/$defs/y' }],
-    });
+  it('resolves a $ref against the base URI of the node holding it, merging a chained target with the keywords beside it', () => {
+    expect(refDefinition(graph, node('/$defs/child/properties/a/anyOf/0'))).toEqual({ minLength: 1, type: 'string' });
+    // Read once per node, and shared
+    expect(refDefinition(graph, node('/$defs/child/properties/a/anyOf/0'))).toBe(
+      refDefinition(graph, node('/$defs/child/properties/a/anyOf/0')),
+    );
   });
   it('follows a chain of references with nothing beside them to the definition it ends at', () => {
     expect(refDefinition(graph, node('/$defs/pure'))).toEqual(

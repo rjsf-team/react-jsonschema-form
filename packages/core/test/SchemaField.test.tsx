@@ -1626,7 +1626,7 @@ describe('SchemaField', () => {
           ]);
         });
 
-        it('renders the keywords beside a $ref that another $ref reaches in place of its target under draft-07', () => {
+        it('renders the keywords beside a $ref that another $ref reaches together with its target', () => {
           const schema: RJSFSchema = {
             definitions: {
               O: { properties: { a: { type: 'string', default: 'a' } } },
@@ -1636,8 +1636,9 @@ describe('SchemaField', () => {
             properties: { v: { $ref: '#/definitions/M' } },
           };
           const { node } = createFormComponent({ schema });
-          expect(controls(node)).toEqual(['root_v_b']);
+          expect(controls(node)).toEqual(['root_v_b', 'root_v_a']);
           expect(node.querySelector('#root_v_b')).toHaveValue('b');
+          expect(node.querySelector('#root_v_a')).toHaveValue('a');
         });
 
         it('renders the default beside the $ref of a tuple entry and of additionalItems', () => {

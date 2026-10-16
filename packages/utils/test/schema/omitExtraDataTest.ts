@@ -969,7 +969,7 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({ inner: { name: '' } });
       });
 
-      it('keeps the fields the keywords beside a $ref render, along a draft-07 chain of references, as the form does', () => {
+      it('keeps the fields of both the keywords beside a $ref and its target, along a chain of references, as the form does', () => {
         const schema: RJSFSchema = {
           type: 'object',
           definitions: {
@@ -981,10 +981,10 @@ export default function omitExtraDataTest(testValidator: TestValidatorType) {
             w: { $ref: '#/definitions/O', properties: { c: { type: 'string' } } },
           },
         };
-        const formData = { v: { a: 'x', b: 'y' }, w: { a: 'x', c: 'z' } };
+        const formData = { v: { a: 'x', b: 'y', d: 'gone' }, w: { a: 'x', c: 'z', d: 'gone' } };
         expect(omitExtraData({ validator: testValidator }, schema, schema, formData)).toEqual({
-          v: { b: 'y' },
-          w: { c: 'z' },
+          v: { a: 'x', b: 'y' },
+          w: { a: 'x', c: 'z' },
         });
       });
 

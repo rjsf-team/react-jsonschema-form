@@ -445,7 +445,7 @@ describe('getDefaultFormState() on recursive schemas', () => {
     }
   });
 
-  it("applies the keywords beside a recursive $ref in place of its target's at every level, as the form renders them", () => {
+  it("fills the keywords beside a recursive $ref together with its target's at every level, as the form renders them", () => {
     const schema: RJSFSchema = {
       definitions: {
         node: {
@@ -458,7 +458,8 @@ describe('getDefaultFormState() on recursive schemas', () => {
       },
       $ref: D('node'),
     };
-    expect(defaultsOf(schema)).toEqual({ name: 'n', child: { own: 'o' } });
+    // The recursion collapses below `child`, which keeps the keywords beside its `$ref`
+    expect(defaultsOf(schema)).toEqual({ name: 'n', child: { own: 'o', name: 'n', child: { own: 'o' } } });
   });
 
   it('stops a recursion through a percent-encoded $ref where the same $ref written plainly stops', () => {
@@ -543,12 +544,14 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
     expect(defaultsOf(schema)).toEqual({ t: ['beside', 'target'], x: [undefined, 'beside'] });
   });
 
-  it('lets the keywords beside a $ref another $ref reaches override its target under draft-07', () => {
+  it('fills the keywords beside a $ref another $ref reaches together with its target, whatever the allOf behavior', () => {
     const definitions: RJSFSchema['definitions'] = {
       O: { properties: { a: { type: 'string', default: 'a' } } },
       M: { $ref: D('O'), properties: { b: { type: 'string', default: 'b' } } },
     };
-    expect(defaultsOf({ definitions, type: 'object', properties: { v: { $ref: D('M') } } })).toEqual({ v: { b: 'b' } });
+    const schema: RJSFSchema = { definitions, type: 'object', properties: { v: { $ref: D('M') } } };
+    expect(defaultsOf(schema)).toEqual({ v: { b: 'b', a: 'a' } });
+    expect(defaultsOf(schema, undefined, populate)).toEqual({ v: { b: 'b', a: 'a' } });
   });
 
   it.each(['https://json-schema.org/draft/2019-09/schema', draft2020])(
@@ -823,7 +826,8 @@ describe('getDefaultFormState() reading $ref, branches and extra keys as the for
       type: 'object',
       additionalProperties: { $ref: '#/$defs/M' },
     };
-    expect(defaultsOf(inheritanceMap, { k: {} })).toEqual({ k: {} });
+    // The keywords beside a `$ref` are no `allOf` the schema declares, so they are filled whatever the behavior
+    expect(defaultsOf(inheritanceMap, { k: {} })).toEqual({ k: { a: 'a', b: 'b' } });
     expect(defaultsOf(inheritanceMap, { k: {} }, populate)).toEqual({ k: { a: 'a', b: 'b' } });
   });
 
