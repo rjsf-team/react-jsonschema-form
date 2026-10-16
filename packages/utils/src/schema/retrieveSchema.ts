@@ -199,6 +199,12 @@ interface MemoizedView {
  */
 const views = new KeyedMemo<MemoizedView>();
 
+/** The type each additional-property subschema names, its options resolved, by validator, `customMergeAllOf`, root and
+ * subschema: it is read without the data, and the keys no pattern matches are all described by the one subschema, so
+ * it is the same for every key and every edit
+ */
+const namedTypes = new KeyedMemo<string | undefined>();
+
 /** Whether a field seeded by `seeds` merges nothing into its one subschema: a field that does, through a `$ref`, an
  * `allOf`, a condition, `dependencies` or options, is the only kind the recursion rule can collapse
  */
@@ -890,17 +896,10 @@ export function stubExistingAdditionalProperties<
   const extraKeys = Object.keys(formData).filter(
     (key) => !Object.hasOwn(schema.properties, key) && !Object.hasOwn(optionProperties, key),
   );
-  // Shared by every key stubbed here, since the keys no pattern matches are all described by the one subschema
-  const namedTypes = new Map<S, string | undefined>();
-  const typeOf = (subSchema: S) => {
-    if (!namedTypes.has(subSchema)) {
-      namedTypes.set(
-        subSchema,
-        getAdditionalPropertyType<S>(retrieveSchema<T, S, F>(context, subSchema, rootSchema, undefined, true)),
-      );
-    }
-    return namedTypes.get(subSchema);
-  };
+  const typeOf = (subSchema: S) =>
+    namedTypes.get([context.validator, context.customMergeAllOf, rootSchema, subSchema], () =>
+      getAdditionalPropertyType<S>(retrieveSchema<T, S, F>(context, subSchema, rootSchema, undefined, true)),
+    );
   for (const key of extraKeys) {
     const keySchema = getAdditionalPropertySchema<S>(schema, key);
     let stub: S;
