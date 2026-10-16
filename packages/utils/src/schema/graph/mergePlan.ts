@@ -901,17 +901,14 @@ class PlanBuilder<S extends StrictRJSFSchema, F extends FormContextType> {
     if (optionPolicy === undefined) {
       return this.expand(id, refPath, 'option');
     }
-    const { mergeAllOf, conditions } = this;
-    // The option is merged into the field, so an `if` of its own counts as the field's
-    this.mergeAllOf =
-      optionPolicy.allOf === true ||
-      (optionPolicy.allOf === 'if' && (this.seedHasCondition || declaresKeyword(this.graph, id, IF_KEY)));
+    const outer = { mergeAllOf: this.mergeAllOf, conditions: this.conditions };
+    this.mergeAllOf = optionPolicy.allOf === true || (optionPolicy.allOf === 'if' && this.seedHasCondition);
     this.conditions = optionPolicy.conditions;
     try {
       return this.expand(id, refPath, 'option');
     } finally {
-      this.mergeAllOf = mergeAllOf;
-      this.conditions = conditions;
+      this.mergeAllOf = outer.mergeAllOf;
+      this.conditions = outer.conditions;
     }
   }
 }
