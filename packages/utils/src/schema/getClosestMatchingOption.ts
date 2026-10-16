@@ -1,8 +1,10 @@
-import { ALL_OF_KEY, REF_KEY } from '../constants.ts';
+import { REF_KEY } from '../constants.ts';
+import deepEquals from '../deepEquals.ts';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema.ts';
 import getXxxOfKey from '../getXxxOfKey.ts';
 import guessType from '../guessType.ts';
 import isObject, { isSchemaObject } from '../isObject.ts';
+import isPlainObject from '../isPlainObject.ts';
 import { getByPath } from '../pathUtils.ts';
 import type { FormContextType, RJSFSchema, SchemaContext, StrictRJSFSchema } from '../types.ts';
 import { optionMatches, optionNodeOf, simpleDiscriminatorMatch } from './getFirstMatchingOption.ts';
@@ -138,12 +140,13 @@ interface BestOption {
 }
 
 /** The options picked for data held in an object or array, by validator, merge, root, flags, the option objects
- * themselves, since an option's view scores the data apart from the option it was retrieved from, and the data itself.
- * Form data is replaced rather than mutated, so the same object is the same data; scoring an option list reads the
- * lists nested below it for each candidate, so without this every level of a recursion through options multiplies the
- * matching done below it by the number of candidates (#4990). Other data scores no nested list and is not kept.
+ * themselves, since an option's view scores the data apart from the option it was retrieved from, and the data itself,
+ * with a copy of what the data held. Scoring an option list reads the lists nested below it for each candidate, so
+ * without this every level of a recursion through options multiplies the matching done below it by the number of
+ * candidates (#4990). A pick is reused only while the data still equals the copy: a caller may mutate the data in place
+ * between calls, at any depth. Other data scores no nested list and is not kept.
  */
-const picked = new KeyedMemo<BestOption>();
+const picked = new KeyedMemo<{ pick: BestOption; data: unknown }>();
 
 /** Returns the index of the option of `options` closest to `formData`, as `getClosestMatchingOption()` describes,
  * with each option matched as `optionMatches()` matches it under `relax`, and that option's score
@@ -181,19 +184,34 @@ function bestOption<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
   if (typeof formData !== 'object' || formData === null) {
     return compute();
   }
-  return picked.get(
-    [
-      context.validator,
-      context.customMergeAllOf,
-      rootSchema,
-      relax,
-      discriminatorField,
-      selectedOption,
-      ...options,
-      formData,
-    ],
-    compute,
-  );
+  const keys = [
+    context.validator,
+    context.customMergeAllOf,
+    rootSchema,
+    relax,
+    discriminatorField,
+    selectedOption,
+    ...options,
+    formData,
+  ];
+  const stored = picked.peek(keys);
+  if (stored && deepEquals(stored.data, formData)) {
+    return stored.pick;
+  }
+  const pick = compute();
+  picked.set(keys, { pick, data: copyOfData(formData) });
+  return pick;
+}
+
+/** A copy of the arrays and plain objects in `data`, sharing every other value */
+function copyOfData(data: unknown): unknown {
+  if (Array.isArray(data)) {
+    return data.map(copyOfData);
+  }
+  if (isPlainObject(data)) {
+    return Object.fromEntries(Object.entries(data).map(([key, value]) => [key, copyOfData(value)]));
+  }
+  return data;
 }
 
 /** Picks the option for `bestOption()`, see `getClosestMatchingOption()` */
@@ -284,8 +302,7 @@ export function closestOption<S extends StrictRJSFSchema = RJSFSchema, F extends
  * Otherwise the options that match, or all of them when none does, are the candidates: each is scored by calling
  * `calculateIndexScore()` on it, and the candidate with the best score is returned. A tie goes to the `selectedOption`
  * when it is a candidate and to the first candidate otherwise, so an option that does not match the data is never
- * returned while one does. The pick is remembered per option list and data object, which the form replaces rather
- * than mutates: data mutated in place after a call can be answered as it was before.
+ * returned while one does.
  *
  * @param context - The `SchemaContext` that will be forwarded to all the APIs
  * @param rootSchema - The root JSON schema of the entire form
