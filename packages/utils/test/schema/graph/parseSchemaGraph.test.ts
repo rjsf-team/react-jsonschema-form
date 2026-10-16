@@ -1,4 +1,4 @@
-import { JSON_SCHEMA_DRAFT_2020_12 } from '../../../src/index.ts';
+import { JSON_SCHEMA_DRAFT_2019_09, JSON_SCHEMA_DRAFT_2020_12 } from '../../../src/index.ts';
 import type { RJSFSchema } from '../../../src/index.ts';
 import parseSchemaGraph, { EXTERNAL_POINTER } from '../../../src/schema/graph/parseSchemaGraph.ts';
 import type { NodeId, ObjectNode, SchemaGraph, SchemaNode } from '../../../src/schema/graph/parseSchemaGraph.ts';
@@ -313,6 +313,29 @@ describe('parseSchemaGraph()', () => {
     const m = at(graph, '/$defs/m');
     const siblings = graph.child(m.conjunction ?? -1, 'allOf', '0') ?? -1;
     expect(graph.child(siblings, 'properties', 'flag')).toBe(graph.byPointer('/$defs/m/properties/flag'));
+  });
+
+  it.each([
+    JSON_SCHEMA_DRAFT_2019_09,
+    JSON_SCHEMA_DRAFT_2020_12,
+    `${JSON_SCHEMA_DRAFT_2019_09}#`,
+    `${JSON_SCHEMA_DRAFT_2020_12}#`,
+  ])('resolves an $anchor and reads a $ref beside keywords as their allOf under a %s root', ($schema) => {
+    const graph = parseSchemaGraph({
+      $schema,
+      $defs: { a: { $anchor: 'foo', type: 'string' }, m: { $ref: '#foo', title: 'M', minLength: 1 } },
+      properties: { p: { $ref: '#foo' } },
+    });
+    expect(target(graph, '/properties/p').pointer).toBe('/$defs/a');
+    expect(at(graph, '/$defs/m').conjunction).toBeDefined();
+  });
+  it('reads $anchor as no keyword under a draft-07 root', () => {
+    const graph = parseSchemaGraph({
+      $schema: 'http://json-schema.org/draft-07/schema#',
+      definitions: { a: { $anchor: 'foo', type: 'string' } },
+      properties: { p: { $ref: '#foo' } },
+    });
+    expect(target(graph, '/properties/p')).toMatchObject({ kind: 'invalid', reason: 'dangling' });
   });
 
   describe('references under a draft 2020-12 root', () => {

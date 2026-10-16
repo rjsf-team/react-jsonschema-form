@@ -207,12 +207,10 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   readonly rawRoot: S;
   readonly root: NodeId;
   readonly base?: Graph<S>;
-  /** Whether `$anchor` names a location, as it does under a draft 2020-12 root */
-  private readonly anchored: boolean;
-  /** Whether the keywords beside a `$ref` apply alongside it, as they do from draft 2019-09 on: a draft-07 `$ref`
-   * ignores them, an `$id` beside it included
+  /** Whether the root is draft 2019-09 or 2020-12, under which `$anchor` names a location and the keywords beside a
+   * `$ref` apply alongside it: a draft-07 `$ref` ignores them, an `$id` beside it included
    */
-  private readonly keywordsApplyBesideRef: boolean;
+  private readonly laterDialect: boolean;
   private readonly rootBase: string;
   private readonly offset: number;
   private readonly own: SchemaNode<S>[] = [];
@@ -230,8 +228,9 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
   constructor(rawRoot: S, base?: Graph<S>) {
     this.rawRoot = rawRoot;
     this.base = base;
-    this.anchored = rawRoot[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12;
-    this.keywordsApplyBesideRef = this.anchored || rawRoot[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2019_09;
+    // A `$schema` ending in an empty fragment names the same dialect as one without it
+    const dialect = stringKeyword(rawRoot, SCHEMA_KEY)?.replace(/#$/, '');
+    this.laterDialect = dialect === JSON_SCHEMA_DRAFT_2020_12 || dialect === JSON_SCHEMA_DRAFT_2019_09;
     const rootId = stringKeyword(rawRoot, ID_KEY);
     this.rootBase = rootId === undefined ? '' : resolveUri('', rootId);
     this.offset = base === undefined ? 0 : base.offset + base.own.length;
@@ -419,11 +418,11 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
     if (id === undefined || id.startsWith('#')) {
       return undefined;
     }
-    return this.keywordsApplyBesideRef || stringKeyword(raw, REF_KEY) === undefined ? id : undefined;
+    return this.laterDialect || stringKeyword(raw, REF_KEY) === undefined ? id : undefined;
   }
 
   private register(node: ObjectNode<S>, startsResource: boolean): void {
-    const anchor = this.anchored ? stringKeyword(node.raw, '$anchor') : undefined;
+    const anchor = this.laterDialect ? stringKeyword(node.raw, '$anchor') : undefined;
     if (!startsResource && anchor === undefined) {
       return;
     }
@@ -464,7 +463,7 @@ class Graph<S extends StrictRJSFSchema = RJSFSchema> implements SchemaGraph<S> {
       const failure = this.chainFailure(ref, node, hops);
       if (failure === undefined) {
         node.ref = hops.get(node.id);
-        if (this.keywordsApplyBesideRef && Object.keys(node.raw).some((key) => !NON_ANNOTATING_KEYS.has(key))) {
+        if (this.laterDialect && Object.keys(node.raw).some((key) => !NON_ANNOTATING_KEYS.has(key))) {
           node.conjunction = this.addConjunction(node);
         }
       } else {
