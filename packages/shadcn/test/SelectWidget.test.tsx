@@ -843,6 +843,64 @@ describe('SelectWidget combobox', () => {
     expect(screen.getAllByRole('option')).toHaveLength(2);
   });
 
+  test("opens an autofocused multiple select's list on Down Arrow", async () => {
+    const user = userEvent.setup();
+    render(
+      <Form
+        schema={{
+          type: 'object',
+          properties: {
+            color: {
+              type: 'array',
+              title: 'Color',
+              items: { type: 'string', enum: ['red', 'blue'] },
+              uniqueItems: true,
+            },
+          },
+        }}
+        uiSchema={{ color: { 'ui:autofocus': true } }}
+        validator={validator}
+      />,
+    );
+
+    expect(screen.queryByRole('option')).not.toBeInTheDocument();
+    await user.keyboard('{ArrowDown}');
+    expect(screen.getAllByRole('option')).toHaveLength(2);
+  });
+
+  test("closes a multiple select's list as focus leaves it from a remove button", async () => {
+    const user = userEvent.setup();
+    render(
+      <>
+        <button type='button'>Before</button>
+        <Form
+          schema={{
+            type: 'object',
+            properties: {
+              color: {
+                type: 'array',
+                title: 'Color',
+                items: { type: 'string', enum: ['red', 'blue', 'green'] },
+                uniqueItems: true,
+              },
+            },
+          }}
+          initialFormData={{ color: ['red'] }}
+          validator={validator}
+        />
+      </>,
+    );
+
+    await user.click(screen.getByRole('combobox'));
+    expect(screen.getAllByRole('option')).toHaveLength(2);
+    await user.tab({ shift: true });
+    expect(screen.getAllByRole('option')).toHaveLength(2);
+    await user.tab({ shift: true });
+
+    expect(screen.getByRole('button', { name: 'Before' })).toHaveFocus();
+    expect(screen.queryByRole('option')).not.toBeInTheDocument();
+  });
+
   test('a single select no label names is named by the select prompt where it has no title', () => {
     render(
       <SelectWidget
@@ -857,5 +915,329 @@ describe('SelectWidget combobox', () => {
     );
 
     expect(screen.getByRole('combobox')).toHaveAccessibleName('Select ...');
+  });
+});
+
+describe("the single select's combobox while its listbox is open", () => {
+  const enumOptions = [
+    { label: 'Red', value: 'red' },
+    { label: 'Green', value: 'green' },
+    { label: 'Blue', value: 'blue' },
+  ];
+
+  test('points at the listbox and at the option it highlights, which focus never leaves it for, and Enter chooses', async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+    const props = makeWidgetMockProps({
+      id: 'root_color',
+      label: 'Color',
+      disabled: false,
+      readonly: false,
+      onChange,
+      options: { enumOptions },
+    });
+    const { rerender } = render(<SelectWidget {...props} />);
+    const combobox = screen.getByRole('combobox', { expanded: false });
+
+    // Moving the highlight scrolls the item into view with an API jsdom lacks
+    Element.prototype.scrollIntoView = vi.fn();
+    try {
+      await user.click(combobox);
+      await user.keyboard('{ArrowDown}');
+
+      const highlighted = screen
+        .getAllByRole('option')
+        .find((option) => option.getAttribute('aria-selected') === 'true');
+      expect(highlighted).toHaveTextContent('Green');
+      expect(combobox).toHaveFocus();
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlighted!.id);
+      expect(combobox).toHaveAttribute('aria-controls', screen.getByRole('listbox').id);
+
+      await user.keyboard('{Enter}');
+      expect(onChange).toHaveBeenLastCalledWith('green');
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).not.toHaveAttribute('aria-activedescendant');
+
+      // The options mount under new ids as the listbox reopens on the option the select now holds
+      rerender(<SelectWidget {...props} value='green' />);
+      await user.click(combobox);
+      const rehighlighted = screen
+        .getAllByRole('option')
+        .find((option) => option.getAttribute('aria-selected') === 'true');
+      expect(rehighlighted).toHaveTextContent('Green');
+      expect(combobox).toHaveAttribute('aria-activedescendant', rehighlighted!.id);
+    } finally {
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
+  });
+
+  describe('driven by the keys of a select-only combobox', () => {
+    // Moving the highlight scrolls the item into view with an API jsdom lacks
+    beforeEach(() => {
+      Element.prototype.scrollIntoView = vi.fn();
+    });
+    afterEach(() => {
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    });
+
+    function renderSelect(props: Parameters<typeof makeWidgetMockProps>[0] = {}) {
+      const onChange = vi.fn();
+      const view = render(
+        <SelectWidget
+          {...makeWidgetMockProps({
+            id: 'root_color',
+            label: 'Color',
+            disabled: false,
+            readonly: false,
+            autofocus: false,
+            onChange,
+            options: { enumOptions },
+            ...props,
+          })}
+        />,
+      );
+      return { ...view, onChange, combobox: screen.getByRole('combobox') };
+    }
+
+    function highlightedOption() {
+      return screen.getAllByRole('option').find((option) => option.getAttribute('aria-selected') === 'true');
+    }
+
+    test('opens on the option it holds, so Enter keeps that value', async () => {
+      const user = userEvent.setup();
+      const { combobox, onChange } = renderSelect({ value: 'blue' });
+
+      await user.click(combobox);
+      expect(highlightedOption()).toHaveTextContent('Blue');
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlightedOption()!.id);
+      await user.keyboard('{Enter}');
+
+      expect(onChange).not.toHaveBeenCalled();
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('reports no change on Space over the option it holds', async () => {
+      const user = userEvent.setup();
+      const { combobox, onChange } = renderSelect({ value: 'blue' });
+
+      await user.click(combobox);
+      await user.keyboard(' ');
+
+      expect(onChange).not.toHaveBeenCalled();
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('opens with no value on its first option a user can choose, not on one an earlier opening left highlighted', async () => {
+      const user = userEvent.setup();
+      const { combobox } = renderSelect({ options: { enumOptions, enumDisabled: ['red'] } });
+
+      await user.click(combobox);
+      await user.keyboard('{ArrowDown}');
+      expect(highlightedOption()).toHaveTextContent('Blue');
+      await user.keyboard('{Escape}');
+      await user.keyboard('{ArrowDown}');
+
+      expect(highlightedOption()).toHaveTextContent('Green');
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlightedOption()!.id);
+    });
+
+    test.each([
+      ['Down Arrow', '{ArrowDown}'],
+      ['Alt+Down Arrow', '{Alt>}{ArrowDown}{/Alt}'],
+      ['Up Arrow', '{ArrowUp}'],
+    ])('opens on %s, keeping focus on the combobox', async (_, keys) => {
+      const user = userEvent.setup();
+      const { combobox } = renderSelect();
+
+      await user.tab();
+      await user.keyboard(keys);
+
+      expect(combobox).toHaveAttribute('aria-expanded', 'true');
+      expect(combobox).toHaveFocus();
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlightedOption()!.id);
+    });
+
+    test('closes on Enter without choosing where the option it holds and opens on is disabled', async () => {
+      const user = userEvent.setup();
+      const { combobox, onChange } = renderSelect({
+        value: 'green',
+        options: { enumOptions, enumDisabled: ['green'] },
+      });
+
+      await user.tab();
+      await user.keyboard('{Enter}');
+      expect(highlightedOption()).toHaveTextContent('Green');
+      await user.keyboard('{Enter}');
+
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    // Ctrl+N, J, P and K are cmdk's vim bindings, and Alt+Arrow, with no other group to jump to, falls back to a step
+    test.each([
+      ['{ArrowDown}', 'Blue'],
+      ['{ArrowUp}', 'Red'],
+      ['{Control>}n{/Control}', 'Blue'],
+      ['{Control>}j{/Control}', 'Blue'],
+      ['{Control>}p{/Control}', 'Red'],
+      ['{Control>}k{/Control}', 'Red'],
+      ['{Alt>}{ArrowDown}{/Alt}', 'Blue'],
+      ['{Alt>}{ArrowUp}{/Alt}', 'Red'],
+    ])(
+      'moves the highlight on %s from the disabled option it holds and opens on to its neighbour',
+      async (key, name) => {
+        const user = userEvent.setup();
+        renderSelect({ value: 'green', options: { enumOptions, enumDisabled: ['green'] } });
+
+        await user.tab();
+        await user.keyboard('{Enter}');
+        expect(highlightedOption()).toHaveTextContent('Green');
+        await user.keyboard(key);
+
+        expect(highlightedOption()).toHaveTextContent(name);
+        expect(vi.mocked(Element.prototype.scrollIntoView).mock.contexts).toContain(highlightedOption());
+      },
+    );
+
+    test.each([
+      ['{Meta>}{ArrowDown}{/Meta}', 'Purple'],
+      ['{Meta>}{ArrowUp}{/Meta}', 'Red'],
+    ])('leaves %s from the disabled option it holds to cmdk, which jumps to the end of the list', async (key, name) => {
+      const user = userEvent.setup();
+      renderSelect({
+        value: 'blue',
+        options: {
+          enumOptions: [...enumOptions, { label: 'Yellow', value: 'yellow' }, { label: 'Purple', value: 'purple' }],
+          enumDisabled: ['blue'],
+        },
+      });
+
+      await user.tab();
+      await user.keyboard('{Enter}');
+      expect(highlightedOption()).toHaveTextContent('Blue');
+      await user.keyboard(key);
+
+      expect(highlightedOption()).toHaveTextContent(name);
+    });
+
+    test.each([
+      ['red', '{ArrowDown}', 'Orange'],
+      ['orange', '{ArrowDown}', 'Green'],
+      ['green', '{ArrowUp}', 'Orange'],
+      ['red', '{Alt>}{ArrowDown}{/Alt}', 'Green'],
+      ['blue', '{Alt>}{ArrowUp}{/Alt}', 'Red'],
+      ['blue', '{Alt>}{ArrowDown}{/Alt}', 'Purple'],
+    ])('moves the highlight from the disabled %s it holds on %s across its groups to %s', async (value, key, name) => {
+      const user = userEvent.setup();
+      renderSelect({
+        value,
+        options: {
+          enumOptions: [
+            { label: 'Red', value: 'red' },
+            { label: 'Orange', value: 'orange' },
+            { label: 'Green', value: 'green' },
+            { label: 'Blue', value: 'blue' },
+            { label: 'Purple', value: 'purple' },
+          ],
+          enumDisabled: [value],
+          optgroups: { Warm: ['red', 'orange'], Cool: ['green', 'blue', 'purple'] },
+        },
+      });
+
+      await user.tab();
+      await user.keyboard('{Enter}');
+      expect(highlightedOption()).toHaveTextContent(new RegExp(`^${value}$`, 'i'));
+      await user.keyboard(key);
+
+      expect(highlightedOption()).toHaveTextContent(name);
+    });
+
+    test('highlights and chooses an option whose value cmdk trims', async () => {
+      const user = userEvent.setup();
+      const { combobox, onChange } = renderSelect({
+        value: undefined,
+        options: {
+          enumOptions: [
+            { label: 'Small', value: ' s' },
+            { label: 'Large', value: 'l' },
+          ],
+          optionValueFormat: 'realValue',
+        },
+      });
+
+      await user.tab();
+      await user.keyboard('{Enter}');
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlightedOption()!.id);
+      await user.keyboard(' ');
+
+      expect(onChange).toHaveBeenLastCalledWith(' s');
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('closes on Escape without choosing', async () => {
+      const user = userEvent.setup();
+      const { combobox, onChange } = renderSelect();
+
+      await user.click(combobox);
+      await user.keyboard('{Escape}');
+
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+      expect(combobox).toHaveFocus();
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    test('chooses the highlighted option on Space while open', async () => {
+      const user = userEvent.setup();
+      const { combobox, onChange } = renderSelect();
+
+      await user.click(combobox);
+      await user.keyboard('{ArrowDown}');
+      await user.keyboard(' ');
+
+      expect(onChange).toHaveBeenLastCalledWith('green');
+      expect(combobox).toHaveAttribute('aria-expanded', 'false');
+    });
+
+    test('skips an option ui:enumDisabled disables, which it marks disabled', async () => {
+      const user = userEvent.setup();
+      const { combobox } = renderSelect({ options: { enumOptions, enumDisabled: ['green'] } });
+
+      await user.click(combobox);
+      await user.keyboard('{ArrowDown}');
+
+      expect(screen.getByRole('option', { name: 'Green' })).toHaveAttribute('aria-disabled', 'true');
+      expect(highlightedOption()).toHaveTextContent('Blue');
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlightedOption()!.id);
+    });
+  });
+
+  test('points at the highlighted option again when the options remount while it is open', async () => {
+    const user = userEvent.setup();
+    const props = makeWidgetMockProps({
+      id: 'root_color',
+      label: 'Color',
+      disabled: false,
+      readonly: false,
+      autofocus: false,
+      options: { enumOptions },
+    });
+    const { rerender } = render(<SelectWidget {...props} />);
+    const combobox = screen.getByRole('combobox');
+
+    Element.prototype.scrollIntoView = vi.fn();
+    try {
+      await user.click(combobox);
+      await user.keyboard('{ArrowDown}');
+      // Grouping the options puts them in new groups, so cmdk mounts them under new ids, keeping its highlight
+      rerender(<SelectWidget {...props} options={{ enumOptions, optgroups: { Warm: ['red'] } }} />);
+
+      const highlighted = screen
+        .getAllByRole('option')
+        .find((option) => option.getAttribute('aria-selected') === 'true');
+      expect(highlighted).toHaveTextContent('Green');
+      expect(combobox).toHaveAttribute('aria-activedescendant', highlighted!.id);
+    } finally {
+      delete (Element.prototype as Partial<Element>).scrollIntoView;
+    }
   });
 });

@@ -105,6 +105,12 @@ export function FancySelect({
 }: Readonly<FancySelectInterface>): ReactElement {
   const [open, setOpen] = useState(false);
   const popupId = useId();
+  // Focus stays on the combobox while cmdk highlights an option, so the combobox points at the highlighted option and at
+  // the listbox holding it by the ids cmdk gives them, which it keeps to itself. cmdk reports the option it highlights
+  // only while its value is controlled
+  const [highlighted, setHighlighted] = useState('');
+  const [highlightedId, setHighlightedId] = useState<string>();
+  const [listboxId, setListboxId] = useState<string>();
   const selectedItem = items?.find((item) => item.value === selected);
   const selectedRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -117,6 +123,74 @@ export function FancySelect({
     }
   }, [open]);
 
+  // Read on opening and as the options change too, not only as the highlight moves: the options mount afresh, under new
+  // ids, each time the listbox opens or its options change, while cmdk keeps the highlight it had and reports no change
+  const shownOptions = sections ?? items;
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!open || !container || !shownOptions?.length) {
+      return;
+    }
+    setHighlightedId(cmdkOption(container, highlighted)?.id);
+    setListboxId(container.querySelector<HTMLElement>('[cmdk-list]')?.id);
+  }, [open, highlighted, shownOptions]);
+
+  // The listbox opens on the option the select holds, as a native select's does, so Enter keeps the value until the
+  // highlight is moved, else on the first option a user can choose, rather than on one an earlier opening left
+  // highlighted, which cmdk keeps. The highlight is held trimmed, as cmdk trims the value an item registers under and
+  // the highlight it reports, so an option whose value has leading or trailing whitespace is matched by that value
+  // trimmed
+  const itemsInOrder = sections ? sections.flatMap((section) => section.items) : items;
+  const openList = () => {
+    const opening = selectedItem ?? itemsInOrder?.find((item) => !item.disabled);
+    if (opening) {
+      setHighlighted(cmdkValue(opening));
+    }
+    setOpen(true);
+  };
+  const toggleList = () => {
+    if (open) {
+      setOpen(false);
+    } else {
+      openList();
+    }
+  };
+  const highlightedItem = items?.find((candidate) => cmdkValue(candidate) === highlighted);
+  // Choosing the option the select already holds reports no change, as a native select's doesn't
+  const choose = (item: FancySelectItem | undefined) => {
+    if (item && !item.disabled && item.value !== selected) {
+      onValueChange?.(item.value);
+    }
+    setOpen(false);
+  };
+  // cmdk moves the highlight among the options a user can choose, so from a disabled one, as the option the select holds
+  // and opens on can be, it finds no place to move from: Down Arrow, and its Ctrl+N and Ctrl+J, go to the first option,
+  // and Up Arrow, Ctrl+P and Ctrl+K nowhere. Those keys move from that option's own place in the list instead. cmdk
+  // scrolls only to a highlight it moves itself, not to one its controlled value is given, so the option is scrolled into
+  // view here
+  const highlightFromDisabled = (down: boolean) => {
+    const order = itemsInOrder ?? [];
+    const at = order.findIndex((item) => cmdkValue(item) === highlighted);
+    const next = down
+      ? order.slice(at + 1).find((item) => !item.disabled)
+      : order.slice(0, at).findLast((item) => !item.disabled);
+    if (next) {
+      const value = cmdkValue(next);
+      setHighlighted(value);
+      cmdkOption(containerRef.current, value)?.scrollIntoView({ block: 'nearest' });
+    }
+  };
+  // cmdk's Alt+Arrow jumps to the first option a user can choose in the next or previous group, which it finds from a
+  // disabled option too, but with no such group, as in a list of one, it falls back to the step that can't move from one
+  const groupBeyond = (down: boolean) => {
+    const at = sections?.findIndex((section) => section.items.some((item) => cmdkValue(item) === highlighted));
+    if (!sections || at === undefined || at === -1) {
+      return false;
+    }
+    const beyond = down ? sections.slice(at + 1) : sections.slice(0, at);
+    return beyond.some((section) => section.items.some((item) => !item.disabled));
+  };
+
   const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
     if (containerRef.current && !containerRef.current.contains(e.relatedTarget)) {
       setOpen(false);
@@ -127,6 +201,7 @@ export function FancySelect({
   function renderItem(item: FancySelectItem) {
     return (
       <CommandItem
+        disabled={item.disabled}
         ref={item.value === selected ? selectedRef : undefined}
         key={item.value}
         value={String(item.value)}
@@ -161,11 +236,13 @@ export function FancySelect({
       aria-disabled={disabled}
       onBlur={handleBlur}
       onFocus={onFocus}
+      value={highlighted}
+      onValueChange={setHighlighted}
       aria-placeholder={ariaPlaceholder}
     >
       {/* A combobox, as a native select is, so it can be `aria-invalid`, which a button can't, and holds the item it
-          displays as its value. cmdk gives its listbox an id of its own, so the combobox controls the element the
-          listbox opens in */}
+          displays as its value. It controls the listbox while it is open, and the element the listbox opens in while
+          it is closed */}
       <button
         id={id}
         type='button'
@@ -175,22 +252,47 @@ export function FancySelect({
         autoFocus={autoFocus}
         aria-expanded={open}
         aria-haspopup='listbox'
-        aria-controls={popupId}
+        aria-controls={(open && listboxId) || popupId}
+        aria-activedescendant={open ? highlightedId : undefined}
         aria-label={ariaLabel}
         aria-labelledby={ariaLabelledby}
         aria-describedby={ariaDescribedby}
         aria-invalid={ariaInvalid || undefined}
         aria-required={required || undefined}
-        onClick={() => !disabled && setOpen(!open)}
+        onClick={() => !disabled && toggleList()}
+        // The keys of a select-only combobox, which its role leads a screen reader user to press: the arrow keys open
+        // it, Escape closes it, and Space or Enter chooses the option highlighted while it is open. The arrow keys move
+        // the highlight once it is open, which cmdk does
         onKeyDown={(e) => {
-          // Enter on a highlighted option is left to cmdk, which chooses it
-          if (e.key === 'Enter' && open && highlightedId) {
+          // Enter on a highlighted option a user can choose is left to cmdk, which chooses it. cmdk ignores Enter on a
+          // disabled one, as the option the select holds can be, so that closes the list here
+          if (disabled || (e.key === 'Enter' && open && highlightedId && !highlightedItem?.disabled)) {
             return;
           }
-          if ((e.key === 'Enter' || e.key === ' ') && !disabled) {
-            e.preventDefault();
-            e.stopPropagation();
-            setOpen(!open);
+          const opensList = !open && (e.key === 'ArrowDown' || e.key === 'ArrowUp');
+          // cmdk's vim bindings, on by default, step as the arrows do
+          const down = e.key === 'ArrowDown' || (e.ctrlKey && (e.key === 'n' || e.key === 'j'));
+          const up = e.key === 'ArrowUp' || (e.ctrlKey && (e.key === 'p' || e.key === 'k'));
+          // cmdk's Meta jump to the list's end, and its Alt jump to another group where there is one, find their way
+          // from a disabled option
+          const movesFromDisabled =
+            open &&
+            (down || up) &&
+            !e.metaKey &&
+            !(e.altKey && groupBeyond(down)) &&
+            Boolean(highlightedItem?.disabled);
+          if (opensList) {
+            openList();
+          } else if (movesFromDisabled) {
+            highlightFromDisabled(down);
+          } else if (e.key === ' ' && open) {
+            choose(highlightedItem);
+          } else if (e.key === 'Enter' || e.key === ' ') {
+            toggleList();
+          } else if (open && e.key === 'Escape') {
+            setOpen(false);
+          } else {
+            return;
           }
         }}
         className={cn(

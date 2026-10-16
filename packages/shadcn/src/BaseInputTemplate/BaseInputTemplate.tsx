@@ -85,7 +85,7 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={cn({ 'border-destructive focus-visible:ring-0': hasWidgetErrors<T, S, F>(props) }, className)}
+        className={cn({ 'border-destructive': hasWidgetErrors<T, S, F>(props) }, className)}
         list={hasExamples ? examplesId(id) : undefined}
         title={callerPattern ? undefined : getNumericInputTitle(derivedInputProps, registry.translateString)}
         {...inputProps}

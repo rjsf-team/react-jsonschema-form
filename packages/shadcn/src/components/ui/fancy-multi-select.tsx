@@ -114,6 +114,19 @@ export function FancyMultiSelect({
     [selectedItems, onValueChange, disabled],
   );
 
+  // The focus `autoFocus` gives the input as it mounts opens no list, which would cover the fields below before the user
+  // does anything, so the list opens on the user's own focus, click, typing or Down Arrow. React focuses it while
+  // committing the mount, before this effect runs
+  const focusedOnMount = useRef(autoFocus);
+  useEffect(() => {
+    focusedOnMount.current = false;
+  }, []);
+  const openList = useCallback(() => {
+    if (!disabled && !focusedOnMount.current) {
+      setOpen(true);
+    }
+  }, [disabled]);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent<HTMLDivElement>) => {
       if (disabled || inputRef.current?.value !== '') {
@@ -125,9 +138,12 @@ export function FancyMultiSelect({
         onValueChange?.(newSelected.map((item) => item.index));
       } else if (e.key === 'Escape') {
         inputRef.current.blur();
+      } else if (e.key === 'ArrowDown') {
+        // The input `autoFocus` focuses as it mounts opens no list, so Down Arrow opens it, as on a closed combobox
+        openList();
       }
     },
-    [selectedItems, onValueChange, disabled],
+    [selectedItems, onValueChange, disabled, openList],
   );
 
   const handleSelect = useCallback(
@@ -141,19 +157,6 @@ export function FancyMultiSelect({
     },
     [multiple, selectedItems, onValueChange, disabled],
   );
-
-  // The focus `autoFocus` gives the input as it mounts opens no list, which would cover the fields below before the user
-  // does anything, so the list opens on the user's own focus, click or typing. React focuses it while committing the
-  // mount, before this effect runs
-  const focusedOnMount = useRef(autoFocus);
-  useEffect(() => {
-    focusedOnMount.current = false;
-  }, []);
-  const openList = useCallback(() => {
-    if (!disabled && !focusedOnMount.current) {
-      setOpen(true);
-    }
-  }, [disabled]);
 
   const handleFocus = useCallback(
     (e: FocusEvent<HTMLDivElement>) => {
