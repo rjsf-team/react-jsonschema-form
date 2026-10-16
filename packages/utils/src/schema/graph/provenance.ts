@@ -2,7 +2,7 @@ import { RJSF_PROVENANCE_KEY } from '../../constants.ts';
 import type { RJSFSchema, StrictRJSFSchema } from '../../types.ts';
 import { seedsKey } from './mergePlan.ts';
 import type { Seed } from './mergePlan.ts';
-import type { SchemaGraph } from './parseSchemaGraph.ts';
+import type { NodeId, SchemaGraph } from './parseSchemaGraph.ts';
 
 /** The plan sets of a field's ancestors since its chain last restarted, which the set-equality guard checks a field's
  * own plan set against. Interned per graph: one parent chain extended by one set is one chain.
@@ -20,10 +20,10 @@ export interface GuardChain {
 export interface ProvenanceFields {
   readonly seeds: readonly Seed[];
   readonly chain?: GuardChain;
-  /** For an `anyOf`/`oneOf` option, the `setKey` of the plan of the field offering it: an option whose own plan adds
-   * nothing to that set renders nothing beside the selector
+  /** For an `anyOf`/`oneOf` option, the set and `setKey` of the plan of the field offering it: an option whose own plan
+   * adds nothing to that set renders nothing beside the selector
    */
-  readonly optionOf?: string;
+  readonly optionOf?: { readonly setKey: string; readonly set: ReadonlySet<NodeId> };
 }
 
 /** A copy's provenance: the field it is the schema of, by the graph it was planned in and the seeds and chain the
@@ -110,7 +110,7 @@ function intern<S extends StrictRJSFSchema>(
   parent?: Provenance<S>,
 ): Provenance<S> {
   const table = tableOf(graph);
-  const key = [parent?.id, seedsKey(fields.seeds), fields.chain?.id, fields.optionOf].join('|');
+  const key = [parent?.id, seedsKey(fields.seeds), fields.chain?.id, fields.optionOf?.setKey].join('|');
   const interned = table.provenances.get(key);
   if (isProvenanceOf(interned, graph)) {
     return interned;

@@ -282,8 +282,11 @@ export function resolveOwnRef<S extends StrictRJSFSchema = RJSFSchema>(schema: S
 }
 
 /** Whether an option's plan adds nothing to the plan of the field offering it, beyond the option's own `$ref` */
-function addsNothing<S extends StrictRJSFSchema>(plan: MergePlan<S>, field: Provenance<S>, optionOf: string): boolean {
-  const offered = new Set(optionOf.split(',').map(Number));
+function addsNothing<S extends StrictRJSFSchema>(
+  plan: MergePlan<S>,
+  field: Provenance<S>,
+  offered: ReadonlySet<NodeId>,
+): boolean {
   const [seed] = field.seeds;
   const seedNode = field.graph.node(seed.node);
   return [...plan.set].every(
@@ -318,7 +321,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
   }
   const reads: [string, unknown][] = [];
   const seedNode = graph.node(seeds[0].node);
-  if (field.optionOf !== undefined && seedNode.kind === 'schema' && addsNothing(plan, field, field.optionOf)) {
+  if (field.optionOf !== undefined && seedNode.kind === 'schema' && addsNothing(plan, field, field.optionOf.set)) {
     // An option such as a `$ref` back to the schema offering it: merged in, it would render that schema again inside
     // itself, without end
     return handOut(withoutKeys(seedNode.raw, REF_KEY), field);
@@ -423,7 +426,7 @@ function buildView<S extends StrictRJSFSchema, F extends FormContextType>(
           const provenance = childProvenance(field, {
             seeds: [{ node, refPath: [] }],
             chain: optionChain,
-            optionOf: plan.setKey,
+            optionOf: { setKey: plan.setKey, set: plan.set },
           });
           return resolveOptions ? buildView(context, root, provenance, data, false) : handOut(option, provenance);
         }),

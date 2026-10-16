@@ -35,15 +35,16 @@ describe('provenance', () => {
     const parent = rootProvenance(graph, seeds);
     const chain = extendChain(graph, undefined, '0,1');
     const child = { seeds: [{ node: 2, refPath: [1] }] };
+    const optionOf = { setKey: '0', set: new Set([0]) };
     const variants = [
       childProvenance(parent, child),
       childProvenance(parent, { seeds: [{ node: 2, refPath: [1, 1] }] }),
       childProvenance(parent, { ...child, chain }),
-      childProvenance(parent, { ...child, chain, optionOf: '0' }),
+      childProvenance(parent, { ...child, chain, optionOf }),
       rootProvenance(graph, child.seeds),
     ];
     expect(new Set(variants).size).toBe(variants.length);
-    expect(childProvenance(parent, { ...child, chain, optionOf: '0' })).toBe(variants[3]);
+    expect(childProvenance(parent, { ...child, chain, optionOf: { ...optionOf } })).toBe(variants[3]);
     expect(variants[0].parent).toBe(parent);
   });
   it('prints as its id, rather than as the graph it points into', () => {
