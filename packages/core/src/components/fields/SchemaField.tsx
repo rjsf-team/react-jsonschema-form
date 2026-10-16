@@ -276,7 +276,7 @@ function resolveNamedField<
     );
   }
   if (schemaId) {
-    const resolved = getByPath(fields, schemaId);
+    const resolved = lookUpUiField<T, S, F>(schemaId, fields);
     if (isComponentType<FieldProps<T, S, F>>(resolved)) {
       return { namedField: resolved, ignored };
     }
@@ -562,8 +562,9 @@ function SchemaFieldRender<
   // Memoized so a child reading it past a `memo` boundary isn't re-rendered by a new object each render
   const fieldUiSchema = useMemo<UiSchema<T, S, F>>(() => omitConsumedStyling<T, S, F>(uiSchema), [uiSchema]);
   const ownUiOptions = useMemo(() => getUiOptions<T, S, F>(uiSchema), [uiSchema]);
-  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time.
-  // Nothing compares either object by identity; both are memoized because the React Compiler
+  // What `getUiOptions(uiSchema, globalUiOptions)` returns, without reading the `uiSchema`'s keys a second time, except
+  // that a global `required` it drops is kept: nothing reads `required` from these options, since `ui:required` is
+  // resolved from `ownUiOptions` alone below. Nothing compares either object by identity; both are memoized because the React Compiler
   // (`react/preserve-manual-memoization`) refuses the options memo below when the flags it depends on derive from an
   // object rebuilt each render, which it takes for one that may still be mutated
   const uiOptions = useMemo<UIOptionsType<T, S, F>>(
