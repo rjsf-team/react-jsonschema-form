@@ -1,13 +1,14 @@
 import type { ChangeEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsDomValues,
   enumOptionsIsDisabled,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
+  getGroupAttributes,
   getOptionValueFormat,
+  hasWidgetErrors,
   optionId,
   useOptionFocusHandlers,
 } from '@rjsf/utils';
@@ -17,19 +18,9 @@ export default function CheckboxesWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({
-  id,
-  htmlName,
-  disabled,
-  options,
-  value,
-  autofocus,
-  readonly,
-  required,
-  onChange,
-  onBlur,
-  onFocus,
-}: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const { id, htmlName, disabled, options, value, autofocus, readonly, onChange, onBlur, onFocus, presentation } =
+    props;
   const { enumOptions, enumDisabled, inline } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -45,10 +36,15 @@ export default function CheckboxesWidget<
       }
     };
 
+  const invalid = hasWidgetErrors<T, S, F>(props);
   const { focusHandlers, blurHandlers } = useOptionFocusHandlers<T, S, F>({ id, options, onFocus, onBlur });
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'group',
+  );
 
   return (
-    <Form.Group>
+    <Form.Group id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index: number) => {
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
@@ -59,8 +55,8 @@ export default function CheckboxesWidget<
               // oxlint-disable-next-line react/no-array-index-key
               key={index}
               inline={inline}
-              required={required}
               checked={checked}
+              isInvalid={invalid}
               value={domValues[index]}
               className='bg-transparent border-0'
               type='checkbox'
@@ -72,7 +68,7 @@ export default function CheckboxesWidget<
               onBlur={blurHandlers[index]}
               onFocus={focusHandlers[index]}
               disabled={disabled || itemDisabled || readonly}
-              aria-describedby={ariaDescribedByIds(id)}
+              {...optionAttributes}
             />
           );
         })}

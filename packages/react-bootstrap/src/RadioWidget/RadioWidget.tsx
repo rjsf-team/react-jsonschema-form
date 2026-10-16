@@ -1,12 +1,13 @@
 import type { ChangeEvent, FocusEvent } from 'react';
 import type { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import {
-  ariaDescribedByIds,
   enumOptionsIsDisabled,
   enumOptionValueDecoder,
   enumOptionsDomValues,
   enumOptionsIsSelected,
+  getGroupAttributes,
   getOptionValueFormat,
+  hasWidgetErrors,
   optionId,
 } from '@rjsf/utils';
 import { Form } from 'react-bootstrap';
@@ -15,7 +16,21 @@ export default function RadioWidget<
   T = unknown,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = FormContextType,
->({ id, htmlName, options, value, required, disabled, readonly, onChange, onBlur, onFocus }: WidgetProps<T, S, F>) {
+>(props: WidgetProps<T, S, F>) {
+  const {
+    id,
+    htmlName,
+    options,
+    value,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    onChange,
+    onBlur,
+    onFocus,
+    presentation,
+  } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const optionValueFormat = getOptionValueFormat(options);
   const domValues = enumOptionsDomValues<S>(enumOptions, optionValueFormat);
@@ -28,9 +43,14 @@ export default function RadioWidget<
     onFocus(id, enumOptionValueDecoder<S>(target?.value, enumOptions, optionValueFormat, emptyValue));
 
   const inline = Boolean(options?.inline);
+  const invalid = hasWidgetErrors<T, S, F>(props);
+  const { group: groupAttributes, option: optionAttributes } = getGroupAttributes<T, S, F>(
+    { id, presentation },
+    'radiogroup',
+  );
 
   return (
-    <Form.Group className='mb-0'>
+    <Form.Group className='mb-0' id={id} {...groupAttributes}>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, index) => {
           const itemDisabled = enumOptionsIsDisabled(option.value, enumDisabled);
@@ -48,11 +68,13 @@ export default function RadioWidget<
               disabled={disabled || itemDisabled || readonly}
               checked={checked}
               required={required}
+              autoFocus={autofocus && index === 0}
+              isInvalid={invalid}
               value={domValues[index]}
               onChange={handleChange}
               onBlur={handleBlur}
               onFocus={handleFocus}
-              aria-describedby={ariaDescribedByIds(id)}
+              {...optionAttributes}
             />
           );
           return radio;

@@ -5,7 +5,10 @@ import { makeWidgetMockProps } from './helpers/createMocks.ts';
 
 describe('TextareaWidget', () => {
   test('simple without errors', () => {
-    const { asFragment } = render(<TextareaWidget {...makeWidgetMockProps({})} />);
+    const { asFragment } = render(
+      // oxlint-disable-next-line typescript/no-deprecated -- the mock's default errors would style the textarea invalid
+      <TextareaWidget {...makeWidgetMockProps({ rawErrors: [] })} />,
+    );
     expect(asFragment()).toMatchSnapshot();
   });
   test('simple with errors', () => {
