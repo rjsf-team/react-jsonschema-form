@@ -38,6 +38,7 @@ import {
   fieldPathToName,
   toFieldPath,
 } from './fieldPath.ts';
+import findSchemaDefinition from './findSchemaDefinition.ts';
 import flattenGroupedOptions from './flattenGroupedOptions.ts';
 import getChangedFields from './getChangedFields.ts';
 import type { DateElementFormat, DateElementProp } from './getDateElementProps.ts';
@@ -230,6 +231,8 @@ export {
   expandButtonId,
   ErrorSchemaBuilder,
   fieldLabelId,
+  // oxlint-disable-next-line typescript/no-deprecated -- re-exported for callers written against 6.x
+  findSchemaDefinition,
   flattenGroupedOptions,
   getAdditionalPropertySchema,
   getChangedFields,

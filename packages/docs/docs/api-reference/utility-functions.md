@@ -720,6 +720,23 @@ Derives the HTML `name` for `fieldPath` using the `nameGenerator` in `globalForm
 
 - string | undefined: The name for the field, or undefined when no `nameGenerator` is configured or `fieldPath` is the root
 
+### findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+**Deprecated.** Kept for callers written against 6.x; resolve a `$ref` as the form does with `schemaUtils.retrieveSchema({ $ref })` instead.
+
+Returns the definition `$ref` names in `rootSchema`, resolved through the schema graph as the form resolves a field's `$ref`: a JSON pointer, an `$anchor` or the `$id` of an embedded resource, each resolved against the `$id`s around it, with every `$ref` below the target followed, the annotations beside a followed `$ref` read over the target's and any other keywords beside it merged with the target as the `allOf` of both.
+The result is shared across calls and marked with `RJSF_REF_KEY`, so copy it rather than changing it.
+Throws `Could not find a definition for …` for a `$ref` that names nothing, and `Definition for … is a circular reference` for a chain of `$ref`s that loops back on itself.
+
+#### Parameters
+
+- [$ref]: string - The `$ref` to resolve
+- [rootSchema={}]: S - The root schema the `$ref` names a definition of
+
+#### Returns
+
+- S: The definition the `$ref` names
+
 ### flattenGroupedOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Flattens the list returned by `groupEnumOptions()` back into a single list of options, in the same order they appear in that list: each group's options in place of the group, followed by any standalone options.
