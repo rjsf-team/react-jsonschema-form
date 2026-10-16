@@ -53,11 +53,18 @@ export default class AJV8Validator<
   private hasRegisteredRootSchema = false;
 
   /** The keys `isValid()` added schemas to Ajv under. A schema such as `{ $ref: '#/definitions/x' }` means something
-   * else under every root, so they are removed whenever the root registered under the same id is replaced.
+   * else under every root, and one with an `$id` of its own is keyed by that `$id` whatever root it names, so they are
+   * removed whenever another root is checked against or the one registered under the same id is replaced.
    *
    * @private
    */
   private readonly subschemaIds = new Set<string>();
+
+  /** The id the root `isValid()` last checked against is registered under
+   *
+   * @private
+   */
+  private currentRootSchemaId?: string;
 
   /** Constructs an `AJV8Validator` instance using the `options`
    *
@@ -91,6 +98,7 @@ export default class AJV8Validator<
   reset() {
     this.ajv.removeSchema();
     this.subschemaIds.clear();
+    this.currentRootSchemaId = undefined;
     this.lastSeenRootSchema = undefined;
     this.hasRegisteredRootSchema = false;
   }
@@ -104,11 +112,16 @@ export default class AJV8Validator<
    */
   private replaceRootSchema(rootSchema: S, rootSchemaId: string, validate: boolean) {
     this.ajv.removeSchema(rootSchemaId);
-    this.subschemaIds.forEach((id) => this.ajv.removeSchema(id));
-    this.subschemaIds.clear();
+    this.removeSubschemas();
     if (isObject(rootSchema)) {
       this.ajv.addSchema(rootSchema, rootSchemaId, undefined, validate);
     }
+  }
+
+  /** Removes the schemas `isValid()` added, which were compiled against the root registered when they were added */
+  private removeSubschemas() {
+    this.subschemaIds.forEach((id) => this.ajv.removeSchema(id));
+    this.subschemaIds.clear();
   }
 
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
@@ -264,6 +277,10 @@ export default class AJV8Validator<
       // registered, unvalidated, so a `$ref` into its definitions resolves from the first call on. The old root is
       // dropped first because comparing against it compiles it, which throws for a rejected root.
       this.replaceRootSchema(rootSchema, rootSchemaId, false);
+    }
+    if (this.currentRootSchemaId !== rootSchemaId) {
+      this.removeSubschemas();
+      this.currentRootSchemaId = rootSchemaId;
     }
     this.lastSeenRootSchema = rootSchema;
     this.hasRegisteredRootSchema = true;
