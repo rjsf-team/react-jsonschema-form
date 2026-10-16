@@ -13,6 +13,7 @@ import {
   getTemplates,
   getUiOptions,
   getWidgetType,
+  templateDrawsDescription,
   templateDrawsLabel,
   templateLabelFor,
   templateMarksRequired,
@@ -181,7 +182,7 @@ export default function FieldTemplate<
           </label>
         )}
         {children}
-        {!widgetRendersLabel && description ? description : null}
+        {!widgetRendersLabel && templateDrawsDescription<T, S, F>(props) && description ? description : null}
         {errors}
         {help}
       </div>
