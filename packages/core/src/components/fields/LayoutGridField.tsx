@@ -24,6 +24,7 @@ import {
   isComponentType,
   isObject,
   isPlainObject,
+  describeUnresolvedComponent,
   logOnce,
   lookupFromFormContext,
   LOOKUP_MAP_NAME,
@@ -37,7 +38,6 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog from '../../fieldLabelForLog.ts';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 
