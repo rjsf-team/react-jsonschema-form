@@ -601,6 +601,7 @@ Return a consistent `id` for the field error element.
 
 Returns the `value` under `key` when it is a child node of an `ErrorSchema`: a plain object, or an array holding the errors of an array field's items, which the walks of an `ErrorSchema` descend into.
 An `__errors` array holds messages, not nodes, so a value under `__errors` is never a child.
+Any other object, such as a class instance or a plain object made in another realm (an iframe, say), is not a supported node: its `__errors` still show on its field, but are not listed, do not block the submit and are not dropped with a field's raised errors.
 
 #### Parameters
 

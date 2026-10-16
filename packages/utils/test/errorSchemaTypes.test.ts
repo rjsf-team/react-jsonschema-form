@@ -98,6 +98,8 @@ describe('ErrorSchema type', () => {
     // @ts-expect-error an array's items are keyed by index in an object
     const arrayRoot: ErrorSchema<string[]> = [{ __errors: ['bad item'] }];
     const lengthField: ErrorSchema<Data> = { measured: { length: { __errors: ['too long'] } } };
+    // The object member's `length` field gives `length` a node, which an array's `length` satisfies
+    const lengthUnionList: ErrorSchema<Data> = { measured: [{ __errors: ['bad item'] }] };
     const untyped: ErrorSchema = { list: [{ __errors: ['bad item'] }] };
     const neverField: ErrorSchema<Data> = { retired: { __errors: ['no longer accepted'] } };
 
@@ -106,6 +108,7 @@ describe('ErrorSchema type', () => {
     expect(tuple.pair).toBeDefined();
     expect(arrayRoot).toBeDefined();
     expect(lengthField.measured?.length?.__errors).toEqual(['too long']);
+    expect(lengthUnionList.measured).toBeDefined();
     expect(neverField.retired?.__errors).toEqual(['no longer accepted']);
     expect(untyped.list).toBeDefined();
   });

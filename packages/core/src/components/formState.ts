@@ -390,6 +390,13 @@ function isPathPrefix(prefix: FieldPathList, path: FieldPathList): boolean {
   return prefix.length <= path.length && prefix.every((segment, i) => String(segment) === String(path[i]));
 }
 
+/** Defines `value` under `key` as an own data property of `target`. A JSON-sourced `__proto__` key is a field name like
+ * any other, and a plain assignment would reach the setter and swap `target`'s prototype for `value`
+ */
+function setOwnKey(target: Record<string, unknown>, key: string, value: unknown) {
+  Object.defineProperty(target, key, { value, enumerable: true, writable: true, configurable: true });
+}
+
 /** A copy of `errorSchema` without the `__errors` of the nodes `isDropped` names, and without the nodes that hold
  * nothing, an empty `__errors` or a `null` or `undefined` child included, which a raise at an ancestor would read as
  * errors still being there. `path` is that of `errorSchema` itself. An array a raise holds for the items of an array
@@ -412,7 +419,7 @@ function pruneErrorSchema(
       const node = errorSchemaChild(key, value);
       const child = node ? pruneErrorSchema(node, isDropped, [...path, key]) : value;
       if (!isPlainObject(child) || Object.keys(child).length > 0) {
-        kept[key] = child;
+        setOwnKey(kept, key, child);
       }
     }
   }
@@ -498,7 +505,7 @@ function moveErrorSchemaKeys<T>(errorSchema: ErrorSchema<T>, path: FieldPathList
     const newKey = key === ERRORS_KEY ? key : newKeyOf(key);
     if (newKey !== undefined) {
       // A rename onto a key that holds errors, such as a declared property the data lacks, keeps both
-      moved[newKey] = Object.hasOwn(moved, newKey) ? mergeObjects(moved[newKey], node, true) : node;
+      setOwnKey(moved, newKey, Object.hasOwn(moved, newKey) ? mergeObjects(moved[newKey], node, true) : node);
     }
   }
   return replaceErrorSchemaNode(errorSchema, path, moved);
