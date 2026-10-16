@@ -2286,6 +2286,19 @@ Two schemas sharing a key must validate the same way, so a schema derived from a
 
 - string: The `$id` of the schema if it has a non-empty one, otherwise the hash of the schema
 
+### schemaParser&lt;S extends StrictRJSFSchema = RJSFSchema>()
+
+**Deprecated.** Another name for [`getValidationSchemas()`](#getvalidationschemassextendsstrictrjsfschemarjsfschema), kept for callers written against 6.x.
+It returns the same list, which changed with the rename, so code calling it still has to regenerate its precompiled validators.
+
+#### Parameters
+
+- rootSchema: S - The root schema to list the validated schemas of
+
+#### Returns
+
+- SchemaMap&lt;S>: The schemas, keyed by `schemaKey()`
+
 ### schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Check to see if a `schema` specifies that a value must be true. This happens when:
