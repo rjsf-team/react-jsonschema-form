@@ -43,6 +43,7 @@ import {
   resolveUiSchema,
   RJSF_REF_CYCLE_KEY,
   shouldRenderOptionalField,
+  describeUnresolvedComponent,
   isObject,
   toConstant,
   toFieldPath,
@@ -53,7 +54,6 @@ import {
   uiBooleanOption,
 } from '@rjsf/utils';
 
-import describeUnresolvedComponent from '../../describeUnresolvedComponent.ts';
 import fieldLabelForLog, { entryLabelForLog } from '../../fieldLabelForLog.ts';
 import hasOptionLabels from '../../hasOptionLabels.ts';
 import optionRendersFieldLabel from './optionRendersFieldLabel.ts';
@@ -571,6 +571,7 @@ function SchemaFieldRender<
   const { FieldTemplate, DescriptionFieldTemplate, FieldHelpTemplate, FieldErrorTemplate } = getTemplates<T, S, F>(
     registry,
     uiOptions,
+    fieldLabelForLog(fieldId, fieldPath),
   );
 
   const deprecatedHandling = getDeprecatedHandling<T, S, F>(schema, uiOptions);
