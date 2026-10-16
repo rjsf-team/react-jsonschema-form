@@ -635,6 +635,26 @@ describe('option selection as form state', () => {
     expect(selectOf(node, 'root_1__anyof_select')).toHaveValue('1');
   });
 
+  it('drops the selection of an additional property with the property, so one added under its name starts over', async () => {
+    const schema: RJSFSchema = {
+      type: 'object',
+      additionalProperties: {
+        anyOf: [
+          { title: 'A', type: 'object', properties: { name: { type: 'string' } } },
+          { title: 'B', type: 'object', properties: { name: { type: 'string' }, more: { type: 'string' } } },
+        ],
+      },
+    };
+    const { node } = createFormComponent({ schema, initialFormData: {} });
+    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+    await user.selectOptions(selectOf(node, 'root_newKey__anyof_select'), 'B');
+
+    await user.click(elementOf(node, '.rjsf-object-property-remove'));
+    await user.click(elementOf(node, '.rjsf-object-property-expand button'));
+
+    expect(selectOf(node, 'root_newKey__anyof_select')).toHaveValue('0');
+  });
+
   it('keeps the selection of a field whose components unmount and mount again', async () => {
     const schema: RJSFSchema = {
       type: 'object',

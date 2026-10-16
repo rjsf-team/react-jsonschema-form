@@ -8,7 +8,7 @@ import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 /** The `CyclicSchemaField` component renders a field `retrieveSchema()` collapsed as a `$ref` cycle (marked with
  * `RJSF_REF_CYCLE_KEY`): an Expand button until the field is expanded, and then the field resolved one level further.
  * Which fields are expanded is the form's state, by path, so an expansion outlives the field's components and follows
- * the array moves the form is told of; outside a `Form` it is the outermost `SchemaField`'s, see `useUiState()`.
+ * the moves the form is told of, of array items and of additional properties renamed or removed; outside a `Form` it is the outermost `SchemaField`'s, see `useUiState()`.
  *
  * @param props - The `FieldProps` for this template
  */

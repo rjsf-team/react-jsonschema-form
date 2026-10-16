@@ -18,6 +18,7 @@ import {
   getByPath,
   hasByPath,
   setByPath,
+  unsetByPath,
   ADDITIONAL_PROPERTIES_KEY,
   ADDITIONAL_PROPERTY_FLAG,
   allowsAdditionalProperties,
@@ -46,7 +47,7 @@ import {
 } from '@rjsf/utils';
 
 import useFieldView from '../../hooks/useFieldView.ts';
-import { ADDITIONAL_PROPERTY_KEY_REMOVE, EMPTY_UI_SCHEMA } from '../constants.ts';
+import { EMPTY_UI_SCHEMA } from '../constants.ts';
 import RichDescription from '../RichDescription.tsx';
 import RawFormDataContext, { useReadsFormData } from './RawFormDataContext.ts';
 import { useShownOptionBeside } from './ShownOptionContext.ts';
@@ -721,15 +722,22 @@ export default function ObjectField<
     [onChange, fieldPath, getAvailableKey, seedForKey, view, readData],
   );
 
-  /** Handles the remove click which calls the `onChange` callback with the special ADDITIONAL_PROPERTY_FIELD_REMOVE
-   * value for the path plus the key to be removed
+  /** Handles the remove click, proposing the object without the property, and saying the property is gone, so the form
+   * drops what it holds for it, its errors and its option selection among them, rather than leaving them to a property
+   * added under its name
    */
   const handleRemoveProperty = useCallback(
     (key: string) => {
+      const newFormData = copyObjectData(readData());
+      unsetByPath(newFormData, [key]);
       setAdditionalPropertyOrder((order) => order.filter((property) => property !== key));
-      onChange(ADDITIONAL_PROPERTY_KEY_REMOVE as T, toFieldPath(key, fieldPath));
+      view.propose(
+        newFormData,
+        () => onChange(newFormData, fieldPath),
+        (property) => (property === key ? undefined : property),
+      );
     },
-    [onChange, fieldPath],
+    [readData, view, onChange, fieldPath],
   );
 
   /** Returns the stable React key for a property. For the most recently renamed

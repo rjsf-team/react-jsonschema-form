@@ -40,7 +40,6 @@ import {
 } from '@rjsf/utils';
 
 import { buildRegistry } from '../Theme.ts';
-import { ADDITIONAL_PROPERTY_KEY_REMOVE } from './constants.ts';
 import type { FormProps, FormState } from './Form.tsx';
 import type { EventFormData, IChangeEvent } from './IChangeEvent.ts';
 import type { FieldTree } from './sanitizeFieldTree.ts';
@@ -516,13 +515,6 @@ function moveErrorKeys<T>(validation: ValidationData<T>, path: FieldPathList, ne
   return { errors, errorSchema: moveErrorSchemaKeys(validation.errorSchema, path, newKeyOf) };
 }
 
-/** What a change says of the field's own errors: its raise, with the removal of a key counting as an empty one, since
- * nothing is left at its path for an error to describe
- */
-function raiseOf<T>({ newValue, newErrorSchema }: PendingChange<T>): ErrorSchema<T> | undefined {
-  return newErrorSchema ?? (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE ? {} : undefined);
-}
-
 /** The fields' own errors of `current` after `change`, by the rules of `applyChangeToErrors()`: the part of what a
  * change does to the errors that needs no validator result, which is all that live validation keeps of it
  *
@@ -534,9 +526,8 @@ export function ownErrorsAfterChange<T, S extends StrictRJSFSchema, F extends Fo
   current: FormState<T, S, F>,
   change: PendingChange<T>,
 ): ErrorSchema<T> | undefined {
-  const { fieldPath, newKeyOf, newOwnKeyOf, dropsOwnErrors } = change;
+  const { fieldPath, newKeyOf, newOwnKeyOf, dropsOwnErrors, newErrorSchema: raised } = change;
   const path = fieldPathToList(fieldPath);
-  const raised = raiseOf(change);
   let { customErrors } = current;
   const hasOwnErrors = getByPath<string[]>(customErrors, [...path, ERRORS_KEY], []).length > 0;
   if (newKeyOf && customErrors) {
@@ -584,9 +575,8 @@ export function applyChangeToErrors<T, S extends StrictRJSFSchema, F extends For
   change: PendingChange<T>,
   extraErrors: ErrorSchema<T> | undefined,
 ): OwnedErrorState<T> {
-  const { fieldPath, newKeyOf } = change;
+  const { fieldPath, newKeyOf, newErrorSchema: raised } = change;
   const customErrors = ownErrorsAfterChange(current, change);
-  const raised = raiseOf(change);
   if (!newKeyOf && !raised && customErrors === current.customErrors) {
     return ownedErrorsOf(current);
   }
@@ -1074,10 +1064,7 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     // and AJV never receives { key: undefined } for type:"string" fields (#4518).
     let plainLeafWasCleared = false;
 
-    if (newValue === ADDITIONAL_PROPERTY_KEY_REMOVE) {
-      // For additional properties, this key was explicitly removed, so unset it
-      unsetByPath(formData, path);
-    } else if (!isRootPath) {
+    if (!isRootPath) {
       // Set the new value at its path in the form data.
       let valueForPath: T | null | undefined = newValue;
 
