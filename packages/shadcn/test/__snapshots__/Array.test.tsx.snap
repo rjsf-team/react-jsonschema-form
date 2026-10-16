@@ -4219,10 +4219,13 @@ exports[`with title and description > array 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -4324,10 +4327,13 @@ exports[`with title and description > array icons 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -4883,10 +4889,13 @@ exports[`with title and description > fixed array 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  Test field
+                  <span
+                    id="root__title"
+                  >
+                    Test field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -5060,10 +5069,13 @@ exports[`with title and description from both > array 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -5165,10 +5177,13 @@ exports[`with title and description from both > array icons 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -5724,10 +5739,13 @@ exports[`with title and description from both > fixed array 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -5901,10 +5919,13 @@ exports[`with title and description from uiSchema > array 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -6006,10 +6027,13 @@ exports[`with title and description from uiSchema > array icons 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
@@ -6565,10 +6589,13 @@ exports[`with title and description from uiSchema > fixed array 1`] = `
             >
               <div
                 class="my-1 flex flex-col gap-0.5"
-                id="root__title"
               >
                 <h5>
-                  My Field
+                  <span
+                    id="root__title"
+                  >
+                    My Field
+                  </span>
                 </h5>
                 <div
                   class="bg-border shrink-0 data-[orientation=horizontal]:h-px data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-px my-1"
