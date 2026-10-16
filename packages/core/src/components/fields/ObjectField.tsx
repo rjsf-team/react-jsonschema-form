@@ -724,9 +724,8 @@ export default function ObjectField<
 
         // The errors the form holds under the old name describe the property, so they go to its new name with it
         const isRefused =
-          sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () =>
-            onChange(renamedObj, fieldPath),
-          ) === 'refused';
+          sendMove({ newKeyOf: (key) => (key === oldKey ? actualNewKey : key) }, () => onChange(renamedObj, fieldPath))
+            ?.kind === 'refused';
         // Recorded once the rename is taken: a refused one leaves the property its name, its place among the others
         // and the React key the last rename gave another property, so that property keeps its instance
         if (!isRefused) {

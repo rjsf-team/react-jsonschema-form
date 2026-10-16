@@ -39,10 +39,10 @@ interface OptionSelection<T> {
   selectedOption: number;
   formData: T | undefined;
   id: string;
-  /** The data the user's last option switch sent, so the data the form answers it with tells an accepted switch, which
-   * keeps the explicit choice, from one refused or rewritten, which the option is re-matched to
+  /** The data the user's last option switch sent, and what the form stored for it when it took the switch as sent, so
+   * an accepted switch keeps the explicit choice and one refused or rewritten is re-matched to the data the form kept
    */
-  switched: { formData: T | undefined } | undefined;
+  switched: { formData: T | undefined; taken?: { kept: unknown } } | undefined;
 }
 
 /** Re-matches the selected option of an `AnyOfField` to data that changed under the same field
@@ -68,8 +68,12 @@ function optionForData<
   const { selectedOption, switched } = selection;
   const { schemaUtils } = registry;
   if (switched) {
-    // The data came back as the switch sent it, so the form accepted the switch
-    if (deepEqualsUndefinedAsMissing(formData, switched.formData)) {
+    // The data is what the form stored for the switch it took, the defaults it derived for it included; or, from a
+    // parent other than a form, the data came back as the switch sent it
+    if (
+      (switched.taken && deepEquals(formData, switched.taken.kept)) ||
+      deepEqualsUndefinedAsMissing(formData, switched.formData)
+    ) {
       return selectedOption;
     }
     // The data is not what the switch sent, which is what a `transformChange` or an `onChange` that refuses or
@@ -255,8 +259,7 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         uiSchemaDefinitions,
       });
 
-      setSelection((current) => ({ ...current, selectedOption: intOption, switched: { formData: newFormData } }));
-      sendOptionSwitch(
+      const outcome = sendOptionSwitch(
         schema,
         {
           oldOption,
@@ -269,6 +272,11 @@ function AnyOfField<T = unknown, S extends StrictRJSFSchema = RJSFSchema, F exte
         newFormData,
         () => onChange(newFormData, fieldPath, undefined, fieldId),
       );
+      setSelection((current) => ({
+        ...current,
+        selectedOption: intOption,
+        switched: { formData: newFormData, taken: outcome?.kind === 'taken' ? { kept: outcome.kept } : undefined },
+      }));
     },
     [
       selectedOption,

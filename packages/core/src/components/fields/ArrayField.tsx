@@ -1154,23 +1154,26 @@ export default function ArrayField<
       const outcome = sendMove({ newKeyOf: moveOfItems((index) => newIndexes.get(rows[index])) }, () =>
         onChange(updateKeyedFormData(newKeyedFormData), fieldPath),
       );
-      if (outcome === 'refused') {
+      if (outcome?.kind === 'refused') {
         updateKeyedFormData(rows);
-      } else if (outcome !== 'taken') {
+      } else if (outcome?.kind === 'rewritten') {
+        const items: T[] = Array.isArray(outcome.kept) ? outcome.kept : [];
         const edited: unknown[] = Array.isArray(outcome.edited) ? outcome.edited : [];
-        const kept: KeyedFormDataType<T>[] = [];
-        readRows().forEach(({ item }, index) => {
+        const rewritten: KeyedFormDataType<T>[] = [];
+        // By index, as `readRows()` reads them, so a hole is an item with a row of its own
+        for (let index = 0; index < items.length; index++) {
+          const item = items[index];
           const row = newKeyedFormData[index];
           const { key, order } =
             row && index < edited.length && deepEquals(item, edited[index])
               ? row
-              : newRowId([...newKeyedFormData, ...kept]);
-          kept.push({ key, order, item });
-        });
-        updateKeyedFormData(kept);
+              : newRowId([...newKeyedFormData, ...rewritten]);
+          rewritten.push({ key, order, item });
+        }
+        updateKeyedFormData(rewritten);
       }
     },
-    [sendMove, onChange, updateKeyedFormData, fieldPath, readRows, newRowId],
+    [sendMove, onChange, updateKeyedFormData, fieldPath, newRowId],
   );
 
   /** Callback handler for when the user clicks on the add or add at index buttons. Creates a new row of keyed form data

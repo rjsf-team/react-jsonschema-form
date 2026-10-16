@@ -4413,3 +4413,51 @@ describe('oneOf', () => {
     expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
   });
 });
+
+describe.each(['oneOf', 'anyOf'] as const)('an %s option switch the form takes', (keyword) => {
+  it('keeps the chosen option when the defaults the switch brings in add to the data it sent', async () => {
+    // Option A describes data with a `kind` and a `note` better than option B does, so only the user's choice keeps B
+    const schema: RJSFSchema = {
+      type: 'object',
+      properties: {
+        status: {
+          [keyword]: [
+            {
+              title: 'A',
+              type: 'object',
+              properties: { kind: { type: 'string' }, note: { type: 'string' }, by: { type: 'string' } },
+              required: ['by'],
+            },
+            {
+              title: 'B',
+              type: 'object',
+              properties: { kind: { const: 'b' }, reason: { type: 'string' } },
+              required: ['reason'],
+            },
+          ],
+        },
+      },
+      // The switched value turns this on, so the form's own derivation adds `note` under the field's path
+      allOf: [
+        {
+          if: {
+            properties: { status: { properties: { kind: { const: 'b' } }, required: ['kind'] } },
+            required: ['status'],
+          },
+          then: { properties: { status: { properties: { note: { type: 'string', default: 'n' } } } } },
+        },
+      ],
+    };
+    const { node, onChange } = createFormComponent({ schema, initialFormData: { status: { by: 'me' } } });
+    const selector = elementOf(node, `#root_status__${keyword.toLowerCase()}_select`);
+
+    await user.selectOptions(selector, 'B');
+
+    expect(onChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ formData: { status: { kind: 'b', note: 'n' } } }),
+      `root_status__${keyword.toLowerCase()}_select`,
+    );
+    expect(selector).toHaveValue('1');
+    expect(node.querySelector('#root_status_reason')).toBeInTheDocument();
+  });
+});

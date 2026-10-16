@@ -144,11 +144,15 @@ export interface FieldChange<T> {
   clearedPath?: FieldPathList;
 }
 
-/** What became of a change that moved keys, see `FormDataAccess.sendMove()`: taken as sent; refused by
- * `transformChange`, which leaves the keys where they were; or rewritten by it, with `edited`, the value the change alone
- * would have left at its path, for a field to tell which of the keys it moved still hold what it moved there
+/** What became of a change that moved keys, see `FormDataAccess.sendMove()`: refused by `transformChange`, which leaves
+ * the keys where they were, or stored, with `kept`, what the form stored at the change's path. A change `transformChange`
+ * rewrote also has `edited`, what the change alone would have left there, for a field to tell which of the keys it
+ * moved still hold what it moved there
  */
-export type MoveOutcome = 'taken' | 'refused' | { edited: unknown };
+export type MoveOutcome =
+  | { kind: 'refused' }
+  | { kind: 'taken'; kept: unknown }
+  | { kind: 'rewritten'; kept: unknown; edited: unknown };
 
 /** Where a change put what an array or object held under `key`: the new key, or `undefined` when it is gone */
 type KeyMove = (key: string) => string | undefined;

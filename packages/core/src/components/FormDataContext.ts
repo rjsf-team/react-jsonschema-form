@@ -14,9 +14,10 @@ interface FormDataAccess {
    * where a key went.
    *
    * Returns what became of that change, so a field that moved its own record of the keys, such as an array's row keys,
-   * can move it back where `transformChange` refused the change, or rewrote it.
+   * can move it back where `transformChange` refused the change, or rewrote it; `undefined` when the change never
+   * reached the form at that path.
    */
-  sendMove(move: AnnouncedMove, send: () => void): MoveOutcome;
+  sendMove(move: AnnouncedMove, send: () => void): MoveOutcome | undefined;
   /** The form's current data at `path` */
   readField<D>(path: FieldPath): D;
 }

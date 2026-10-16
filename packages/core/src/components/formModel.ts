@@ -325,10 +325,11 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     const move = announced?.fieldPath === fieldPath ? announced : undefined;
     if (move) {
       announced = undefined;
-      moved = { move, outcome: 'refused' };
+      moved = { move, outcome: { kind: 'refused' } };
     }
+    const path = fieldPathToList(fieldPath);
     deliver(() => {
-      let outcome: MoveOutcome = 'taken';
+      let edit: { isRefused: boolean; edited?: FormState<T, S, F> } = { isRefused: false };
       const committed = commit(
         settled((base) => {
           const { next, edited } = applyEdit(
@@ -344,17 +345,18 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
             props,
           );
           // `applyEdit()` hands `base` itself back only for an edit `transformChange` refused
-          if (next === base) {
-            outcome = 'refused';
-          } else if (edited) {
-            outcome = { edited: getAt<unknown>(edited.formData, fieldPathToList(fieldPath)) };
-          } else {
-            outcome = 'taken';
-          }
+          edit = { isRefused: next === base, edited };
           return next;
         }),
       );
       if (move) {
+        const kept = getAt<unknown>(committed.formData, path);
+        let outcome: MoveOutcome = { kind: 'taken', kept };
+        if (edit.isRefused) {
+          outcome = { kind: 'refused' };
+        } else if (edit.edited) {
+          outcome = { kind: 'rewritten', kept, edited: getAt<unknown>(edit.edited.formData, path) };
+        }
         moved = { move, outcome };
       }
       props.onChange?.(toIChangeEvent(committed), id);
@@ -490,8 +492,8 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
           announced = undefined;
         }
       }
-      // A change that never reached the form at the move's path, as from a field outside it, is the field's own
-      const outcome = moved?.move === move ? moved.outcome : 'taken';
+      // `undefined` for a change that never reached the form at the move's path, which a custom parent field kept
+      const outcome = moved?.move === move ? moved.outcome : undefined;
       moved = undefined;
       return outcome;
     },
