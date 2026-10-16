@@ -20,10 +20,11 @@ import {
 
 import type { FormProps, FormState } from './Form.tsx';
 import type { FormRef } from './FormRef.ts';
-import type { AnnouncedMove } from './formState.ts';
+import type { AnnouncedMove, FieldChange } from './formState.ts';
 import {
   applyBlur,
-  applyChange,
+  applyChangeToData,
+  applyChangeToErrorsOf,
   applyReset,
   applySubmit,
   applyValidation,
@@ -33,6 +34,7 @@ import {
   freezeFormData,
   isBlurValidated,
   isDevelopment,
+  isLiveValidated,
   toEventFormData,
   toIChangeEvent,
   validateFormData,
@@ -218,27 +220,30 @@ export function createFormModel<T, S extends StrictRJSFSchema, F extends FormCon
     return false;
   };
 
-  /** `change` applied to `base`, then, when the consumer's `transformChange` returns other data than the change left,
-   * that data written over the whole form with no key move, so its errors, live validation and row pairing describe
-   * the data the form keeps. Pure, as `settled()` asks: it may run again on a newer base.
+  /** `change` applied to `base`, with the data the consumer's `transformChange` decides on: the change's own, `base`
+   * itself for a refused one, or other data, written over the whole form with no key move after the change's own
+   * error moves. The data is decided before anything validates it, so live validation, `customValidate` and
+   * `transformErrors` run once, on the data the form keeps. Pure, as `settled()` asks: it may run again on a newer base.
    */
-  const applyEdit = (
-    base: FormState<T, S, F>,
-    change: Parameters<typeof applyChange<T, S, F>>[1],
-    props: FormProps<T, S, F>,
-  ) => {
-    const next = applyChange(base, change, props);
-    const { transformChange } = props;
-    if (!transformChange) {
-      return next;
+  const applyEdit = (base: FormState<T, S, F>, change: FieldChange<T>, props: FormProps<T, S, F>) => {
+    const isValidated = isLiveValidated(props);
+    const edited = applyChangeToData(base, change, props);
+    const transformed = props.transformChange ? props.transformChange(edited.formData, base.formData) : edited.formData;
+    if (Object.is(transformed, edited.formData)) {
+      return applyChangeToErrorsOf(edited, base.formData, change, props, isValidated);
     }
-    const transformed = transformChange(next.formData, base.formData);
-    return Object.is(transformed, next.formData)
-      ? next
-      : applyChange(next, { newValue: transformed, fieldPath: ROOT_FIELD_PATH }, props);
+    if (Object.is(transformed, base.formData)) {
+      return base;
+    }
+    const rewrite: FieldChange<T> = { newValue: transformed, fieldPath: ROOT_FIELD_PATH };
+    // Unvalidated, the change still moves its errors with the keys it moved and settles the fields' own errors, which
+    // the rewrite then carries through its one validation
+    const withEditErrors = applyChangeToErrorsOf(edited, base.formData, change, props, false);
+    const rewritten = applyChangeToData(withEditErrors, rewrite, props);
+    return applyChangeToErrorsOf(rewritten, edited.formData, rewrite, props, isValidated);
   };
 
-  /** Applies a change to the field at `fieldPath` with `applyChange()`, commits the result and reports it through
+  /** Applies a change to the field at `fieldPath` with `applyEdit()`, commits the result and reports it through
    * `onChange`, which is called before this returns, the way `deliver` says.
    *
    * @param newValue - The new value at `fieldPath`

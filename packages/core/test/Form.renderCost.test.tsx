@@ -80,7 +80,7 @@ describe('render cost of one update', () => {
 
     await user.type(input(container, 'root_name'), 'x');
 
-    // Once for the edited data in `applyChange()`, once for the render; the render restart `setCache` causes reuses it
+    // Once for the edited data in `applyChangeToData()`, once for the render; the render restart `setCache` causes reuses it
     expect(vi.mocked(buildRegistry).mock.calls.length).toBeLessThanOrEqual(2);
   });
 
@@ -90,7 +90,7 @@ describe('render cost of one update', () => {
 
     await user.type(input(container, 'root_name'), 'x');
 
-    // Once for the edit in `applyChange()`, once for the render of it; the parent renders nothing new
+    // Once for the edit in `applyChangeToData()`, once for the render of it; the parent renders nothing new
     expect(vi.mocked(buildRegistry).mock.calls.length).toBeLessThanOrEqual(2);
   });
 
@@ -122,7 +122,7 @@ describe('render cost of one update', () => {
     // Another record is loaded through the ref; the widget normalizes it once
     act(() => handleOf(ref).setFieldValue('', { name: 'cd' }));
 
-    // Once for the record's change in `applyChange()` and once for its render, then once for the widget's edit and
+    // Once for the record's change in `applyChangeToData()` and once for its render, then once for the widget's edit and
     // once for the render of that; each change reports through `onChange`
     expect(onChange).toHaveBeenCalledTimes(2);
     expect(vi.mocked(buildRegistry).mock.calls.length).toBeLessThanOrEqual(4);

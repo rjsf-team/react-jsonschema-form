@@ -116,8 +116,8 @@ export function toIChangeEvent<
   };
 }
 
-/** A field change, applied by `applyChange()` */
-interface FieldChange<T> {
+/** A field change, applied by `applyChangeToData()` and `applyChangeToErrorsOf()` */
+export interface FieldChange<T> {
   /** The `FieldPath` into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
   fieldPath: FieldPath;
   /** The new value to set into the formData */
@@ -1294,7 +1294,7 @@ function mustLiveValidate<T, S extends StrictRJSFSchema, F extends FormContextTy
 }
 
 /** Whether the form validates its data on every change */
-function isLiveValidated<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>) {
+export function isLiveValidated<T, S extends StrictRJSFSchema, F extends FormContextType>(props: FormProps<T, S, F>) {
   // oxlint-disable-next-line typescript/no-deprecated
   return !props.noValidate && props.liveValidate === 'onChange';
 }
@@ -1623,19 +1623,19 @@ function isWholeValueSelectAt<T, S extends StrictRJSFSchema, F extends FormConte
   return fieldSchema !== undefined && isWholeValueSelect<S>(fieldSchema);
 }
 
-/** Applies one `change` to `current`, returning the next state. The `newValue` is set at the change's path in the
- * data, which is then run through `deriveFormData()` for any missing defaults and, when the resolved schema changed,
- * sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered to remove any extra data not in
- * a form field. The errors the form holds are changed as `applyChangeToErrors()` describes; then the data is validated
- * if required. Reads nothing but its arguments and performs no callbacks: committing the result and notifying are the
- * caller's.
+/** Applies the data of one `change` to `current`, returning the next state with `current`'s errors. The `newValue` is
+ * set at the change's path in the data, which is then run through `deriveFormData()` for any missing defaults and,
+ * when the resolved schema changed, sanitization. If `omitExtraData` and `liveOmit` are turned on, the data is filtered
+ * to remove any extra data not in a form field. The errors are `applyChangeToErrorsOf()`'s, kept apart so an edit's
+ * data can be decided on before anything validates it. Reads nothing but its arguments and performs no callbacks:
+ * committing the result and notifying are the caller's.
  *
  * @param current - The state the change applies to
  * @param change - The change to apply
  * @param props - The current props
  * @returns - The next state, sharing every unchanged subtree with `current`
  */
-export function applyChange<T, S extends StrictRJSFSchema, F extends FormContextType>(
+export function applyChangeToData<T, S extends StrictRJSFSchema, F extends FormContextType>(
   current: FormState<T, S, F>,
   change: FieldChange<T>,
   props: FormProps<T, S, F>,
@@ -1643,7 +1643,7 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
   const { newValue, fieldPath } = change;
   // The single place where a `FieldPath` is parsed back into segments for writing into the formData
   const path = fieldPathToList(fieldPath);
-  const { extraErrors, omitExtraData, liveOmit, disabled, readonly } = props;
+  const { omitExtraData, liveOmit, disabled, readonly } = props;
   const { formData: oldFormData } = current;
   // The derivation below hands back the context for the data it settled on, resolved schema included, so committing
   // whatever it returns is what keeps state's resolved schema and the utilities that resolved it in step.
@@ -1783,32 +1783,56 @@ export function applyChange<T, S extends StrictRJSFSchema, F extends FormContext
     newFormData = context.schemaUtils.omitExtraData(context.schema, formData);
   }
 
-  let next: Partial<FormState<T, S, F>> = {
+  return {
+    ...current,
+    ...context,
     formData: newFormData,
     formDataSchema,
     settledFormData,
     settledFormDataForPairing,
     settledRetrievedSchema,
   };
-  if (isLiveValidated(props)) {
+}
+
+/** The errors after one `change`, for `changed`, the state `applyChangeToData()` made of it, which still carries the
+ * errors from before the change. With `isValidated`, the data is validated and only the fields' own errors are
+ * carried through; otherwise they are changed as `applyChangeToErrors()` describes.
+ *
+ * @param changed - The state the change's data left, with the errors from before it
+ * @param previousFormData - The data before the change
+ * @param change - The change
+ * @param props - The current props
+ * @param isValidated - Whether the change's data is validated
+ * @returns - `changed` with the errors after the change
+ */
+export function applyChangeToErrorsOf<T, S extends StrictRJSFSchema, F extends FormContextType>(
+  changed: FormState<T, S, F>,
+  previousFormData: T | undefined,
+  change: FieldChange<T>,
+  props: FormProps<T, S, F>,
+  isValidated: boolean,
+): FormState<T, S, F> {
+  const { formData } = changed;
+  if (isValidated) {
     // The validation replaces the validator's result whole, so only the fields' own errors are carried through
-    const customErrors = ownErrorsAfterChange(current, change);
-    next = {
-      ...next,
-      ...runLiveValidation(props, context, newFormData, customErrors, context.retrievedSchema),
+    const customErrors = ownErrorsAfterChange(changed, change);
+    return {
+      ...changed,
+      ...runLiveValidation(props, changed, formData, customErrors, changed.retrievedSchema),
       customErrors,
     };
-  } else {
-    // No validation rewrites the validator's errors here, so those of the replaced values are cleared instead. What a
-    // key move leaves is diffed with the keys where the move put them, so the errors that moved with them stay
-    const getDataChange = () =>
-      dataChange(
-        newFormData,
-        change.newKeyOf ? withKeysMoved(oldFormData, newFormData, path, change.newKeyOf) : oldFormData,
-      );
-    next = { ...next, ...applyChangeToErrors(current, change, extraErrors, getDataChange) };
   }
-  return { ...current, ...context, ...next };
+  // No validation rewrites the validator's errors here, so those of the replaced values are cleared instead. What a
+  // key move leaves is diffed with the keys where the move put them, so the errors that moved with them stay
+  const { newKeyOf } = change;
+  const getDataChange = () =>
+    dataChange(
+      formData,
+      newKeyOf
+        ? withKeysMoved(previousFormData, formData, fieldPathToList(change.fieldPath), newKeyOf)
+        : previousFormData,
+    );
+  return { ...changed, ...applyChangeToErrors(changed, change, props.extraErrors, getDataChange) };
 }
 
 /** The error members of a state with `extraErrors` as the only errors on display, as a reset or a valid submission

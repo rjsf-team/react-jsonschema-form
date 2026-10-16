@@ -1,6 +1,6 @@
-import type { FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import type { CustomValidator, ErrorTransformer, FieldTemplateProps, RJSFSchema } from '@rjsf/utils';
 import { buttonId } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
+import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import { act, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 
@@ -190,6 +190,80 @@ describe('transformChange', () => {
       expect(node.querySelector('#root_status_reason')).not.toBeInTheDocument();
       expect(handleOf(ref).getFormData()).toEqual({ status: { by: 'me' } });
       expect(reported.filter(({ formData }) => formData.status?.by !== 'me')).toEqual([]);
+    });
+  });
+
+  describe('under liveValidate', () => {
+    interface Name {
+      first?: string;
+    }
+    const lengthSchema: RJSFSchema = { type: 'object', properties: { first: { type: 'string', minLength: 3 } } };
+    const upperCase: FormProps<Name>['transformChange'] = (next) =>
+      next && { ...next, first: next.first?.toUpperCase() };
+    const refuseX: FormProps<Name>['transformChange'] = (next, previous) =>
+      next?.first?.includes('x') ? previous : next;
+
+    /** Renders a live-validated form with its own validator, whose validations are counted from after mount */
+    function renderValidated(transformChange: FormProps<Name>['transformChange']) {
+      const customValidate = vi.fn<CustomValidator<Name>>((_formData, errors) => errors);
+      const transformErrors = vi.fn<ErrorTransformer>((errors) => errors);
+      const ownValidator = customizeValidator();
+      const validateFormData = vi.spyOn(ownValidator, 'validateFormData');
+      const reported: IChangeEvent<Name>[] = [];
+      const { container: node } = render(
+        <Form<Name>
+          schema={lengthSchema}
+          validator={ownValidator}
+          initialFormData={{ first: '' }}
+          liveValidate='onChange'
+          transformChange={transformChange}
+          customValidate={customValidate}
+          transformErrors={transformErrors}
+          onChange={(event) => reported.push(event)}
+        />,
+      );
+      customValidate.mockClear();
+      transformErrors.mockClear();
+      validateFormData.mockClear();
+      return { node, reported, customValidate, transformErrors, validateFormData };
+    }
+
+    it('validates a rewritten edit once per keystroke, and only the data the form keeps', async () => {
+      const { node, customValidate, transformErrors, validateFormData } = renderValidated(upperCase);
+
+      await user.type(input(node, 'root_first'), 'ab');
+
+      expect(validateFormData.mock.calls.map(([formData]) => formData)).toEqual([{ first: 'A' }, { first: 'AB' }]);
+      expect(customValidate.mock.calls.map(([formData]) => formData)).toEqual([{ first: 'A' }, { first: 'AB' }]);
+      expect(transformErrors).toHaveBeenCalledTimes(2);
+    });
+
+    it('validates nothing for a refused edit and leaves the errors as they were', async () => {
+      const { node, reported, customValidate, transformErrors, validateFormData } = renderValidated(refuseX);
+
+      await user.type(input(node, 'root_first'), 'a');
+      const errorsBefore = reported.at(-1)?.errors;
+      customValidate.mockClear();
+      transformErrors.mockClear();
+      validateFormData.mockClear();
+      await user.type(input(node, 'root_first'), 'x');
+
+      expect(input(node, 'root_first')).toHaveValue('a');
+      expect(validateFormData).not.toHaveBeenCalled();
+      expect(customValidate).not.toHaveBeenCalled();
+      expect(transformErrors).not.toHaveBeenCalled();
+      expect(errorsBefore?.map(({ property }) => property)).toEqual(['.first']);
+      expect(reported.at(-1)?.errors).toEqual(errorsBefore);
+    });
+
+    it('validates a taken edit once per keystroke', async () => {
+      const { node, customValidate, transformErrors, validateFormData } = renderValidated(refuseX);
+
+      await user.type(input(node, 'root_first'), 'ab');
+
+      expect(validateFormData).toHaveBeenCalledTimes(2);
+      expect(customValidate.mock.calls.map(([formData]) => formData)).toEqual([{ first: 'a' }, { first: 'ab' }]);
+      expect(transformErrors).toHaveBeenCalledTimes(2);
     });
   });
 
