@@ -47,7 +47,7 @@ import buildPlan, {
 } from './graph/mergePlan.ts';
 import type { MergePlan, OptionRequest, PlanPolicy, Seed } from './graph/mergePlan.ts';
 import parseSchemaGraph from './graph/parseSchemaGraph.ts';
-import type { AdoptedSchema, SchemaGraph } from './graph/parseSchemaGraph.ts';
+import type { AdoptedSchema, NodeId, SchemaGraph } from './graph/parseSchemaGraph.ts';
 import { childProvenance, extendChain, readProvenance, rootProvenance, stamp } from './graph/provenance.ts';
 import type { GuardChain, Provenance } from './graph/provenance.ts';
 import { childField, collapses, restartSeeds } from './graph/recursionRule.ts';
